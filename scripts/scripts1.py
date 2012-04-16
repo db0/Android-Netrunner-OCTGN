@@ -10,10 +10,8 @@ MinusOne= ("-1", "48ceb18b-5521-4d3f-b5fb-c8212e8bcbae")
 #---------------------------------------------------------------------------
 # Global variables
 #---------------------------------------------------------------------------
-global ds
 ds = ""
 global TurnAutomation
-global TraceValue
 TraceValue = 0
 
 turnIdx = 0
@@ -559,144 +557,60 @@ def useCardAbility(card,x=0,y=0):
 #------------------------------------------------------------------------------
 # Hand Actions
 #------------------------------------------------------------------------------
-def intPlay (card, cost):
-		TypeCard[card] = card.properties["Type"]
-	
-		if re.match(r'\bIce\b', card.properties["Type"]):
-			mute()
-			#DifficultyLevels[card] = card.properties["Difficulty"]
-			#MemoryRequirements[card] = card.properties["MU Required"]
-			InstallationCosts[card] = card.properties["Cost"]
-			card.moveToTable(0, 90, True)
-			card.orientation ^= Rot90
-			card.markers[Not_rezzed] += 1
-			me.counters['Actions'].value -=1
-			
-			notify("{} plays a card.".format(me))
-		elif re.match(r'\bAgenda\b', card.properties["Type"]):
-			mute()
-			DifficultyLevels[card] = card.properties["Cost"]
-			#MemoryRequirements[card] = card.properties["MU Required"]
-			#InstallationCosts[card] = card.properties["Cost"]
-			card.moveToTable(90, 0, True)
-			card.markers[Not_rezzed] += 1
-			me.counters['Actions'].value -=1
-		
-			notify("{} plays a card.".format(me))
-		elif re.match(r'\bNode\b', card.properties["Type"]):
-			mute()
-			#DifficultyLevels[card] = card.properties["Difficulty"]
-			#MemoryRequirements[card] = card.properties["MU Required"]
-			InstallationCosts[card] = card.properties["Cost"]
-			card.moveToTable(0, 0, True)
-			card.markers[Not_rezzed] += 1
-			me.counters['Actions'].value -=1
-			
-			notify("{} plays a card.".format(me))
-
-		elif re.match(r'\bUpgrade\b', card.properties["Type"]):
-			mute()
-			#DifficultyLevels[card] = card.properties["Difficulty"]
-			#MemoryRequirements[card] = card.properties["MU Required"]
-			InstallationCosts[card] = card.properties["Cost"]
-			
-
-			if card.properties["Keyword 1"] != "Region":
-				card.moveToTable(90, 0, True)
-				card.markers[Not_rezzed] += 1
-				notify("{} plays a card.".format(me))
-			else:
-				card.moveToTable(90, 0, False)
-				if ( cost == "free"): notify("{} plays {} at no cost.".format(me, card)) 
-				else: 
-					me.counters['Bit Pool'].value -= card.properties["Cost"]
-					notify("{} payed {} and plays {}.".format(me, card.properties["Cost"], card))
-
-			me.counters['Actions'].value -=1
-
-		elif re.match(r'\bProgram\b', card.properties["Type"]):
-			mute()
-			#DifficultyLevels[card] = card.properties["Difficulty"]
-			MemoryRequirements[card] = card.properties["MU Required"]
-			InstallationCosts[card] = card.properties["Cost"]
-			card.moveToTable(-180, 90, False)
-			me.counters['Memory'].value -= MemoryRequirements[card]
-			me.counters['Actions'].value -=1
-
-			if ( cost == "not_free" ):
-				me.counters['Bit Pool'].value -= InstallationCosts[card]
-				notify("{} pays {} and plays {}.".format(me, InstallationCosts[card], card))
-			else: notify("{} plays {} at no cost.".format(me, card)) 
-
-		elif re.match(r'\bPrep\b', card.properties["Type"]):
-			mute()
-			#DifficultyLevels[card] = card.properties["Difficulty"]
-			MemoryRequirements[card] = card.properties["MU Required"]
-			InstallationCosts[card] = card.properties["Cost"]
-			card.moveToTable(0, 0, False)
-			me.counters['Memory'].value -= MemoryRequirements[card]
-			me.counters['Actions'].value -=1
-
-			if ( cost == "not_free" ):
-				me.counters['Bit Pool'].value -= InstallationCosts[card]
-				notify("{} pays {} and plays {}.".format(me, InstallationCosts[card], card))
-			else: notify("{} plays {} at no cost.".format(me, card)) 
-
-		elif re.match(r'\bResource\b', card.properties["Type"]):
-			mute()
-			#DifficultyLevels[card] = card.properties["Difficulty"]
-			MemoryRequirements[card] = card.properties["MU Required"]
-			InstallationCosts[card] = card.properties["Cost"]
-
-			if ( card.properties["Keyword 1"] != "Hidden" and card.properties["Keyword 2"] != "Hidden") :
-				card.moveToTable(-180, 270, False)
-				if ( cost == "not_free" ):
-					me.counters['Bit Pool'].value -= InstallationCosts[card]
-					notify("{} pays {} and plays {}.".format(me, InstallationCosts[card], card))
-				else: notify("{} plays {} at no cost.".format(me, card)) 
-				
-			else:
-				card.moveToTable(-180, 270, True)
-				notify("{} installs a card.".format(me))
-				
-			
-			me.counters['Memory'].value -= MemoryRequirements[card]
-			me.counters['Actions'].value -=1
-
-		elif re.match(r'\bHardware\b', card.properties["Type"]):
-			mute()
-			#DifficultyLevels[card] = card.properties["Difficulty"]
-			MemoryRequirements[card] = card.properties["MU Required"]
-			InstallationCosts[card] = card.properties["Cost"]
-			card.moveToTable(-180, 180, False)
-			me.counters['Memory'].value -= MemoryRequirements[card]
-			me.counters['Actions'].value -=1
-
-			if ( cost == "not_free" ):
-				me.counters['Bit Pool'].value -= InstallationCosts[card]
-				notify("{} pays {} and plays {}.".format(me, InstallationCosts[card], card))
-			else: notify("{} plays {} at no cost.".format(me, card))  
-
-		else:
-			mute()
-			#DifficultyLevels[card] = card.properties["Difficulty"]
-			#MemoryRequirements[card] = card.properties["MU Required"]
-			InstallationCosts[card] = card.properties["Cost"]
-			card.moveToTable(0, 0, False)
-			me.counters['Actions'].value -=1
-
-			if ( cost == "not_free" ):
-				me.counters['Bit Pool'].value -= InstallationCosts[card]
-				notify("{} pays {} and plays {}.".format(me, InstallationCosts[card], card))
-			else: notify("{} plays {} at no cost.".format(me, card)) 		
-	
-		executeAutomations ( card, "play" )
+def intPlay(card, cost):
+    global TypeCard
+    mute() 
+    TypeCard[card] = card.Type
+    if card.Type == 'Resource' and (card.properties["Keyword 1"] == "Hidden" or card.properties["Keyword 2"] == "Hidden"): hiddenresource = 'yes'
+    else: hiddenresource = 'no'
+    if card.Type == 'Ice' or card.Type == 'Agenda' or card.Type == 'Node':
+        if card.Type == 'Ice': card.orientation ^= Rot90
+        card.moveToTable(0, 0, True) # I removed the different table positions for each type of card. Otherwise you signify what kind of card it is to the opponent!
+        card.markers[Not_rezzed] += 1
+        me.Actions -=1 
+        notify("{} plays a card.".format(me))
+    elif card.Type == 'Upgrade':
+        if card.properties["Keyword 1"] != "Region":
+            card.moveToTable(0, 0, True)
+            card.markers[Not_rezzed] += 1
+            notify("{} plays a card.".format(me))
+        else:
+            card.moveToTable(90, 0, False)
+            if ( cost == "free"): notify("{} plays {} at no cost.".format(me, card))
+            else:
+                me.counters['Bit Pool'].value -= card.Cost
+                notify("{} paid {} and plays {}.".format(me, card.Cost, card))
+        me.Actions -=1
+    elif card.Type == 'Program' or card.Type == 'Prep' or card.Type == 'Resource' or card.Type == 'Hardware':
+        me.Memory -= card.properties["MU Required"]
+        me.Actions -=1
+        if card.Type == 'Program': card.moveToTable(-180, 90, False)
+        if card.Type == 'Prep': card.moveToTable(0, 0, False)
+        if card.Type == 'Hardware': card.moveToTable(-180, 180, False)
+        if card.Type == 'Resource' and hiddenresource == 'no': card.moveToTable(-180, 270, False)
+        if card.Type == 'Resource' and hiddenresource == 'yes':
+            card.moveToTable(-180, 270, True)
+            notify("{} installs a card.".format(me))
+            executeAutomations(card,"play")
+            return
+        if cost == "not_free":
+            me.counters['Bit Pool'].value -= card.Cost
+            notify("{} pays {} and plays {}.".format(me, card.Cost, card))
+        else: notify("{} plays {} at no cost.".format(me, card))
+    else:
+        card.moveToTable(0, 0, False)
+        me.Actions -=1
+        if cost == "not_free":
+            me.counters['Bit Pool'].value -= card.Cost
+            notify("{} pays {} and plays {}.".format(me, card.Cost, card))
+        else: notify("{} plays {} at no cost.".format(me, card))               
+    executeAutomations ( card, "play" )
 
 def playForFree(card, x = 0, y = 0):
-	intPlay (card,"free")
+	intPlay(card,"free")
 
 def play(card, x = 0, y = 0):
-	intPlay (card,"not_free")
+	intPlay(card,"not_free")
 
 def movetoTopOfStack (card):
 	mute()

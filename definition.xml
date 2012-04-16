@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<game xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="Netrunner" id="13568561-7a2e-4572-8f31-3d99580ab245" octgnVersion="0.10.0.0" version="1.5.0" markersize="16">
+<game xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="Netrunner" id="13568561-7a2e-4572-8f31-3d99580ab245" octgnVersion="3.0.1.0" version="1.5.1" markersize="16">
 	<card back="r4" front="r5" width="63" height="88" cornerRadius="2">
 		<property name="Player" type="String" hidden="false" ignoreText="False" />
 		<property name="Cost" type="Integer" hidden="false" />
@@ -27,7 +27,7 @@
 	</card>
 	<table name="Table" visibility="undefined" ordered="false" width="1080" height="671" board="r35" boardPosition="-540,-335,1080,671" background="r1" backgroundStyle="uniformToFill">
 		<groupactions menu="Game ...">
-			<groupaction menu="Set up" default="true" execute="intJackin" />
+			<groupaction menu="Set up" default="false" execute="intJackin" />
 			<groupaction menu="Turn Automation ON" default="false" execute="turnAutomationOn" />
 			<groupaction menu="Turn Automation OFF" default="false" execute="turnAutomationOff" />
 			<groupactions menu="not used ...">
@@ -84,7 +84,7 @@
 			<cardaction menu="Trash at No Cost" default="false" shortcut="del" execute="trashForFree" />
 		</cardactions>
 		<cardactions menu="Rez...">
-			<cardaction menu="Pay and Rez" default="false" execute="rez" />
+			<cardaction menu="Pay and Rez" default="true" execute="rez" />
 			<cardaction menu="Rez at no Cost" default="false" execute="rezForFree" />
 			<cardaction menu="Derez" default="false" execute="derez" />	
 		</cardactions>
@@ -101,7 +101,7 @@
 	</table>
 	<player summary="Actions {#Actions} / Bits {#Bit Pool} / Hand {#HQ/Hand}">
 		<hand name="HQ/Hand" visibility="me" ordered="false" width="63" height="88" icon="r11">
-			<cardaction menu="Pay and Play Card" default="false" shortcut="enter" execute="play" />
+			<cardaction menu="Pay and Play Card" default="true" shortcut="enter" execute="play" />
 			<cardaction menu="Play Card at no cost" default="false" execute="playForFree" />
 			<cardactions menu="Move ...">
 				<cardaction menu ="To Top of R&amp;D/Stack" default="false" execute="movetoTopOfStack" />
