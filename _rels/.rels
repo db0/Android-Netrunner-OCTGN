@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
+  <Relationship Target="/definition.xml" Id="def" Type="http://schemas.octgn.org/game/definition" />
+</Relationships>
