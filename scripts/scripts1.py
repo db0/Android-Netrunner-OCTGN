@@ -36,6 +36,18 @@ turns = [
 ScoredColor = "#009900"
 SelectColor = "#009900"
 MakeRunColor = "#ff0000"
+
+#---------------------------------------------------------------------------
+# General functions
+#---------------------------------------------------------------------------
+
+def num (s):
+   if not s: return 0
+   try:
+      return int(s)
+   except ValueError:
+      return 0
+
 #---------------------------------------------------------------------------
 # Actions indication
 #---------------------------------------------------------------------------
@@ -417,7 +429,7 @@ def scrAgenda(card, x = 0, y = 0):
 		if confirm("Do you want to score this agenda?") == True:
 			mute()
 			card.isFaceUp = True
-			ap = card.properties['Stat']
+			ap = num(card.Stat)
 			card.markers[Advance] = 0
 			card.markers[Not_rezzed] = 0
 			card.highlight = ScoredColor
@@ -455,7 +467,7 @@ def intRez (card,Cost):
 		card.isFaceUp = True
 		card.markers[Not_rezzed] -= 1
 		if Cost != "free":
-			rc = card.properties['Cost']
+			rc = num(card.Cost)
 			me.counters['Bit Pool'].value -= rc
 			notify("{} payed {} and rezzed {}.".format(me, rc, card))
 		else:
@@ -539,7 +551,7 @@ def intTrashCard (card, cost):
 
 def trash_it(card, x = 0, y = 0):
 	mute()
-	cost = card.properties['Stat']
+	cost = num(card.Stat)
 	me.counters['Bit Pool'].value -= cost
 	intTrashCard(card, cost)
 
@@ -578,11 +590,11 @@ def intPlay(card, cost):
             card.moveToTable(90, 0, False)
             if ( cost == "free"): notify("{} plays {} at no cost.".format(me, card))
             else:
-                me.counters['Bit Pool'].value -= card.Cost
+                me.counters['Bit Pool'].value -= num(card.Cost)
                 notify("{} paid {} and plays {}.".format(me, card.Cost, card))
         me.Actions -=1
     elif card.Type == 'Program' or card.Type == 'Prep' or card.Type == 'Resource' or card.Type == 'Hardware':
-        me.Memory -= card.properties["MU Required"]
+        me.Memory -= num(card.properties["MU Required"])
         me.Actions -=1
         if card.Type == 'Program': card.moveToTable(-180, 90, False)
         if card.Type == 'Prep': card.moveToTable(0, 0, False)
@@ -594,14 +606,14 @@ def intPlay(card, cost):
             executeAutomations(card,"play")
             return
         if cost == "not_free":
-            me.counters['Bit Pool'].value -= card.Cost
+            me.counters['Bit Pool'].value -= num(card.Cost)
             notify("{} pays {} and plays {}.".format(me, card.Cost, card))
         else: notify("{} plays {} at no cost.".format(me, card))
     else:
         card.moveToTable(0, 0, False)
         me.Actions -=1
         if cost == "not_free":
-            me.counters['Bit Pool'].value -= card.Cost
+            me.counters['Bit Pool'].value -= num(card.Cost)
             notify("{} pays {} and plays {}.".format(me, card.Cost, card))
         else: notify("{} plays {} at no cost.".format(me, card))               
     executeAutomations ( card, "play" )
@@ -768,7 +780,7 @@ def checkDeckNoLimit (group):
 		loRunner = 0
 		for card in group:
 			card.moveTo(me.piles['Archives'])
-     			if ( re.match(r'\bAgenda\b', card.properties["Type"]) ): loAP += card.properties["Stat"]
+     			if ( re.match(r'\bAgenda\b', card.properties["Type"]) ): loAP += num(card.Stat)
 			if ( card.properties["Player"] == "runner"): loRunner = 1
 			card.moveToBottom(group)
 
@@ -813,8 +825,8 @@ def executeAutomations ( card, action ):
 
 	if ( Execute == 0): return
 
-	Param1 = card.properties ["ParamAS1"]*Execute
-	Param2 = card.properties ["ParamAS2"]*Execute
+	Param1 = num(card.ParamAS1)*Execute
+	Param2 = num(card.ParamAS2)*Execute
 
 	if ( AutoScript == "autoGainXDrawY" ): autoGainXDrawY ( card, Param1, Param2 )
 	elif ( AutoScript == "autoGainXIfY"): autoGainXIfY( card, Param1, Param2 )
