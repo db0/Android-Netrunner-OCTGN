@@ -576,8 +576,8 @@ def intPlay(card, cost):
     if card.Type == 'Resource' and (card.properties["Keyword 1"] == "Hidden" or card.properties["Keyword 2"] == "Hidden"): hiddenresource = 'yes'
     else: hiddenresource = 'no'
     if card.Type == 'Ice' or card.Type == 'Agenda' or card.Type == 'Node':
-        if card.Type == 'Ice': card.orientation ^= Rot90
         card.moveToTable(0, 0, True) # I removed the different table positions for each type of card. Otherwise you signify what kind of card it is to the opponent!
+        if card.Type == 'Ice': card.orientation ^= Rot90
         card.markers[Not_rezzed] += 1
         me.Actions -=1 
         notify("{} plays a card.".format(me))
