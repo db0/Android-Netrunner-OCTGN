@@ -64,12 +64,12 @@
 		<cardaction menu = "Use Ability" default="false" execute="useCardAbility" />
 		<cardaction menu="Clear" default="false" shortcut="esc" execute="clear" />
 		<cardactions menu="Trash...">
-			<cardaction menu="Pay and Trash" default="false" execute="trash_it" />
+			<cardaction menu="Pay and Trash" default="false" execute="trashCard" />
 			<cardaction menu="Pay (2) and Trash" default="false" execute="pay2AndTrash" />
 			<cardaction menu="Trash at No Cost" default="false" shortcut="del" execute="trashForFree" />
 		</cardactions>
 		<cardactions menu="Rez...">
-			<cardaction menu="Pay and Rez" default="true" execute="rez" />
+			<cardaction menu="Pay and Rez" default="true" execute="intRez" />
 			<cardaction menu="Rez at no Cost" default="false" execute="rezForFree" />
 			<cardaction menu="Derez" default="false" execute="derez" />	
 		</cardactions>
@@ -110,11 +110,11 @@
 			</groupactions>
 		</group>
 
-		<group name="Archives" visibility="all" ordered="false" width="63" height="88" icon="r14" collapsed="false">
+		<group name="Trash" visibility="all" ordered="false" width="63" height="88" icon="r14" collapsed="false">
 			<groupaction menu="Move all to R&amp;D/Stack" default="false" execute="archivestoStack" />
 		</group>
 
-		<group name="Archives H" visibility="me" ordered="false" width="63" height="88" icon="r15" collapsed="false">
+		<group name="Archives" visibility="me" ordered="false" width="63" height="88" icon="r15" collapsed="false">
 			<groupaction menu="Move all to Archives" default="false" execute="toarchives" />
 			<groupaction menu="Move all to R&amp;D/Stack" default="false" execute="archivestoStack" />
 		</group>

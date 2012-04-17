@@ -18,6 +18,7 @@ turnIdx = 0
 DifficultyLevels = { }
 
 TypeCard = {}
+CostCard = {}
 
 MemoryRequirements = { }
 InstallationCosts = { }
@@ -128,8 +129,8 @@ def turnAutomationOn (group,x=0,y=0):
 
 def create3DataForts(group):
 	table.create("2a0b57ca-1714-4a70-88d7-25fdf795486f", 150, 250, 1)
-	table.create("181de100-c255-464f-a4ed-4ac8cd728c61", 250, 250, 1)
-	table.create("59665835-0b0c-4710-99f7-8b90377c35b7", 350, 250, 1)
+	table.create("181de100-c255-464f-a4ed-4ac8cd728c61", 300, 250, 1)
+	table.create("59665835-0b0c-4710-99f7-8b90377c35b7", 450, 250, 1)
 
 def intJackin(group, x = 0, y = 0):
 	global ds
@@ -141,7 +142,7 @@ def intJackin(group, x = 0, y = 0):
 		return
 	mute()
 	TopCard = stack[0]
-	TopCard.moveTo(me.piles['Archives'])
+	TopCard.moveTo(me.Trash)
 	ds = TopCard.Player
 	TopCard.moveTo(me.piles['R&D/Stack'])
 
@@ -333,13 +334,14 @@ def cancelTrace ( card, x=0,y=0):
 #-----------------------------------------------------------------------------
 
 def intdamageDiscard(group,x=0,y=0):
-	mute()
-	if ( len(group) == 0 ):
-		notify ( "{} cannot discard at random. Did {} just lose the game?".format(me, me) )
-	else:
-		card = group.random()
-    		notify("{} discards {} at random.".format(me,card))
-    		card.moveTo(me.Archives)
+    mute()
+    if len(group) == 0:
+        notify ("{} cannot discard at random.".format(me))
+    else:
+        card = group.random()
+        if ds == 'corp': card.moveTo(me.Archives)
+        else: card.moveTo(me.Trash)
+        notify("{} discards {} at random.".format(me,card))
 
 def addBrainDmg(group, x = 0, y = 0):
     me.counters['Brain Damage'].value +=1
@@ -363,7 +365,7 @@ def payCost(count = 1, cost = 'not_free', notification = silent): # A function t
    count = num(count)
    if count == 0 : return 0# If the card has 0 cost, there's nothing to do.
    if me.counters['Bit Pool'].value < count: # If we don't have enough Bits in the pool, we assume card effects or mistake and notify the player that they need to do things manually.
-      if not confirm("You do not seem to have enough Bits in your pool to play this card. Are you sure you want to proceed? \
+      if not confirm("You do not seem to have enough Bits in your pool to take this action. Are you sure you want to proceed? \
       \n(If you do, your Bit Pool will go to the negative. You will need to increase it manually as required.)"): return 'ABORT'
       if notification == loud: notify("{} was supposed to pay {} Bits but only has {} in their pool. They'll need to reduce the cost by {} with card effects.".format(me, count, me.counters['Bit Pool'].value, count - me.counters['Bit Pool'].value))   
       me.counters['Bit Pool'].value -= num(count) 
@@ -406,35 +408,24 @@ def isRezzable (card):
 	if ( Type == "Ice" or Type == "Node" or Type == "Upgrade"): return 0
 	else: return -1
 
-def intRez (card,Cost):
-
-	if ( isRezzable(card) == -1):
-		whisper ("Not a rezzable card")
-		return
-	else:
-		mute()
-		card.isFaceUp = True
-		card.markers[Not_rezzed] -= 1
-		if Cost != "free":
-			rc = num(card.Cost)
-			me.counters['Bit Pool'].value -= rc
-			notify("{} payed {} and rezzed {}.".format(me, rc, card))
-		else:
-			notify("{} rezzed {} at no cost.".format(me, card))
-
-		executeAutomations ( card, "rez" )
-
-def rez(card, x = 0, y = 0):
-	if card.markers[Not_rezzed] != 0:
-      		intRez(card, "not free")
-   	else:
-      		notify ( "you can't rez a rezzed card")
+def intRez (card,cost = 'not free', x=0, y=0):
+    mute()
+    if card.markers[Not_rezzed] == 0: whisper("you can't rez a rezzed card")
+    elif isRezzable(card) == -1: whisper("Not a rezzable card")
+    else:
+        rc = payCost(CostCard[card], cost, loud)
+        if rc == "ABORT": return # If the player didn't have enough money to pay and aborted the function, then do nothing.
+        elif rc == "free": notify("{} rezzes {} at no cost.".format(me, card))
+        else:
+            card.isFaceUp = True
+            card.markers[Not_rezzed] -= 1
+            if card.Type == 'Ice': notify("{} has activated {}.".format(me, card))
+            if card.Type == 'Node': notify("{} has acquired {}.".format(me, card))
+            if card.Type == 'Upgrade': notify("{} has installed {}.".format(me, card))
+        executeAutomations ( card, "rez" )
 
 def rezForFree (card, x = 0, y = 0):
-	if card.markers[Not_rezzed] != 0:
-      		intRez(card, "free")
-	else:
-      		notify ( "you can't rez a rezzed card")
+	intRez(card, "free")
 
 def derez(card, x = 0, y = 0):
    if (card.markers[Not_rezzed] == 0):
@@ -471,46 +462,35 @@ def clear(card, x = 0, y = 0):
     card.highlight = None
     card.target(False)
 
-def intTrashCard (card, cost):
-	mute()
-	
-	if (card.properties['Type'] == "Tracing"): return
-	
-	cardowner = card.owner
-	if card.isFaceUp:
-		
-		if ( cost == "free") : notify("{} trash {} at no cost.".format(me, card))
-		else: notify("{} payed {} and trash {}.".format(me, cost, card))
-		executeAutomations ( card, "trash" )
-		card.moveTo(cardowner.piles['Archives'])
+def intTrashCard (card, stat, cost = "not free"):
+    mute()
+    if card.Type == "Tracing": return
+    cardowner = card.owner
+    rc = payCost(stat, cost, loud)
+    if rc == "ABORT": return # If the player didn't have enough money to pay and aborted the function, then do nothing.
+    if card.isFaceUp:
+        if rc == "free" : notify("{} trashed {} at no cost.".format(me, card))
+        else: notify("{} trashed {}.".format(me, card))
+        executeAutomations (card, "trash")
+        if ds == 'runner': card.moveTo(cardowner.Trash)
+        else: card.moveTo(cardowner.Archives)
+    elif (ds == "runner" and cardowner == me) or (ds == "corp" and cardowner != me ): #I'm the runner and I trash my card or I 'm the corp and I trash a runner card
+        card.moveTo(cardowner.Trash)
+        if rc == "free" : notify ("{} trashed {} at no cost.".format(me,card))
+        else: notify("{} trashed {}.".format(me, cost, card))
+    else: #I'm the corp and I trash my card or I'm the runner and I trash a corp's card
+        card.moveTo(cardowner.Archives)
+        if rc == "free": notify("{} trashed a hidden card at no cost.".format(me))
+        else: notify("{} trashed a hidden card.".format(me,cost))
 
-	elif (ds == "runner" and cardowner == me) or (ds == "corp" and cardowner != me ): #i'm the runner and i trash my card or i 'm the corp and i trash a runner card
-		card.moveTo(cardowner.piles['Archives'])
-		if ( cost == "free") : notify ( "{} trashed {} at no cost.".format(me,card))
-		else: notify("{} payed {} and trash {}.".format(me, cost, card))
-		
-	else: #i'm the corp and i trash my card or i'm the runner and i trash a corp's card
-		card.moveTo(cardowner.piles['Archives H'])
-		if ( cost == "free" ): notify("{} trashed a hidden card at no cost.".format(me))
-		else: notify("{} payed {} and trashed a hidden card.".format(me,cost))
-	
-	
-
-	#if MemoryRequirements[card] > 0: me.counters['Memory'].value += MemoryRequirements[card]
-
-def trash_it(card, x = 0, y = 0):
-	mute()
-	cost = num(card.Stat)
-	me.counters['Bit Pool'].value -= cost
-	intTrashCard(card, cost)
-
+def trashCard (card, x = 0, y = 0):
+	intTrashCard(card, card.Stat)
+        
 def trashForFree (card, x = 0, y = 0):
-	intTrashCard(card, "free")
+	intTrashCard(card, card.Stat, "free")
 
 def pay2AndTrash ( card, x=0, y=0):
-	mute()
-	me.counters['Bit Pool'].value -=2
-	intTrashCard(card, 2 )
+	intTrashCard(card, 2)
 
 def useCardAbility(card,x=0,y=0):
 	card.highlight = SelectColor
@@ -519,10 +499,11 @@ def useCardAbility(card,x=0,y=0):
 # Hand Actions
 #------------------------------------------------------------------------------
 def intPlay(card, cost = 'not_free'):
-    global TypeCard
+    global TypeCard, CostCard
     mute() 
     if useAction() == 'ABORT': return
     TypeCard[card] = card.Type
+    CostCard[card] = card.Cost
     if card.Type == 'Resource' and (card.properties["Keyword 1"] == "Hidden" or card.properties["Keyword 2"] == "Hidden"): hiddenresource = 'yes'
     else: hiddenresource = 'no'
     if card.Type == 'Ice' or card.Type == 'Agenda' or card.Type == 'Node':
@@ -567,7 +548,7 @@ def intPlay(card, cost = 'not_free'):
                 card.moveToTable(-180, 180, False)
                 notify("{} has purchased {}.".format(me, card))
             if card.Type == 'Resource' and hiddenresource == 'no':
-                card.moveToTable(-180, 270, False)
+                card.moveToTable(-180, 250, False)
                 notify("{} has acquired {}.".format(me, card))
     else:
         rc = payCost(card.Cost, cost, loud)
@@ -601,25 +582,21 @@ def movetoBottomOfStack (card):
 	notify ( "{} moves a card to Bottom of {}.".format(me,nameStack) )
 
 def handtoArchivesH (card):
-
-	if ( ds == "runner"): return
+	if ds == "runner": return
 	mute()
-	Stack = me.piles['Archives H']
-	card.moveTo(Stack)
-	
-	notify ("{} moves a card to Archives H.".format(me))
+	card.moveTo(me.Archives)
+	notify ("{} moves a card to their Archives.".format(me))
 
 def handDiscard(group):
-	mute()
-	card = group.random()
-	if card == None: return
-	if ds == "corp" :
-		card.moveTo(me.piles['Archives H'])
-    		notify("{} discards a card at random.".format(me))
-    		
-	else:
-		card.moveTo(me.Archives)
-		notify("{} discards {} at random.".format(me,card))
+    mute()
+    card = group.random()
+    if card == None: return
+    if ds == "corp" :
+        card.moveTo(me.Archives)
+        notify("{} discards a card at random.".format(me))
+    else:
+        card.moveTo(me.Trash)
+        notify("{} discards {} at random.".format(me,card))
     		
 def showatrandom(group):
 	mute()
@@ -629,18 +606,16 @@ def showatrandom(group):
 	notify("{} show {} at random.".format(me,card))
 
 def handtoStack (group):
-	mute()
-	Stack = me.piles['R&D/Stack']
-	for c in me.hand: c.moveTo(Stack)
-	#Archives.shuffle()
-	if ( ds == "runner"):
-		nameHand = "Hand"
-		nameStack = "Stack"
-	else:
-		nameHand = "HQ"
-		nameStack = "R&D"
-
-	notify ("{} moves {} to {}.".format(me,nameHand,nameStack))
+    mute()
+    Stack = me.piles['R&D/Stack']
+    for c in me.hand: c.moveTo(Stack)
+    if ( ds == "runner"):
+        nameHand = "Hand"
+        nameStack = "Stack"
+    else:
+        nameHand = "HQ"
+        nameStack = "R&D"
+    notify ("{} moves {} to {}.".format(me,nameHand,nameStack))
 
 
 #------------------------------------------------------------------------------
@@ -673,7 +648,7 @@ def drawMany(group, count = None):
 
 	notify("{} draws {} cards.".format(me, count))
 
-def toarchives(group = me.piles['Archives H']):
+def toarchives(group = me.Archives):
 	mute()
 	Archives = me.Archives
 	for c in group: c.moveTo(Archives)
@@ -702,7 +677,7 @@ def mill(group):
 		nameStack = "Stack"
 		nameTrash = "Trash"
 	else:
-		for c in group.top(count): c.moveTo(me.piles['Archives H'])
+		for c in group.top(count): c.moveTo(me.Archives)
 		nameStack = "HQ"
 		nameTrash = "Archives H"
 
@@ -737,7 +712,7 @@ def checkDeckNoLimit (group):
 		loAP = 0.0
 		loRunner = 0
 		for card in group:
-			card.moveTo(me.piles['Archives'])
+			card.moveTo(me.Trash)
      			if ( re.match(r'\bAgenda\b', card.properties["Type"]) ): loAP += num(card.Stat)
 			if ( card.properties["Player"] == "runner"): loRunner = 1
 			card.moveToBottom(group)
@@ -752,7 +727,7 @@ def checkDeckNoLimit (group):
 	else:
 		loCorp = 0
 		for card in group:
-			card.moveTo(me.piles['Archives'])
+			card.moveTo(me.Trash)
      			if (card.properties["Player"]== "corp"): loCorp = 1
 			card.moveToBottom(group)
 
