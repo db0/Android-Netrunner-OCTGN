@@ -33,7 +33,7 @@ turns = [
 	"It is now Runner's Turn",
 	"It is now End of Turn"]
 
-ScoredColor = "#009900"
+ScoredColor = "#00ff44"
 SelectColor = "#009900"
 MakeRunColor = "#ff0000"
 
@@ -57,20 +57,56 @@ def useAction0(group, x=0, y=0):
 		notify("{} takes the Mandatory draw".format(me))
 		drawMany(me.piles['R&D/Stack'],1)
 
-def useAction1(group, x=0, y=0):
-	notify("{} takes Action #1".format(me))
+def useAction(group = table, x=0, y=0):
+    if me.Actions < 1: 
+        if not confirm("You have no more actions left. Are you sure you want to continue?"): return 'aborted'
+    if ds == 'corp': act = 4 - me.Actions
+    else: act = 5 - me.Actions
+    notify("{} takes Action #{}".format(me,act))
+    me.Actions -= 1
 
-def useAction2(group, x=0, y=0):
-	notify("{} takes Action #2".format(me))
+def showCurrentTurn(group, x = 0, y = 0):
+    notify(turns[turnIdx])
 
-def useAction3(group, x=0, y=0):
-	notify("{} takes Action #3".format(me))
+def goToCsTurn(group, x = 0, y = 0):
+	global turnIdx
+	turnIdx = 1
+	showCurrentTurn(group)
+	mute()
+	if (ds == "corp" and (me.counters['Actions'].value == 0)):
+		me.counters['Actions'].value = ileActions['Corp']
 
-def useAction4(group, x=0, y=0):
-	notify("{} takes Action #4".format(me))
+def endOfCsTurn(group, x = 0, y = 0):
+	notify("End of Corporation's Turn")
 
-def useExtraAction(group, x=0, y=0):
-	notify("{} takes an Extra Action".format(me))
+def goToNrTurn(group, x = 0, y = 0):
+	global turnIdx
+	turnIdx = 2
+	showCurrentTurn(group)
+	mute()
+	if (ds == "runner" and (me.counters['Actions'].value == 0)):
+		me.counters['Actions'].value = ileActions['Runr']
+
+def endOfNrTurn(group, x = 0, y = 0):
+	notify("End of Runner's Turn")
+
+def goToEndTurn(group, x = 0, y = 0):
+	if ( ds == "" ):
+		whisper ("choose a side first")
+		return
+	elif (ds == "corp"): notify ("This is Corporation End of Turn.")
+	else: notify ("This is Runner End of Turn.")
+
+	global turnIdx
+	turnIdx = 3
+	showCurrentTurn(group)
+
+def goToSot (group, x=0,y=0):
+	if (ds == "" ):
+		whisper ("choose a side first")
+		return
+	elif (ds == "corp"): notify ("This is Corporation Start of Turn.")
+	else: notify ("This is Runner Start of Turn.")
 
 #------------------------------------------------------------------------------
 # Table group actions
@@ -88,9 +124,9 @@ def turnAutomationOn (group,x=0,y=0):
 	TurnAutomation = 0
 
 def create3DataForts(group):
-	table.create("2a0b57ca-1714-4a70-88d7-25fdf795486f", 0, 0, 1)
-	table.create("181de100-c255-464f-a4ed-4ac8cd728c61", 100, 100, 1)
-	table.create("59665835-0b0c-4710-99f7-8b90377c35b7", 200, 200, 1)
+	table.create("2a0b57ca-1714-4a70-88d7-25fdf795486f", 150, 250, 1)
+	table.create("181de100-c255-464f-a4ed-4ac8cd728c61", 250, 250, 1)
+	table.create("59665835-0b0c-4710-99f7-8b90377c35b7", 350, 250, 1)
 
 def intJackin(group, x = 0, y = 0):
 	global ds
@@ -136,81 +172,11 @@ def intJackin(group, x = 0, y = 0):
 
 	drawMany (me.piles['R&D/Stack'], 5) 
 
-def declare_side(group, x = 0, y = 0):
-	global ds
-	ds = ""
-	if confirm("Are you playing Corporation?") == True:
-		ds = "corp"
-		notify("{} is playing as Corporation".format(me))
-	else:
-		ds = "runner"
-		notify("{} is playing as Runner".format(me))
-	intJackin (group, x = 0, y = 0)
-
-def whoami(group, x = 0, y = 0):
-#	whisper("to moje id: {}".format(me._id))
-	if ds == "corp":
-		whisper("You're playing as Corporation")
-	elif ds == "runner":
-		whisper("You're playing as Runner")
-	else:
-		whisper("You did not choose any side yet")
-
 def start_token(group, x = 0, y = 0):
     card, quantity = askCard("[Type] = 'Setup'")
     if quantity == 0: return
     table.create(card, x, y, quantity)
 
-def showCurrentTurn(group, x = 0, y = 0):
-    notify(turns[turnIdx])
-
-#def nextTurn(group, x = 0, y = 0):
-#	global turnIdx
-#	if turnIdx == 3:
-#		turnIdx = 1
-#	else:
-#		turnIdx += 1
-#	showCurrentTurn(group)
-
-def goToCsTurn(group, x = 0, y = 0):
-	global turnIdx
-	turnIdx = 1
-	showCurrentTurn(group)
-	mute()
-	if (ds == "corp" and (me.counters['Actions'].value == 0)):
-		me.counters['Actions'].value = ileActions['Corp']
-
-def endOfCsTurn(group, x = 0, y = 0):
-	notify("End of Corporation's Turn")
-
-def goToNrTurn(group, x = 0, y = 0):
-	global turnIdx
-	turnIdx = 2
-	showCurrentTurn(group)
-	mute()
-	if (ds == "runner" and (me.counters['Actions'].value == 0)):
-		me.counters['Actions'].value = ileActions['Runr']
-
-def endOfNrTurn(group, x = 0, y = 0):
-	notify("End of Runner's Turn")
-
-def goToEndTurn(group, x = 0, y = 0):
-	if ( ds == "" ):
-		whisper ("choose a side first")
-		return
-	elif (ds == "corp"): notify ("This is Corporation End of Turn.")
-	else: notify ("This is Runner End of Turn.")
-
-	global turnIdx
-	turnIdx = 3
-	showCurrentTurn(group)
-
-def goToSot (group, x=0,y=0):
-	if (ds == "" ):
-		whisper ("choose a side first")
-		return
-	elif (ds == "corp"): notify ("This is Corporation Start of Turn.")
-	else: notify ("This is Runner Start of Turn.")
 
 
 #def addActionsR(group, x = 0, y = 0):
@@ -240,12 +206,6 @@ def runSDF(group, x=0,Y=0):
 #------------------------------------------------------------------------------
 # Tags...
 #------------------------------------------------------------------------------
-def addTag(group, x = 0, y = 0):
-	mute()
-	if ds == "runner":
-		me.counters['Tags'].value +=1
-		notify ("{} gets 1 tag.".format(me))
-
 def pay2andDelTag(group, x = 0, y = 0):
 	mute()
 	if ds == "runner":
@@ -255,34 +215,6 @@ def pay2andDelTag(group, x = 0, y = 0):
 			notify (" {} pays (2) and loose 1 tag.".format(me))
 		else: whisper("You don't have any tags")
 
-def delXTag ( group, x=0,Y=0):
-	NBTags = me.counters['Tags'].value
-	mute()
-	if ds == "runner":
-		if NBTags >= 1:
-			count = askInteger("Remove how many tags?", 1)
-			if ( count >= NBTags): count = NBTags
-
-			me.counters['Tags'].value -=count
-			notify ("{} removes {} tag(s).".format(me,count))
-		else:
-			whisper("You don't have any tags")
-
-def addXTag ( group, x=0,Y=0):
-	mute()
-	if ds == "runner":
-		count = askInteger("add how many tags?", 1)
-		me.counters['Tags'].value +=count
-		notify ("{} gets {} tag(s).".format(me,count))
-
-def delAllTag (group, x=0,Y=0):
-	mute()
-	if ds == "runner":
-		if me.counters['Tags'].value >= 1:
-			me.counters['Tags'].value = 0
-			notify ( "{} removes all tags.".format(me))
-		else:
-			whisper("You don't have any tags")
 #------------------------------------------------------------------------------
 # Markers
 #------------------------------------------------------------------------------
@@ -298,7 +230,6 @@ def addBits(card, x = 0, y = 0):
 	count = askInteger("Add how many Bits?", 1)
 	intAddBits ( card, count)
 	
-
 def remBits(card, x = 0, y = 0):
 	mute()
 	count = askInteger("Remove how many Bits?", 1)
@@ -401,7 +332,7 @@ def cancelTrace ( card, x=0,y=0):
 def intdamageDiscard(group,x=0,y=0):
 	mute()
 	if ( len(group) == 0 ):
-		notify ( "{} cannot discard at random.".format(me) )
+		notify ( "{} cannot discard at random. Did {} just lose the game?".format(me, me) )
 	else:
 		card = group.random()
     		notify("{} discards {} at random.".format(me,card))
@@ -423,6 +354,7 @@ def addMeatNetDmg(group, x = 0, y = 0):
 #------------------------------------------------------------------------------
 # Other functions on card
 #------------------------------------------------------------------------------
+
 def scrAgenda(card, x = 0, y = 0):
 	#if DifficultyLevels[card] >= 1:
 	if ( TypeCard[card] == "Agenda" ):
@@ -572,6 +504,7 @@ def useCardAbility(card,x=0,y=0):
 def intPlay(card, cost):
     global TypeCard
     mute() 
+    if useAction() == 'aborted': return
     TypeCard[card] = card.Type
     if card.Type == 'Resource' and (card.properties["Keyword 1"] == "Hidden" or card.properties["Keyword 2"] == "Hidden"): hiddenresource = 'yes'
     else: hiddenresource = 'no'
@@ -579,7 +512,6 @@ def intPlay(card, cost):
         card.moveToTable(0, 0, True) # I removed the different table positions for each type of card. Otherwise you signify what kind of card it is to the opponent!
         if card.Type == 'Ice': card.orientation ^= Rot90
         card.markers[Not_rezzed] += 1
-        me.Actions -=1 
         notify("{} plays a card.".format(me))
     elif card.Type == 'Upgrade':
         if card.properties["Keyword 1"] != "Region":
@@ -592,10 +524,8 @@ def intPlay(card, cost):
             else:
                 me.counters['Bit Pool'].value -= num(card.Cost)
                 notify("{} paid {} and plays {}.".format(me, card.Cost, card))
-        me.Actions -=1
     elif card.Type == 'Program' or card.Type == 'Prep' or card.Type == 'Resource' or card.Type == 'Hardware':
         me.Memory -= num(card.properties["MU Required"])
-        me.Actions -=1
         if card.Type == 'Program': card.moveToTable(-180, 90, False)
         if card.Type == 'Prep': card.moveToTable(0, 0, False)
         if card.Type == 'Hardware': card.moveToTable(-180, 180, False)
@@ -611,7 +541,6 @@ def intPlay(card, cost):
         else: notify("{} plays {} at no cost.".format(me, card))
     else:
         card.moveToTable(0, 0, False)
-        me.Actions -=1
         if cost == "not_free":
             me.counters['Bit Pool'].value -= num(card.Cost)
             notify("{} pays {} and plays {}.".format(me, card.Cost, card))

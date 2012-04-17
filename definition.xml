@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<game xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="Netrunner" id="13568561-7a2e-4572-8f31-3d99580ab245" octgnVersion="3.0.1.0" version="1.5.1" markersize="16">
+<game xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="Netrunner" id="13568561-7a2e-4572-8f31-3d99580ab245" octgnVersion="3.0.1.0" version="1.5.2" markersize="16">
 	<card back="r4" front="r5" width="63" height="88" cornerRadius="2">
 		<property name="Player" type="String" hidden="false" ignoreText="False" />
 		<property name="Cost" type="Integer" hidden="false" />
@@ -27,25 +27,16 @@
 	</card>
 	<table name="Table" visibility="undefined" ordered="false" width="1080" height="671" board="r35" boardPosition="-540,-335,1080,671" background="r1" backgroundStyle="uniformToFill">
 		<groupactions menu="Game ...">
-			<groupaction menu="Set up" default="false" execute="intJackin" />
+			<groupaction menu="Set up" default="false" shorcut = "Ctrl+Shift+S" execute="intJackin" />
 			<groupaction menu="Turn Automation ON" default="false" execute="turnAutomationOn" />
 			<groupaction menu="Turn Automation OFF" default="false" execute="turnAutomationOff" />
-			<groupactions menu="not used ...">
-				<groupaction menu="Declare Side" default="false" execute="declare_side" />
-				<groupaction menu="Check Side" default="false" execute="whoami" />
-				<groupaction menu="(C) Create Data Forts" default="false" execute="start_token" />
-			</groupactions>
 		</groupactions>
 		<groupactions menu="Turns/Actions ...">
 			<groupaction menu="Declare Start of Turn" default = "false" shorcut = "F9" execute = "goToSot" />
 			<groupaction menu="Mandatory draw" default="false" shortcut="F10" execute="useAction0" />
-			<groupaction menu="Action #1" default="false" shortcut="F1" execute="useAction1" />
-			<groupaction menu="Action #2" default="false" shortcut="F2" execute="useAction2" />
-			<groupaction menu="Action #3" default="false" shortcut="F3" execute="useAction3" />
-			<groupaction menu="Action #4" default="false" shortcut="F4" execute="useAction4" />
-			<groupaction menu="Extra Action" default="false" shortcut="F5" execute="useExtraAction" />
+			<groupaction menu="Declare Action" default="false" shortcut="Enter" execute="useAction" />
 			<groupaction menu="Declare End of Turn" default="false" shortcut="F12" execute="goToEndTurn" />
-			<groupaction menu="Current Turn" default="false" shortcut="F6" execute="showCurrentTurn" />
+			<groupaction menu="Announce Current Turn" default="false" shortcut="F6" execute="showCurrentTurn" />
 		</groupactions>
 		<groupactions menu="Run ...">
 			<groupaction menu="On HQ" default="false" execute="runHQ" />
@@ -53,13 +44,7 @@
 			<groupaction menu="On Archives" default="false" execute="runArchives" />
 			<groupaction menu="On a SDF" default="false" execute="runSDF" />
 		</groupactions>
-		<groupactions menu="Tags ...">
-			<groupaction menu="Receive a Tag" default="false" execute="addTag" />
-			<groupaction menu="Receive X Tags" default="false" execute="addXTag" />
-			<groupaction menu="Pay 2 and loose a Tag" default="false" execute="pay2andDelTag" />
-			<groupaction menu="Loose X Tags" default="false" execute="delXTag" />
-			<groupaction menu="Loose all Tags" default="false" execute="delAllTag" />
-		</groupactions>
+		<groupaction menu="Pay 2 and loose a Tag" default="false" execute="pay2andDelTag" />
 		<groupactions menu="Damages ...">
 			<groupaction menu="Take 1 Brain Damage" default="false" execute="addBrainDmg" />
 			<groupaction menu="Take 1 Meat Or Net Damage" default="false" execute="addMeatNetDmg" />
