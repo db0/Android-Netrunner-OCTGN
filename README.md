@@ -13,6 +13,7 @@ Changelog
 * Trimmed down the unused actions
 * Implemented a better Actions notification, based on the Actions counter. When player does not have enough default actions, they will be warned. 
 * Superfluous "Action #2","Action #3" etc removed in favour of a single "Declare Action" action.
+* When a player plays a card from their hand, the game automatically uses an action.
 * Implemented a new payCost() function that takes care of reducing the player's Bit Pool and informing if that's not possible.
 * Made card payment go through the payCost action. This takes into accound "play for free" actions
 * Added Ctrl+Shift+S shortcut to Setup Game.
