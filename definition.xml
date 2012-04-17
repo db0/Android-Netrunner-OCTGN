@@ -110,11 +110,11 @@
 			</groupactions>
 		</group>
 
-		<group name="Trash" visibility="all" ordered="false" width="63" height="88" icon="r14" collapsed="false">
+		<group name="Trash/Archives(Face-up)" visibility="all" ordered="false" width="63" height="88" icon="r14" collapsed="false">
 			<groupaction menu="Move all to R&amp;D/Stack" default="false" execute="archivestoStack" />
 		</group>
 
-		<group name="Archives" visibility="me" ordered="false" width="63" height="88" icon="r15" collapsed="false">
+		<group name="Archives(Hidden)" visibility="me" ordered="false" width="63" height="88" icon="r15" collapsed="false">
 			<groupaction menu="Move all to Archives" default="false" execute="toarchives" />
 			<groupaction menu="Move all to R&amp;D/Stack" default="false" execute="archivestoStack" />
 		</group>

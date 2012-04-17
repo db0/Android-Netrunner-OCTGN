@@ -142,7 +142,7 @@ def intJackin(group, x = 0, y = 0):
 		return
 	mute()
 	TopCard = stack[0]
-	TopCard.moveTo(me.Trash)
+	TopCard.moveTo(me.piles['Trash/Archives(Face-up)'])
 	ds = TopCard.Player
 	TopCard.moveTo(me.piles['R&D/Stack'])
 
@@ -339,8 +339,8 @@ def intdamageDiscard(group,x=0,y=0):
         notify ("{} cannot discard at random.".format(me))
     else:
         card = group.random()
-        if ds == 'corp': card.moveTo(me.Archives)
-        else: card.moveTo(me.Trash)
+        if ds == 'corp': card.moveTo(me.piles['Archives(Hidden)'])
+        else: card.moveTo(me.piles['Trash/Archives(Face-up)'])
         notify("{} discards {} at random.".format(me,card))
 
 def addBrainDmg(group, x = 0, y = 0):
@@ -472,14 +472,13 @@ def intTrashCard (card, stat, cost = "not free"):
         if rc == "free" : notify("{} trashed {} at no cost.".format(me, card))
         else: notify("{} trashed {}.".format(me, card))
         executeAutomations (card, "trash")
-        if ds == 'runner': card.moveTo(cardowner.Trash)
-        else: card.moveTo(cardowner.Archives)
+        card.moveTo(cardowner.piles['Trash/Archives(Face-up)'])
     elif (ds == "runner" and cardowner == me) or (ds == "corp" and cardowner != me ): #I'm the runner and I trash my card or I 'm the corp and I trash a runner card
-        card.moveTo(cardowner.Trash)
+        card.moveTo(cardowner.piles['Trash/Archives(Face-up)'])
         if rc == "free" : notify ("{} trashed {} at no cost.".format(me,card))
         else: notify("{} trashed {}.".format(me, cost, card))
     else: #I'm the corp and I trash my card or I'm the runner and I trash a corp's card
-        card.moveTo(cardowner.Archives)
+        card.moveTo(cardowner.piles['Archives(Hidden)'])
         if rc == "free": notify("{} trashed a hidden card at no cost.".format(me))
         else: notify("{} trashed a hidden card.".format(me,cost))
 
@@ -539,16 +538,16 @@ def intPlay(card, cost = 'not_free'):
         elif rc == "free": notify("{} plays {} at no cost.".format(me, card))
         else:
             if card.Type == 'Program':
-                card.moveToTable(-180, 90, False)
+                card.moveToTable(-180, 50, False)
                 notify("{} has installed {}.".format(me, card))
             if card.Type == 'Prep':
                 card.moveToTable(0, 0, False)
                 notify("{} has prepped {}.".format(me, card))
             if card.Type == 'Hardware':
-                card.moveToTable(-180, 180, False)
+                card.moveToTable(-180, 140, False)
                 notify("{} has purchased {}.".format(me, card))
             if card.Type == 'Resource' and hiddenresource == 'no':
-                card.moveToTable(-180, 250, False)
+                card.moveToTable(-180, 210, False)
                 notify("{} has acquired {}.".format(me, card))
     else:
         rc = payCost(card.Cost, cost, loud)
@@ -584,7 +583,7 @@ def movetoBottomOfStack (card):
 def handtoArchivesH (card):
 	if ds == "runner": return
 	mute()
-	card.moveTo(me.Archives)
+	card.moveTo(me.piles['Archives(Hidden)'])
 	notify ("{} moves a card to their Archives.".format(me))
 
 def handDiscard(group):
@@ -592,10 +591,10 @@ def handDiscard(group):
     card = group.random()
     if card == None: return
     if ds == "corp" :
-        card.moveTo(me.Archives)
+        card.moveTo(me.piles['Archives(Hidden)'])
         notify("{} discards a card at random.".format(me))
     else:
-        card.moveTo(me.Trash)
+        card.moveTo(me.piles['Trash/Archives(Face-up)'])
         notify("{} discards {} at random.".format(me,card))
     		
 def showatrandom(group):
@@ -648,9 +647,9 @@ def drawMany(group, count = None):
 
 	notify("{} draws {} cards.".format(me, count))
 
-def toarchives(group = me.Archives):
+def toarchives(group = me.piles['Archives(Hidden)']):
 	mute()
-	Archives = me.Archives
+	Archives = me.piles['Archives(Hidden)']
 	for c in group: c.moveTo(Archives)
 	#Archives.shuffle()
 	notify ("{} moves Hidden Archives to Archives.".format(me))
@@ -673,11 +672,11 @@ def mill(group):
 	mute()
     	count = askInteger("Mill how many cards?", 1)
 	if ( ds == "runner"):
-    		for c in group.top(count): c.moveTo(me.Archives)
+    		for c in group.top(count): c.moveTo(me.piles['Archives(Hidden)'])
 		nameStack = "Stack"
 		nameTrash = "Trash"
 	else:
-		for c in group.top(count): c.moveTo(me.Archives)
+		for c in group.top(count): c.moveTo(me.piles['Archives(Hidden)'])
 		nameStack = "HQ"
 		nameTrash = "Archives H"
 
@@ -712,7 +711,7 @@ def checkDeckNoLimit (group):
 		loAP = 0.0
 		loRunner = 0
 		for card in group:
-			card.moveTo(me.Trash)
+			card.moveTo(me.piles['Trash/Archives(Face-up)'])
      			if ( re.match(r'\bAgenda\b', card.properties["Type"]) ): loAP += num(card.Stat)
 			if ( card.properties["Player"] == "runner"): loRunner = 1
 			card.moveToBottom(group)
@@ -727,7 +726,7 @@ def checkDeckNoLimit (group):
 	else:
 		loCorp = 0
 		for card in group:
-			card.moveTo(me.Trash)
+			card.moveTo(me.piles['Trash/Archives(Face-up)'])
      			if (card.properties["Player"]== "corp"): loCorp = 1
 			card.moveToBottom(group)
 
