@@ -151,7 +151,6 @@ def intJackin(group, x = 0, y = 0):
 	me.counters['Bit Pool'].value =5
 	me.counters['Max Hand Size'].value =5
 	me.counters['Tags'].value =0
-	me.counters['Brain damage'].value =0
 	me.counters['Agenda Points'].value =0
 	me.counters['Bad Publicity'].value =0
 	
@@ -180,14 +179,6 @@ def start_token(group, x = 0, y = 0):
     card, quantity = askCard("[Type] = 'Setup'")
     if quantity == 0: return
     table.create(card, x, y, quantity)
-
-
-
-#def addActionsR(group, x = 0, y = 0):
-#	ileActions['Runr'] += 1
-
-#def delActionsR(group, x = 0, y = 0):
-#	ileActions['Runr'] -= 1
 
 #------------------------------------------------------------------------------
 # Run...
@@ -266,12 +257,14 @@ def addMinusOne(card, x = 0, y = 0):
 # advancing cards
 #------------------------------------------------------------------------------
 def advanceCardP(card, x = 0, y = 0):
-	mute()
-	me.counters['Actions'].value -=1
-	me.counters['Bit Pool'].value -=1
-	card.markers[Advance] += 1
-	if ( card.isFaceUp == True): notify("{} payed 1 and advanced {}.".format(me,card))
-	else: notify("{} payed 1 and advanced a card.".format(me))
+    mute()
+    if useAction() == 'ABORT': return
+    if payCost(1) == "ABORT": 
+        me.Actions += 1 # If the player didn't notice they didn't have enough bits, we give them back their action
+        return # If the player didn't have enough money to pay and aborted the function, then do nothing.
+    card.markers[Advance] += 1
+    if ( card.isFaceUp == True): notify("{} paid 1 and advanced {}.".format(me,card))
+    else: notify("{} payed 1 and advanced a card.".format(me))
 
 def addXadvancementCounter(card, x=0, y=0):
 	mute()
@@ -299,22 +292,24 @@ def advanceCardM(card, x = 0, y = 0):
 #----------------------
 
 def inputTraceValue (card, x=0,y=0):
-	global TraceValue
-	if (card.properties['Type'] <> "Tracing"): return
-	TraceValue = askInteger("Bet How Many?", 0)
-	card.markers[Bits] = 0
-	card.isFaceUp = False
-	notify ("{} chose a Trace Value.".format(me))
-	TypeCard[card] = "Tracing"
+    mute()
+    global TraceValue
+    if (card.properties['Type'] <> "Tracing"): return
+    TraceValue = askInteger("Bet How Many?", 0)
+    card.markers[Bits] = 0
+    card.isFaceUp = False
+    notify ("{} chose a Trace Value.".format(me))
+    TypeCard[card] = "Tracing"
 	
 def revealTraceValue (card, x=0,y=0):
-	global TraceValue
-	if ( TypeCard[card] <> "Tracing"): return
-	mute()
-	card.isFaceUp = True
-	card.markers[Bits] = TraceValue
-	notify ( "{} reveals a Trace Value of {}.".format(me,TraceValue))
-	TraceValue = 0
+    mute()
+    global TraceValue
+    if ( TypeCard[card] <> "Tracing"): return
+    mute()
+    card.isFaceUp = True
+    card.markers[Bits] = TraceValue
+    notify ( "{} reveals a Trace Value of {}.".format(me,TraceValue))
+    TraceValue = 0
 
 def payTraceValue (card, x=0,y=0):
 	if (card.properties['Type'] <> "Tracing"): return
@@ -324,10 +319,11 @@ def payTraceValue (card, x=0,y=0):
 	card.markers[Bits] = 0
 
 def cancelTrace ( card, x=0,y=0):
-	card.isFaceUp = True
-	TraceValue = 0
-	card.markers[Bits] = 0
-	notify ("{} cancels the Trace Value.".format(me) )
+    mute()
+    card.isFaceUp = True
+    TraceValue = 0
+    card.markers[Bits] = 0
+    notify ("{} cancels the Trace Value.".format(me) )
 
 #------------------------------------------------------------------------------
 # Other functions
@@ -344,7 +340,6 @@ def intdamageDiscard(group,x=0,y=0):
         notify("{} discards {} at random.".format(me,card))
 
 def addBrainDmg(group, x = 0, y = 0):
-    me.counters['Brain Damage'].value +=1
     me.counters['Max Hand Size'].value -=1
     notify ("{} suffers 1 Brain Damage.".format(me) )
     intdamageDiscard(me.hand)
@@ -354,8 +349,11 @@ def addMeatNetDmg(group, x = 0, y = 0):
     notify ("{} suffers 1 Net or Meat Damage.".format(me) )
     intdamageDiscard(me.hand)
 
-
-
+def getBit(group, x = 0, y = 0):
+    if useAction() == 'ABORT': return
+    notify ("{} Receives ➊.".format(me))
+    me.counters['Bit Pool'].value += 1
+    
 #------------------------------------------------------------------------------
 # Other functions on card
 #------------------------------------------------------------------------------
@@ -491,9 +489,15 @@ def trashForFree (card, x = 0, y = 0):
 def pay2AndTrash ( card, x=0, y=0):
 	intTrashCard(card, 2)
 
-def useCardAbility(card,x=0,y=0):
-	card.highlight = SelectColor
-	notify ( "{} uses the ability of {}.".format(me,card) )
+def useCard(card,x=0,y=0):
+    if card.highlight == None:
+        card.highlight = SelectColor
+        notify ( "{} uses the ability of {}.".format(me,card) )
+    else:
+        notify("{} clears {}.".format(me, card))
+        card.highlight = None
+        card.target(False)
+
 #------------------------------------------------------------------------------
 # Hand Actions
 #------------------------------------------------------------------------------
@@ -623,10 +627,11 @@ def shuffle(group):
 	group.shuffle()
 
 def draw(group, x = 0, y = 0):
-	if len(group) == 0: return
-	mute()
-	group[0].moveTo(me.hand)
-	notify("{} draws a card.".format(me))
+    if len(group) == 0: return
+    if useAction() == 'ABORT': return
+    mute()
+    group[0].moveTo(me.hand)
+    notify("{} draws a card.".format(me))
 
 def drawManySilent(group, count):
 	SSize = len(group)

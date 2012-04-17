@@ -9,7 +9,21 @@ Note: This is just the game engine, you'll also need to download [the sets](http
 Changelog
 ---------
 
+### 1.5.4
+
+* Reorganized the context menu for the table
+* Now drawing a card uses an action
+* Advancing a card now uses propely the payCost() and useAction() functions
+* muted some trace functions
+* Added function for players to use an action and get a bit
+* Started using unicode "Return" character to denote which options require the use of an Action.
+* Started using unicode Dingbats 10102 to 10111 to  denote which options require the payment of bits. The getBit() function also uses them in its message.
+* Removed the Brain damage counter and now using only the hand size one. The hand size counter has the brain icon now.
+
 ### 1.5.3
+
+* Changed placement of various cards for corp and runner to make more use of the board setup
+* Renamed the "Trash" to "Trash/Archives(face-up)" and "Archives" to "Archives(Hidden)"
 
 ### 1.5.2
 
