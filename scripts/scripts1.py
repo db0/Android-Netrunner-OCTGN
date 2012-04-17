@@ -128,9 +128,9 @@ def turnAutomationOn (group,x=0,y=0):
 	TurnAutomation = 0
 
 def create3DataForts(group):
-	table.create("2a0b57ca-1714-4a70-88d7-25fdf795486f", 150, 250, 1)
-	table.create("181de100-c255-464f-a4ed-4ac8cd728c61", 300, 250, 1)
-	table.create("59665835-0b0c-4710-99f7-8b90377c35b7", 450, 250, 1)
+	table.create("2a0b57ca-1714-4a70-88d7-25fdf795486f", 150, 160, 1)
+	table.create("181de100-c255-464f-a4ed-4ac8cd728c61", 300, 160, 1)
+	table.create("59665835-0b0c-4710-99f7-8b90377c35b7", 450, 160, 1)
 
 def intJackin(group, x = 0, y = 0):
 	global ds
@@ -505,25 +505,13 @@ def intPlay(card, cost = 'not_free'):
     CostCard[card] = card.Cost
     if card.Type == 'Resource' and (card.properties["Keyword 1"] == "Hidden" or card.properties["Keyword 2"] == "Hidden"): hiddenresource = 'yes'
     else: hiddenresource = 'no'
-    if card.Type == 'Ice' or card.Type == 'Agenda' or card.Type == 'Node':
-        card.moveToTable(0, 0, True) # I removed the different table positions for each type of card. Otherwise you signify what kind of card it is to the opponent!
-        if TypeCard[card] == 'Ice': card.orientation ^= Rot90
+    if card.Type == 'Ice' or card.Type == 'Agenda' or card.Type == 'Node' or (card.Type == 'Upgrade' and card.properties["Keyword 1"] != "Region"):
+        card.moveToTable(-180, 160, True) # Agendas, Nodes and non-region Upgrades all are played to the same spot now.
+        if TypeCard[card] == 'Ice': 
+            card.orientation ^= Rot90
+            card.moveToTable(-180, 65, True) # Ice are moved a bit more to the front and played sideways.
         card.markers[Not_rezzed] += 1
-        notify("{} plays a card.".format(me))
-    elif card.Type == 'Upgrade':
-        if card.properties["Keyword 1"] != "Region":
-            card.moveToTable(0, 0, True)
-            card.markers[Not_rezzed] += 1
-            notify("{} plays a card.".format(me))
-        else:
-            rc = payCost(card.Cost, cost, loud)
-            if rc == "ABORT": 
-                me.Actions += 1 # If the player didn't notice they didn't have enough bits, we give them back their action
-                return # If the player didn't have enough money to pay and aborted the function, then do nothing.
-            elif rc == "free": notify("{} plays {} at no cost.".format(me, card))
-            else:
-                card.moveToTable(90, 0, False)
-                notify("{} upgrades with {}.".format(me, card))
+        notify("{} prepares a card.".format(me))
     elif card.Type == 'Program' or card.Type == 'Prep' or card.Type == 'Resource' or card.Type == 'Hardware':
         me.Memory -= num(card.properties["MU Required"])
         if card.Type == 'Resource' and hiddenresource == 'yes':
@@ -538,25 +526,36 @@ def intPlay(card, cost = 'not_free'):
         elif rc == "free": notify("{} plays {} at no cost.".format(me, card))
         else:
             if card.Type == 'Program':
-                card.moveToTable(-180, 50, False)
+                card.moveToTable(-150, 65, False)
                 notify("{} has installed {}.".format(me, card))
-            if card.Type == 'Prep':
+            elif card.Type == 'Prep':
                 card.moveToTable(0, 0, False)
-                notify("{} has prepped {}.".format(me, card))
-            if card.Type == 'Hardware':
-                card.moveToTable(-180, 140, False)
+                notify("{} has prepped with {}.".format(me, card))
+            elif card.Type == 'Hardware':
+                card.moveToTable(-210, 160, False)
                 notify("{} has purchased {}.".format(me, card))
-            if card.Type == 'Resource' and hiddenresource == 'no':
-                card.moveToTable(-180, 210, False)
+            elif card.Type == 'Resource' and hiddenresource == 'no':
+                card.moveToTable(180, 240, False)
                 notify("{} has acquired {}.".format(me, card))
+            else:
+                card.moveToTable(0, 0, False)
+                notify("{} plays {}.".format(me, card))
     else:
         rc = payCost(card.Cost, cost, loud)
         if rc == "ABORT": 
             me.Actions += 1 # If the player didn't notice they didn't have enough bits, we give them back their action
             return # If the player didn't have enough money to pay and aborted the function, then do nothing.
         elif rc == "free": notify("{} plays {} at no cost.".format(me, card))
-        else: notify("{} plays {}.".format(me, card))
-        card.moveToTable(0, 0, False)
+        else:
+            if card.Type == 'Operation':
+                card.moveToTable(0, 0, False)
+                notify("{} initiates {}.".format(me, card))
+            elif card.Type == 'Upgrade' and card.properties["Keyword 1"] == "Region":
+                card.moveToTable(-220, -240, False)
+                notify("{} opened a base of operations in {}.".format(me, card))
+            else:
+                card.moveToTable(0, 0, False)
+                notify("{} has played {}.".format(me, card))           
     executeAutomations ( card, "play" )
 
 def playForFree(card, x = 0, y = 0):

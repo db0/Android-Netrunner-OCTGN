@@ -8,6 +8,9 @@ Note: This is just the game engine, you'll also need to download [the sets](http
 
 Changelog
 ---------
+
+### 1.5.3
+
 ### 1.5.2
 
 * Trimmed down the unused actions
