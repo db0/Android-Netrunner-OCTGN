@@ -37,6 +37,8 @@ ScoredColor = "#00ff44"
 SelectColor = "#009900"
 MakeRunColor = "#ff0000"
 
+silent = 'silent'
+loud = 'loud'
 #---------------------------------------------------------------------------
 # General functions
 #---------------------------------------------------------------------------
@@ -58,8 +60,9 @@ def useAction0(group, x=0, y=0):
 		drawMany(me.piles['R&D/Stack'],1)
 
 def useAction(group = table, x=0, y=0):
+    mute()
     if me.Actions < 1: 
-        if not confirm("You have no more actions left. Are you sure you want to continue?"): return 'aborted'
+        if not confirm("You have no more actions left. Are you sure you want to continue?"): return 'ABORT'
     if ds == 'corp': act = 4 - me.Actions
     else: act = 5 - me.Actions
     notify("{} takes Action #{}".format(me,act))
@@ -355,6 +358,20 @@ def addMeatNetDmg(group, x = 0, y = 0):
 # Other functions on card
 #------------------------------------------------------------------------------
 
+def payCost(count = 1, cost = 'not_free', notification = silent): # A function that removed the cost provided from our bit pool, after checking that we have enough.
+   if cost == 'free': return 'free'
+   count = num(count)
+   if count == 0 : return 0# If the card has 0 cost, there's nothing to do.
+   if me.counters['Bit Pool'].value < count: # If we don't have enough Bits in the pool, we assume card effects or mistake and notify the player that they need to do things manually.
+      if not confirm("You do not seem to have enough Bits in your pool to play this card. Are you sure you want to proceed? \
+      \n(If you do, your Bit Pool will go to the negative. You will need to increase it manually as required.)"): return 'ABORT'
+      if notification == loud: notify("{} was supposed to pay {} Bits but only has {} in their pool. They'll need to reduce the cost by {} with card effects.".format(me, count, me.counters['Bit Pool'].value, count - me.counters['Bit Pool'].value))   
+      me.counters['Bit Pool'].value -= num(count) 
+   else: # Otherwise, just take the money out and inform that we did if we're "loud".
+      me.counters['Bit Pool'].value -= num(count)
+      if notification == loud: notify("{} has paid {} Bits. {} is left their pool".format(me, count, me.counters['Bit Pool'].value))  
+   return count
+
 def scrAgenda(card, x = 0, y = 0):
 	#if DifficultyLevels[card] >= 1:
 	if ( TypeCard[card] == "Agenda" ):
@@ -501,16 +518,16 @@ def useCardAbility(card,x=0,y=0):
 #------------------------------------------------------------------------------
 # Hand Actions
 #------------------------------------------------------------------------------
-def intPlay(card, cost):
+def intPlay(card, cost = 'not_free'):
     global TypeCard
     mute() 
-    if useAction() == 'aborted': return
+    if useAction() == 'ABORT': return
     TypeCard[card] = card.Type
     if card.Type == 'Resource' and (card.properties["Keyword 1"] == "Hidden" or card.properties["Keyword 2"] == "Hidden"): hiddenresource = 'yes'
     else: hiddenresource = 'no'
     if card.Type == 'Ice' or card.Type == 'Agenda' or card.Type == 'Node':
         card.moveToTable(0, 0, True) # I removed the different table positions for each type of card. Otherwise you signify what kind of card it is to the opponent!
-        if card.Type == 'Ice': card.orientation ^= Rot90
+        if TypeCard[card] == 'Ice': card.orientation ^= Rot90
         card.markers[Not_rezzed] += 1
         notify("{} plays a card.".format(me))
     elif card.Type == 'Upgrade':
@@ -519,39 +536,51 @@ def intPlay(card, cost):
             card.markers[Not_rezzed] += 1
             notify("{} plays a card.".format(me))
         else:
-            card.moveToTable(90, 0, False)
-            if ( cost == "free"): notify("{} plays {} at no cost.".format(me, card))
+            rc = payCost(card.Cost, cost, loud)
+            if rc == "ABORT": 
+                me.Actions += 1 # If the player didn't notice they didn't have enough bits, we give them back their action
+                return # If the player didn't have enough money to pay and aborted the function, then do nothing.
+            elif rc == "free": notify("{} plays {} at no cost.".format(me, card))
             else:
-                me.counters['Bit Pool'].value -= num(card.Cost)
-                notify("{} paid {} and plays {}.".format(me, card.Cost, card))
+                card.moveToTable(90, 0, False)
+                notify("{} upgrades with {}.".format(me, card))
     elif card.Type == 'Program' or card.Type == 'Prep' or card.Type == 'Resource' or card.Type == 'Hardware':
         me.Memory -= num(card.properties["MU Required"])
-        if card.Type == 'Program': card.moveToTable(-180, 90, False)
-        if card.Type == 'Prep': card.moveToTable(0, 0, False)
-        if card.Type == 'Hardware': card.moveToTable(-180, 180, False)
-        if card.Type == 'Resource' and hiddenresource == 'no': card.moveToTable(-180, 270, False)
         if card.Type == 'Resource' and hiddenresource == 'yes':
-            card.moveToTable(-180, 270, True)
+            card.moveToTable(-180, 230, True)
             notify("{} installs a card.".format(me))
             executeAutomations(card,"play")
             return
-        if cost == "not_free":
-            me.counters['Bit Pool'].value -= num(card.Cost)
-            notify("{} pays {} and plays {}.".format(me, card.Cost, card))
-        else: notify("{} plays {} at no cost.".format(me, card))
+        rc = payCost(card.Cost, cost, loud)
+        if rc == "ABORT": 
+            me.Actions += 1 # If the player didn't notice they didn't have enough bits, we give them back their action
+            return # If the player didn't have enough money to pay and aborted the function, then do nothing.
+        elif rc == "free": notify("{} plays {} at no cost.".format(me, card))
+        else:
+            if card.Type == 'Program':
+                card.moveToTable(-180, 90, False)
+                notify("{} has installed {}.".format(me, card))
+            if card.Type == 'Prep':
+                card.moveToTable(0, 0, False)
+                notify("{} has prepped {}.".format(me, card))
+            if card.Type == 'Hardware':
+                card.moveToTable(-180, 180, False)
+                notify("{} has purchased {}.".format(me, card))
+            if card.Type == 'Resource' and hiddenresource == 'no':
+                card.moveToTable(-180, 270, False)
+                notify("{} has acquired {}.".format(me, card))
     else:
+        rc = payCost(card.Cost, cost, loud)
+        if rc == "ABORT": 
+            me.Actions += 1 # If the player didn't notice they didn't have enough bits, we give them back their action
+            return # If the player didn't have enough money to pay and aborted the function, then do nothing.
+        elif rc == "free": notify("{} plays {} at no cost.".format(me, card))
+        else: notify("{} plays {}.".format(me, card))
         card.moveToTable(0, 0, False)
-        if cost == "not_free":
-            me.counters['Bit Pool'].value -= num(card.Cost)
-            notify("{} pays {} and plays {}.".format(me, card.Cost, card))
-        else: notify("{} plays {} at no cost.".format(me, card))               
     executeAutomations ( card, "play" )
 
 def playForFree(card, x = 0, y = 0):
 	intPlay(card,"free")
-
-def play(card, x = 0, y = 0):
-	intPlay(card,"not_free")
 
 def movetoTopOfStack (card):
 	mute()
