@@ -12,12 +12,12 @@ Changelog
 ### 1.5.4
 
 * Reorganized the context menu for the table
-* Now drawing a card uses an action
+* Now drawing a card uses an action. Playes can use the Draw Many option to avoid this.
 * Advancing a card now uses propely the payCost() and useAction() functions
-* muted some trace functions
+* Muted some trace functions
 * Added function for players to use an action and get a bit
 * Started using unicode "Return" character to denote which options require the use of an Action.
-* Started using unicode Dingbats 10102 to 10111 to  denote which options require the payment of bits. The getBit() function also uses them in its message.
+* Started using unicode [Dingbats](http://www.alanwood.net/unicode/dingbats.html) 10102 to 10111 to denote which options require the payment of bits. The getBit() function also uses them in its message.
 * Removed the Brain damage counter and now using only the hand size one. The hand size counter has the brain icon now.
 
 ### 1.5.3
