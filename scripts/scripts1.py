@@ -11,7 +11,8 @@ MinusOne= ("-1", "48ceb18b-5521-4d3f-b5fb-c8212e8bcbae")
 # Global variables
 #---------------------------------------------------------------------------
 ds = ""
-global TurnAutomation
+Automation = False # If True, game will automatically trigger card effects when playing cards. Requires specific preparation in the sets.
+                   # Starts False and is switched on automatically at Jack In
 TraceValue = 0
 
 turnIdx = 0
@@ -69,7 +70,19 @@ def chooseSide(): # Called from many functions to check if the player has chosen
      else:
         playeraxis = Yaxis
         playerside = 1
-      
+
+def uniBit(count):
+    if count == 1: return '❶'
+    elif count == 2: return '❷'
+    elif count == 3: return '❸'
+    elif count == 4: return '❹'
+    elif count == 5: return '❺'
+    elif count == 6: return '❻'
+    elif count == 7: return '❼'
+    elif count == 8: return '❽'
+    elif count == 9: return '❾'
+    elif count == 10: return '❿'
+    else: return "({})".format(count)        
 #---------------------------------------------------------------------------
 # Card Placement functions
 #---------------------------------------------------------------------------
@@ -170,17 +183,15 @@ def modActions(group,x=0,y=0):
 # Table group actions
 #------------------------------------------------------------------------------
 
-def turnAutomationOff (group,x=0,y=0):
-	global TurnAutomation
-	notify ("{}'s automations are OFF.".format(me))
-	TurnAutomation = -1
-
-
-def turnAutomationOn (group,x=0,y=0):
-	global TurnAutomation
-	notify ("{}'s automations are ON.".format(me))
-	TurnAutomation = 0
-
+def switchAutomation(group,x=0,y=0,command = 'Off'):
+    global Automation
+    if Automation and command != 'On':
+        notify ("{}'s automations are OFF.".format(me))
+        Automation = False
+    else:
+        notify ("{}'s automations are ON.".format(me))
+        Automation = True
+        
 def create3DataForts(group):
 	table.create("2a0b57ca-1714-4a70-88d7-25fdf795486f", 150, 160 * playerside, 1)
 	table.create("181de100-c255-464f-a4ed-4ac8cd728c61", 300, 160 * playerside, 1)
@@ -219,7 +230,7 @@ def intJackin(group, x = 0, y = 0):
         NameDeck = "Stack"
         notify("{} is playing as Runner".format(me))
     table.create("c0f18b5a-adcd-4efe-b3f8-7d72d1bd1db8", 0, 200 * playerside, 1 ) #trace card
-    turnAutomationOff (group,x,y)
+#    switchAutomation(group,x,y,'On')
     shuffle(me.piles['R&D/Stack'])
     notify ("{}'s {} is shuffled ".format(me,NameDeck) )
     drawMany (me.piles['R&D/Stack'], 5) 
@@ -267,7 +278,7 @@ def pay2andDelTag(group, x = 0, y = 0):
         me.Actions += 1 # If the player didn't notice they didn't have enough bits, we give them back their action
         return # If the player didn't have enough money to pay and aborted the function, then do nothing.
     me.counters['Tags'].value -= 1
-    notify (" {} pays (2) and looses 1 tag.".format(me))
+    notify (" {} pays ❷ and looses 1 tag.".format(me))
 
 #------------------------------------------------------------------------------
 # Markers
@@ -276,8 +287,8 @@ def intAddBits ( card, count):
 	mute()
 	if ( count > 0):
 		card.markers[Bits] += count
-		if ( card.isFaceUp == True): notify("{} adds {} bits from the bank on {}.".format(me,count,card))
-		else: notify("{} adds {} bits on a card.".format(me,count))
+		if ( card.isFaceUp == True): notify("{} adds {} from the bank on {}.".format(me,uniBit(count),card))
+		else: notify("{} adds {} on a card.".format(me,uniBit(count)))
 
 def addBits(card, x = 0, y = 0):
 	mute()
@@ -290,8 +301,8 @@ def remBits(card, x = 0, y = 0):
 	if ( count > card.markers[Bits]): count = card.markers[Bits]
 
 	card.markers[Bits] -= count
-	if ( card.isFaceUp == True): notify("{} removes {} bits from {}.".format(me,count,card))
-	else: notify("{} removes {} bits from a card.".format(me,count))
+	if ( card.isFaceUp == True): notify("{} removes {} from {}.".format(me,uniBit(count),card))
+	else: notify("{} removes {} from a card.".format(me,uniBit(count)))
 
 def remBits2BP (card, x = 0, y = 0):
 	mute()
@@ -300,8 +311,8 @@ def remBits2BP (card, x = 0, y = 0):
 
 	card.markers[Bits] -= count
 	me.counters['Bit Pool'].value += count 
-	if ( card.isFaceUp == True): notify("{} removes {} bits from {} to Bit Pool.".format(me,count,card))
-	else: notify("{} takes {} bits from a card to BitPool.".format(me,count))
+	if ( card.isFaceUp == True): notify("{} removes {} from {} to their Bit Pool.".format(me,uniBit(count),card))
+	else: notify("{} takes {} from a card to their Bit Pool.".format(me,uniBit(count)))
 
 def addPlusOne(card, x = 0, y = 0):
 	mute()
@@ -323,7 +334,7 @@ def advanceCardP(card, x = 0, y = 0):
         return # If the player didn't have enough money to pay and aborted the function, then do nothing.
     card.markers[Advance] += 1
     if ( card.isFaceUp == True): notify("{} paid 1 and advanced {}.".format(me,card))
-    else: notify("{} payed 1 and advanced a card.".format(me))
+    else: notify("{} paid ❶ and advanced a card.".format(me))
 
 def addXadvancementCounter(card, x=0, y=0):
 	mute()
@@ -374,7 +385,7 @@ def payTraceValue (card, x=0,y=0):
 	if (card.properties['Type'] <> "Tracing"): return
 	mute()
 	me.counters['Bit Pool'].value -= card.markers[Bits]
-	notify ("{} pays {} bits for the Trace Value.".format(me,card.markers[Bits]))
+	notify ("{} pays {} for the Trace Value.".format(me,uniBit(card.markers[Bits])))
 	card.markers[Bits] = 0
 
 def cancelTrace ( card, x=0,y=0):
@@ -419,18 +430,18 @@ def getBit(group, x = 0, y = 0):
 
 def payCost(count = 1, cost = 'not_free', notification = silent): # A function that removed the cost provided from our bit pool, after checking that we have enough.
    if cost == 'free': return 'free'
-   count = num(count)
+#   count = num(count)
    if count == 0 : return 0# If the card has 0 cost, there's nothing to do.
-   if me.counters['Bit Pool'].value < count: # If we don't have enough Bits in the pool, we assume card effects or mistake and notify the player that they need to do things manually.
+   if me.counters['Bit Pool'].value < num(count): # If we don't have enough Bits in the pool, we assume card effects or mistake and notify the player that they need to do things manually.
       if not confirm("You do not seem to have enough Bits in your pool to take this action. Are you sure you want to proceed? \
       \n(If you do, your Bit Pool will go to the negative. You will need to increase it manually as required.)"): return 'ABORT'
-      if notification == loud: notify("{} was supposed to pay {} Bits but only has {} in their pool. They'll need to reduce the cost by {} with card effects.".format(me, count, me.counters['Bit Pool'].value, count - me.counters['Bit Pool'].value))   
+      if notification == loud: notify("{} was supposed to pay {} but only has {} in their pool. They'll need to reduce the cost by {} with card effects.".format(me, uniBit(count), uniBit(me.counters['Bit Pool'].value), uniBit(count - me.counters['Bit Pool'].value)))   
       me.counters['Bit Pool'].value -= num(count) 
    else: # Otherwise, just take the money out and inform that we did if we're "loud".
       me.counters['Bit Pool'].value -= num(count)
-      if notification == loud: notify("{} has paid {} Bits. {} is left their pool".format(me, count, me.counters['Bit Pool'].value))  
+      if notification == loud: notify("{} has paid {}. {} is left their pool".format(me, uniBit(count), uniBit(me.counters['Bit Pool'].value)))  
    return count
-
+   
 def scrAgenda(card, x = 0, y = 0):
 	#if DifficultyLevels[card] >= 1:
 	if ( TypeCard[card] == "Agenda" ):
@@ -838,7 +849,7 @@ def checkDeckNoLimit (group):
 #------------------------------------------------------------------------------
 def executeAutomations ( card, action ):
 	
-    if ( TurnAutomation != 0): return
+    if not Automation: return
     if not card.isFaceUp: return
 
     AutoScript = card.properties ["AutoScript"]

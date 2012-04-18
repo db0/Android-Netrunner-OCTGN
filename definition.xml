@@ -28,8 +28,7 @@
 	<table name="Table" visibility="undefined" ordered="false" width="1080" height="671" board="r35" boardPosition="-540,-335,1080,671" background="r1" backgroundStyle="uniformToFill">
 		<groupactions menu="Game...">
 			<groupaction menu="Set up" default="false" shortcut="Ctrl+Shift+S" execute="intJackin" />
-<!--			<groupaction menu="Turn Automation ON" default="false" execute="turnAutomationOn" /> 
-			<groupaction menu="Turn Automation OFF" default="false" execute="turnAutomationOff" /> -->
+<!--			<groupaction menu="Switch Automation ON/OFF" default="false" execute="switchAutomation" />  -->
 		</groupactions>
 		<groupactions menu="Turns/Actions...">
 			<groupaction menu="Declare Start of Turn" default="false" shortcut="F1" execute="goToSot" />
@@ -39,7 +38,7 @@
 		<groupactions menu="Runner Actions...">
 			<groupaction menu="Take 1 Brain Damage" default="false" execute="addBrainDmg" />
 			<groupaction menu="Take 1 Meat Or Net Damage" default="false" execute="addMeatNetDmg" />
-            <groupaction menu="&#9166; Pay &#10123; and loose a Tag" default="false" execute="pay2andDelTag" />
+            <groupaction menu="&#9166; Pay &#10123; and lose a Tag" default="false" execute="pay2andDelTag" />
 			<groupaction menu="&#9166; Run on HQ" default="false" execute="runHQ" />
 			<groupaction menu="&#9166; Run on R&amp;D" default="false" execute="runRD" />
 			<groupaction menu="&#9166; Run on Archives" default="false" execute="runArchives" />
