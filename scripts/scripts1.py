@@ -23,6 +23,9 @@ CostCard = {}
 MemoryRequirements = { }
 InstallationCosts = { }
 maxActions = 3
+playerside = None # Variable to keep track on which side each player is
+playeraxis = None # Variable to keep track on which axis the player is
+
 #---------------------------------------------------------------------------
 # Constants
 #---------------------------------------------------------------------------
@@ -43,6 +46,8 @@ endofturn = False #We use this variable to know if the player is in the end-of-t
 
 silent = 'silent'
 loud = 'loud'
+Xaxis = 'x'  # Same as above
+Yaxis = 'y'	 # Same as above
 #---------------------------------------------------------------------------
 # General functions
 #---------------------------------------------------------------------------
@@ -54,6 +59,46 @@ def num (s):
    except ValueError:
       return 0
 
+def chooseSide(): # Called from many functions to check if the player has chosen a side for this game.
+   mute()
+   global playerside, playeraxis
+   if playerside == None:  # Has the player selected a side yet? If not, then...
+     if me.hasInvertedTable():
+        playeraxis = Yaxis
+        playerside = -1
+     else:
+        playeraxis = Yaxis
+        playerside = 1
+      
+#---------------------------------------------------------------------------
+# Card Placement functions
+#---------------------------------------------------------------------------
+
+def cwidth(card, divisor = 10):
+# This function is used to always return the width of the card plus an offset that is based on the percentage of the width of the card used.
+# The smaller the number given, the less the card is divided into pieces and thus the larger the offset added.
+# For example if a card is 80px wide, a divisor of 4 will means that we will offset the card's size by 80/4 = 20.
+# In other words, we will return 1 + 1/4 of the card width. 
+# Thus, no matter what the size of the table and cards becomes, the distances used will be relatively the same.
+# The default is to return an offset equal to 1/10 of the card width. A divisor of 0 means no offset.
+   if divisor == 0: offset = 0
+   else: offset = card.width() / divisor
+   return (card.width() + offset)
+
+def cheight(card, divisor = 10):
+   if divisor == 0: offset = 0
+   else: offset = card.height() / divisor
+   return (card.height() + offset)
+
+def yaxisMove(card):
+# Variable to move the cards played by player 2 on a 2-sided table, more towards their own side. 
+# Player's 2 axis will fall one extra card length towards their side.
+# This is because of bug #146 (https://github.com/kellyelton/OCTGN/issues/146)
+   if me.hasInvertedTable(): cardmove = cheight(card) + 10
+   else: cardmove = cardmove = 0
+   return cardmove
+
+   
 #---------------------------------------------------------------------------
 # Actions indication
 #---------------------------------------------------------------------------
@@ -137,14 +182,15 @@ def turnAutomationOn (group,x=0,y=0):
 	TurnAutomation = 0
 
 def create3DataForts(group):
-	table.create("2a0b57ca-1714-4a70-88d7-25fdf795486f", 150, 160, 1)
-	table.create("181de100-c255-464f-a4ed-4ac8cd728c61", 300, 160, 1)
-	table.create("59665835-0b0c-4710-99f7-8b90377c35b7", 450, 160, 1)
+	table.create("2a0b57ca-1714-4a70-88d7-25fdf795486f", 150, 160 * playerside, 1)
+	table.create("181de100-c255-464f-a4ed-4ac8cd728c61", 300, 160 * playerside, 1)
+	table.create("59665835-0b0c-4710-99f7-8b90377c35b7", 450, 160 * playerside, 1)
 
 def intJackin(group, x = 0, y = 0):
     global ds, maxActions
     mute()
     ds = ""
+    chooseSide()
     stack = me.piles['R&D/Stack']
     if len(stack) == 0:
         whisper ("Please load a deck first!")
@@ -172,8 +218,8 @@ def intJackin(group, x = 0, y = 0):
         maxActions = 4
         NameDeck = "Stack"
         notify("{} is playing as Runner".format(me))
-    table.create("c0f18b5a-adcd-4efe-b3f8-7d72d1bd1db8", 0, 200, 1 ) #trace card
-    turnAutomationOn (group,x,y)
+    table.create("c0f18b5a-adcd-4efe-b3f8-7d72d1bd1db8", 0, 200 * playerside, 1 ) #trace card
+    turnAutomationOff (group,x,y)
     shuffle(me.piles['R&D/Stack'])
     notify ("{}'s {} is shuffled ".format(me,NameDeck) )
     drawMany (me.piles['R&D/Stack'], 5) 
@@ -518,22 +564,23 @@ def useCard(card,x=0,y=0):
 def intPlay(card, cost = 'not_free'):
     global TypeCard, CostCard
     mute() 
+    chooseSide() # Just in case...
     if useAction() == 'ABORT': return
     TypeCard[card] = card.Type
     CostCard[card] = card.Cost
     if card.Type == 'Resource' and (card.properties["Keyword 1"] == "Hidden" or card.properties["Keyword 2"] == "Hidden"): hiddenresource = 'yes'
     else: hiddenresource = 'no'
     if card.Type == 'Ice' or card.Type == 'Agenda' or card.Type == 'Node' or (card.Type == 'Upgrade' and card.properties["Keyword 1"] != "Region"):
-        card.moveToTable(-180, 160, True) # Agendas, Nodes and non-region Upgrades all are played to the same spot now.
+        card.moveToTable(-180, 160 * playerside - yaxisMove(card), True) # Agendas, Nodes and non-region Upgrades all are played to the same spot now.
         if TypeCard[card] == 'Ice': 
             card.orientation ^= Rot90
-            card.moveToTable(-180, 65, True) # Ice are moved a bit more to the front and played sideways.
+            card.moveToTable(-180, 65 * playerside - yaxisMove(card), True) # Ice are moved a bit more to the front and played sideways.
         card.markers[Not_rezzed] += 1
         notify("{} prepares a card.".format(me))
     elif card.Type == 'Program' or card.Type == 'Prep' or card.Type == 'Resource' or card.Type == 'Hardware':
         me.Memory -= num(card.properties["MU Required"])
         if card.Type == 'Resource' and hiddenresource == 'yes':
-            card.moveToTable(-180, 230, True)
+            card.moveToTable(-180, 230 * playerside - yaxisMove(card), True)
             notify("{} installs a card.".format(me))
             executeAutomations(card,"play")
             return
@@ -544,19 +591,19 @@ def intPlay(card, cost = 'not_free'):
         elif rc == "free": notify("{} plays {} at no cost.".format(me, card))
         else:
             if card.Type == 'Program':
-                card.moveToTable(-150, 65, False)
+                card.moveToTable(-150, 65 * playerside - yaxisMove(card), False)
                 notify("{} has installed {}.".format(me, card))
             elif card.Type == 'Prep':
-                card.moveToTable(0, 0, False)
+                card.moveToTable(0, 0 * playerside - yaxisMove(card), False)
                 notify("{} has prepped with {}.".format(me, card))
             elif card.Type == 'Hardware':
-                card.moveToTable(-210, 160, False)
+                card.moveToTable(-210, 160 * playerside - yaxisMove(card), False)
                 notify("{} has purchased {}.".format(me, card))
             elif card.Type == 'Resource' and hiddenresource == 'no':
-                card.moveToTable(180, 240, False)
+                card.moveToTable(180, 240 * playerside - yaxisMove(card), False)
                 notify("{} has acquired {}.".format(me, card))
             else:
-                card.moveToTable(0, 0, False)
+                card.moveToTable(0, 0 * playerside - yaxisMove(card), False)
                 notify("{} plays {}.".format(me, card))
     else:
         rc = payCost(card.Cost, cost, loud)
@@ -566,13 +613,13 @@ def intPlay(card, cost = 'not_free'):
         elif rc == "free": notify("{} plays {} at no cost.".format(me, card))
         else:
             if card.Type == 'Operation':
-                card.moveToTable(0, 0, False)
+                card.moveToTable(0, 0 * playerside - yaxisMove(card), False)
                 notify("{} initiates {}.".format(me, card))
             elif card.Type == 'Upgrade' and card.properties["Keyword 1"] == "Region":
-                card.moveToTable(-220, -240, False)
+                card.moveToTable(-220, 240 * playerside - yaxisMove(card), False)
                 notify("{} opened a base of operations in {}.".format(me, card))
             else:
-                card.moveToTable(0, 0, False)
+                card.moveToTable(0, 0 * playerside - yaxisMove(card), False)
                 notify("{} has played {}.".format(me, card))           
     executeAutomations ( card, "play" )
 
@@ -644,7 +691,7 @@ def showatrandom(group):
 	mute()
 	card = group.random()
 	if card == None: return
-	card.moveToTable(0, 0, False)
+	card.moveToTable(0, 0 - yaxisMove(card), False)
 	notify("{} show {} at random.".format(me,card))
 
 def handtoStack (group):

@@ -5,9 +5,24 @@ Considered by most one of the best Card Games ever conceived, Netrunner is an as
 
 Note: This is just the game engine, you'll also need to download [the sets](http://octgn.gamersjudgement.com/viewtopic.php?f=40&t=212). If you've never played the Netrunner before, you can find [some links to check out here](http://octgn.gamersjudgement.com/viewtopic.php?f=40&t=208&sid=253a1e9b14f4c47f0796b3301fa117c6)
 
+Screenshots
+---------
+(Click for larger size)
+
+Sample Screenshot of 1.5.7
+
+[![](http://i.imgur.com/CAyqTl.jpg)](http://i.imgur.com/CAyqT.jpg)
 
 Changelog
 ---------
+
+### 1.5.7
+
+* Fixed the card placing for a 2-player inverted table setup.
+
+### 1.5.6
+
+* Disabled Automations so that the game can be playable until they are finalized
 
 ### 1.5.5
 
