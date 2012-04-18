@@ -13,6 +13,8 @@ MinusOne= ("-1", "48ceb18b-5521-4d3f-b5fb-c8212e8bcbae")
 ds = ""
 Automation = False # If True, game will automatically trigger card effects when playing cards. Requires specific preparation in the sets.
                    # Starts False and is switched on automatically at Jack In
+UniBits = True # If True, game will display bits as unicode characters ❶, ❷, ❿ etc
+
 TraceValue = 0
 
 turnIdx = 0
@@ -72,17 +74,19 @@ def chooseSide(): # Called from many functions to check if the player has chosen
         playerside = 1
 
 def uniBit(count):
-    if count == 1: return '❶'
-    elif count == 2: return '❷'
-    elif count == 3: return '❸'
-    elif count == 4: return '❹'
-    elif count == 5: return '❺'
-    elif count == 6: return '❻'
-    elif count == 7: return '❼'
-    elif count == 8: return '❽'
-    elif count == 9: return '❾'
-    elif count == 10: return '❿'
-    else: return "({})".format(count)        
+    if UniBits:
+        if count == 1: return '❶'
+        elif count == 2: return '❷'
+        elif count == 3: return '❸'
+        elif count == 4: return '❹'
+        elif count == 5: return '❺'
+        elif count == 6: return '❻'
+        elif count == 7: return '❼'
+        elif count == 8: return '❽'
+        elif count == 9: return '❾'
+        elif count == 10: return '❿'
+        else: return "({})".format(count)
+    else: return "({})".format(count)
 #---------------------------------------------------------------------------
 # Card Placement functions
 #---------------------------------------------------------------------------
@@ -191,6 +195,15 @@ def switchAutomation(group,x=0,y=0,command = 'Off'):
     else:
         notify ("{}'s automations are ON.".format(me))
         Automation = True
+
+def switchUniBits(group,x=0,y=0,command = 'Off'):
+    global UniBits
+    if UniBits and command != 'On':
+        whisper("Bits will now be displayed as normal numbers.".format(me))
+        UniBits = False
+    else:
+        whisper("Bits will now be displayed as unicode.".format(me))
+        UniBits = True
         
 def create3DataForts(group):
 	table.create("2a0b57ca-1714-4a70-88d7-25fdf795486f", 150, 160 * playerside, 1)
@@ -278,7 +291,7 @@ def pay2andDelTag(group, x = 0, y = 0):
         me.Actions += 1 # If the player didn't notice they didn't have enough bits, we give them back their action
         return # If the player didn't have enough money to pay and aborted the function, then do nothing.
     me.counters['Tags'].value -= 1
-    notify (" {} pays ❷ and looses 1 tag.".format(me))
+    notify (" {} pays {} and looses 1 tag.".format(me,uniBit(2)))
 
 #------------------------------------------------------------------------------
 # Markers
@@ -334,7 +347,7 @@ def advanceCardP(card, x = 0, y = 0):
         return # If the player didn't have enough money to pay and aborted the function, then do nothing.
     card.markers[Advance] += 1
     if ( card.isFaceUp == True): notify("{} paid 1 and advanced {}.".format(me,card))
-    else: notify("{} paid ❶ and advanced a card.".format(me))
+    else: notify("{} paid {} and advanced a card.".format(me,uniBit(1)))
 
 def addXadvancementCounter(card, x=0, y=0):
 	mute()
@@ -421,7 +434,7 @@ def addMeatNetDmg(group, x = 0, y = 0):
 
 def getBit(group, x = 0, y = 0):
     if useAction() == 'ABORT': return
-    notify ("{} Receives ➊.".format(me))
+    notify ("{} Receives {}.".format(me,uniBit(1)))
     me.counters['Bit Pool'].value += 1
     
 #------------------------------------------------------------------------------
