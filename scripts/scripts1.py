@@ -473,12 +473,11 @@ def intRez (card,cost = 'not free', x=0, y=0):
         rc = payCost(CostCard[card], cost, loud)
         if rc == "ABORT": return # If the player didn't have enough money to pay and aborted the function, then do nothing.
         elif rc == "free": notify("{} rezzes {} at no cost.".format(me, card))
-        else:
-            card.isFaceUp = True
-            card.markers[Not_rezzed] -= 1
-            if card.Type == 'Ice': notify("{} has activated {}.".format(me, card))
-            if card.Type == 'Node': notify("{} has acquired {}.".format(me, card))
-            if card.Type == 'Upgrade': notify("{} has installed {}.".format(me, card))
+        card.isFaceUp = True
+        card.markers[Not_rezzed] -= 1
+        if card.Type == 'Ice': notify("{} has rezzed {}.".format(me, card))
+        if card.Type == 'Node': notify("{} has acquired {}.".format(me, card))
+        if card.Type == 'Upgrade': notify("{} has installed {}.".format(me, card))
         executeAutomations ( card, "rez" )
 
 def rezForFree (card, x = 0, y = 0):
@@ -589,38 +588,36 @@ def intPlay(card, cost = 'not_free'):
             me.Actions += 1 # If the player didn't notice they didn't have enough bits, we give them back their action
             return # If the player didn't have enough money to pay and aborted the function, then do nothing.
         elif rc == "free": notify("{} plays {} at no cost.".format(me, card))
+        if card.Type == 'Program':
+            card.moveToTable(-150, 65 * playerside - yaxisMove(card), False)
+            notify("{} has installed {}.".format(me, card))
+        elif card.Type == 'Prep':
+            card.moveToTable(0, 0 * playerside - yaxisMove(card), False)
+            notify("{} has prepped with {}.".format(me, card))
+        elif card.Type == 'Hardware':
+            card.moveToTable(-210, 160 * playerside - yaxisMove(card), False)
+            notify("{} has purchased {}.".format(me, card))
+        elif card.Type == 'Resource' and hiddenresource == 'no':
+            card.moveToTable(180, 240 * playerside - yaxisMove(card), False)
+            notify("{} has acquired {}.".format(me, card))
         else:
-            if card.Type == 'Program':
-                card.moveToTable(-150, 65 * playerside - yaxisMove(card), False)
-                notify("{} has installed {}.".format(me, card))
-            elif card.Type == 'Prep':
-                card.moveToTable(0, 0 * playerside - yaxisMove(card), False)
-                notify("{} has prepped with {}.".format(me, card))
-            elif card.Type == 'Hardware':
-                card.moveToTable(-210, 160 * playerside - yaxisMove(card), False)
-                notify("{} has purchased {}.".format(me, card))
-            elif card.Type == 'Resource' and hiddenresource == 'no':
-                card.moveToTable(180, 240 * playerside - yaxisMove(card), False)
-                notify("{} has acquired {}.".format(me, card))
-            else:
-                card.moveToTable(0, 0 * playerside - yaxisMove(card), False)
-                notify("{} plays {}.".format(me, card))
+            card.moveToTable(0, 0 * playerside - yaxisMove(card), False)
+            notify("{} plays {}.".format(me, card))
     else:
         rc = payCost(card.Cost, cost, loud)
         if rc == "ABORT": 
             me.Actions += 1 # If the player didn't notice they didn't have enough bits, we give them back their action
             return # If the player didn't have enough money to pay and aborted the function, then do nothing.
         elif rc == "free": notify("{} plays {} at no cost.".format(me, card))
+        if card.Type == 'Operation':
+            card.moveToTable(0, 0 * playerside - yaxisMove(card), False)
+            notify("{} initiates {}.".format(me, card))
+        elif card.Type == 'Upgrade' and card.properties["Keyword 1"] == "Region":
+            card.moveToTable(-220, 240 * playerside - yaxisMove(card), False)
+            notify("{} opened a base of operations in {}.".format(me, card))
         else:
-            if card.Type == 'Operation':
-                card.moveToTable(0, 0 * playerside - yaxisMove(card), False)
-                notify("{} initiates {}.".format(me, card))
-            elif card.Type == 'Upgrade' and card.properties["Keyword 1"] == "Region":
-                card.moveToTable(-220, 240 * playerside - yaxisMove(card), False)
-                notify("{} opened a base of operations in {}.".format(me, card))
-            else:
-                card.moveToTable(0, 0 * playerside - yaxisMove(card), False)
-                notify("{} has played {}.".format(me, card))           
+            card.moveToTable(0, 0 * playerside - yaxisMove(card), False)
+            notify("{} has played {}.".format(me, card))           
     executeAutomations ( card, "play" )
 
 def playForFree(card, x = 0, y = 0):
@@ -841,35 +838,36 @@ def checkDeckNoLimit (group):
 #------------------------------------------------------------------------------
 def executeAutomations ( card, action ):
 	
-	if ( TurnAutomation != 0): return
+    if ( TurnAutomation != 0): return
+    if not card.isFaceUp: return
 
-	AutoScript = card.properties ["AutoScript"]
+    AutoScript = card.properties ["AutoScript"]
 
-	if (  AutoScript == "") : return
-	Execute = 0
+    if (  AutoScript == "") : return
+    Execute = 0
 
-	if ( action == "play" or action == "rez" or action == "scores"): Execute = 1
-	
-	if ( ( (action == "trash" and card.markers[Not_rezzed] == 0) or action == "derez") and AutoScript.find("ReverseYes") != -1 ): Execute = -1
+    if ( action == "play" or action == "rez" or action == "scores"): Execute = 1
 
-	if ( Execute == 0): return
+    if ( ( (action == "trash" and card.markers[Not_rezzed] == 0) or action == "derez") and AutoScript.find("ReverseYes") != -1 ): Execute = -1
 
-	Param1 = num(card.ParamAS1)*Execute
-	Param2 = num(card.ParamAS2)*Execute
+    if ( Execute == 0): return
 
-	if ( AutoScript == "autoGainXDrawY" ): autoGainXDrawY ( card, Param1, Param2 )
-	elif ( AutoScript == "autoGainXIfY"): autoGainXIfY( card, Param1, Param2 )
-	elif ( AutoScript == "autoGainX" ) : autoGainX ( card, Param1, Param2 )
-	elif ( AutoScript == "autoDrawX" ) : autoDrawX ( card, Param1, Param2 )
-	elif ( AutoScript == "autoAddBitsCounter" ): autoAddBitsCounter( card, Param1, Param2 )
-	elif ( AutoScript == "autoGainXYTags"): autoGainXYTags( card, Param1, Param2 )
-	elif ( AutoScript == "autoGainXYBadPub"): autoGainXYBadPub( card, Param1, Param2 )
-	elif ( AutoScript.find("autoAddMUAndBitsCounter") != -1): autoAddMUAndCounter ( card, Param1, Param2 )
-	elif ( Autoscript.find("autoaddMUHandSizeBitsCounter") != -1 ): autoaddMUHandSizeBitsCounter ( card, Param1, Param2 )
-	elif ( AutoScript.find("autoAddMU") != -1 ): autoAddMU( card, Param1, Param2 )
-	elif ( AutoScript.find("autoAddHandSize") != -1 ): autoAddHandSize( card, Param1, Param2 )
-	
-	else: return
+    Param1 = num(card.ParamAS1)*Execute
+    Param2 = num(card.ParamAS2)*Execute
+
+    if ( AutoScript == "autoGainXDrawY" ): autoGainXDrawY ( card, Param1, Param2 )
+    elif ( AutoScript == "autoGainXIfY"): autoGainXIfY( card, Param1, Param2 )
+    elif ( AutoScript == "autoGainX" ) : autoGainX ( card, Param1, Param2 )
+    elif ( AutoScript == "autoDrawX" ) : autoDrawX ( card, Param1, Param2 )
+    elif ( AutoScript == "autoAddBitsCounter" ): autoAddBitsCounter( card, Param1, Param2 )
+    elif ( AutoScript == "autoGainXYTags"): autoGainXYTags( card, Param1, Param2 )
+    elif ( AutoScript == "autoGainXYBadPub"): autoGainXYBadPub( card, Param1, Param2 )
+    elif ( AutoScript.find("autoAddMUAndBitsCounter") != -1): autoAddMUAndCounter ( card, Param1, Param2 )
+    elif ( Autoscript.find("autoaddMUHandSizeBitsCounter") != -1 ): autoaddMUHandSizeBitsCounter ( card, Param1, Param2 )
+    elif ( AutoScript.find("autoAddMU") != -1 ): autoAddMU( card, Param1, Param2 )
+    elif ( AutoScript.find("autoAddHandSize") != -1 ): autoAddHandSize( card, Param1, Param2 )
+
+    else: return
 
 def autoGainXDrawY ( card, Param1, Param2 ):
 	mute()

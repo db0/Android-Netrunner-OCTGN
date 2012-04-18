@@ -16,6 +16,10 @@ Sample Screenshot of 1.5.7
 Changelog
 ---------
 
+### 1.5.8
+
+* Fixed playing or rezzing cards at no cost not putting it on the table.
+
 ### 1.5.7
 
 * Fixed the card placing for a 2-player inverted table setup.
