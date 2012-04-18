@@ -9,6 +9,18 @@ Note: This is just the game engine, you'll also need to download [the sets](http
 Changelog
 ---------
 
+### 1.5.5
+
+* Made The "Declare Start of Turn", "Declare End of Turn" more central to the game. It supposed to work as follows
+  * At the start of your turn, you press F1 to declare the start of your turn. This also reinitializes your actions and makes some further checks for mistakes
+  * When you're done with your turn, you press F12 to declare the end of your turn. It does some further checks and if it realizes that you have more cards in your hand than your handsize, it puts you in the "End Turn Phase" where you have to discard your excess cards
+  * When done with discarding, you press F12 again and after some internal checks, the game announces the end of your turn.
+* The mandatory draw action has been removed as its own unique entity. It has been merged into the normal card draw action, but to work correctly you need to use the end turn, start turn actions appropriately.
+* Added more unicode Action and Bit characters on the menu!
+* Now runs, paying to remove traces and paying to discard resources costs an action
+* Added action to change your Action limit per turn. THis is used when they are automatically refreshed at Turn Start.
+* Added new hand action for card discard. This automatically places the cards in the right pile depending if you're corp or runner. It also shows thematic messages when done during the end-of-turn phase.
+
 ### 1.5.4
 
 * Reorganized the context menu for the table
