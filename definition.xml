@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<game xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="Netrunner" id="13568561-7a2e-4572-8f31-3d99580ab245" octgnVersion="3.0.1.0" version="1.5.4" markersize="16">
+<game xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="Netrunner" id="13568561-7a2e-4572-8f31-3d99580ab245" octgnVersion="3.0.1.0" version="1.5.5" markersize="16">
 	<card back="r4" front="r5" width="63" height="88" cornerRadius="2">
 		<property name="Player" type="String" hidden="false" ignoreText="False" />
 		<property name="Cost" type="Integer" hidden="false" />
@@ -32,39 +32,38 @@
 			<groupaction menu="Turn Automation OFF" default="false" execute="turnAutomationOff" />
 		</groupactions>
 		<groupactions menu="Turns/Actions...">
-			<groupaction menu="Declare Start of Turn" default="false" shorcut="F1" execute="goToSot" />
+			<groupaction menu="Declare Start of Turn" default="false" shortcut="F1" execute="goToSot" />
 			<groupaction menu="&#9166; Declare Action" default="false" shortcut="Enter" execute="useAction" />
 			<groupaction menu="Declare End of Turn" default="false" shortcut="F12" execute="goToEndTurn" />
-			<groupaction menu="Announce Current Turn" default="false" shortcut="F6" execute="showCurrentTurn" />
 		</groupactions>
 		<groupactions menu="Runner Actions...">
 			<groupaction menu="Take 1 Brain Damage" default="false" execute="addBrainDmg" />
 			<groupaction menu="Take 1 Meat Or Net Damage" default="false" execute="addMeatNetDmg" />
-            <groupaction menu="Pay &#10123; and loose a Tag" default="false" execute="pay2andDelTag" />
-			<groupaction menu="Run on HQ" default="false" execute="runHQ" />
-			<groupaction menu="Run on R&amp;D" default="false" execute="runRD" />
-			<groupaction menu="Run on Archives" default="false" execute="runArchives" />
-			<groupaction menu="Run on a SDF" default="false" execute="runSDF" />
+            <groupaction menu="&#9166; Pay &#10123; and loose a Tag" default="false" execute="pay2andDelTag" />
+			<groupaction menu="&#9166; Run on HQ" default="false" execute="runHQ" />
+			<groupaction menu="&#9166; Run on R&amp;D" default="false" execute="runRD" />
+			<groupaction menu="&#9166; Run on Archives" default="false" execute="runArchives" />
+			<groupaction menu="&#9166; Run on a SDF" default="false" execute="runSDF" />
 		</groupactions>
 		<cardactions menu="Add/Remove Markers...">
-			<cardaction menu="&#9166; Pay &#10122; and advance card" default="false" shortcut="ctrl+a" execute="advanceCardP" />
+			<cardaction menu="&#9166; Pay &#10122; and advance card" default="false" shortcut="Alt+A" execute="advanceCardP" />
 			<cardaction menu="Add X advancement counter" default="false" execute="addXadvancementCounter" />
-			<cardaction menu="Remove 1 advancement counter" default="false" execute="advanceCardM" />
+			<cardaction menu="Remove 1 advancement counter" default="false" shortcut="Alt+Shift+A" execute="advanceCardM" />
 			<cardaction menu="Remove X advancement counters" default="false" execute="delXadvancementCounter" />
-			<cardaction menu="Put X Bits from the Bank" default="false" execute="addBits" />
+			<cardaction menu="Put X Bits from the Bank" default="false" shortcut="Alt+B" execute="addBits" />
 			<cardaction menu="Remove X Bits" default="false" execute="remBits" />
-			<cardaction menu="Take X Bits to Bit Pool" default="false" execute="remBits2BP" />
-			<cardaction menu="Add a +1 counter" default="false" execute="addPlusOne" />
-			<cardaction menu="Add a -1 couner" default="false" execute="addMinusOne" />
+			<cardaction menu="Take X Bits to Bit Pool" default="false" shortcut="Alt+Shift+B" execute="remBits2BP" />
+			<cardaction menu="Add a +1 counter" default="false" shortcut="Alt+1" execute="addPlusOne" />
+			<cardaction menu="Add a -1 couner" default="false" shortcut="Alt+Shift+1" execute="addMinusOne" />
 		</cardactions>
 		<cardactions menu="Rez...">
-			<cardaction menu="Pay and Rez" default="false" execute="intRez" />
+			<cardaction menu="Pay and Rez" default="false" shortcut="Ctrl+R" execute="intRez" />
 			<cardaction menu="Rez at no Cost" default="false" execute="rezForFree" />
-			<cardaction menu="Derez" default="false" execute="derez" />	
+			<cardaction menu="Derez" default="false" shortcut="Ctrl+Shift+R" execute="derez" />	
 		</cardactions>
 		<cardactions menu="Trash...">
-			<cardaction menu="Pay and Trash" default="false" execute="trashCard" />
-			<cardaction menu="&#9166; Pay &#10123; and Trash" default="false" execute="pay2AndTrash" />
+			<cardaction menu="Pay and Trash" default="false" shortcut="Ctrl+del" execute="trashCard" />
+			<cardaction menu="&#9166; Pay &#10123; to Trash a Resource" default="false" execute="pay2AndTrash" />
 			<cardaction menu="Trash at No Cost" default="false" shortcut="del" execute="trashForFree" />
 		</cardactions>
 		<cardactions menu="Trace...">
@@ -73,25 +72,26 @@
 			<cardaction menu="Pay Trace Value" default="false" execute="payTraceValue" />
 			<cardaction menu="Cancel Trace" default="false" execute="cancelTrace" />
 		</cardactions>
-        <groupaction menu="Mandatory draw" default="false" shortcut="F10" execute="useAction0" />
+        <groupaction menu="Modify your max actions per turn" default="false" execute="modActions" />
 		<cardaction menu="Use Card Ability/Clear" default="true" execute="useCard" />
 		<cardaction menu="Expose card" default="false" execute="expose" />
 		<cardaction menu="Score Agenda" default="false" execute="scrAgenda" />
-		<groupaction menu="Roll d6" default="false" execute="rolld6" />
-		<groupaction menu="&#9166; Receive &#10122;" default="false" execute="getBit" />
+		<groupaction menu="Roll d6" default="false" shortcut="Ctrl+6" execute="rolld6" />
+		<groupaction menu="&#9166; Receive &#10122;" default="false" shortcut="Ctrl+B" execute="getBit" />
         
 		
 	</table>
 	<player summary="Actions {#Actions} / Bits {#Bit Pool} / Hand {#HQ/Hand}">
 		<hand name="HQ/Hand" visibility="me" ordered="false" width="63" height="88" icon="r11">
-			<cardaction menu="Pay and Play Card" default="true" shortcut="enter" execute="intPlay" />
+			<cardaction menu="&#9166; Pay and Install Card" default="true" shortcut="enter" execute="intPlay" />
 			<cardaction menu="Play Card at no cost" default="false" execute="playForFree" />
 			<cardactions menu="Move ...">
 				<cardaction menu ="To Top of R&amp;D/Stack" default="false" execute="movetoTopOfStack" />
 				<cardaction menu ="To Bottom of R&amp;D/Stack" default="false" execute="movetoBottomOfStack" />
 				<cardaction menu ="To Archives H" default="false" execute="handtoArchivesH" />
 			</cardactions>
-			<groupaction menu="Discard a Card at Random" default="false" execute="handDiscard" />
+			<cardaction menu="Discard" default="false" shortcut="del" execute="handDiscard" />           
+			<groupaction menu="Discard a Card at Random" default="false" execute="handRandomDiscard" />
 			<groupaction menu="Show a Card at Random" default="false" execute="showatrandom"/>
 			<groupaction menu="Move to R&amp;D/Stack" default="false" execute="handtoStack"/>
 
