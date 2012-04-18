@@ -22,7 +22,7 @@ CostCard = {}
 
 MemoryRequirements = { }
 InstallationCosts = { }
-ileActions = {'Runr': 4, 'Corp': 3}
+maxActions = 3
 #---------------------------------------------------------------------------
 # Constants
 #---------------------------------------------------------------------------
@@ -37,6 +37,9 @@ turns = [
 ScoredColor = "#00ff44"
 SelectColor = "#009900"
 MakeRunColor = "#ff0000"
+
+newturn = True #We use this variable to track whether a player has yet to do anything this turn.
+endofturn = False #We use this variable to know if the player is in the end-of-turn phase.
 
 silent = 'silent'
 loud = 'loud'
@@ -55,13 +58,9 @@ def num (s):
 # Actions indication
 #---------------------------------------------------------------------------
 
-def useAction0(group, x=0, y=0):
-	if ( ds == "corp"):
-		notify("{} takes the Mandatory draw".format(me))
-		drawMany(me.piles['R&D/Stack'],1)
-
 def useAction(group = table, x=0, y=0):
     mute()
+    global newturn
     if me.Actions < 1: 
         if not confirm("You have no more actions left. Are you sure you want to continue?"): return 'ABORT'
     if ds == 'corp': act = 4 - me.Actions
@@ -69,49 +68,59 @@ def useAction(group = table, x=0, y=0):
     notify("{} takes Action #{}".format(me,act))
     me.Actions -= 1
 
-def showCurrentTurn(group, x = 0, y = 0):
-    notify(turns[turnIdx])
-
-def goToCsTurn(group, x = 0, y = 0):
-	global turnIdx
-	turnIdx = 1
-	showCurrentTurn(group)
-	mute()
-	if (ds == "corp" and (me.counters['Actions'].value == 0)):
-		me.counters['Actions'].value = ileActions['Corp']
-
-def endOfCsTurn(group, x = 0, y = 0):
-	notify("End of Corporation's Turn")
-
-def goToNrTurn(group, x = 0, y = 0):
-	global turnIdx
-	turnIdx = 2
-	showCurrentTurn(group)
-	mute()
-	if (ds == "runner" and (me.counters['Actions'].value == 0)):
-		me.counters['Actions'].value = ileActions['Runr']
-
-def endOfNrTurn(group, x = 0, y = 0):
-	notify("End of Runner's Turn")
-
 def goToEndTurn(group, x = 0, y = 0):
-	if ( ds == "" ):
-		whisper ("choose a side first")
-		return
-	elif (ds == "corp"): notify ("This is Corporation End of Turn.")
-	else: notify ("This is Runner End of Turn.")
-
-	global turnIdx
-	turnIdx = 3
-	showCurrentTurn(group)
+    mute()
+    global endofturn
+    if ( ds == "" ):
+        whisper ("Please perform the game setup first (Ctrl+Shift+S)")
+        return
+    if me.Actions > 0: # If the player has not used all their actions for this turn, remind them, just in case.
+        if not confirm("You have not taken all your actions for this turn, are you sure you want to declare end of turn"): return
+    if len(me.hand) > me.counters['Max Hand Size'].value: #If the player is holding more cards than their hand max. remind them that they need to discard some 
+                                                       # and put them in the end of turn to allow them to do so.
+        if endofturn: #If the player has gone through the end of turn phase and still has more hands, allow them to continue but let everyone know.
+            if not confirm("You still hold more cards than your hand size maximum. Are you sure you want to proceed?"): return
+            else: notify("Note: {} has ended their turn holding more cards ({}) than their hand size maximum of {}".format(me,len(me.hand),me.counters['Max Hand Size'].value))
+        else: # If the player just ended their turn, give them a chance to discard down to their hand maximum.
+            if (ds == "corp"): notify ("The Corporation of {} is performing an Internal Audit before CoB.".format(me))
+            else: notify ("Runner {} is rebooting all systems for the day.".format(me))
+            whisper('Note: You have more card in your hand than your current hand size maximum. Please discard enough and then use the "Declare End of Turn" action again.')
+            endofturn = True
+            return
+    if (ds == "corp"): notify ("The Corporation of {} has reached CoB (Close of Business hours).".format(me))
+    else: notify ("Runner {} has gone to sleep for the day.".format(me))
+    endofturn = False
+    newturn = False
 
 def goToSot (group, x=0,y=0):
-	if (ds == "" ):
-		whisper ("choose a side first")
-		return
-	elif (ds == "corp"): notify ("This is Corporation Start of Turn.")
-	else: notify ("This is Runner Start of Turn.")
+    global newturn, endofturn
+    mute()
+    if endofturn:
+        if not confirm("You have not yet properly ended you previous turn. Are you sure you want to continue?"): return
+        else: 
+            if len(me.hand) > me.counters['Max Hand Size'].value: # Just made sure to notify of any shenanigans
+                notify("Note: {} has skipped their End-of-Turn phase and they are holding more cards ({}) than their hand size maximum of {}".format(me,len(me.hand),me.counters['Max Hand Size'].value))
+            else: notify("Note: {} has skipped their End-of-Turn phase".format(me))
+            endofturn = False
+    if (ds == "" ):
+        whisper ("Please perform the game setup first (Ctrl+Shift+S)")
+        return
+    if me.Actions < 0: 
+        if not confirm("Your actions were negative from last turn. Was this a result of a penalty you suffered from a card?"): 
+            me.Actions = maxActions # If the player did not have a penalty, then we assume those were extra actions granted by some card effect, so we make sure they have their full maximum
+        else: 
+            me.Actions += maxActions # If it was a penalty, then it remains with them for this round, which means they have less actions to use.
+            notify("{} is starting with {} less actions this turn, due to a penalty from a previous turn. They have {} actions this turn".format(me,maxActions - me.Actions, me.Actions))
+    else: me.Actions = maxActions
+    if (ds == "corp"): notify ("The offices of {}'s Corporation are now open for business.".format(me))
+    else: notify ("Runner {} has woken up".format(me))
+    newturn = True
 
+def modActions(group,x=0,y=0):
+    global maxActions
+    mute()
+    if ds =="corp": maxActions = askInteger("What is your current maximum Actions per turn?", 3)
+    else: maxActions = askInteger("What is your current maximum Actions per turn?", 4)
 #------------------------------------------------------------------------------
 # Table group actions
 #------------------------------------------------------------------------------
@@ -133,47 +142,41 @@ def create3DataForts(group):
 	table.create("59665835-0b0c-4710-99f7-8b90377c35b7", 450, 160, 1)
 
 def intJackin(group, x = 0, y = 0):
-	global ds
-	ds = ""
-
-	stack = me.piles['R&D/Stack']
-	if ( len(stack) == 0):
-		whisper ("Please load a deck first!")
-		return
-	mute()
-	TopCard = stack[0]
-	TopCard.moveTo(me.piles['Trash/Archives(Face-up)'])
-	ds = TopCard.Player
-	TopCard.moveTo(me.piles['R&D/Stack'])
-
-	if ( checkDeckNoLimit (me.piles['R&D/Stack']) <> 0): notify ("SHOULD RETURN")
-
-	me.counters['Bit Pool'].value =5
-	me.counters['Max Hand Size'].value =5
-	me.counters['Tags'].value =0
-	me.counters['Agenda Points'].value =0
-	me.counters['Bad Publicity'].value =0
-	
-	if ds == "corp":
-		me.counters['Actions'].value =3
-		me.counters['Memory'].value =0
-		NameDeck = "R&D"
-		create3DataForts(group)
-		notify("{} is playing as Corporation".format(me))
-		
-	else:
-		me.counters['Actions'].value =4
-		me.counters['Memory'].value =4
-		NameDeck = "Stack"
-		notify("{} is playing as Runner".format(me))
-
-	table.create("c0f18b5a-adcd-4efe-b3f8-7d72d1bd1db8", 0, 200, 1 ) #trace card
-
-	turnAutomationOn (group,x,y)
-	shuffle(me.piles['R&D/Stack'])
-	notify ("{}'s {} is shuffled ".format(me,NameDeck) )
-
-	drawMany (me.piles['R&D/Stack'], 5) 
+    global ds, maxActions
+    mute()
+    ds = ""
+    stack = me.piles['R&D/Stack']
+    if len(stack) == 0:
+        whisper ("Please load a deck first!")
+        return
+    TopCard = stack[0]
+    TopCard.moveTo(me.piles['Trash/Archives(Face-up)'])
+    ds = TopCard.Player
+    TopCard.moveTo(me.piles['R&D/Stack'])
+    if checkDeckNoLimit(stack) != 0: notify ("SHOULD RETURN")
+    me.counters['Bit Pool'].value =5
+    me.counters['Max Hand Size'].value =5
+    me.counters['Tags'].value =0
+    me.counters['Agenda Points'].value =0
+    me.counters['Bad Publicity'].value =0
+    if ds == "corp":
+        me.counters['Actions'].value =3
+        me.counters['Memory'].value =0
+        maxActions = 3
+        NameDeck = "R&D"
+        create3DataForts(group)
+        notify("{} is playing as Corporation".format(me))      
+    else:
+        me.counters['Actions'].value =4
+        me.counters['Memory'].value =4
+        maxActions = 4
+        NameDeck = "Stack"
+        notify("{} is playing as Runner".format(me))
+    table.create("c0f18b5a-adcd-4efe-b3f8-7d72d1bd1db8", 0, 200, 1 ) #trace card
+    turnAutomationOn (group,x,y)
+    shuffle(me.piles['R&D/Stack'])
+    notify ("{}'s {} is shuffled ".format(me,NameDeck) )
+    drawMany (me.piles['R&D/Stack'], 5) 
 
 def start_token(group, x = 0, y = 0):
     card, quantity = askCard("[Type] = 'Setup'")
@@ -187,28 +190,38 @@ def intRun(Name):
 	notify ("{} declares a run on {}.".format(me,Name))
 
 def runHQ(group, x=0,Y=0):
-	if ds == "runner": intRun("HQ")
+    if useAction() == 'ABORT': return
+    if ds == "runner": intRun("HQ")
 
 def runRD(group, x=0,Y=0):
-	if ds == "runner": intRun("R&D")
+    if useAction() == 'ABORT': return
+    if ds == "runner": intRun("R&D")
 
 def runArchives(group, x=0,Y=0):
-	if ds == "runner": intRun ("the Archives")
+    if useAction() == 'ABORT': return
+    if ds == "runner": intRun ("the Archives")
 
 def runSDF(group, x=0,Y=0):
-	if ds == "runner": intRun("a subsidiary data fort")
+    if useAction() == 'ABORT': return
+    if ds == "runner": intRun("a subsidiary data fort")
 
 #------------------------------------------------------------------------------
 # Tags...
 #------------------------------------------------------------------------------
 def pay2andDelTag(group, x = 0, y = 0):
-	mute()
-	if ds == "runner":
-		if me.counters['Tags'].value >= 1:
-			me.counters['Tags'].value -=1
-			me.counters['Bit Pool'].value -=2
-			notify (" {} pays (2) and loose 1 tag.".format(me))
-		else: whisper("You don't have any tags")
+    mute()
+    if ds != "runner":
+        whisper("Only runners can use this action")
+        return
+    if me.Tags < 1: 
+        whisper("You don't have any tags")
+        return
+    if useAction() == 'ABORT': return
+    if payCost(2) == "ABORT": 
+        me.Actions += 1 # If the player didn't notice they didn't have enough bits, we give them back their action
+        return # If the player didn't have enough money to pay and aborted the function, then do nothing.
+    me.counters['Tags'].value -= 1
+    notify (" {} pays (2) and looses 1 tag.".format(me))
 
 #------------------------------------------------------------------------------
 # Markers
@@ -487,7 +500,8 @@ def trashForFree (card, x = 0, y = 0):
 	intTrashCard(card, card.Stat, "free")
 
 def pay2AndTrash ( card, x=0, y=0):
-	intTrashCard(card, 2)
+    if useAction() == 'ABORT': return
+    intTrashCard(card, 2)
 
 def useCard(card,x=0,y=0):
     if card.highlight == None:
@@ -589,7 +603,33 @@ def handtoArchivesH (card):
 	card.moveTo(me.piles['Archives(Hidden)'])
 	notify ("{} moves a card to their Archives.".format(me))
 
-def handDiscard(group):
+def handDiscard (card):
+    mute()
+    if ds == "runner": 
+        card.moveTo(me.piles['Trash/Archives(Face-up)'])
+        if endofturn: 
+            if card.Type == 'Program': notify("{} has killed a hanging process.".format(me))
+            elif card.Type == 'Prep': notify("{} has thrown away some notes.".format(me))
+            elif card.Type == 'Hardware': notify("{} has deleted some spam mail.".format(me))
+            elif card.Type == 'Resource': notify("{} has reconfigured some net protocols.".format(me))
+            else: notify("{} has power cycled some hardware.".format(me))
+            if len(me.hand) == me.counters['Max Hand Size'].value: 
+                notify("{} has now discarded down to their max handsize of {}".format(me, me.counters['Max Hand Size'].value))
+        else: notify("{} discards {}.".format(me,card))
+    else:
+        card.moveTo(me.piles['Archives(Hidden)'])
+        if endofturn: 
+            random = rnd(1, 5)
+            if random == 1: notify("{}'s Internal Audit has corrected some tax book discrepancies.".format(me))
+            if random == 2: notify("{} has downsized a department.".format(me))
+            if random == 3: notify("{}'s Corporation has sent some hardware to secure recycling.".format(me))
+            if random == 4: notify("{} has sold off some stock options".format(me))
+            if random == 5: notify("{} has liquidated some assets.".format(me))
+            if len(me.hand) == me.counters['Max Hand Size'].value: 
+                notify("{} has now discarded down to their max handsize of {}".format(me, me.counters['Max Hand Size'].value))
+        else: notify("{} discards a card.".format(me))
+    
+def handRandomDiscard(group):
     mute()
     card = group.random()
     if card == None: return
@@ -626,12 +666,18 @@ def handtoStack (group):
 def shuffle(group):
 	group.shuffle()
 
-def draw(group, x = 0, y = 0):
-    if len(group) == 0: return
-    if useAction() == 'ABORT': return
+def draw(group):
+    global newturn
     mute()
-    group[0].moveTo(me.hand)
-    notify("{} draws a card.".format(me))
+    if len(group) == 0: return
+    if ds == 'corp' and newturn: 
+        group[0].moveTo(me.hand)
+        notify("{} perform's the turn's mandatory draw.".format(me))
+        newturn = False
+    else:
+        if useAction() == 'ABORT': return
+        group[0].moveTo(me.hand)
+        notify("{} draws a card.".format(me))
 
 def drawManySilent(group, count):
 	SSize = len(group)
