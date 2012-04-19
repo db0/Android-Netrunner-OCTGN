@@ -11,4 +11,5 @@
   <Default Extension="xml" ContentType="text/xml" />
   <Default Extension="o8d" ContentType="octgn/deck" />
   <Default Extension="py" ContentType="text/x-python" />
+  <Default Extension="ttf" ContentType="application/x-font-ttf" />  
 </Types>

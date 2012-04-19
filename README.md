@@ -16,6 +16,14 @@ Sample Screenshot of 1.5.7
 Changelog
 ---------
 
+### 1.5.9
+
+* Renamed some option to be more thematic
+* Converted all bit references to unicode via new function
+* Reworked the automation ON/OFF to use boolean and to be smaller.
+* Added option to switch unicode bits on/off
+* Added Unicode font as default to be used in the upcoming version of OCTGN(untested)
+
 ### 1.5.8
 
 * Fixed playing or rezzing cards at no cost not putting it on the table.
