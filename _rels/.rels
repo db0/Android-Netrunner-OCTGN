@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
   <Relationship Target="/definition.xml" Id="def" Type="http://schemas.octgn.org/game/definition" />
-  <Relationship Target="/DejaVuSans.ttf" Id="fnt" Type="http://schemas.octgn.info/game/font" />
+  <Relationship Target="/CyberpunkIsNotDead.ttf" Id="fnt" Type="http://schemas.octgn.info/game/font" />
+  <Relationship Target="/chat.ttf" Id="chtfnt" Type="http://schemas.octgn.info/game/font" />
 </Relationships>

@@ -16,6 +16,18 @@ Sample Screenshot of 1.5.7
 Changelog
 ---------
 
+### 1.5.11
+
+* Added Commodore 64 fonts for the chat box
+
+### 1.5.10
+
+* Added modified [Cyberpunks Not Dead font](http://www.dafont.com/cyberpunk-is-not-dead.font) (with some specific unicode support). many thanks to Aurelius :-)
+* Changed some wordings.
+* Agenda Points scored now visible on player summary.
+* Changed the hand "Trash Card" actions to "Trash/Archive" to be more descriptive. 
+* "Move to Archives H" now is "Move to Face-Up Archives" since the Hidden archives are alread delt with the normal "Trash/Archive".
+
 ### 1.5.9
 
 * Renamed some option to be more thematic

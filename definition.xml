@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<game xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="Netrunner" id="13568561-7a2e-4572-8f31-3d99580ab245" octgnVersion="3.0.1.0" version="1.5.9" markersize="16">
+<game xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="Netrunner" id="13568561-7a2e-4572-8f31-3d99580ab245" octgnVersion="3.0.1.0" version="1.5.11" markersize="16">
 	<card back="r4" front="r5" width="63" height="88" cornerRadius="2">
 		<property name="Player" type="String" hidden="false" ignoreText="False" />
 		<property name="Cost" type="Integer" hidden="false" />
@@ -81,17 +81,17 @@
         
 		
 	</table>
-	<player summary="Actions {#Actions} / Bits {#Bit Pool} / Hand {#HQ/Hand}">
+	<player summary="Actions {#Actions} / Bits {#Bit Pool} / Hand {#HQ/Hand} / APs {#Agenda Points}">
 		<hand name="HQ/Hand" visibility="me" ordered="false" width="63" height="88" icon="r11">
 			<cardaction menu="&#9166; Pay and Install Card" default="true" shortcut="enter" execute="intPlay" />
 			<cardaction menu="Install Card at no cost" default="false" execute="playForFree" />
 			<cardactions menu="Move ...">
 				<cardaction menu ="To Top of R&amp;D/Stack" default="false" execute="movetoTopOfStack" />
 				<cardaction menu ="To Bottom of R&amp;D/Stack" default="false" execute="movetoBottomOfStack" />
-				<cardaction menu ="To Archives H" default="false" execute="handtoArchivesH" />
+				<cardaction menu ="To Face-up Archives" default="false" execute="handtoArchives" />
 			</cardactions>
-			<cardaction menu="Trash" default="false" shortcut="del" execute="handDiscard" />           
-			<groupaction menu="Trash a Card at Random" default="false" execute="handRandomDiscard" />
+			<cardaction menu="Trash/Archive" default="false" shortcut="del" execute="handDiscard" />           
+			<groupaction menu="Trash/Archive a Card at Random" default="false" execute="handRandomDiscard" />
 			<groupaction menu="Show a Card at Random" default="false" execute="showatrandom"/>
 			<groupaction menu="Move to R&amp;D/Stack" default="false" execute="handtoStack"/>
 
