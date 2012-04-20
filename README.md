@@ -27,7 +27,7 @@ The final release of the co-operation between Db0 and toon. Netrunner 2.0.0 is r
 Due to the significant changes in this version, it is strongly suggested that you delete your OCTGN\Database folder after patching. OCTGN should automatically reinstall all your games the next time you start it (If not, just go to options, select Install on Launch and restart OCTGN)
 Don't forget to download the latest markers file as well.
 
-Also keep in mind that the current (as of 20/04/2012) stable versions of OCTGN do not support the custom fonts that are enabled by the game. If you see squares where you should be seeing characters, (or if you just want to experience the awesomeness) use the OCTGN Beta 4.
+Also keep in mind that the current (as of 20/04/2012) stable versions of OCTGN do not support the custom fonts that are enabled by the game. If you see squares where you should be seeing characters, (or if you just want to experience the awesomeness) use the [OCTGN Beta 4](https://github.com/downloads/Gravecorp/OCTGN/beta4.zip).
 
 ### 1.5.11
 
