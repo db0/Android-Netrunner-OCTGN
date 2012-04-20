@@ -17,7 +17,6 @@ UniBits = True # If True, game will display bits as unicode characters ❶, ❷,
 
 TraceValue = 0
 
-turnIdx = 0
 DifficultyLevels = { }
 
 TypeCard = {}
@@ -26,6 +25,7 @@ CostCard = {}
 MemoryRequirements = { }
 InstallationCosts = { }
 maxActions = 3
+scoredAgendas = 0
 playerside = None # Variable to keep track on which side each player is
 playeraxis = None # Variable to keep track on which axis the player is
 
@@ -111,7 +111,7 @@ def yaxisMove(card):
 # Variable to move the cards played by player 2 on a 2-sided table, more towards their own side. 
 # Player's 2 axis will fall one extra card length towards their side.
 # This is because of bug #146 (https://github.com/kellyelton/OCTGN/issues/146)
-   if me.hasInvertedTable(): cardmove = cheight(card) + 10
+   if me.hasInvertedTable(): cardmove = cheight(card)
    else: cardmove = cardmove = 0
    return cardmove
 
@@ -214,6 +214,8 @@ def intJackin(group, x = 0, y = 0):
     global ds, maxActions
     mute()
     ds = ""
+    if not table.isTwoSided(): 
+        if not confirm("This game is designed to be played on a two-sided table. Things will be wonky otherwise!! Please start a new game and makde sure the  the appropriate button is checked. Are you sure you want to continue?"): return   
     chooseSide()
     stack = me.piles['R&D/Stack']
     if len(stack) == 0:
@@ -456,31 +458,37 @@ def payCost(count = 1, cost = 'not_free', notification = silent): # A function t
    return count
    
 def scrAgenda(card, x = 0, y = 0):
-	#if DifficultyLevels[card] >= 1:
-	if ( TypeCard[card] == "Agenda" ):
-		if confirm("Do you want to score this agenda?") == True:
-			mute()
-			card.isFaceUp = True
-			ap = num(card.Stat)
-			card.markers[Advance] = 0
-			card.markers[Not_rezzed] = 0
-			card.highlight = ScoredColor
-			card.markers[Scored] += 1
-#			card.moveToTable(270, 90)
-			me.counters['Agenda Points'].value += ap
-			
-			if ds == "runner": agendaTxt = "liberates"
-			else: agendaTxt = "scores"
-
-			notify("{} {} {} and receives {} agenda point(s)".format(me, agendaTxt, card, ap))
-
-			if ( me.counters['Agenda Points'].value >= 7) : notify("{} wins the game!".format(me))
-			else: executeAutomations ( card, agendaTxt)
-
-		else:
-			whisper (" you decided not to score.")
-	else:
-		whisper ("You can't score this card")
+    #if DifficultyLevels[card] >= 1:
+    global TypeCard, scoredAgendas
+    mute()
+    if card.markers[Scored] > 0: 
+        notify ("This agenda has already been scored")
+        return
+    if ds == 'runner' and card.Type != "Agenda" and not card.isFaceUp:
+        card.isFaceUp = True
+        random = rnd(100,1000) # Hack Workaround
+        if card.Type != "Agenda":
+            whisper ("You can only score Agendas")
+            card.isFaceUp = False
+            return
+    if ds == 'runner': TypeCard[card] = card.Type
+    if TypeCard[card] == "Agenda":
+        if confirm("Do you want to score this agenda?") == True:
+            card.isFaceUp = True
+            ap = num(card.Stat)
+            card.markers[Advance] = 0
+            card.markers[Not_rezzed] = 0
+            card.markers[Scored] += 1
+            me.counters['Agenda Points'].value += ap
+            card.moveToTable(-600 - scoredAgendas * cwidth(card) / 6, 60 - yaxisMove(card) + scoredAgendas * cheight(card) / 2 * playerside, False)
+            scoredAgendas += 1
+            if ds == "runner": agendaTxt = "liberates"
+            else: agendaTxt = "scores"
+            notify("{} {} {} and receives {} agenda point(s)".format(me, agendaTxt, card, ap))
+            if me.counters['Agenda Points'].value >= 7 : notify("{} wins the game!".format(me))
+            else: executeAutomations (card,agendaTxt)
+    else:
+        whisper ("You can't score this card")
 
 def isRezzable (card):
 	mute()
@@ -595,13 +603,13 @@ def intPlay(card, cost = 'not_free'):
     CostCard[card] = card.Cost
     if card.Type == 'Resource' and re.search(r'Hidden', card.Keywords): hiddenresource = 'yes'
     else: hiddenresource = 'no'
-    if card.Type == 'Ice' or card.Type == 'Agenda' or card.Type == 'Node' or (card.Type == 'Upgrade' and re.search(r'Region', card.Keywords)):
+    if card.Type == 'Ice' or card.Type == 'Agenda' or card.Type == 'Node' or (card.Type == 'Upgrade' and not re.search(r'Region', card.Keywords)):
         card.moveToTable(-180, 160 * playerside - yaxisMove(card), True) # Agendas, Nodes and non-region Upgrades all are played to the same spot now.
         if TypeCard[card] == 'Ice': 
             card.orientation ^= Rot90
             card.moveToTable(-180, 65 * playerside - yaxisMove(card), True) # Ice are moved a bit more to the front and played sideways.
         card.markers[Not_rezzed] += 1
-        notify("{} prepares a card.".format(me))
+        notify("{} installs a card.".format(me))
     elif card.Type == 'Program' or card.Type == 'Prep' or card.Type == 'Resource' or card.Type == 'Hardware':
         me.Memory -= num(card.properties["MU Required"])
         if card.Type == 'Resource' and hiddenresource == 'yes':
@@ -618,7 +626,7 @@ def intPlay(card, cost = 'not_free'):
             card.moveToTable(-150, 65 * playerside - yaxisMove(card), False)
             notify("{} has installed {}{}.".format(me, card, extraText))
         elif card.Type == 'Prep':
-            card.moveToTable(0, 0 * playerside - yaxisMove(card), False)
+            card.moveToTable(0, 0 - yaxisMove(card), False)
             notify("{} has prepped with {}{}.".format(me, card, extraText))
         elif card.Type == 'Hardware':
             card.moveToTable(-210, 160 * playerside - yaxisMove(card), False)
