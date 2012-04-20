@@ -553,13 +553,17 @@ def clear(card, x = 0, y = 0):
 
 def intTrashCard (card, stat, cost = "not free"):
     mute()
+    MUtext = ""
     if card.Type == "Tracing": return
     cardowner = card.owner
     rc = payCost(stat, cost, loud)
     if rc == "ABORT": return # If the player didn't have enough money to pay and aborted the function, then do nothing.
     if card.isFaceUp:
-        if rc == "free" : notify("{} trashed {} at no cost.".format(me, card))
-        else: notify("{} trashed {}.".format(me, card))
+        if num(card.properties["MU Required"]) > 0:
+            cardowner.Memory += num(card.properties["MU Required"])
+            MUtext = ", freeing up {} MUs".format(card.properties["MU Required"])
+        if rc == "free" : notify("{} trashed {} at no cost{}.".format(me, card, MUtext))
+        else: notify("{} trashed {}{}.".format(me, card, MUtext))
         executeAutomations (card, "trash")
         card.moveTo(cardowner.piles['Trash/Archives(Face-up)'])
     elif (ds == "runner" and cardowner == me) or (ds == "corp" and cardowner != me ): #I'm the runner and I trash my card or I 'm the corp and I trash a runner card
@@ -601,6 +605,7 @@ def intPlay(card, cost = 'not_free'):
     if useAction() == 'ABORT': return
     TypeCard[card] = card.Type
     CostCard[card] = card.Cost
+    MUtext = ""
     if card.Type == 'Resource' and re.search(r'Hidden', card.Keywords): hiddenresource = 'yes'
     else: hiddenresource = 'no'
     if card.Type == 'Ice' or card.Type == 'Agenda' or card.Type == 'Node' or (card.Type == 'Upgrade' and not re.search(r'Region', card.Keywords)):
@@ -611,7 +616,9 @@ def intPlay(card, cost = 'not_free'):
         card.markers[Not_rezzed] += 1
         notify("{} installs a card.".format(me))
     elif card.Type == 'Program' or card.Type == 'Prep' or card.Type == 'Resource' or card.Type == 'Hardware':
-        me.Memory -= num(card.properties["MU Required"])
+        if num(card.properties["MU Required"]) > 0:
+            me.Memory -= num(card.properties["MU Required"])
+            MUtext = ", using up {} MUs".format(card.properties["MU Required"])
         if card.Type == 'Resource' and hiddenresource == 'yes':
             card.moveToTable(-180, 230 * playerside - yaxisMove(card), True)
             notify("{} installs a card.".format(me))
@@ -624,19 +631,19 @@ def intPlay(card, cost = 'not_free'):
         elif rc == "free": extraText = " at no cost"
         if card.Type == 'Program':
             card.moveToTable(-150, 65 * playerside - yaxisMove(card), False)
-            notify("{} has installed {}{}.".format(me, card, extraText))
+            notify("{} has installed {}{}{}.".format(me, card, extraText,MUtext))
         elif card.Type == 'Prep':
             card.moveToTable(0, 0 - yaxisMove(card), False)
             notify("{} has prepped with {}{}.".format(me, card, extraText))
         elif card.Type == 'Hardware':
             card.moveToTable(-210, 160 * playerside - yaxisMove(card), False)
-            notify("{} has purchased {}{}.".format(me, card, extraText))
+            notify("{} has purchased {}{}{}.".format(me, card, extraText,MUtext))
         elif card.Type == 'Resource' and hiddenresource == 'no':
             card.moveToTable(180, 240 * playerside - yaxisMove(card), False)
-            notify("{} has acquired {}{}.".format(me, card, extraText))
+            notify("{} has acquired {}{}{}.".format(me, card, extraText,MUtext))
         else:
             card.moveToTable(0, 0 * playerside - yaxisMove(card), False)
-            notify("{} plays {}{}.".format(me, card, extraText))
+            notify("{} plays {}{}{}.".format(me, card, extraText,MUtext))
     else:
         rc = payCost(card.Cost, cost, loud)
         if rc == "ABORT": 
@@ -874,16 +881,16 @@ def executeAutomations(card,action = ''):
     Param1 = num(card.ParamAS1)*Execute
     Param2 = num(card.ParamAS2)*Execute
     if AutoScript == "autoGainXDrawY": autoGainXDrawY(card,Param1,Param2)
-    if AutoScript == "autoGainXIfY": autoGainXIfY(card,Param1,Param2)
-    if AutoScript == "autoGainX": autoGainX(card,Param1,Param2)
-    if AutoScript == "autoDrawX" : autoDrawX(card,Param1,Param2)
-    if AutoScript == "autoAddBitsCounter": autoAddBitsCounter(card,Param1,Param2)
-    if AutoScript == "autoGainXYTags": autoGainXYTags(card,Param1,Param2 )
-    if AutoScript == "autoGainXYBadPub": autoGainXYBadPub(card,Param1,Param2)
-    if re.search(r'autoAddMUAndBitsCounter', AutoScript): autoAddMUAndCounter(card,Param1,Param2)
-    if re.search(r'autoaddMUHandSizeBitsCounter', AutoScript): autoaddMUHandSizeBitsCounter(card,Param1,Param2)
-    if re.search(r'autoAddMU', AutoScript): autoAddMU(card,Param1,Param2)
-    if re.search(r'autoAddHandSize', AutoScript): autoAddHandSize(card,Param1,Param2)
+    elif AutoScript == "autoGainXIfY": autoGainXIfY(card,Param1,Param2)
+    elif AutoScript == "autoGainX": autoGainX(card,Param1,Param2)
+    elif AutoScript == "autoDrawX" : autoDrawX(card,Param1,Param2)
+    elif AutoScript == "autoAddBitsCounter": autoAddBitsCounter(card,Param1,Param2)
+    elif AutoScript == "autoGainXYTags": autoGainXYTags(card,Param1,Param2 )
+    elif AutoScript == "autoGainXYBadPub": autoGainXYBadPub(card,Param1,Param2)
+    elif re.search(r'autoAddMUAndBitsCounter', AutoScript): autoAddMUAndCounter(card,Param1,Param2)
+    elif re.search(r'autoaddMUHandSizeBitsCounter', AutoScript): autoaddMUHandSizeBitsCounter(card,Param1,Param2)
+    elif re.search(r'autoAddMU', AutoScript): autoAddMU(card,Param1,Param2)
+    elif re.search(r'autoAddHandSize', AutoScript): autoAddHandSize(card,Param1,Param2)
 
 def autoGainXDrawY ( card, Param1, Param2 ):
 	mute()

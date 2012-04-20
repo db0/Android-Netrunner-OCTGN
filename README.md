@@ -19,6 +19,10 @@ How the custom fonts look like
 
 Changelog
 ---------
+### 2.0.2
+
+* Cards with MU cost now announce how much it is when they installed, and return it back to their owner when they're trashed.
+* Fixed +MU card giving double the bonuses.
 
 ### 2.0.1
 
