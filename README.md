@@ -18,7 +18,7 @@ Changelog
 
 ### 2.0.0
 
-The final release of the co-operation between Db0 and toon. Netrunner 2.0.0 is released!
+The latest release of the co-operation between Db0 and toon. Netrunner 2.0.0 is released!
 
 * Autoscripts are now working without errors. This means that many of the cards that do something fairly simple, like drawing 3 cards, or increasing your handsize, now do that automatically.
 * Function to disable Autoscripts in the game menu
