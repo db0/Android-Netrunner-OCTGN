@@ -9,12 +9,23 @@ Screenshots
 ---------
 (Click for larger size)
 
-Sample Screenshot of 1.5.7
+Sample Screenshot of 2.0.0
 
-[![](http://i.imgur.com/CAyqTl.jpg)](http://i.imgur.com/CAyqT.jpg)
+[![](http://i.imgur.com/FBWUwl.jpg)](http://i.imgur.com/FBWUw.jpg)
+
+How the custom fonts look like
+
+[![](http://i.imgur.com/1Zcjy.png)](http://i.imgur.com/1Zcjy.png)
 
 Changelog
 ---------
+
+### 2.0.1
+
+* Agenda scoring should now work for the runner.
+* Fixe bug where Corp Upgrades were being installed face-up
+* Put a warning in case people try to start a game without a two-sided-table
+* Scored agendas now moved to the scoring player's side and stacked.
 
 ### 2.0.0
 
