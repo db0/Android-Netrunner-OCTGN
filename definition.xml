@@ -1,15 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<game xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="Netrunner" id="13568561-7a2e-4572-8f31-3d99580ab245" octgnVersion="3.0.1.0" version="1.5.11" markersize="16">
+<game xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="Netrunner" id="13568561-7a2e-4572-8f31-3d99580ab245" octgnVersion="3.0.1.2" version="2.0.0" markersize="16">
 	<card back="r4" front="r5" width="63" height="88" cornerRadius="2">
 		<property name="Player" type="String" hidden="false" ignoreText="False" />
 		<property name="Cost" type="Integer" hidden="false" />
 		<property name="MU Required" type="Integer" hidden="false" />
 		<property name="Type" type="String" hidden="false" ignoreText="False" textKind="Free" />
-		<property name="Keyword 1" type="String" hidden="false" ignoreText="False" textKind="Tokens" />
-		<property name="Keyword 2" type="String" hidden="false" ignoreText="False" textKind="Tokens" />
-		<property name="Keyword 3" type="String" hidden="false" ignoreText="False" textKind="Tokens" />
-		<property name="Keyword 4" type="String" hidden="false" ignoreText="False" textKind="Tokens" />
-		<property name="Keyword 5" type="String" hidden="false" ignoreText="False" textKind="Tokens" />
+		<property name="Keywords" type="String" hidden="false" ignoreText="False" />
 		<property name="Stat" type="Integer" hidden="false" ignoreText="False" />
 		<property name="Rules" type="String" hidden="false" ignoreText="False" />
 		<property name="Errata" type="String" hidden="false" ignoreText="False" />
@@ -29,7 +25,7 @@
 		<groupactions menu="Game...">
 			<groupaction menu="Set up" default="false" shortcut="Ctrl+Shift+S" execute="intJackin" />
 			<groupaction menu="Switch Unicode bits ON/OFF" default="false" execute="switchUniBits" />
-<!--			<groupaction menu="Switch Automation ON/OFF" default="false" execute="switchAutomation" />  -->
+			<groupaction menu="Switch Automation ON/OFF" default="false" execute="switchAutomation" />  
 		</groupactions>
 		<groupactions menu="Turns/Actions...">
 			<groupaction menu="Declare Start of Turn" default="false" shortcut="F1" execute="goToSot" />

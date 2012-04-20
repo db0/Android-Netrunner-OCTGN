@@ -243,7 +243,7 @@ def intJackin(group, x = 0, y = 0):
         NameDeck = "Stack"
         notify("{} is playing as Runner".format(me))
     table.create("c0f18b5a-adcd-4efe-b3f8-7d72d1bd1db8", 0, 200 * playerside, 1 ) #trace card
-#    switchAutomation(group,x,y,'On')
+    switchAutomation(group,x,y,'On')
     shuffle(me.piles['R&D/Stack'])
     notify ("{}'s {} is shuffled ".format(me,NameDeck) )
     drawMany (me.piles['R&D/Stack'], 5) 
@@ -443,15 +443,15 @@ def getBit(group, x = 0, y = 0):
 
 def payCost(count = 1, cost = 'not_free', notification = silent): # A function that removed the cost provided from our bit pool, after checking that we have enough.
    if cost == 'free': return 'free'
-#   count = num(count)
+   count = num(count)
    if count == 0 : return 0# If the card has 0 cost, there's nothing to do.
-   if me.counters['Bit Pool'].value < num(count): # If we don't have enough Bits in the pool, we assume card effects or mistake and notify the player that they need to do things manually.
+   if me.counters['Bit Pool'].value < count: # If we don't have enough Bits in the pool, we assume card effects or mistake and notify the player that they need to do things manually.
       if not confirm("You do not seem to have enough Bits in your pool to take this action. Are you sure you want to proceed? \
       \n(If you do, your Bit Pool will go to the negative. You will need to increase it manually as required.)"): return 'ABORT'
       if notification == loud: notify("{} was supposed to pay {} but only has {} in their bit pool. They'll need to reduce the cost by {} with card effects.".format(me, uniBit(count), uniBit(me.counters['Bit Pool'].value), uniBit(count - me.counters['Bit Pool'].value)))   
-      me.counters['Bit Pool'].value -= num(count) 
+      me.counters['Bit Pool'].value -= count 
    else: # Otherwise, just take the money out and inform that we did if we're "loud".
-      me.counters['Bit Pool'].value -= num(count)
+      me.counters['Bit Pool'].value -= count
       if notification == loud: notify("{} has paid {}. {} remaining.".format(me, uniBit(count), uniBit(me.counters['Bit Pool'].value)))  
    return count
    
@@ -593,9 +593,9 @@ def intPlay(card, cost = 'not_free'):
     if useAction() == 'ABORT': return
     TypeCard[card] = card.Type
     CostCard[card] = card.Cost
-    if card.Type == 'Resource' and (card.properties["Keyword 1"] == "Hidden" or card.properties["Keyword 2"] == "Hidden"): hiddenresource = 'yes'
+    if card.Type == 'Resource' and re.search(r'Hidden', card.Keywords): hiddenresource = 'yes'
     else: hiddenresource = 'no'
-    if card.Type == 'Ice' or card.Type == 'Agenda' or card.Type == 'Node' or (card.Type == 'Upgrade' and card.properties["Keyword 1"] != "Region"):
+    if card.Type == 'Ice' or card.Type == 'Agenda' or card.Type == 'Node' or (card.Type == 'Upgrade' and re.search(r'Region', card.Keywords)):
         card.moveToTable(-180, 160 * playerside - yaxisMove(card), True) # Agendas, Nodes and non-region Upgrades all are played to the same spot now.
         if TypeCard[card] == 'Ice': 
             card.orientation ^= Rot90
@@ -638,13 +638,13 @@ def intPlay(card, cost = 'not_free'):
         if card.Type == 'Operation':
             card.moveToTable(0, 0 * playerside - yaxisMove(card), False)
             notify("{} initiates {}{}.".format(me, card, extraText))
-        elif card.Type == 'Upgrade' and card.properties["Keyword 1"] == "Region":
+        elif card.Type == 'Upgrade' and re.search(r'Region', card.Keywords):
             card.moveToTable(-220, 240 * playerside - yaxisMove(card), False)
             notify("{} opened a base of operations in {}{}.".format(me, card, extraText))
         else:
             card.moveToTable(0, 0 * playerside - yaxisMove(card), False)
             notify("{} has played {}{}.".format(me, card, extraText))           
-    executeAutomations ( card, "play" )
+    executeAutomations(card,"play")
 
 def playForFree(card, x = 0, y = 0):
 	intPlay(card,"free")
@@ -817,83 +817,65 @@ def checkDeckNoLimit (group):
 	if ( ds == ""):
 		whisper ("Choose a side first.")
 		return 
-
 	notify (" -> Checking deck of {} ...".format(me) )
 	ok = 0
 	loDeckCount = len(group)
-
 	if ( loDeckCount < 45 ):
 		ok = -1
 		notify ( "- Error: only {} cards in {}'s Deck.".format(loDeckCount,me) )
-
 	mute()
 	if ( ds == "corp"):
 		loAP = 0.0
 		loRunner = 0
 		for card in group:
 			card.moveTo(me.piles['Trash/Archives(Face-up)'])
-     			if ( re.match(r'\bAgenda\b', card.properties["Type"]) ): loAP += num(card.Stat)
-			if ( card.properties["Player"] == "runner"): loRunner = 1
+     			if card.Type == 'Agenda': loAP += num(card.Stat)
+			if card.Player == "runner": loRunner = 1
 			card.moveToBottom(group)
-
-		if ( loAP/loDeckCount < 2.0/5.0 ):
-			notify ( "- Error: only {} Agenda Points in {}'s R&D.".format(loAP/1,me) )
+		if loAP/loDeckCount < 2.0/5.0:
+			notify("- Error: only {} Agenda Points in {}'s R&D.".format(loAP/1,me))
 			ok = -1
-
-		if ( loRunner == 1 ):
-			notify ( "- Error: Runner Cards found in {}'s R&D.".format(me) )
+		if loRunner == 1:
+			notify("- Error: Runner Cards found in {}'s R&D.".format(me))
 			ok = -1
 	else:
 		loCorp = 0
 		for card in group:
 			card.moveTo(me.piles['Trash/Archives(Face-up)'])
-     			if (card.properties["Player"]== "corp"): loCorp = 1
+     			if card.Player == "corp": loCorp = 1
 			card.moveToBottom(group)
 
-		if ( loCorp == 1 ):
-			notify ( "- Error: Corp Cards found in {}'s Stack.".format(me) )
+		if loCorp == 1:
+			notify("- Error: Corp Cards found in {}'s Stack.".format(me))
 			ok = -1
-
-
-	if ( ok == 0 ): notify (" -> Deck of {} OK !".format(me) )
-
+	if ok == 0: notify("-> Deck of {} OK !".format(me))
 	return ok
 
 #------------------------------------------------------------------------------
 # Automations
 #------------------------------------------------------------------------------
-def executeAutomations ( card, action ):
-	
+def executeAutomations(card,action = ''):
     if not Automation: return
     if not card.isFaceUp: return
-
-    AutoScript = card.properties ["AutoScript"]
-
-    if (  AutoScript == "") : return
+    AutoScript = card.AutoScript
+    if AutoScript == "": return
     Execute = 0
-
-    if ( action == "play" or action == "rez" or action == "scores"): Execute = 1
-
-    if ( ( (action == "trash" and card.markers[Not_rezzed] == 0) or action == "derez") and AutoScript.find("ReverseYes") != -1 ): Execute = -1
-
-    if ( Execute == 0): return
-
+    if action == "play" or action == "rez" or action == "scores": Execute = 1
+    if ( (action == "trash" and card.markers[Not_rezzed] == 0) or action == "derez") and re.search(r'ReverseYes', AutoScript): Execute = -1
+    if Execute == 0: return
     Param1 = num(card.ParamAS1)*Execute
     Param2 = num(card.ParamAS2)*Execute
-
-    if ( AutoScript == "autoGainXDrawY" ): autoGainXDrawY ( card, Param1, Param2 )
-    elif ( AutoScript == "autoGainXIfY"): autoGainXIfY( card, Param1, Param2 )
-    elif ( AutoScript == "autoGainX" ) : autoGainX ( card, Param1, Param2 )
-    elif ( AutoScript == "autoDrawX" ) : autoDrawX ( card, Param1, Param2 )
-    elif ( AutoScript == "autoAddBitsCounter" ): autoAddBitsCounter( card, Param1, Param2 )
-    elif ( AutoScript == "autoGainXYTags"): autoGainXYTags( card, Param1, Param2 )
-    elif ( AutoScript == "autoGainXYBadPub"): autoGainXYBadPub( card, Param1, Param2 )
-    elif ( AutoScript.find("autoAddMUAndBitsCounter") != -1): autoAddMUAndCounter ( card, Param1, Param2 )
-    elif ( Autoscript.find("autoaddMUHandSizeBitsCounter") != -1 ): autoaddMUHandSizeBitsCounter ( card, Param1, Param2 )
-    elif ( AutoScript.find("autoAddMU") != -1 ): autoAddMU( card, Param1, Param2 )
-    elif ( AutoScript.find("autoAddHandSize") != -1 ): autoAddHandSize( card, Param1, Param2 )
-
-    else: return
+    if AutoScript == "autoGainXDrawY": autoGainXDrawY(card,Param1,Param2)
+    if AutoScript == "autoGainXIfY": autoGainXIfY(card,Param1,Param2)
+    if AutoScript == "autoGainX": autoGainX(card,Param1,Param2)
+    if AutoScript == "autoDrawX" : autoDrawX(card,Param1,Param2)
+    if AutoScript == "autoAddBitsCounter": autoAddBitsCounter(card,Param1,Param2)
+    if AutoScript == "autoGainXYTags": autoGainXYTags(card,Param1,Param2 )
+    if AutoScript == "autoGainXYBadPub": autoGainXYBadPub(card,Param1,Param2)
+    if re.search(r'autoAddMUAndBitsCounter', AutoScript): autoAddMUAndCounter(card,Param1,Param2)
+    if re.search(r'autoaddMUHandSizeBitsCounter', AutoScript): autoaddMUHandSizeBitsCounter(card,Param1,Param2)
+    if re.search(r'autoAddMU', AutoScript): autoAddMU(card,Param1,Param2)
+    if re.search(r'autoAddHandSize', AutoScript): autoAddHandSize(card,Param1,Param2)
 
 def autoGainXDrawY ( card, Param1, Param2 ):
 	mute()
@@ -925,10 +907,10 @@ def autoAddMUAndCounter ( card, Param1, Param2 ):
 	autoAddMU ( card, Param1, Param2 )
 	intAddBits ( card, Param2)
 
-def autoAddHandSize ( card, Param1, Param2):
-	Owner = card.owner
-	Owner.counters['Max Hand Size'].value +=Param1
-	notify ("--> {} max Hand Size is now {}.".format(Owner,Owner.counters['Max Hand Size'].value) )
+def autoAddHandSize(card,Param1,Param2):
+    Owner = card.owner
+    Owner.counters['Max Hand Size'].value += Param1
+    notify ("--> {} max Hand Size is now {}.".format(Owner,Owner.counters['Max Hand Size'].value) )
 
 def autoaddMUHandSizeBitsCounter ( card, Param1, Param2):
 	autoAddMuAndCounter ( card, Param1, Param2)
