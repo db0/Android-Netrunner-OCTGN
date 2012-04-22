@@ -942,3 +942,12 @@ def autoGainXYBadPub ( card, Param1, Param2):
 
 def autoGainXIfY ( card, Param1, Param2):
 	if ( me.counters['Bit Pool'].value >= Param2): autoGainX ( card, Param1, 0)
+
+def regexptst(card, x=0, y=0):
+    s = re.match(r"(A)([0-9]+)(B)([0-9]+)(T)([01])", card.AutoScript)
+    whisper("Actions {}, Bits {}".format(s.group(2), s.group(4)))
+
+    sAddBits = re.search(r"(Gain)([0-9]+)(Bits)", card.AutoScript)
+    sRemTags = re.search(r"(Rem)([0-9]+)(Tags)", card.AutoScript)
+    whisper("Add {} Bits and {} Tags".format(sAddBits.group(2), sRemTags.group(2)))
+    
