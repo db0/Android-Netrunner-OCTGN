@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<game xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="Netrunner" id="13568561-7a2e-4572-8f31-3d99580ab245" octgnVersion="3.0.1.2" version="2.0.2" markersize="16">
+<game xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="Netrunner" id="13568561-7a2e-4572-8f31-3d99580ab245" octgnVersion="3.0.1.2" version="2.0.3" markersize="16">
 	<card back="r4" front="r5" width="63" height="88" cornerRadius="2">
 		<property name="Player" type="String" hidden="false" ignoreText="False" />
 		<property name="Cost" type="Integer" hidden="false" />

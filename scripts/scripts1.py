@@ -888,7 +888,7 @@ def executeAutomations(card,action = ''):
     elif AutoScript == "autoGainXYTags": autoGainXYTags(card,Param1,Param2 )
     elif AutoScript == "autoGainXYBadPub": autoGainXYBadPub(card,Param1,Param2)
     elif re.search(r'autoAddMUAndBitsCounter', AutoScript): autoAddMUAndCounter(card,Param1,Param2)
-    elif re.search(r'autoaddMUHandSizeBitsCounter', AutoScript): autoaddMUHandSizeBitsCounter(card,Param1,Param2)
+    elif re.search(r'MUHandSizeBitsCounter', AutoScript): autoaddMUHandSizeBitsCounter(card,Param1,Param2)
     elif re.search(r'autoAddMU', AutoScript): autoAddMU(card,Param1,Param2)
     elif re.search(r'autoAddHandSize', AutoScript): autoAddHandSize(card,Param1,Param2)
 
@@ -918,7 +918,6 @@ def autoAddMU ( card, Param1, Param2 ):
 	notify (" --> {} max MU is now {}.".format(Owner,Owner.counters['Memory'].value) )
 
 def autoAddMUAndCounter ( card, Param1, Param2 ):
-	#mute()
 	autoAddMU ( card, Param1, Param2 )
 	intAddBits ( card, Param2)
 
@@ -928,8 +927,8 @@ def autoAddHandSize(card,Param1,Param2):
     notify ("--> {} max Hand Size is now {}.".format(Owner,Owner.counters['Max Hand Size'].value) )
 
 def autoaddMUHandSizeBitsCounter ( card, Param1, Param2):
-	autoAddMuAndCounter ( card, Param1, Param2)
-	autoaddHandSize ( card, Param1, 0)
+    autoAddMUAndCounter(card,Param1,Param2)
+    autoAddHandSize(card,Param1,Param2)
 
 def autoGainXYTags( card, Param1, Param2):
 	autoGainX ( card, Param1, 0)
