@@ -1,4 +1,5 @@
-Advance = ("Advance", "73b8d1f2-cd54-41a9-b689-3726b7b86f4f")
+﻿Advance = ("Advance", "73b8d1f2-cd54-41a9-b689-3726b7b86f4f")
+Generic = ("Generic", "b384957d-22c5-4e7d-a508-3990c82f4df6")
 Bits = ("Bits", "19be5742-d233-4ea1-a88a-702cfec930b1")
 Scored = ("Scored", "10254d1f-6335-4b90-b124-b01ec131dd07")
 Not_rezzed = ("Not rezzed", "8105e4c7-cb54-4421-9ae2-4e276bedee90")
@@ -223,6 +224,7 @@ def intJackin(group, x = 0, y = 0):
         return
     TopCard = stack[0]
     TopCard.moveTo(me.piles['Trash/Archives(Face-up)'])
+    if len(players) > 1: random = rnd(1,100) # Fix for multiplayer only. Makes Singleplayer setup very slow otherwise.
     ds = TopCard.Player
     TopCard.moveTo(me.piles['R&D/Stack'])
     if checkDeckNoLimit(stack) != 0: notify ("SHOULD RETURN")
@@ -330,14 +332,29 @@ def remBits2BP (card, x = 0, y = 0):
 	else: notify("{} takes {} from a card to their Bit Pool.".format(me,uniBit(count)))
 
 def addPlusOne(card, x = 0, y = 0):
-	mute()
-	card.markers[PlusOne] += 1
-	notify("{} adds one +1 marker on {}.".format(me,card))
+   mute()
+   if MinusOne in card.markers:
+      card.markers[MinusOne] -= 1
+   else: 
+      card.markers[PlusOne] += 1
+   notify("{} adds one +1 marker on {}.".format(me,card))
 
 def addMinusOne(card, x = 0, y = 0):
-	mute()
-	card.markers[MinusOne] += 1
-	notify("{} adds one +1 marker on {}.".format(me,card))
+   mute()
+   if PlusOne in card.markers:
+      card.markers[PlusOne] -= 1
+   else:
+      card.markers[MinusOne] += 1
+   notify("{} adds one -1 marker on {}.".format(me,card))
+
+def addMarker(cards, x = 0, y = 0): # A simple function to manually add any of the available markers.
+   mute()
+   marker, quantity = askMarker() # Ask the player how many of the same type they want.
+   if quantity == 0: return
+   for card in cards: # Then go through their cards and add those markers to each.
+      card.markers[marker] += quantity
+      notify("{} adds {} {} counter to {}.".format(me, quantity, marker[0], card))	
+
 #------------------------------------------------------------------------------
 # advancing cards
 #------------------------------------------------------------------------------
@@ -803,19 +820,18 @@ def archivestoStack(group):
 	notify ("{} moves {} to {}.".format(me,nameTrash,nameStack))
 
 def mill(group):
-	if len(group) == 0: return
-	mute()
-    	count = askInteger("Mill how many cards?", 1)
-	if ( ds == "runner"):
-    		for c in group.top(count): c.moveTo(me.piles['Archives(Hidden)'])
-		nameStack = "Stack"
-		nameTrash = "Trash"
-	else:
-		for c in group.top(count): c.moveTo(me.piles['Archives(Hidden)'])
-		nameStack = "HQ"
-		nameTrash = "Archives H"
-
-    	notify("{} mills the top {} cards from {} to {}.".format(me, count,nameStack,nameTrash))
+   if len(group) == 0: return
+   mute()
+   count = askInteger("Mill how many cards?", 1)
+   if ( ds == "runner"):
+      for c in group.top(count): c.moveTo(me.piles['Trash/Archives(Face-up)'])
+      nameStack = "Stack"
+      nameTrash = "Trash"
+   else:
+      for c in group.top(count): c.moveTo(me.piles['Archives(Hidden)'])
+      nameStack = "HQ"
+      nameTrash = "Archives H"
+      notify("{} mills the top {} cards from {} to {}.".format(me, count,nameStack,nameTrash))
 
 def moveXtopCardtoBottomStack(group):
 	if len(group) == 0: return
@@ -829,42 +845,44 @@ def moveXtopCardtoBottomStack(group):
 
 
 def checkDeckNoLimit (group):
-	if ( ds == ""):
-		whisper ("Choose a side first.")
-		return 
-	notify (" -> Checking deck of {} ...".format(me) )
-	ok = 0
-	loDeckCount = len(group)
-	if ( loDeckCount < 45 ):
-		ok = -1
-		notify ( "- Error: only {} cards in {}'s Deck.".format(loDeckCount,me) )
-	mute()
-	if ( ds == "corp"):
-		loAP = 0.0
-		loRunner = 0
-		for card in group:
-			card.moveTo(me.piles['Trash/Archives(Face-up)'])
-     			if card.Type == 'Agenda': loAP += num(card.Stat)
-			if card.Player == "runner": loRunner = 1
-			card.moveToBottom(group)
-		if loAP/loDeckCount < 2.0/5.0:
-			notify("- Error: only {} Agenda Points in {}'s R&D.".format(loAP/1,me))
-			ok = -1
-		if loRunner == 1:
-			notify("- Error: Runner Cards found in {}'s R&D.".format(me))
-			ok = -1
-	else:
-		loCorp = 0
-		for card in group:
-			card.moveTo(me.piles['Trash/Archives(Face-up)'])
-     			if card.Player == "corp": loCorp = 1
-			card.moveToBottom(group)
+   if ( ds == ""):
+      whisper ("Choose a side first.")
+      return 
+   notify (" -> Checking deck of {} ...".format(me) )
+   ok = 0
+   loDeckCount = len(group)
+   if ( loDeckCount < 45 ):
+      ok = -1
+      notify ( "- Error: only {} cards in {}'s Deck.".format(loDeckCount,me) )
+   mute()
+   if ( ds == "corp"):
+      loAP = 0.0
+      loRunner = 0
+      for card in group:
+         card.moveTo(me.piles['Trash/Archives(Face-up)'])
+         if len(players) > 1: random = rnd(1,100) # Fix for multiplayer only. Makes Singleplayer setup very slow otherwise.
+         if card.Type == 'Agenda': loAP += num(card.Stat)
+         if card.Player == "runner": loRunner = 1
+         card.moveToBottom(group)
+      if loAP/loDeckCount < 2.0/5.0:
+         notify("- Error: only {} Agenda Points in {}'s R&D.".format(loAP/1,me))
+         ok = -1
+      if loRunner == 1:
+         notify("- Error: Runner Cards found in {}'s R&D.".format(me))
+         ok = -1
+   else:
+      loCorp = 0
+      for card in group:
+         card.moveTo(me.piles['Trash/Archives(Face-up)'])
+         if len(players) > 1: random = rnd(1,100) # Fix for multiplayer only. Makes Singleplayer setup very slow otherwise.
+         if card.Player == "corp": loCorp = 1
+         card.moveToBottom(group)
 
-		if loCorp == 1:
-			notify("- Error: Corp Cards found in {}'s Stack.".format(me))
-			ok = -1
-	if ok == 0: notify("-> Deck of {} OK !".format(me))
-	return ok
+      if loCorp == 1:
+         notify("- Error: Corp Cards found in {}'s Stack.".format(me))
+         ok = -1
+   if ok == 0: notify("-> Deck of {} OK !".format(me))
+   return ok
 
 #------------------------------------------------------------------------------
 # Automations
@@ -875,6 +893,7 @@ def executeAutomations(card,action = ''):
     AutoScript = card.AutoScript
     if AutoScript == "": return
     Execute = 0
+
     if action == "play" or action == "rez" or action == "scores": Execute = 1
     if ( (action == "trash" and card.markers[Not_rezzed] == 0) or action == "derez") and re.search(r'ReverseYes', AutoScript): Execute = -1
     if Execute == 0: return
@@ -887,10 +906,12 @@ def executeAutomations(card,action = ''):
     elif AutoScript == "autoAddBitsCounter": autoAddBitsCounter(card,Param1,Param2)
     elif AutoScript == "autoGainXYTags": autoGainXYTags(card,Param1,Param2 )
     elif AutoScript == "autoGainXYBadPub": autoGainXYBadPub(card,Param1,Param2)
+    elif AutoScript == "autoAddGenericCounter": autoAddGenericCounter(card,Param1,Param2)
     elif re.search(r'autoAddMUAndBitsCounter', AutoScript): autoAddMUAndCounter(card,Param1,Param2)
     elif re.search(r'MUHandSizeBitsCounter', AutoScript): autoaddMUHandSizeBitsCounter(card,Param1,Param2)
     elif re.search(r'autoAddMU', AutoScript): autoAddMU(card,Param1,Param2)
     elif re.search(r'autoAddHandSize', AutoScript): autoAddHandSize(card,Param1,Param2)
+    elif re.search(r'autoAddXtraAction', AutoScript): autoAddXtraAction(card,Param1,Param2)
 
 def autoGainXDrawY ( card, Param1, Param2 ):
 	mute()
@@ -942,3 +963,18 @@ def autoGainXYBadPub ( card, Param1, Param2):
 
 def autoGainXIfY ( card, Param1, Param2):
 	if ( me.counters['Bit Pool'].value >= Param2): autoGainX ( card, Param1, 0)
+	else:
+		mute()
+		me.counters['Bit Pool'].value = 0
+		notify ("--> {} looses all bits.".format(me) )
+
+def autoAddGenericCounter (card,Param1,Param2):
+	mute()
+	card.markers[Generic] += Param1
+	notify("{} adds {} generic markers on {}.".format(me,uniBit(Param1),card))
+
+def autoAddXtraAction (card, Param1, Param2):
+	global maxActions
+	mute()
+	maxActions += Param1
+	notify ( "--> {}'s max action is now {}.".format(me,maxActions) )

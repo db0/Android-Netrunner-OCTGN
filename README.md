@@ -19,6 +19,18 @@ How the custom fonts look like
 
 Changelog
 ---------
+### 2.0.5.3
+
+* Make +1 and -1 card markers counter each other.
+* Added two extra markers. Generic and Advance (Toon)
+* Added two extra autoscripts for adding extra actions and generic counters (Toon)
+* Added a function to add any kind of marker.
+* Made deck checking work robustly in multiplayer
+
+### 2.0.4
+
+* Added custom fonts to be used with OCTGN 3.0.1.4
+
 ### 2.0.2
 
 * Cards with MU cost now announce how much it is when they installed, and return it back to their owner when they're trashed.
