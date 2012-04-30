@@ -19,6 +19,10 @@ How the custom fonts look like
 
 Changelog
 ---------
+### 2.0.8
+
+* No more crashing scripts when player closes windows that ask for numbers
+* Increased the chat font-size to 11 to be more visible on high resolutions (eg 1920x1080)
 
 ### 2.0.7
 
