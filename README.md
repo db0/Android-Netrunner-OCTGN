@@ -19,7 +19,7 @@ How the custom fonts look like
 
 Changelog
 ---------
-### 2.0.8
+### 2.0.8.2
 
 * No more crashing scripts when player closes windows that ask for numbers
 * Increased the chat font-size to 11 to be more visible on high resolutions (eg 1920x1080)
@@ -27,6 +27,7 @@ Changelog
 ### 2.0.7
 
 * Added ⏎ character on the chatbox, when the player takes an action, to be able to distinguish those notifications better.
+  * Important, because of the above change, you'll have to delete your old chat fonts if you're on windows XP and see a square instead of the Enter character. Simply delete the ```%USERPROFILE%\My Documents\Octgn\Games\13568561-7a2e-4572-8f31-3d99580ab245\cmd64.ttf``` file.
 * Paying Action now take into account your max actions (as modified by cards and the player) 
 * Cards that have the "double" trait now correctly use two actions when played. (Toon)
 * Fixed some wonky indentations.
