@@ -25,7 +25,7 @@ Changelog
 * Added ⏎ character on the chatbox, when the player takes an action, to be able to distinguish those notifications better.
 * Paying Action now take into account your max actions (as modified by cards and the player) 
 * Cards that have the "double" trait now correctly use two actions when played. (Toon)
-* Fixed some wonky intentations.
+* Fixed some wonky indentations.
 * Replaced "Note:" with ":::Warning:::" to make them stand out more.
 * Playing Hardware Deck or Unique cards now will confirm and trash existing such cards of the player (Toon)
 * Player will now be prevented from drawing cards automatically if they have an effect which modifies the amount of cards they draw each time. (Toon)

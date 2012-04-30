@@ -185,8 +185,10 @@ def goToSot (group, x=0,y=0):
 def modActions(group,x=0,y=0):
    global maxActions
    mute()
+   bkup = maxActions
    maxActions = askInteger("What is your current maximum Actions per turn?", maxActions)
-   notify("{} has set their Max Actions to {} per turn".format(me,maxActions))
+   if maxActions == None: maxActions = bkup # In case the player closes the window, we restore their previous max.
+   else: notify("{} has set their Max Actions to {} per turn".format(me,maxActions))
 #------------------------------------------------------------------------------
 # Table group actions
 #------------------------------------------------------------------------------
@@ -311,28 +313,29 @@ def intAddBits ( card, count):
 		else: notify("{} adds {} on a card.".format(me,uniBit(count)))
 
 def addBits(card, x = 0, y = 0):
-	mute()
-	count = askInteger("Add how many Bits?", 1)
-	intAddBits ( card, count)
+   mute()
+   count = askInteger("Add how many Bits?", 1)
+   if count == None: return
+   intAddBits(card, count)
 	
 def remBits(card, x = 0, y = 0):
-	mute()
-	count = askInteger("Remove how many Bits?", 1)
-	if ( count > card.markers[Bits]): count = card.markers[Bits]
-
-	card.markers[Bits] -= count
-	if ( card.isFaceUp == True): notify("{} removes {} from {}.".format(me,uniBit(count),card))
-	else: notify("{} removes {} from a card.".format(me,uniBit(count)))
+   mute()
+   count = askInteger("Remove how many Bits?", 1)
+   if count == None: return
+   if count > card.markers[Bits]: count = card.markers[Bits]
+   card.markers[Bits] -= count
+   if card.isFaceUp == True: notify("{} removes {} from {}.".format(me,uniBit(count),card))
+   else: notify("{} removes {} from a card.".format(me,uniBit(count)))
 
 def remBits2BP (card, x = 0, y = 0):
-	mute()
-	count = askInteger("Remove how many Bits?", 1)
-	if ( count > card.markers[Bits]): count = card.markers[Bits]
-
-	card.markers[Bits] -= count
-	me.counters['Bit Pool'].value += count 
-	if ( card.isFaceUp == True): notify("{} removes {} from {} to their Bit Pool.".format(me,uniBit(count),card))
-	else: notify("{} takes {} from a card to their Bit Pool.".format(me,uniBit(count)))
+   mute()
+   count = askInteger("Remove how many Bits?", 1)
+   if count == None: return
+   if count > card.markers[Bits]: count = card.markers[Bits]
+   card.markers[Bits] -= count
+   me.counters['Bit Pool'].value += count 
+   if card.isFaceUp == True: notify("{} removes {} from {} to their Bit Pool.".format(me,uniBit(count),card))
+   else: notify("{} takes {} from a card to their Bit Pool.".format(me,uniBit(count)))
 
 def addPlusOne(card, x = 0, y = 0):
    mute()
@@ -372,19 +375,21 @@ def advanceCardP(card, x = 0, y = 0):
    else: notify("{} paid {} and advanced a card.".format(me,uniBit(1)))
 
 def addXadvancementCounter(card, x=0, y=0):
-	mute()
-	count = askInteger("Add how many counters?", 1)
-	card.markers[Advance] += count
-	if ( card.isFaceUp == True): notify("{} adds {} advancement counters on {}.".format(me,count,card))
-	else: notify("{} adds {} advancement counters on a card.".format(me,count))
+   mute()
+   count = askInteger("Add how many counters?", 1)
+   if count == None: return
+   card.markers[Advance] += count
+   if card.isFaceUp == True: notify("{} adds {} advancement counters on {}.".format(me,count,card))
+   else: notify("{} adds {} advancement counters on a card.".format(me,count))
 
 def delXadvancementCounter(card, x = 0, y = 0):
-	mute()
-	count = askInteger("Remove how many counters?", 1)
-	if ( count > card.markers[Advance] ): count=card.markers[Advance]
-	card.markers[Advance] -= count
-	if ( card.isFaceUp == True): notify("{} removes {} advancement counters on {}.".format(me,count,card))
-	else: notify("{} adds {} advancement counters on a card.".format(me,count))
+   mute()
+   count = askInteger("Remove how many counters?", 1)
+   if count == None: return
+   if count > card.markers[Advance]: count = card.markers[Advance]
+   card.markers[Advance] -= count
+   if card.isFaceUp == True: notify("{} removes {} advancement counters on {}.".format(me,count,card))
+   else: notify("{} adds {} advancement counters on a card.".format(me,count))
 
 def advanceCardM(card, x = 0, y = 0):
 	mute()
@@ -397,14 +402,17 @@ def advanceCardM(card, x = 0, y = 0):
 #----------------------
 
 def inputTraceValue (card, x=0,y=0):
-    mute()
-    global TraceValue
-    if (card.properties['Type'] <> "Tracing"): return
-    TraceValue = askInteger("Bet How Many?", 0)
-    card.markers[Bits] = 0
-    card.isFaceUp = False
-    notify ("{} chose a Trace Value.".format(me))
-    TypeCard[card] = "Tracing"
+   mute()
+   global TraceValue
+   if card.properties['Type'] != "Tracing": return
+   TraceValue = askInteger("Bet How Many?", 0)
+   if TraceValue == None: 
+      whisper(":::Warning::: Trace bid aborted by player.")
+      return
+   card.markers[Bits] = 0
+   card.isFaceUp = False
+   notify ("{} chose a Trace Value.".format(me))
+   TypeCard[card] = "Tracing"
 	
 def revealTraceValue (card, x=0,y=0):
     mute()
@@ -821,14 +829,14 @@ def drawManySilent(group, count):
 	return count
 
 def drawMany(group, count = None):
-	SSize = len(group)
-	if SSize == 0: return
-	mute()
-	if count == None: count = askInteger("Draw how many cards?", 5)
-	if ( count > SSize) : count=SSize
-	for c in group.top(count): c.moveTo(me.hand)
-
-	notify("{} draws {} cards.".format(me, count))
+   mute()
+   SSize = len(group)
+   if SSize == 0: return
+   if count == None: count = askInteger("Draw how many cards?", 5)
+   if count == None: return
+   if count > SSize : count=SSize
+   for c in group.top(count): c.moveTo(me.hand)
+   notify("{} draws {} cards.".format(me, count))
 
 def toarchives(group = me.piles['Archives(Hidden)']):
 	mute()
@@ -854,6 +862,7 @@ def mill(group):
    if len(group) == 0: return
    mute()
    count = askInteger("Mill how many cards?", 1)
+   if count == None: return
    if ( ds == "runner"):
       for c in group.top(count): c.moveTo(me.piles['Trash/Archives(Face-up)'])
       nameStack = "Stack"
@@ -865,14 +874,14 @@ def mill(group):
       notify("{} mills the top {} cards from {} to {}.".format(me, count,nameStack,nameTrash))
 
 def moveXtopCardtoBottomStack(group):
-	if len(group) == 0: return
-	mute()
-    	count = askInteger("Move how many cards?", 1)
-	for c in group.top(count): c.moveToBottom(group)
-	if ( ds == "runner"): nameStack = "Stack"
-	else: nameStack = "R&D"
-
-    	notify("{} moves the top {} cards from {} to bottom of {}.".format(me, count,nameStack,nameStack))
+   mute()
+   if len(group) == 0: return
+   count = askInteger("Move how many cards?", 1)
+   if count == None: return
+   for c in group.top(count): c.moveToBottom(group)
+   if ds == "runner": nameStack = "Stack"
+   else: nameStack = "R&D"
+   notify("{} moves the top {} cards from {} to bottom of {}.".format(me, count,nameStack,nameStack))
 
 
 def checkDeckNoLimit (group):
