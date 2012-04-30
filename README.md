@@ -20,11 +20,11 @@ How the custom fonts look like
 Changelog
 ---------
 
-### 2.0
+### 2.0.6
 
 * Changed chat font size to 10 and menu size to 11
 
--### 2.0.5.3
+### 2.0.5.3
 
 * Made +1 and -1 card markers counter each other.
 * Added two extra markers. Generic and Advance (Toon)
