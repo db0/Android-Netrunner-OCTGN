@@ -1,4 +1,4 @@
-Netrunner CCG plugin for OCTGN
+﻿Netrunner CCG plugin for OCTGN
 =========================
 
 Considered by most one of the best Card Games ever conceived, Netrunner is an asymmetrical Cyberpunk CCG that everyone should play at least once.
@@ -20,11 +20,29 @@ How the custom fonts look like
 Changelog
 ---------
 
-### 2.0
+### 2.0.7
+
+* Added ⏎ character on the chatbox, when the player takes an action, to be able to distinguish those notifications better.
+* Paying Action now take into account your max actions (as modified by cards and the player) 
+* Cards that have the "double" trait now correctly use two actions when played. (Toon)
+* Fixed some wonky intentations.
+* Replaced "Note:" with ":::Warning:::" to make them stand out more.
+* Playing Hardware Deck or Unique cards now will confirm and trash existing such cards of the player (Toon)
+* Player will now be prevented from drawing cards automatically if they have an effect which modifies the amount of cards they draw each time. (Toon)
+* Added action to check errata and rulings for a card on netrunneronline.com (Toon)
+* Added more autoscripting. (Toon)
+  * Runs
+  * Losing tags
+  * Rolling Dice
+  * Refilling Hand
+  * Increasing your Actions Max.
+
+
+### 2.0.6
 
 * Changed chat font size to 10 and menu size to 11
 
--### 2.0.5.3
+### 2.0.5.3
 
 * Made +1 and -1 card markers counter each other.
 * Added two extra markers. Generic and Advance (Toon)

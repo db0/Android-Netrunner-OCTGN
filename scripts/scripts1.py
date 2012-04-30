@@ -16,6 +16,7 @@ Automation = False # If True, game will automatically trigger card effects when 
                    # Starts False and is switched on automatically at Jack In
 UniBits = True # If True, game will display bits as unicode characters ❶, ❷, ❿ etc
 
+ModifyDraw = False #if True the audraw should warn the player to look at r&D instead 
 TraceValue = 0
 
 DifficultyLevels = { }
@@ -121,20 +122,22 @@ def yaxisMove(card):
 # Actions indication
 #---------------------------------------------------------------------------
 
-def useAction(group = table, x=0, y=0):
-    mute()
-    global newturn
-    if me.Actions < 1: 
-        if not confirm("You have no more actions left. Are you sure you want to continue?"): return 'ABORT'
-    if ds == 'corp': act = 4 - me.Actions
-    else: act = 5 - me.Actions
-    notify("{} takes Action #{}".format(me,act))
-    me.Actions -= 1
+def useAction(group = table, x=0, y=0, count = 1):
+   mute()
+   extraText = ''
+   if me.Actions < count: 
+      if not confirm("You have no more actions left. Are you sure you want to continue?"): return 'ABORT'
+      else: extraText = ' (Exceeding Max!)'
+   act = (maxActions - me.Actions) + 1# maxActions is different for corp and runner and is set during jackIn()
+                                 # We give act +1 because otherwise the first action would be action #0.
+   if count > 1: notify("{} takes Double Action #{} and #{}{}".format(me,act, act + 1,extraText)) 
+   else: notify("⏎ {} takes Action #{}{}".format(me,act,extraText)) # We give act +1 because otherwise the first action would be action #0.
+   me.Actions -= count
 
 def goToEndTurn(group, x = 0, y = 0):
     mute()
     global endofturn
-    if ( ds == "" ):
+    if ds == "":
         whisper ("Please perform the game setup first (Ctrl+Shift+S)")
         return
     if me.Actions > 0: # If the player has not used all their actions for this turn, remind them, just in case.
@@ -143,14 +146,14 @@ def goToEndTurn(group, x = 0, y = 0):
                                                        # and put them in the end of turn to allow them to do so.
         if endofturn: #If the player has gone through the end of turn phase and still has more hands, allow them to continue but let everyone know.
             if not confirm("You still hold more cards than your hand size maximum. Are you sure you want to proceed?"): return
-            else: notify("Note: {} has ended their turn holding more cards ({}) than their hand size maximum of {}".format(me,len(me.hand),me.counters['Max Hand Size'].value))
+            else: notify(":::Warning::: {} has ended their turn holding more cards ({}) than their hand size maximum of {}".format(me,len(me.hand),me.counters['Max Hand Size'].value))
         else: # If the player just ended their turn, give them a chance to discard down to their hand maximum.
-            if (ds == "corp"): notify ("The Corporation of {} is performing an Internal Audit before CoB.".format(me))
+            if ds == "corp": notify ("The Corporation of {} is performing an Internal Audit before CoB.".format(me))
             else: notify ("Runner {} is rebooting all systems for the day.".format(me))
-            whisper('Note: You have more card in your hand than your current hand size maximum. Please discard enough and then use the "Declare End of Turn" action again.')
+            whisper(':::Warning::: You have more card in your hand than your current hand size maximum. Please discard enough and then use the "Declare End of Turn" action again.')
             endofturn = True
             return
-    if (ds == "corp"): notify ("The Corporation of {} has reached CoB (Close of Business hours).".format(me))
+    if ds == "corp": notify ("The Corporation of {} has reached CoB (Close of Business hours).".format(me))
     else: notify ("Runner {} has gone to sleep for the day.".format(me))
     endofturn = False
     newturn = False
@@ -162,10 +165,10 @@ def goToSot (group, x=0,y=0):
         if not confirm("You have not yet properly ended you previous turn. Are you sure you want to continue?"): return
         else: 
             if len(me.hand) > me.counters['Max Hand Size'].value: # Just made sure to notify of any shenanigans
-                notify("Note: {} has skipped their End-of-Turn phase and they are holding more cards ({}) than their hand size maximum of {}".format(me,len(me.hand),me.counters['Max Hand Size'].value))
-            else: notify("Note: {} has skipped their End-of-Turn phase".format(me))
+                notify(":::Warning::: {} has skipped their End-of-Turn phase and they are holding more cards ({}) than their hand size maximum of {}".format(me,len(me.hand),me.counters['Max Hand Size'].value))
+            else: notify(":::Warning::: {} has skipped their End-of-Turn phase".format(me))
             endofturn = False
-    if (ds == "" ):
+    if ds == "":
         whisper ("Please perform the game setup first (Ctrl+Shift+S)")
         return
     if me.Actions < 0: 
@@ -175,15 +178,15 @@ def goToSot (group, x=0,y=0):
             me.Actions += maxActions # If it was a penalty, then it remains with them for this round, which means they have less actions to use.
             notify("{} is starting with {} less actions this turn, due to a penalty from a previous turn. They have {} actions this turn".format(me,maxActions - me.Actions, me.Actions))
     else: me.Actions = maxActions
-    if (ds == "corp"): notify ("The offices of {}'s Corporation are now open for business.".format(me))
+    if ds == "corp": notify("The offices of {}'s Corporation are now open for business.".format(me))
     else: notify ("Runner {} has woken up".format(me))
     newturn = True
 
 def modActions(group,x=0,y=0):
-    global maxActions
-    mute()
-    if ds =="corp": maxActions = askInteger("What is your current maximum Actions per turn?", 3)
-    else: maxActions = askInteger("What is your current maximum Actions per turn?", 4)
+   global maxActions
+   mute()
+   maxActions = askInteger("What is your current maximum Actions per turn?", maxActions)
+   notify("{} has set their Max Actions to {} per turn".format(me,maxActions))
 #------------------------------------------------------------------------------
 # Table group actions
 #------------------------------------------------------------------------------
@@ -359,14 +362,14 @@ def addMarker(cards, x = 0, y = 0): # A simple function to manually add any of t
 # advancing cards
 #------------------------------------------------------------------------------
 def advanceCardP(card, x = 0, y = 0):
-    mute()
-    if useAction() == 'ABORT': return
-    if payCost(1) == "ABORT": 
-        me.Actions += 1 # If the player didn't notice they didn't have enough bits, we give them back their action
-        return # If the player didn't have enough money to pay and aborted the function, then do nothing.
-    card.markers[Advance] += 1
-    if ( card.isFaceUp == True): notify("{} paid 1 and advanced {}.".format(me,card))
-    else: notify("{} paid {} and advanced a card.".format(me,uniBit(1)))
+   mute()
+   if useAction() == 'ABORT': return
+   if payCost(1) == "ABORT": 
+      me.Actions += 1 # If the player didn't notice they didn't have enough bits, we give them back their action
+      return # If the player didn't have enough money to pay and aborted the function, then do nothing.
+   card.markers[Advance] += 1
+   if card.isFaceUp: notify("{} paid 1 and advanced {}.".format(me,card))
+   else: notify("{} paid {} and advanced a card.".format(me,uniBit(1)))
 
 def addXadvancementCounter(card, x=0, y=0):
 	mute()
@@ -611,72 +614,100 @@ def useCard(card,x=0,y=0):
         card.highlight = None
         card.target(False)
 
+def rulings(card, x = 0, y = 0):
+  mute()
+  if not card.isFaceUp: return
+  openUrl('http://www.netrunneronline.com/cards/{}/'.format(card.Errata))
+
+def checkNotHardwareDeck (card):
+   mute()
+   if card.Type != "Hardware" or not re.search(r'Deck', card.Keywords): return True
+   ExistingDecks = [ c for c in table
+         if c.owner == me and c.isFaceUp and re.search(r'Deck', c.Keywords) ]
+   if len(ExistingDecks) != 0 and not confirm("You already have at least one hardware deck in play. Are you sure you want to play {}?\n\n(If you do, your installed Decks will be automatically trashed at no cost)".format(card.name)): return False
+   else: 
+      for HWDeck in ExistingDecks: trashForFree(HWDeck)
+   return True   
+
+def checkUnique (card):
+   mute()
+   if not re.search(r'Unique', card.Keywords): return True #If the played card isn't unique do nothing.
+   ExistingUniques = [ c for c in table
+         if c.owner == me and c.isFaceUp and c.name == card.name and re.search(r'Unique', c.Keywords) ]
+   if len(ExistingUniques) != 0 and not confirm("This unique card is already in play. Are you sure you want to play {}?\n\n(If you do, you existing unique card will be trashed at no cost)".format(card.name)) : return False
+   else:
+      for uniqueC in ExistingUniques: trashForFree(uniqueC)
+   return True   
 #------------------------------------------------------------------------------
 # Hand Actions
 #------------------------------------------------------------------------------
 def intPlay(card, cost = 'not_free'):
-    global TypeCard, CostCard
-    extraText = ''
-    mute() 
-    chooseSide() # Just in case...
-    if useAction() == 'ABORT': return
-    TypeCard[card] = card.Type
-    CostCard[card] = card.Cost
-    MUtext = ""
-    if card.Type == 'Resource' and re.search(r'Hidden', card.Keywords): hiddenresource = 'yes'
-    else: hiddenresource = 'no'
-    if card.Type == 'Ice' or card.Type == 'Agenda' or card.Type == 'Node' or (card.Type == 'Upgrade' and not re.search(r'Region', card.Keywords)):
-        card.moveToTable(-180, 160 * playerside - yaxisMove(card), True) # Agendas, Nodes and non-region Upgrades all are played to the same spot now.
-        if TypeCard[card] == 'Ice': 
-            card.orientation ^= Rot90
-            card.moveToTable(-180, 65 * playerside - yaxisMove(card), True) # Ice are moved a bit more to the front and played sideways.
-        card.markers[Not_rezzed] += 1
-        notify("{} installs a card.".format(me))
-    elif card.Type == 'Program' or card.Type == 'Prep' or card.Type == 'Resource' or card.Type == 'Hardware':
-        if num(card.properties["MU Required"]) > 0:
-            me.Memory -= num(card.properties["MU Required"])
-            MUtext = ", using up {} MUs".format(card.properties["MU Required"])
-        if card.Type == 'Resource' and hiddenresource == 'yes':
-            card.moveToTable(-180, 230 * playerside - yaxisMove(card), True)
-            notify("{} installs a card.".format(me))
-            executeAutomations(card,"play")
-            return
-        rc = payCost(card.Cost, cost, loud)
-        if rc == "ABORT": 
-            me.Actions += 1 # If the player didn't notice they didn't have enough bits, we give them back their action
-            return # If the player didn't have enough money to pay and aborted the function, then do nothing.
-        elif rc == "free": extraText = " at no cost"
-        if card.Type == 'Program':
-            card.moveToTable(-150, 65 * playerside - yaxisMove(card), False)
-            notify("{} has installed {}{}{}.".format(me, card, extraText,MUtext))
-        elif card.Type == 'Prep':
-            card.moveToTable(0, 0 - yaxisMove(card), False)
-            notify("{} has prepped with {}{}.".format(me, card, extraText))
-        elif card.Type == 'Hardware':
-            card.moveToTable(-210, 160 * playerside - yaxisMove(card), False)
-            notify("{} has purchased {}{}{}.".format(me, card, extraText,MUtext))
-        elif card.Type == 'Resource' and hiddenresource == 'no':
-            card.moveToTable(180, 240 * playerside - yaxisMove(card), False)
-            notify("{} has acquired {}{}{}.".format(me, card, extraText,MUtext))
-        else:
-            card.moveToTable(0, 0 * playerside - yaxisMove(card), False)
-            notify("{} plays {}{}{}.".format(me, card, extraText,MUtext))
-    else:
-        rc = payCost(card.Cost, cost, loud)
-        if rc == "ABORT": 
-            me.Actions += 1 # If the player didn't notice they didn't have enough bits, we give them back their action
-            return # If the player didn't have enough money to pay and aborted the function, then do nothing.
-        elif rc == "free": extraText = " at no cost"
-        if card.Type == 'Operation':
-            card.moveToTable(0, 0 * playerside - yaxisMove(card), False)
-            notify("{} initiates {}{}.".format(me, card, extraText))
-        elif card.Type == 'Upgrade' and re.search(r'Region', card.Keywords):
-            card.moveToTable(-220, 240 * playerside - yaxisMove(card), False)
-            notify("{} opened a base of operations in {}{}.".format(me, card, extraText))
-        else:
-            card.moveToTable(0, 0 * playerside - yaxisMove(card), False)
-            notify("{} has played {}{}.".format(me, card, extraText))           
-    executeAutomations(card,"play")
+   global TypeCard, CostCard
+   extraText = ''
+   mute() 
+   chooseSide() # Just in case...
+   if re.search(r'Double', card.Keywords): NbReq = 2 # Some cards require two actions to play. This variable is passed to the useAction() function.
+   else: NbReq = 1 #In case it's not a "Double" card. Then it only uses one action to play.
+   if useAction(count = NbReq) == 'ABORT': return #If the player didn't have enough actions and opted not to proceed, do nothing.
+   if checkUnique(card) == False: return #If the player has the unique card and opted not to trash it, do nothing.
+   if not checkNotHardwareDeck(card): return	#If player already has a deck in play and doesnt want to play that card, do nothing.
+   TypeCard[card] = card.Type
+   CostCard[card] = card.Cost
+   MUtext = ""
+   if card.Type == 'Resource' and re.search(r'Hidden', card.Keywords): hiddenresource = 'yes'
+   else: hiddenresource = 'no'
+   if card.Type == 'Ice' or card.Type == 'Agenda' or card.Type == 'Node' or (card.Type == 'Upgrade' and not re.search(r'Region', card.Keywords)):
+      card.moveToTable(-180, 160 * playerside - yaxisMove(card), True) # Agendas, Nodes and non-region Upgrades all are played to the same spot now.
+      if TypeCard[card] == 'Ice': 
+         card.orientation ^= Rot90
+         card.moveToTable(-180, 65 * playerside - yaxisMove(card), True) # Ice are moved a bit more to the front and played sideways.
+      card.markers[Not_rezzed] += 1
+      notify("{} installs a card.".format(me))
+   elif card.Type == 'Program' or card.Type == 'Prep' or card.Type == 'Resource' or card.Type == 'Hardware':
+      if num(card.properties["MU Required"]) > 0:
+         me.Memory -= num(card.properties["MU Required"])
+         MUtext = ", using up {} MUs".format(card.properties["MU Required"])
+      if card.Type == 'Resource' and hiddenresource == 'yes':
+         card.moveToTable(-180, 230 * playerside - yaxisMove(card), True)
+         notify("{} installs a card.".format(me))
+         executeAutomations(card,"play")
+         return
+      rc = payCost(card.Cost, cost, loud)
+      if rc == "ABORT": 
+         me.Actions += 1 # If the player didn't notice they didn't have enough bits, we give them back their action
+         return # If the player didn't have enough money to pay and aborted the function, then do nothing.
+      elif rc == "free": extraText = " at no cost"
+      if card.Type == 'Program':
+         card.moveToTable(-150, 65 * playerside - yaxisMove(card), False)
+         notify("{} has installed {}{}{}.".format(me, card, extraText,MUtext))
+      elif card.Type == 'Prep':
+         card.moveToTable(0, 0 - yaxisMove(card), False)
+         notify("{} has prepped with {}{}.".format(me, card, extraText))
+      elif card.Type == 'Hardware':
+         card.moveToTable(-210, 160 * playerside - yaxisMove(card), False)
+         notify("{} has purchased {}{}{}.".format(me, card, extraText,MUtext))
+      elif card.Type == 'Resource' and hiddenresource == 'no':
+         card.moveToTable(180, 240 * playerside - yaxisMove(card), False)
+         notify("{} has acquired {}{}{}.".format(me, card, extraText,MUtext))
+      else:
+         card.moveToTable(0, 0 * playerside - yaxisMove(card), False)
+         notify("{} plays {}{}{}.".format(me, card, extraText,MUtext))
+   else:
+      rc = payCost(card.Cost, cost, loud)
+      if rc == "ABORT": 
+         me.Actions += 1 # If the player didn't notice they didn't have enough bits, we give them back their action
+         return # If the player didn't have enough money to pay and aborted the function, then do nothing.
+      elif rc == "free": extraText = " at no cost"
+      if card.Type == 'Operation':
+         card.moveToTable(0, 0 * playerside - yaxisMove(card), False)
+         notify("{} initiates {}{}.".format(me, card, extraText))
+      elif card.Type == 'Upgrade' and re.search(r'Region', card.Keywords):
+         card.moveToTable(-220, 240 * playerside - yaxisMove(card), False)
+         notify("{} opened a base of operations in {}{}.".format(me, card, extraText))
+      else:
+         card.moveToTable(0, 0 * playerside - yaxisMove(card), False)
+         notify("{} has played {}{}.".format(me, card, extraText))           
+   executeAutomations(card,"play")
 
 def playForFree(card, x = 0, y = 0):
 	intPlay(card,"free")
@@ -907,11 +938,20 @@ def executeAutomations(card,action = ''):
     elif AutoScript == "autoGainXYTags": autoGainXYTags(card,Param1,Param2 )
     elif AutoScript == "autoGainXYBadPub": autoGainXYBadPub(card,Param1,Param2)
     elif AutoScript == "autoAddGenericCounter": autoAddGenericCounter(card,Param1,Param2)
+    elif AutoScript == "autoRun": autoRun(card)
+    elif AutoScript == "autoRunHQ": autoRunFort("HQ")
+    elif AutoScript == "autoRunRD": autoRunFort("R&D")
+    elif AutoScript == "autoRunArchives": autoRunFort("the Archives")
+    elif AutoScript == "autoLooseTags": autoLooseTags (card, Param1)
+    elif AutoScript == "autoRollDice": autoRollDice (Param1)
+    elif AutoScript == "autoRefreshToX": autoRefreshToX(card,Param1)
+    elif AutoScript == "autoRefreshHand": autoRefreshHand(card,Param1)
     elif re.search(r'autoAddMUAndBitsCounter', AutoScript): autoAddMUAndCounter(card,Param1,Param2)
     elif re.search(r'MUHandSizeBitsCounter', AutoScript): autoaddMUHandSizeBitsCounter(card,Param1,Param2)
     elif re.search(r'autoAddMU', AutoScript): autoAddMU(card,Param1,Param2)
     elif re.search(r'autoAddHandSize', AutoScript): autoAddHandSize(card,Param1,Param2)
     elif re.search(r'autoAddXtraAction', AutoScript): autoAddXtraAction(card,Param1,Param2)
+    elif re.search(r'autoModifyDraw', AutoScript): autoModifyDraw(card,Param1,Param2)
 
 def autoGainXDrawY ( card, Param1, Param2 ):
 	mute()
@@ -977,4 +1017,58 @@ def autoAddXtraAction (card, Param1, Param2):
 	global maxActions
 	mute()
 	maxActions += Param1
-	notify ( "--> {}'s max action is now {}.".format(me,maxActions) )
+	notify ( "--> {}'s max actions per turn are now {}.".format(me,maxActions) )
+
+def autoModifyDraw ( card, Param1, Param2):
+	global ModifyDraw
+	if ( Param1 == 1): ModifyDraw = True
+	else: ModifyDraw = False
+
+def autoRun (card):
+	notify (" --> {} declares a run !.".format(me) )
+
+def autoRunFort (fort):
+	notify (" --> {} declares a run on {}!.".format(me,fort) )
+
+def autoLooseTags (card, Param1 ):
+	mute()
+	notify ("here")
+	if (me.counters['Tags'].value == 0):
+		notify ( " --> no tag to loose !")
+		return
+	
+	if ( Param1 == 999):
+		me.counters['Tags'].value = 0
+		notify (" --> {} looses all tags.".format(me) )
+
+	else:
+		me.counters['Tags'].value -= Param1
+		notify (" --> {} looses {} tags.".format(me,Param1) )
+
+def autoRollDice (NbDice):
+	mute()
+	Acc = 0
+	for i in range(1,NbDice):
+		N = rnd(1, 6)
+		Acc += N
+		notify (" --> {} rolls a die and gets {}.".format(me,N) )
+
+	return Acc
+
+def autoRefreshToX (card, Param1):
+	mute()
+	handtoStack (0)
+	if ( ds == "corp"): archivestoStack(me.piles['Archives(Hidden)'])
+	archivestoStack(me.piles['Trash/Archives(Face-up)'])
+	shuffle(me.piles['R&D/Stack'])
+	drawManySilent (me.piles['R&D/Stack'], Param1)
+	notify (" --> {} shuffles and draws {} cards.".format(me,Param1) )
+
+def autoRefreshHand ( card, Param1):
+	mute()
+	if ( Param1 == 999): ToDraw = len(me.hand)
+	else: ToDraw = Param1
+	handtoStack (0)
+	shuffle(me.piles['R&D/Stack'])
+	drawManySilent (me.piles['R&D/Stack'], ToDraw)
+	notify (" --> {} shuffles and draws {} cards.".format(me,ToDraw) )
