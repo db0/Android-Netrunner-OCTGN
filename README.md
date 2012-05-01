@@ -9,13 +9,15 @@ Screenshots
 ---------
 (Click for larger size)
 
-Sample Screenshot of 2.0.0
+A game in progress at v2.0.4
 
-[![](http://i.imgur.com/FBWUwl.jpg)](http://i.imgur.com/FBWUw.jpg)
+[![](http://i.imgur.com/yDKgGl.jpg)](http://fav.me/d4y88aq)
 
 How the custom fonts look like
 
 [![](http://i.imgur.com/1Zcjy.png)](http://i.imgur.com/1Zcjy.png)
+
+
 
 Changelog
 ---------
