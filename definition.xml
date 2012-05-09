@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<game xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="Netrunner" id="13568561-7a2e-4572-8f31-3d99580ab245" octgnVersion="3.0.1.2" version="2.0.8.2" markersize="16">
+<game xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="Netrunner" id="13568561-7a2e-4572-8f31-3d99580ab245" octgnVersion="3.0.1.2" version="2.1.0.0" markersize="16">
    <globalvariables> 
      <globalvariable name="fontsize" value="11"/>
      <globalvariable name="chatsize" value="11"/>
@@ -22,10 +22,12 @@
 		<property name="AutoScript" type="String" hidden="True" ignoreText="True" />
 		<property name="ParamAS1" type="Integer" hidden="True" ignoreText="True" />
 		<property name="ParamAS2" type="Integer" hidden="True" ignoreText="True" />
+		<property name="AutoAction" type="String" hidden="True" ignoreText="True" />
 		<property name="RaritySealed" type="String" hidden="True" ignoretText ="True" textKind="Enum" />
 
 	</card>
 	<table name="Table" visibility="undefined" ordered="false" width="1080" height="671" board="r35" boardPosition="-540,-335,1080,671" background="r1" backgroundStyle="uniformToFill">
+		<cardaction menu="Use Card Ability/Clear" default="true" execute="useCard" />
 		<groupactions menu="Game...">
 			<groupaction menu="Set up" default="false" shortcut="Ctrl+Shift+S" execute="intJackin" />
 			<groupaction menu="Switch Unicode bits ON/OFF" default="false" execute="switchUniBits" />
@@ -74,7 +76,6 @@
 			<cardaction menu="Cancel Trace" default="false" execute="cancelTrace" />
 		</cardactions>
         <groupaction menu="Modify your max actions per turn" default="false" execute="modActions" />
-		<cardaction menu="Use Card Ability/Clear" default="true" execute="useCard" />
 		<cardaction menu="Expose card" default="false" execute="expose" />
 		<cardaction menu="Score Agenda" default="false" execute="scrAgenda" />
 		<groupaction menu="Roll d6" default="false" shortcut="Ctrl+6" execute="rolld6" />
