@@ -495,7 +495,7 @@ def payCost(count = 1, cost = 'not_free', notification = silent): # A function t
    else: # Otherwise, just take the money out and inform that we did if we're "loud".
       me.counters['Bit Pool'].value -= count
       if notification == loud: notify("{} has paid {}. {} remaining.".format(me, uniBit(count), uniBit(me.counters['Bit Pool'].value)))  
-   return count
+   return uniBit(count)
    
 def scrAgenda(card, x = 0, y = 0):
     #if DifficultyLevels[card] >= 1:
@@ -540,17 +540,19 @@ def isRezzable (card):
 def intRez (card,cost = 'not free', x=0, y=0):
     mute()
     extraText = ''
+    rc = ''
     if card.markers[Not_rezzed] == 0: whisper("you can't rez a rezzed card")
     elif isRezzable(card) == -1: whisper("Not a rezzable card")
     else:
-        rc = payCost(CostCard[card], cost, loud)
+        rc = payCost(CostCard[card], cost)
         if rc == "ABORT": return # If the player didn't have enough money to pay and aborted the function, then do nothing.
         elif rc == "free": extraText = " at no cost"
+        elif rc != 0: rc = "for {}".format(rc)
         card.isFaceUp = True
         card.markers[Not_rezzed] -= 1
-        if card.Type == 'Ice': notify("{} has rezzed {}{}.".format(me, card, extraText))
-        if card.Type == 'Node': notify("{} has acquired {}{}.".format(me, card, extraText))
-        if card.Type == 'Upgrade': notify("{} has installed {}{}.".format(me, card, extraText))
+        if card.Type == 'Ice': notify("{} has rezzed {}{}{}.".format(me, card, rc, extraText))
+        if card.Type == 'Node': notify("{} has acquired {}{}{}.".format(me, card, rc, extraText))
+        if card.Type == 'Upgrade': notify("{} has installed {}{}{}.".format(me, card, rc, extraText))
         executeAutomations ( card, "rez" )
 
 def rezForFree (card, x = 0, y = 0):
@@ -594,12 +596,16 @@ def clear(card, x = 0, y = 0):
 def intTrashCard (card, stat, cost = "not free",  ActionCost = ''):
     mute()
     MUtext = ""
+    rc = ''
     if ActionCost == '': ActionCost == '{}'.format(me) # If not actions were used, then just announce our name.
     else: ActionCost += ' and '
     if card.Type == "Tracing": return
     cardowner = card.owner
-    rc = payCost(stat, cost, loud)
+    rc = payCost(stat, cost)
     if rc == "ABORT": return # If the player didn't have enough money to pay and aborted the function, then do nothing.
+    elif rc == 0: 
+      if ActionCost.endswith(' and'): ActionCost[:-len(' and')] # if we have no action cost, we don't need the connection.
+    else: ActionCost += "paid {}".format(rc) # If we have Bit cost, append it to the Action cost to be announced.
     if card.isFaceUp:
         if num(card.properties["MU Required"]) > 0:
             cardowner.Memory += num(card.properties["MU Required"])
@@ -611,11 +617,11 @@ def intTrashCard (card, stat, cost = "not free",  ActionCost = ''):
     elif (ds == "runner" and cardowner == me) or (ds == "corp" and cardowner != me ): #I'm the runner and I trash my card or I 'm the corp and I trash a runner card
         card.moveTo(cardowner.piles['Trash/Archives(Face-up)'])
         if rc == "free" : notify ("{} trashed {} at no cost.".format(me,card))
-        else: notify("{} and paid {} to trash {} {}.".format(ActionCost, uniBit(cost), card))
+        else: notify("{} to trash {}.".format(ActionCost, card))
     else: #I'm the corp and I trash my card or I'm the runner and I trash a corp's card
         card.moveTo(cardowner.piles['Archives(Hidden)'])
         if rc == "free": notify("{} trashed a hidden card at no cost.".format(me))
-        else: notify("{} and paid {} to trash a hidden card.".format(ActionCost,uniBit(cost)))
+        else: notify("{} to trash a hidden card.".format(ActionCost))
 
 def trashCard (card, x = 0, y = 0):
 	intTrashCard(card, card.Stat)
@@ -677,7 +683,8 @@ def intPlay(card, cost = 'not_free'):
    if not checkNotHardwareDeck(card): return	#If player already has a deck in play and doesnt want to play that card, do nothing.
    TypeCard[card] = card.Type
    CostCard[card] = card.Cost
-   MUtext = ""
+   MUtext = ''
+   rc = ''
    if card.Type == 'Resource' and re.search(r'Hidden', card.Keywords): hiddenresource = 'yes'
    else: hiddenresource = 'no'
    if card.Type == 'Ice' or card.Type == 'Agenda' or card.Type == 'Node' or (card.Type == 'Upgrade' and not re.search(r'Region', card.Keywords)):
@@ -696,41 +703,43 @@ def intPlay(card, cost = 'not_free'):
          notify("{} to install a card.".format(ActionCost))
          executeAutomations(card,"play")
          return
-      rc = payCost(card.Cost, cost, loud)
+      rc = payCost(card.Cost, cost)
       if rc == "ABORT": 
-         me.Actions += 1 # If the player didn't notice they didn't have enough bits, we give them back their action
+         me.Actions += NbReq # If the player didn't notice they didn't have enough bits, we give them back their action
          return # If the player didn't have enough money to pay and aborted the function, then do nothing.
       elif rc == "free": extraText = " at no cost"
+      elif rc != 0: rc = " and pays {}".format(rc)
       if card.Type == 'Program':
          card.moveToTable(-150, 65 * playerside - yaxisMove(card), False)
-         notify("{} to install {}{}{}.".format(ActionCost, card, extraText,MUtext))
+         notify("{}{} to install {}{}{}.".format(ActionCost, rc, card, extraText,MUtext))
       elif card.Type == 'Prep':
          card.moveToTable(0, 0 - yaxisMove(card), False)
-         notify("{} to prep with {}{}.".format(ActionCost, card, extraText))
+         notify("{}{} to prep with {}{}.".format(ActionCost, rc, card, extraText))
       elif card.Type == 'Hardware':
          card.moveToTable(-210, 160 * playerside - yaxisMove(card), False)
-         notify("{} to purchase {}{}{}.".format(ActionCost, card, extraText,MUtext))
+         notify("{}{} to purchase {}{}{}.".format(ActionCost, rc, card, extraText,MUtext))
       elif card.Type == 'Resource' and hiddenresource == 'no':
          card.moveToTable(180, 240 * playerside - yaxisMove(card), False)
-         notify("{} to acquire {}{}{}.".format(ActionCost, card, extraText,MUtext))
+         notify("{}{} to acquire {}{}{}.".format(ActionCost, rc, card, extraText,MUtext))
       else:
          card.moveToTable(0, 0 * playerside - yaxisMove(card), False)
-         notify("{} to play {}{}{}.".format(ActionCost, card, extraText,MUtext))
+         notify("{}{} to play {}{}{}.".format(ActionCost, rc, card, extraText,MUtext))
    else:
-      rc = payCost(card.Cost, cost, loud)
+      rc = payCost(card.Cost, cost)
       if rc == "ABORT": 
-         me.Actions += 1 # If the player didn't notice they didn't have enough bits, we give them back their action
+         me.Actions += NbReq # If the player didn't notice they didn't have enough bits, we give them back their action
          return # If the player didn't have enough money to pay and aborted the function, then do nothing.
       elif rc == "free": extraText = " at no cost"
+      elif rc != 0: rc = " and pays {}".format(rc)
       if card.Type == 'Operation':
          card.moveToTable(0, 0 * playerside - yaxisMove(card), False)
-         notify("{} to initiate {}{}.".format(ActionCost, card, extraText))
+         notify("{}{} to initiate {}{}.".format(ActionCost, rc, card, extraText))
       elif card.Type == 'Upgrade' and re.search(r'Region', card.Keywords):
          card.moveToTable(-220, 240 * playerside - yaxisMove(card), False)
-         notify("{} to opene a base of operations in {}{}.".format(ActionCost, card, extraText))
+         notify("{}{} to open a base of operations in {}{}.".format(ActionCost, rc, card, extraText))
       else:
          card.moveToTable(0, 0 * playerside - yaxisMove(card), False)
-         notify("{} to play {}{}.".format(ActionCost, card, extraText))           
+         notify("{}{} to play {}{}.".format(ActionCost, rc, card, extraText))           
    executeAutomations(card,"play")
 
 def playForFree(card, x = 0, y = 0):
