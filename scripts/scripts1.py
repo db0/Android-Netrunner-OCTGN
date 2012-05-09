@@ -597,31 +597,37 @@ def intTrashCard (card, stat, cost = "not free",  ActionCost = ''):
     mute()
     MUtext = ""
     rc = ''
-    if ActionCost == '': ActionCost == '{}'.format(me) # If not actions were used, then just announce our name.
-    else: ActionCost += ' and '
+    if ActionCost == '': 
+      ActionCost = '{} '.format(me) # If not actions were used, then just announce our name.
+      goodGrammar = 'es' # LOL Grammar Nazi
+    else: 
+      ActionCost += ' and '
+      goodGrammar = ''
     if card.Type == "Tracing": return
     cardowner = card.owner
     rc = payCost(stat, cost)
     if rc == "ABORT": return # If the player didn't have enough money to pay and aborted the function, then do nothing.
     elif rc == 0: 
       if ActionCost.endswith(' and'): ActionCost[:-len(' and')] # if we have no action cost, we don't need the connection.
-    else: ActionCost += "paid {}".format(rc) # If we have Bit cost, append it to the Action cost to be announced.
+    else: 
+      ActionCost += "pays {} to".format(rc) # If we have Bit cost, append it to the Action cost to be announced.
+      goodGrammar = ''
     if card.isFaceUp:
         if num(card.properties["MU Required"]) > 0:
             cardowner.Memory += num(card.properties["MU Required"])
             MUtext = ", freeing up {} MUs".format(card.properties["MU Required"])
         if rc == "free" : notify("{} trashed {} at no cost{}.".format(me, card, MUtext))
-        else: notify("{} to trash {}{}.".format(ActionCost, card, MUtext))
+        else: notify("{} trash{} {}{}.".format(ActionCost, goodGrammar, card, MUtext))
         executeAutomations (card, "trash")
         card.moveTo(cardowner.piles['Trash/Archives(Face-up)'])
     elif (ds == "runner" and cardowner == me) or (ds == "corp" and cardowner != me ): #I'm the runner and I trash my card or I 'm the corp and I trash a runner card
         card.moveTo(cardowner.piles['Trash/Archives(Face-up)'])
         if rc == "free" : notify ("{} trashed {} at no cost.".format(me,card))
-        else: notify("{} to trash {}.".format(ActionCost, card))
+        else: notify("{} trash{} {}.".format(ActionCost, goodGrammar, card))
     else: #I'm the corp and I trash my card or I'm the runner and I trash a corp's card
         card.moveTo(cardowner.piles['Archives(Hidden)'])
         if rc == "free": notify("{} trashed a hidden card at no cost.".format(me))
-        else: notify("{} to trash a hidden card.".format(ActionCost))
+        else: notify("{} trash{} a hidden card.".format(ActionCost, goodGrammar))
 
 def trashCard (card, x = 0, y = 0):
 	intTrashCard(card, card.Stat)
@@ -632,7 +638,7 @@ def trashForFree (card, x = 0, y = 0):
 def pay2AndTrash(card, x=0, y=0):
    ActionCost = useAction()
    if ActionCost == 'ABORT': return
-   intTrashCard(card, 2, ActionCost)
+   intTrashCard(card, 2, ActionCost = ActionCost)
 
 def useCard(card,x=0,y=0):
     if card.highlight == None:
