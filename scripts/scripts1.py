@@ -89,6 +89,10 @@ def uniBit(count):
         elif count == 10: return '❿'
         else: return "({})".format(count)
     else: return "({})".format(count)
+ 
+def uniAction():
+   if uniBits: return '⏎'
+   else: return '|>'
 #---------------------------------------------------------------------------
 # Card Placement functions
 #---------------------------------------------------------------------------
@@ -131,8 +135,9 @@ def useAction(group = table, x=0, y=0, count = 1):
    act = (maxActions - me.Actions) + 1# maxActions is different for corp and runner and is set during jackIn()
                                       # We give act +1 because otherwise the first action would be action #0.
    me.Actions -= count
-   if count > 1: return "⏎ ⏎ {} takes Double Action #{} and #{}{}".format(me,act, act + 1,extraText)
-   else: return "⏎ {} takes Action #{}{}".format(me,act,extraText) # We give act +1 because otherwise the first action would be action #0.
+   if count == 1: return "{} {} {} takes Double Action #{} and #{}{}".format(uniAction(),uniAction(),me,act, act + 1,extraText)
+   elif count == 2: return "{} {} {} {} takes Triple Action #{}, #{} and #{}{}".format(uniAction(),uniAction(),uniAction(),me,act, act + 1,act + 2,extraText)
+   else: return "{} {} takes Action #{}{}".format(uniAction(),me,act,extraText) # We give act +1 because otherwise the first action would be action #0.
 
 def goToEndTurn(group, x = 0, y = 0):
     mute()
@@ -205,10 +210,10 @@ def switchAutomation(group,x=0,y=0,command = 'Off'):
 def switchUniBits(group,x=0,y=0,command = 'Off'):
     global UniBits
     if UniBits and command != 'On':
-        whisper("Bits will now be displayed as normal numbers.".format(me))
+        whisper("Bits and Actions will now be displayed as normal ASCII.".format(me))
         UniBits = False
     else:
-        whisper("Bits will now be displayed as unicode.".format(me))
+        whisper("Bits and Actions will now be displayed as Unicode.".format(me))
         UniBits = True
         
 def create3DataForts(group):
@@ -600,17 +605,17 @@ def intTrashCard (card, stat, cost = "not free",  ActionCost = ''):
             cardowner.Memory += num(card.properties["MU Required"])
             MUtext = ", freeing up {} MUs".format(card.properties["MU Required"])
         if rc == "free" : notify("{} trashed {} at no cost{}.".format(me, card, MUtext))
-        else: notify("{} trashed {}{}.".format(ActionCost, card, MUtext))
+        else: notify("{} to trash {}{}.".format(ActionCost, card, MUtext))
         executeAutomations (card, "trash")
         card.moveTo(cardowner.piles['Trash/Archives(Face-up)'])
     elif (ds == "runner" and cardowner == me) or (ds == "corp" and cardowner != me ): #I'm the runner and I trash my card or I 'm the corp and I trash a runner card
         card.moveTo(cardowner.piles['Trash/Archives(Face-up)'])
         if rc == "free" : notify ("{} trashed {} at no cost.".format(me,card))
-        else: notify("{} paid {} to trash {} {}.".format(ActionCost, uniBit(cost), card))
+        else: notify("{} and paid {} to trash {} {}.".format(ActionCost, uniBit(cost), card))
     else: #I'm the corp and I trash my card or I'm the runner and I trash a corp's card
         card.moveTo(cardowner.piles['Archives(Hidden)'])
         if rc == "free": notify("{} trashed a hidden card at no cost.".format(me))
-        else: notify("{} paid {} to trash a hidden card.".format(ActionCost,uniBit(cost)))
+        else: notify("{} and paid {} to trash a hidden card.".format(ActionCost,uniBit(cost)))
 
 def trashCard (card, x = 0, y = 0):
 	intTrashCard(card, card.Stat)
