@@ -91,7 +91,7 @@ def uniBit(count):
     else: return "({})".format(count)
  
 def uniAction():
-   if uniBits: return '⏎'
+   if UniBits: return '⏎'
    else: return '|>'
 #---------------------------------------------------------------------------
 # Card Placement functions
@@ -135,8 +135,8 @@ def useAction(group = table, x=0, y=0, count = 1):
    act = (maxActions - me.Actions) + 1# maxActions is different for corp and runner and is set during jackIn()
                                       # We give act +1 because otherwise the first action would be action #0.
    me.Actions -= count
-   if count == 1: return "{} {} {} takes Double Action #{} and #{}{}".format(uniAction(),uniAction(),me,act, act + 1,extraText)
-   elif count == 2: return "{} {} {} {} takes Triple Action #{}, #{} and #{}{}".format(uniAction(),uniAction(),uniAction(),me,act, act + 1,act + 2,extraText)
+   if count == 2: return "{} {} {} takes Double Action #{} and #{}{}".format(uniAction(),uniAction(),me,act, act + 1,extraText)
+   elif count == 3: return "{} {} {} {} takes Triple Action #{}, #{} and #{}{}".format(uniAction(),uniAction(),uniAction(),me,act, act + 1,act + 2,extraText)
    else: return "{} {} takes Action #{}{}".format(uniAction(),me,act,extraText) # We give act +1 because otherwise the first action would be action #0.
 
 def goToEndTurn(group, x = 0, y = 0):
