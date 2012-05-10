@@ -1175,6 +1175,8 @@ def useAbility(card, x = 0, y = 0):
          if abilRegex.group(4) != '0': 
             if abilCost != '': abilCost += ' and '
             abilCost += 'Trash this card'
+         if abilRegex.group(1) == '0' and abilRegex.group(2) == '0' and abilRegex.group(3) == '0' and abilRegex.group(4) == '0':
+            abilCost = 'Activate'
          if abilRegex.group(6):
             if abilRegex.group(6) == '999': abilX = 'all'
             else: abilX = abilRegex.group(6)
@@ -1461,7 +1463,16 @@ def RunX(Autoscript, announceText, card, targetCard = None, manual = True, n = 0
    else: return announceString
 
 def per(Autoscript, card = None, count = 0, targetCard = None, manual = False): # This function goes through the autoscript and looks for the words "per<Something>". Then figures out what the card multiplies its effect with, and returns the appropriate multiplier.
-   return 1 # Currently not implemented fully.
+   per = re.search(r'\b(per|upto)(Assigned|Target|Parent|Generated|Installed|Rezzed|Transferred|Bought)?([{A-Z][A-Za-z0-9,_ {}&]*)[-]?', Autoscript) # We're searching for the word per, and grabbing all after that, until the first dash "-" as the variable.
+   if per: # If the  search was successful...
+      if per.group(2) and per.group(2) == 'Target': useC = targetCard # If the effect is targeted, we need to use the target's attributes
+      else: useC = card # If not, use our own.
+      if per.group(3) == 'X': multiplier = count      
+      elif per.group(3) == 'AdvancementMarker': multiplier = useC.markers[Advance]
+      elif per.group(3) == 'BitMarker': multiplier = useC.markers[Bits]
+      elif per.group(3) == 'GenericMarker': multiplier = useC.markers[Generic]
+   else: multiplier = 1
+   return multiplier
       
 def customScript(card):
    useCard(card) # Not in use atm.
