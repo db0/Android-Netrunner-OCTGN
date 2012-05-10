@@ -483,18 +483,18 @@ def getBit(group, x = 0, y = 0):
 # Other functions on card
 #------------------------------------------------------------------------------
 
-def payCost(count = 1, cost = 'not_free', notification = silent): # A function that removed the cost provided from our bit pool, after checking that we have enough.
+def payCost(count = 1, cost = 'not_free', counter = 'BP'): # A function that removed the cost provided from our bit pool, after checking that we have enough.
    if cost == 'free': return 'free'
    count = num(count)
    if count == 0 : return 0# If the card has 0 cost, there's nothing to do.
-   if me.counters['Bit Pool'].value < count: # If we don't have enough Bits in the pool, we assume card effects or mistake and notify the player that they need to do things manually.
-      if not confirm("You do not seem to have enough Bits in your pool to take this action. Are you sure you want to proceed? \
-      \n(If you do, your Bit Pool will go to the negative. You will need to increase it manually as required.)"): return 'ABORT'
-      if notification == loud: notify("{} was supposed to pay {} but only has {} in their bit pool. They'll need to reduce the cost by {} with card effects.".format(me, uniBit(count), uniBit(me.counters['Bit Pool'].value), uniBit(count - me.counters['Bit Pool'].value)))   
-      me.counters['Bit Pool'].value -= count 
-   else: # Otherwise, just take the money out and inform that we did if we're "loud".
+   if counter == 'BP':
+      if me.counters['Bit Pool'].value < count and not confirm("You do not seem to have enough Bits in your pool to take this action. Are you sure you want to proceed? \
+         \n(If you do, your Bit Pool will go to the negative. You will need to increase it manually as required.)"): return 'ABORT' # If we don't have enough Bits in the pool, we assume card effects or mistake and notify the player that they need to do things manually.
       me.counters['Bit Pool'].value -= count
-      if notification == loud: notify("{} has paid {}. {} remaining.".format(me, uniBit(count), uniBit(me.counters['Bit Pool'].value)))  
+   elif counter == 'AP': # We can also take costs from other counters with this action.
+      if me.counters['Agenda Points'].value < count and not confirm("You do not seem to have enough Agenda Points to take this action. Are you sure you want to proceed? \
+         \n(If you do, your Agenda Points will go to the negative. You will need to increase them manually as required.)"): return 'ABORT'
+      me.counters['Agenda Points'].value -= count
    return uniBit(count)
    
 def scrAgenda(card, x = 0, y = 0):
@@ -1113,3 +1113,169 @@ def autoRefreshHand ( card, Param1):
 	shuffle(me.piles['R&D/Stack'])
 	drawManySilent (me.piles['R&D/Stack'], ToDraw)
 	notify (" --> {} shuffles and draws {} cards.".format(me,ToDraw) )
+   
+#------------------------------------------------------------------------------
+# Autoactions
+#------------------------------------------------------------------------------
+
+def inspectCard(card, x = 0, y = 0): # This function shows the player the card text, to allow for easy reading until High Quality scans are procured.
+   if card.Autoscript == "": ASText = "\n\nThis card is not Auto-Scripted!"
+   else: ASText = "\n\nThis card is Auto-Scripted:\n[{}]".format(card.AutoScript)
+   confirm("{}".format(ASText))
+
+def useAbility(card, x = 0, y = 0):
+   mute()
+   if not card.isFaceUp: # If card is face down assume they wanted to rez 
+      intRez(card)
+      return
+   elif not Automation or card.AutoAction == "": 
+      useCard(card) # If card is face up but has no autoscripts, or automation is disabled just notify that we're using an action.
+      return
+   elif re.search(r'{Custom:', card.AutoScript): 
+      customScript(card) # Some cards just have a fairly unique effect and there's no use in trying to make them work in the generic framework.
+      return
+   ### Checking if card has multiple autoscript options and providing choice to player.
+   Autoscripts = card.AutoAction.split('||')
+   for autoS in Autoscripts: # Checking and removing any "WhileDeployed" actions.
+      if re.search(r'WhileInstalled', autoS) or re.search(r'AtTurnStart', autoS): Autoscripts.remove(autoS)
+   if len(Autoscripts) == 0:
+      useCard(card) # If the card had only "WhileInstalled"  or AtTurnStart effect, just announce that it is being used.
+      return      
+   if len(Autoscripts) > 1: 
+      abilConcat = "This card has multiple abilities.\nWhich one would you like to use?\n\n" # We start a concat which we use in our confirm window.
+      for idx in range(len(Autoscripts)): # If a card has multiple abilities, we go through each of them to create a nicely written option for the player.
+         #notify("Autoscripts {}".format(Autoscripts)) # Debug
+         abilRegex = re.search(r"A([0-9]+)B([0-9]+)G([0-9]+)T([0-9]+):([A-Z][a-z]+)([X0-9]*)([A-Z][a-z ]+)-?([A-Za-z -{},]*)", Autoscripts[idx]) # This regexp returns 3-4 groups, which we then reformat and put in the confirm dialogue in a better readable format.
+         #notify("abilRegex is {}".format(abilRegex.groups())) # Debug
+         if abilRegex.group(1) != '0': abilCost = 'Use {} Actions'.format(abilRegex.group(1))
+         else: abilCost = '' 
+         if abilRegex.group(2) != '0': 
+            if abilCost != '': 
+               if abilRegex.group(3) != '0' or abilRegex.group(4) != '0': abilCost += ', '
+               else: abilCost += ' and '
+            abilCost += 'Pay {} Bits'.format(abilRegex.group(2))
+         if abilRegex.group(3) != '0': 
+            if abilCost != '': 
+               if abilRegex.group(4) != '0': abilCost += ', '
+               else: abilCost += ' and '
+            abilCost += 'Lose {} Agenda Points'.format(abilRegex.group(3))
+         if abilRegex.group(4) != '0': 
+            if abilCost != '': abilCost += ' and '
+            abilCost += 'Trash this card'
+         if abilRegex.group(6):
+            if abilRegex.group(6) == '999': abilX = 'all'
+            else: abilX = abilRegex.group(6)
+         else: abilX = abilRegex.group(6)
+         abilConcat += '{}: {} to {} {} {}'.format(idx, abilCost, abilRegex.group(5), abilX, abilRegex.group(7)) # We add the first three groups to the concat. Those groups are always Gain/Hoard/Prod ## Favo/Solaris/Spice
+         if abilRegex.group(8): # If the autoscript has a fourth group, then it means it has subconditions. Such as "per Holding" or "by Rival"
+            subconditions = abilRegex.group(8).split('$$') # These subconditions are always separated by dashes "-", so we use them to split the string
+            for idx2 in range(len(subconditions)):
+               if idx2 > 0: abilConcat += ' and'
+               subadditions = subconditions[idx2].split('-')
+               for idx3 in range(len(subadditions)):
+                  abilConcat += ' {}'.format(subconditions[idx2]) #  Then we iterate through each distinct subcondition and display it without the dashes between them. (In the future I may also add whitespaces between the distinct words)
+         abilConcat += '\n' # Finally add a newline at the concatenated string for the next ability to be listed.
+      abilChoice = len(Autoscripts) + 1 # Since we want a valid choice, we put the choice in a loop until the player exists or selects a valid one.
+      while abilChoice >= len(Autoscripts):
+         abilChoice = askInteger('{}'.format(abilConcat), 0) # We use the ability concatenation we crafted before to give the player a choice of the abilities on the card.
+         if abilChoice == None: return # If the player closed the window, abort.
+      selectedAutoscripts = Autoscripts[abilChoice].split('$$') # If a valid choice is given, choose the autoscript at the list index the player chose.
+   else: selectedAutoscripts = Autoscripts[0].split('$$')
+   timesNothingDone = 0 # A variable that keeps track if we've done any of the autoscripts defined. If none have been coded, we just engage the card.
+   for activeAutoscript in selectedAutoscripts:
+      ### Checking if any of  card effects requires one or more targets first
+      if re.search(r'Targeted', activeAutoscript) and not findTarget(activeAutoscript): return
+   for activeAutoscript in selectedAutoscripts:
+      targetC = findTarget(activeAutoscript)
+      ### Warning the player in case we need to
+      if chkWarn(activeAutoscript) == 'ABORT': return
+      ### Checking the activation cost and preparing a relevant string for the announcement
+      actionCost = re.match(r"A([0-9]+)B([0-9]+)G([0-9]+)T([0-9]+):", activeAutoscript) 
+      # This is the cost of the card.  It starts with A which is the amount of Actions needed to activate
+      # After A follows B for Bit cost, then for aGenda cost.
+      # T takes a binary value. A value of 1 means the card needs to be trashed.
+      if actionCost: # If there's no match, it means we've already been through the cost part once and now we're going through the '$$' part.
+         if actionCost.group(1) != '0': # If we need to use actions
+            Acost = useAction(count = num(actionCost.group(1)))
+            if Acost == 'ABORT': return
+            else: announceText = Acost
+         else: announceText = '{}'.format(me) # A variable with the text to be announced at the end of the action.
+         if actionCost.group(2) != '0': # If we need to pay bits
+            Bcost = payCost(actionCost.group(2))
+            if Bcost == 'ABORT': # if they can't pay the cost afterall, we return them their actions and abort.
+               me.Actions += num(actionCost.group(1))
+               return
+            if actionCost.group(1) != '0':
+               if actionCost.group(3) != '0' or actionCost.group(4) != '0': announceText += ', '
+               else: announceText += ' and '
+            else: announceText += ' '
+            announceText += 'pays {}'.format(actionCost.group(2))
+         if actionCost.group(3) != '0': # If we need to pay agenda points...
+            Gcost = payCost(actionCost.group(3), counter = 'AP')
+            if Gcost == 'ABORT': 
+               me.Actions += num(actionCost.group(1))
+               me.counters['Bit Pool'].value += num(actionCost.group(2))
+               return
+            if actionCost.group(1) != '0' or actionCost.group(2)  != '0':
+               if actionCost.group(4) != '0': announceText += ', '
+               else: announceText += ' and '
+            else: announceText += ' '
+            announceText += 'liquidates {} Agenda Points'.format(actionCost.group(3))
+         if actionCost.group(4) != '0': # If the card needs to be trashed...
+            if not confirm("This action will trash the card as a cost. Are you sure you want to continue?"): # First confirm the trash cost to avoid double-click accidents
+               me.Actions += num(actionCost.group(1))
+               me.counters['Bit Pool'].value += num(actionCost.group(2))
+               me.counters['Agenda Points'].value += num(actionCost.group(3))
+               return               
+            if actionCost.group(1) != '0' or actionCost.group(2) != '0' or actionCost.group(3) != '0': announceText += ' and '
+            else: announceText += ' '
+            announceText += 'trashes {} to use its ability'.format(card)
+         else: announceText += ' to activate the ability of {}'.format(card) # If we don't have to trash the card, we need to still announce the name of the card we're using.
+         if actionCost.group(1) == '0' and actionCost.group(2) == '0' and actionCost.group(3) == '0' and actionCost.group(4) == '0':
+            notify("Card has no costs whatsoever. Is this right?")
+            announceText = '{} uses the ability of {}'.format(me, card)
+         announceText += ' in order to'
+      elif not announceText.endswith(' in order to') and not announceText.endswith(' and'): announceText += ' and'
+      ### Calling the relevant function depending on if we're increasing our own counters, the hoard's or putting card markers.
+      #if re.search(r'Gain([X0-9]+)', activeAutoscript): announceText = GainX(activeAutoscript, announceText, card, targetC, True, n = X)
+      #elif re.search(r'Reshuffle([X0-9]+)', activeAutoscript): announceText = HoardX(activeAutoscript, announceText, card, True)
+      #elif re.search(r'Spawn([X0-9]+)', activeAutoscript): announceText = ProdX(activeAutoscript, announceText, card, True)
+      #elif re.search(r'Take([X0-9]+)', activeAutoscript): announceText = TransferX(activeAutoscript, announceText, card, targetC, True)
+      #elif re.search(r'Draw([X0-9]+)', activeAutoscript): announceText = DrawX(activeAutoscript, announceText, card, targetC, True)
+      #elif re.search(r'UseCustomAbility', activeAutoscript): announceText = UseCustomAbility(activeAutoscript, announceText, card, targetC)
+      #else: timesNothingDone += 1
+      if announceText == 'ABORT': 
+         autoscriptCostUndo(selectedAutoscripts[0]) # If nothing was done, try to undo. The first item in selectedAutoscripts[] contains the cost.
+         return
+   if announceText.endswith(' in order to'): # If our text annouce ends with " to", it means that nothing happened. Try to undo and inform player.
+      autoscriptCostUndo(selectedAutoscripts[0])
+      notify("{} but there was nothing to do.".format(announceText[:-len(' in order to')]))
+   else: # If we did something and everything finished as expected, then take the costs.
+      if not re.search(r"T0:", selectedAutoscripts[0]): 
+         executeAutomations (card, "trash")
+         card.moveTo(card.owner.piles['Trash/Archives(Face-up)'])
+      notify("{}.".format(announceText)) # Finally announce what the player just did by using the concatenated string.
+
+def autoscriptCostUndo(Autoscript):
+   whisper("--> Undoing action...")
+   actionCost = re.match(r"A([0-9]+)B([0-9]+)G([0-9]+)T([0-9]+):", Autoscript)
+   me.Actions += num(actionCost.group(1))
+   me.counters['Bit Pool'].value += num(actionCost.group(2))
+   me.counters['Agenda Points'].value += num(actionCost.group(3))
+
+def findTarget(Autoscript):
+   return None # Not in use atm.
+   
+def chkWarn(Autoscript):
+   warning = re.search(r'warn([A-Z][A-Za-z0-9 ]+)-?', Autoscript)
+   if warning:
+      if warning.group(1) == 'Discard': 
+         if not confirm("This action requires that you discard some cards. Have you done this already?"):
+            whisper("--> Aborting action. Please discard the necessary amount of cards and run this action again")
+            return 'ABORT'
+      if warning.group(1) == 'Workaround':
+         notify(":::Note:::{} is using a workaround autoscript".format(me))
+   return 'OK'
+ 
+def customScript(card):
+   useCard(card) # Not in use atm.
