@@ -1145,7 +1145,7 @@ def useAbility(card, x = 0, y = 0):
       abilConcat = "This card has multiple abilities.\nWhich one would you like to use?\n\n" # We start a concat which we use in our confirm window.
       for idx in range(len(Autoscripts)): # If a card has multiple abilities, we go through each of them to create a nicely written option for the player.
          #notify("Autoscripts {}".format(Autoscripts)) # Debug
-         abilRegex = re.search(r"A([0-9]+)B([0-9]+)G([0-9]+)T([0-9]+):([A-Z][a-z]+)([X0-9]*)([A-Z][a-z ]+)-?([A-Za-z -{},]*)", Autoscripts[idx]) # This regexp returns 3-4 groups, which we then reformat and put in the confirm dialogue in a better readable format.
+         abilRegex = re.search(r"A([0-9]+)B([0-9]+)G([0-9]+)T([0-9]+):([A-Z][a-z ]+)([X0-9]*)([A-Z][a-z ]+)-?([A-Za-z -{},]*)", Autoscripts[idx]) # This regexp returns 3-4 groups, which we then reformat and put in the confirm dialogue in a better readable format.
          #notify("abilRegex is {}".format(abilRegex.groups())) # Debug
          if abilRegex.group(1) != '0': abilCost = 'Use {} Actions'.format(abilRegex.group(1))
          else: abilCost = '' 
@@ -1182,6 +1182,7 @@ def useAbility(card, x = 0, y = 0):
       selectedAutoscripts = Autoscripts[abilChoice].split('$$') # If a valid choice is given, choose the autoscript at the list index the player chose.
    else: selectedAutoscripts = Autoscripts[0].split('$$')
    timesNothingDone = 0 # A variable that keeps track if we've done any of the autoscripts defined. If none have been coded, we just engage the card.
+   X = 0 # Variable for special costs.
    for activeAutoscript in selectedAutoscripts:
       ### Checking if any of  card effects requires one or more targets first
       if re.search(r'Targeted', activeAutoscript) and not findTarget(activeAutoscript): return
@@ -1230,20 +1231,20 @@ def useAbility(card, x = 0, y = 0):
             if actionCost.group(1) != '0' or actionCost.group(2) != '0' or actionCost.group(3) != '0': announceText += ' and '
             else: announceText += ' '
             announceText += 'trashes {} to use its ability'.format(card)
-         else: announceText += ' to activate the ability of {}'.format(card) # If we don't have to trash the card, we need to still announce the name of the card we're using.
+         else: announceText += ' to activate {}'.format(card) # If we don't have to trash the card, we need to still announce the name of the card we're using.
          if actionCost.group(1) == '0' and actionCost.group(2) == '0' and actionCost.group(3) == '0' and actionCost.group(4) == '0':
             notify("Card has no costs whatsoever. Is this right?")
             announceText = '{} uses the ability of {}'.format(me, card)
          announceText += ' in order to'
       elif not announceText.endswith(' in order to') and not announceText.endswith(' and'): announceText += ' and'
-      ### Calling the relevant function depending on if we're increasing our own counters, the hoard's or putting card markers.
-      #if re.search(r'Gain([X0-9]+)', activeAutoscript): announceText = GainX(activeAutoscript, announceText, card, targetC, True, n = X)
-      #elif re.search(r'Reshuffle([X0-9]+)', activeAutoscript): announceText = HoardX(activeAutoscript, announceText, card, True)
-      #elif re.search(r'Spawn([X0-9]+)', activeAutoscript): announceText = ProdX(activeAutoscript, announceText, card, True)
-      #elif re.search(r'Take([X0-9]+)', activeAutoscript): announceText = TransferX(activeAutoscript, announceText, card, targetC, True)
-      #elif re.search(r'Draw([X0-9]+)', activeAutoscript): announceText = DrawX(activeAutoscript, announceText, card, targetC, True)
+      ## Calling the relevant function depending on if we're increasing our own counters, the hoard's or putting card markers.
+      if re.search(r'Gain([X0-9]+)', activeAutoscript): announceText = GainX(activeAutoscript, announceText, card, targetC, n = X)
+      #elif re.search(r'Reshuffle([X0-9]+)', activeAutoscript): announceText = HoardX(activeAutoscript, announceText, card)
+      #elif re.search(r'Spawn([X0-9]+)', activeAutoscript): announceText = ProdX(activeAutoscript, announceText, card)
+      #elif re.search(r'Take([X0-9]+)', activeAutoscript): announceText = TransferX(activeAutoscript, announceText, card, targetC)
+      #elif re.search(r'Draw([X0-9]+)', activeAutoscript): announceText = DrawX(activeAutoscript, announceText, card, targetC)
       #elif re.search(r'UseCustomAbility', activeAutoscript): announceText = UseCustomAbility(activeAutoscript, announceText, card, targetC)
-      #else: timesNothingDone += 1
+      else: timesNothingDone += 1
       if announceText == 'ABORT': 
          autoscriptCostUndo(selectedAutoscripts[0]) # If nothing was done, try to undo. The first item in selectedAutoscripts[] contains the cost.
          return
@@ -1276,6 +1277,27 @@ def chkWarn(Autoscript):
       if warning.group(1) == 'Workaround':
          notify(":::Note:::{} is using a workaround autoscript".format(me))
    return 'OK'
- 
+
+def GainX(Autoscript, announceText, card, targetCard = None, manual = True, n = 0):
+   gain = 0
+   action = re.search(r'\bGain([X0-9]+)(Bits|Agenda Points|Actions|Bad Publicity|Tags)', Autoscript)
+   if action.group(1) == 'X': gain = n # n is usually the number returned by another function.
+   else: gain += num(action.group(1))
+   multiplier = per(Autoscript, card, n, targetCard) # We check if the card provides a gain based on something else, such as favour bought, or number of dune fiefs controlled by rivals.
+   if action.group(2) == 'Bits': card.owner.counters['Bit Pool'].value += gain * multiplier
+   elif action.group(2) == 'Agenda Points': card.owner.counters['Agenda Points'].value += gain * multiplier
+   elif action.group(2) == 'Actions': card.owner.Actions += gain * multiplier
+   elif action.group(2) == 'Bad Publicity': card.owner.counters['Bad Publicity'].value += gain * multiplier
+   elif action.group(2) == 'Tags': card.owner.Tags += gain * multiplier
+   else: 
+      whisper("Gain what?! (Bad autoscript)")
+      return 'ABORT'
+   announceString = "{} gain {} {}".format(announceText, gain * multiplier, action.group(2))
+   if not manual and multiplier > 0: notify('--> {}.'.format(announceString))
+   else: return announceString
+
+def per(Autoscript, card = None, count = 0, targetCard = None): # This function goes through the autoscript and looks for the words "per<Something>". Then figures out what the card multiplies its effect with, and returns the appropriate multiplier.
+   return 1 # Currently not implemented fully.
+      
 def customScript(card):
    useCard(card) # Not in use atm.
