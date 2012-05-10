@@ -93,6 +93,17 @@ def uniBit(count):
 def uniAction():
    if UniBits: return '⏎'
    else: return '|>'
+   
+def chooseWell(limit, choiceText, default = None):
+   if default == None: default = 0# If the player has not provided a default value for askInteger, just assume it's the max.
+   choice = limit # limit is the number of choices we have
+   if limit > 1: # But since we use 0 as a valid choice, then we can't actually select the limit as a number
+      while choice >= limit:
+         choice = askInteger("{}".format(choiceText), default)
+         if not choice: return False
+         if choice > limit: whisper("You must choose between 0 and {}".format(limit - 1))
+   else: choice = 0 # If our limit is 1, it means there's only one choice, 0.
+   return choice   
 #---------------------------------------------------------------------------
 # Card Placement functions
 #---------------------------------------------------------------------------
@@ -236,6 +247,7 @@ def intJackin(group, x = 0, y = 0):
     TopCard.moveTo(me.piles['Trash/Archives(Face-up)'])
     if len(players) > 1: random = rnd(1,100) # Fix for multiplayer only. Makes Singleplayer setup very slow otherwise.
     ds = TopCard.Player
+    me.setGlobalVariable(ds, ds)
     TopCard.moveTo(me.piles['R&D/Stack'])
     if checkDeckNoLimit(stack) != 0: notify ("SHOULD RETURN")
     me.counters['Bit Pool'].value = 5
@@ -580,10 +592,11 @@ def expose(card, x = 0, y = 0):
 	else:
 		notify("You can't expose this card")
 
-def rolld6(group, x = 0, y = 0):
-    mute()
-    n = rnd(1, 6)
-    notify("{} rolls {} on a 6-sided die.".format(me, n))
+def rolld6(group = table, x = 0, y = 0, silent = False):
+   mute()
+   n = rnd(1, 6)
+   if not silent: notify("{} rolls {} on a 6-sided die.".format(me, n))
+   return n
 
 def selectAsTarget (card, x = 0, y = 0):
     card.target(True)
@@ -819,17 +832,19 @@ def showatrandom(group):
 	card.moveToTable(0, 0 - yaxisMove(card), False)
 	notify("{} show {} at random.".format(me,card))
 
-def handtoStack (group):
-    mute()
-    Stack = me.piles['R&D/Stack']
-    for c in me.hand: c.moveTo(Stack)
-    if ( ds == "runner"):
-        nameHand = "Hand"
-        nameStack = "Stack"
-    else:
-        nameHand = "HQ"
-        nameStack = "R&D"
-    notify ("{} moves {} to {}.".format(me,nameHand,nameStack))
+def handtoStack (group, silent = False):
+   mute()
+   Stack = me.piles['R&D/Stack']
+   handlength = len(me.hand)
+   for c in me.hand: c.moveTo(Stack)
+   if ds == "runner":
+      nameHand = "Hand"
+      nameStack = "Stack"
+   else:
+      nameHand = "HQ"
+      nameStack = "R&D"
+   if not silent: notify ("{} moves {} to {}.".format(me,nameHand,nameStack))
+   else: return(nameHand,nameStack,handlength) # Return a tuple with the names of the groups.
 
 
 #------------------------------------------------------------------------------
@@ -852,23 +867,20 @@ def draw(group):
         group[0].moveTo(me.hand)
         notify("{} to draw a card.".format(ActionCost))
 
-def drawManySilent(group, count):
-	SSize = len(group)
-	if SSize == 0: return 0
-	mute()
-	if ( count > SSize) : count=SSize
-	for c in group.top(count): c.moveTo(me.hand)
-	return count
 
-def drawMany(group, count = None):
+def drawMany(group, count = None, destination = None, silent = False):
    mute()
+   if not destination: destination = me.hand
    SSize = len(group)
-   if SSize == 0: return
+   if SSize == 0: return 0
    if count == None: count = askInteger("Draw how many cards?", 5)
-   if count == None: return
-   if count > SSize : count=SSize
-   for c in group.top(count): c.moveTo(me.hand)
-   notify("{} draws {} cards.".format(me, count))
+   if count == None: return 0
+   if count > SSize : 
+      count = SSize
+      whisper("You do not have enough cards in your deck to complete this action. Will draw as many as possible")
+   for c in group.top(count): c.moveTo(destination)
+   if not silent: notify("{} draws {} cards.".format(me, count))
+   return count
 
 def toarchives(group = me.piles['Archives(Hidden)']):
 	mute()
@@ -877,18 +889,19 @@ def toarchives(group = me.piles['Archives(Hidden)']):
 	#Archives.shuffle()
 	notify ("{} moves Hidden Archives to Archives.".format(me))
 
-def archivestoStack(group):
-	mute()
-	Stack = me.piles['R&D/Stack']
-	for c in group: c.moveTo(Stack)
-	#Archives.shuffle()
-	if ( ds == "runner"):
-		nameTrash = "Trash"
-		nameStack = "Stack"
-	else:
-		nameTrash = "Archives"
-		nameStack = "R&D"
-	notify ("{} moves {} to {}.".format(me,nameTrash,nameStack))
+def archivestoStack(group, silent = False):
+   mute()
+   Stack = me.piles['R&D/Stack']
+   for c in group: c.moveTo(Stack)
+   #Archives.shuffle()
+   if ( ds == "runner"):
+      nameTrash = "Trash"
+      nameStack = "Stack"
+   else:
+      nameTrash = "Archives"
+      nameStack = "R&D"
+   if not silent: notify ("{} moves {} to {}.".format(me,nameTrash,nameStack))
+   else: return(nameTrash,nameStack)
 
 def mill(group):
    if len(group) == 0: return
@@ -997,7 +1010,7 @@ def executeAutomations(card,action = ''):
 def autoGainXDrawY ( card, Param1, Param2 ):
 	mute()
 	me.counters['Bit Pool'].value += Param1
-	drawManySilent ( me.piles['R&D/Stack'], Param2)
+	drawMany ( me.piles['R&D/Stack'], Param2, True)
 	notify ( "--> {} gains {} bits and draws {} cards.".format(me,Param1,Param2) )
 
 def autoGainX ( card, Param1,Param2 ):
@@ -1007,7 +1020,7 @@ def autoGainX ( card, Param1,Param2 ):
 
 def autoDrawX ( card, Param1,Param2):
 	mute()
-	drawManySilent ( me.piles['R&D/Stack'], Param1)
+	drawMany ( me.piles['R&D/Stack'], Param1, True)
 	notify ( "--> {} draws {} card(s).".format(me,Param1) )
 
 def autoAddBitsCounter ( card, Param1, Param2 ):
@@ -1102,7 +1115,7 @@ def autoRefreshToX (card, Param1):
 	if ( ds == "corp"): archivestoStack(me.piles['Archives(Hidden)'])
 	archivestoStack(me.piles['Trash/Archives(Face-up)'])
 	shuffle(me.piles['R&D/Stack'])
-	drawManySilent (me.piles['R&D/Stack'], Param1)
+	drawMany (me.piles['R&D/Stack'], Param1, True)
 	notify (" --> {} shuffles and draws {} cards.".format(me,Param1) )
 
 def autoRefreshHand ( card, Param1):
@@ -1111,7 +1124,7 @@ def autoRefreshHand ( card, Param1):
 	else: ToDraw = Param1
 	handtoStack (0)
 	shuffle(me.piles['R&D/Stack'])
-	drawManySilent (me.piles['R&D/Stack'], ToDraw)
+	drawMany (me.piles['R&D/Stack'], ToDraw, True)
 	notify (" --> {} shuffles and draws {} cards.".format(me,ToDraw) )
    
 #------------------------------------------------------------------------------
@@ -1173,7 +1186,8 @@ def useAbility(card, x = 0, y = 0):
                if idx2 > 0: abilConcat += ' and'
                subadditions = subconditions[idx2].split('-')
                for idx3 in range(len(subadditions)):
-                  abilConcat += ' {}'.format(subconditions[idx2]) #  Then we iterate through each distinct subcondition and display it without the dashes between them. (In the future I may also add whitespaces between the distinct words)
+                  if re.search(r'warn[A-Z][A-Za-z0-9 ]+', subadditions[idx3]): continue # Don't mention warnings.
+                  abilConcat += ' {}'.format(subadditions[idx3]) #  Then we iterate through each distinct subcondition and display it without the dashes between them. (In the future I may also add whitespaces between the distinct words)
          abilConcat += '\n' # Finally add a newline at the concatenated string for the next ability to be listed.
       abilChoice = len(Autoscripts) + 1 # Since we want a valid choice, we put the choice in a loop until the player exists or selects a valid one.
       while abilChoice >= len(Autoscripts):
@@ -1233,17 +1247,25 @@ def useAbility(card, x = 0, y = 0):
             announceText += 'trashes {} to use its ability'.format(card)
          else: announceText += ' to activate {}'.format(card) # If we don't have to trash the card, we need to still announce the name of the card we're using.
          if actionCost.group(1) == '0' and actionCost.group(2) == '0' and actionCost.group(3) == '0' and actionCost.group(4) == '0':
-            notify("Card has no costs whatsoever. Is this right?")
-            announceText = '{} uses the ability of {}'.format(me, card)
+            announceText = '{} activates the free ability of {}'.format(me, card)
          announceText += ' in order to'
       elif not announceText.endswith(' in order to') and not announceText.endswith(' and'): announceText += ' and'
-      ## Calling the relevant function depending on if we're increasing our own counters, the hoard's or putting card markers.
-      if re.search(r'Gain([X0-9]+)', activeAutoscript): announceText = GainX(activeAutoscript, announceText, card, targetC, n = X)
-      #elif re.search(r'Reshuffle([X0-9]+)', activeAutoscript): announceText = HoardX(activeAutoscript, announceText, card)
-      #elif re.search(r'Spawn([X0-9]+)', activeAutoscript): announceText = ProdX(activeAutoscript, announceText, card)
-      #elif re.search(r'Take([X0-9]+)', activeAutoscript): announceText = TransferX(activeAutoscript, announceText, card, targetC)
-      #elif re.search(r'Draw([X0-9]+)', activeAutoscript): announceText = DrawX(activeAutoscript, announceText, card, targetC)
-      #elif re.search(r'UseCustomAbility', activeAutoscript): announceText = UseCustomAbility(activeAutoscript, announceText, card, targetC)
+      ### Calling the relevant function depending on if we're increasing our own counters, the hoard's or putting card markers.
+      if re.search(r'\bGain([X0-9]+)', activeAutoscript): announceText = GainX(activeAutoscript, announceText, card, targetC, n = X)
+      elif re.search(r'\bReshuffle([A-Za-z& ]+)', activeAutoscript): 
+         reshuffleTuple = ReshuffleX(activeAutoscript, announceText, card) # The reshuffleX() function is special because it returns a tuple.
+         announceText = reshuffleTuple[0] # The first element of the tuple contains the announceText string
+         X = reshuffleTuple[1] # The second element of the tuple contains the number of cards that were reshuffled from the hand in the deck.
+      elif re.search(r'Roll([X0-9]+)', activeAutoscript): 
+         rollTuple = RollX(activeAutoscript, announceText, card) # Returns like reshuffleX()
+         announceText = rollTuple[0] 
+         X = rollTuple[1] 
+      elif re.search(r'\bPut([X0-9]+)', activeAutoscript): announceText = TokensX(activeAutoscript, announceText, card, targetC, n = X)
+      elif re.search(r'\bTransfer([X0-9]+)', activeAutoscript): announceText = TransferX(activeAutoscript, announceText, card, targetC, n = X)
+      elif re.search(r'\bDraw([X0-9]+)', activeAutoscript): announceText = DrawX(activeAutoscript, announceText, card, targetC, n = X)
+      elif re.search(r'\bShuffle([A-Za-z& ]+)', activeAutoscript): announceText = ShuffleX(activeAutoscript, announceText, card, targetC, n = X)
+      elif re.search(r'\bRun([A-Za-z& ]+)', activeAutoscript): announceText = RunX(activeAutoscript, announceText, card, targetC, n = X)
+      elif re.search(r'\bUseCustomAbility', activeAutoscript): announceText = UseCustomAbility(activeAutoscript, announceText, card, targetC, n = X)
       else: timesNothingDone += 1
       if announceText == 'ABORT': 
          autoscriptCostUndo(selectedAutoscripts[0]) # If nothing was done, try to undo. The first item in selectedAutoscripts[] contains the cost.
@@ -1251,6 +1273,8 @@ def useAbility(card, x = 0, y = 0):
    if announceText.endswith(' in order to'): # If our text annouce ends with " to", it means that nothing happened. Try to undo and inform player.
       autoscriptCostUndo(selectedAutoscripts[0])
       notify("{} but there was nothing to do.".format(announceText[:-len(' in order to')]))
+   elif announceText.endswith(' and'):
+      announceText = announceText[:-len(' and')] # If for some reason we end with " and" (say because the last action did nothing), we remove it.
    else: # If we did something and everything finished as expected, then take the costs.
       if not re.search(r"T0:", selectedAutoscripts[0]): 
          executeAutomations (card, "trash")
@@ -1274,6 +1298,14 @@ def chkWarn(Autoscript):
          if not confirm("This action requires that you discard some cards. Have you done this already?"):
             whisper("--> Aborting action. Please discard the necessary amount of cards and run this action again")
             return 'ABORT'
+      if warning.group(1) == 'ReshuffleOpponent': 
+         if not confirm("This action will reshuffle your opponent's pile. Are you sure?\n\n[Important: Please ask your opponent not to take any actions with their piles until this actions is complete or the game might crash]"):
+            whisper("--> Aborting action.")
+            return 'ABORT'
+      if warning.group(1) == 'Reshuffle': 
+         if not confirm("This action will reshuffle your piles. Are you sure?"):
+            whisper("--> Aborting action.")
+            return 'ABORT'
       if warning.group(1) == 'Workaround':
          notify(":::Note:::{} is using a workaround autoscript".format(me))
    return 'OK'
@@ -1296,8 +1328,144 @@ def GainX(Autoscript, announceText, card, targetCard = None, manual = True, n = 
    if not manual and multiplier > 0: notify('--> {}.'.format(announceString))
    else: return announceString
 
-def per(Autoscript, card = None, count = 0, targetCard = None): # This function goes through the autoscript and looks for the words "per<Something>". Then figures out what the card multiplies its effect with, and returns the appropriate multiplier.
+def TransferX(Autoscript, announceText, card, targetCard = None, manual = True, n = 0):
+   breakadd = 1
+   if not targetCard: targetCard = card # If there's been to target card given, assume the target is the card itself.
+   action = re.search(r'\bTransfer([X0-9]+)Bits-to(Bit Pool|Discard)', Autoscript)
+   if action.group(1) == 'X': count = n # n is usually the number returned by another function.
+   elif action.group(1) == '999':
+      if targetCard.markers[Bits]: count = targetCard.markers[Bits]
+      else: count = 0
+   else: count = num(action.group(1))
+   if targetCard.markers[Bits] < count: 
+      if re.search(r'isCost', Autoscript):
+         whisper("You must have at least {} Bits on the card to take this action".format(action.group(1)))
+         return 'ABORT'
+      elif targetCard.markers[Bits] == 0: 
+         whisper("There was nothing to transfer.")
+         return 'ABORT'
+   for transfer in range(count):
+      if targetCard.markers[Bits] > 0: 
+         targetCard.markers[Bits] -= 1
+         if action.group(2) == 'Bit Pool': 
+            card.owner.counters['Bit Pool'].value += 1
+            destination = "{}'s bit pool".format(card.owner)
+         elif action.group(2) == 'Discard': destination = "the Discard Pile" # If the tokens are discarded, do nothing more.
+      else: 
+         breakadd -= 1 # We decrease the transfer variable by one, to make sure we announce the correct total.
+         break # If there's no more tokens to transfer, break out of the loop.
+   announceString = "{} transfer {} bits from {} to {}".format(announceText, transfer + breakadd, targetCard, destination)
+   if not manual: notify('--> {}.'.format(announceString))
+   else: return announceString   
+
+def TokensX(Autoscript, announceText, card, targetCard = None, manual = True, n = 0):
+   if not targetCard: targetCard = card # If there's been to target card given, assume the target is the card itself.
+   action = re.search(r'\b(Put|Remove)([X0-9]+)(Bits|Advance|Generic)', Autoscript)
+   if action.group(3) == 'Bits': token = Bits
+   elif action.group(3) == 'Advance' : token = Advance
+   elif action.group(3) == 'Generic' : token = Generic
+   else: 
+      whisper("Wat Token? [Error in autoscript!]")
+      return 'ABORT'
+   if action.group(2) == 'X': count = n # n is usually the number returned by another function.
+   else: count = num(action.group(2))
+   multiplier = per(Autoscript, card, n, targetCard, manual)
+   if action.group(1) == 'Put': modtokens = count * multiplier
+   else: modtokens = -count * multiplier
+   targetCard.markers[token] += modtokens
+   #autoscriptOtherPlayers('Generated{}'.format(action.group(3)),modtokens) # not implemented yet
+   announceString = "{} {} {} {} tokens on {}".format(announceText, action.group(1), abs(modtokens), action.group(3), targetCard)
+   if not manual and multiplier > 0: notify('--> {}.'.format(announceString))
+   else: return announceString
+
+def DrawX(Autoscript, announceText, card, targetCard = None, manual = True, n = 0): # Function for drawing X Cards from the house deck to your hand.
+   destiVerb = 'draw'
+   action = re.search(r'\bDraw([X0-9]+)Card', Autoscript)
+   targetPL = ofwhom(Autoscript)
+   if targetPL != me: destiVerb = 'move'
+   if re.search(r'-fromTrash', Autoscript): source = targetPL.piles['Trash/Archives(Face-up)']
+   else: source = targetPL.piles['R&D/Stack']
+   if re.search(r'-toStack', Autoscript): 
+      destination = targetPL.piles['R&D/Stack']
+      destiVerb = 'move'
+   else: destination = targetPL.hand
+   if action.group(1) == 'X': draw = n # n is usually the number returned by another function.
+   else: draw = num(action.group(1))
+   multiplier = per(Autoscript, card, n, targetCard, manual)
+   count = drawMany(source, draw * multiplier, destination, True)
+   if count == 0: return announceText # If there are no cards, then we effectively did nothing, so we don't change the notification.
+   if targetPL == me: announceString = "{} {} {} cards from their {} to their {}".format(announceText, destiVerb, count, source.name, destination.name)
+   else: announceString = "{} {} {} cards from {}'s {} to {}'s {}".format(announceText, destiVerb, count, targetPL, source.name, targetPL, destination.name)
+   if not manual and multiplier > 0: notify('--> {}.'.format(announceString))
+   else: return announceString
+
+def ofwhom(Autoscript):
+   if re.search(r'-ofOpponent', Autoscript):
+      if len(players) > 1:
+         for player in players:
+            if player != me and player.getGlobalVariable(ds) != ds: 
+               targetPL = player # Opponent needs to be not us, and of a different type. 
+                                 # In the future I'll also be checking for teams by using a global player variable for it and having players select their team on startup.
+      else : 
+         whisper("There's no Opponents! Selecting myself.")
+         targetPL = me
+   else: targetPL = me
+   return targetPL
+   
+def ReshuffleX(Autoscript, announceText, card, targetCard = None, manual = True, n = 0): # A Function for reshuffling a pile into the R&D/Stack
+   mute()
+   X = 0
+   action = re.search(r'\bReshuffle([A-Za-z& ]+)', Autoscript)
+   #confirm("Bump1! Autoscript = {}, Action1 = {}".format(Autoscript, action.group(1))) # Debug
+   if action.group(1) == 'HQ':
+      namestuple = handtoStack(me.hand, True) # We do a silent hand reshuffle into the deck, which returns a tuple
+      X = namestuple[2] # The 3rd part of the tuple is how many cards were in our hand before it got shuffled.
+   elif action.group(1) == 'Archives':
+      if ds == "corp": archivestoStack(me.piles['Archives(Hidden)'], True)
+      namestuple = archivestoStack(me.piles['Trash/Archives(Face-up)'], True)    
+   else: 
+      whisper("Wat Group? [Error in autoscript!]")
+      return 'ABORT'
+   shuffle(me.piles['R&D/Stack'])
+   announceString = "{} shuffle their {} to their {}".format(announceText, namestuple[0], namestuple[1])
+   if not manual: notify('--> {}.'.format(announceString))
+   else: return (announceString, X)
+
+def ShuffleX(Autoscript, announceText, card, targetCard = None, manual = True, n = 0): # A Function for reshuffling a pile into the R&D/Stack
+   mute()
+   action = re.search(r'\bShuffle([A-Za-z& ]+)', Autoscript)
+   targetPL = ofwhom(Autoscript)
+   if action.group(1) == 'Trash': pile = targetPL.piles['Trash/Archives(Face-up)']
+   elif action.group(1) == 'Stack': pile = targetPL.piles['R&D/Stack']
+   elif action.group(1) == 'Hidden Archives': pile = targetPL.piles['Archives(Hidden)']
+   shuffle(pile)
+   if targetPL == me: announceString = "{} shuffle their {}".format(announceText, pile.name)
+   else: announceString = "{} shuffle {}' {}".format(announceText, targetPL, pile.name)
+   if not manual: notify('--> {}.'.format(announceString))
+   else: return announceString
+   
+def RollX(Autoscript, announceText, card, targetCard = None, manual = True, n = 0): # Function for drawing X Cards from the house deck to your hand.
+   action = re.search(r'\bRoll([X0-9]+)Dice', Autoscript)
+   if action.group(1) == 'X': count = n # n is usually the number returned by another function.
+   else: count = num(action.group(1))
+   multiplier = per(Autoscript, card, n, targetCard, manual)
+   d6 = rolld6(silent = True) # For now we always roll 1d6. If we ever have a autoaction which needs more then 1, I'll implement it.
+   announceString = "{} roll {} on a die".format(announceText, d6)
+   if not manual: notify('--> {}.'.format(announceString))
+   else: return (announceString, d6)
+   
+def RunX(Autoscript, announceText, card, targetCard = None, manual = True, n = 0): # Function for drawing X Cards from the house deck to your hand.
+   action = re.search(r'\bRun([A-Z][A-Za-z& ]+)', Autoscript)
+   announceString = "{} start a run on {}".format(announceText, action.group(1))
+   if not manual: notify('--> {}.'.format(announceString))
+   else: return announceString
+
+def per(Autoscript, card = None, count = 0, targetCard = None, manual = False): # This function goes through the autoscript and looks for the words "per<Something>". Then figures out what the card multiplies its effect with, and returns the appropriate multiplier.
    return 1 # Currently not implemented fully.
       
 def customScript(card):
    useCard(card) # Not in use atm.
+   
+def TrialError(group, x=0, y=0):
+   table.create("c0f18b5a-adcd-4efe-b3f8-7d72d1bd1db8", 0, 200 * playerside, 1 ) #trace card
+   create3DataForts(group)
