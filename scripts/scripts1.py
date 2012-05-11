@@ -8,6 +8,25 @@ Trace_value = ("Trace value", "01feb523-ac36-4dcd-970a-515aa8d73e37")
 Link_value = ("Link value", "3c429e4c-3c7a-49fb-96cc-7f84a63cc672")
 PlusOne= ("+1", "aa261722-e12a-41d4-a475-3cc1043166a7")
 MinusOne= ("-1", "48ceb18b-5521-4d3f-b5fb-c8212e8bcbae")
+
+mdict = dict(Advance = ("Advance", "73b8d1f2-cd54-41a9-b689-3726b7b86f4f"),
+             Generic = ("Generic", "b384957d-22c5-4e7d-a508-3990c82f4df6"),
+             Bits = ("Bits", "19be5742-d233-4ea1-a88a-702cfec930b1"),
+             Scored = ("Scored", "10254d1f-6335-4b90-b124-b01ec131dd07"),
+             Not_rezzed = ("Not rezzed", "8105e4c7-cb54-4421-9ae2-4e276bedee90"),
+             Derezzed = ("Derezzed", "ae34ee21-5309-46b3-98de-9d428f59e243"),
+             Trace_value = ("Trace value", "01feb523-ac36-4dcd-970a-515aa8d73e37"),
+             Link_value = ("Link value", "3c429e4c-3c7a-49fb-96cc-7f84a63cc672"),
+             PlusOne= ("+1", "aa261722-e12a-41d4-a475-3cc1043166a7"),
+             MinusOne= ("-1", "48ceb18b-5521-4d3f-b5fb-c8212e8bcbae"),
+             virusButcherBoy = ("Boardwalk","5831fb18-7cdf-44d2-8685-bdd392bb9f1c"),
+             virusCascade = ("Cascade","723a0cca-7a05-46a8-a681-6e06666042ee"),
+             virusCockroach = ("Cockroach","cda4cfcb-6f2d-4a7f-acaf-d796b8d1edee"),
+             virusGremlin = ("Gremlin","032d2efa-e722-4218-ba2b-699dc80f0b94"),
+             virusThought = ("Thought","811b9153-93cb-4898-ad9f-68864452b9f4"),
+             virusFait = ("Fait","72c89567-72aa-446d-a9ea-e158c22c113a"),
+             virusBoardwalk = ("Boardwalk","8c48db01-4f12-4653-a31a-3d22e9f5b6e9"))
+         
 #---------------------------------------------------------------------------
 # Global variables
 #---------------------------------------------------------------------------
@@ -195,6 +214,8 @@ def goToSot (group, x=0,y=0):
             me.Actions += maxActions # If it was a penalty, then it remains with them for this round, which means they have less actions to use.
             notify("{} is starting with {} less actions this turn, due to a penalty from a previous turn. They have {} actions this turn".format(me,maxActions - me.Actions, me.Actions))
     else: me.Actions = maxActions
+    myCards = (card for card in table if card.controller == me and card.owner == me)
+    for card in myCards: card.orientation &= ~Rot90 # Refresh all cards which can be used once a turn.
     atTurnStartEffects() # Check all our cards to see if there's any Start of Turn effects active.
     if ds == "corp": notify("The offices of {}'s Corporation are now open for business.".format(me))
     else: notify ("Runner {} has woken up".format(me))
@@ -239,9 +260,10 @@ def switchUniBits(group,x=0,y=0,command = 'Off'):
         UniBits = True
         
 def create3DataForts(group):
-	table.create("2a0b57ca-1714-4a70-88d7-25fdf795486f", 150, 160 * playerside, 1)
-	table.create("181de100-c255-464f-a4ed-4ac8cd728c61", 300, 160 * playerside, 1)
-	table.create("59665835-0b0c-4710-99f7-8b90377c35b7", 450, 160 * playerside, 1)
+   table.create("2a0b57ca-1714-4a70-88d7-25fdf795486f", 150, 160 * playerside, 1)
+   table.create("181de100-c255-464f-a4ed-4ac8cd728c61", 300, 160 * playerside, 1)
+   table.create("59665835-0b0c-4710-99f7-8b90377c35b7", 450, 160 * playerside, 1)
+   table.create("feaadfe5-63fc-443e-b829-b9f63c346d11", 0, 250 * playerside, 1) # The Antivirus card.
 
 def intJackin(group, x = 0, y = 0):
     global ds, maxActions
@@ -279,7 +301,7 @@ def intJackin(group, x = 0, y = 0):
         me.Memory = 4
         NameDeck = "Stack"
         notify("{} is playing as Runner".format(me))
-    table.create("c0f18b5a-adcd-4efe-b3f8-7d72d1bd1db8", 0, 200 * playerside, 1 ) #trace card
+    table.create("c0f18b5a-adcd-4efe-b3f8-7d72d1bd1db8", 0, 155 * playerside, 1 ) #trace card
     switchAutomation(group,x,y,'On')
     switchStartAutomation(group,x,y,'On')
     shuffle(me.piles['R&D/Stack'])
@@ -583,16 +605,14 @@ def rezForFree (card, x = 0, y = 0):
 	intRez(card, "free")
 
 def derez(card, x = 0, y = 0):
-   if (card.markers[Not_rezzed] == 0):
-	if ( isRezzable(card) == -1):
-		whisper ("Not a rezzable card")
-		return
-	else:
-      		mute()
-		card.markers[Bits] = 0
-      		card.markers[Not_rezzed] += 1
-      		notify("{} derezzed {}".format(me, card))
-      		executeAutomations ( card, "derez" )
+   mute()
+   if card.markers[Not_rezzed] == 0:
+      if isRezzable(card) == -1: whisper ("Not a rezzable card")
+      else:
+         card.markers[Bits] = 0
+         card.markers[Not_rezzed] += 1
+         notify("{} derezzed {}".format(me, card))
+         executeAutomations ( card, "derez" )
    else:
       notify ( "you can't derez a unrezzed card")
 
@@ -698,6 +718,16 @@ def checkUnique (card):
    else:
       for uniqueC in ExistingUniques: trashForFree(uniqueC)
    return True   
+   
+def oncePerTurn(card, x = 0, y = 0, silent = False):
+   mute()
+   if card.orientation == Rot90:
+      if not confirm("The once-per-turn ability of {} has already been used this turn\nBypass restriction?.".format(card.name)): return 'ABORT'
+      else: 
+         if not silent: notify('{} activates the once-per-turn ability of {} another time'.format(me, card))
+   else:
+      if not silent: notify('{} activates the once-per-turn ability of {}'.format(me, card))
+   card.orientation = Rot90
 #------------------------------------------------------------------------------
 # Hand Actions
 #------------------------------------------------------------------------------
@@ -1186,7 +1216,8 @@ def useAbility(card, x = 0, y = 0):
             abilCost += 'Lose {} Agenda Points'.format(abilRegex.group(3))
          if abilRegex.group(4) != '0': 
             if abilCost != '': abilCost += ' and '
-            abilCost += 'Trash this card'
+            if abilRegex.group(4) == '1': abilCost += 'Trash this card'
+            else: abilCost += 'Use (Once per turn)'
          if abilRegex.group(1) == '0' and abilRegex.group(2) == '0' and abilRegex.group(3) == '0' and abilRegex.group(4) == '0':
             abilCost = 'Activate'
          if abilRegex.group(6):
@@ -1251,14 +1282,16 @@ def useAbility(card, x = 0, y = 0):
             else: announceText += ' '
             announceText += 'liquidates {} Agenda Points'.format(actionCost.group(3))
          if actionCost.group(4) != '0': # If the card needs to be trashed...
-            if not confirm("This action will trash the card as a cost. Are you sure you want to continue?"): # First confirm the trash cost to avoid double-click accidents
+            if (actionCost.group(4) == '2' and oncePerTurn(card, silent = True) == 'ABORT') or (actionCost.group(4) == '1' and not confirm("This action will trash the card as a cost. Are you sure you want to continue?")):
+               # On trash cost, we confirm first to avoid double-click accidents
                me.Actions += num(actionCost.group(1))
                me.counters['Bit Pool'].value += num(actionCost.group(2))
                me.counters['Agenda Points'].value += num(actionCost.group(3))
-               return               
+               return
             if actionCost.group(1) != '0' or actionCost.group(2) != '0' or actionCost.group(3) != '0': announceText += ' and '
             else: announceText += ' '
-            announceText += 'trashes {} to use its ability'.format(card)
+            if actionCost.group(4) == '1': announceText += 'trashes {} to use its ability'.format(card)
+            else: announceText += 'activates the once-per-turn ability of {}'.format(card)
          else: announceText += ' to activate {}'.format(card) # If we don't have to trash the card, we need to still announce the name of the card we're using.
          if actionCost.group(1) == '0' and actionCost.group(2) == '0' and actionCost.group(3) == '0' and actionCost.group(4) == '0':
             announceText = '{} activates the free ability of {}'.format(me, card)
@@ -1274,7 +1307,7 @@ def useAbility(card, x = 0, y = 0):
          rollTuple = RollX(activeAutoscript, announceText, card) # Returns like reshuffleX()
          announceText = rollTuple[0] 
          X = rollTuple[1] 
-      elif re.search(r'\bPut([0-9]+)', activeAutoscript): announceText = TokensX(activeAutoscript, announceText, card, targetC, n = X)
+      elif re.search(r'\b(Put|Remove|Refill|Use)([0-9]+)', activeAutoscript): announceText = TokensX(activeAutoscript, announceText, card, targetC, n = X)
       elif re.search(r'\bTransfer([0-9]+)', activeAutoscript): announceText = TransferX(activeAutoscript, announceText, card, targetC, n = X)
       elif re.search(r'\bDraw([0-9]+)', activeAutoscript): announceText = DrawX(activeAutoscript, announceText, card, targetC, n = X)
       elif re.search(r'\bShuffle([A-Za-z& ]+)', activeAutoscript): announceText = ShuffleX(activeAutoscript, announceText, card, targetC, n = X)
@@ -1282,25 +1315,28 @@ def useAbility(card, x = 0, y = 0):
       elif re.search(r'\bUseCustomAbility', activeAutoscript): announceText = UseCustomAbility(activeAutoscript, announceText, card, targetC, n = X)
       else: timesNothingDone += 1
       if announceText == 'ABORT': 
-         autoscriptCostUndo(selectedAutoscripts[0]) # If nothing was done, try to undo. The first item in selectedAutoscripts[] contains the cost.
+         autoscriptCostUndo(card, selectedAutoscripts[0]) # If nothing was done, try to undo. The first item in selectedAutoscripts[] contains the cost.
          return
    if announceText.endswith(' in order to'): # If our text annouce ends with " to", it means that nothing happened. Try to undo and inform player.
-      autoscriptCostUndo(selectedAutoscripts[0])
+      autoscriptCostUndo(card, selectedAutoscripts[0])
       notify("{} but there was nothing to do.".format(announceText[:-len(' in order to')]))
    elif announceText.endswith(' and'):
       announceText = announceText[:-len(' and')] # If for some reason we end with " and" (say because the last action did nothing), we remove it.
    else: # If we did something and everything finished as expected, then take the costs.
-      if not re.search(r"T0:", selectedAutoscripts[0]): 
+      if re.search(r"T1:", selectedAutoscripts[0]): 
          executeAutomations (card, "trash")
          card.moveTo(card.owner.piles['Trash/Archives(Face-up)'])
       notify("{}.".format(announceText)) # Finally announce what the player just did by using the concatenated string.
 
-def autoscriptCostUndo(Autoscript):
+def autoscriptCostUndo(card, Autoscript):
    whisper("--> Undoing action...")
    actionCost = re.match(r"A([0-9]+)B([0-9]+)G([0-9]+)T([0-9]+):", Autoscript)
    me.Actions += num(actionCost.group(1))
    me.counters['Bit Pool'].value += num(actionCost.group(2))
    me.counters['Agenda Points'].value += num(actionCost.group(3))
+   if re.search(r"T2:", Autoscript):
+      random = rnd(10,5000) # A little wait...
+      card.orientation = Rot0
 
 def findTarget(Autoscript):
    return None # Not in use atm.
@@ -1376,24 +1412,52 @@ def TransferX(Autoscript, announceText, card, targetCard = None, manual = True, 
 
 def TokensX(Autoscript, announceText, card, targetCard = None, manual = True, n = 0):
    if not targetCard: targetCard = card # If there's been to target card given, assume the target is the card itself.
-   action = re.search(r'\b(Put|Remove|Refill)([0-9]+)(Bits|Advance|Generic)', Autoscript)
-   if action.group(3) == 'Bits': token = Bits
-   elif action.group(3) == 'Advance' : token = Advance
-   elif action.group(3) == 'Generic' : token = Generic
-   else: 
-      whisper("Wat Token? [Error in autoscript!]")
-      return 'ABORT'
+   foundKey = False
+   action = re.search(r'\b(Put|Remove|Refill|Use)([0-9]+)([A-Za-z]+)-?', Autoscript)
+   #confirm("{}".format(action.group(3)))
+   if action.group(3) in mdict: token = mdict[action.group(3)]
+   else: # If the marker we're looking for it not defined, then either create a new one with a random color, or look for a token with the custom name we used above.
+      if card.markers:
+         for key in card.markers:
+            if key[0] == action.group(3): 
+               foundKey = True
+               token = key
+      if not foundKey: # If no key is found with the name we seek, then create a new one with a random colour.
+         rndGUID = rnd(1,8)
+         token = ("{}".format(action.group(3)),"00000000-0000-0000-0000-00000000000{}".format(rndGUID))
+   #confirm("Bump")
    count = num(action.group(2))
    multiplier = per(Autoscript, card, n, targetCard, manual)
    if action.group(1) == 'Put': modtokens = count * multiplier
    elif action.group(1) == 'Refill': modtokens = count - targetCard.markers[token]
-   else: modtokens = -count * multiplier
-   targetCard.markers[token] += modtokens
+   elif action.group(1) == 'Use':
+      if not targetCard.markers[token] or count > targetCard.markers[token]: 
+         whisper("There's not enough counters left on the card to use this ability!")
+         return 'ABORT'
+      else: modtokens = -count * multiplier
+   else: 
+      if count == 999:
+         if action.group(3) == 'Virus': pass # We deal with removal of viruses later.
+         elif targetCard.markers[token]: count = targetCard.markers[token]
+         else: 
+            whisper("There was nothing to remove.")
+            return 'ABORT'
+      else: modtokens = -count * multiplier
+   if action.group(3) == 'Virus' and count == 999:
+      targetCard.markers[virusButcherBoy] = 0
+      targetCard.markers[virusCascade] = 0
+      targetCard.markers[virusCockroach] = 0
+      targetCard.markers[virusGremlin] = 0
+      targetCard.markers[virusThought] = 0
+      targetCard.markers[virusFait] = 0
+      targetCard.markers[virusBoardwalk] = 0
+   else: targetCard.markers[token] += modtokens
    if action.group(1) == 'Refill': announceString = "{} {} to {} {}".format(announceText, action.group(1), abs(modtokens), action.group(3))
-   else: announceString = "{} {} {} {} tokens on {}".format(announceText, action.group(1).lower(), abs(modtokens), action.group(3), targetCard)
+   elif re.search(r'\bRemove999Virus', Autoscript): announceString = "{} to clean all viruses from their corporate network".format(announceText)
+   else: announceString = "{} {} {} {} counters on {}".format(announceText, action.group(1).lower(), abs(modtokens), action.group(3), targetCard)
    if not manual and multiplier > 0: notify('--> {}.'.format(announceString))
    else: return announceString
-
+ 
 def DrawX(Autoscript, announceText, card, targetCard = None, manual = True, n = 0): # Function for drawing X Cards from the house deck to your hand.
    destiVerb = 'draw'
    action = re.search(r'\bDraw([0-9]+)Card', Autoscript)
