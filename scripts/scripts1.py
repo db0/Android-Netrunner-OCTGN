@@ -1455,7 +1455,7 @@ def TokensX(Autoscript, announceText, card, targetCard = None, manual = True, n 
    if action.group(1) == 'Refill': announceString = "{} {} to {} {}".format(announceText, action.group(1), abs(modtokens), action.group(3))
    elif re.search(r'\bRemove999Virus', Autoscript): announceString = "{} to clean all viruses from their corporate network".format(announceText)
    else: announceString = "{} {} {} {} counters on {}".format(announceText, action.group(1).lower(), abs(modtokens), action.group(3), targetCard)
-   if not manual and multiplier > 0: notify('--> {}.'.format(announceString))
+   if not manual and modtokens != 0: notify('--> {}.'.format(announceString))
    else: return announceString
  
 def DrawX(Autoscript, announceText, card, targetCard = None, manual = True, n = 0): # Function for drawing X Cards from the house deck to your hand.
