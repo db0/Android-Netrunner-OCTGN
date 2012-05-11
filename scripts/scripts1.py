@@ -458,14 +458,22 @@ def advanceCardM(card, x = 0, y = 0):
 # Trace
 #----------------------
 
-def inputTraceValue (card, x=0,y=0):
+def inputTraceValue (card, x=0,y=0, limit = 0):
    mute()
+   limitText = ''
    global TraceValue
    if card.properties['Type'] != "Tracing": return
-   TraceValue = askInteger("Bet How Many?", 0)
+   limit = num(limit) # Just in case
+   if limit > 0: limitText = '\n\n(Max: {})'.format(limit)
+   TraceValue = askInteger("Bet How Many?{}".format(limitText), 0)
    if TraceValue == None: 
       whisper(":::Warning::: Trace bid aborted by player.")
       return
+   while limit > 0 and TraceValue > limit:
+      TraceValue = askInteger("Please bet under the max limit.\nBet How Many?{}".format(limitText), 0)
+      if TraceValue == None: 
+         whisper(":::Warning::: Trace bid aborted by player.")
+         return
    card.markers[Bits] = 0
    card.isFaceUp = False
    notify ("{} chose a Trace Value.".format(me))
@@ -1022,7 +1030,7 @@ def executeAutomations(card,action = ''):
     if re.search(r'(onRez|onPlay|onScore|whileRezzed|whileScored):', AutoScript): 
       executePlayScripts(card, action)
       return
-    else: confirm("No new ones")
+    #else: confirm("No new ones") # Debug
     Execute = 0
 
     if action == "play" or action == "rez" or action == "scores": Execute = 1
@@ -1222,6 +1230,11 @@ def inspectCard(card, x = 0, y = 0): # This function shows the player the card t
 
 def useAbility(card, x = 0, y = 0):
    mute()
+   if (card in TypeCard and TypeCard[card] == 'Tracing') or card.model == 'c0f18b5a-adcd-4efe-b3f8-7d72d1bd1db8': # If the player double clicks on the Tracing card...
+      if card.isFaceUp and not card.markers[Bits]: inputTraceValue(card, limit = 0)
+      elif card.isFaceUp and card.markers[Bits]: payTraceValue(card)
+      elif not card.isFaceUp: revealTraceValue(card)
+      return
    if not card.isFaceUp or card.markers[Not_rezzed]: # If card is face down assume they wanted to rez 
       intRez(card)
       return
