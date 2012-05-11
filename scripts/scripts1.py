@@ -1019,6 +1019,10 @@ def executeAutomations(card,action = ''):
     if not card.isFaceUp: return
     AutoScript = card.AutoScript
     if AutoScript == "": return
+    if re.search(r'(onRez|onPlay|onScore|whileRezzed):', AutoScript): 
+      executePlayScripts(card, action)
+      return
+    else: notify('{}'.format(AutoScript))
     Execute = 0
 
     if action == "play" or action == "rez" or action == "scores": Execute = 1
@@ -1168,7 +1172,41 @@ def autoRefreshHand ( card, Param1):
 	shuffle(me.piles['R&D/Stack'])
 	drawMany (me.piles['R&D/Stack'], ToDraw, True)
 	notify (" --> {} shuffles and draws {} cards.".format(me,ToDraw) )
-   
+
+def executePlayScripts(card, action):
+   X = 0
+   Autoscripts = card.AutoScript.split('||') # When playing cards, the || is used as an "and" separator, rather than "or". i.e. we don't do choices (yet)
+   for autoS in Autoscripts: # Checking and removing any "AtTurnStart" actions.
+      if re.search(r'AtTurnStart', autoS): Autoscripts.remove(autoS)
+   if len(Autoscripts) == 0: return
+   announceText = "{}".format(me)
+   for AutoS in Autoscripts:
+      effectType = re.search(r'(onRez|onScore|onPlay|whileRezzed):', AutoS)
+      selectedAutoscripts = AutoS.split('$$')
+      confirm('selectedAutoscripts: {}'.format(selectedAutoscripts))
+      for activeAutoscript in selectedAutoscripts:
+         effect = re.search(r'\b([A-Za-z]+)([0-9]+)([A-Z][A-Za-z& ]+)(.*)', activeAutoscript)
+         confirm('effects: {}'.format(effect.groups()))
+         if effectType.group(1) == 'whileRezzed' and (action == 'derez' or (action == 'trash' and card.markers[Not_rezzed] == 0)): Removal = True
+         else: Removal = False
+         if effect.group(1) == 'Gain':
+            if Removal: passedScript = "Lose{}{}".format(effect.group(2),effect.group(3))
+            else: passedScript = "Gain{}{}".format(effect.group(2),effect.group(3))
+            if effect.group(4): passedScript += effect.group(4)
+            GainX(passedScript, announceText, card, notification = 'Quick')
+         else:
+            passedScript = "{}".format(effect.group(0))
+            if effect.group(1) == 'Draw': DrawX(passedScript, announceText, card, notification = 'Quick', n = X)
+            if effect.group(1) == 'Put': TokensX(passedScript, announceText, card, notification = 'Quick', n = X)
+            if effect.group(1) == 'Roll': 
+               rollTuple = RollX(passedScript, announceText, card, notification = 'Quick', n = X)
+               X = rollTuple[1] 
+            if effect.group(1) == 'Run': RunX(passedScript, announceText, card, notification = 'Quick', n = X)
+            if effect.group(1) == 'Reshuffle': 
+               reshuffleTuple = ReshuffleX(passedScript, announceText, card, notification = 'Quick', n = X)
+               X = reshuffleTuple[1]
+            if effect.group(1) == 'Shuffle': ShuffleX(passedScript, announceText, card, notification = 'Quick', n = X)
+         
 #------------------------------------------------------------------------------
 # Autoactions
 #------------------------------------------------------------------------------
@@ -1191,8 +1229,8 @@ def useAbility(card, x = 0, y = 0):
       return
    ### Checking if card has multiple autoscript options and providing choice to player.
    Autoscripts = card.AutoAction.split('||')
-   for autoS in Autoscripts: # Checking and removing any "WhileDeployed" actions.
-      if re.search(r'WhileInstalled', autoS) or re.search(r'AtTurnStart', autoS): Autoscripts.remove(autoS)
+   for autoS in Autoscripts: # Checking and removing any actionscripts which were put here in error.
+      if re.search(r'whileRezzed', autoS) or re.search(r'onInstall', autoS) or re.search(r'AtTurnStart', autoS): Autoscripts.remove(autoS)
    if len(Autoscripts) == 0:
       useCard(card) # If the card had only "WhileInstalled"  or AtTurnStart effect, just announce that it is being used.
       return      
@@ -1360,9 +1398,10 @@ def chkWarn(Autoscript):
          notify(":::Note:::{} is using a workaround autoscript".format(me))
    return 'OK'
 
-def GainX(Autoscript, announceText, card, targetCard = None, manual = True, n = 0):
+def GainX(Autoscript, announceText, card, targetCard = None, notification = None, n = 0):
+   global maxActions
    gain = 0
-   action = re.search(r'\b(Gain|Lose)([0-9]+)(Bits|Agenda Points|Actions|Bad Publicity|Tags)', Autoscript)
+   action = re.search(r'\b(Gain|Lose)([0-9]+)(Bits|Agenda Points|Actions|Bad Publicity|Tags|Max Actions)', Autoscript)
    gain += num(action.group(2))
    if action.group(1) == 'Lose': gain *= -1
    multiplier = per(Autoscript, card, n, targetCard) # We check if the card provides a gain based on something else, such as favour bought, or number of dune fiefs controlled by rivals.
@@ -1373,14 +1412,16 @@ def GainX(Autoscript, announceText, card, targetCard = None, manual = True, n = 
    elif action.group(3) == 'Tags': 
       card.owner.Tags += gain * multiplier
       if card.owner.Tags < 0: card.owner.Tags = 0
+   elif action.group(3) == 'Max Actions': maxActions += gain * multiplier
    else: 
       whisper("Gain what?! (Bad autoscript)")
       return 'ABORT'
-   announceString = "{} {} {} {}".format(announceText, action.group(1).lower(), abs(gain * multiplier), action.group(3))
-   if not manual and multiplier > 0: notify('--> {}.'.format(announceString))
-   else: return announceString
+   if notification == 'Quick': announceString = "{} {}s {} {}".format(announceText, action.group(1).lower(), abs(gain * multiplier), action.group(3))
+   else: announceString = "{} {} {} {}".format(announceText, action.group(1).lower(), abs(gain * multiplier), action.group(3))
+   if notification and multiplier > 0: notify('--> {}.'.format(announceString))
+   return announceString
 
-def TransferX(Autoscript, announceText, card, targetCard = None, manual = True, n = 0):
+def TransferX(Autoscript, announceText, card, targetCard = None, notification = None, n = 0):
    breakadd = 1
    if not targetCard: targetCard = card # If there's been to target card given, assume the target is the card itself.
    action = re.search(r'\bTransfer([0-9]+)Bits?-to(Bit Pool|Discard)', Autoscript)
@@ -1392,10 +1433,10 @@ def TransferX(Autoscript, announceText, card, targetCard = None, manual = True, 
       if re.search(r'isCost', Autoscript):
          whisper("You must have at least {} Bits on the card to take this action".format(action.group(1)))
          return 'ABORT'
-      elif targetCard.markers[Bits] == 0 and manual: 
+      elif targetCard.markers[Bits] == 0 and not notification: 
          whisper("There was nothing to transfer.")
          return 'ABORT'
-      elif targetCard.markers[Bits] == 0 and not manual: return 'ABORT'
+      elif targetCard.markers[Bits] == 0 and notification: return 'ABORT'
    for transfer in range(count):
       if targetCard.markers[Bits] > 0: 
          targetCard.markers[Bits] -= 1
@@ -1406,11 +1447,12 @@ def TransferX(Autoscript, announceText, card, targetCard = None, manual = True, 
       else: 
          breakadd -= 1 # We decrease the transfer variable by one, to make sure we announce the correct total.
          break # If there's no more tokens to transfer, break out of the loop.
-   announceString = "{} transfer {} bits from {} to {}".format(announceText, transfer + breakadd, targetCard, destination)
-   if not manual: notify('--> {}.'.format(announceString))
-   else: return announceString   
+   if notification == 'Quick': announceString = "{} takes {} bits".format(announceText, transfer + breakadd)
+   else: announceString = "{} transfer {} bits from {} to {}".format(announceText, transfer + breakadd, targetCard, destination)
+   if notification: notify('--> {}.'.format(announceString))
+   return announceString   
 
-def TokensX(Autoscript, announceText, card, targetCard = None, manual = True, n = 0):
+def TokensX(Autoscript, announceText, card, targetCard = None, notification = None, n = 0):
    if not targetCard: targetCard = card # If there's been to target card given, assume the target is the card itself.
    foundKey = False
    action = re.search(r'\b(Put|Remove|Refill|Use)([0-9]+)([A-Za-z]+)-?', Autoscript)
@@ -1427,7 +1469,7 @@ def TokensX(Autoscript, announceText, card, targetCard = None, manual = True, n 
          token = ("{}".format(action.group(3)),"00000000-0000-0000-0000-00000000000{}".format(rndGUID))
    #confirm("Bump")
    count = num(action.group(2))
-   multiplier = per(Autoscript, card, n, targetCard, manual)
+   multiplier = per(Autoscript, card, n, targetCard, notification)
    if action.group(1) == 'Put': modtokens = count * multiplier
    elif action.group(1) == 'Refill': modtokens = count - targetCard.markers[token]
    elif action.group(1) == 'Use':
@@ -1454,11 +1496,11 @@ def TokensX(Autoscript, announceText, card, targetCard = None, manual = True, n 
    else: targetCard.markers[token] += modtokens
    if action.group(1) == 'Refill': announceString = "{} {} to {} {}".format(announceText, action.group(1), abs(modtokens), action.group(3))
    elif re.search(r'\bRemove999Virus', Autoscript): announceString = "{} to clean all viruses from their corporate network".format(announceText)
-   else: announceString = "{} {} {} {} counters on {}".format(announceText, action.group(1).lower(), abs(modtokens), action.group(3), targetCard)
-   if not manual and modtokens != 0: notify('--> {}.'.format(announceString))
-   else: return announceString
+   else: announceString = "{} {} {} {} counters".format(announceText, action.group(1).lower(), abs(modtokens), action.group(3))
+   if notification == 'Automatic' and modtokens != 0: notify('--> {}.'.format(announceString))
+   return announceString
  
-def DrawX(Autoscript, announceText, card, targetCard = None, manual = True, n = 0): # Function for drawing X Cards from the house deck to your hand.
+def DrawX(Autoscript, announceText, card, targetCard = None, notification = None, n = 0): # Function for drawing X Cards from the house deck to your hand.
    destiVerb = 'draw'
    action = re.search(r'\bDraw([0-9]+)Card', Autoscript)
    targetPL = ofwhom(Autoscript)
@@ -1471,13 +1513,14 @@ def DrawX(Autoscript, announceText, card, targetCard = None, manual = True, n = 
    else: destination = targetPL.hand
    if destiVerb == 'draw' and ModifyDraw and not confirm("You have a card effect in play that modifies the amount of cards you draw. Have you already looked at the relevant cards on the top of your deck before taking this action?\n\n(Answering 'No' will abort this action so that you can first check your deck"): return 'ABORT'
    draw = num(action.group(1))
-   multiplier = per(Autoscript, card, n, targetCard, manual)
+   multiplier = per(Autoscript, card, n, targetCard, notification)
    count = drawMany(source, draw * multiplier, destination, True)
    if count == 0: return announceText # If there are no cards, then we effectively did nothing, so we don't change the notification.
-   if targetPL == me: announceString = "{} {} {} cards from their {} to their {}".format(announceText, destiVerb, count, source.name, destination.name)
+   if notification == 'Quick': announceString = "{} draws {} cards".format(announceText, count)
+   elif targetPL == me: announceString = "{} {} {} cards from their {} to their {}".format(announceText, destiVerb, count, source.name, destination.name)
    else: announceString = "{} {} {} cards from {}'s {} to {}'s {}".format(announceText, destiVerb, count, targetPL, source.name, targetPL, destination.name)
-   if not manual and multiplier > 0: notify('--> {}.'.format(announceString))
-   else: return announceString
+   if notification and multiplier > 0: notify('--> {}.'.format(announceString))
+   return announceString
 
 def ofwhom(Autoscript):
    if re.search(r'-ofOpponent', Autoscript):
@@ -1492,7 +1535,7 @@ def ofwhom(Autoscript):
    else: targetPL = me
    return targetPL
    
-def ReshuffleX(Autoscript, announceText, card, targetCard = None, manual = True, n = 0): # A Function for reshuffling a pile into the R&D/Stack
+def ReshuffleX(Autoscript, announceText, card, targetCard = None, notification = None, n = 0): # A Function for reshuffling a pile into the R&D/Stack
    mute()
    X = 0
    action = re.search(r'\bReshuffle([A-Za-z& ]+)', Autoscript)
@@ -1507,11 +1550,12 @@ def ReshuffleX(Autoscript, announceText, card, targetCard = None, manual = True,
       whisper("Wat Group? [Error in autoscript!]")
       return 'ABORT'
    shuffle(me.piles['R&D/Stack'])
-   announceString = "{} shuffle their {} to their {}".format(announceText, namestuple[0], namestuple[1])
-   if not manual: notify('--> {}.'.format(announceString))
-   else: return (announceString, X)
+   if notification == 'Quick': announceString = "{} shuffles their {} into their {}".format(announceText, namestuple[0], namestuple[1])
+   else: announceString = "{} shuffle their {} into their {}".format(announceText, namestuple[0], namestuple[1])
+   if notification: notify('--> {}.'.format(announceString))
+   return (announceString, X)
 
-def ShuffleX(Autoscript, announceText, card, targetCard = None, manual = True, n = 0): # A Function for reshuffling a pile into the R&D/Stack
+def ShuffleX(Autoscript, announceText, card, targetCard = None, notification = None, n = 0): # A Function for reshuffling a pile into the R&D/Stack
    mute()
    action = re.search(r'\bShuffle([A-Za-z& ]+)', Autoscript)
    targetPL = ofwhom(Autoscript)
@@ -1519,27 +1563,30 @@ def ShuffleX(Autoscript, announceText, card, targetCard = None, manual = True, n
    elif action.group(1) == 'Stack': pile = targetPL.piles['R&D/Stack']
    elif action.group(1) == 'Hidden Archives': pile = targetPL.piles['Archives(Hidden)']
    shuffle(pile)
-   if targetPL == me: announceString = "{} shuffle their {}".format(announceText, pile.name)
+   if notification == 'Quick': announceString = "{} shuffles their {}".format(announceText, pile.name)
+   elif targetPL == me: announceString = "{} shuffle their {}".format(announceText, pile.name)
    else: announceString = "{} shuffle {}' {}".format(announceText, targetPL, pile.name)
-   if not manual: notify('--> {}.'.format(announceString))
-   else: return announceString
+   if notification: notify('--> {}.'.format(announceString))
+   return announceString
    
-def RollX(Autoscript, announceText, card, targetCard = None, manual = True, n = 0): # Function for drawing X Cards from the house deck to your hand.
+def RollX(Autoscript, announceText, card, targetCard = None, notification = None, n = 0): # Function for drawing X Cards from the house deck to your hand.
    action = re.search(r'\bRoll([0-9]+)Dice', Autoscript)
    count = num(action.group(1))
-   multiplier = per(Autoscript, card, n, targetCard, manual)
+   multiplier = per(Autoscript, card, n, targetCard, notification)
    d6 = rolld6(silent = True) # For now we always roll 1d6. If we ever have a autoaction which needs more then 1, I'll implement it.
-   announceString = "{} roll {} on a die".format(announceText, d6)
-   if not manual: notify('--> {}.'.format(announceString))
-   else: return (announceString, d6)
+   if notification == 'Quick': announceString = "{} rolls {} on a die".format(announceText, d6)
+   else: announceString = "{} roll {} on a die".format(announceText, d6)
+   if notification: notify('--> {}.'.format(announceString))
+   return (announceString, d6)
    
-def RunX(Autoscript, announceText, card, targetCard = None, manual = True, n = 0): # Function for drawing X Cards from the house deck to your hand.
+def RunX(Autoscript, announceText, card, targetCard = None, notification = None, n = 0): # Function for drawing X Cards from the house deck to your hand.
    action = re.search(r'\bRun([A-Z][A-Za-z& ]+)', Autoscript)
-   announceString = "{} start a run on {}".format(announceText, action.group(1))
-   if not manual: notify('--> {}.'.format(announceString))
-   else: return announceString
+   if notification == 'Quick': announceString = "{} starts a run on {}".format(announceText, action.group(1))
+   else: announceString = "{} start a run on {}".format(announceText, action.group(1))
+   if notification: notify('--> {}.'.format(announceString))
+   return announceString
 
-def per(Autoscript, card = None, count = 0, targetCard = None, manual = False): # This function goes through the autoscript and looks for the words "per<Something>". Then figures out what the card multiplies its effect with, and returns the appropriate multiplier.
+def per(Autoscript, card = None, count = 0, targetCard = None, notification = None): # This function goes through the autoscript and looks for the words "per<Something>". Then figures out what the card multiplies its effect with, and returns the appropriate multiplier.
    per = re.search(r'\b(per|upto)(Assigned|Target|Parent|Generated|Installed|Rezzed|Transferred|Bought)?([{A-Z][A-Za-z0-9,_ {}&]*)[-]?', Autoscript) # We're searching for the word per, and grabbing all after that, until the first dash "-" as the variable.
    if per: # If the  search was successful...
       if per.group(2) and per.group(2) == 'Target': useC = targetCard # If the effect is targeted, we need to use the target's attributes
@@ -1570,13 +1617,13 @@ def atTurnStartEffects():
       effectNR = num(effect.group(2))
       announceText = "{}:".format(card)
       if effect.group(1) == 'Gain' or effect.group(1) == 'Lose':
-         GainX(card.AutoScript, announceText, card, manual = False)
+         GainX(card.AutoScript, announceText, card, notification = 'Automatic')
       if effect.group(1) == 'Transfer':
-         TransferX(card.AutoScript, announceText, card, manual = False)
+         TransferX(card.AutoScript, announceText, card, notification = 'Automatic')
       if effect.group(1) == 'Draw':
-         DrawX(card.AutoScript, announceText, card, manual = False)
+         DrawX(card.AutoScript, announceText, card, notification = 'Automatic')
       if effect.group(1) == 'Refill':
-         TokensX(card.AutoScript, announceText, card, manual = False)
+         TokensX(card.AutoScript, announceText, card, notification = 'Automatic')
    if me.counters['Bit Pool'].value < 0: 
       notify(":::Warning::: {}'s start of turn effects cost more Bits than they had in their Bit Pool!".format(me))
    if TitleDone: notify(":::--------------------------:::".format(me))
