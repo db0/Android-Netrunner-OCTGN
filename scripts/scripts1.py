@@ -1019,10 +1019,10 @@ def executeAutomations(card,action = ''):
     if not card.isFaceUp: return
     AutoScript = card.AutoScript
     if AutoScript == "": return
-    if re.search(r'(onRez|onPlay|onScore|whileRezzed):', AutoScript): 
+    if re.search(r'(onRez|onPlay|onScore|whileRezzed|whileScored):', AutoScript): 
       executePlayScripts(card, action)
       return
-    else: notify('{}'.format(AutoScript))
+    else: confirm("No new ones")
     Execute = 0
 
     if action == "play" or action == "rez" or action == "scores": Execute = 1
@@ -1181,17 +1181,21 @@ def executePlayScripts(card, action):
    if len(Autoscripts) == 0: return
    announceText = "{}".format(me)
    for AutoS in Autoscripts:
-      effectType = re.search(r'(onRez|onScore|onPlay|whileRezzed):', AutoS)
+      effectType = re.search(r'(onRez|onScore|onPlay|whileRezzed|whileScored):', AutoS)
       selectedAutoscripts = AutoS.split('$$')
       confirm('selectedAutoscripts: {}'.format(selectedAutoscripts))
       for activeAutoscript in selectedAutoscripts:
          effect = re.search(r'\b([A-Za-z]+)([0-9]+)([A-Z][A-Za-z& ]+)(.*)', activeAutoscript)
          confirm('effects: {}'.format(effect.groups()))
-         if effectType.group(1) == 'whileRezzed' and (action == 'derez' or (action == 'trash' and card.markers[Not_rezzed] == 0)): Removal = True
+         if (effectType.group(1) == 'whileRezzed' or effectType.group(1) == 'whileScored') and (action == 'derez' or (action == 'trash' and card.markers[Not_rezzed] == 0)): Removal = True
          else: Removal = False
-         if effect.group(1) == 'Gain':
-            if Removal: passedScript = "Lose{}{}".format(effect.group(2),effect.group(3))
-            else: passedScript = "Gain{}{}".format(effect.group(2),effect.group(3))
+         if effect.group(1) == 'Gain' or effect.group(1) == 'Lose':
+            if Removal: 
+               if effect.group(1) == 'Gain': passedScript = "Lose{}{}".format(effect.group(2),effect.group(3))
+               else: passedScript = "Gain{}{}".format(effect.group(2),effect.group(3))
+            else: 
+               if effect.group(1) == 'Gain': passedScript = "Gain{}{}".format(effect.group(2),effect.group(3))
+               else: passedScript = "Lose{}{}".format(effect.group(2),effect.group(3))
             if effect.group(4): passedScript += effect.group(4)
             GainX(passedScript, announceText, card, notification = 'Quick')
          else:
@@ -1401,7 +1405,7 @@ def chkWarn(Autoscript):
 def GainX(Autoscript, announceText, card, targetCard = None, notification = None, n = 0):
    global maxActions
    gain = 0
-   action = re.search(r'\b(Gain|Lose)([0-9]+)(Bits|Agenda Points|Actions|Bad Publicity|Tags|Max Actions)', Autoscript)
+   action = re.search(r'\b(Gain|Lose)([0-9]+)(Bits|Agenda Points|Actions|Bad Publicity|Tags|Max Actions|Hand Size)', Autoscript)
    gain += num(action.group(2))
    if action.group(1) == 'Lose': gain *= -1
    multiplier = per(Autoscript, card, n, targetCard) # We check if the card provides a gain based on something else, such as favour bought, or number of dune fiefs controlled by rivals.
@@ -1413,6 +1417,7 @@ def GainX(Autoscript, announceText, card, targetCard = None, notification = None
       card.owner.Tags += gain * multiplier
       if card.owner.Tags < 0: card.owner.Tags = 0
    elif action.group(3) == 'Max Actions': maxActions += gain * multiplier
+   elif action.group(3) == 'Hand Size': card.owner.counters['Max Hand Size'].value += gain * multiplier
    else: 
       whisper("Gain what?! (Bad autoscript)")
       return 'ABORT'
@@ -1465,6 +1470,10 @@ def TokensX(Autoscript, announceText, card, targetCard = None, notification = No
                foundKey = True
                token = key
       if not foundKey: # If no key is found with the name we seek, then create a new one with a random colour.
+         #counterIcon = re.search(r'-counterIcon{([A-Za-z]+)}', Autoscript) # Not possible at the moment
+         #if counterIcon and counterIcon.group(1) == 'plusOne':             # See https://github.com/kellyelton/OCTGN/issues/446
+         #   token = ("{}".format(action.group(3)),"aa261722-e12a-41d4-a475-3cc1043166a7")         
+         #else:
          rndGUID = rnd(1,8)
          token = ("{}".format(action.group(3)),"00000000-0000-0000-0000-00000000000{}".format(rndGUID))
    #confirm("Bump")
@@ -1609,21 +1618,22 @@ def atTurnStartEffects():
    if not StartAutomation: return
    TitleDone = False
    for card in table:
-      effect = re.search(r'AtTurnStart:([A-Z][A-Za-z]+)([0-9]+)([A-Z][A-Za-z0-9 ]+)-?([A-Za-z0-9- {}$]*)', card.AutoScript)
+      effect = re.search(r'atTurnStart:([A-Z][A-Za-z]+)([0-9]+)([A-Z][A-Za-z0-9 ]+)(.*)', card.AutoScript)
       if card.owner != me or not effect: continue
       if effect.group(4) and re.search(r'isOptional', effect.group(4)) and not confirm("{} can have the following optional ability activated at the start of your turn:\n\n[ {} {} {} ]\n\nDo you want to activate it?".format(card.name, effect.group(1), effect.group(2),effect.group(3))): continue
       if not TitleDone: notify(":::{}'s Start of Turn Effects:::".format(me))
       TitleDone = True
       effectNR = num(effect.group(2))
+      passedScript = '{}'.format(effect.group(0))
       announceText = "{}:".format(card)
       if effect.group(1) == 'Gain' or effect.group(1) == 'Lose':
-         GainX(card.AutoScript, announceText, card, notification = 'Automatic')
+         GainX(passedScript, announceText, card, notification = 'Automatic')
       if effect.group(1) == 'Transfer':
-         TransferX(card.AutoScript, announceText, card, notification = 'Automatic')
+         TransferX(passedScript, announceText, card, notification = 'Automatic')
       if effect.group(1) == 'Draw':
-         DrawX(card.AutoScript, announceText, card, notification = 'Automatic')
+         DrawX(passedScript, announceText, card, notification = 'Automatic')
       if effect.group(1) == 'Refill':
-         TokensX(card.AutoScript, announceText, card, notification = 'Automatic')
+         TokensX(passedScript, announceText, card, notification = 'Automatic')
    if me.counters['Bit Pool'].value < 0: 
       notify(":::Warning::: {}'s start of turn effects cost more Bits than they had in their Bit Pool!".format(me))
    if TitleDone: notify(":::--------------------------:::".format(me))
