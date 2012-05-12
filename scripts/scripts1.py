@@ -262,12 +262,18 @@ def switchUniBits(group,x=0,y=0,command = 'Off'):
         whisper("Bits and Actions will now be displayed as Unicode.".format(me))
         UniBits = True
         
-def create3DataForts(group):
-   table.create("2a0b57ca-1714-4a70-88d7-25fdf795486f", 150, 160 * playerside, 1)
-   table.create("181de100-c255-464f-a4ed-4ac8cd728c61", 300, 160 * playerside, 1)
-   table.create("59665835-0b0c-4710-99f7-8b90377c35b7", 450, 160 * playerside, 1)
-   AV = table.create("feaadfe5-63fc-443e-b829-b9f63c346d11", 0, 250 * playerside, 1) # The Antivirus card.
-   storeSpecial(AV)
+def createStartingCards():
+   traceCard = table.create("c0f18b5a-adcd-4efe-b3f8-7d72d1bd1db8", 0, 155 * playerside, 1 ) #The Trace card
+   storeSpecial(traceCard)
+   if ds == "corp":
+      table.create("2a0b57ca-1714-4a70-88d7-25fdf795486f", 150, 160 * playerside, 1, True)
+      table.create("181de100-c255-464f-a4ed-4ac8cd728c61", 300, 160 * playerside, 1, True)
+      table.create("59665835-0b0c-4710-99f7-8b90377c35b7", 450, 160 * playerside, 1, True)
+      AV = table.create("feaadfe5-63fc-443e-b829-b9f63c346d11", 0, 250 * playerside, 1, True) # The Virus Scan card.
+      storeSpecial(AV)
+   else:
+      TC = table.create("f58c40eb-bb11-4bad-9562-030d906ea352", 0, 250 * playerside, 1, True) # The Technical Difficulties card.
+      storeSpecial(TC)      
 
 def intJackin(group, x = 0, y = 0):
     global ds, maxActions
@@ -297,7 +303,6 @@ def intJackin(group, x = 0, y = 0):
         me.Actions = maxActions
         me.Memory = 0
         NameDeck = "R&D"
-        create3DataForts(group)
         notify("{} is playing as Corporation".format(me))      
     else:
         maxActions = 4
@@ -305,8 +310,7 @@ def intJackin(group, x = 0, y = 0):
         me.Memory = 4
         NameDeck = "Stack"
         notify("{} is playing as Runner".format(me))
-    traceCard = table.create("c0f18b5a-adcd-4efe-b3f8-7d72d1bd1db8", 0, 155 * playerside, 1 ) #trace card
-    storeSpecial(traceCard)
+    createStartingCards()
     for type in Automations: switchAutomation(type,'Announce')
     shuffle(me.piles['R&D/Stack'])
     notify ("{}'s {} is shuffled ".format(me,NameDeck) )
@@ -315,13 +319,13 @@ def intJackin(group, x = 0, y = 0):
 def storeSpecial(card): 
 # Function stores into a shared variable some special cards that other players might look up.
    specialCards = eval(me.getGlobalVariable('specialCards'))
-   specialCards[card.name] = card._id
+   specialCards[card.Type] = card._id
    me.setGlobalVariable('specialCards', str(specialCards))
 
-def getSpecial(cardName,player = me):
+def getSpecial(cardType,player = me):
 # Functions takes as argument the name of a special card, and the player to whom it belongs, and returns the card object.
    specialCards = eval(player.getGlobalVariable('specialCards'))
-   return Card(specialCards[cardName])
+   return Card(specialCards[cardType])
    
 def start_token(group, x = 0, y = 0):
     card, quantity = askCard("[Type] = 'Setup'")
@@ -478,7 +482,7 @@ def inputTraceValue (card, x=0,y=0, limit = 0, silent = False):
    mute()
    limitText = ''
    betReplaced = False
-   card = getSpecial('Trace')
+   card = getSpecial('Tracing')
    if not card.isFaceUp and not confirm("You're already placed a bet. Replace it with a new one?"): return
    else: betReplaced = True
    limit = num(limit) # Just in case
@@ -502,7 +506,7 @@ def inputTraceValue (card, x=0,y=0, limit = 0, silent = False):
 def revealTraceValue (card, x=0,y=0):
    mute()
    global TraceValue
-   card = getSpecial('Trace')
+   card = getSpecial('Tracing')
    card.isFaceUp = True
    card.markers[Bits] = TraceValue
    notify ( "{} reveals a Trace Value of {}.".format(me,TraceValue))
@@ -510,7 +514,7 @@ def revealTraceValue (card, x=0,y=0):
 
 def payTraceValue (card, x=0,y=0):
    mute()
-   card = getSpecial('Trace')
+   card = getSpecial('Tracing')
    me.counters['Bit Pool'].value -= card.markers[Bits]
    notify ("{} pays {} for the Trace Value.".format(me,uniBit(card.markers[Bits])))
    card.markers[Bits] = 0
@@ -525,6 +529,9 @@ def cancelTrace ( card, x=0,y=0):
 #------------------------------------------------------------------------------
 # Other functions
 #-----------------------------------------------------------------------------
+
+def createSDF(group,x=0,y=0):
+      table.create("98a40fb6-1fea-4283-a036-567c8adade8e", x, y, 1, True)
 
 def intdamageDiscard(group,x=0,y=0):
    mute()
@@ -1262,7 +1269,7 @@ def useAbility(card, x = 0, y = 0):
    elif not Automations['Play, Score and Rez'] or card.AutoAction == "": 
       useCard(card) # If card is face up but has no autoscripts, or automation is disabled just notify that we're using an action.
       return
-   elif re.search(r'{Custom:', card.AutoScript): 
+   elif re.search(r'{Custom:', card.AutoAction): 
       customScript(card) # Some cards just have a fairly unique effect and there's no use in trying to make them work in the generic framework.
       return
    ### Checking if card has multiple autoscript options and providing choice to player.
@@ -1521,7 +1528,7 @@ def TokensX(Autoscript, announceText, card, targetCard = None, notification = No
    elif action.group(1) == 'Infect': 
       modtokens = count * multiplier
       victim = ofwhom('onOpponent')
-      targetCard = getSpecial('Virus Scan',victim)
+      targetCard = getSpecial('Counter Hold',victim)
       infectTXT = '{} with'.format(victim)
    elif action.group(1) == 'Use':
       if not targetCard.markers[token] or count > targetCard.markers[token]: 

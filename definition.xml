@@ -45,7 +45,7 @@
 		<groupactions menu="Runner Actions...">
 			<groupaction menu="Take 1 Brain Damage" default="false" execute="addBrainDmg" />
 			<groupaction menu="Take 1 Meat Or Net Damage" default="false" execute="addMeatNetDmg" />
-            <groupaction menu="&#9166; Pay &#10123; and lose a Tag" default="false" execute="pay2andDelTag" />
+         <groupaction menu="&#9166; Pay &#10123; and lose a Tag" default="false" execute="pay2andDelTag" />
 			<groupaction menu="&#9166; Run on HQ" default="false" execute="runHQ" />
 			<groupaction menu="&#9166; Run on R&amp;D" default="false" execute="runRD" />
 			<groupaction menu="&#9166; Run on Archives" default="false" execute="runArchives" />
@@ -79,9 +79,10 @@
 			<cardaction menu="Pay Trace Value" default="false" execute="payTraceValue" />
 			<cardaction menu="Cancel Trace" default="false" execute="cancelTrace" />
 		</cardactions>
-        <groupaction menu="Modify your max actions per turn" default="false" execute="modActions" />
+      <groupaction menu="Modify your max actions per turn" default="false" execute="modActions" />
 		<cardaction menu="Expose card" default="false" execute="expose" />
-		<cardaction menu="Score Agenda" default="false" execute="scrAgenda" />
+		<cardaction menu="Score Agenda" default="false" execute="scrAgenda" />      
+		<groupaction menu="Create new Subsidiary Data Fort" default="false" execute="createSDF" />
 		<groupaction menu="Roll d6" default="false" shortcut="Ctrl+6" execute="rolld6" />
 		<groupaction menu="&#9166; Receive &#10122;" default="false" shortcut="Ctrl+B" execute="getBit" />
         
