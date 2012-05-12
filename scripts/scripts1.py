@@ -1383,7 +1383,7 @@ def useAbility(card, x = 0, y = 0):
          rollTuple = RollX(activeAutoscript, announceText, card) # Returns like reshuffleX()
          announceText = rollTuple[0] 
          X = rollTuple[1] 
-      elif re.search(r'\b(Put|Remove|Refill|Use)([0-9]+)', activeAutoscript): announceText = TokensX(activeAutoscript, announceText, card, targetC, n = X)
+      elif re.search(r'\b(Put|Remove|Refill|Use|Infect)([0-9]+)', activeAutoscript): announceText = TokensX(activeAutoscript, announceText, card, targetC, n = X)
       elif re.search(r'\bTransfer([0-9]+)', activeAutoscript): announceText = TransferX(activeAutoscript, announceText, card, targetC, n = X)
       elif re.search(r'\bDraw([0-9]+)', activeAutoscript): announceText = DrawX(activeAutoscript, announceText, card, targetC, n = X)
       elif re.search(r'\bShuffle([A-Za-z& ]+)', activeAutoscript): announceText = ShuffleX(activeAutoscript, announceText, card, targetC, n = X)
@@ -1496,7 +1496,7 @@ def TransferX(Autoscript, announceText, card, targetCard = None, notification = 
 def TokensX(Autoscript, announceText, card, targetCard = None, notification = None, n = 0):
    if not targetCard: targetCard = card # If there's been to target card given, assume the target is the card itself.
    foundKey = False
-   action = re.search(r'\b(Put|Remove|Refill|Use)([0-9]+)([A-Za-z]+)-?', Autoscript)
+   action = re.search(r'\b(Put|Remove|Refill|Use|Infect)([0-9]+)([A-Za-z]+)-?', Autoscript)
    #confirm("{}".format(action.group(3))) # Debug
    if action.group(3) in mdict: token = mdict[action.group(3)]
    else: # If the marker we're looking for it not defined, then either create a new one with a random color, or look for a token with the custom name we used above.
@@ -1517,6 +1517,9 @@ def TokensX(Autoscript, announceText, card, targetCard = None, notification = No
    multiplier = per(Autoscript, card, n, targetCard, notification)
    if action.group(1) == 'Put': modtokens = count * multiplier
    elif action.group(1) == 'Refill': modtokens = count - targetCard.markers[token]
+   elif action.group(1) == 'Infect': 
+      modtokens = count * multiplier
+      targetCard = getSpecial('Virus Scan',ofwhom('-onOpponent'))
    elif action.group(1) == 'Use':
       if not targetCard.markers[token] or count > targetCard.markers[token]: 
          whisper("There's not enough counters left on the card to use this ability!")
@@ -1706,11 +1709,14 @@ def customScript(card):
 def TrialError(group, x=0, y=0):
    testcards = ["a042c7e7-90af-4586-8474-4985ef5e4719",
                 "5ef3a7cc-7d0f-4696-9dbf-a79967e2c2bb",
-                "4da5197c-0f42-4f92-b784-d2c905dd048e"]
+                "4da5197c-0f42-4f92-b784-d2c905dd048e",
+                "bf4e2705-43d9-447e-b71f-dcad30dacbcd"]
    for idx in range(len(testcards)):
       test = table.create(testcards[idx], (70 * idx) - 150, 0, 1, True)
       TypeCard[test] = test.Type
-      test.isFaceUp = False
+      if test.Type == 'Ice' or test.Type == 'Agenda' or test.Type == 'Node':
+         test.isFaceUp = False
+         test.markers[Not_rezzed] += 1
    
 def atTurnStartEffects():
    if not Automations['Start-of-Turn']: return
