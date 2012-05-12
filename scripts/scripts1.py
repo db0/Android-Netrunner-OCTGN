@@ -36,8 +36,6 @@ scoredAgendas = 0
 playerside = None # Variable to keep track on which side each player is
 playeraxis = None # Variable to keep track on which axis the player is
 
-traceCard = None
-
 DMGwarn = False # A boolean varialbe to track whether we've warned the player about doing automatic damage.
 newturn = True #We use this variable to track whether a player has yet to do anything this turn.
 endofturn = False #We use this variable to know if the player is in the end-of-turn phase.
@@ -268,7 +266,8 @@ def create3DataForts(group):
    table.create("2a0b57ca-1714-4a70-88d7-25fdf795486f", 150, 160 * playerside, 1)
    table.create("181de100-c255-464f-a4ed-4ac8cd728c61", 300, 160 * playerside, 1)
    table.create("59665835-0b0c-4710-99f7-8b90377c35b7", 450, 160 * playerside, 1)
-   table.create("feaadfe5-63fc-443e-b829-b9f63c346d11", 0, 250 * playerside, 1) # The Antivirus card.
+   AV = table.create("feaadfe5-63fc-443e-b829-b9f63c346d11", 0, 250 * playerside, 1) # The Antivirus card.
+   storeSpecial(AV)
 
 def intJackin(group, x = 0, y = 0):
     global ds, maxActions
@@ -285,7 +284,7 @@ def intJackin(group, x = 0, y = 0):
     TopCard.moveTo(me.piles['Trash/Archives(Face-up)'])
     if len(players) > 1: random = rnd(1,100) # Fix for multiplayer only. Makes Singleplayer setup very slow otherwise.
     ds = TopCard.Player
-    me.setGlobalVariable(ds, ds)
+    me.setGlobalVariable('ds', ds)
     TopCard.moveTo(me.piles['R&D/Stack'])
     if checkDeckNoLimit(stack) != 0: notify ("SHOULD RETURN")
     me.counters['Bit Pool'].value = 5
@@ -306,12 +305,24 @@ def intJackin(group, x = 0, y = 0):
         me.Memory = 4
         NameDeck = "Stack"
         notify("{} is playing as Runner".format(me))
-    table.create("c0f18b5a-adcd-4efe-b3f8-7d72d1bd1db8", 0, 155 * playerside, 1 ) #trace card
+    traceCard = table.create("c0f18b5a-adcd-4efe-b3f8-7d72d1bd1db8", 0, 155 * playerside, 1 ) #trace card
+    storeSpecial(traceCard)
     for type in Automations: switchAutomation(type,'Announce')
     shuffle(me.piles['R&D/Stack'])
     notify ("{}'s {} is shuffled ".format(me,NameDeck) )
     drawMany (me.piles['R&D/Stack'], 5) 
 
+def storeSpecial(card): 
+# Function stores into a shared variable some special cards that other players might look up.
+   specialCards = eval(me.getGlobalVariable('specialCards'))
+   specialCards[card.name] = card._id
+   me.setGlobalVariable('specialCards', str(specialCards))
+
+def getSpecial(cardName,player = me):
+# Functions takes as argument the name of a special card, and the player to whom it belongs, and returns the card object.
+   specialCards = eval(player.getGlobalVariable('specialCards'))
+   return Card(specialCards[cardName])
+   
 def start_token(group, x = 0, y = 0):
     card, quantity = askCard("[Type] = 'Setup'")
     if quantity == 0: return
@@ -463,21 +474,11 @@ def advanceCardM(card, x = 0, y = 0):
 #----------------------
 
 def inputTraceValue (card, x=0,y=0, limit = 0, silent = False):
-   global traceCard, TraceValue
+   global TraceValue
    mute()
    limitText = ''
    betReplaced = False
-   if card != traceCard:
-      if not traceCard:
-         if card.Type != "Tracing": 
-            for c in table:
-               if c.model == 'c0f18b5a-adcd-4efe-b3f8-7d72d1bd1db8' and c.owner == me: 
-                  traceCard = c
-                  traceFound = True
-            if not traceFound: return
-         else: traceCard = card
-      else: card = traceCard
-   card = traceCard
+   card = getSpecial('Trace')
    if not card.isFaceUp and not confirm("You're already placed a bet. Replace it with a new one?"): return
    else: betReplaced = True
    limit = num(limit) # Just in case
@@ -501,7 +502,7 @@ def inputTraceValue (card, x=0,y=0, limit = 0, silent = False):
 def revealTraceValue (card, x=0,y=0):
    mute()
    global TraceValue
-   if card != traceCard: card = traceCard
+   card = getSpecial('Trace')
    card.isFaceUp = True
    card.markers[Bits] = TraceValue
    notify ( "{} reveals a Trace Value of {}.".format(me,TraceValue))
@@ -509,7 +510,7 @@ def revealTraceValue (card, x=0,y=0):
 
 def payTraceValue (card, x=0,y=0):
    mute()
-   if card != traceCard: card = traceCard
+   card = getSpecial('Trace')
    me.counters['Bit Pool'].value -= card.markers[Bits]
    notify ("{} pays {} for the Trace Value.".format(me,uniBit(card.markers[Bits])))
    card.markers[Bits] = 0
@@ -1570,7 +1571,7 @@ def ofwhom(Autoscript):
    if re.search(r'-o[fn]Opponent', Autoscript):
       if len(players) > 1:
          for player in players:
-            if player != me and player.getGlobalVariable(ds) != ds: 
+            if player != me and player.getGlobalVariable('ds') != ds: 
                targetPL = player # Opponent needs to be not us, and of a different type. 
                                  # In the future I'll also be checking for teams by using a global player variable for it and having players select their team on startup.
       else : 
@@ -1667,7 +1668,7 @@ def InflictX(Autoscript, announceText, card, targetCard = None, notification = N
                       \n(Press any button to continue)")
                DMGwarn = True
             DMGcard = targetPL.hand.random()
-            if targetPL.getGlobalVariable(ds) == 'corp': DMGcard.moveTo(targetPL.piles['Archives(Hidden)'])
+            if targetPL.getGlobalVariable('ds') == 'corp': DMGcard.moveTo(targetPL.piles['Archives(Hidden)'])
             else: DMGcard.moveTo(targetPL.piles['Trash/Archives(Face-up)'])
             if action.group(3) == 'Brain':  targetPL.counters['Max Hand Size'].value -= 1
    if notification == 'Quick': announceString = "{} suffers {} {} damage".format(announceText,DMG,action.group(3))
