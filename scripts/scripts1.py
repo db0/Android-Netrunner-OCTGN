@@ -1212,8 +1212,8 @@ def executePlayScripts(card, action):
       selectedAutoscripts = AutoS.split('$$')
       #confirm('selectedAutoscripts: {}'.format(selectedAutoscripts)) # Debug
       for activeAutoscript in selectedAutoscripts:
-         effect = re.search(r'\b([A-Za-z]+)([0-9]+)([A-Za-z& ]+)(.*)', activeAutoscript)
-         #confirm('effects: {}'.format(effect.groups())) #Debug
+         effect = re.search(r'\b([A-Za-z]+)([0-9]+)([A-Za-z& ]*)-?(.*)', activeAutoscript)
+         confirm('effects: {}'.format(effect.groups())) #Debug
          if (effectType.group(1) == 'whileRezzed' or effectType.group(1) == 'whileScored') and (action == 'derez' or (action == 'trash' and card.markers[Not_rezzed] == 0)): Removal = True
          else: Removal = False
          if effect.group(1) == 'Gain' or effect.group(1) == 'Lose':
@@ -1225,10 +1225,10 @@ def executePlayScripts(card, action):
                else: passedScript = "Lose{}{}".format(effect.group(2),effect.group(3))
             if effect.group(4): passedScript += effect.group(4)
             GainX(passedScript, announceText, card, notification = 'Quick')
-         else:
+         else: 
             passedScript = "{}".format(effect.group(0))
             if effect.group(1) == 'Draw': DrawX(passedScript, announceText, card, notification = 'Quick', n = X)
-            if effect.group(1) == 'Put': TokensX(passedScript, announceText, card, notification = 'Quick', n = X)
+            if re.search(r'(Put|Remove|Refill|Use|Infect)', effect.group(1)): TokensX(passedScript, announceText, card, notification = 'Quick', n = X)
             if effect.group(1) == 'Roll': 
                rollTuple = RollX(passedScript, announceText, card, notification = 'Quick', n = X)
                X = rollTuple[1] 
@@ -1495,7 +1495,8 @@ def TransferX(Autoscript, announceText, card, targetCard = None, notification = 
 
 def TokensX(Autoscript, announceText, card, targetCard = None, notification = None, n = 0):
    if not targetCard: targetCard = card # If there's been to target card given, assume the target is the card itself.
-   foundKey = False
+   foundKey = False # We use this to see if the marker used in the AutoAction is already defined.
+   infectTXT = '' # We only inject this into the announcement when this is an infect AutoAction.
    action = re.search(r'\b(Put|Remove|Refill|Use|Infect)([0-9]+)([A-Za-z]+)-?', Autoscript)
    #confirm("{}".format(action.group(3))) # Debug
    if action.group(3) in mdict: token = mdict[action.group(3)]
@@ -1519,21 +1520,23 @@ def TokensX(Autoscript, announceText, card, targetCard = None, notification = No
    elif action.group(1) == 'Refill': modtokens = count - targetCard.markers[token]
    elif action.group(1) == 'Infect': 
       modtokens = count * multiplier
-      targetCard = getSpecial('Virus Scan',ofwhom('-onOpponent'))
+      victim = ofwhom('onOpponent')
+      targetCard = getSpecial('Virus Scan',victim)
+      infectTXT = '{} with'.format(victim)
    elif action.group(1) == 'Use':
       if not targetCard.markers[token] or count > targetCard.markers[token]: 
          whisper("There's not enough counters left on the card to use this ability!")
          return 'ABORT'
       else: modtokens = -count * multiplier
    else: 
-      if count == 999:
+      if count == 999: # 999 effectively means "all markers on card"
          if action.group(3) == 'Virus': pass # We deal with removal of viruses later.
          elif targetCard.markers[token]: count = targetCard.markers[token]
          else: 
             whisper("There was nothing to remove.")
             return 'ABORT'
       else: modtokens = -count * multiplier
-   if action.group(3) == 'Virus' and count == 999:
+   if action.group(3) == 'Virus' and count == 999: # This combination means that the Corp is cleaning all viruses.
       targetCard.markers[mdict['virusButcherBoy']] = 0
       targetCard.markers[mdict['virusCascade']] = 0
       targetCard.markers[mdict['virusCockroach']] = 0
@@ -1544,7 +1547,7 @@ def TokensX(Autoscript, announceText, card, targetCard = None, notification = No
    else: targetCard.markers[token] += modtokens
    if action.group(1) == 'Refill': announceString = "{} {} to {} {}".format(announceText, action.group(1), abs(modtokens), action.group(3))
    elif re.search(r'\bRemove999Virus', Autoscript): announceString = "{} to clean all viruses from their corporate network".format(announceText)
-   else: announceString = "{} {} {} {} counters".format(announceText, action.group(1).lower(), abs(modtokens), action.group(3))
+   else: announceString = "{} {} {} {} {} counters".format(announceText, action.group(1).lower(),infectTXT, abs(modtokens), action.group(3))
    if notification == 'Automatic' and modtokens != 0: notify('--> {}.'.format(announceString))
    return announceString
  
@@ -1571,7 +1574,7 @@ def DrawX(Autoscript, announceText, card, targetCard = None, notification = None
    return announceString
 
 def ofwhom(Autoscript):
-   if re.search(r'-o[fn]Opponent', Autoscript):
+   if re.search(r'o[fn]Opponent', Autoscript):
       if len(players) > 1:
          for player in players:
             if player != me and player.getGlobalVariable('ds') != ds: 
@@ -1648,11 +1651,14 @@ def InflictX(Autoscript, announceText, card, targetCard = None, notification = N
    global DMGwarn
    action = re.search(r'\b(Inflict)([0-9]+)(Meat|Net|Brain)Damage', Autoscript)
    multiplier = per(Autoscript, card, n, targetCard)
+   enhancer = findEnhancements(Autoscript)
+   if enhancer > 0: enhanceTXT = ' (Enhanced: +{})'.format(enhancer)
+   else: enhanceTXT = ''
    targetPL = ofwhom(Autoscript)
    if re.search(r'-ifTagged', Autoscript) and targetPL.Tags == 0:
       whisper("Your opponent needs to be tagged to use this action")
       return 'ABORT'
-   DMG = num(action.group(2)) * multiplier
+   DMG = (num(action.group(2)) * multiplier) + enhancer
    preventTXT = ''
    if Automations['Damage']: #The actual effects happen only if the Damage automation switch is ON. It should be ON by default.
       DMGprevented = findDMGProtection(DMG, action.group(3), targetPL)
@@ -1675,7 +1681,7 @@ def InflictX(Autoscript, announceText, card, targetCard = None, notification = N
             else: DMGcard.moveTo(targetPL.piles['Trash/Archives(Face-up)'])
             if action.group(3) == 'Brain':  targetPL.counters['Max Hand Size'].value -= 1
    if notification == 'Quick': announceString = "{} suffers {} {} damage".format(announceText,DMG,action.group(3))
-   else: announceString = "{} inflict {} {} damage to {}{}".format(announceText,DMG,action.group(3),targetPL,preventTXT)
+   else: announceString = "{} inflict {} {} damage{} to {}{}".format(announceText,DMG,action.group(3),enhanceTXT,targetPL,preventTXT)
    if notification and multiplier > 0: notify('--> {}.'.format(announceString))
    return announceString
 
@@ -1691,6 +1697,15 @@ def findDMGProtection(DMGdone, DMGtype, targetPL):
          if DMGdone == 0: break # If we've found enough protection to alleviate all damage, stop the search.
    return protectionFound
 
+def findEnhancements(Autoscript):
+   enhancer = 0
+   DMGtype = re.search(r'\bInflict[0-9]+(Meat|Net|Brain)Damage', Autoscript)
+   if DMGtype:
+      for card in table:
+         cardENH = re.search(r'Enhance([0-9]+){}Damage'.format(DMGtype.group(1)), card.AutoScript)
+         if card.controller == me and not card.markers[Not_rezzed] and cardENH: enhancer += num(cardENH.group(1))
+   return enhancer
+   
 def per(Autoscript, card = None, count = 0, targetCard = None, notification = None): # This function goes through the autoscript and looks for the words "per<Something>". Then figures out what the card multiplies its effect with, and returns the appropriate multiplier.
    per = re.search(r'\b(per|upto)(Assigned|Target|Parent|Generated|Installed|Rezzed|Transferred|Bought)?([{A-Z][A-Za-z0-9,_ {}&]*)[-]?', Autoscript) # We're searching for the word per, and grabbing all after that, until the first dash "-" as the variable.
    if per: # If the  search was successful...
@@ -1710,7 +1725,7 @@ def TrialError(group, x=0, y=0):
    testcards = ["a042c7e7-90af-4586-8474-4985ef5e4719",
                 "5ef3a7cc-7d0f-4696-9dbf-a79967e2c2bb",
                 "4da5197c-0f42-4f92-b784-d2c905dd048e",
-                "bf4e2705-43d9-447e-b71f-dcad30dacbcd"]
+                "493d532f-da48-4a01-be65-d61a0b888ace"]
    for idx in range(len(testcards)):
       test = table.create(testcards[idx], (70 * idx) - 150, 0, 1, True)
       TypeCard[test] = test.Type
