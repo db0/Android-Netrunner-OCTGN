@@ -1,4 +1,6 @@
-﻿Advance = ("Advance", "73b8d1f2-cd54-41a9-b689-3726b7b86f4f")
+﻿import re
+
+Advance = ("Advance", "73b8d1f2-cd54-41a9-b689-3726b7b86f4f")
 Generic = ("Generic", "b384957d-22c5-4e7d-a508-3990c82f4df6")
 Bits = ("Bits", "19be5742-d233-4ea1-a88a-702cfec930b1")
 Scored = ("Scored", "10254d1f-6335-4b90-b124-b01ec131dd07")
@@ -8,32 +10,14 @@ Trace_value = ("Trace value", "01feb523-ac36-4dcd-970a-515aa8d73e37")
 Link_value = ("Link value", "3c429e4c-3c7a-49fb-96cc-7f84a63cc672")
 PlusOne= ("+1", "aa261722-e12a-41d4-a475-3cc1043166a7")
 MinusOne= ("-1", "48ceb18b-5521-4d3f-b5fb-c8212e8bcbae")
-
-mdict = dict(Advance = ("Advance", "73b8d1f2-cd54-41a9-b689-3726b7b86f4f"),
-             Generic = ("Generic", "b384957d-22c5-4e7d-a508-3990c82f4df6"),
-             Bits = ("Bits", "19be5742-d233-4ea1-a88a-702cfec930b1"),
-             Scored = ("Scored", "10254d1f-6335-4b90-b124-b01ec131dd07"),
-             Not_rezzed = ("Not rezzed", "8105e4c7-cb54-4421-9ae2-4e276bedee90"),
-             Derezzed = ("Derezzed", "ae34ee21-5309-46b3-98de-9d428f59e243"),
-             Trace_value = ("Trace value", "01feb523-ac36-4dcd-970a-515aa8d73e37"),
-             Link_value = ("Link value", "3c429e4c-3c7a-49fb-96cc-7f84a63cc672"),
-             PlusOne= ("+1", "aa261722-e12a-41d4-a475-3cc1043166a7"),
-             MinusOne= ("-1", "48ceb18b-5521-4d3f-b5fb-c8212e8bcbae"),
-             virusButcherBoy = ("Boardwalk","5831fb18-7cdf-44d2-8685-bdd392bb9f1c"),
-             virusCascade = ("Cascade","723a0cca-7a05-46a8-a681-6e06666042ee"),
-             virusCockroach = ("Cockroach","cda4cfcb-6f2d-4a7f-acaf-d796b8d1edee"),
-             virusGremlin = ("Gremlin","032d2efa-e722-4218-ba2b-699dc80f0b94"),
-             virusThought = ("Thought","811b9153-93cb-4898-ad9f-68864452b9f4"),
-             virusFait = ("Fait","72c89567-72aa-446d-a9ea-e158c22c113a"),
-             virusBoardwalk = ("Boardwalk","8c48db01-4f12-4653-a31a-3d22e9f5b6e9"),
-             protectionMeatDMG = ("Meat Damage protection","f50fbac7-a147-4941-8d77-56cf9ea672ea"),
-             protectionNetDMG = ("Net Damage protection","84527bb1-6b34-4ace-9b11-7e19a6e353c7"),
-             protectionBrainDMG = ("Brain damage protection","8a0612d7-202b-44ec-acdc-84ff93e7968d"))
          
 #---------------------------------------------------------------------------
 # Global variables
 #---------------------------------------------------------------------------
 ds = ""
+Automations = {'Play, Score and Rez': True, 
+               'Start-of-Turn' : True, 
+               'Damage'        : True}
 Automation = True # If True, game will automatically trigger card effects when playing or double-clicking on cards. Requires specific preparation in the sets.
                    # Starts False and is switched on automatically at Jack In
 StartAutomation = True # If True, game will automatically trigger effects happening at the start of the player's turn, from cards they control.                
@@ -57,10 +41,32 @@ playeraxis = None # Variable to keep track on which axis the player is
 
 traceCard = None
 
+newturn = True #We use this variable to track whether a player has yet to do anything this turn.
+endofturn = False #We use this variable to know if the player is in the end-of-turn phase.
 #---------------------------------------------------------------------------
 # Constants
 #---------------------------------------------------------------------------
-import re
+
+mdict = dict(Advance = ("Advance", "73b8d1f2-cd54-41a9-b689-3726b7b86f4f"),
+             Generic = ("Generic", "b384957d-22c5-4e7d-a508-3990c82f4df6"),
+             Bits = ("Bits", "19be5742-d233-4ea1-a88a-702cfec930b1"),
+             Scored = ("Scored", "10254d1f-6335-4b90-b124-b01ec131dd07"),
+             Not_rezzed = ("Not rezzed", "8105e4c7-cb54-4421-9ae2-4e276bedee90"),
+             Derezzed = ("Derezzed", "ae34ee21-5309-46b3-98de-9d428f59e243"),
+             Trace_value = ("Trace value", "01feb523-ac36-4dcd-970a-515aa8d73e37"),
+             Link_value = ("Link value", "3c429e4c-3c7a-49fb-96cc-7f84a63cc672"),
+             PlusOne= ("+1", "aa261722-e12a-41d4-a475-3cc1043166a7"),
+             MinusOne= ("-1", "48ceb18b-5521-4d3f-b5fb-c8212e8bcbae"),
+             virusButcherBoy = ("Boardwalk","5831fb18-7cdf-44d2-8685-bdd392bb9f1c"),
+             virusCascade = ("Cascade","723a0cca-7a05-46a8-a681-6e06666042ee"),
+             virusCockroach = ("Cockroach","cda4cfcb-6f2d-4a7f-acaf-d796b8d1edee"),
+             virusGremlin = ("Gremlin","032d2efa-e722-4218-ba2b-699dc80f0b94"),
+             virusThought = ("Thought","811b9153-93cb-4898-ad9f-68864452b9f4"),
+             virusFait = ("Fait","72c89567-72aa-446d-a9ea-e158c22c113a"),
+             virusBoardwalk = ("Boardwalk","8c48db01-4f12-4653-a31a-3d22e9f5b6e9"),
+             protectionMeatDMG = ("Meat Damage protection","f50fbac7-a147-4941-8d77-56cf9ea672ea"),
+             protectionNetDMG = ("Net Damage protection","84527bb1-6b34-4ace-9b11-7e19a6e353c7"),
+             protectionBrainDMG = ("Brain damage protection","8a0612d7-202b-44ec-acdc-84ff93e7968d"))
 
 turns = [
 	'Start of Game',
@@ -72,13 +78,8 @@ ScoredColor = "#00ff44"
 SelectColor = "#009900"
 MakeRunColor = "#ff0000"
 
-newturn = True #We use this variable to track whether a player has yet to do anything this turn.
-endofturn = False #We use this variable to know if the player is in the end-of-turn phase.
-
-silent = 'silent'
-loud = 'loud'
-Xaxis = 'x'  # Same as above
-Yaxis = 'y'	 # Same as above
+Xaxis = 'x'
+Yaxis = 'y'
 #---------------------------------------------------------------------------
 # General functions
 #---------------------------------------------------------------------------
@@ -238,32 +239,23 @@ def modActions(group,x=0,y=0):
 # Table group actions
 #------------------------------------------------------------------------------
 
-def switchAutomation(group,x=0,y=0,command = 'Off'):
-    global Automation
-    if (Automation and command == 'Off') or (not Automation and command == 'Announce'):
-        notify ("{}'s automations are OFF.".format(me))
-        if command != 'Announce': Automation = False
-    else:
-        notify ("{}'s automations are ON.".format(me))
-        if command != 'Announce': Automation = True
+def switchAutomation(type,command = 'Off'):
+   global Automations
+   if (Automations[type] and command == 'Off') or (not Automations[type] and command == 'Announce'):
+      notify ("{}'s {} automations are OFF.".format(me,type))
+      if command != 'Announce': Automations[type] = False
+   else:
+      notify ("{}'s {} automations are ON.".format(me,type))
+      if command != 'Announce': Automations[type] = True
+   
+def switchPlayAutomation(group,x=0,y=0):
+   switchAutomation('Play, Score and Rez')
+   
+def switchStartAutomation(group,x=0,y=0):
+   switchAutomation('Start-of-Turn')
 
-def switchStartAutomation(group,x=0,y=0,command = 'Off'):
-    global StartAutomation
-    if (StartAutomation and command == 'Off') or (not StartAutomation and command == 'Announce'):
-        notify ("{}'s Start-of-Turn automations are OFF.".format(me))
-        if command != 'Announce': StartAutomation = False
-    else:
-        notify ("{}'s Start-of-Turn automations are ON.".format(me))
-        if command != 'Announce': StartAutomation = True
-
-def switchDMGAutomation(group,x=0,y=0,command = 'Off'):
-    global DMGAutomation
-    if (DMGAutomation and command == 'Off') or (not DMGAutomation and command == 'Announce'):
-        notify ("{}'s Damage automations are OFF.".format(me))
-        if command != 'Announce': DMGAutomation = False
-    else:
-        notify ("{}'s Damage automations are ON.".format(me))
-        if command != 'Announce': DMGAutomation = True
+def switchDMGAutomation(group,x=0,y=0):
+   switchAutomation('Damage')
         
 def switchUniBits(group,x=0,y=0,command = 'Off'):
     global UniBits
@@ -317,9 +309,7 @@ def intJackin(group, x = 0, y = 0):
         NameDeck = "Stack"
         notify("{} is playing as Runner".format(me))
     table.create("c0f18b5a-adcd-4efe-b3f8-7d72d1bd1db8", 0, 155 * playerside, 1 ) #trace card
-    switchAutomation(group,x,y,'Announce')
-    switchStartAutomation(group,x,y,'Announce')
-    switchDMGAutomation(group,x,y,'Announce')
+    for type in Automations: switchAutomation(type,'Announce')
     shuffle(me.piles['R&D/Stack'])
     notify ("{}'s {} is shuffled ".format(me,NameDeck) )
     drawMany (me.piles['R&D/Stack'], 5) 
