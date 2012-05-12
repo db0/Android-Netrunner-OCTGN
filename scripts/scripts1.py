@@ -15,13 +15,10 @@ MinusOne= ("-1", "48ceb18b-5521-4d3f-b5fb-c8212e8bcbae")
 # Global variables
 #---------------------------------------------------------------------------
 ds = ""
-Automations = {'Play, Score and Rez': True, 
-               'Start-of-Turn' : True, 
-               'Damage'        : True}
-Automation = True # If True, game will automatically trigger card effects when playing or double-clicking on cards. Requires specific preparation in the sets.
-                   # Starts False and is switched on automatically at Jack In
-StartAutomation = True # If True, game will automatically trigger effects happening at the start of the player's turn, from cards they control.                
-DMGAutomation = True
+Automations = {'Play, Score and Rez': True, # If True, game will automatically trigger card effects when playing or double-clicking on cards. Requires specific preparation in the sets.
+               'Start-of-Turn'      : True, # If True, game will automatically trigger effects happening at the start of the player's turn, from cards they control.                
+               'Damage'             : True}
+
 UniBits = True # If True, game will display bits as unicode characters ❶, ❷, ❿ etc
 
 ModifyDraw = False #if True the audraw should warn the player to look at r&D instead 
@@ -41,6 +38,7 @@ playeraxis = None # Variable to keep track on which axis the player is
 
 traceCard = None
 
+DMGwarn = False # A boolean varialbe to track whether we've warned the player about doing automatic damage.
 newturn = True #We use this variable to track whether a player has yet to do anything this turn.
 endofturn = False #We use this variable to know if the player is in the end-of-turn phase.
 #---------------------------------------------------------------------------
@@ -1043,7 +1041,7 @@ def checkDeckNoLimit (group):
 # Automations
 #------------------------------------------------------------------------------
 def executeAutomations(card,action = ''):
-    if not Automation: return
+    if not Automations['Play, Score and Rez']: return
     if not card.isFaceUp: return
     AutoScript = card.AutoScript
     if AutoScript == "": return
@@ -1260,7 +1258,7 @@ def useAbility(card, x = 0, y = 0):
    if not card.isFaceUp or card.markers[Not_rezzed]: # If card is face down assume they wanted to rez 
       intRez(card)
       return
-   elif not Automation or card.AutoAction == "": 
+   elif not Automations['Play, Score and Rez'] or card.AutoAction == "": 
       useCard(card) # If card is face up but has no autoscripts, or automation is disabled just notify that we're using an action.
       return
    elif re.search(r'{Custom:', card.AutoScript): 
@@ -1643,28 +1641,37 @@ def TraceX(Autoscript, announceText, card, targetCard = None, notification = Non
    return announceString
 
 def InflictX(Autoscript, announceText, card, targetCard = None, notification = None, n = 0):
-   #confirm("Bump1")
-   targetPL = ofwhom(Autoscript)
-   #confirm("Bump2")
+   global DMGwarn
    action = re.search(r'\b(Inflict)([0-9]+)(Meat|Net|Brain)Damage', Autoscript)
    multiplier = per(Autoscript, card, n, targetCard)
+   targetPL = ofwhom(Autoscript)
+   if re.search(r'-ifTagged', Autoscript) and targetPL.Tags == 0:
+      whisper("Your opponent needs to be tagged to use this action")
+      return 'ABORT'
    DMG = num(action.group(2)) * multiplier
-   DMGprevented = findDMGProtection(DMG, action.group(3), targetPL)
-   if DMGprevented > 0:
-      preventTXT = ' ({} prevented)'.format(DMGprevented)
-      DMG -= DMGprevented
-   else: preventTXT = ''
-   for DMGpt in range(DMG):
-      if len(targetPL.hand) == 0 or targetPL.counters['Max Hand Size'].value < 0: 
-         notify(":::Warning:::{} has flatlined!".format(targetPL))
-         break
-      else:   
-         DMGcard = targetPL.hand.random()
-         if targetPL.getGlobalVariable(ds) == 'corp': DMGcard.moveTo(targetPL.piles['Archives(Hidden)'])
-         else: DMGcard.moveTo(targetPL.piles['Trash/Archives(Face-up)'])
-         if action.group(3) == 'Brain':  targetPL.counters['Max Hand Size'].value -= 1
+   preventTXT = ''
+   if Automations['Damage']: #The actual effects happen only if the Damage automation switch is ON. It should be ON by default.
+      DMGprevented = findDMGProtection(DMG, action.group(3), targetPL)
+      if DMGprevented > 0:
+         preventTXT = ' ({} prevented)'.format(DMGprevented)
+         DMG -= DMGprevented
+      for DMGpt in range(DMG):
+         if len(targetPL.hand) == 0 or targetPL.counters['Max Hand Size'].value < 0: 
+            notify(":::Warning:::{} has flatlined!".format(targetPL))
+            break
+         else:
+            if not DMGwarn: 
+               confirm("You are about to inflict damage on another player for the first time.\
+                       \nBefore you do that, please make sure that your opponent is not currently manipulating their hand or this might cause the game to crash.\
+                     \n\nThis message will not appear again.\
+                      \n(Press any button to continue)")
+               DMGwarn = True
+            DMGcard = targetPL.hand.random()
+            if targetPL.getGlobalVariable(ds) == 'corp': DMGcard.moveTo(targetPL.piles['Archives(Hidden)'])
+            else: DMGcard.moveTo(targetPL.piles['Trash/Archives(Face-up)'])
+            if action.group(3) == 'Brain':  targetPL.counters['Max Hand Size'].value -= 1
    if notification == 'Quick': announceString = "{} suffers {} {} damage".format(announceText,DMG,action.group(3))
-   else: announceString = "{} inflict {} {} damage to {}{}.".format(announceText,DMG,action.group(3),targetPL,preventTXT)
+   else: announceString = "{} inflict {} {} damage to {}{}".format(announceText,DMG,action.group(3),targetPL,preventTXT)
    if notification and multiplier > 0: notify('--> {}.'.format(announceString))
    return announceString
 
@@ -1705,7 +1712,7 @@ def TrialError(group, x=0, y=0):
       test.isFaceUp = False
    
 def atTurnStartEffects():
-   if not StartAutomation: return
+   if not Automations['Start-of-Turn']: return
    TitleDone = False
    for card in table:
       effect = re.search(r'atTurnStart:([A-Z][A-Za-z]+)([0-9]+)([A-Za-z0-9 ]+)(.*)', card.AutoScript)
