@@ -25,15 +25,19 @@ mdict = dict(Advance = ("Advance", "73b8d1f2-cd54-41a9-b689-3726b7b86f4f"),
              virusGremlin = ("Gremlin","032d2efa-e722-4218-ba2b-699dc80f0b94"),
              virusThought = ("Thought","811b9153-93cb-4898-ad9f-68864452b9f4"),
              virusFait = ("Fait","72c89567-72aa-446d-a9ea-e158c22c113a"),
-             virusBoardwalk = ("Boardwalk","8c48db01-4f12-4653-a31a-3d22e9f5b6e9"))
+             virusBoardwalk = ("Boardwalk","8c48db01-4f12-4653-a31a-3d22e9f5b6e9"),
+             protectionMeatDMG = ("Meat Damage protection","f50fbac7-a147-4941-8d77-56cf9ea672ea"),
+             protectionNetDMG = ("Net Damage protection","84527bb1-6b34-4ace-9b11-7e19a6e353c7"),
+             protectionBrainDMG = ("Brain damage protection","8a0612d7-202b-44ec-acdc-84ff93e7968d"))
          
 #---------------------------------------------------------------------------
 # Global variables
 #---------------------------------------------------------------------------
 ds = ""
-Automation = False # If True, game will automatically trigger card effects when playing or double-clicking on cards. Requires specific preparation in the sets.
+Automation = True # If True, game will automatically trigger card effects when playing or double-clicking on cards. Requires specific preparation in the sets.
                    # Starts False and is switched on automatically at Jack In
-StartAutomation = False # If True, game will automatically trigger effects happening at the start of the player's turn, from cards they control.                
+StartAutomation = True # If True, game will automatically trigger effects happening at the start of the player's turn, from cards they control.                
+DMGAutomation = True
 UniBits = True # If True, game will display bits as unicode characters ❶, ❷, ❿ etc
 
 ModifyDraw = False #if True the audraw should warn the player to look at r&D instead 
@@ -236,22 +240,31 @@ def modActions(group,x=0,y=0):
 
 def switchAutomation(group,x=0,y=0,command = 'Off'):
     global Automation
-    if Automation and command != 'On':
+    if (Automation and command == 'Off') or (not Automation and command == 'Announce'):
         notify ("{}'s automations are OFF.".format(me))
-        Automation = False
+        if command != 'Announce': Automation = False
     else:
         notify ("{}'s automations are ON.".format(me))
-        Automation = True
+        if command != 'Announce': Automation = True
 
 def switchStartAutomation(group,x=0,y=0,command = 'Off'):
     global StartAutomation
-    if StartAutomation and command != 'On':
+    if (StartAutomation and command == 'Off') or (not StartAutomation and command == 'Announce'):
         notify ("{}'s Start-of-Turn automations are OFF.".format(me))
-        StartAutomation = False
+        if command != 'Announce': StartAutomation = False
     else:
         notify ("{}'s Start-of-Turn automations are ON.".format(me))
-        StartAutomation = True
+        if command != 'Announce': StartAutomation = True
 
+def switchDMGAutomation(group,x=0,y=0,command = 'Off'):
+    global DMGAutomation
+    if (DMGAutomation and command == 'Off') or (not DMGAutomation and command == 'Announce'):
+        notify ("{}'s Damage automations are OFF.".format(me))
+        if command != 'Announce': DMGAutomation = False
+    else:
+        notify ("{}'s Damage automations are ON.".format(me))
+        if command != 'Announce': DMGAutomation = True
+        
 def switchUniBits(group,x=0,y=0,command = 'Off'):
     global UniBits
     if UniBits and command != 'On':
@@ -304,8 +317,9 @@ def intJackin(group, x = 0, y = 0):
         NameDeck = "Stack"
         notify("{} is playing as Runner".format(me))
     table.create("c0f18b5a-adcd-4efe-b3f8-7d72d1bd1db8", 0, 155 * playerside, 1 ) #trace card
-    switchAutomation(group,x,y,'On')
-    switchStartAutomation(group,x,y,'On')
+    switchAutomation(group,x,y,'Announce')
+    switchStartAutomation(group,x,y,'Announce')
+    switchDMGAutomation(group,x,y,'Announce')
     shuffle(me.piles['R&D/Stack'])
     notify ("{}'s {} is shuffled ".format(me,NameDeck) )
     drawMany (me.piles['R&D/Stack'], 5) 
@@ -524,14 +538,14 @@ def cancelTrace ( card, x=0,y=0):
 #-----------------------------------------------------------------------------
 
 def intdamageDiscard(group,x=0,y=0):
-    mute()
-    if len(group) == 0:
-        notify ("{} cannot discard at random.".format(me))
-    else:
-        card = group.random()
-        if ds == 'corp': card.moveTo(me.piles['Archives(Hidden)'])
-        else: card.moveTo(me.piles['Trash/Archives(Face-up)'])
-        notify("{} discards {} at random.".format(me,card))
+   mute()
+   if len(group) == 0:
+      notify ("{} cannot discard at random. Have they flatlined?".format(me))
+   else:
+      card = group.random()
+      if ds == 'corp': card.moveTo(me.piles['Archives(Hidden)'])
+      else: card.moveTo(me.piles['Trash/Archives(Face-up)'])
+      notify("{} discards {} at random.".format(me,card))
 
 def addBrainDmg(group, x = 0, y = 0):
     me.counters['Max Hand Size'].value -=1
@@ -1207,10 +1221,10 @@ def executePlayScripts(card, action):
    for AutoS in Autoscripts:
       effectType = re.search(r'(onRez|onScore|onPlay|whileRezzed|whileScored):', AutoS)
       selectedAutoscripts = AutoS.split('$$')
-      confirm('selectedAutoscripts: {}'.format(selectedAutoscripts))
+      #confirm('selectedAutoscripts: {}'.format(selectedAutoscripts)) # Debug
       for activeAutoscript in selectedAutoscripts:
-         effect = re.search(r'\b([A-Za-z]+)([0-9]+)([A-Z][A-Za-z& ]+)(.*)', activeAutoscript)
-         confirm('effects: {}'.format(effect.groups()))
+         effect = re.search(r'\b([A-Za-z]+)([0-9]+)([A-Za-z& ]+)(.*)', activeAutoscript)
+         #confirm('effects: {}'.format(effect.groups())) #Debug
          if (effectType.group(1) == 'whileRezzed' or effectType.group(1) == 'whileScored') and (action == 'derez' or (action == 'trash' and card.markers[Not_rezzed] == 0)): Removal = True
          else: Removal = False
          if effect.group(1) == 'Gain' or effect.group(1) == 'Lose':
@@ -1235,6 +1249,7 @@ def executePlayScripts(card, action):
                reshuffleTuple = ReshuffleX(passedScript, announceText, card, notification = 'Quick', n = X)
                X = reshuffleTuple[1]
             if effect.group(1) == 'Shuffle': ShuffleX(passedScript, announceText, card, notification = 'Quick', n = X)
+            if effect.group(1) == 'Inflict': InflictX(passedScript, announceText, card, notification = 'Quick', n = X)
          
 #------------------------------------------------------------------------------
 # Autoactions
@@ -1385,6 +1400,7 @@ def useAbility(card, x = 0, y = 0):
       elif re.search(r'\bShuffle([A-Za-z& ]+)', activeAutoscript): announceText = ShuffleX(activeAutoscript, announceText, card, targetC, n = X)
       elif re.search(r'\bRun([A-Za-z& ]+)', activeAutoscript): announceText = RunX(activeAutoscript, announceText, card, targetC, n = X)
       elif re.search(r'\bTrace([0-9]+)', activeAutoscript): announceText = TraceX(activeAutoscript, announceText, card, targetC, n = X)
+      elif re.search(r'\bInflict([0-9]+)', activeAutoscript): announceText = InflictX(activeAutoscript, announceText, card, targetC, n = X)
       elif re.search(r'\bUseCustomAbility', activeAutoscript): announceText = UseCustomAbility(activeAutoscript, announceText, card, targetC, n = X)
       else: timesNothingDone += 1
       if announceText == 'ABORT': 
@@ -1492,7 +1508,7 @@ def TokensX(Autoscript, announceText, card, targetCard = None, notification = No
    if not targetCard: targetCard = card # If there's been to target card given, assume the target is the card itself.
    foundKey = False
    action = re.search(r'\b(Put|Remove|Refill|Use)([0-9]+)([A-Za-z]+)-?', Autoscript)
-   #confirm("{}".format(action.group(3)))
+   #confirm("{}".format(action.group(3))) # Debug
    if action.group(3) in mdict: token = mdict[action.group(3)]
    else: # If the marker we're looking for it not defined, then either create a new one with a random color, or look for a token with the custom name we used above.
       if card.markers:
@@ -1507,7 +1523,7 @@ def TokensX(Autoscript, announceText, card, targetCard = None, notification = No
          #else:
          rndGUID = rnd(1,8)
          token = ("{}".format(action.group(3)),"00000000-0000-0000-0000-00000000000{}".format(rndGUID))
-   #confirm("Bump")
+   #confirm("Bumpa") # Debug
    count = num(action.group(2))
    multiplier = per(Autoscript, card, n, targetCard, notification)
    if action.group(1) == 'Put': modtokens = count * multiplier
@@ -1563,7 +1579,7 @@ def DrawX(Autoscript, announceText, card, targetCard = None, notification = None
    return announceString
 
 def ofwhom(Autoscript):
-   if re.search(r'-ofOpponent', Autoscript):
+   if re.search(r'-o[fn]Opponent', Autoscript):
       if len(players) > 1:
          for player in players:
             if player != me and player.getGlobalVariable(ds) != ds: 
@@ -1636,6 +1652,44 @@ def TraceX(Autoscript, announceText, card, targetCard = None, notification = Non
    if notification: notify('--> {}.'.format(announceString))
    return announceString
 
+def InflictX(Autoscript, announceText, card, targetCard = None, notification = None, n = 0):
+   #confirm("Bump1")
+   targetPL = ofwhom(Autoscript)
+   #confirm("Bump2")
+   action = re.search(r'\b(Inflict)([0-9]+)(Meat|Net|Brain)Damage', Autoscript)
+   multiplier = per(Autoscript, card, n, targetCard)
+   DMG = num(action.group(2)) * multiplier
+   DMGprevented = findDMGProtection(DMG, action.group(3), targetPL)
+   if DMGprevented > 0:
+      preventTXT = ' ({} prevented)'.format(DMGprevented)
+      DMG -= DMGprevented
+   else: preventTXT = ''
+   for DMGpt in range(DMG):
+      if len(targetPL.hand) == 0 or targetPL.counters['Max Hand Size'].value < 0: 
+         notify(":::Warning:::{} has flatlined!".format(targetPL))
+         break
+      else:   
+         DMGcard = targetPL.hand.random()
+         if targetPL.getGlobalVariable(ds) == 'corp': DMGcard.moveTo(targetPL.piles['Archives(Hidden)'])
+         else: DMGcard.moveTo(targetPL.piles['Trash/Archives(Face-up)'])
+         if action.group(3) == 'Brain':  targetPL.counters['Max Hand Size'].value -= 1
+   if notification == 'Quick': announceString = "{} suffers {} {} damage".format(announceText,DMG,action.group(3))
+   else: announceString = "{} inflict {} {} damage to {}{}.".format(announceText,DMG,action.group(3),targetPL,preventTXT)
+   if notification and multiplier > 0: notify('--> {}.'.format(announceString))
+   return announceString
+
+def findDMGProtection(DMGdone, DMGtype, targetPL):
+   protectionFound = 0
+   protectionType = 'protection{}DMG'.format(DMGtype) # This is the string key that we use in the mdict{} dictionary
+   for card in table:
+      if card.controller == targetPL and card.markers[mdict[protectionType]]:
+         while DMGdone > 0 and card.markers[mdict[protectionType]] > 0: # For each point of damage we do.
+            protectionFound += 1 # We increase the protection found by 1
+            DMGdone -= 1 # We reduce how much damage we still need to prevent by 1
+            card.markers[mdict[protectionType]] -= 1 # We reduce the card's damage protection counters by 1
+         if DMGdone == 0: break # If we've found enough protection to alleviate all damage, stop the search.
+   return protectionFound
+
 def per(Autoscript, card = None, count = 0, targetCard = None, notification = None): # This function goes through the autoscript and looks for the words "per<Something>". Then figures out what the card multiplies its effect with, and returns the appropriate multiplier.
    per = re.search(r'\b(per|upto)(Assigned|Target|Parent|Generated|Installed|Rezzed|Transferred|Bought)?([{A-Z][A-Za-z0-9,_ {}&]*)[-]?', Autoscript) # We're searching for the word per, and grabbing all after that, until the first dash "-" as the variable.
    if per: # If the  search was successful...
@@ -1652,7 +1706,9 @@ def customScript(card):
    useCard(card) # Not in use atm.
    
 def TrialError(group, x=0, y=0):
-   testcards = ["58a2734d-2243-41ea-9ce6-df5cec5bbdf0"]
+   testcards = ["a042c7e7-90af-4586-8474-4985ef5e4719",
+                "5ef3a7cc-7d0f-4696-9dbf-a79967e2c2bb",
+                "4da5197c-0f42-4f92-b784-d2c905dd048e"]
    for idx in range(len(testcards)):
       test = table.create(testcards[idx], (70 * idx) - 150, 0, 1, True)
       TypeCard[test] = test.Type
@@ -1662,7 +1718,7 @@ def atTurnStartEffects():
    if not StartAutomation: return
    TitleDone = False
    for card in table:
-      effect = re.search(r'atTurnStart:([A-Z][A-Za-z]+)([0-9]+)([A-Z][A-Za-z0-9 ]+)(.*)', card.AutoScript)
+      effect = re.search(r'atTurnStart:([A-Z][A-Za-z]+)([0-9]+)([A-Za-z0-9 ]+)(.*)', card.AutoScript)
       if card.owner != me or not effect: continue
       if effect.group(4) and re.search(r'isOptional', effect.group(4)) and not confirm("{} can have the following optional ability activated at the start of your turn:\n\n[ {} {} {} ]\n\nDo you want to activate it?".format(card.name, effect.group(1), effect.group(2),effect.group(3))): continue
       if not TitleDone: notify(":::{}'s Start of Turn Effects:::".format(me))

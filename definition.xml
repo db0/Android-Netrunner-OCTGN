@@ -33,7 +33,9 @@
 			<groupaction menu="Switch Unicode bits ON/OFF" default="false" execute="switchUniBits" />
 			<groupaction menu="Switch Automation ON/OFF" default="false" execute="switchAutomation" />  
 			<groupaction menu="Switch Start-of-Turn Automation ON/OFF" default="false" execute="switchStartAutomation" />  
+			<groupaction menu="Switch Damage Automation ON/OFF" default="false" execute="switchDMGAutomation" />  
 			<groupaction menu="Debug" default="false" shortcut="Ctrl+Shift+D" execute="TrialError" />
+			<!-- <groupaction menu="Inspect" default="false" shortcut="Ctrl+Shift+I" execute="inspectCard" /> -->
 		</groupactions>
 		<groupactions menu="Turns/Actions...">
 			<groupaction menu="Declare Start of Turn" default="false" shortcut="F1" execute="goToSot" />
