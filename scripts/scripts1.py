@@ -51,6 +51,8 @@ scoredAgendas = 0
 playerside = None # Variable to keep track on which side each player is
 playeraxis = None # Variable to keep track on which axis the player is
 
+traceCard = None
+
 #---------------------------------------------------------------------------
 # Constants
 #---------------------------------------------------------------------------
@@ -458,50 +460,64 @@ def advanceCardM(card, x = 0, y = 0):
 # Trace
 #----------------------
 
-def inputTraceValue (card, x=0,y=0, limit = 0):
+def inputTraceValue (card, x=0,y=0, limit = 0, silent = False):
+   global traceCard, TraceValue
    mute()
    limitText = ''
-   global TraceValue
-   if card.properties['Type'] != "Tracing": return
+   betReplaced = False
+   if card != traceCard:
+      if not traceCard:
+         if card.Type != "Tracing": 
+            for c in table:
+               if c.model == 'c0f18b5a-adcd-4efe-b3f8-7d72d1bd1db8' and c.owner == me: 
+                  traceCard = c
+                  traceFound = True
+            if not traceFound: return
+         else: traceCard = card
+      else: card = traceCard
+   card = traceCard
+   if not card.isFaceUp and not confirm("You're already placed a bet. Replace it with a new one?"): return
+   else: betReplaced = True
    limit = num(limit) # Just in case
-   if limit > 0: limitText = '\n\n(Max: {})'.format(limit)
+   if limit > 0: limitText = '\n\n(Max Trace Power: {})'.format(limit)
    TraceValue = askInteger("Bet How Many?{}".format(limitText), 0)
    if TraceValue == None: 
       whisper(":::Warning::: Trace bid aborted by player.")
       return
    while limit > 0 and TraceValue > limit:
-      TraceValue = askInteger("Please bet under the max limit.\nBet How Many?{}".format(limitText), 0)
+      TraceValue = askInteger("Please bet equal or less than the max trace power!\nBet How Many?{}".format(limitText), 0)
       if TraceValue == None: 
          whisper(":::Warning::: Trace bid aborted by player.")
          return
    card.markers[Bits] = 0
    card.isFaceUp = False
-   notify ("{} chose a Trace Value.".format(me))
+   if not silent: 
+      if not betReplaced: notify("{} chose a Trace Value.".format(me))
+      else: notify("{} changed their hidden Trace Value.".format(me))
    TypeCard[card] = "Tracing"
 	
 def revealTraceValue (card, x=0,y=0):
-    mute()
-    global TraceValue
-    if ( TypeCard[card] <> "Tracing"): return
-    mute()
-    card.isFaceUp = True
-    card.markers[Bits] = TraceValue
-    notify ( "{} reveals a Trace Value of {}.".format(me,TraceValue))
-    TraceValue = 0
+   mute()
+   global TraceValue
+   if card != traceCard: card = traceCard
+   card.isFaceUp = True
+   card.markers[Bits] = TraceValue
+   notify ( "{} reveals a Trace Value of {}.".format(me,TraceValue))
+   TraceValue = 0
 
 def payTraceValue (card, x=0,y=0):
-	if (card.properties['Type'] <> "Tracing"): return
-	mute()
-	me.counters['Bit Pool'].value -= card.markers[Bits]
-	notify ("{} pays {} for the Trace Value.".format(me,uniBit(card.markers[Bits])))
-	card.markers[Bits] = 0
+   mute()
+   if card != traceCard: card = traceCard
+   me.counters['Bit Pool'].value -= card.markers[Bits]
+   notify ("{} pays {} for the Trace Value.".format(me,uniBit(card.markers[Bits])))
+   card.markers[Bits] = 0
 
 def cancelTrace ( card, x=0,y=0):
-    mute()
-    card.isFaceUp = True
-    TraceValue = 0
-    card.markers[Bits] = 0
-    notify ("{} cancels the Trace Value.".format(me) )
+   mute()
+   card.isFaceUp = True
+   TraceValue = 0
+   card.markers[Bits] = 0
+   notify ("{} cancels the Trace Value.".format(me) )
 
 #------------------------------------------------------------------------------
 # Other functions
@@ -1185,7 +1201,7 @@ def executePlayScripts(card, action):
    X = 0
    Autoscripts = card.AutoScript.split('||') # When playing cards, the || is used as an "and" separator, rather than "or". i.e. we don't do choices (yet)
    for autoS in Autoscripts: # Checking and removing any "AtTurnStart" actions.
-      if re.search(r'AtTurnStart', autoS): Autoscripts.remove(autoS)
+      if re.search(r'atTurnStart', autoS): Autoscripts.remove(autoS)
    if len(Autoscripts) == 0: return
    announceText = "{}".format(me)
    for AutoS in Autoscripts:
@@ -1214,6 +1230,7 @@ def executePlayScripts(card, action):
                rollTuple = RollX(passedScript, announceText, card, notification = 'Quick', n = X)
                X = rollTuple[1] 
             if effect.group(1) == 'Run': RunX(passedScript, announceText, card, notification = 'Quick', n = X)
+            if effect.group(1) == 'Trace': TraceX(passedScript, announceText, card, notification = 'Quick', n = X)
             if effect.group(1) == 'Reshuffle': 
                reshuffleTuple = ReshuffleX(passedScript, announceText, card, notification = 'Quick', n = X)
                X = reshuffleTuple[1]
@@ -1367,6 +1384,7 @@ def useAbility(card, x = 0, y = 0):
       elif re.search(r'\bDraw([0-9]+)', activeAutoscript): announceText = DrawX(activeAutoscript, announceText, card, targetC, n = X)
       elif re.search(r'\bShuffle([A-Za-z& ]+)', activeAutoscript): announceText = ShuffleX(activeAutoscript, announceText, card, targetC, n = X)
       elif re.search(r'\bRun([A-Za-z& ]+)', activeAutoscript): announceText = RunX(activeAutoscript, announceText, card, targetC, n = X)
+      elif re.search(r'\bTrace([0-9]+)', activeAutoscript): announceText = TraceX(activeAutoscript, announceText, card, targetC, n = X)
       elif re.search(r'\bUseCustomAbility', activeAutoscript): announceText = UseCustomAbility(activeAutoscript, announceText, card, targetC, n = X)
       else: timesNothingDone += 1
       if announceText == 'ABORT': 
@@ -1508,13 +1526,13 @@ def TokensX(Autoscript, announceText, card, targetCard = None, notification = No
             return 'ABORT'
       else: modtokens = -count * multiplier
    if action.group(3) == 'Virus' and count == 999:
-      targetCard.markers[virusButcherBoy] = 0
-      targetCard.markers[virusCascade] = 0
-      targetCard.markers[virusCockroach] = 0
-      targetCard.markers[virusGremlin] = 0
-      targetCard.markers[virusThought] = 0
-      targetCard.markers[virusFait] = 0
-      targetCard.markers[virusBoardwalk] = 0
+      targetCard.markers[mdict['virusButcherBoy']] = 0
+      targetCard.markers[mdict['virusCascade']] = 0
+      targetCard.markers[mdict['virusCockroach']] = 0
+      targetCard.markers[mdict['virusGremlin']] = 0
+      targetCard.markers[mdict['virusThought']] = 0
+      targetCard.markers[mdict['virusFait']] = 0
+      targetCard.markers[mdict['virusBoardwalk']] = 0
    else: targetCard.markers[token] += modtokens
    if action.group(1) == 'Refill': announceString = "{} {} to {} {}".format(announceText, action.group(1), abs(modtokens), action.group(3))
    elif re.search(r'\bRemove999Virus', Autoscript): announceString = "{} to clean all viruses from their corporate network".format(announceText)
@@ -1608,6 +1626,16 @@ def RunX(Autoscript, announceText, card, targetCard = None, notification = None,
    if notification: notify('--> {}.'.format(announceString))
    return announceString
 
+def TraceX(Autoscript, announceText, card, targetCard = None, notification = None, n = 0): # Function for drawing X Cards from the house deck to your hand.
+   action = re.search(r'\bTrace([0-9]+)', Autoscript)
+   inputTraceValue(card, limit = num(action.group(1)))
+   if action.group(1) != '0': limitText = ' (max power: {})'.format(action.group(1))
+   else: limitText = ''
+   if notification == 'Quick': announceString = "{} starts a trace{}".format(announceText, limitText)
+   else: announceString = "{} start a trace{}".format(announceText, limitText)
+   if notification: notify('--> {}.'.format(announceString))
+   return announceString
+
 def per(Autoscript, card = None, count = 0, targetCard = None, notification = None): # This function goes through the autoscript and looks for the words "per<Something>". Then figures out what the card multiplies its effect with, and returns the appropriate multiplier.
    per = re.search(r'\b(per|upto)(Assigned|Target|Parent|Generated|Installed|Rezzed|Transferred|Bought)?([{A-Z][A-Za-z0-9,_ {}&]*)[-]?', Autoscript) # We're searching for the word per, and grabbing all after that, until the first dash "-" as the variable.
    if per: # If the  search was successful...
@@ -1624,8 +1652,11 @@ def customScript(card):
    useCard(card) # Not in use atm.
    
 def TrialError(group, x=0, y=0):
-   table.create("c0f18b5a-adcd-4efe-b3f8-7d72d1bd1db8", 0, 200 * playerside, 1 ) #trace card
-   create3DataForts(group)
+   testcards = ["58a2734d-2243-41ea-9ce6-df5cec5bbdf0"]
+   for idx in range(len(testcards)):
+      test = table.create(testcards[idx], (70 * idx) - 150, 0, 1, True)
+      TypeCard[test] = test.Type
+      test.isFaceUp = False
    
 def atTurnStartEffects():
    if not StartAutomation: return
