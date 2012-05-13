@@ -1450,22 +1450,27 @@ def GainX(Autoscript, announceText, card, targetCard = None, notification = None
    gain = 0
    action = re.search(r'\b(Gain|Lose)([0-9]+)(Bits|Agenda Points|Actions|Bad Publicity|Tags|Max Actions|Hand Size)', Autoscript)
    gain += num(action.group(2))
+   targetPL = ofwhom(Autoscript)
+   if targetPL != me: otherTXT = ' force {} to'.format(targetPL)
+   else: otherTXT = ''
    if action.group(1) == 'Lose': gain *= -1
    multiplier = per(Autoscript, card, n, targetCard) # We check if the card provides a gain based on something else, such as favour bought, or number of dune fiefs controlled by rivals.
-   if action.group(3) == 'Bits': card.owner.counters['Bit Pool'].value += gain * multiplier
-   elif action.group(3) == 'Agenda Points': card.owner.counters['Agenda Points'].value += gain * multiplier
-   elif action.group(3) == 'Actions': card.owner.Actions += gain * multiplier
-   elif action.group(3) == 'Bad Publicity': card.owner.counters['Bad Publicity'].value += gain * multiplier
+   if action.group(3) == 'Bits': targetPL.counters['Bit Pool'].value += gain * multiplier
+   elif action.group(3) == 'Agenda Points': targetPL.counters['Agenda Points'].value += gain * multiplier
+   elif action.group(3) == 'Actions': targetPL.Actions += gain * multiplier
+   elif action.group(3) == 'Bad Publicity': targetPL.counters['Bad Publicity'].value += gain * multiplier
    elif action.group(3) == 'Tags': 
-      card.owner.Tags += gain * multiplier
-      if card.owner.Tags < 0: card.owner.Tags = 0
-   elif action.group(3) == 'Max Actions': maxActions += gain * multiplier
-   elif action.group(3) == 'Hand Size': card.owner.counters['Max Hand Size'].value += gain * multiplier
+      targetPL.Tags += gain * multiplier
+      if targetPL.Tags < 0: targetPL.Tags = 0
+   elif action.group(3) == 'Max Actions': 
+      if targetPL == me: maxActions += gain * multiplier
+      else: notify("--> {} loses {} max action. They must make this modification manually".format(targetPL,gain * multiplier))
+   elif action.group(3) == 'Hand Size': targetPL.counters['Max Hand Size'].value += gain * multiplier
    else: 
       whisper("Gain what?! (Bad autoscript)")
       return 'ABORT'
    if notification == 'Quick': announceString = "{} {}s {} {}".format(announceText, action.group(1).lower(), abs(gain * multiplier), action.group(3))
-   else: announceString = "{} {} {} {}".format(announceText, action.group(1).lower(), abs(gain * multiplier), action.group(3))
+   else: announceString = "{}{} {} {} {}".format(announceText, otherTXT, action.group(1).lower(), abs(gain * multiplier), action.group(3))
    if notification and multiplier > 0: notify('--> {}.'.format(announceString))
    return announceString
 
@@ -1504,7 +1509,7 @@ def TokensX(Autoscript, announceText, card, targetCard = None, notification = No
    if not targetCard: targetCard = card # If there's been to target card given, assume the target is the card itself.
    foundKey = False # We use this to see if the marker used in the AutoAction is already defined.
    infectTXT = '' # We only inject this into the announcement when this is an infect AutoAction.
-   action = re.search(r'\b(Put|Remove|Refill|Use|Infect)([0-9]+)([A-Za-z]+)-?', Autoscript)
+   action = re.search(r'\b(Put|Remove|Refill|Use|Infect)([0-9]+)([A-Za-z ]+)-?', Autoscript)
    #confirm("{}".format(action.group(3))) # Debug
    if action.group(3) in mdict: token = mdict[action.group(3)]
    else: # If the marker we're looking for it not defined, then either create a new one with a random color, or look for a token with the custom name we used above.
@@ -1662,13 +1667,16 @@ def InflictX(Autoscript, announceText, card, targetCard = None, notification = N
    if enhancer > 0: enhanceTXT = ' (Enhanced: +{})'.format(enhancer)
    else: enhanceTXT = ''
    targetPL = ofwhom(Autoscript)
-   if re.search(r'-ifTagged', Autoscript) and targetPL.Tags == 0:
+   if re.search(r'ifTagged', Autoscript) and targetPL.Tags == 0:
       whisper("Your opponent needs to be tagged to use this action")
       return 'ABORT'
    DMG = (num(action.group(2)) * multiplier) + enhancer
    preventTXT = ''
    if Automations['Damage']: #The actual effects happen only if the Damage automation switch is ON. It should be ON by default.
-      DMGprevented = findDMGProtection(DMG, action.group(3), targetPL)
+      if re.search(r'nonPreventable', Autoscript): 
+         DMGprevented = 0
+         preventTXT = ' (Unpreventable)'
+      else: DMGprevented = findDMGProtection(DMG, action.group(3), targetPL)
       if DMGprevented > 0:
          preventTXT = ' ({} prevented)'.format(DMGprevented)
          DMG -= DMGprevented
