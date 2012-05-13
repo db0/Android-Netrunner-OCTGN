@@ -515,7 +515,7 @@ def revealTraceValue (card, x=0,y=0):
 def payTraceValue (card, x=0,y=0):
    mute()
    card = getSpecial('Tracing')
-   me.counters['Bit Pool'].value -= card.markers[Bits]
+   if payCost(card.markers[Bits])  == 'ABORT': return
    notify ("{} pays {} for the Trace Value.".format(me,uniBit(card.markers[Bits])))
    card.markers[Bits] = 0
 
@@ -1219,8 +1219,8 @@ def executePlayScripts(card, action):
       selectedAutoscripts = AutoS.split('$$')
       #confirm('selectedAutoscripts: {}'.format(selectedAutoscripts)) # Debug
       for activeAutoscript in selectedAutoscripts:
-         #effect = re.search(r'\b([A-Za-z]+)([0-9]+)([A-Za-z& ]*)-?(.*)', activeAutoscript)
-         confirm('effects: {}'.format(effect.groups())) #Debug
+         effect = re.search(r'\b([A-Za-z]+)([0-9]+)([A-Za-z& ]*)-?(.*)', activeAutoscript)
+         #confirm('effects: {}'.format(effect.groups())) #Debug
          if (effectType.group(1) == 'whileRezzed' or effectType.group(1) == 'whileScored') and (action == 'derez' or (action == 'trash' and card.markers[Not_rezzed] == 0)): Removal = True
          else: Removal = False
          if effect.group(1) == 'Gain' or effect.group(1) == 'Lose':
@@ -1388,8 +1388,9 @@ def useAbility(card, x = 0, y = 0):
             announceText = '{} activates the free ability of {}'.format(me, card)
          announceText += ' in order to'
       elif not announceText.endswith(' in order to') and not announceText.endswith(' and'): announceText += ' and'
+      #confirm("Bump: {}".format(activeAutoscript)) # Debug
       ### Calling the relevant function depending on if we're increasing our own counters, the hoard's or putting card markers.
-      if re.search(r'\b(Gain|Loose)([0-9]+)', activeAutoscript): announceText = GainX(activeAutoscript, announceText, card, targetC, n = X)
+      if re.search(r'\b(Gain|Lose)([0-9]+)', activeAutoscript): announceText = GainX(activeAutoscript, announceText, card, targetC, n = X)
       elif re.search(r'\bReshuffle([A-Za-z& ]+)', activeAutoscript): 
          reshuffleTuple = ReshuffleX(activeAutoscript, announceText, card) # The reshuffleX() function is special because it returns a tuple.
          announceText = reshuffleTuple[0] # The first element of the tuple contains the announceText string
@@ -1456,7 +1457,8 @@ def chkWarn(Autoscript):
 def GainX(Autoscript, announceText, card, targetCard = None, notification = None, n = 0):
    global maxActions
    gain = 0
-   action = re.search(r'\b(Gain|Lose)([0-9]+)(Bits|Agenda Points|Actions|Bad Publicity|Tags|Max Actions|Hand Size)', Autoscript)
+   action = re.search(r'\b(Gain|Lose)([0-9]+)([A-Z][A-Za-z &]+)-?', Autoscript)
+   #confirm("Bump1: {}".format(action.groups(0))) # Debug
    gain += num(action.group(2))
    targetPL = ofwhom(Autoscript)
    if targetPL != me: otherTXT = ' force {} to'.format(targetPL)
@@ -1466,25 +1468,25 @@ def GainX(Autoscript, announceText, card, targetCard = None, notification = None
       return 'ABORT'
    if action.group(1) == 'Lose': gain *= -1
    multiplier = per(Autoscript, card, n, targetCard) # We check if the card provides a gain based on something else, such as favour bought, or number of dune fiefs controlled by rivals.
-   if action.group(3) == 'Bits': 
+   if re.match(r'Bit', action.group(3)): 
       targetPL.counters['Bit Pool'].value += gain * multiplier
       if targetPL.counters['Bit Pool'].value < 0: targetPL.counters['Bit Pool'].value = 0
-   elif action.group(3) == 'Agenda Points': 
+   elif re.match(r'Agenda Point', action.group(3)): 
       targetPL.counters['Agenda Points'].value += gain * multiplier
       if targetPL.counters['Agenda Points'].value < 0: targetPL.counters['Agenda Points'].value = 0
-   elif action.group(3) == 'Actions': 
+   elif re.match(r'Action', action.group(3)): 
       if gain == -999: targetPL.Actions = 0
       else: targetPL.Actions += gain * multiplier
-   elif action.group(3) == 'Bad Publicity': 
+   elif re.match(r'Bad Publicity', action.group(3)): 
       targetPL.counters['Bad Publicity'].value += gain * multiplier
       if targetPL.counters['Bad Publicity'].value < 0: targetPL.counters['Bad Publicity'].value = 0
-   elif action.group(3) == 'Tags': 
+   elif re.match(r'Tag', action.group(3)): 
       targetPL.Tags += gain * multiplier
       if targetPL.Tags < 0: targetPL.Tags = 0
-   elif action.group(3) == 'Max Actions': 
+   elif re.match(r'Max Action', action.group(3)): 
       if targetPL == me: maxActions += gain * multiplier
       else: notify("--> {} loses {} max action. They must make this modification manually".format(targetPL,gain * multiplier))
-   elif action.group(3) == 'Hand Size': 
+   elif re.match(r'Hand Size', action.group(3)): 
       targetPL.counters['Max Hand Size'].value += gain * multiplier
       if targetPL.counters['Max Hand Size'].value < 0: targetPL.counters['Max Hand Size'].value = 0
    else: 
