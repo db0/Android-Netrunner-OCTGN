@@ -1442,7 +1442,78 @@ def autoscriptCostUndo(card, Autoscript):
       card.orientation = Rot0
 
 def findTarget(Autoscript):
-   return None # Not in use atm.
+   targetC = None
+   if re.search(r'Targeted', Autoscript):
+      validTargets = [] # a list that holds any type that a card must be, in order to be a valid target.
+      validNamedTargets = [] # a list that holds any name or allegiance that a card must have, in order to be a valid target.
+      invalidTargets = [] # a list that holds any type that a card must not be to be a valid target.
+      invalidNamedTargets = [] # a list that holds the name or allegiance that the card must not have to be a valid target.
+      requiredAllegiances = []
+      whatTarget = re.search(r'\bon([A-Za-z_{},& ]+)[-]?', Autoscript) # We signify target restrictions keywords by starting a string with "or"
+      if whatTarget: validTargets = whatTarget.group(1).split('_or_') # If we have a list of valid targets, split them into a list, separated by the string "_or_". Usually this results in a list of 1 item.
+      ValidTargetsSnapshot = list(validTargets) # We have to work on a snapshot, because we're going to be modifying the actual list as we iterate.
+      for chkTarget in ValidTargetsSnapshot: # Now we go through each list item and see if it has more than one condition (Eg, non-desert fief)
+         if re.search(r'_and_', chkTarget):  # If there's a string "_and_" between our restriction keywords, then this keyword has mutliple conditions
+            multiConditionTargets = chkTarget.split('_and_') # We put all the mutliple conditions in a new list, separating each element.
+            for chkCondition in multiConditionTargets: 
+               regexCondition = re.search(r'(no[nt]){?([A-Za-z,& ]+)}?', chkCondition) # Do a search to see if in the multicondition targets there's one with "non" in front
+               if regexCondition and regexCondition.group(1):
+                  if regexCondition.group(2) not in invalidTargets == 'non': invalidTargets.append(regexCondition.group(2)) # If there is, move it without the "non" into the invalidTargets list.
+               elif regexCondition and regexCondition.group(1) == 'not':
+                  if regexCondition.group(2) not in invalidNamedTargets: invalidNamedTargets.append(regexCondition.group(2))
+               else: validTargets.append(chkCondition) # Else just move the individual condition to the end if validTargets list
+            validTargets.remove(chkTarget) # Finally, remove the multicondition keyword from the valid list. Its individual elements should now be on this list or the invalid targets one.
+         else:
+            regexCondition = re.search(r'(no[nt]){?([A-Za-z,& ]+)}?', chkTarget)
+            if regexCondition and regexCondition.group(1) == 'non' and regexCondition.group(2) not in invalidTargets: # If the keyword has "non" in front, it means it's something we need to avoid, so we move it to a different list.
+               invalidTargets.append(regexCondition.group(2))
+               validTargets.remove(chkTarget)
+               continue
+            if regexCondition and regexCondition.group(1) == 'not' and regexCondition.group(2) not in invalidNamedTargets: # Same as above but keywords with "not" in front as specific card names.
+               invalidNamedTargets.append(regexCondition.group(2))
+               validTargets.remove(chkTarget)
+               continue
+            regexCondition = re.search(r'{([A-Za-z,& ]+)}', chkTarget)
+            if regexCondition and regexCondition.group(1) not in validNamedTargets: # Same as above but keywords in {curly brackets} are exact names in front as specific card names.
+               validNamedTargets.append(regexCondition.group(1))
+               validTargets.remove(chkTarget)
+      for targetLookup in table: # Now that we have our list of restrictions, we go through each targeted card on the table to check if it matches.
+         if targetLookup.targetedBy and targetLookup.targetedBy == me and chkPlayer(Autoscript, targetLookup.controller, False): # The card needs to be targeted by the player. If the card needs to belong to a specific player (me or rival) this also is taken into account.
+            if not targetLookup.isFaceUp: # If we've targeted a subdued card, we turn it temporarily face-up to grab its properties.
+               targetLookup.isFaceUp = True
+               wasNotRezzed = True
+            else: wasNotRezzed = False
+            if len(validTargets) == 0 and len(validNamedTargets) == 0: targetC = targetLookup # If we have no target restrictions, any targeted  card will do.
+            else:
+               for validtargetCHK in validTargets: # look if the card we're going through matches our valid target checks
+                  if re.search(r'{}'.format(validtargetCHK), targetLookup.Type) or re.search(r'{}'.format(validtargetCHK), targetLookup.Keywords) or re.search(r'{}'.format(validtargetCHK), targetLookup.Player):
+                     targetC = targetLookup
+               for validtargetCHK in validNamedTargets: # look if the card we're going through matches our valid target checks
+                  if validtargetCHK == targetLookup.name:
+                     targetC = targetLookup
+            if len(invalidTargets) > 0: # If we have no target restrictions, any selected card will do as long as it's a valid target.
+               for invalidtargetCHK in invalidTargets:
+                  if re.search(r'{}'.format(invalidtargetCHK), targetLookup.Type) or re.search(r'{}'.format(invalidtargetCHK), targetLookup.Keywords) or re.search(r'{}'.format(invalidtargetCHK), targetLookup.Player):
+                     targetC = None
+            if len(invalidNamedTargets) > 0: # If we have no target restrictions, any selected card will do as long as it's a valid target.
+               for invalidtargetCHK in invalidNamedTargets:
+                  if invalidtargetCHK == targetLookup.name:
+                     targetC = None
+            if wasNotRezzed: targetLookup.isFaceUp = False
+            if targetC: return targetC
+      if targetC == None: 
+         targetsText = ''
+         if len(validTargets) > 0: targetsText += "\nValid Target types: {}.".format(validTargets)
+         if len(validNamedTargets) > 0: targetsText += "\nSpecific Valid Targets: {}.".format(validNamedTargets)
+         if len(invalidTargets) > 0: targetsText += "\nInvalid Target types: {}.".format(invalidTargets)
+         if len(invalidNamedTargets) > 0: targetsText += "\nSpecific Invalid Targets: {}.".format(invalidNamedTargets)
+         if not chkPlayer(Autoscript, targetLookup.controller, False): 
+            allegiance = re.search(r'by(Opponent|Me)', Autoscript)
+            requiredAllegiances.append(allegiance.group(1))
+         if len(requiredAllegiances) > 0: targetsText += "\nValid Target Allegiance: {}.".format(requiredAllegiances)
+         whisper("You need to target a valid card before using this action{}".format(targetsText))
+         return targetC
+   else: return targetC
    
 def chkWarn(card, Autoscript):
    global Trashwarn
@@ -1781,21 +1852,42 @@ def per(Autoscript, card = None, count = 0, targetCard = None, notification = No
       elif per.group(3) == 'GenericMarker': multiplier = useC.markers[Generic]
    else: multiplier = 1
    return multiplier
-  
+
+def chkPlayer(Autoscript, controller, manual):
+# Function returns 1 if the card is not only for rivals, or if it is for rivals and the card being activated it not ours.
+# This is then multiplied by the multiplier, which means that if the card activated only works for Rival's cards, our cards will have a 0 gain.
+# This will probably make no sense when I read it in 10 years...
+   byOpponent = re.search(r'byOpponent', Autoscript)
+   byMe = re.search(r'byMe', Autoscript)
+   if manual: return 1 #manual means that the actions was called by a player double clicking on the card. In which case we always do it.
+   elif not byOpponent and not byMe: return 1 # If the card has no restrictions on being us or a rival.
+   elif byOpponent and controller != me: return 1 # If the card needs to be played by a rival.
+   elif byMe and controller == me: return 1 # If the card needs to be played by us.
+   else: return 0 # If all the above fail, it means that we're not supposed to be triggering, so we'll return 0 which will make the multiplier 0.
+   
+   
 def customScript(card):
    useCard(card) # Not in use atm.
    
 def TrialError(group, x=0, y=0):
-   global TypeCard, CostCard
+   global TypeCard, CostCard, ds
    testcards = ["a042c7e7-90af-4586-8474-4985ef5e4719",
                 "5ef3a7cc-7d0f-4696-9dbf-a79967e2c2bb",
                 "4da5197c-0f42-4f92-b784-d2c905dd048e",
                 "493d532f-da48-4a01-be65-d61a0b888ace",
-                "413364d6-d82e-430b-b395-ce64e1cae6ff"]
+                "c4c07717-a67e-41fe-aea3-5c1ce9b58fe8"]
+   ds = "corp"
+   me.setGlobalVariable('ds', ds) 
+   me.counters['Bit Pool'].value = 50
+   me.counters['Max Hand Size'].value = 5
+   me.counters['Tags'].value = 1
+   me.counters['Agenda Points'].value = 10
+   me.counters['Bad Publicity'].value = 10
+   me.Actions = 15
    for idx in range(len(testcards)):
       test = table.create(testcards[idx], (70 * idx) - 150, 0, 1, True)
       TypeCard[test] = test.Type
-      CostCard[test] = card.Cost
+      CostCard[test] = test.Cost
       #random = rnd(10,500)
       if test.Type == 'Ice' or test.Type == 'Agenda' or test.Type == 'Node':
          test.isFaceUp = False
