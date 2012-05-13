@@ -32,7 +32,7 @@
 			<groupaction menu="Set up" default="false" shortcut="Ctrl+Shift+S" execute="intJackin" />
 			<groupaction menu="Switch Unicode bits ON/OFF" default="false" execute="switchUniBits" />
 			<groupaction menu="Switch Play, Score and Rez Automation ON/OFF" default="false" execute="switchPlayAutomation" />  
-			<groupaction menu="Switch Start-of-Turn Automation ON/OFF" default="false" execute="switchStartAutomation" />  
+			<groupaction menu="Switch Start/End-of-Turn Automation ON/OFF" default="false" execute="switchStartEndAutomation" />  
 			<groupaction menu="Switch Damage Automation ON/OFF" default="false" execute="switchDMGAutomation" />  
 			<groupaction menu="Debug" default="false" shortcut="Ctrl+Shift+D" execute="TrialError" />
 			<!-- <groupaction menu="Inspect" default="false" shortcut="Ctrl+Shift+I" execute="inspectCard" /> -->
@@ -88,7 +88,7 @@
         
 		
 	</table>
-	<player summary="Actions {#Actions} / Bits {#Bit Pool} / Hand {#HQ/Hand} / APs {#Agenda Points}">
+	<player summary="Actions {#Actions} / Bits {#Bit Pool} / Hand {#HQ/Hand} / APs {#Agenda Points} / Tags {#Tags}">
       <globalvariable name="ds" value="" /> 
       <globalvariable name="specialCards" value="{}" /> 
 		<hand name="HQ/Hand" visibility="me" ordered="false" width="63" height="88" icon="r11">

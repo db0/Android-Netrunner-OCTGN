@@ -16,7 +16,7 @@ MinusOne= ("-1", "48ceb18b-5521-4d3f-b5fb-c8212e8bcbae")
 #---------------------------------------------------------------------------
 ds = ""
 Automations = {'Play, Score and Rez': True, # If True, game will automatically trigger card effects when playing or double-clicking on cards. Requires specific preparation in the sets.
-               'Start-of-Turn'      : True, # If True, game will automatically trigger effects happening at the start of the player's turn, from cards they control.                
+               'Start/End-of-Turn'      : True, # If True, game will automatically trigger effects happening at the start of the player's turn, from cards they control.                
                'Damage'             : True}
 
 UniBits = True # If True, game will display bits as unicode characters ❶, ❷, ❿ etc
@@ -192,10 +192,11 @@ def goToEndTurn(group, x = 0, y = 0):
             whisper(':::Warning::: You have more card in your hand than your current hand size maximum. Please discard enough and then use the "Declare End of Turn" action again.')
             endofturn = True
             return
-    if ds == "corp": notify ("The Corporation of {} has reached CoB (Close of Business hours).".format(me))
-    else: notify ("Runner {} has gone to sleep for the day.".format(me))
     endofturn = False
     newturn = False
+    atTurnStartEndEffects('End')
+    if ds == "corp": notify ("The Corporation of {} has reached CoB (Close of Business hours).".format(me))
+    else: notify ("Runner {} has gone to sleep for the day.".format(me))
 
 def goToSot (group, x=0,y=0):
     global newturn, endofturn
@@ -220,7 +221,7 @@ def goToSot (group, x=0,y=0):
     myCards = (card for card in table if card.controller == me and card.owner == me)
     for card in myCards: card.orientation &= ~Rot90 # Refresh all cards which can be used once a turn.
     newturn = True
-    atTurnStartEffects() # Check all our cards to see if there's any Start of Turn effects active.
+    atTurnStartEndEffects('Start') # Check all our cards to see if there's any Start of Turn effects active.
     if ds == "corp": notify("The offices of {}'s Corporation are now open for business.".format(me))
     else: notify ("Runner {} has woken up".format(me))
 
@@ -238,17 +239,17 @@ def modActions(group,x=0,y=0):
 def switchAutomation(type,command = 'Off'):
    global Automations
    if (Automations[type] and command == 'Off') or (not Automations[type] and command == 'Announce'):
-      notify ("{}'s {} automations are OFF.".format(me,type))
+      notify ("--> {}'s {} automations are OFF.".format(me,type))
       if command != 'Announce': Automations[type] = False
    else:
-      notify ("{}'s {} automations are ON.".format(me,type))
+      notify ("--> {}'s {} automations are ON.".format(me,type))
       if command != 'Announce': Automations[type] = True
    
 def switchPlayAutomation(group,x=0,y=0):
    switchAutomation('Play, Score and Rez')
    
-def switchStartAutomation(group,x=0,y=0):
-   switchAutomation('Start-of-Turn')
+def switchStartEndAutomation(group,x=0,y=0):
+   switchAutomation('Start/End-of-Turn')
 
 def switchDMGAutomation(group,x=0,y=0):
    switchAutomation('Damage')
@@ -1211,7 +1212,10 @@ def executePlayScripts(card, action):
    X = 0
    Autoscripts = card.AutoScript.split('||') # When playing cards, the || is used as an "and" separator, rather than "or". i.e. we don't do choices (yet)
    for autoS in Autoscripts: # Checking and removing any "AtTurnStart" actions.
-      if re.search(r'atTurnStart', autoS): Autoscripts.remove(autoS)
+      if re.search(r'atTurn(Start|End)', autoS): Autoscripts.remove(autoS)
+      if re.search(r'{Custom:', autoS): 
+         customScript(card)
+         Autoscripts.remove(autoS)
    if len(Autoscripts) == 0: return
    announceText = "{}".format(me)
    for AutoS in Autoscripts:
@@ -1219,7 +1223,7 @@ def executePlayScripts(card, action):
       selectedAutoscripts = AutoS.split('$$')
       #confirm('selectedAutoscripts: {}'.format(selectedAutoscripts)) # Debug
       for activeAutoscript in selectedAutoscripts:
-         effect = re.search(r'\b([A-Za-z]+)([0-9]+)([A-Za-z& ]*)-?(.*)', activeAutoscript)
+         effect = re.search(r'\b([A-Za-z]+)([0-9]+)([A-Za-z& ]*)(-?.*)', activeAutoscript)
          #confirm('effects: {}'.format(effect.groups())) #Debug
          if (effectType.group(1) == 'whileRezzed' or effectType.group(1) == 'whileScored') and (action == 'derez' or (action == 'trash' and card.markers[Not_rezzed] == 0)): Removal = True
          else: Removal = False
@@ -1468,27 +1472,37 @@ def GainX(Autoscript, announceText, card, targetCard = None, notification = None
       return 'ABORT'
    if action.group(1) == 'Lose': gain *= -1
    multiplier = per(Autoscript, card, n, targetCard) # We check if the card provides a gain based on something else, such as favour bought, or number of dune fiefs controlled by rivals.
-   if re.match(r'Bit', action.group(3)): 
+   if re.match(r'Bit', action.group(3)): # Note to self: I can probably comprress the following, by using variables and by putting the counter object into a variable as well.
       targetPL.counters['Bit Pool'].value += gain * multiplier
-      if targetPL.counters['Bit Pool'].value < 0: targetPL.counters['Bit Pool'].value = 0
+      if targetPL.counters['Bit Pool'].value < 0: 
+         if re.search(r'isCost', Autoscript): notify(":::Warning:::{} did not have enough {} to pay the cost of this action".format(targetPL,action.group(3)))
+         else: targetPL.counters['Bit Pool'].value = 0
    elif re.match(r'Agenda Point', action.group(3)): 
       targetPL.counters['Agenda Points'].value += gain * multiplier
-      if targetPL.counters['Agenda Points'].value < 0: targetPL.counters['Agenda Points'].value = 0
+      if targetPL.counters['Agenda Points'].value < 0: 
+         if re.search(r'isCost', Autoscript): notify(":::Warning:::{} did not have enough {} to pay the cost of this action".format(targetPL,action.group(3)))
+         else: targetPL.counters['Agenda Points'].value = 0
    elif re.match(r'Action', action.group(3)): 
       if gain == -999: targetPL.Actions = 0
       else: targetPL.Actions += gain * multiplier
    elif re.match(r'Bad Publicity', action.group(3)): 
       targetPL.counters['Bad Publicity'].value += gain * multiplier
-      if targetPL.counters['Bad Publicity'].value < 0: targetPL.counters['Bad Publicity'].value = 0
+      if targetPL.counters['Bad Publicity'].value < 0: 
+         if re.search(r'isCost', Autoscript): notify(":::Warning:::{} did not have enough {} to pay the cost of this action".format(targetPL,action.group(3)))
+         else: targetPL.counters['Bad Publicity'].value = 0
    elif re.match(r'Tag', action.group(3)): 
       targetPL.Tags += gain * multiplier
-      if targetPL.Tags < 0: targetPL.Tags = 0
+      if targetPL.Tags < 0: 
+         if re.search(r'isCost', Autoscript): notify(":::Warning:::{} did not have enough {} to pay the cost of this action".format(targetPL,action.group(3)))
+         else: targetPL.Tags = 0
    elif re.match(r'Max Action', action.group(3)): 
       if targetPL == me: maxActions += gain * multiplier
       else: notify("--> {} loses {} max action. They must make this modification manually".format(targetPL,gain * multiplier))
    elif re.match(r'Hand Size', action.group(3)): 
       targetPL.counters['Max Hand Size'].value += gain * multiplier
-      if targetPL.counters['Max Hand Size'].value < 0: targetPL.counters['Max Hand Size'].value = 0
+      if targetPL.counters['Max Hand Size'].value < 0: 
+         if re.search(r'isCost', Autoscript): notify(":::Warning:::{} did not have enough {} to pay the cost of this action".format(action.group(3)))
+         else: targetPL.counters['Max Hand Size'].value = 0
    else: 
       whisper("Gain what?! (Bad autoscript)")
       return 'ABORT'
@@ -1763,35 +1777,38 @@ def TrialError(group, x=0, y=0):
    testcards = ["a042c7e7-90af-4586-8474-4985ef5e4719",
                 "5ef3a7cc-7d0f-4696-9dbf-a79967e2c2bb",
                 "4da5197c-0f42-4f92-b784-d2c905dd048e",
-                "493d532f-da48-4a01-be65-d61a0b888ace"]
+                "493d532f-da48-4a01-be65-d61a0b888ace",
+                "413364d6-d82e-430b-b395-ce64e1cae6ff"]
    for idx in range(len(testcards)):
       test = table.create(testcards[idx], (70 * idx) - 150, 0, 1, True)
       TypeCard[test] = test.Type
+      random = rnd(10,1000)
       if test.Type == 'Ice' or test.Type == 'Agenda' or test.Type == 'Node':
          test.isFaceUp = False
          test.markers[Not_rezzed] += 1
    
-def atTurnStartEffects():
-   if not Automations['Start-of-Turn']: return
+def atTurnStartEndEffects(Time = 'Start'):
+   if not Automations['Start/End-of-Turn']: return
    TitleDone = False
    for card in table:
-      effect = re.search(r'atTurnStart:([A-Z][A-Za-z]+)([0-9]+)([A-Za-z0-9 ]+)(.*)', card.AutoScript)
+      effect = re.search(r'atTurn(Start|End):([A-Z][A-Za-z]+)([0-9]+)([A-Za-z0-9 ]+)(.*)', card.AutoScript)
       if card.owner != me or not effect: continue
-      if effect.group(4) and re.search(r'isOptional', effect.group(4)) and not confirm("{} can have the following optional ability activated at the start of your turn:\n\n[ {} {} {} ]\n\nDo you want to activate it?".format(card.name, effect.group(1), effect.group(2),effect.group(3))): continue
-      if not TitleDone: notify(":::{}'s Start of Turn Effects:::".format(me))
+      if effect.group(1) != Time: continue # If it's a start-of-turn effect and we're at the end, or vice-versa, do nothing.
+      if effect.group(5) and re.search(r'isOptional', effect.group(5)) and not confirm("{} can have the following optional ability activated at the start of your turn:\n\n[ {} {} {} ]\n\nDo you want to activate it?".format(card.name, effect.group(2), effect.group(3),effect.group(4))): continue
+      if not TitleDone: notify(":::{}'s {}-of-Turn Effects:::".format(me,effect.group(1)))
       TitleDone = True
-      effectNR = num(effect.group(2))
+      effectNR = num(effect.group(3))
       passedScript = '{}'.format(effect.group(0))
       announceText = "{}:".format(card)
-      if effect.group(1) == 'Gain' or effect.group(1) == 'Lose':
+      if effect.group(2) == 'Gain' or effect.group(2) == 'Lose':
          GainX(passedScript, announceText, card, notification = 'Automatic')
-      if effect.group(1) == 'Transfer':
+      if effect.group(2) == 'Transfer':
          TransferX(passedScript, announceText, card, notification = 'Automatic')
-      if effect.group(1) == 'Draw':
+      if effect.group(2) == 'Draw':
          DrawX(passedScript, announceText, card, notification = 'Automatic')
-      if effect.group(1) == 'Refill':
+      if effect.group(2) == 'Refill':
          TokensX(passedScript, announceText, card, notification = 'Automatic')
    if me.counters['Bit Pool'].value < 0: 
-      notify(":::Warning::: {}'s start of turn effects cost more Bits than they had in their Bit Pool!".format(me))
-   if ds == 'corp': draw(me.piles['R&D/Stack'])
+      notify(":::Warning::: {}'s {}-of-turn effects cost more Bits than they had in their Bit Pool!".format(me,effect.group(1)))
+   if ds == 'corp' and Time =='Start': draw(me.piles['R&D/Stack'])
    if TitleDone: notify(":::--------------------------:::".format(me))
