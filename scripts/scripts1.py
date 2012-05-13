@@ -66,11 +66,22 @@ mdict = dict(Advance = ("Advance", "73b8d1f2-cd54-41a9-b689-3726b7b86f4f"),
              protectionBrainDMG = ("Brain damage protection","8a0612d7-202b-44ec-acdc-84ff93e7968d"))
 
 turns = [
-	'Start of Game',
-	"It is now Corporation's Turn",
-	"It is now Runner's Turn",
-	"It is now End of Turn"]
+   'Start of Game',
+   "It is now Corporation's Turn",
+   "It is now Runner's Turn",
+   "It is now End of Turn"]
 
+trashEasterEgg = [
+   "You really shouldn't try to trash this kind of card.",
+   "No really, stop trying to trash this card. You need it.",
+   "Just how silly are you?",
+   "You just won't rest until you've trashed a setup card will you?",
+   "I'm warning you...",
+   "OK, NOW I'm really warning you...",
+   "Shit's just got real!",
+   "Careful what you wish for..."]
+trashEasterEggIDX = 0
+ 
 ScoredColor = "#00ff44"
 SelectColor = "#009900"
 MakeRunColor = "#ff0000"
@@ -619,46 +630,56 @@ def isRezzable (card):
 	if Type == "Ice" or Type == "Node" or Type == "Upgrade": return True
 	else: return False
 
-def intRez (card,cost = 'not free', x=0, y=0):
-    mute()
-    extraText = ''
-    rc = ''
-    if card.markers[Not_rezzed] == 0: whisper("you can't rez a rezzed card")
-    elif not isRezzable(card): whisper("Not a rezzable card")
-    else:
-        rc = payCost(CostCard[card], cost)
-        if rc == "ABORT": return # If the player didn't have enough money to pay and aborted the function, then do nothing.
-        elif rc == "free": extraText = " at no cost"
-        elif rc != 0: rc = "for {}".format(rc)
-        card.isFaceUp = True
-        card.markers[Not_rezzed] -= 1
-        if card.Type == 'Ice': notify("{} has rezzed {}{}{}.".format(me, card, rc, extraText))
-        if card.Type == 'Node': notify("{} has acquired {}{}{}.".format(me, card, rc, extraText))
-        if card.Type == 'Upgrade': notify("{} has installed {}{}{}.".format(me, card, rc, extraText))
-        executeAutomations ( card, "rez" )
+def intRez (card, cost = 'not free', x=0, y=0, silent = False):
+   mute()
+   extraText = ''
+   rc = ''
+   if card.markers[Not_rezzed] == 0: 
+      whisper("you can't rez a rezzed card")
+      return 'ABORT'
+   if not isRezzable(card): 
+      whisper("Not a rezzable card")
+      return 'ABORT'
+   rc = payCost(CostCard[card], cost)
+   if rc == "ABORT": return # If the player didn't have enough money to pay and aborted the function, then do nothing.
+   elif rc == "free": extraText = " at no cost"
+   elif rc != 0: rc = "for {}".format(rc)
+   card.isFaceUp = True
+   card.markers[Not_rezzed] -= 1
+   if not silent:
+      if card.Type == 'Ice': notify("{} has rezzed {}{}{}.".format(me, card, rc, extraText))
+      if card.Type == 'Node': notify("{} has acquired {}{}{}.".format(me, card, rc, extraText))
+      if card.Type == 'Upgrade': notify("{} has installed {}{}{}.".format(me, card, rc, extraText))
+   executeAutomations ( card, "rez" )
+    
 
 def rezForFree (card, x = 0, y = 0):
 	intRez(card, "free")
 
-def derez(card, x = 0, y = 0):
+def derez(card, x = 0, y = 0, silent = False):
    mute()
    if card.markers[Not_rezzed] == 0:
-      if not isRezzable(card): whisper ("Not a rezzable card")
+      if not isRezzable(card): 
+         whisper ("Not a rezzable card")
+         return 'ABORT'
       else:
          card.markers[Bits] = 0
          card.markers[Not_rezzed] += 1
-         notify("{} derezzed {}".format(me, card))
+         if not silent: notify("{} derezzed {}".format(me, card))
          executeAutomations ( card, "derez" )
    else:
       notify ( "you can't derez a unrezzed card")
+      return 'ABORT'
+      
 
-def expose(card, x = 0, y = 0):
-	if not card.isFaceUp:
-		mute()
-		card.isFaceUp = True
-		notify("{} exposed {}".format(me, card))
-	else:
-		notify("You can't expose this card")
+def expose(card, x = 0, y = 0, silent = False):
+   if not card.isFaceUp:
+      mute()
+      card.isFaceUp = True
+      if not silent: notify("{} exposed {}".format(me, card))
+   else:
+      notify("This card is already exposed")
+      return 'ABORT'
 
 def rolld6(group = table, x = 0, y = 0, silent = False):
    mute()
@@ -674,7 +695,8 @@ def clear(card, x = 0, y = 0):
    card.highlight = None
    card.target(False)
 
-def intTrashCard (card, stat, cost = "not free",  ActionCost = ''):
+def intTrashCard (card, stat, cost = "not free",  ActionCost = '', silent = False):
+    global trashEasterEggIDX
     mute()
     MUtext = ""
     rc = ''
@@ -684,10 +706,18 @@ def intTrashCard (card, stat, cost = "not free",  ActionCost = ''):
     else: 
       ActionCost += ' and '
       goodGrammar = ''
-    if card.Type == "Tracing": return
+    if card.Type == "Tracing" or card.Type == "Counter Hold": 
+      whisper("{}".format(trashEasterEgg[trashEasterEggIDX]))
+      if trashEasterEggIDX < 7:
+         trashEasterEggIDX += 1
+         return 'ABORT'
+      elif trashEasterEggIDX == 7: 
+         card.moveToBottom(cardowner.piles['Trash/Archives(Face-up)'])
+         trashEasterEggIDX = 0
+         return
     cardowner = card.owner
     rc = payCost(stat, cost)
-    if rc == "ABORT": return # If the player didn't have enough money to pay and aborted the function, then do nothing.
+    if rc == "ABORT": return 'ABORT' # If the player didn't have enough money to pay and aborted the function, then do nothing.
     elif rc == 0: 
       if ActionCost.endswith(' and'): ActionCost[:-len(' and')] # if we have no action cost, we don't need the connection.
     else: 
@@ -697,18 +727,18 @@ def intTrashCard (card, stat, cost = "not free",  ActionCost = ''):
         if num(card.properties["MU Required"]) > 0:
             cardowner.Memory += num(card.properties["MU Required"])
             MUtext = ", freeing up {} MUs".format(card.properties["MU Required"])
-        if rc == "free" : notify("{} trashed {} at no cost{}.".format(me, card, MUtext))
-        else: notify("{} trash{} {}{}.".format(ActionCost, goodGrammar, card, MUtext))
+        if rc == "free" and not silent: notify("{} trashed {} at no cost{}.".format(me, card, MUtext))
+        elif not silent: notify("{} trash{} {}{}.".format(ActionCost, goodGrammar, card, MUtext))
         executeAutomations (card, "trash")
         card.moveTo(cardowner.piles['Trash/Archives(Face-up)'])
     elif (ds == "runner" and cardowner == me) or (ds == "corp" and cardowner != me ): #I'm the runner and I trash my card or I 'm the corp and I trash a runner card
         card.moveTo(cardowner.piles['Trash/Archives(Face-up)'])
-        if rc == "free" : notify ("{} trashed {} at no cost.".format(me,card))
-        else: notify("{} trash{} {}.".format(ActionCost, goodGrammar, card))
+        if rc == "free" and not silent: notify ("{} trashed {} at no cost.".format(me,card))
+        elif not silent: notify("{} trash{} {}.".format(ActionCost, goodGrammar, card))
     else: #I'm the corp and I trash my card or I'm the runner and I trash a corp's card
         card.moveTo(cardowner.piles['Archives(Hidden)'])
-        if rc == "free": notify("{} trashed a hidden card at no cost.".format(me))
-        else: notify("{} trash{} a hidden card.".format(ActionCost, goodGrammar))
+        if rc == "free" and not silent: notify("{} trashed a hidden card at no cost.".format(me))
+        elif not silent: notify("{} trash{} a hidden card.".format(ActionCost, goodGrammar))
 
 def trashCard (card, x = 0, y = 0):
 	intTrashCard(card, card.Stat)
@@ -1227,8 +1257,9 @@ def executePlayScripts(card, action):
       #confirm('selectedAutoscripts: {}'.format(selectedAutoscripts)) # Debug
       for activeAutoscript in selectedAutoscripts:
          if chkWarn(card, activeAutoscript) == 'ABORT': return
-         effect = re.search(r'\b([A-Za-z]+)([0-9]+)([A-Za-z& ]*)(-?.*)', activeAutoscript)
-         #confirm('effects: {}'.format(effect.groups())) #Debug
+         targetC = findTarget(activeAutoscript)
+         effect = re.search(r'\b([A-Z][A-Za-z]+)([0-9]*)([A-Za-z& ]*)\b([^:]?[A-Za-z0-9& -]*)', activeAutoscript)
+         confirm('effects: {}'.format(effect.groups())) #Debug
          if (effectType.group(1) == 'whileRezzed' or effectType.group(1) == 'whileScored') and (action == 'derez' or (action == 'trash' and card.markers[Not_rezzed] == 0)): Removal = True
          else: Removal = False
          if effect.group(1) == 'Gain' or effect.group(1) == 'Lose':
@@ -1243,25 +1274,27 @@ def executePlayScripts(card, action):
          else: 
             passedScript = "{}".format(effect.group(0))
             if effect.group(1) == 'Draw': 
-               if DrawX(passedScript, announceText, card, notification = 'Quick', n = X) == 'ABORT': return
+               if DrawX(passedScript, announceText, card, targetC, notification = 'Quick', n = X) == 'ABORT': return
             if re.search(r'(Put|Remove|Refill|Use|Infect)', effect.group(1)): 
-               if TokensX(passedScript, announceText, card, notification = 'Quick', n = X) == 'ABORT': return
+               if TokensX(passedScript, announceText, card, targetC, notification = 'Quick', n = X) == 'ABORT': return
             if effect.group(1) == 'Roll': 
-               rollTuple = RollX(passedScript, announceText, card, notification = 'Quick', n = X)
+               rollTuple = RollX(passedScript, announceText, card, targetC, notification = 'Quick', n = X)
                if rollTuple == 'ABORT': return
                X = rollTuple[1] 
             if effect.group(1) == 'Run': 
-               if RunX(passedScript, announceText, card, notification = 'Quick', n = X) == 'ABORT': return
+               if RunX(passedScript, announceText, card, targetC, notification = 'Quick', n = X) == 'ABORT': return
             if effect.group(1) == 'Trace': 
-               if TraceX(passedScript, announceText, card, notification = 'Quick', n = X) == 'ABORT': return
+               if TraceX(passedScript, announceText, card, targetC, notification = 'Quick', n = X) == 'ABORT': return
             if effect.group(1) == 'Reshuffle': 
-               reshuffleTuple = ReshuffleX(passedScript, announceText, card, notification = 'Quick', n = X)
+               reshuffleTuple = ReshuffleX(passedScript, announceText, card, targetC, notification = 'Quick', n = X)
                if reshuffleTuple == 'ABORT': return
                X = reshuffleTuple[1]
             if effect.group(1) == 'Shuffle': 
-               if ShuffleX(passedScript, announceText, card, notification = 'Quick', n = X) == 'ABORT': return
+               if ShuffleX(passedScript, announceText, card, targetC, notification = 'Quick', n = X) == 'ABORT': return
             if effect.group(1) == 'Inflict': 
-               if InflictX(passedScript, announceText, card, notification = 'Quick', n = X) == 'ABORT': return
+               if InflictX(passedScript, announceText, card, targetC, notification = 'Quick', n = X) == 'ABORT': return
+            if re.search(r'(Rez|Derez|Expose|Trash)Target', effect.group(1)): 
+               if ModifyStatus(passedScript, announceText, card, targetC, notification = 'Quick', n = X) == 'ABORT': return
          
 #------------------------------------------------------------------------------
 # Autoactions
@@ -1343,7 +1376,7 @@ def useAbility(card, x = 0, y = 0):
    timesNothingDone = 0 # A variable that keeps track if we've done any of the autoscripts defined. If none have been coded, we just engage the card.
    X = 0 # Variable for special costs.
    for activeAutoscript in selectedAutoscripts:
-      ### Checking if any of  card effects requires one or more targets first
+      ### Checking if any of the card's effects requires one or more targets first
       if re.search(r'Targeted', activeAutoscript) and not findTarget(activeAutoscript): return
    for activeAutoscript in selectedAutoscripts:
       targetC = findTarget(activeAutoscript)
@@ -1415,6 +1448,7 @@ def useAbility(card, x = 0, y = 0):
       elif re.search(r'\bRun([A-Za-z& ]+)', activeAutoscript): announceText = RunX(activeAutoscript, announceText, card, targetC, n = X)
       elif re.search(r'\bTrace([0-9]+)', activeAutoscript): announceText = TraceX(activeAutoscript, announceText, card, targetC, n = X)
       elif re.search(r'\bInflict([0-9]+)', activeAutoscript): announceText = InflictX(activeAutoscript, announceText, card, targetC, n = X)
+      elif re.search(r'(Rez|Derez|Expose|Trash)Target', activeAutoscript): announceText = ModifyStatus(activeAutoscript, announceText, card, targetC, n = X)
       elif re.search(r'\bUseCustomAbility', activeAutoscript): announceText = UseCustomAbility(activeAutoscript, announceText, card, targetC, n = X)
       else: timesNothingDone += 1
       if announceText == 'ABORT': 
@@ -1449,13 +1483,13 @@ def findTarget(Autoscript):
       invalidTargets = [] # a list that holds any type that a card must not be to be a valid target.
       invalidNamedTargets = [] # a list that holds the name or allegiance that the card must not have to be a valid target.
       requiredAllegiances = []
-      whatTarget = re.search(r'\bon([A-Za-z_{},& ]+)[-]?', Autoscript) # We signify target restrictions keywords by starting a string with "or"
+      whatTarget = re.search(r'\bat([A-Za-z_{},& ]+)[-]?', Autoscript) # We signify target restrictions keywords by starting a string with "or"
       if whatTarget: validTargets = whatTarget.group(1).split('_or_') # If we have a list of valid targets, split them into a list, separated by the string "_or_". Usually this results in a list of 1 item.
       ValidTargetsSnapshot = list(validTargets) # We have to work on a snapshot, because we're going to be modifying the actual list as we iterate.
       for chkTarget in ValidTargetsSnapshot: # Now we go through each list item and see if it has more than one condition (Eg, non-desert fief)
          if re.search(r'_and_', chkTarget):  # If there's a string "_and_" between our restriction keywords, then this keyword has mutliple conditions
             multiConditionTargets = chkTarget.split('_and_') # We put all the mutliple conditions in a new list, separating each element.
-            for chkCondition in multiConditionTargets: 
+            for chkCondition in multiConditionTargets:
                regexCondition = re.search(r'(no[nt]){?([A-Za-z,& ]+)}?', chkCondition) # Do a search to see if in the multicondition targets there's one with "non" in front
                if regexCondition and regexCondition.group(1):
                   if regexCondition.group(2) not in invalidTargets == 'non': invalidTargets.append(regexCondition.group(2)) # If there is, move it without the "non" into the invalidTargets list.
@@ -1779,6 +1813,20 @@ def TraceX(Autoscript, announceText, card, targetCard = None, notification = Non
    if notification: notify('--> {}.'.format(announceString))
    return announceString
 
+def ModifyStatus(Autoscript, announceText, card, targetCard = None, notification = None, n = 0):
+   action = re.search(r'\b(Rez|Derez|Expose|Trash)(Target|Parent)', Autoscript)
+   if action.group(1) == 'Rez' and intRez(targetCard, silent = True) != 'ABORT': pass
+   elif action.group(1) == 'Derez'and derez(targetCard, silent = True) != 'ABORT': pass
+   elif action.group(1) == 'Expose' and expose(targetCard, silent = True) != 'ABORT': pass
+   elif action.group(1) == 'Trash': whisper(":::Note::: No automatic discard action is taken. Please ask the owner of the card to do take this action themselves.") # We do not discard automatically because it's easy to make a mistake that will be difficult to undo this way.
+   else:
+      whisper("Wat Modify? (Bad AutoScript)")
+      return 'ABORT'
+   if notification == 'Quick': announceString = "{} {}es {}".format(announceText, action.group(1), targetCard)
+   else: announceString = "{} {} {}".format(announceText, action.group(1), targetCard)
+   if notification: notify('--> {}.'.format(announceString))
+   return announceString
+   
 def InflictX(Autoscript, announceText, card, targetCard = None, notification = None, n = 0):
    global DMGwarn
    action = re.search(r'\b(Inflict)([0-9]+)(Meat|Net|Brain)Damage', Autoscript)
@@ -1871,17 +1919,15 @@ def customScript(card):
    
 def TrialError(group, x=0, y=0):
    global TypeCard, CostCard, ds
-   testcards = ["a042c7e7-90af-4586-8474-4985ef5e4719",
-                "5ef3a7cc-7d0f-4696-9dbf-a79967e2c2bb",
-                "4da5197c-0f42-4f92-b784-d2c905dd048e",
-                "493d532f-da48-4a01-be65-d61a0b888ace",
-                "c4c07717-a67e-41fe-aea3-5c1ce9b58fe8"]
+   testcards = ["5c5558f7-333e-4919-845e-e3b9e19cb2e0",
+                "596e0ebb-2936-48ed-9a12-9215dccdc0cb",
+                "01f644d6-7bfa-4485-a90f-bcfa46d0f773"]
    ds = "corp"
    me.setGlobalVariable('ds', ds) 
    me.counters['Bit Pool'].value = 50
    me.counters['Max Hand Size'].value = 5
    me.counters['Tags'].value = 1
-   me.counters['Agenda Points'].value = 10
+   me.counters['Agenda Points'].value = 0
    me.counters['Bad Publicity'].value = 10
    me.Actions = 15
    for idx in range(len(testcards)):
