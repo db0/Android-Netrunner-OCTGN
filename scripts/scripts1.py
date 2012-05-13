@@ -609,6 +609,10 @@ def scrAgenda(card, x = 0, y = 0):
     if TypeCard[card] == "Agenda":
         if confirm("Do you want to score this agenda?") == True:
             card.isFaceUp = True
+            if chkTargeting(card) == 'ABORT': 
+               card.isFaceUp = False
+               notify("{} cancels their action".format(me))
+               return
             ap = num(card.Stat)
             card.markers[Advance] = 0
             card.markers[Not_rezzed] = 0
@@ -640,6 +644,9 @@ def intRez (card, cost = 'not free', x=0, y=0, silent = False):
    if not isRezzable(card): 
       whisper("Not a rezzable card")
       return 'ABORT'
+   if chkTargeting(card) == 'ABORT': 
+      notify("{} cancels their action".format(me))
+      return
    rc = payCost(CostCard[card], cost)
    if rc == "ABORT": return # If the player didn't have enough money to pay and aborted the function, then do nothing.
    elif rc == "free": extraText = " at no cost"
@@ -804,6 +811,7 @@ def intPlay(card, cost = 'not_free'):
    extraText = ''
    mute() 
    chooseSide() # Just in case...
+   if (card.Type == 'Operation' or card.Type == 'Prep') and chkTargeting(card) == 'ABORT': return # If it's an Operation or Prep and has targeting requirements, check with the user first.
    if re.search(r'Double', card.Keywords): NbReq = 2 # Some cards require two actions to play. This variable is passed to the useAction() function.
    else: NbReq = 1 #In case it's not a "Double" card. Then it only uses one action to play.
    ActionCost = useAction(count = NbReq)
@@ -871,6 +879,10 @@ def intPlay(card, cost = 'not_free'):
          notify("{}{} to play {}{}.".format(ActionCost, rc, card, extraText))           
    executeAutomations(card,"play")
 
+def chkTargeting(card):
+   if re.search(r'Targeted', card.AutoScript) and not findTarget(card.AutoScript) and not confirm("This card requires a valid target for it to work correctly.\
+                                                                                            \nIf you proceed without a target, strange things might happen.\
+                                                                                          \n\nProceed anyway?"): return 'ABORT'
 def playForFree(card, x = 0, y = 0):
 	intPlay(card,"free")
 
@@ -1259,7 +1271,7 @@ def executePlayScripts(card, action):
          if chkWarn(card, activeAutoscript) == 'ABORT': return
          targetC = findTarget(activeAutoscript)
          effect = re.search(r'\b([A-Z][A-Za-z]+)([0-9]*)([A-Za-z& ]*)\b([^:]?[A-Za-z0-9& -]*)', activeAutoscript)
-         confirm('effects: {}'.format(effect.groups())) #Debug
+         #confirm('effects: {}'.format(effect.groups())) #Debug
          if (effectType.group(1) == 'whileRezzed' or effectType.group(1) == 'whileScored') and (action == 'derez' or (action == 'trash' and card.markers[Not_rezzed] == 0)): Removal = True
          else: Removal = False
          if effect.group(1) == 'Gain' or effect.group(1) == 'Lose':
