@@ -1453,19 +1453,32 @@ def GainX(Autoscript, announceText, card, targetCard = None, notification = None
    targetPL = ofwhom(Autoscript)
    if targetPL != me: otherTXT = ' force {} to'.format(targetPL)
    else: otherTXT = ''
+   if re.search(r'ifTagged', Autoscript) and targetPL.Tags == 0:
+      whisper("Your opponent needs to be tagged to use this action")
+      return 'ABORT'
    if action.group(1) == 'Lose': gain *= -1
    multiplier = per(Autoscript, card, n, targetCard) # We check if the card provides a gain based on something else, such as favour bought, or number of dune fiefs controlled by rivals.
-   if action.group(3) == 'Bits': targetPL.counters['Bit Pool'].value += gain * multiplier
-   elif action.group(3) == 'Agenda Points': targetPL.counters['Agenda Points'].value += gain * multiplier
-   elif action.group(3) == 'Actions': targetPL.Actions += gain * multiplier
-   elif action.group(3) == 'Bad Publicity': targetPL.counters['Bad Publicity'].value += gain * multiplier
+   if action.group(3) == 'Bits': 
+      targetPL.counters['Bit Pool'].value += gain * multiplier
+      if targetPL.counters['Bit Pool'].value < 0: targetPL.counters['Bit Pool'].value = 0
+   elif action.group(3) == 'Agenda Points': 
+      targetPL.counters['Agenda Points'].value += gain * multiplier
+      if targetPL.counters['Agenda Points'].value < 0: targetPL.counters['Agenda Points'].value = 0
+   elif action.group(3) == 'Actions': 
+      if gain == -999: targetPL.Actions = 0
+      else: targetPL.Actions += gain * multiplier
+   elif action.group(3) == 'Bad Publicity': 
+      targetPL.counters['Bad Publicity'].value += gain * multiplier
+      if targetPL.counters['Bad Publicity'].value < 0: targetPL.counters['Bad Publicity'].value = 0
    elif action.group(3) == 'Tags': 
       targetPL.Tags += gain * multiplier
       if targetPL.Tags < 0: targetPL.Tags = 0
    elif action.group(3) == 'Max Actions': 
       if targetPL == me: maxActions += gain * multiplier
       else: notify("--> {} loses {} max action. They must make this modification manually".format(targetPL,gain * multiplier))
-   elif action.group(3) == 'Hand Size': targetPL.counters['Max Hand Size'].value += gain * multiplier
+   elif action.group(3) == 'Hand Size': 
+      targetPL.counters['Max Hand Size'].value += gain * multiplier
+      if targetPL.counters['Max Hand Size'].value < 0: targetPL.counters['Max Hand Size'].value = 0
    else: 
       whisper("Gain what?! (Bad autoscript)")
       return 'ABORT'
