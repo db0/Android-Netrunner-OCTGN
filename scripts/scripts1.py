@@ -36,7 +36,8 @@ scoredAgendas = 0
 playerside = None # Variable to keep track on which side each player is
 playeraxis = None # Variable to keep track on which axis the player is
 
-DMGwarn = False # A boolean varialbe to track whether we've warned the player about doing automatic damage.
+DMGwarn = True # A boolean varialbe to track whether we've warned the player about doing automatic damage.
+Trashwarn = True # Much like above, but it serves to remind the player not to trash some cards.
 newturn = True #We use this variable to track whether a player has yet to do anything this turn.
 endofturn = False #We use this variable to know if the player is in the end-of-turn phase.
 #---------------------------------------------------------------------------
@@ -73,6 +74,7 @@ turns = [
 ScoredColor = "#00ff44"
 SelectColor = "#009900"
 MakeRunColor = "#ff0000"
+TrashedColor = "#000000" # Marks cards which are supposed to be out of play, so that players can tell them apart.
 
 Xaxis = 'x'
 Yaxis = 'y'
@@ -195,8 +197,8 @@ def goToEndTurn(group, x = 0, y = 0):
     endofturn = False
     newturn = False
     atTurnStartEndEffects('End')
-    if ds == "corp": notify ("The Corporation of {} has reached CoB (Close of Business hours).".format(me))
-    else: notify ("Runner {} has gone to sleep for the day.".format(me))
+    if ds == "corp": notify ("=> The Corporation of {} has reached CoB (Close of Business hours).".format(me))
+    else: notify ("=> Runner {} has gone to sleep for the day.".format(me))
 
 def goToSot (group, x=0,y=0):
     global newturn, endofturn
@@ -222,8 +224,8 @@ def goToSot (group, x=0,y=0):
     for card in myCards: card.orientation &= ~Rot90 # Refresh all cards which can be used once a turn.
     newturn = True
     atTurnStartEndEffects('Start') # Check all our cards to see if there's any Start of Turn effects active.
-    if ds == "corp": notify("The offices of {}'s Corporation are now open for business.".format(me))
-    else: notify ("Runner {} has woken up".format(me))
+    if ds == "corp": notify("=> The offices of {}'s Corporation are now open for business.".format(me))
+    else: notify ("=> Runner {} has woken up".format(me))
 
 def modActions(group,x=0,y=0):
    global maxActions
@@ -669,9 +671,9 @@ def selectAsTarget (card, x = 0, y = 0):
     card.target(True)
 
 def clear(card, x = 0, y = 0):
-    notify("{} clears {}.".format(me, card))
-    card.highlight = None
-    card.target(False)
+   notify("{} clears {}.".format(me, card))
+   card.highlight = None
+   card.target(False)
 
 def intTrashCard (card, stat, cost = "not free",  ActionCost = ''):
     mute()
@@ -721,13 +723,15 @@ def pay2AndTrash(card, x=0, y=0):
    intTrashCard(card, 2, ActionCost = ActionCost)
 
 def useCard(card,x=0,y=0):
-    if card.highlight == None:
-        card.highlight = SelectColor
-        notify ( "{} uses the ability of {}.".format(me,card) )
-    else:
-        notify("{} clears {}.".format(me, card))
-        card.highlight = None
-        card.target(False)
+   if card.highlight == None:
+      card.highlight = SelectColor
+      notify ( "{} uses the ability of {}.".format(me,card) )
+   else:
+      if card.highlight == TrashColor and not confirm("This highlight signifies that this card is technically trashedAre you sure you want to clear the card's highlight?"):
+         return
+      notify("{} clears {}.".format(me, card))
+      card.highlight = None
+      card.target(False)
 
 def rulings(card, x = 0, y = 0):
   mute()
@@ -936,7 +940,7 @@ def draw(group):
     if len(group) == 0: return
     if ds == 'corp' and newturn: 
         group[0].moveTo(me.hand)
-        notify("{} perform's the turn's mandatory draw.".format(me))
+        notify("--> {} perform's the turn's mandatory draw.".format(me))
         newturn = False
     else:
         ActionCost = useAction()
@@ -1223,6 +1227,7 @@ def executePlayScripts(card, action):
       selectedAutoscripts = AutoS.split('$$')
       #confirm('selectedAutoscripts: {}'.format(selectedAutoscripts)) # Debug
       for activeAutoscript in selectedAutoscripts:
+         if chkWarn(card, activeAutoscript) == 'ABORT': return
          effect = re.search(r'\b([A-Za-z]+)([0-9]+)([A-Za-z& ]*)(-?.*)', activeAutoscript)
          #confirm('effects: {}'.format(effect.groups())) #Debug
          if (effectType.group(1) == 'whileRezzed' or effectType.group(1) == 'whileScored') and (action == 'derez' or (action == 'trash' and card.markers[Not_rezzed] == 0)): Removal = True
@@ -1343,7 +1348,7 @@ def useAbility(card, x = 0, y = 0):
    for activeAutoscript in selectedAutoscripts:
       targetC = findTarget(activeAutoscript)
       ### Warning the player in case we need to
-      if chkWarn(activeAutoscript) == 'ABORT': return
+      if chkWarn(card, activeAutoscript) == 'ABORT': return
       ### Checking the activation cost and preparing a relevant string for the announcement
       actionCost = re.match(r"A([0-9]+)B([0-9]+)G([0-9]+)T([0-9]+):", activeAutoscript) 
       # This is the cost of the card.  It starts with A which is the amount of Actions needed to activate
@@ -1439,7 +1444,8 @@ def autoscriptCostUndo(card, Autoscript):
 def findTarget(Autoscript):
    return None # Not in use atm.
    
-def chkWarn(Autoscript):
+def chkWarn(card, Autoscript):
+   global Trashwarn
    warning = re.search(r'warn([A-Z][A-Za-z0-9 ]+)-?', Autoscript)
    if warning:
       if warning.group(1) == 'Discard': 
@@ -1456,6 +1462,12 @@ def chkWarn(Autoscript):
             return 'ABORT'
       if warning.group(1) == 'Workaround':
          notify(":::Note:::{} is using a workaround autoscript".format(me))
+      if warning.group(1) == 'DoNotTrash': 
+         if Trashwarn and not confirm("This card asks you to trash it, but its lingering effects will only work automatically while the card is in play.\
+                       \nWe suggest you do not manually trash it. Rather we will mark it with a special highlight so that you know that it's supposed to be out of play.\
+                     \n\nSome cards provide you with an ability that you can activate after they're been trashed. If this card has one, you can activate it by double clicking on the card. Very often, this will often trash the card if it's required.\
+                     \n\nDo you want to see this warning again?"): Trashwarn = False
+         card.highlight = TrashedColor
    return 'OK'
 
 def GainX(Autoscript, announceText, card, targetCard = None, notification = None, n = 0):
@@ -1722,12 +1734,12 @@ def InflictX(Autoscript, announceText, card, targetCard = None, notification = N
             notify(":::Warning:::{} has flatlined!".format(targetPL))
             break
          else:
-            if not DMGwarn: 
+            if DMGwarn: 
                confirm("You are about to inflict damage on another player for the first time.\
                        \nBefore you do that, please make sure that your opponent is not currently manipulating their hand or this might cause the game to crash.\
                      \n\nThis message will not appear again.\
                       \n(Press any button to continue)")
-               DMGwarn = True
+               DMGwarn = False
             DMGcard = targetPL.hand.random()
             if targetPL.getGlobalVariable('ds') == 'corp': DMGcard.moveTo(targetPL.piles['Archives(Hidden)'])
             else: DMGcard.moveTo(targetPL.piles['Trash/Archives(Face-up)'])
@@ -1774,6 +1786,7 @@ def customScript(card):
    useCard(card) # Not in use atm.
    
 def TrialError(group, x=0, y=0):
+   global TypeCard, CostCard
    testcards = ["a042c7e7-90af-4586-8474-4985ef5e4719",
                 "5ef3a7cc-7d0f-4696-9dbf-a79967e2c2bb",
                 "4da5197c-0f42-4f92-b784-d2c905dd048e",
@@ -1782,7 +1795,8 @@ def TrialError(group, x=0, y=0):
    for idx in range(len(testcards)):
       test = table.create(testcards[idx], (70 * idx) - 150, 0, 1, True)
       TypeCard[test] = test.Type
-      random = rnd(10,1000)
+      CostCard[test] = card.Cost
+      #random = rnd(10,500)
       if test.Type == 'Ice' or test.Type == 'Agenda' or test.Type == 'Node':
          test.isFaceUp = False
          test.markers[Not_rezzed] += 1
