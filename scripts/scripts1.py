@@ -219,10 +219,10 @@ def goToSot (group, x=0,y=0):
     else: me.Actions = maxActions
     myCards = (card for card in table if card.controller == me and card.owner == me)
     for card in myCards: card.orientation &= ~Rot90 # Refresh all cards which can be used once a turn.
+    newturn = True
     atTurnStartEffects() # Check all our cards to see if there's any Start of Turn effects active.
     if ds == "corp": notify("The offices of {}'s Corporation are now open for business.".format(me))
     else: notify ("Runner {} has woken up".format(me))
-    newturn = True
 
 def modActions(group,x=0,y=0):
    global maxActions
@@ -606,7 +606,7 @@ def scrAgenda(card, x = 0, y = 0):
             else: agendaTxt = "scores"
             notify("{} {} {} and receives {} agenda point(s)".format(me, agendaTxt, card, ap))
             if me.counters['Agenda Points'].value >= 7 : notify("{} wins the game!".format(me))
-            else: executeAutomations (card,agendaTxt)
+            executeAutomations (card,agendaTxt)
     else:
         whisper ("You can't score this card")
 
@@ -1219,7 +1219,7 @@ def executePlayScripts(card, action):
       selectedAutoscripts = AutoS.split('$$')
       #confirm('selectedAutoscripts: {}'.format(selectedAutoscripts)) # Debug
       for activeAutoscript in selectedAutoscripts:
-         effect = re.search(r'\b([A-Za-z]+)([0-9]+)([A-Za-z& ]*)-?(.*)', activeAutoscript)
+         #effect = re.search(r'\b([A-Za-z]+)([0-9]+)([A-Za-z& ]*)-?(.*)', activeAutoscript)
          confirm('effects: {}'.format(effect.groups())) #Debug
          if (effectType.group(1) == 'whileRezzed' or effectType.group(1) == 'whileScored') and (action == 'derez' or (action == 'trash' and card.markers[Not_rezzed] == 0)): Removal = True
          else: Removal = False
@@ -1231,21 +1231,29 @@ def executePlayScripts(card, action):
                if effect.group(1) == 'Gain': passedScript = "Gain{}{}".format(effect.group(2),effect.group(3))
                else: passedScript = "Lose{}{}".format(effect.group(2),effect.group(3))
             if effect.group(4): passedScript += effect.group(4)
-            GainX(passedScript, announceText, card, notification = 'Quick')
+            if GainX(passedScript, announceText, card, notification = 'Quick') == 'ABORT': return
          else: 
             passedScript = "{}".format(effect.group(0))
-            if effect.group(1) == 'Draw': DrawX(passedScript, announceText, card, notification = 'Quick', n = X)
-            if re.search(r'(Put|Remove|Refill|Use|Infect)', effect.group(1)): TokensX(passedScript, announceText, card, notification = 'Quick', n = X)
+            if effect.group(1) == 'Draw': 
+               if DrawX(passedScript, announceText, card, notification = 'Quick', n = X) == 'ABORT': return
+            if re.search(r'(Put|Remove|Refill|Use|Infect)', effect.group(1)): 
+               if TokensX(passedScript, announceText, card, notification = 'Quick', n = X) == 'ABORT': return
             if effect.group(1) == 'Roll': 
                rollTuple = RollX(passedScript, announceText, card, notification = 'Quick', n = X)
+               if rollTuple == 'ABORT': return
                X = rollTuple[1] 
-            if effect.group(1) == 'Run': RunX(passedScript, announceText, card, notification = 'Quick', n = X)
-            if effect.group(1) == 'Trace': TraceX(passedScript, announceText, card, notification = 'Quick', n = X)
+            if effect.group(1) == 'Run': 
+               if RunX(passedScript, announceText, card, notification = 'Quick', n = X) == 'ABORT': return
+            if effect.group(1) == 'Trace': 
+               if TraceX(passedScript, announceText, card, notification = 'Quick', n = X) == 'ABORT': return
             if effect.group(1) == 'Reshuffle': 
                reshuffleTuple = ReshuffleX(passedScript, announceText, card, notification = 'Quick', n = X)
+               if reshuffleTuple == 'ABORT': return
                X = reshuffleTuple[1]
-            if effect.group(1) == 'Shuffle': ShuffleX(passedScript, announceText, card, notification = 'Quick', n = X)
-            if effect.group(1) == 'Inflict': InflictX(passedScript, announceText, card, notification = 'Quick', n = X)
+            if effect.group(1) == 'Shuffle': 
+               if ShuffleX(passedScript, announceText, card, notification = 'Quick', n = X) == 'ABORT': return
+            if effect.group(1) == 'Inflict': 
+               if InflictX(passedScript, announceText, card, notification = 'Quick', n = X) == 'ABORT': return
          
 #------------------------------------------------------------------------------
 # Autoactions
@@ -1283,8 +1291,8 @@ def useAbility(card, x = 0, y = 0):
       abilConcat = "This card has multiple abilities.\nWhich one would you like to use?\n\n" # We start a concat which we use in our confirm window.
       for idx in range(len(Autoscripts)): # If a card has multiple abilities, we go through each of them to create a nicely written option for the player.
          #notify("Autoscripts {}".format(Autoscripts)) # Debug
-         abilRegex = re.search(r"A([0-9]+)B([0-9]+)G([0-9]+)T([0-9]+):([A-Z][a-z ]+)([0-9]*)([A-Z][a-z ]+)-?([A-Za-z -{},]*)", Autoscripts[idx]) # This regexp returns 3-4 groups, which we then reformat and put in the confirm dialogue in a better readable format.
-         #notify("abilRegex is {}".format(abilRegex.groups())) # Debug
+         abilRegex = re.search(r"A([0-9]+)B([0-9]+)G([0-9]+)T([0-9]+):([A-Z][a-z ]+)([0-9]*)([A-Za-z ]*)-?([A-Za-z -{},]*)", Autoscripts[idx]) # This regexp returns 3-4 groups, which we then reformat and put in the confirm dialogue in a better readable format.
+         #confirm("abilRegex is {}".format(abilRegex.groups())) # Debug
          if abilRegex.group(1) != '0': abilCost = 'Use {} Actions'.format(abilRegex.group(1))
          else: abilCost = '' 
          if abilRegex.group(2) != '0': 
@@ -1783,4 +1791,5 @@ def atTurnStartEffects():
          TokensX(passedScript, announceText, card, notification = 'Automatic')
    if me.counters['Bit Pool'].value < 0: 
       notify(":::Warning::: {}'s start of turn effects cost more Bits than they had in their Bit Pool!".format(me))
+   if ds == 'corp': draw(me.piles['R&D/Stack'])
    if TitleDone: notify(":::--------------------------:::".format(me))
