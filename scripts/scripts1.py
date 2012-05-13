@@ -616,16 +616,15 @@ def scrAgenda(card, x = 0, y = 0):
 def isRezzable (card):
 	mute()
 	Type = TypeCard[card]
-	
-	if ( Type == "Ice" or Type == "Node" or Type == "Upgrade"): return 0
-	else: return -1
+	if Type == "Ice" or Type == "Node" or Type == "Upgrade": return True
+	else: return False
 
 def intRez (card,cost = 'not free', x=0, y=0):
     mute()
     extraText = ''
     rc = ''
     if card.markers[Not_rezzed] == 0: whisper("you can't rez a rezzed card")
-    elif isRezzable(card) == -1: whisper("Not a rezzable card")
+    elif not isRezzable(card): whisper("Not a rezzable card")
     else:
         rc = payCost(CostCard[card], cost)
         if rc == "ABORT": return # If the player didn't have enough money to pay and aborted the function, then do nothing.
@@ -644,7 +643,7 @@ def rezForFree (card, x = 0, y = 0):
 def derez(card, x = 0, y = 0):
    mute()
    if card.markers[Not_rezzed] == 0:
-      if isRezzable(card) == -1: whisper ("Not a rezzable card")
+      if not isRezzable(card): whisper ("Not a rezzable card")
       else:
          card.markers[Bits] = 0
          card.markers[Not_rezzed] += 1
@@ -727,7 +726,7 @@ def useCard(card,x=0,y=0):
       card.highlight = SelectColor
       notify ( "{} uses the ability of {}.".format(me,card) )
    else:
-      if card.highlight == TrashColor and not confirm("This highlight signifies that this card is technically trashedAre you sure you want to clear the card's highlight?"):
+      if card.highlight == TrashedColor and not confirm("This highlight signifies that this card is technically trashedAre you sure you want to clear the card's highlight?"):
          return
       notify("{} clears {}.".format(me, card))
       card.highlight = None
@@ -1280,8 +1279,9 @@ def useAbility(card, x = 0, y = 0):
       elif card.isFaceUp and card.markers[Bits]: payTraceValue(card)
       elif not card.isFaceUp: revealTraceValue(card)
       return
-   if not card.isFaceUp or card.markers[Not_rezzed]: # If card is face down assume they wanted to rez 
-      intRez(card)
+   if not card.isFaceUp or card.markers[Not_rezzed]:
+      if TypeCard[card] == 'Agenda': scrAgenda(card) # If the player double-clicks on an Agenda card, assume they wanted to Score it.
+      else: intRez(card) # If card is face down or not rezzed assume they wanted to rez       
       return
    elif not Automations['Play, Score and Rez'] or card.AutoAction == "": 
       useCard(card) # If card is face up but has no autoscripts, or automation is disabled just notify that we're using an action.
