@@ -34,6 +34,7 @@
 			<groupaction menu="Switch Play, Score and Rez Automation ON/OFF" default="false" execute="switchPlayAutomation" />  
 			<groupaction menu="Switch Start/End-of-Turn Automation ON/OFF" default="false" execute="switchStartEndAutomation" />  
 			<groupaction menu="Switch Damage Automation ON/OFF" default="false" execute="switchDMGAutomation" />  
+			<groupaction menu="Disable all &quot;Newbie&quot; Warnings" default="false" execute="ImAProAtThis" />  
 			<groupaction menu="Debug" default="false" shortcut="Ctrl+Shift+D" execute="TrialError" />
 			<!-- <groupaction menu="Inspect" default="false" shortcut="Ctrl+Shift+I" execute="inspectCard" /> -->
 		</groupactions>

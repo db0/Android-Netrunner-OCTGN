@@ -38,6 +38,7 @@ playeraxis = None # Variable to keep track on which axis the player is
 
 DMGwarn = True # A boolean varialbe to track whether we've warned the player about doing automatic damage.
 Trashwarn = True # Much like above, but it serves to remind the player not to trash some cards.
+ExposeTargetsWarn = True # A boolean variable that reminds the player to select multiple targets to expose for used by specific cards like Encryption Breakthrough
 newturn = True #We use this variable to track whether a player has yet to do anything this turn.
 endofturn = False #We use this variable to know if the player is in the end-of-turn phase.
 #---------------------------------------------------------------------------
@@ -129,7 +130,7 @@ def uniBit(count):
 def uniAction():
    if UniBits: return '⏎'
    else: return '|>'
-   
+
 def chooseWell(limit, choiceText, default = None):
    if default == None: default = 0# If the player has not provided a default value for askInteger, just assume it's the max.
    choice = limit # limit is the number of choices we have
@@ -275,6 +276,13 @@ def switchUniBits(group,x=0,y=0,command = 'Off'):
     else:
         whisper("Bits and Actions will now be displayed as Unicode.".format(me))
         UniBits = True
+
+def ImAProAtThis(group, x=0, y=0):
+   global DMGwarn, Trashwarn, ExposeTargetsWarn
+   DMGwarn = False 
+   Trashwarn = False 
+   ExposeTargetsWarn = False
+   whisper("-- All Newbie warnings have been disabled. Play safe.")
         
 def createStartingCards():
    traceCard = table.create("c0f18b5a-adcd-4efe-b3f8-7d72d1bd1db8", 0, 155 * playerside, 1 ) #The Trace card
@@ -880,9 +888,20 @@ def intPlay(card, cost = 'not_free'):
    executeAutomations(card,"play")
 
 def chkTargeting(card):
+   global ExposeTargetsWarn
    if re.search(r'Targeted', card.AutoScript) and not findTarget(card.AutoScript) and not confirm("This card requires a valid target for it to work correctly.\
                                                                                             \nIf you proceed without a target, strange things might happen.\
                                                                                           \n\nProceed anyway?"): return 'ABORT'
+   if re.search(r'isExposeTarget', card.AutoScript) and ExposeTargetsWarn:
+      if confirm("This card will automatically provide a bonus depending on how many non-exposed derezzed cards you've selected.\
+                    \nMake sure you've selected all the cards you wish to expose and have peeked at them before taking this action\
+                    \nSince this is the first time you take this action, you have the opportunity now to abort and select your targets before proceeding.\
+                  \n\nDo you want to abort this action?\
+                    \n(This message will not appear again)"): 
+         ExposeTargetsWarn = False
+         return 'ABORT'
+      else: ExposeTargetsWarn = False # Whatever happens, we don't show this message again.
+
 def playForFree(card, x = 0, y = 0):
 	intPlay(card,"free")
 
@@ -1270,7 +1289,7 @@ def executePlayScripts(card, action):
       for activeAutoscript in selectedAutoscripts:
          if chkWarn(card, activeAutoscript) == 'ABORT': return
          targetC = findTarget(activeAutoscript)
-         effect = re.search(r'\b([A-Z][A-Za-z]+)([0-9]*)([A-Za-z& ]*)\b([^:]?[A-Za-z0-9& -]*)', activeAutoscript)
+         effect = re.search(r'\b([A-Z][A-Za-z]+)([0-9]*)([A-Za-z& ]*)\b([^:]?[A-Za-z0-9_& -]*)', activeAutoscript)
          #confirm('effects: {}'.format(effect.groups())) #Debug
          if (effectType.group(1) == 'whileRezzed' or effectType.group(1) == 'whileScored') and (action == 'derez' or (action == 'trash' and card.markers[Not_rezzed] == 0)): Removal = True
          else: Removal = False
@@ -1910,6 +1929,46 @@ def per(Autoscript, card = None, count = 0, targetCard = None, notification = No
       elif per.group(3) == 'AdvancementMarker': multiplier = useC.markers[Advance]
       elif per.group(3) == 'BitMarker': multiplier = useC.markers[Bits]
       elif per.group(3) == 'GenericMarker': multiplier = useC.markers[Generic]
+      else:
+         #if re.search(r'Targeted', Autoscript): return 1 # Temporary fix for that give according to the attached cards. So that they can still work manually until I implement that.         
+         perItems = per.group(3).split('_or_')     
+         perItemMatch = [] # A list with all the properties we'll need to match on each card on the table.
+         perItemExclusion = [] # A list with all the properties we'll need to match on each card on the table.
+         cardProperties = [] #we're making a big list with all the properties of the card we need to match
+         multiplier = 0
+         for perItem in perItems:
+            subItems = perItem.split('_and_')
+            for subItem in subItems:
+               regexCondition = re.search(r'{?([A-Z][A-Za-z0-9, ]*)}?', subItem)
+               if re.search(r'no[nt]', subItem): # If this is an exclusion item, we put it on the exclusion list.
+                  perItemExclusion.append(regexCondition.group(1))
+               else:
+                  perItemMatch.append(regexCondition.group(1))
+         #notify('Matches: {}\nExclusions: {}'.format(perItemMatch, perItemExclusion)) # Debug
+         for c in table: # Go through each card on the table and gather its properties, then see if they match.
+            del cardProperties[:] # Cleaning the previous entries
+            cardProperties.append(c.name)
+            cardProperties.append(c.Type)
+            cardSubtypes = c.Keywords.split('-')
+            for cardSubtype in cardSubtypes:
+               strippedCS = cardSubtype.strip() # Remove any leading/trailing spaces. We need to use a new variable, because we can't modify the loop iterator.
+               if strippedCS: cardProperties.append(strippedCS) # If there's anything left after the stip (i.e. it's not an empty string anymrore) add it to the list.
+            cardProperties.append(c.Player)
+            perCHK = True
+            #notify("Starting check with {}.\nProperties: {}".format(c, cardProperties)) # Debug
+            for perItem in perItemMatch: # Now we check if the card properties include all the properties we need
+               if perItem not in cardProperties: perCHK = False # The perCHK starts as True. We only need one missing item to turn it to False, since they all have to exist.
+            for perItem in perItemExclusion:
+               if perItem in cardProperties: perCHK = False # Pretty much the opposite of the above.
+            if perCHK: # If we still have not dismissed the card...
+               if not ((re.search(r'isExposeTarget', Autoscript) and not c.isFaceUp and c.targetedBy == me)
+                    or (re.search(r'isRezzed', Autoscript) and c.isFaceUp and not c.markers[Not_rezzed])): 
+                  perCHK = False
+                  #confirm("Ignored.\nAutoscript is {}".format(Autoscript)) # Debug
+               if re.search(r'isExposeTarget', Autoscript) and not c.isFaceUp and c.targetedBy == me: expose(c) # If the card is supposed to be exposed to get the benefit, then do so now.
+            if perCHK and c.isFaceUp: 
+               multiplier += 1 * chkPlayer(Autoscript, c.controller, False) # If the perCHK remains 1 after the above loop, means that the card matches all our requirements. We only check faceup cards so that we don't take into acoount peeked face-down ones.
+                                                                                                   # We also multiply it with chkPlayer() which will return 0 if the player is not of the correct allegiance (i.e. Rival, or Me)
    else: multiplier = 1
    return multiplier
 
@@ -1933,7 +1992,8 @@ def TrialError(group, x=0, y=0):
    global TypeCard, CostCard, ds
    testcards = ["5c5558f7-333e-4919-845e-e3b9e19cb2e0",
                 "596e0ebb-2936-48ed-9a12-9215dccdc0cb",
-                "01f644d6-7bfa-4485-a90f-bcfa46d0f773"]
+                "01f644d6-7bfa-4485-a90f-bcfa46d0f773",
+                "c48c91d0-8253-42b3-9c69-918a464445e0"]
    ds = "corp"
    me.setGlobalVariable('ds', ds) 
    me.counters['Bit Pool'].value = 50
