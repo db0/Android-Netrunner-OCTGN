@@ -56,7 +56,7 @@ mdict = dict(Advance = ("Advance", "73b8d1f2-cd54-41a9-b689-3726b7b86f4f"),
              Link_value = ("Link value", "3c429e4c-3c7a-49fb-96cc-7f84a63cc672"),
              PlusOne= ("+1", "aa261722-e12a-41d4-a475-3cc1043166a7"),
              MinusOne= ("-1", "48ceb18b-5521-4d3f-b5fb-c8212e8bcbae"),
-             virusButcherBoy = ("Boardwalk","5831fb18-7cdf-44d2-8685-bdd392bb9f1c"),
+             virusButcherBoy = ("Butcher Boy","5831fb18-7cdf-44d2-8685-bdd392bb9f1c"),
              virusCascade = ("Cascade","723a0cca-7a05-46a8-a681-6e06666042ee"),
              virusCockroach = ("Cockroach","cda4cfcb-6f2d-4a7f-acaf-d796b8d1edee"),
              virusGremlin = ("Gremlin","032d2efa-e722-4218-ba2b-699dc80f0b94"),
@@ -1615,9 +1615,9 @@ def chkWarn(card, Autoscript):
          notify(":::Note:::{} is using a workaround autoscript".format(me))
       if warning.group(1) == 'DoNotTrash': 
          if Trashwarn and not confirm("This card asks you to trash it, but its lingering effects will only work automatically while the card is in play.\
-                       \nWe suggest you do not manually trash it. Rather we will mark it with a special highlight so that you know that it's supposed to be out of play.\
-                     \n\nSome cards provide you with an ability that you can activate after they're been trashed. If this card has one, you can activate it by double clicking on the card. Very often, this will often trash the card if it's required.\
-                     \n\nDo you want to see this warning again?"): Trashwarn = False
+                                     \nWe suggest you do not manually trash it. Rather we will mark it with a special highlight so that you know that it's supposed to be out of play.\
+                                   \n\nSome cards provide you with an ability that you can activate after they're been trashed. If this card has one, you can activate it by double clicking on the card. Very often, this will often trash the card if it's required.\
+                                   \n\nDo you want to see this warning again?"): Trashwarn = False
          card.highlight = TrashedColor
    return 'OK'
 
@@ -1900,11 +1900,9 @@ def InflictX(Autoscript, announceText, card, targetCard = None, notification = N
             break
          else:
             if DMGwarn: 
-               confirm("You are about to inflict damage on another player for the first time.\
-                       \nBefore you do that, please make sure that your opponent is not currently manipulating their hand or this might cause the game to crash.\
-                     \n\nThis message will not appear again.\
-                      \n(Press any button to continue)")
-               DMGwarn = False
+               if not confirm("You are about to inflict damage on another player.\
+                             \nBefore you do that, please make sure that your opponent is not currently manipulating their hand or this might cause the game to crash.\
+                           \n\nDo you want this warning message will to appear again?"): DMGwarn = False
             DMGcard = targetPL.hand.random()
             if targetPL.getGlobalVariable('ds') == 'corp': DMGcard.moveTo(targetPL.piles['Archives(Hidden)'])
             else: DMGcard.moveTo(targetPL.piles['Trash/Archives(Face-up)'])
