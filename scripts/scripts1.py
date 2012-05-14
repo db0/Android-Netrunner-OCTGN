@@ -39,6 +39,7 @@ playeraxis = None # Variable to keep track on which axis the player is
 DMGwarn = True # A boolean varialbe to track whether we've warned the player about doing automatic damage.
 Trashwarn = True # Much like above, but it serves to remind the player not to trash some cards.
 ExposeTargetsWarn = True # A boolean variable that reminds the player to select multiple targets to expose for used by specific cards like Encryption Breakthrough
+RevealandShuffleWarn = True # Similar to above.
 newturn = True #We use this variable to track whether a player has yet to do anything this turn.
 endofturn = False #We use this variable to know if the player is in the end-of-turn phase.
 #---------------------------------------------------------------------------
@@ -87,6 +88,7 @@ ScoredColor = "#00ff44"
 SelectColor = "#009900"
 MakeRunColor = "#ff0000"
 TrashedColor = "#000000" # Marks cards which are supposed to be out of play, so that players can tell them apart.
+RevealedColor = "#ffffff"
 
 Xaxis = 'x'
 Yaxis = 'y'
@@ -278,10 +280,11 @@ def switchUniBits(group,x=0,y=0,command = 'Off'):
         UniBits = True
 
 def ImAProAtThis(group, x=0, y=0):
-   global DMGwarn, Trashwarn, ExposeTargetsWarn
+   global DMGwarn, Trashwarn, ExposeTargetsWarn, RevealandShuffleWarn
    DMGwarn = False 
    Trashwarn = False 
    ExposeTargetsWarn = False
+   RevealandShuffleWarn = False
    whisper("-- All Newbie warnings have been disabled. Play safe.")
         
 def createStartingCards():
@@ -888,19 +891,28 @@ def intPlay(card, cost = 'not_free'):
    executeAutomations(card,"play")
 
 def chkTargeting(card):
-   global ExposeTargetsWarn
+   global ExposeTargetsWarn, RevealandShuffleWarn
    if re.search(r'Targeted', card.AutoScript) and not findTarget(card.AutoScript) and not confirm("This card requires a valid target for it to work correctly.\
                                                                                             \nIf you proceed without a target, strange things might happen.\
                                                                                           \n\nProceed anyway?"): return 'ABORT'
    if re.search(r'isExposeTarget', card.AutoScript) and ExposeTargetsWarn:
       if confirm("This card will automatically provide a bonus depending on how many non-exposed derezzed cards you've selected.\
-                    \nMake sure you've selected all the cards you wish to expose and have peeked at them before taking this action\
-                    \nSince this is the first time you take this action, you have the opportunity now to abort and select your targets before proceeding.\
-                  \n\nDo you want to abort this action?\
-                    \n(This message will not appear again)"): 
+                \nMake sure you've selected all the cards you wish to expose and have peeked at them before taking this action\
+                \nSince this is the first time you take this action, you have the opportunity now to abort and select your targets before traying it again.\
+              \n\nDo you want to abort this action?\
+                \n(This message will not appear again)"): 
          ExposeTargetsWarn = False
          return 'ABORT'
-      else: ExposeTargetsWarn = False # Whatever happens, we don't show this message again.
+      else: ExposeTargetsWarn = False # Whatever happens, we don't show this message again. 
+   if re.search(r'Reveal&Shuffle', card.AutoScript) and RevealandShuffleWarn:
+      if confirm("This card will automatically provide a bonus depending on how many cards you selected to reveal (i.e. place on the table) from your hand.\
+                \nMake sure you've selected all the cards (of any specific type required) you wish to reveal to the other players\
+                \nSince this is the first time you take this action, you have the opportunity now to abort and select your targets before trying it again.\
+              \n\nDo you want to abort this action?\
+                \n(This message will not appear again)"): 
+         RevealandShuffleWarn = False
+         return 'ABORT'
+      else: RevealandShuffleWarn = False # Whatever happens, we don't show this message again. 
 
 def playForFree(card, x = 0, y = 0):
 	intPlay(card,"free")
@@ -1291,7 +1303,10 @@ def executePlayScripts(card, action):
          targetC = findTarget(activeAutoscript)
          effect = re.search(r'\b([A-Z][A-Za-z]+)([0-9]*)([A-Za-z& ]*)\b([^:]?[A-Za-z0-9_& -]*)', activeAutoscript)
          #confirm('effects: {}'.format(effect.groups())) #Debug
-         if (effectType.group(1) == 'whileRezzed' or effectType.group(1) == 'whileScored') and (action == 'derez' or (action == 'trash' and card.markers[Not_rezzed] == 0)): Removal = True
+         if effectType.group(1) == 'whileRezzed' or effectType.group(1) == 'whileScored':
+            if action == 'derez' or (action == 'trash' and card.markers[Not_rezzed] == 0): Removal = True
+            else: Removal = False
+         elif action == 'derez' or action == 'trash': return # If it's just a one-off event, and we're trashing it, then do nothing.
          else: Removal = False
          if effect.group(1) == 'Gain' or effect.group(1) == 'Lose':
             if Removal: 
@@ -1936,6 +1951,7 @@ def per(Autoscript, card = None, count = 0, targetCard = None, notification = No
          perItemExclusion = [] # A list with all the properties we'll need to match on each card on the table.
          cardProperties = [] #we're making a big list with all the properties of the card we need to match
          multiplier = 0
+         iter = 0
          for perItem in perItems:
             subItems = perItem.split('_and_')
             for subItem in subItems:
@@ -1945,7 +1961,9 @@ def per(Autoscript, card = None, count = 0, targetCard = None, notification = No
                else:
                   perItemMatch.append(regexCondition.group(1))
          #notify('Matches: {}\nExclusions: {}'.format(perItemMatch, perItemExclusion)) # Debug
-         for c in table: # Go through each card on the table and gather its properties, then see if they match.
+         if re.search(r'fromHand', Autoscript): cardgroup = [c for c in me.hand]
+         else: cardgroup = [c for c in table]
+         for c in cardgroup: # Go through each card on the table and gather its properties, then see if they match.
             del cardProperties[:] # Cleaning the previous entries
             cardProperties.append(c.name)
             cardProperties.append(c.Type)
@@ -1962,13 +1980,27 @@ def per(Autoscript, card = None, count = 0, targetCard = None, notification = No
                if perItem in cardProperties: perCHK = False # Pretty much the opposite of the above.
             if perCHK: # If we still have not dismissed the card...
                if not ((re.search(r'isExposeTarget', Autoscript) and not c.isFaceUp and c.targetedBy == me)
-                    or (re.search(r'isRezzed', Autoscript) and c.isFaceUp and not c.markers[Not_rezzed])): 
+                    or (re.search(r'isRezzed', Autoscript) and c.isFaceUp and not c.markers[Not_rezzed])
+                    or (re.search(r'Reveal&Shuffle', Autoscript) and c.targetedBy and c.targetedBy == me)): 
                   perCHK = False
                   #confirm("Ignored.\nAutoscript is {}".format(Autoscript)) # Debug
                if re.search(r'isExposeTarget', Autoscript) and not c.isFaceUp and c.targetedBy == me: expose(c) # If the card is supposed to be exposed to get the benefit, then do so now.
+               if re.search(r'Reveal&Shuffle', Autoscript) and c.targetedBy and c.targetedBy == me: 
+                  c.moveToTable((70 * iter) - 150, 0 - yaxisMove(card), False) # If the card is supposed to be revealed to get the benefit, then we do so now
+                  c.highlight = RevealedColor
+                  notify("- {} reveals {} from their hand".format(me,c))
+                  iter +=1
             if perCHK and c.isFaceUp: 
-               multiplier += 1 * chkPlayer(Autoscript, c.controller, False) # If the perCHK remains 1 after the above loop, means that the card matches all our requirements. We only check faceup cards so that we don't take into acoount peeked face-down ones.
-                                                                                                   # We also multiply it with chkPlayer() which will return 0 if the player is not of the correct allegiance (i.e. Rival, or Me)
+               if re.search(r'extraPointsPerAP', Autoscript): multiplier += num(c.Stat) # Some cards give you points per some stat of the card. In this case agenda points.
+               else: multiplier += 1 * chkPlayer(Autoscript, c.controller, False) # If the perCHK remains 1 after the above loop, means that the card matches all our requirements. We only check faceup cards so that we don't take into acoount peeked face-down ones.
+                                                                                  # We also multiply it with chkPlayer() which will return 0 if the player is not of the correct allegiance (i.e. Rival, or Me)
+         revealedCards = [c for c in table if c.highlight == RevealedColor] # If we have any revealed cards that need to be reshuffled, we need to do so now.
+         if re.search(r'Reveal&Shuffle', Autoscript) and len(revealedCards) > 0: 
+            confirm("The cards you've just revealed will be reshuffled into your deck once your opponents have had a chance to look at them.\
+                   \nOnce you are ready, press any button to reshuffle them back into your deck")
+            for c in revealedCards: c.moveTo(me.piles['R&D/Stack'])
+            shuffle(me.piles['R&D/Stack'])
+            notify("- {} Shuffles their revealed cards back into their deck".format(me))
    else: multiplier = 1
    return multiplier
 
@@ -1993,7 +2025,7 @@ def TrialError(group, x=0, y=0):
    testcards = ["5c5558f7-333e-4919-845e-e3b9e19cb2e0",
                 "596e0ebb-2936-48ed-9a12-9215dccdc0cb",
                 "01f644d6-7bfa-4485-a90f-bcfa46d0f773",
-                "c48c91d0-8253-42b3-9c69-918a464445e0"]
+                "271ea3ce-3582-4450-b05e-69326a4d6493"]
    ds = "corp"
    me.setGlobalVariable('ds', ds) 
    me.counters['Bit Pool'].value = 50
