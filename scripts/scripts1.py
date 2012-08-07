@@ -1762,7 +1762,7 @@ def TokensX(Autoscript, announceText, card, targetCard = None, notification = No
          #   token = ("{}".format(action.group(3)),"aa261722-e12a-41d4-a475-3cc1043166a7")         
          #else:
          rndGUID = rnd(1,8)
-         token = ("{}".format(action.group(3)),"00000000-0000-0000-0000-00000000000{}".format(rndGUID))
+         token = ("{}".format(action.group(3)),"00000000-0000-0000-0000-00000000000{}".format(rndGUID)) #This GUID is one of the builtin ones
    #confirm("Bumpa") # Debug
    count = num(action.group(2))
    multiplier = per(Autoscript, card, n, targetCard, notification)
@@ -1911,18 +1911,20 @@ def ModifyStatus(Autoscript, announceText, card, targetCard = None, notification
    if notification: notify('--> {}.'.format(announceString))
    return announceString
    
-def InflictX(Autoscript, announceText, card, targetCard = None, notification = None, n = 0):
-   global DMGwarn
-   action = re.search(r'\b(Inflict)([0-9]+)(Meat|Net|Brain)Damage', Autoscript)
+def InflictX(Autoscript, announceText, card, targetCard = None, notification = None, n = 0): 
+#inflicts damage to a player
+   global DMGwarn 
+   localDMGwarn = True #A variable to check if we've already warned the player during this damage dealing.
+   action = re.search(r'\b(Inflict)([0-9]+)(Meat|Net|Brain)Damage', Autoscript) # Find out what kind of damage we're going
    multiplier = per(Autoscript, card, n, targetCard)
-   enhancer = findEnhancements(Autoscript)
-   if enhancer > 0: enhanceTXT = ' (Enhanced: +{})'.format(enhancer)
+   enhancer = findEnhancements(Autoscript) #See if any of our cards increases damage we deal
+   if enhancer > 0: enhanceTXT = ' (Enhanced: +{})'.format(enhancer) #Also notify that this is the case
    else: enhanceTXT = ''
-   targetPL = ofwhom(Autoscript)
-   if re.search(r'ifTagged', Autoscript) and targetPL.Tags == 0:
+   targetPL = ofwhom(Autoscript) #Find out who the target is
+   if re.search(r'ifTagged', Autoscript) and targetPL.Tags == 0: #See if the target needs to be tagged.
       whisper("Your opponent needs to be tagged to use this action")
       return 'ABORT'
-   DMG = (num(action.group(2)) * multiplier) + enhancer
+   DMG = (num(action.group(2)) * multiplier) + enhancer #Calculate our damage
    preventTXT = ''
    if Automations['Damage']: #The actual effects happen only if the Damage automation switch is ON. It should be ON by default.
       if re.search(r'nonPreventable', Autoscript): 
@@ -1932,26 +1934,27 @@ def InflictX(Autoscript, announceText, card, targetCard = None, notification = N
       if DMGprevented > 0:
          preventTXT = ' ({} prevented)'.format(DMGprevented)
          DMG -= DMGprevented
-      for DMGpt in range(DMG):
+      for DMGpt in range(DMG): #Start applying the damage
          if len(targetPL.hand) == 0 or targetPL.counters['Max Hand Size'].value < 0: 
-            notify(":::Warning:::{} has flatlined!".format(targetPL))
+            notify(":::Warning:::{} has flatlined!".format(targetPL)) #If the target does not have any more cards in their hand, inform they've flatlined.
             break
-         else:
-            if DMGwarn: 
+         else: #Otherwise, warn the player doing it for the first time
+            if DMGwarn and localDMGwarn:
+               localDMGwarn = False # We don't want to warn the player for every point of damage.
                if not confirm("You are about to inflict damage on another player.\
                              \nBefore you do that, please make sure that your opponent is not currently manipulating their hand or this might cause the game to crash.\
                            \n\nImportant: Before proceeding, ask your opponent to activate any cards they want that add protection against this type of damage\
-                           \n\nDo you want this warning message will to appear again?"): DMGwarn = False
-            DMGcard = targetPL.hand.random()
-            if targetPL.getGlobalVariable('ds') == 'corp': DMGcard.moveTo(targetPL.piles['Archives(Hidden)'])
-            else: DMGcard.moveTo(targetPL.piles['Trash/Archives(Face-up)'])
-            if action.group(3) == 'Brain':  targetPL.counters['Max Hand Size'].value -= 1
+                           \n\nDo you want this warning message will to appear again next time you do damage?"): DMGwarn = False
+            DMGcard = targetPL.hand.random() # Pick a random card from their hand
+            if targetPL.getGlobalVariable('ds') == 'corp': DMGcard.moveTo(targetPL.piles['Archives(Hidden)']) # If they're a corp, move it to the hidden archive
+            else: DMGcard.moveTo(targetPL.piles['Trash/Archives(Face-up)']) #If they're a runner, move it to trash.
+            if action.group(3) == 'Brain':  targetPL.counters['Max Hand Size'].value -= 1 # If it's brain damage, also reduce the player's maximum handsize.
    if notification == 'Quick': announceString = "{} suffers {} {} damage".format(announceText,DMG,action.group(3))
    else: announceString = "{} inflict {} {} damage{} to {}{}".format(announceText,DMG,action.group(3),enhanceTXT,targetPL,preventTXT)
    if notification and multiplier > 0: notify('--> {}.'.format(announceString))
    return announceString
 
-def findDMGProtection(DMGdone, DMGtype, targetPL):
+def findDMGProtection(DMGdone, DMGtype, targetPL): # Find out if the player has any card preventing damage
    protectionFound = 0
    protectionType = 'protection{}DMG'.format(DMGtype) # This is the string key that we use in the mdict{} dictionary
    for card in table:
@@ -1963,7 +1966,7 @@ def findDMGProtection(DMGdone, DMGtype, targetPL):
          if DMGdone == 0: break # If we've found enough protection to alleviate all damage, stop the search.
    return protectionFound
 
-def findEnhancements(Autoscript):
+def findEnhancements(Autoscript): #Find out if the player has any cards increasing damage dealt.
    enhancer = 0
    DMGtype = re.search(r'\bInflict[0-9]+(Meat|Net|Brain)Damage', Autoscript)
    if DMGtype:
