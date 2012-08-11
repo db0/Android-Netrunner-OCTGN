@@ -65,7 +65,10 @@ mdict = dict(Advance = ("Advance", "73b8d1f2-cd54-41a9-b689-3726b7b86f4f"),
              virusBoardwalk = ("Boardwalk","8c48db01-4f12-4653-a31a-3d22e9f5b6e9"),
              protectionMeatDMG = ("Meat Damage protection","f50fbac7-a147-4941-8d77-56cf9ea672ea"),
              protectionNetDMG = ("Net Damage protection","84527bb1-6b34-4ace-9b11-7e19a6e353c7"),
-             protectionBrainDMG = ("Brain damage protection","8a0612d7-202b-44ec-acdc-84ff93e7968d"))
+             protectionBrainDMG = ("Brain damage protection","8a0612d7-202b-44ec-acdc-84ff93e7968d"),
+             protectionBrainNetDMG = ("Brain & Net Damage protection","42072423-2599-4e70-80b6-56127b7177d9"),
+             protectionVirus = ("Virus protection","6242317f-b706-4e39-b60a-32958d00a8f8"),
+             BrainDMG = ("Brain Damage","05250943-0c9f-4486-bb96-481c025ce0e0"))
 
 turns = [
    'Start of Game',
@@ -1747,6 +1750,7 @@ def TokensX(Autoscript, announceText, card, targetCard = None, notification = No
    if not targetCard: targetCard = card # If there's been to target card given, assume the target is the card itself.
    foundKey = False # We use this to see if the marker used in the AutoAction is already defined.
    infectTXT = '' # We only inject this into the announcement when this is an infect AutoAction.
+   preventTXT = '' # Again for virus infections, to note down how much was prevented.
    action = re.search(r'\b(Put|Remove|Refill|Use|Infect)([0-9]+)([A-Za-z ]+)-?', Autoscript)
    #confirm("{}".format(action.group(3))) # Debug
    if action.group(3) in mdict: token = mdict[action.group(3)]
@@ -1768,11 +1772,17 @@ def TokensX(Autoscript, announceText, card, targetCard = None, notification = No
    multiplier = per(Autoscript, card, n, targetCard, notification)
    if action.group(1) == 'Put': modtokens = count * multiplier
    elif action.group(1) == 'Refill': modtokens = count - targetCard.markers[token]
-   elif action.group(1) == 'Infect': 
-      modtokens = count * multiplier
+   elif action.group(1) == 'Infect':
       victim = ofwhom(Autoscript)
-      if targetCard == None: targetCard = getSpecial('Counter Hold',victim)
+      if not targetCard or targetCard == card: targetCard = getSpecial('Counter Hold',victim) # For infecting targets, the target is never the card causing the effect.
+      modtokens = count * multiplier
+      if token != mdict['protectionVirus']: # We don't want us to prevent putting virus protection tokens, even though we put them with the "Infect" keyword.
+         Virusprevented = findVirusProtection(targetCard, victim, modtokens)
+         if Virusprevented > 0:
+            preventTXT = ' ({} prevented)'.format(Virusprevented)
+            modtokens -= Virusprevented
       infectTXT = '{} with'.format(victim)
+      #notify("Token is {}".format(token[0])) # Debug
    elif action.group(1) == 'Use':
       if not targetCard.markers[token] or count > targetCard.markers[token]: 
          whisper("There's not enough counters left on the card to use this ability!")
@@ -1796,9 +1806,9 @@ def TokensX(Autoscript, announceText, card, targetCard = None, notification = No
       for c in table: # Fait viruses exist on Data Forts, so we clean all of them there.
          if c.Type == 'Data Fort' and c.owner == me: c.markers[mdict['virusFait']] = 0
    else: targetCard.markers[token] += modtokens
-   if action.group(1) == 'Refill': announceString = "{} {} to {} {}".format(announceText, action.group(1), abs(modtokens), action.group(3))
+   if action.group(1) == 'Refill': announceString = "{} {} to {} {}".format(announceText, action.group(1), abs(modtokens), token[0])
    elif re.search(r'\bRemove999Virus', Autoscript): announceString = "{} to clean all viruses from their corporate network".format(announceText)
-   else: announceString = "{} {} {} {} {} counters".format(announceText, action.group(1).lower(),infectTXT, abs(modtokens), action.group(3))
+   else: announceString = "{} {} {} {} {} counters{}".format(announceText, action.group(1).lower(),infectTXT, abs(modtokens), token[0],preventTXT)
    if notification == 'Automatic' and modtokens != 0: notify('--> {}.'.format(announceString))
    return announceString
  
@@ -1974,6 +1984,15 @@ def findEnhancements(Autoscript): #Find out if the player has any cards increasi
          cardENH = re.search(r'Enhance([0-9]+){}Damage'.format(DMGtype.group(1)), card.AutoScript)
          if card.controller == me and not card.markers[Not_rezzed] and cardENH: enhancer += num(cardENH.group(1))
    return enhancer
+
+def findVirusProtection(card, targetPL, VirusInfected): # Find out if the player has any virus preventing counters.
+   protectionFound = 0
+   if card.markers[mdict['protectionVirus']]:
+      while VirusInfected > 0 and card.markers[mdict['protectionVirus']] > 0: # For each virus infected...
+         protectionFound += 1 # We increase the protection found by 1
+         VirusInfected -= 1 # We reduce how much viruses we still need to prevent by 1
+         card.markers[mdict['protectionVirus']] -= 1 # We reduce the card's virus protection counters by 1
+   return protectionFound
    
 def per(Autoscript, card = None, count = 0, targetCard = None, notification = None): # This function goes through the autoscript and looks for the words "per<Something>". Then figures out what the card multiplies its effect with, and returns the appropriate multiplier.
    #confirm("Bump per") #Debug
@@ -2069,9 +2088,9 @@ def customScript(card):
    
 def TrialError(group, x=0, y=0):
    global TypeCard, CostCard, ds
-   testcards = ["5c5558f7-333e-4919-845e-e3b9e19cb2e0",
-                "596e0ebb-2936-48ed-9a12-9215dccdc0cb",
-                "01f644d6-7bfa-4485-a90f-bcfa46d0f773",
+   testcards = ["54a32830-8382-46e6-8aae-8bbeb11afcaf",
+                "bf4e2705-43d9-447e-b71f-dcad30dacbcd",
+                "dd067e2d-788b-4b59-bfff-52dae7e882eb",
                 "271ea3ce-3582-4450-b05e-69326a4d6493"]
    ds = "corp"
    me.setGlobalVariable('ds', ds) 
