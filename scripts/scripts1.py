@@ -538,6 +538,7 @@ def revealTraceValue (card, x=0,y=0):
    card.isFaceUp = True
    card.markers[Bits] = TraceValue
    notify ( "{} reveals a Trace Value of {}.".format(me,TraceValue))
+   if TraceValue == 0: autoscriptOtherPlayers('TraceAttempt') # if the trace value is 0, then we consider the trace attempt as valid, so we call scripts triggering from that.
    TraceValue = 0
 
 def payTraceValue (card, x=0,y=0):
@@ -546,6 +547,7 @@ def payTraceValue (card, x=0,y=0):
    if payCost(card.markers[Bits])  == 'ABORT': return
    notify ("{} pays {} for the Trace Value.".format(me,uniBit(card.markers[Bits])))
    card.markers[Bits] = 0
+   autoscriptOtherPlayers('TraceAttempt')
 
 def cancelTrace ( card, x=0,y=0):
    mute()
@@ -686,6 +688,7 @@ def intRez (card, cost = 'not free', x=0, y=0, silent = False):
    if rc == "ABORT": return # If the player didn't have enough money to pay and aborted the function, then do nothing.
    elif rc == "free": extraText = " at no cost"
    elif rc != 0: rc = "for {}".format(rc)
+   else: rc = ''
    card.isFaceUp = True
    card.markers[Not_rezzed] -= 1
    if not silent:
@@ -1781,7 +1784,7 @@ def TokensX(Autoscript, announceText, card, targetCard = None, notification = No
          if Virusprevented > 0:
             preventTXT = ' ({} prevented)'.format(Virusprevented)
             modtokens -= Virusprevented
-      infectTXT = '{} with'.format(victim)
+      infectTXT = ' {} with'.format(victim)
       #notify("Token is {}".format(token[0])) # Debug
    elif action.group(1) == 'Use':
       if not targetCard.markers[token] or count > targetCard.markers[token]: 
@@ -1808,7 +1811,7 @@ def TokensX(Autoscript, announceText, card, targetCard = None, notification = No
    else: targetCard.markers[token] += modtokens
    if action.group(1) == 'Refill': announceString = "{} {} to {} {}".format(announceText, action.group(1), abs(modtokens), token[0])
    elif re.search(r'\bRemove999Virus', Autoscript): announceString = "{} to clean all viruses from their corporate network".format(announceText)
-   else: announceString = "{} {} {} {} {} counters{}".format(announceText, action.group(1).lower(),infectTXT, abs(modtokens), token[0],preventTXT)
+   else: announceString = "{} {}{} {} {} counters{}".format(announceText, action.group(1).lower(),infectTXT, abs(modtokens), token[0],preventTXT)
    if notification == 'Automatic' and modtokens != 0: notify('--> {}.'.format(announceString))
    return announceString
  
@@ -1996,7 +1999,7 @@ def findVirusProtection(card, targetPL, VirusInfected): # Find out if the player
    
 def per(Autoscript, card = None, count = 0, targetCard = None, notification = None): # This function goes through the autoscript and looks for the words "per<Something>". Then figures out what the card multiplies its effect with, and returns the appropriate multiplier.
    #confirm("Bump per") #Debug
-   per = re.search(r'\b(per|upto)(Assigned|Target|Parent|Generated|Installed|Rezzed|Transferred|Bought)?([{A-Z][A-Za-z0-9,_ {}&]*)[-]?', Autoscript) # We're searching for the word per, and grabbing all after that, until the first dash "-" as the variable.   
+   per = re.search(r'\b(per|upto)(Assigned|Target|Parent|Generated|Installed|Rezzed|Transferred|Bought|TraceAttempt)?([{A-Z][A-Za-z0-9,_ {}&]*)[-]?', Autoscript) # We're searching for the word per, and grabbing all after that, until the first dash "-" as the variable.   
    if per: # If the  search was successful...
       if per.group(2) and per.group(2) == 'Target': useC = targetCard # If the effect is targeted, we need to use the target's attributes
       else: useC = card # If not, use our own.
@@ -2004,6 +2007,9 @@ def per(Autoscript, card = None, count = 0, targetCard = None, notification = No
       elif per.group(3) == 'AdvancementMarker': multiplier = useC.markers[Advance]
       elif per.group(3) == 'BitMarker': multiplier = useC.markers[Bits]
       elif per.group(3) == 'GenericMarker': multiplier = useC.markers[Generic]
+      elif count: multiplier = num(count) * chkPlayer(Autoscript, card.controller, False) # All non-special-rules per<somcething> requests use this formula.
+                                                                                           # Usually there is a count sent to this function (eg, number of favour purchased) with which to multiply the end result with
+                                                                                           # and some cards may only work when a rival owns or does something.
       else:
          #if re.search(r'Targeted', Autoscript): return 1 # Temporary fix for that give according to the attached cards. So that they can still work manually until I implement that.         
          perItems = per.group(3).split('_or_')     
@@ -2082,6 +2088,28 @@ def chkPlayer(Autoscript, controller, manual):
    elif byMe and controller == me: return 1 # If the card needs to be played by us.
    else: return 0 # If all the above fail, it means that we're not supposed to be triggering, so we'll return 0 which will make the multiplier 0.
    
+def autoscriptOtherPlayers(lookup, count = 1):
+# This function is called from other functions in order to go through the table and see if other players have any cards which would be activated by it.
+# For example a card that would produce bits whenever a trace was attempted. 
+   if not Automations['Play, Score and Rez']: return # If automations have been disabled, do nothing.
+   for card in table:
+      #notify('Checking {}'.format(card)) # Debug
+      if not card.isFaceUp or card.markers[mdict['Not_rezzed']]: continue # Don't take into accounts cards that are not rezzed.
+      costText = '{} activates {} to'.format(card.controller, card) 
+      if re.search(r'{}'.format(lookup), card.AutoScript): # Search if in the script of the card, the string that was sent to us exists. The sent string is decided by the function calling us, so for example the ProdX() function knows it only needs to send the 'GeneratedSpice' string.
+         Autoscripts = card.AutoScript.split('||') 
+         for autoS in Autoscripts: # Checking and removing anything other than whileRezzed or whileScored.
+            if not re.search(r'while(Rezzed|Scored)', autoS): Autoscripts.remove(autoS)
+         if len(Autoscripts) == 0: return
+         for AutoS in Autoscripts:
+            #confirm('Autoscripts: {}'.format(AutoS)) # Debug
+            effect = re.search(r'\b([A-Z][A-Za-z]+)([0-9]*)([A-Za-z& ]*)\b([^:]?[A-Za-z0-9_& -]*)', AutoS)
+            passedScript = "{}".format(effect.group(0))
+            confirm('effects: {}'.format(passedScript)) #Debug
+            if effect.group(1) == 'Gain' or effect.group(1) == 'Lose':
+               GainX(passedScript, costText, card, notification = 'Automatic', n = count) # If it exists, then call the GainX() function, because cards that automatically do something when other players do something else, always give the player something directly.
+            if re.search(r'(Put|Remove|Refill|Use|Infect)', effect.group(1)): 
+               TokensX(passedScript, costText, card, notification = 'Automatic', n = count)
    
 def customScript(card):
    useCard(card) # Not in use atm.
@@ -2091,7 +2119,7 @@ def TrialError(group, x=0, y=0):
    testcards = ["54a32830-8382-46e6-8aae-8bbeb11afcaf",
                 "bf4e2705-43d9-447e-b71f-dcad30dacbcd",
                 "dd067e2d-788b-4b59-bfff-52dae7e882eb",
-                "271ea3ce-3582-4450-b05e-69326a4d6493"]
+                "5045ca08-46b8-456f-88cd-9ce3acf49f22"]
    ds = "corp"
    me.setGlobalVariable('ds', ds) 
    me.counters['Bit Pool'].value = 50
