@@ -57,6 +57,7 @@ mdict = dict(Advance = ("Advance", "73b8d1f2-cd54-41a9-b689-3726b7b86f4f"),
              PlusOne= ("+1", "aa261722-e12a-41d4-a475-3cc1043166a7"),
              MinusOne= ("-1", "48ceb18b-5521-4d3f-b5fb-c8212e8bcbae"),
              DaemonMU = ("Daemon MU", "6e46d937-786c-4618-b02c-d7d5ffd3b1a5"),
+             BaseLink = ("Base Link", "226b0f44-bbdc-4960-86cd-21f404265562"),
              virusButcherBoy = ("Butcher Boy","5831fb18-7cdf-44d2-8685-bdd392bb9f1c"),
              virusCascade = ("Cascade","723a0cca-7a05-46a8-a681-6e06666042ee"),
              virusCockroach = ("Cockroach","cda4cfcb-6f2d-4a7f-acaf-d796b8d1edee"),
@@ -739,6 +740,9 @@ def selectAsTarget (card, x = 0, y = 0):
 def clear(card, x = 0, y = 0):
    notify("{} clears {}.".format(me, card))
    card.highlight = None
+   card.markers[mdict['BaseLink']] = 0
+   card.markers[mdict['PlusOne']] = 0
+   card.markers[mdict['MinusOne']] = 0
    card.target(False)
 
 def intTrashCard (card, stat, cost = "not free",  ActionCost = '', silent = False):
@@ -1831,7 +1835,7 @@ def TokensX(Autoscript, announceText, card, targetCard = None, notification = No
       for c in table: # Fait viruses exist on Data Forts, so we clean all of them there.
          if c.Type == 'Data Fort' and c.owner == me: c.markers[mdict['virusFait']] = 0
    else: targetCard.markers[token] += modtokens
-   if action.group(1) == 'Refill': announceString = "{} {} to {} {}".format(announceText, action.group(1), abs(modtokens), token[0])
+   if action.group(1) == 'Refill': announceString = "{} {} to {} {}".format(announceText, action.group(1), count, token[0]) # We need a special announcement for refill, since it always needs to point out the max.
    elif re.search(r'\bRemove999Virus', Autoscript): announceString = "{} to clean all viruses from their corporate network".format(announceText)
    else: announceString = "{} {}{} {} {} counters{}".format(announceText, action.group(1).lower(),infectTXT, abs(modtokens), token[0],preventTXT)
    if notification == 'Automatic' and modtokens != 0: notify('--> {}.'.format(announceString))
@@ -2158,10 +2162,10 @@ def customScript(card):
    
 def TrialError(group, x=0, y=0):
    global TypeCard, CostCard, ds
-   testcards = ["7c9f1acd-f3c6-4e52-b815-06cd2250fa8f",
-                "2645b5bb-43ef-4cd5-82c7-c82f7d6b0fcb",
-                "e5a60274-edf8-42f5-827b-b6f4893c364e",
-                "856db093-6b22-4fd1-a28a-4c5538ea23ce",
+   testcards = ["72b85a2d-8035-4c31-8b5d-1e07bd87e159",
+                "3b7a8012-9bec-4197-ace4-45aa79286a63",
+                "aaa0d8a1-2817-429c-ad3d-2b2ef1f3763d",
+                "a2b43ec7-3325-4852-91cd-eda21b53f5a8",
                 "f43237a3-70a5-4d01-bf3e-bf5bdc4d7d8e",
                 "3ebff079-41c2-4792-9cc5-4c18613de5c5"]
    ds = "corp"

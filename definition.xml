@@ -28,6 +28,7 @@
 	</card>
 	<table name="Table" visibility="undefined" ordered="false" width="1080" height="671" board="r35" boardPosition="-540,-335,1080,671" background="r1" backgroundStyle="uniformToFill">
 		<cardaction menu="Use Card Ability/Clear" default="true" execute="useAbility" />
+		<cardaction menu="Clear Card" default="false" execute="clear" />
 		<groupactions menu="Game...">
 			<groupaction menu="Set up" default="false" shortcut="Ctrl+Shift+S" execute="intJackin" />
 			<groupaction menu="Switch Unicode bits ON/OFF" default="false" execute="switchUniBits" />
