@@ -66,7 +66,7 @@ mdict = dict(Advance = ("Advance", "73b8d1f2-cd54-41a9-b689-3726b7b86f4f"),
              protectionMeatDMG = ("Meat Damage protection","f50fbac7-a147-4941-8d77-56cf9ea672ea"),
              protectionNetDMG = ("Net Damage protection","84527bb1-6b34-4ace-9b11-7e19a6e353c7"),
              protectionBrainDMG = ("Brain damage protection","8a0612d7-202b-44ec-acdc-84ff93e7968d"),
-             protectionBrainNetDMG = ("Brain & Net Damage protection","42072423-2599-4e70-80b6-56127b7177d9"),
+             protectionNetBrainDMG = ("Net & Brain Damage protection","42072423-2599-4e70-80b6-56127b7177d9"),
              protectionVirus = ("Virus protection","6242317f-b706-4e39-b60a-32958d00a8f8"),
              BrainDMG = ("Brain Damage","05250943-0c9f-4486-bb96-481c025ce0e0"))
 
@@ -1988,6 +1988,15 @@ def findDMGProtection(DMGdone, DMGtype, targetPL): # Find out if the player has 
             DMGdone -= 1 # We reduce how much damage we still need to prevent by 1
             card.markers[mdict[protectionType]] -= 1 # We reduce the card's damage protection counters by 1
          if DMGdone == 0: break # If we've found enough protection to alleviate all damage, stop the search.
+   if DMGtype == 'Net' or DMGtype == 'Brain': altprotectionType = 'protectionNetBrainDMG' # To check for the combined Net & Brain protection counter as well.
+   else: altprotectionType = None
+   for card in table: # We check for the combined protections after we use the single protectors.
+      if card.controller == targetPL and altprotectionType and card.markers[mdict[altprotectionType]]:
+         while DMGdone > 0 and card.markers[mdict[altprotectionType]] > 0: # For each point of damage we do.
+            protectionFound += 1 # We increase the protection found by 1
+            DMGdone -= 1 # We reduce how much damage we still need to prevent by 1
+            card.markers[mdict[altprotectionType]] -= 1 # We reduce the card's damage protection counters by 1
+         if DMGdone == 0: break # If we've found enough protection to alleviate all damage, stop the search.
    return protectionFound
 
 def findEnhancements(Autoscript): #Find out if the player has any cards increasing damage dealt.
@@ -2127,10 +2136,12 @@ def customScript(card):
    
 def TrialError(group, x=0, y=0):
    global TypeCard, CostCard, ds
-   testcards = ["22c5f23d-fe42-454a-b5d2-7c7db7f1b887",
-                "8b6d6ad9-f060-4575-94ef-4e98d840ee2a",
-                "ddae08d6-c091-4424-b025-b831e0e0a97c",
-                "f13dbfeb-9655-476d-a999-4f3b274da94f"]
+   testcards = ["f23e3180-e3d5-4a8d-a6d6-d7aa67acfdf5",
+                "2645b5bb-43ef-4cd5-82c7-c82f7d6b0fcb",
+                "e5a60274-edf8-42f5-827b-b6f4893c364e",
+                "856db093-6b22-4fd1-a28a-4c5538ea23ce",
+                "f43237a3-70a5-4d01-bf3e-bf5bdc4d7d8e",
+                "3ebff079-41c2-4792-9cc5-4c18613de5c5"]
    ds = "corp"
    me.setGlobalVariable('ds', ds) 
    me.counters['Bit Pool'].value = 50
