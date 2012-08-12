@@ -65,6 +65,8 @@ mdict = dict(Advance = ("Advance", "73b8d1f2-cd54-41a9-b689-3726b7b86f4f"),
              virusThought = ("Thought","811b9153-93cb-4898-ad9f-68864452b9f4"),
              virusFait = ("Fait","72c89567-72aa-446d-a9ea-e158c22c113a"),
              virusBoardwalk = ("Boardwalk","8c48db01-4f12-4653-a31a-3d22e9f5b6e9"),
+             virusIncubate = ("Incubate","eccc2ee3-2bca-4563-8196-54de4909d313"),
+             virusPattel = ("Pattel","93a124c4-d2fe-4f58-9531-1396675c64dd"),
              protectionMeatDMG = ("Meat Damage protection","f50fbac7-a147-4941-8d77-56cf9ea672ea"),
              protectionNetDMG = ("Net Damage protection","84527bb1-6b34-4ace-9b11-7e19a6e353c7"),
              protectionBrainDMG = ("Brain damage protection","8a0612d7-202b-44ec-acdc-84ff93e7968d"),
@@ -1832,8 +1834,10 @@ def TokensX(Autoscript, announceText, card, targetCard = None, notification = No
       targetCard.markers[mdict['virusGremlin']] = 0
       targetCard.markers[mdict['virusThought']] = 0      
       targetCard.markers[mdict['virusBoardwalk']] = 0
-      for c in table: # Fait viruses exist on Data Forts, so we clean all of them there.
-         if c.Type == 'Data Fort' and c.owner == me: c.markers[mdict['virusFait']] = 0
+      targetCard.markers[mdict['virusIncubate']] = 0
+      for c in table: 
+         if c.Type == 'Data Fort' and c.owner == me: c.markers[mdict['virusFait']] = 0 # Fait viruses exist on Data Forts, so we clean all of them there.
+         if c.Type == 'Ice' and c.owner == me: c.markers[mdict['virusPattel']] = 0 # Pattel viruses exist on Ice, so we clean all of them there.
    else: targetCard.markers[token] += modtokens
    if action.group(1) == 'Refill': announceString = "{} {} to {} {}".format(announceText, action.group(1), count, token[0]) # We need a special announcement for refill, since it always needs to point out the max.
    elif re.search(r'\bRemove999Virus', Autoscript): announceString = "{} to clean all viruses from their corporate network".format(announceText)
@@ -2162,12 +2166,12 @@ def customScript(card):
    
 def TrialError(group, x=0, y=0):
    global TypeCard, CostCard, ds
-   testcards = ["72b85a2d-8035-4c31-8b5d-1e07bd87e159",
-                "3b7a8012-9bec-4197-ace4-45aa79286a63",
+   testcards = ["1e3ac642-4199-4904-92d8-4d2e994ec5a2",
+                "33edf37f-aa77-4072-a946-70a68cb8815d",
                 "aaa0d8a1-2817-429c-ad3d-2b2ef1f3763d",
                 "a2b43ec7-3325-4852-91cd-eda21b53f5a8",
                 "f43237a3-70a5-4d01-bf3e-bf5bdc4d7d8e",
-                "3ebff079-41c2-4792-9cc5-4c18613de5c5"]
+                "1f681197-fee7-4b1d-a619-361bb88f2d2c"]
    ds = "corp"
    me.setGlobalVariable('ds', ds) 
    me.counters['Bit Pool'].value = 50
