@@ -56,6 +56,7 @@ mdict = dict(Advance = ("Advance", "73b8d1f2-cd54-41a9-b689-3726b7b86f4f"),
              Link_value = ("Link value", "3c429e4c-3c7a-49fb-96cc-7f84a63cc672"),
              PlusOne= ("+1", "aa261722-e12a-41d4-a475-3cc1043166a7"),
              MinusOne= ("-1", "48ceb18b-5521-4d3f-b5fb-c8212e8bcbae"),
+             DaemonMU = ("Daemon MU", "6e46d937-786c-4618-b02c-d7d5ffd3b1a5"),
              virusButcherBoy = ("Butcher Boy","5831fb18-7cdf-44d2-8685-bdd392bb9f1c"),
              virusCascade = ("Cascade","723a0cca-7a05-46a8-a681-6e06666042ee"),
              virusCockroach = ("Cockroach","cda4cfcb-6f2d-4a7f-acaf-d796b8d1edee"),
@@ -769,7 +770,7 @@ def intTrashCard (card, stat, cost = "not free",  ActionCost = '', silent = Fals
       ActionCost += "pays {} to".format(rc) # If we have Bit cost, append it to the Action cost to be announced.
       goodGrammar = ''
     if card.isFaceUp:
-        if num(card.properties["MU Required"]) > 0:
+        if num(card.properties["MU Required"]) > 0 and not card.markers[mdict['DaemonMU']]:
             cardowner.Memory += num(card.properties["MU Required"])
             MUtext = ", freeing up {} MUs".format(card.properties["MU Required"])
         if rc == "free" and not silent: notify("{} trashed {} at no cost{}.".format(me, card, MUtext))
@@ -806,12 +807,28 @@ def uninstall(card, silent = False):
       whisper("You can only uninstall your own cards!")
       return 'ABORT'   
    else: 
-      if card.isFaceUp and num(card.properties["MU Required"]) > 0:
+      if card.isFaceUp and num(card.properties["MU Required"]) > 0 and not card.markers[mdict['DaemonMU']]:
          card.owner.Memory += num(card.properties["MU Required"])      
       executeAutomations (card, "uninstall")
       card.moveTo(me.hand)
    if not silent: notify("{} uninstalled {}.".format(me,card))
-   
+
+def possess(daemonCard, programCard, silent = False):
+   #This function takes as arguments 2 cards. A Daemon and a program requiring MUs, then assigns the program to the Daemon, restoring the used MUs to the player.
+   count = num(programCard.properties["MU Required"])
+   if count > daemonCard.markers[mdict['DaemonMU']]:
+      whisper("{} does not have enough free MUs to possess {}.".format(daemonCard, programCard))
+      return 'ABORT'
+   elif programCard.markers[mdict['DaemonMU']]:
+      whisper("{} is already possessed by a daemon.".format(programCard))
+      return 'ABORT'
+   else: 
+      daemonCard.markers[mdict['DaemonMU']] -= count
+      programCard.markers[mdict['DaemonMU']] += count
+      programCard.owner.Memory += count # We return the MUs the card would be otherwise using.
+      if not silent: notify("{} installs {} into {}".format(me,programCard,daemonCard))
+
+      
 def useCard(card,x=0,y=0):
    if card.highlight == None:
       card.highlight = SelectColor
@@ -902,6 +919,10 @@ def intPlay(card, cost = 'not_free'):
       elif rc != 0: rc = " and pays {}".format(rc)
       if card.Type == 'Program':
          card.moveToTable(-150, 65 * playerside - yaxisMove(card), False)
+         for targetLookup in table: # We check if we're targeting a daemon to install the program in.
+            if targetLookup.targetedBy and targetLookup.targetedBy == me and re.search(r'Daemon',targetLookup.Keywords) and possess(targetLookup, card, silent = True) != 'ABORT':
+               MUtext = ", installing it into {}".format(targetLookup)
+               break         
          notify("{}{} to install {}{}{}.".format(ActionCost, rc, card, extraText,MUtext))
       elif card.Type == 'Prep':
          card.moveToTable(0, 0 - yaxisMove(card), False)
@@ -1382,7 +1403,7 @@ def executePlayScripts(card, action):
                if ShuffleX(passedScript, announceText, card, targetC, notification = 'Quick', n = X) == 'ABORT': return
             if effect.group(1) == 'Inflict': 
                if InflictX(passedScript, announceText, card, targetC, notification = 'Quick', n = X) == 'ABORT': return
-            if re.search(r'(Rez|Derez|Expose|Trash|Uninstall)Target', effect.group(1)): 
+            if re.search(r'(Rez|Derez|Expose|Trash|Uninstall|Possess)Target', effect.group(1)): 
                if ModifyStatus(passedScript, announceText, card, targetC, notification = 'Quick', n = X) == 'ABORT': return
          
 #------------------------------------------------------------------------------
@@ -1537,7 +1558,7 @@ def useAbility(card, x = 0, y = 0):
       elif re.search(r'\bRun([A-Za-z& ]+)', activeAutoscript): announceText = RunX(activeAutoscript, announceText, card, targetC, n = X)
       elif re.search(r'\bTrace([0-9]+)', activeAutoscript): announceText = TraceX(activeAutoscript, announceText, card, targetC, n = X)
       elif re.search(r'\bInflict([0-9]+)', activeAutoscript): announceText = InflictX(activeAutoscript, announceText, card, targetC, n = X)
-      elif re.search(r'(Rez|Derez|Expose|Trash|Uninstall)Target', activeAutoscript): announceText = ModifyStatus(activeAutoscript, announceText, card, targetC, n = X)
+      elif re.search(r'(Rez|Derez|Expose|Trash|Uninstall|Possess)Target', activeAutoscript): announceText = ModifyStatus(activeAutoscript, announceText, card, targetC, n = X)
       elif re.search(r'\bSimplyAnnounce', activeAutoscript): announceText = SimplyAnnounce(activeAutoscript, announceText, card, targetC, n = X)
       elif re.search(r'\bUseCustomAbility', activeAutoscript): announceText = UseCustomAbility(activeAutoscript, announceText, card, targetC, n = X)
       else: timesNothingDone += 1
@@ -1920,18 +1941,19 @@ def TraceX(Autoscript, announceText, card, targetCard = None, notification = Non
    return announceString
 
 def ModifyStatus(Autoscript, announceText, card, targetCard = None, notification = None, n = 0):
-   action = re.search(r'\b(Rez|Derez|Expose|Trash|Uninstall)(Target|Parent)', Autoscript)
+   action = re.search(r'\b(Rez|Derez|Expose|Trash|Uninstall|Possess)(Target|Parent)', Autoscript)
    if action.group(1) == 'Rez' and intRez(targetCard, silent = True) != 'ABORT': pass
    elif action.group(1) == 'Derez'and derez(targetCard, silent = True) != 'ABORT': pass
    elif action.group(1) == 'Expose' and expose(targetCard, silent = True) != 'ABORT': pass
    elif action.group(1) == 'Uninstall' and uninstall(targetCard, silent = True) != 'ABORT': pass
+   elif action.group(1) == 'Possess' and possess(card, targetCard, silent = True) != 'ABORT': pass
    elif action.group(1) == 'Trash': whisper(":::Note::: No automatic discard action is taken. Please ask the owner of the card to do take this action themselves.") # We do not discard automatically because it's easy to make a mistake that will be difficult to undo this way.
    else: return 'ABORT'
    if notification == 'Quick': announceString = "{} {}es {}".format(announceText, action.group(1), targetCard)
    else: announceString = "{} {} {}".format(announceText, action.group(1), targetCard)
    if notification: notify('--> {}.'.format(announceString))
    return announceString
-   
+         
 def InflictX(Autoscript, announceText, card, targetCard = None, notification = None, n = 0): 
 #inflicts damage to a player
    global DMGwarn 
@@ -2136,7 +2158,7 @@ def customScript(card):
    
 def TrialError(group, x=0, y=0):
    global TypeCard, CostCard, ds
-   testcards = ["f23e3180-e3d5-4a8d-a6d6-d7aa67acfdf5",
+   testcards = ["7c9f1acd-f3c6-4e52-b815-06cd2250fa8f",
                 "2645b5bb-43ef-4cd5-82c7-c82f7d6b0fcb",
                 "e5a60274-edf8-42f5-827b-b6f4893c364e",
                 "856db093-6b22-4fd1-a28a-4c5538ea23ce",
