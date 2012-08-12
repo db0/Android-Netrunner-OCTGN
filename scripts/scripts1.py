@@ -548,8 +548,10 @@ def revealTraceValue (card, x=0,y=0):
 def payTraceValue (card, x=0,y=0):
    mute()
    card = getSpecial('Tracing')
-   if payCost(card.markers[Bits])  == 'ABORT': return
-   notify ("{} pays {} for the Trace Value.".format(me,uniBit(card.markers[Bits])))
+   reduction = reduceCost(card, 'Trace', card.markers[Bits])
+   if reduction: extraText = " (reduced by {})".format(uniBit(reduction))
+   if payCost(card.markers[Bits] - reduction)  == 'ABORT': return
+   notify ("{} pays {} for the Trace Value{}.".format(me,uniBit(card.markers[Bits]),extraText))
    card.markers[Bits] = 0
    autoscriptOtherPlayers('TraceAttempt')
 
@@ -611,7 +613,7 @@ def payCost(count = 1, cost = 'not_free', counter = 'BP'): # A function that rem
       me.counters['Agenda Points'].value -= count
    return uniBit(count)
 
-def reduceCost(card, type = 'rez'):
+def reduceCost(card, type = 'Rez', fullCost = 0):
    #confirm("Bump") # Debug
    reduction = 0
    faceD = False
@@ -621,12 +623,19 @@ def reduceCost(card, type = 'rez'):
       random = rnd(100,1000) # Hack Workaround
    for c in table:
       #notify("Checking {} with AS: {}".format(c, c.AutoScript)) #Debug
-      reductionSearch = re.search(r'Reduce([0-9]+)CostRez-for([A-Z][A-Za-z ]+)', c.AutoScript) # For now we're only looking for cards which reduce for rezzing, but in the future there might be for other actions as well.
-      if c.controller == me and reductionSearch and type == 'rez' and c.markers[Not_rezzed] == 0 and c.isFaceUp: # If the above search matches (i.e. we have a card with reduction for Rez and a condition we continue to check if our card matches the condition)
+      reductionSearch = re.search(r'Reduce([0-9#]+)Cost{}-for([A-Z][A-Za-z ]+)'.format(type), c.AutoScript) 
+      if c.controller == me and reductionSearch and c.markers[Not_rezzed] == 0 and c.isFaceUp: # If the above search matches (i.e. we have a card with reduction for Rez and a condition we continue to check if our card matches the condition)
          #confirm("Possible Match found in {}".format(c)) # Debug
-         if re.search(r'{}'.format(reductionSearch.group(2)), card.Type) or re.search(r'{}'.format(reductionSearch.group(2)), card.Keywords): #Looking for the type of card being reduced into the properties of the card we're currently paying.
-            #confirm("Search match!") # Debug
-            reduction += num(reductionSearch.group(1)) # if there is a match, the total reduction for this card's cost is increased.
+         if reductionSearch.group(2) == 'All' or re.search(r'{}'.format(reductionSearch.group(2)), card.Type) or re.search(r'{}'.format(reductionSearch.group(2)), card.Keywords): #Looking for the type of card being reduced into the properties of the card we're currently paying.
+            #confirm("Search match! Group is {}".format(reductionSearch.group(1))) # Debug
+            if reductionSearch.group(1) != '#':
+               reduction += num(reductionSearch.group(1)) # if there is a match, the total reduction for this card's cost is increased.
+            else: 
+               while fullCost > 0 and c.markers[mdict['Bits']] > 0: 
+                  reduction += 1
+                  fullCost -= 1
+                  c.markers[mdict['Bits']] -= 1
+                  if fullCost == 0: break
    if faceD: card.isFaceUp = False
    return reduction
    
@@ -686,7 +695,7 @@ def intRez (card, cost = 'not free', x=0, y=0, silent = False):
    if chkTargeting(card) == 'ABORT': 
       notify("{} cancels their action".format(me))
       return
-   reduction = reduceCost(card, 'rez')
+   reduction = reduceCost(card, 'Rez', num(CostCard[card]))
    if reduction: extraText = " (reduced by {})".format(uniBit(reduction))
    rc = payCost(num(CostCard[card]) - reduction, cost)
    if rc == "ABORT": return # If the player didn't have enough money to pay and aborted the function, then do nothing.
@@ -2166,7 +2175,7 @@ def customScript(card):
    
 def TrialError(group, x=0, y=0):
    global TypeCard, CostCard, ds
-   testcards = ["1e3ac642-4199-4904-92d8-4d2e994ec5a2",
+   testcards = ["3695a424-a307-449c-b482-bf2f28a130fb",
                 "33edf37f-aa77-4072-a946-70a68cb8815d",
                 "aaa0d8a1-2817-429c-ad3d-2b2ef1f3763d",
                 "a2b43ec7-3325-4852-91cd-eda21b53f5a8",
