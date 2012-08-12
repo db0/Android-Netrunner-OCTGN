@@ -1538,6 +1538,7 @@ def useAbility(card, x = 0, y = 0):
       elif re.search(r'\bTrace([0-9]+)', activeAutoscript): announceText = TraceX(activeAutoscript, announceText, card, targetC, n = X)
       elif re.search(r'\bInflict([0-9]+)', activeAutoscript): announceText = InflictX(activeAutoscript, announceText, card, targetC, n = X)
       elif re.search(r'(Rez|Derez|Expose|Trash|Uninstall)Target', activeAutoscript): announceText = ModifyStatus(activeAutoscript, announceText, card, targetC, n = X)
+      elif re.search(r'\bSimplyAnnounce', activeAutoscript): announceText = SimplyAnnounce(activeAutoscript, announceText, card, targetC, n = X)
       elif re.search(r'\bUseCustomAbility', activeAutoscript): announceText = UseCustomAbility(activeAutoscript, announceText, card, targetC, n = X)
       else: timesNothingDone += 1
       if announceText == 'ABORT': 
@@ -1901,6 +1902,13 @@ def RunX(Autoscript, announceText, card, targetCard = None, notification = None,
    if notification: notify('--> {}.'.format(announceString))
    return announceString
 
+def SimplyAnnounce(Autoscript, announceText, card, targetCard = None, notification = None, n = 0): # Function for drawing X Cards from the house deck to your hand.
+   action = re.search(r'\bSimplyAnnounce{([A-Za-z&,\. ]+)}', Autoscript)
+   if notification == 'Quick': announceString = "{} {}".format(announceText, action.group(1))
+   else: announceString = "{} {}".format(announceText, action.group(1))
+   if notification: notify('--> {}.'.format(announceString))
+   return announceString
+   
 def TraceX(Autoscript, announceText, card, targetCard = None, notification = None, n = 0): # Function for drawing X Cards from the house deck to your hand.
    action = re.search(r'\bTrace([0-9]+)', Autoscript)
    inputTraceValue(card, limit = num(action.group(1)))
@@ -1936,6 +1944,9 @@ def InflictX(Autoscript, announceText, card, targetCard = None, notification = N
    targetPL = ofwhom(Autoscript) #Find out who the target is
    if re.search(r'ifTagged', Autoscript) and targetPL.Tags == 0: #See if the target needs to be tagged.
       whisper("Your opponent needs to be tagged to use this action")
+      return 'ABORT'
+   elif re.search(r'ifTagged2', Autoscript) and targetPL.Tags < 2: #See if the target needs to be double tagged.
+      whisper("Your opponent needs to be tagged twice to use this action")
       return 'ABORT'
    DMG = (num(action.group(2)) * multiplier) + enhancer #Calculate our damage
    preventTXT = ''
@@ -2116,10 +2127,10 @@ def customScript(card):
    
 def TrialError(group, x=0, y=0):
    global TypeCard, CostCard, ds
-   testcards = ["54a32830-8382-46e6-8aae-8bbeb11afcaf",
-                "bf4e2705-43d9-447e-b71f-dcad30dacbcd",
-                "dd067e2d-788b-4b59-bfff-52dae7e882eb",
-                "5045ca08-46b8-456f-88cd-9ce3acf49f22"]
+   testcards = ["22c5f23d-fe42-454a-b5d2-7c7db7f1b887",
+                "8b6d6ad9-f060-4575-94ef-4e98d840ee2a",
+                "ddae08d6-c091-4424-b025-b831e0e0a97c",
+                "f13dbfeb-9655-476d-a999-4f3b274da94f"]
    ds = "corp"
    me.setGlobalVariable('ds', ds) 
    me.counters['Bit Pool'].value = 50
