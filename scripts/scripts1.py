@@ -1406,7 +1406,7 @@ def executePlayScripts(card, action):
       for activeAutoscript in selectedAutoscripts:
          if chkWarn(card, activeAutoscript) == 'ABORT': return
          targetC = findTarget(activeAutoscript)
-         effect = re.search(r'\b([A-Z][A-Za-z]+)([0-9]*)([A-Za-z& ]*)\b([^:]?[A-Za-z0-9_& -]*)', activeAutoscript)
+         effect = re.search(r'\b([A-Z][A-Za-z]+)([0-9]*)([A-Za-z& ]*)\b([^:]?[A-Za-z0-9_&{} -]*)', activeAutoscript)
          #confirm('effects: {}'.format(effect.groups())) #Debug
          if effectType.group(1) == 'whileRezzed' or effectType.group(1) == 'whileScored':
             if action == 'derez' or ((action == 'trash' or action == 'uninstall') and card.markers[Not_rezzed] == 0): Removal = True
@@ -1424,7 +1424,7 @@ def executePlayScripts(card, action):
                else: passedScript = "Lose{}{}".format(effect.group(2),effect.group(3))
             if effect.group(4): passedScript += effect.group(4)
             #confirm("passedscript: {}".format(passedScript)) # Debug
-            if GainX(passedScript, announceText, card, notification = 'Quick') == 'ABORT': return
+            if GainX(passedScript, announceText, card, targetC, notification = 'Quick') == 'ABORT': return
          else: 
             passedScript = "{}".format(effect.group(0))
             if effect.group(1) == 'Draw': 
@@ -2131,18 +2131,25 @@ def findVirusProtection(card, targetPL, VirusInfected): # Find out if the player
    
 def per(Autoscript, card = None, count = 0, targetCard = None, notification = None): # This function goes through the autoscript and looks for the words "per<Something>". Then figures out what the card multiplies its effect with, and returns the appropriate multiplier.
    #confirm("Bump per") #Debug
-   per = re.search(r'\b(per|upto)(Assigned|Target|Parent|Generated|Installed|Rezzed|Transferred|Bought|TraceAttempt)?([{A-Z][A-Za-z0-9,_ {}&]*)[-]?', Autoscript) # We're searching for the word per, and grabbing all after that, until the first dash "-" as the variable.   
+   per = re.search(r'\b(per|upto)(Assigned|Target|Parent|Generated|Installed|Rezzed|Transferred|Bought|TraceAttempt)?([A-Z][A-Za-z0-9{} ]*)-?', Autoscript) # We're searching for the word per, and grabbing all after that, until the first dash "-" as the variable.   
    if per: # If the  search was successful...
+      #confirm("Groups: {}".format(per.groups())) #Debug
       if per.group(2) and per.group(2) == 'Target': useC = targetCard # If the effect is targeted, we need to use the target's attributes
       else: useC = card # If not, use our own.
       if per.group(3) == 'X': multiplier = count      
-      elif per.group(3) == 'AdvancementMarker': multiplier = useC.markers[Advance]
-      elif per.group(3) == 'BitMarker': multiplier = useC.markers[Bits]
-      elif per.group(3) == 'GenericMarker': multiplier = useC.markers[Generic]
+      elif re.search(r'Marker',per.group(3)):
+         marker = re.search(r'Marker{([\w ]+)}',per.group(3))
+         #confirm("Groups2: {}\n\nuseC: {}".format(marker.group(1),useC)) #Debug
+         multiplier = useC.markers[mdict[marker.group(1)]]
+      elif re.search(r'Property',per.group(3)):
+         property = re.search(r'Property{([\w ]+)}',per.group(3))
+         #confirm("Groups2: {}\n\nuseC: {}".format(marker.group(1),useC)) #Debug
+         multiplier = useC.properties[property.group(1)]
       elif count: multiplier = num(count) * chkPlayer(Autoscript, card.controller, False) # All non-special-rules per<somcething> requests use this formula.
                                                                                            # Usually there is a count sent to this function (eg, number of favour purchased) with which to multiply the end result with
                                                                                            # and some cards may only work when a rival owns or does something.
       else:
+         #confirm("Bump per rest") #Debug
          #if re.search(r'Targeted', Autoscript): return 1 # Temporary fix for that give according to the attached cards. So that they can still work manually until I implement that.         
          perItems = per.group(3).split('_or_')     
          perItemMatch = [] # A list with all the properties we'll need to match on each card on the table.
@@ -2248,10 +2255,10 @@ def customScript(card):
    
 def TrialError(group, x=0, y=0):
    global TypeCard, CostCard, ds
-   testcards = ["c8d67d7d-8a73-4658-a138-231d681e5a1b",
-                "3695a424-a307-449c-b482-bf2f28a130fb", #Krumz
-                "3fdc9c8f-9656-4740-9d1f-7f3d27ea0feb",
-                "b5712c36-5e00-4e5d-836a-43d9047b5a4a", #Arasaka Owns you.
+   testcards = ["9564ee0c-7009-42d3-a994-395c8f3cfff0", # Silver Lining Recovery
+                "d962a368-b3b0-402d-96e3-210e00a840df", # Startup Immolator
+                "facbc33b-e8e8-4179-a63b-956e57d5efd2", # Misc.for-sale
+                "b5712c36-5e00-4e5d-836a-43d9047b5a4a", # Arasaka Owns you.
                 "8934fae5-bb11-4434-8e50-7bd8f23372a1", # Armadillo
                 "4bba7ad5-0c78-4382-bc99-986226ab093a"] # Emergency Self-Reconstruct
    if not ds: ds = "corp"
