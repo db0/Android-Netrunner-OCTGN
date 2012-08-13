@@ -1,4 +1,4 @@
-﻿import re
+import re
 
 Advance = ("Advance", "73b8d1f2-cd54-41a9-b689-3726b7b86f4f")
 Generic = ("Generic", "b384957d-22c5-4e7d-a508-3990c82f4df6")
@@ -122,6 +122,7 @@ def chooseSide(): # Called from many functions to check if the player has chosen
         playerside = 1
 
 def uniBit(count):
+    count = num(count)
     if UniBits:
         if count == 1: return '❶'
         elif count == 2: return '❷'
@@ -547,6 +548,7 @@ def revealTraceValue (card, x=0,y=0):
 
 def payTraceValue (card, x=0,y=0):
    mute()
+   extraText = ''
    card = getSpecial('Tracing')
    reduction = reduceCost(card, 'Trace', card.markers[Bits])
    if reduction: extraText = " (reduced by {})".format(uniBit(reduction))
@@ -623,9 +625,11 @@ def reduceCost(card, type = 'Rez', fullCost = 0):
       random = rnd(100,1000) # Hack Workaround
    for c in table:
       #notify("Checking {} with AS: {}".format(c, c.AutoScript)) #Debug
-      reductionSearch = re.search(r'Reduce([0-9#]+)Cost{}-for([A-Z][A-Za-z ]+)'.format(type), c.AutoScript) 
+      reductionSearch = re.search(r'Reduce([0-9#]+)Cost{}-for([A-Z][A-Za-z ]+)(-not[A-Za-z_& ]+)?'.format(type), c.AutoScript) 
       if c.controller == me and reductionSearch and c.markers[Not_rezzed] == 0 and c.isFaceUp: # If the above search matches (i.e. we have a card with reduction for Rez and a condition we continue to check if our card matches the condition)
-         #confirm("Possible Match found in {}".format(c)) # Debug
+         #confirm("Possible Match found in {}".format(c)) # Debug         
+         if reductionSearch.group(3): exclusion = re.search(r'-not([A-Za-z_& ]+)'.format(type), reductionSearch.group(3))
+         if exclusion and (re.search(r'{}'.format(exclusion.group(1)), card.Type) or re.search(r'{}'.format(exclusion.group(1)), card.Keywords)): continue
          if reductionSearch.group(2) == 'All' or re.search(r'{}'.format(reductionSearch.group(2)), card.Type) or re.search(r'{}'.format(reductionSearch.group(2)), card.Keywords): #Looking for the type of card being reduced into the properties of the card we're currently paying.
             #confirm("Search match! Group is {}".format(reductionSearch.group(1))) # Debug
             if reductionSearch.group(1) != '#':
@@ -761,6 +765,7 @@ def intTrashCard (card, stat, cost = "not free",  ActionCost = '', silent = Fals
     mute()
     MUtext = ""
     rc = ''
+    extraText = ''
     if ActionCost == '': 
       ActionCost = '{} '.format(me) # If not actions were used, then just announce our name.
       goodGrammar = 'es' # LOL Grammar Nazi
@@ -777,7 +782,9 @@ def intTrashCard (card, stat, cost = "not free",  ActionCost = '', silent = Fals
          trashEasterEggIDX = 0
          return
     cardowner = card.owner
-    rc = payCost(stat, cost)
+    reduction = reduceCost(card, 'Trash', stat)
+    if reduction: extraText = " (reduced by {})".format(uniBit(reduction))    
+    rc = payCost(num(stat) - reduction, cost)
     if rc == "ABORT": return 'ABORT' # If the player didn't have enough money to pay and aborted the function, then do nothing.
     elif rc == 0: 
       if ActionCost.endswith(' and'): ActionCost[:-len(' and')] # if we have no action cost, we don't need the connection.
@@ -789,13 +796,13 @@ def intTrashCard (card, stat, cost = "not free",  ActionCost = '', silent = Fals
             cardowner.Memory += num(card.properties["MU Required"])
             MUtext = ", freeing up {} MUs".format(card.properties["MU Required"])
         if rc == "free" and not silent: notify("{} trashed {} at no cost{}.".format(me, card, MUtext))
-        elif not silent: notify("{} trash{} {}{}.".format(ActionCost, goodGrammar, card, MUtext))
+        elif not silent: notify("{} trash{} {}{}{}.".format(ActionCost, goodGrammar, card, extraText, MUtext))
         executeAutomations (card, "trash")
         card.moveTo(cardowner.piles['Trash/Archives(Face-up)'])
     elif (ds == "runner" and cardowner == me) or (ds == "corp" and cardowner != me ): #I'm the runner and I trash my card or I 'm the corp and I trash a runner card
         card.moveTo(cardowner.piles['Trash/Archives(Face-up)'])
         if rc == "free" and not silent: notify ("{} trashed {} at no cost.".format(me,card))
-        elif not silent: notify("{} trash{} {}.".format(ActionCost, goodGrammar, card))
+        elif not silent: notify("{} trash{} {}{}.".format(ActionCost, goodGrammar, card, extraText))
     else: #I'm the corp and I trash my card or I'm the runner and I trash a corp's card
         card.moveTo(cardowner.piles['Archives(Hidden)'])
         if rc == "free" and not silent: notify("{} trashed a hidden card at no cost.".format(me))
@@ -926,7 +933,9 @@ def intPlay(card, cost = 'not_free'):
          notify("{} to install a card.".format(ActionCost))
          executeAutomations(card,"play")
          return
-      rc = payCost(card.Cost, cost)
+      reduction = reduceCost(card, 'Install', num(card.Cost)) #Checking to see if the cost is going to be reduced by cards we have in play.
+      if reduction: extraText = " (reduced by {})".format(uniBit(reduction)) #If it is, make sure to inform.
+      rc = payCost(num(card.Cost) - reduction, cost)
       if rc == "ABORT": 
          me.Actions += NbReq # If the player didn't notice they didn't have enough bits, we give them back their action
          return # If the player didn't have enough money to pay and aborted the function, then do nothing.
@@ -1519,7 +1528,10 @@ def useAbility(card, x = 0, y = 0):
             else: announceText = Acost
          else: announceText = '{}'.format(me) # A variable with the text to be announced at the end of the action.
          if actionCost.group(2) != '0': # If we need to pay bits
-            Bcost = payCost(actionCost.group(2))
+            reduction = reduceCost(card, 'Use', num(actionCost.group(2)))
+            if reduction: extraText = " (reduced by {})".format(uniBit(reduction))  
+            else: extraText = ''
+            Bcost = payCost(num(actionCost.group(2)) - reduction)
             if Bcost == 'ABORT': # if they can't pay the cost afterall, we return them their actions and abort.
                me.Actions += num(actionCost.group(1))
                return
@@ -1527,7 +1539,7 @@ def useAbility(card, x = 0, y = 0):
                if actionCost.group(3) != '0' or actionCost.group(4) != '0': announceText += ', '
                else: announceText += ' and '
             else: announceText += ' '
-            announceText += 'pays {}'.format(actionCost.group(2))
+            announceText += 'pays {}{}'.format(uniBit(num(actionCost.group(2)) - reduction),extraText)
          if actionCost.group(3) != '0': # If we need to pay agenda points...
             Gcost = payCost(actionCost.group(3), counter = 'AP')
             if Gcost == 'ABORT': 
@@ -2175,12 +2187,12 @@ def customScript(card):
    
 def TrialError(group, x=0, y=0):
    global TypeCard, CostCard, ds
-   testcards = ["3695a424-a307-449c-b482-bf2f28a130fb",
-                "33edf37f-aa77-4072-a946-70a68cb8815d",
-                "aaa0d8a1-2817-429c-ad3d-2b2ef1f3763d",
-                "a2b43ec7-3325-4852-91cd-eda21b53f5a8",
-                "f43237a3-70a5-4d01-bf3e-bf5bdc4d7d8e",
-                "1f681197-fee7-4b1d-a619-361bb88f2d2c"]
+   testcards = ["cff2a104-e589-4376-996b-ae65d007a4dc",
+                "5e9e46c9-b13c-47b0-ae34-5cdd093214e3",
+                "3fdc9c8f-9656-4740-9d1f-7f3d27ea0feb",
+                "197be271-5adc-4caf-8569-d85423766081",
+                "8c13d239-1b06-48fc-8239-41d2a57901f0",
+                "4bba7ad5-0c78-4382-bc99-986226ab093a"]
    ds = "corp"
    me.setGlobalVariable('ds', ds) 
    me.counters['Bit Pool'].value = 50
