@@ -673,13 +673,15 @@ def scrAgenda(card, x = 0, y = 0):
    if ds == 'runner': 
       TypeCard[card] = card.Type
       KeywordCard[card] = card.Keywords
+      agendaTxt = "liberate"
+   else: agendaTxt = "score"
    if TypeCard[card] == "Agenda":
       if ds == 'corp' and card.markers[mdict['Advance']] < card.Stat:
          if confirm("You have not advanced this agenda enough to score it. Bypass?"): 
             cheapAgenda = True
             currentAdv = card.markers[mdict['Advance']]
          else: return
-      elif not confirm("Do you want to score this agenda?"): return
+      elif not confirm("Do you want to {} this agenda?".format(agendaTxt)): return
       card.isFaceUp = True
       if chkTargeting(card) == 'ABORT': 
          card.isFaceUp = False
@@ -692,8 +694,6 @@ def scrAgenda(card, x = 0, y = 0):
       me.counters['Agenda Points'].value += ap
       card.moveToTable(-600 - scoredAgendas * cwidth(card) / 6, 60 - yaxisMove(card) + scoredAgendas * cheight(card) / 2 * playerside, False)
       scoredAgendas += 1
-      if ds == "runner": agendaTxt = "liberate"
-      else: agendaTxt = "score"
       notify("{} {}s {} and receives {} agenda point(s)".format(me, agendaTxt, card, ap))
       if cheapAgenda: notify(":::Warning:::{} did not have enough advance tokens ({} out of {})! ".format(card,currentAdv,card.Cost))
       if me.counters['Agenda Points'].value >= 7 : notify("{} wins the game!".format(me))
@@ -844,6 +844,23 @@ def pay2AndTrash(card, x=0, y=0):
    if ActionCost == 'ABORT': return
    intTrashCard(card, 2, ActionCost = ActionCost)
 
+def exileCard(card, silent = False):
+   # Puts the removed card in the shared pile and outside of view.
+   mute()
+   if card.Type == "Tracing" or card.Type == "Counter Hold" or card.Type == "Data Fort": 
+      whisper("This kind of card cannot be exiled!")
+      return 'ABORT'
+   elif card.owner != me:
+      whisper("You can only exile your own cards!")
+      return 'ABORT'   
+   else:
+      if card.isFaceUp and num(card.properties["MU Required"]) > 0 and not card.markers[mdict['DaemonMU']]:
+         card.owner.Memory += num(card.properties["MU Required"])      
+      executeAutomations(card,'trash')
+      card.moveTo(shared.exile)
+   if not silent: notify("{} exiled {}.".format(me,card))
+   
+   
 def uninstall(card, silent = False):
    # Returns an installed card into our hand.
    mute()
@@ -1442,8 +1459,8 @@ def executePlayScripts(card, action):
             #confirm("passedscript: {}".format(passedScript)) # Debug
             if GainX(passedScript, announceText, card, targetC, notification = 'Quick') == 'ABORT': return
          else: 
-            passedScript = "{}".format(effect.group(0))
-            #confirm("passedscript: {}".format(passedScript)) # Debug
+            #passedScript = "{}".format(effect.group(0))
+            confirm("passedscript: {}".format(passedScript)) # Debug
             if effect.group(1) == 'Draw': 
                if DrawX(passedScript, announceText, card, targetC, notification = 'Quick', n = X) == 'ABORT': return
             if re.search(r'(Put|Remove|Refill|Use|Infect)', effect.group(1)): 
@@ -1456,17 +1473,17 @@ def executePlayScripts(card, action):
                if RunX(passedScript, announceText, card, targetC, notification = 'Quick', n = X) == 'ABORT': return
             if effect.group(1) == 'Trace': 
                if TraceX(passedScript, announceText, card, targetC, notification = 'Quick', n = X) == 'ABORT': return
-            if effect.group(1) == 'Reshuffle': 
+            if re.search(r'Reshuffle', effect.group(1)): 
                reshuffleTuple = ReshuffleX(passedScript, announceText, card, targetC, notification = 'Quick', n = X)
                if reshuffleTuple == 'ABORT': return
                X = reshuffleTuple[1]
-            if effect.group(1) == 'Shuffle': 
+            if re.search(r'Shuffle', effect.group(1)): 
                if ShuffleX(passedScript, announceText, card, targetC, notification = 'Quick', n = X) == 'ABORT': return
             if effect.group(1) == 'CreateDummy': 
                if CreateDummy(passedScript, announceText, card, targetC, notification = 'Quick', n = X) == 'ABORT': return
             if effect.group(1) == 'Inflict': 
                if InflictX(passedScript, announceText, card, targetC, notification = 'Quick', n = X) == 'ABORT': return
-            if re.search(r'(Rez|Derez|Expose|Trash|Uninstall|Possess)(Target|Multi|Parent)', effect.group(1)): 
+            if re.search(r'(Rez|Derez|Expose|Trash|Uninstall|Possess|Exile)', effect.group(1)): 
                if ModifyStatus(passedScript, announceText, card, targetC, notification = 'Quick', n = X) == 'ABORT': return
          
 #------------------------------------------------------------------------------
@@ -1625,7 +1642,7 @@ def useAbility(card, x = 0, y = 0):
       elif re.search(r'\bRun([A-Za-z& ]+)', activeAutoscript): announceText = RunX(activeAutoscript, announceText, card, targetC, n = X)
       elif re.search(r'\bTrace([0-9]+)', activeAutoscript): announceText = TraceX(activeAutoscript, announceText, card, targetC, n = X)
       elif re.search(r'\bInflict([0-9]+)', activeAutoscript): announceText = InflictX(activeAutoscript, announceText, card, targetC, n = X)
-      elif re.search(r'(Rez|Derez|Expose|Trash|Uninstall|Possess)(Target|Multi|Parent)', activeAutoscript): announceText = ModifyStatus(activeAutoscript, announceText, card, targetC, n = X)
+      elif re.search(r'(Rez|Derez|Expose|Trash|Uninstall|Possess|Exile)', activeAutoscript): announceText = ModifyStatus(activeAutoscript, announceText, card, targetC, n = X)
       elif re.search(r'\bSimplyAnnounce', activeAutoscript): announceText = SimplyAnnounce(activeAutoscript, announceText, card, targetC, n = X)
       elif re.search(r'\bCreateDummy', activeAutoscript): announceText = CreateDummy(activeAutoscript, announceText, card, targetC, n = X)
       elif re.search(r'\bUseCustomAbility', activeAutoscript): announceText = UseCustomAbility(activeAutoscript, announceText, card, targetC, n = X)
@@ -2085,8 +2102,11 @@ def TraceX(Autoscript, announceText, card, targetCards = [], notification = None
 
 def ModifyStatus(Autoscript, announceText, card, targetCards = [], notification = None, n = 0):
    targetCardlist = '' # A text field holding which cards are going to get tokens.
+   action = re.search(r'\b(Rez|Derez|Expose|Trash|Uninstall|Possess|Exile)(Target|Parent|Multi|Myself)', Autoscript)
+   if action.group(2) == 'Myself': 
+      del targetCards[:] # Empty the list, just in case.
+      targetCards.append(card)
    for targetCard in targetCards: targetCardlist += '{},'.format(targetCard)
-   action = re.search(r'\b(Rez|Derez|Expose|Trash|Uninstall|Possess)(Target|Parent|Multi)', Autoscript)
    #confirm("List: {}".format(targetCards)) #Debug
    #for targetCard in targetCards: notify("ModifyX TargetCard: {}".format(targetCard)) #Debug
    for targetCard in targetCards:
@@ -2098,6 +2118,9 @@ def ModifyStatus(Autoscript, announceText, card, targetCards = [], notification 
       elif action.group(1) == 'Trash':
          if targetCard.owner != me: whisper(":::Note::: No automatic discard action is taken. Please ask the owner of the card to do take this action themselves.") # We do not discard automatically because it's easy to make a mistake that will be difficult to undo this way.
          elif intTrashCard(targetCard, targetCard.Stat, "free", silent = True) == 'ABORT': return 'ABORT' # If we're the owner however, it means that most likely it's ok to proceed and trash it.
+      elif action.group(1) == 'Exile':
+         if targetCard.owner != me: whisper(":::Note::: No automatic discard action is taken. Please ask the owner of the card to do take this action themselves.") # We do not discard automatically because it's easy to make a mistake that will be difficult to undo this way.
+         elif exileCard(targetCard, silent = True) == 'ABORT': return 'ABORT'
       else: return 'ABORT'
       if action.group(2) != 'Multi': break # If we're not doing a multi-targeting, abort after the first run.
    if notification == 'Quick': announceString = "{} {}es {}".format(announceText, action.group(1), targetCardlist)
@@ -2339,8 +2362,8 @@ def customScript(card):
    
 def TrialError(group, x=0, y=0):
    global TypeCard, CostCard, ds
-   testcards = ["9564ee0c-7009-42d3-a994-395c8f3cfff0", # Silver Lining Recovery
-                "d962a368-b3b0-402d-96e3-210e00a840df", # Startup Immolator
+   testcards = ["838d533c-cf90-4802-ac43-18ccfb2ce2dc", # MIT West Tier
+                "5b084516-f9f2-43a6-94df-5c3cce80f473", # AI Chief Financial Officer
                 "413364d6-d82e-430b-b395-ce64e1cae6ff", # ACME Savings
                 "8934fae5-bb11-4434-8e50-7bd8f23372a1", # Armadillo
                 "6955b9dc-99e9-4421-9c12-b2389ea11fbf", # Hunt Club BBS
