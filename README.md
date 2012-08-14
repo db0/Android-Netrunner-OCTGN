@@ -21,6 +21,14 @@ How the custom fonts look like
 
 Changelog
 ---------
+
+### 2.1.2
+
+First version with full automation for most cards in the basic set. From adding markers when you play them, to fully automatizing Arasaka Owns You and Emergency Self-Construct ;)
+Changes and bugfixes far too numerous to mention. Needless to say this is a huge update. 
+
+At this moment only the core set is such automated. The other sets are still usable but might need to edit their definitions to make them compatible (Will release a patch)
+
 ### 2.0.8.2
 
 * No more crashing scripts when player closes windows that ask for numbers
