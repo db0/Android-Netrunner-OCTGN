@@ -37,7 +37,7 @@ playerside = None # Variable to keep track on which side each player is
 playeraxis = None # Variable to keep track on which axis the player is
 
 DMGwarn = True # A boolean varialbe to track whether we've warned the player about doing automatic damage.
-Trashwarn = True # Much like above, but it serves to remind the player not to trash some cards.
+Dummywarn = True # Much like above, but it serves to remind the player not to trash some cards.
 ExposeTargetsWarn = True # A boolean variable that reminds the player to select multiple targets to expose for used by specific cards like Encryption Breakthrough
 RevealandShuffleWarn = True # Similar to above.
 newturn = True #We use this variable to track whether a player has yet to do anything this turn.
@@ -94,7 +94,7 @@ trashEasterEggIDX = 0
 ScoredColor = "#00ff44"
 SelectColor = "#009900"
 MakeRunColor = "#ff0000"
-TrashedColor = "#000000" # Marks cards which are supposed to be out of play, so that players can tell them apart.
+DummyColor = "#000000" # Marks cards which are supposed to be out of play, so that players can tell them apart.
 RevealedColor = "#ffffff"
 
 Xaxis = 'x'
@@ -288,9 +288,9 @@ def switchUniBits(group,x=0,y=0,command = 'Off'):
         UniBits = True
 
 def ImAProAtThis(group, x=0, y=0):
-   global DMGwarn, Trashwarn, ExposeTargetsWarn, RevealandShuffleWarn
+   global DMGwarn, Dummywarn, ExposeTargetsWarn, RevealandShuffleWarn
    DMGwarn = False 
-   Trashwarn = False 
+   Dummywarn = False 
    ExposeTargetsWarn = False
    RevealandShuffleWarn = False
    whisper("-- All Newbie warnings have been disabled. Play safe.")
@@ -638,7 +638,7 @@ def reduceCost(card, type = 'Rez', fullCost = 0):
    if not card.isFaceUp:
       card.isFaceUp = True # We need to turn the card we're checking face up temporarily in order to check its data
       faceD = True
-      random = rnd(100,1000) # Hack Workaround
+      random = rnd(10,100) # Hack Workaround
    for c in table:
       #notify("Checking {} with AS: {}".format(c, c.AutoScript)) #Debug
       reductionSearch = re.search(r'Reduce([0-9#]+)Cost{}-for([A-Z][A-Za-z ]+)(-not[A-Za-z_& ]+)?'.format(type), c.AutoScript) 
@@ -799,6 +799,7 @@ def intTrashCard(card, stat, cost = "not free",  ActionCost = '', silent = False
          card.moveToBottom(cardowner.piles['Trash/Archives(Face-up)'])
          trashEasterEggIDX = 0
          return
+    if card.highlight == DummyColor and not confirm(":::Warning!:::\n\nYou are about to trash a dummy card. You will not be able to restore it without using the effect that created it originally.\n\nAre you sure you want to proceed?"): return
     reduction = reduceCost(card, 'Trash', stat)
     if reduction: extraText = " (reduced by {})".format(uniBit(reduction))    
     rc = payCost(num(stat) - reduction, cost)
@@ -873,7 +874,7 @@ def useCard(card,x=0,y=0):
       card.highlight = SelectColor
       notify ( "{} uses the ability of {}.".format(me,card) )
    else:
-      if card.highlight == TrashedColor and not confirm("This highlight signifies that this card is technically trashed\nAre you sure you want to clear the card's highlight?"):
+      if card.highlight == DummyColor and not confirm("This highlight signifies that this card is technically trashed\nAre you sure you want to clear the card's highlight?"):
          return
       notify("{} clears {}.".format(me, card))
       card.highlight = None
@@ -1725,7 +1726,7 @@ def findTarget(Autoscript):
    return foundTargets
    
 def chkWarn(card, Autoscript):
-   global Trashwarn
+   global Dummywarn
    warning = re.search(r'warn([A-Z][A-Za-z0-9 ]+)-?', Autoscript)
    if warning:
       if warning.group(1) == 'Discard': 
@@ -1742,12 +1743,14 @@ def chkWarn(card, Autoscript):
             return 'ABORT'
       if warning.group(1) == 'Workaround':
          notify(":::Note:::{} is using a workaround autoscript".format(me))
-      if warning.group(1) == 'DoNotTrash': 
-         if Trashwarn and not confirm("This card asks you to trash it, but its lingering effects will only work automatically while the card is in play.\
-                                     \nWe suggest you do not manually trash it. Rather we will mark it with a special highlight so that you know that it's supposed to be out of play.\
-                                   \n\nSome cards provide you with an ability that you can activate after they're been trashed. If this card has one, you can activate it by double clicking on the card. Very often, this will often trash the card if it's required.\
-                                   \n\nDo you want to see this warning again?"): Trashwarn = False
-         card.highlight = TrashedColor
+      if warning.group(1) == 'LeaveDummy': 
+         if Dummywarn and not confirm("This card's effect requires that you trash it, but its lingering effects will only work automatically while a copy is in play.\
+                                     \nFor this reason we've created a dummy card on the table and marked it with a special highlight so that you know that it's just a token.\
+                                   \n\nSome cards provide you with an ability that you can activate after they're been trashed. If this card has one, you can activate it by double clicking on the dummy. Very often, this will often remove the dummy since its effect will disappear.\
+                                   \n\nDo you want to see this warning again?"): Dummywarn = False
+         dummyCard = table.create(card.model, 500, 50 * playerside, 1) # This will create a fake card like the one we just created.
+         dummyCard.highlight = DummyColor
+         card.moveTo(card.owner.piles['Trash/Archives(Face-up)'])
       if warning.group(1) == 'LotsofStuff': 
          if not confirm("This card performs a lot of complex actions that will very difficult to undo. Are you sure you want to proceed?"):
             whisper("--> Aborting action.")
@@ -2319,7 +2322,7 @@ def TrialError(group, x=0, y=0):
                 "facbc33b-e8e8-4179-a63b-956e57d5efd2", # Misc.for-sale
                 "0f493d5f-84c4-4bea-ad03-a2a68a59eab9", # Cortical Scaner (Just random ICE)
                 "b6838762-3fcc-48bc-8ed8-d3d0370c5b14", # Corporate boon
-                "29d3428b-f7db-419e-84c3-90ab4665e254"] # Security Code WORM Chip
+                "413364d6-d82e-430b-b395-ce64e1cae6ff"] # ACME Savings and Loan
    if not ds: ds = "corp"
    me.setGlobalVariable('ds', ds) 
    me.counters['Bit Pool'].value = 50
