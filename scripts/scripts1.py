@@ -1,4 +1,4 @@
-﻿import re
+import re
 
 Advance = ("Advance", "73b8d1f2-cd54-41a9-b689-3726b7b86f4f")
 Generic = ("Generic", "b384957d-22c5-4e7d-a508-3990c82f4df6")
