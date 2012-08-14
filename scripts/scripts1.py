@@ -245,7 +245,8 @@ def goToSot (group, x=0,y=0):
             notify("{} is starting with {} less actions this turn, due to a penalty from a previous turn. They have {} actions this turn".format(me,maxActions - me.Actions, me.Actions))
     else: me.Actions = maxActions
     myCards = (card for card in table if card.controller == me and card.owner == me)
-    for card in myCards: card.orientation &= ~Rot90 # Refresh all cards which can be used once a turn.
+    for card in myCards: 
+      if card in TypeCard and TypeCard[card] != 'Ice': card.orientation &= ~Rot90 # Refresh all cards which can be used once a turn.
     newturn = True
     atTurnStartEndEffects('Start') # Check all our cards to see if there's any Start of Turn effects active.
     if ds == "corp": notify("=> The offices of {}'s Corporation are now open for business.".format(me))
@@ -1418,7 +1419,8 @@ def autoRefreshHand ( card, Param1):
 def executePlayScripts(card, action):
    X = 0
    Autoscripts = card.AutoScript.split('||') # When playing cards, the || is used as an "and" separator, rather than "or". i.e. we don't do choices (yet)
-   for autoS in Autoscripts: # Checking and removing any "AtTurnStart" actions.
+   AutoScriptsSnapshot = list(Autoscripts) # Need to work on a snapshot, because we'll be modifying the list.
+   for autoS in AutoScriptsSnapshot: # Checking and removing any "AtTurnStart" actions.
       if re.search(r'atTurn(Start|End)', autoS): Autoscripts.remove(autoS)
       if re.search(r'{Custom:', autoS): 
          customScript(card)
@@ -1426,8 +1428,8 @@ def executePlayScripts(card, action):
    if len(Autoscripts) == 0: return
    announceText = "{}".format(me)
    for AutoS in Autoscripts:
+      #confirm("Processing: {}".format(AutoS)) # Debug
       effectType = re.search(r'(onRez|onScore|onPlay|whileRezzed|whileScored):', AutoS)
-      #confirm("Bump") # Debug
       if ((effectType.group(1) == 'onRez' and action != 'rez') or
           (effectType.group(1) == 'onPlay' and action != 'play') or
           (effectType.group(1) == 'onScore' and action != 'score') or
@@ -1436,6 +1438,7 @@ def executePlayScripts(card, action):
       selectedAutoscripts = AutoS.split('$$')
       #confirm('selectedAutoscripts: {}'.format(selectedAutoscripts)) # Debug
       for activeAutoscript in selectedAutoscripts:
+         #confirm("Processing: {}".format(activeAutoscript)) # Debug
          if chkWarn(card, activeAutoscript) == 'ABORT': return
          targetC = findTarget(activeAutoscript)
          #confirm("targetC: {}".format(targetC)) # Debug
@@ -1457,7 +1460,7 @@ def executePlayScripts(card, action):
                else: passedScript = "Lose{}{}".format(effect.group(2),effect.group(3))
             if effect.group(4): passedScript += effect.group(4)
             #confirm("passedscript: {}".format(passedScript)) # Debug
-            if GainX(passedScript, announceText, card, targetC, notification = 'Quick') == 'ABORT': return
+            if GainX(passedScript, announceText, card, targetC, notification = 'Quick', n = X) == 'ABORT': return
          else: 
             passedScript = "{}".format(effect.group(0))
             #confirm("passedscript: {}".format(passedScript)) # Debug
@@ -1813,6 +1816,13 @@ def GainX(Autoscript, announceText, card, targetCards = None, notification = Non
       if action.group(1) == 'SetTo': targetPL.Actions = 0 # If we're setting to a specific value, we wipe what it's currently.
       if gain == -999: targetPL.Actions = 0
       else: targetPL.Actions += gain * multiplier
+   elif re.match(r'MU', action.group(3)): 
+      if action.group(1) == 'SetTo': targetPL.Memory = 0 # If we're setting to a specific value, we wipe what it's currently.
+      else: targetPL.Memory += gain * multiplier
+      if targetPL.Memory < 0: 
+         if re.search(r'isCost', Autoscript): notify(":::Warning:::{} did not have enough {} to pay the cost of this action".format(targetPL,action.group(3)))
+         elif re.search(r'isPenalty', Autoscript): pass #If an action is marked as penalty, it means that the value can go negative and the player will have to recover that amount.
+         else: targetPL.Memory = 0
    elif re.match(r'Bad Publicity', action.group(3)): 
       if action.group(1) == 'SetTo': targetPL.counters['Bad Publicity'].value = 0 # If we're setting to a specific value, we wipe what it's currently.
       if gain == -999: targetPL.counters['Bad Publicity'].value = 0
@@ -2096,8 +2106,8 @@ def CreateDummy(Autoscript, announceText, card, targetCards = None, notification
    dummyCard.highlight = DummyColor
    #confirm("Dummy ID: {}\n\nList Dummy ID: {}".format(dummyCard._id,passedlist[0]._id)) #Debug   
    card.moveTo(card.owner.piles['Trash/Archives(Face-up)'])
-   if action.group(1): announceText = TokensX('Put{}'.format(action.group(2)), announceText,dummyCard) # If we have a -with in our autoscript, this is meant to put some tokens on the dummy card.
-   return announceText # Creating a dummy isn't announced.
+   if action.group(1): announceString = TokensX('Put{}'.format(action.group(2)), announceText,dummyCard) # If we have a -with in our autoscript, this is meant to put some tokens on the dummy card.
+   return announceString # Creating a dummy isn't announced.
 
    
 def TraceX(Autoscript, announceText, card, targetCards = None, notification = None, n = 0): # Function for drawing X Cards from the house deck to your hand.
@@ -2237,8 +2247,9 @@ def per(Autoscript, card = None, count = 0, targetCards = None, notification = N
       if per.group(2) and per.group(2) == 'Target': # If we're looking for a target, we need to scour the requested group for targets.
          #confirm("Bump per rest") #Debug
          perCHK = per.group(3).split('_on_') # First we check to see if in our conditions we're looking for markers or card properties, to remove them from the checks
+         perCHKSnapshot = list(perCHK)
          #confirm("Group3: {}\nperCHK: {}".format(per.group(3),perCHK)) #Debug
-         for chkItem in perCHK:
+         for chkItem in perCHKSnapshot:
             if re.search(r'(Marker|Property|Any)',chkItem):
                perCHK.remove(chkItem) # We remove markers and card.properties from names of the card keywords  we'll be looking for later.
          #confirm("perCHK: {}".format(perCHK)) #Debug
@@ -2358,8 +2369,9 @@ def autoscriptOtherPlayers(lookup, count = 1):
       if not card.isFaceUp or card.markers[mdict['Not_rezzed']]: continue # Don't take into accounts cards that are not rezzed.
       costText = '{} activates {} to'.format(card.controller, card) 
       if re.search(r'{}'.format(lookup), card.AutoScript): # Search if in the script of the card, the string that was sent to us exists. The sent string is decided by the function calling us, so for example the ProdX() function knows it only needs to send the 'GeneratedSpice' string.
-         Autoscripts = card.AutoScript.split('||') 
-         for autoS in Autoscripts: # Checking and removing anything other than whileRezzed or whileScored.
+         Autoscripts = card.AutoScript.split('||')
+         AutoScriptSnapshot = list(Autoscripts)
+         for autoS in AutoScriptSnapshot: # Checking and removing anything other than whileRezzed or whileScored.
             if not re.search(r'while(Rezzed|Scored)', autoS): Autoscripts.remove(autoS)
          if len(Autoscripts) == 0: return
          for AutoS in Autoscripts:
@@ -2377,7 +2389,7 @@ def customScript(card):
    
 def TrialError(group, x=0, y=0):
    global TypeCard, CostCard, ds
-   testcards = ["a5b5935d-c1d9-4652-bf1b-fb9843fa8d06", # Record Reconstructor
+   testcards = ["70b34d6f-b157-4711-929e-f13269da79da", # Zetatech Mem Chip
                 "5b084516-f9f2-43a6-94df-5c3cce80f473", # AI Chief Financial Officer
                 "74571bf9-6a2e-4ad1-ba91-ec438df2da94", # Open-Ended Mileage Program
                 "8934fae5-bb11-4434-8e50-7bd8f23372a1", # Armadillo
