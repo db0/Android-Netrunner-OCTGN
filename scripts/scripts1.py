@@ -296,7 +296,7 @@ def ImAProAtThis(group, x=0, y=0):
    whisper("-- All Newbie warnings have been disabled. Play safe.")
         
 def createStartingCards():
-   traceCard = table.create("c0f18b5a-adcd-4efe-b3f8-7d72d1bd1db8", 0, 155 * playerside, 1 ) #The Trace card
+   traceCard = table.create("c0f18b5a-adcd-4efe-b3f8-7d72d1bd1db8", 0, 155 * playerside, 1, True) #The Trace card
    storeSpecial(traceCard)
    if ds == "corp":
       table.create("2a0b57ca-1714-4a70-88d7-25fdf795486f", 150, 160 * playerside, 1, True)
@@ -689,11 +689,11 @@ def scrAgenda(card, x = 0, y = 0):
             me.counters['Agenda Points'].value += ap
             card.moveToTable(-600 - scoredAgendas * cwidth(card) / 6, 60 - yaxisMove(card) + scoredAgendas * cheight(card) / 2 * playerside, False)
             scoredAgendas += 1
-            if ds == "runner": agendaTxt = "liberates"
-            else: agendaTxt = "scores"
-            notify("{} {} {} and receives {} agenda point(s)".format(me, agendaTxt, card, ap))
+            if ds == "runner": agendaTxt = "liberate"
+            else: agendaTxt = "score"
+            notify("{} {}s {} and receives {} agenda point(s)".format(me, agendaTxt, card, ap))
             if me.counters['Agenda Points'].value >= 7 : notify("{} wins the game!".format(me))
-            executeAutomations (card,agendaTxt)
+            executeAutomations(card,agendaTxt)
     else:
         whisper ("You can't score this card")
 
@@ -729,7 +729,7 @@ def intRez (card, cost = 'not free', x=0, y=0, silent = False):
       if card.Type == 'Ice': notify("{} has rezzed {}{}{}.".format(me, card, rc, extraText))
       if card.Type == 'Node': notify("{} has acquired {}{}{}.".format(me, card, rc, extraText))
       if card.Type == 'Upgrade': notify("{} has installed {}{}{}.".format(me, card, rc, extraText))
-   executeAutomations ( card, "rez" )
+   executeAutomations(card,'rez')
     
 
 def rezForFree (card, x = 0, y = 0):
@@ -745,7 +745,7 @@ def derez(card, x = 0, y = 0, silent = False):
          card.markers[Bits] = 0
          card.markers[Not_rezzed] += 1
          if not silent: notify("{} derezzed {}".format(me, card))
-         executeAutomations ( card, "derez" )
+         executeAutomations(card,'derez')
    else:
       notify ( "you can't derez a unrezzed card")
       return 'ABORT'
@@ -777,7 +777,7 @@ def clear(card, x = 0, y = 0):
    card.markers[mdict['MinusOne']] = 0
    card.target(False)
 
-def intTrashCard (card, stat, cost = "not free",  ActionCost = '', silent = False):
+def intTrashCard(card, stat, cost = "not free",  ActionCost = '', silent = False):
     global trashEasterEggIDX
     mute()
     MUtext = ""
@@ -789,6 +789,7 @@ def intTrashCard (card, stat, cost = "not free",  ActionCost = '', silent = Fals
     else: 
       ActionCost += ' and '
       goodGrammar = ''
+    cardowner = card.owner
     if card.Type == "Tracing" or card.Type == "Counter Hold" or card.Type == "Data Fort": 
       whisper("{}".format(trashEasterEgg[trashEasterEggIDX]))
       if trashEasterEggIDX < 7:
@@ -798,7 +799,6 @@ def intTrashCard (card, stat, cost = "not free",  ActionCost = '', silent = Fals
          card.moveToBottom(cardowner.piles['Trash/Archives(Face-up)'])
          trashEasterEggIDX = 0
          return
-    cardowner = card.owner
     reduction = reduceCost(card, 'Trash', stat)
     if reduction: extraText = " (reduced by {})".format(uniBit(reduction))    
     rc = payCost(num(stat) - reduction, cost)
@@ -814,7 +814,7 @@ def intTrashCard (card, stat, cost = "not free",  ActionCost = '', silent = Fals
             MUtext = ", freeing up {} MUs".format(card.properties["MU Required"])
         if rc == "free" and not silent: notify("{} trashed {} at no cost{}.".format(me, card, MUtext))
         elif not silent: notify("{} trash{} {}{}{}.".format(ActionCost, goodGrammar, card, extraText, MUtext))
-        executeAutomations (card, "trash")
+        executeAutomations(card,'trash')
         card.moveTo(cardowner.piles['Trash/Archives(Face-up)'])
     elif (ds == "runner" and cardowner == me) or (ds == "corp" and cardowner != me ): #I'm the runner and I trash my card or I 'm the corp and I trash a runner card
         card.moveTo(cardowner.piles['Trash/Archives(Face-up)'])
@@ -848,7 +848,7 @@ def uninstall(card, silent = False):
    else: 
       if card.isFaceUp and num(card.properties["MU Required"]) > 0 and not card.markers[mdict['DaemonMU']]:
          card.owner.Memory += num(card.properties["MU Required"])      
-      executeAutomations (card, "uninstall")
+      executeAutomations(card,'uninstall')
       card.moveTo(me.hand)
    if not silent: notify("{} uninstalled {}.".format(me,card))
 
@@ -873,7 +873,7 @@ def useCard(card,x=0,y=0):
       card.highlight = SelectColor
       notify ( "{} uses the ability of {}.".format(me,card) )
    else:
-      if card.highlight == TrashedColor and not confirm("This highlight signifies that this card is technically trashedAre you sure you want to clear the card's highlight?"):
+      if card.highlight == TrashedColor and not confirm("This highlight signifies that this card is technically trashed\nAre you sure you want to clear the card's highlight?"):
          return
       notify("{} clears {}.".format(me, card))
       card.highlight = None
@@ -948,7 +948,7 @@ def intPlay(card, cost = 'not_free'):
       if card.Type == 'Resource' and hiddenresource == 'yes':
          card.moveToTable(-180, 230 * playerside - yaxisMove(card), True)
          notify("{} to install a card.".format(ActionCost))
-         executeAutomations(card,"play")
+         executeAutomations(card,'play')
          return
       reduction = reduceCost(card, 'Install', num(card.Cost)) #Checking to see if the cost is going to be reduced by cards we have in play.
       if reduction: extraText = " (reduced by {})".format(uniBit(reduction)) #If it is, make sure to inform.
@@ -993,13 +993,13 @@ def intPlay(card, cost = 'not_free'):
       else:
          card.moveToTable(0, 0 * playerside - yaxisMove(card), False)
          notify("{}{} to play {}{}.".format(ActionCost, rc, card, extraText))           
-   executeAutomations(card,"play")
+   executeAutomations(card,'play')
 
 def chkTargeting(card):
    global ExposeTargetsWarn, RevealandShuffleWarn
    if re.search(r'Targeted', card.AutoScript) and not findTarget(card.AutoScript) and not confirm("This card requires a valid target for it to work correctly.\
-                                                                                            \nIf you proceed without a target, strange things might happen.\
-                                                                                          \n\nProceed anyway?"): return 'ABORT'
+                                                                                                 \nIf you proceed without a target, strange things might happen.\
+                                                                                               \n\nProceed anyway?"): return 'ABORT'
    if re.search(r'isExposeTarget', card.AutoScript) and ExposeTargetsWarn:
       if confirm("This card will automatically provide a bonus depending on how many non-exposed derezzed cards you've selected.\
                 \nMake sure you've selected all the cards you wish to expose and have peeked at them before taking this action\
@@ -1401,11 +1401,18 @@ def executePlayScripts(card, action):
    announceText = "{}".format(me)
    for AutoS in Autoscripts:
       effectType = re.search(r'(onRez|onScore|onPlay|whileRezzed|whileScored):', AutoS)
+      #confirm("Bump") # Debug
+      if ((effectType.group(1) == 'onRez' and action != 'rez') or
+          (effectType.group(1) == 'onPlay' and action != 'play') or
+          (effectType.group(1) == 'onScore' and action != 'score') or
+          (effectType.group(1) == 'onTrash' and action != 'trash') or
+          (effectType.group(1) == 'onDerez' and action != 'derez')): continue # We don't want onPlay effects to activate onTrash for example.
       selectedAutoscripts = AutoS.split('$$')
       #confirm('selectedAutoscripts: {}'.format(selectedAutoscripts)) # Debug
       for activeAutoscript in selectedAutoscripts:
          if chkWarn(card, activeAutoscript) == 'ABORT': return
          targetC = findTarget(activeAutoscript)
+         #confirm("targetC: {}".format(targetC)) # Debug
          effect = re.search(r'\b([A-Z][A-Za-z]+)([0-9]*)([A-Za-z& ]*)\b([^:]?[A-Za-z0-9_&{} -]*)', activeAutoscript)
          #confirm('effects: {}'.format(effect.groups())) #Debug
          if effectType.group(1) == 'whileRezzed' or effectType.group(1) == 'whileScored':
@@ -1447,7 +1454,7 @@ def executePlayScripts(card, action):
                if ShuffleX(passedScript, announceText, card, targetC, notification = 'Quick', n = X) == 'ABORT': return
             if effect.group(1) == 'Inflict': 
                if InflictX(passedScript, announceText, card, targetC, notification = 'Quick', n = X) == 'ABORT': return
-            if re.search(r'(Rez|Derez|Expose|Trash|Uninstall|Possess)Target', effect.group(1)): 
+            if re.search(r'(Rez|Derez|Expose|Trash|Uninstall|Possess)(Target|Multi|Parent)', effect.group(1)): 
                if ModifyStatus(passedScript, announceText, card, targetC, notification = 'Quick', n = X) == 'ABORT': return
          
 #------------------------------------------------------------------------------
@@ -1530,6 +1537,7 @@ def useAbility(card, x = 0, y = 0):
    timesNothingDone = 0 # A variable that keeps track if we've done any of the autoscripts defined. If none have been coded, we just engage the card.
    X = 0 # Variable for special costs.
    for activeAutoscript in selectedAutoscripts:
+      #confirm("Active Autoscript: {}".format(activeAutoscript)) #Debug
       ### Checking if any of the card's effects requires one or more targets first
       if re.search(r'Targeted', activeAutoscript) and not findTarget(activeAutoscript): return
    for activeAutoscript in selectedAutoscripts:
@@ -1605,7 +1613,7 @@ def useAbility(card, x = 0, y = 0):
       elif re.search(r'\bRun([A-Za-z& ]+)', activeAutoscript): announceText = RunX(activeAutoscript, announceText, card, targetC, n = X)
       elif re.search(r'\bTrace([0-9]+)', activeAutoscript): announceText = TraceX(activeAutoscript, announceText, card, targetC, n = X)
       elif re.search(r'\bInflict([0-9]+)', activeAutoscript): announceText = InflictX(activeAutoscript, announceText, card, targetC, n = X)
-      elif re.search(r'(Rez|Derez|Expose|Trash|Uninstall|Possess)Target', activeAutoscript): announceText = ModifyStatus(activeAutoscript, announceText, card, targetC, n = X)
+      elif re.search(r'(Rez|Derez|Expose|Trash|Uninstall|Possess)(Target|Multi|Parent)', activeAutoscript): announceText = ModifyStatus(activeAutoscript, announceText, card, targetC, n = X)
       elif re.search(r'\bSimplyAnnounce', activeAutoscript): announceText = SimplyAnnounce(activeAutoscript, announceText, card, targetC, n = X)
       elif re.search(r'\bUseCustomAbility', activeAutoscript): announceText = UseCustomAbility(activeAutoscript, announceText, card, targetC, n = X)
       else: timesNothingDone += 1
@@ -1619,7 +1627,7 @@ def useAbility(card, x = 0, y = 0):
       announceText = announceText[:-len(' and')] # If for some reason we end with " and" (say because the last action did nothing), we remove it.
    else: # If we did something and everything finished as expected, then take the costs.
       if re.search(r"T1:", selectedAutoscripts[0]): 
-         executeAutomations (card, "trash")
+         executeAutomations (card,'trash')
          card.moveTo(card.owner.piles['Trash/Archives(Face-up)'])
       notify("{}.".format(announceText)) # Finally announce what the player just did by using the concatenated string.
 
@@ -1635,6 +1643,8 @@ def autoscriptCostUndo(card, Autoscript):
 
 def findTarget(Autoscript):
    targetC = None
+   #confirm("Looking for targets.\n\nAutoscript: {}".format(Autoscript)) #Debug
+   foundTargets = []
    if re.search(r'Targeted', Autoscript):
       validTargets = [] # a list that holds any type that a card must be, in order to be a valid target.
       validNamedTargets = [] # a list that holds any name or allegiance that a card must have, in order to be a valid target.
@@ -1673,8 +1683,8 @@ def findTarget(Autoscript):
          if targetLookup.targetedBy and targetLookup.targetedBy == me and chkPlayer(Autoscript, targetLookup.controller, False): # The card needs to be targeted by the player. If the card needs to belong to a specific player (me or rival) this also is taken into account.
             if not targetLookup.isFaceUp: # If we've targeted a subdued card, we turn it temporarily face-up to grab its properties.
                targetLookup.isFaceUp = True
-               wasNotRezzed = True
-            else: wasNotRezzed = False
+               cFaceD = True
+            else: cFaceD = False
             if len(validTargets) == 0 and len(validNamedTargets) == 0: targetC = targetLookup # If we have no target restrictions, any targeted  card will do.
             else:
                for validtargetCHK in validTargets: # look if the card we're going through matches our valid target checks
@@ -1691,8 +1701,12 @@ def findTarget(Autoscript):
                for invalidtargetCHK in invalidNamedTargets:
                   if invalidtargetCHK == targetLookup.name:
                      targetC = None
-            if wasNotRezzed: targetLookup.isFaceUp = False
-            if targetC: return targetC
+            #confirm("doing rezcheck") # Debug
+            if re.search(r'isRezzed', Autoscript) and targetLookup.markers[mdict['Not_rezzed']]: targetC = None
+            if re.search(r'isUnrezzed', Autoscript) and not targetLookup.markers[mdict['Not_rezzed']]: targetC = None
+            if cFaceD: targetLookup.isFaceUp = False
+            #confirm("about to append target Card: {}".format(targetC.name)) # Debug
+            if targetC: foundTargets.append(targetC)
       if targetC == None: 
          targetsText = ''
          if len(validTargets) > 0: targetsText += "\nValid Target types: {}.".format(validTargets)
@@ -1702,10 +1716,13 @@ def findTarget(Autoscript):
          if not chkPlayer(Autoscript, targetLookup.controller, False): 
             allegiance = re.search(r'by(Opponent|Me)', Autoscript)
             requiredAllegiances.append(allegiance.group(1))
+         if re.search(r'isRezzed', Autoscript): targetsText += "\nValid Status: Rezzed."
+         if re.search(r'isUnrezzed', Autoscript): targetsText += "\nValid Status: Unrezzed."
          if len(requiredAllegiances) > 0: targetsText += "\nValid Target Allegiance: {}.".format(requiredAllegiances)
          whisper("You need to target a valid card before using this action{}".format(targetsText))
-         return targetC
-   else: return targetC
+   #confirm("List is: {}".format(foundTargets)) # Debug
+   #for foundTarget in foundTargets: notify('found target: {}'.format(foundTarget)) # Debug
+   return foundTargets
    
 def chkWarn(card, Autoscript):
    global Trashwarn
@@ -1737,7 +1754,7 @@ def chkWarn(card, Autoscript):
             return 'ABORT'
    return 'OK'
 
-def GainX(Autoscript, announceText, card, targetCard = None, notification = None, n = 0):
+def GainX(Autoscript, announceText, card, targetCards = [], notification = None, n = 0):
    global maxActions
    #confirm("Bump GainX") #Debug
    gain = 0
@@ -1751,7 +1768,7 @@ def GainX(Autoscript, announceText, card, targetCard = None, notification = None
       whisper("Your opponent needs to be tagged to use this action")
       return 'ABORT'
    if action.group(1) == 'Lose': gain *= -1
-   multiplier = per(Autoscript, card, n, targetCard) # We check if the card provides a gain based on something else, such as favour bought, or number of dune fiefs controlled by rivals.
+   multiplier = per(Autoscript, card, n, targetCards) # We check if the card provides a gain based on something else, such as favour bought, or number of dune fiefs controlled by rivals.
    if re.match(r'Bit', action.group(3)): # Note to self: I can probably comprress the following, by using variables and by putting the counter object into a variable as well.
       if action.group(1) == 'SetTo': targetPL.counters['Bit Pool'].value = 0 # If we're setting to a specific value, we wipe what it's currently.
       if gain == -999: targetPL.counters['Bit Pool'].value = 0
@@ -1809,39 +1826,49 @@ def GainX(Autoscript, announceText, card, targetCard = None, notification = None
    if notification and multiplier > 0: notify('--> {}.'.format(announceString))
    return announceString
 
-def TransferX(Autoscript, announceText, card, targetCard = None, notification = None, n = 0):
+def TransferX(Autoscript, announceText, card, targetCards = [], notification = None, n = 0):
    breakadd = 1
-   if not targetCard: targetCard = card # If there's been to target card given, assume the target is the card itself.
+   targetCardlist = '' # A text field holding which cards are going to get tokens.
+   if len(targetCards) == 0: targetCards.append(card) # If there's been to target card given, assume the target is the card itself.
+   for targetCard in targetCards: targetCardlist += '{},'.format(targetCard)
    action = re.search(r'\bTransfer([0-9]+)Bits?-to(Bit Pool|Discard)', Autoscript)
-   if action.group(1) == '999':
-      if targetCard.markers[Bits]: count = targetCard.markers[Bits]
-      else: count = 0
-   else: count = num(action.group(1))
-   if targetCard.markers[Bits] < count: 
-      if re.search(r'isCost', Autoscript):
-         whisper("You must have at least {} Bits on the card to take this action".format(action.group(1)))
-         return 'ABORT'
-      elif targetCard.markers[Bits] == 0 and not notification: 
-         whisper("There was nothing to transfer.")
-         return 'ABORT'
-      elif targetCard.markers[Bits] == 0 and notification: return 'ABORT'
-   for transfer in range(count):
-      if targetCard.markers[Bits] > 0: 
-         targetCard.markers[Bits] -= 1
-         if action.group(2) == 'Bit Pool': 
-            card.owner.counters['Bit Pool'].value += 1
-            destination = "{}'s bit pool".format(card.owner)
-         elif action.group(2) == 'Discard': destination = "the Discard Pile" # If the tokens are discarded, do nothing more.
-      else: 
-         breakadd -= 1 # We decrease the transfer variable by one, to make sure we announce the correct total.
-         break # If there's no more tokens to transfer, break out of the loop.
+   for targetCard in targetCards:
+      if action.group(1) == '999':
+         if targetCard.markers[Bits]: count = targetCard.markers[Bits]
+         else: count = 0
+      else: count = num(action.group(1))
+      if targetCard.markers[Bits] < count: 
+         if re.search(r'isCost', Autoscript):
+            whisper("You must have at least {} Bits on the card to take this action".format(action.group(1)))
+            return 'ABORT'
+         elif targetCard.markers[Bits] == 0 and not notification: 
+            whisper("There was nothing to transfer.")
+            return 'ABORT'
+         elif targetCard.markers[Bits] == 0 and notification: return 'ABORT'
+      for transfer in range(count):
+         if targetCard.markers[Bits] > 0: 
+            targetCard.markers[Bits] -= 1
+            if action.group(2) == 'Bit Pool': 
+               card.owner.counters['Bit Pool'].value += 1
+               destination = "{}'s bit pool".format(card.owner)
+            elif action.group(2) == 'Discard': destination = "the Discard Pile" # If the tokens are discarded, do nothing more.
+         else: 
+            breakadd -= 1 # We decrease the transfer variable by one, to make sure we announce the correct total.
+            break # If there's no more tokens to transfer, break out of the loop.
    if notification == 'Quick': announceString = "{} takes {} bits".format(announceText, transfer + breakadd)
-   else: announceString = "{} transfer {} bits from {} to {}".format(announceText, transfer + breakadd, targetCard, destination)
+   else: announceString = "{} transfer {} bits from {} to {}".format(announceText, transfer + breakadd, targetCardlist, destination)
    if notification: notify('--> {}.'.format(announceString))
    return announceString   
 
-def TokensX(Autoscript, announceText, card, targetCard = None, notification = None, n = 0):
-   if not targetCard: targetCard = card # If there's been to target card given, assume the target is the card itself.
+def TokensX(Autoscript, announceText, card, targetCards = [], notification = None, n = 0):
+   if len(targetCards) == 0: 
+      targetCards.append(card) # If there's been to target card given, assume the target is the card itself.
+      targetCardlist = ' on it' 
+   else:
+      targetCardlist = ' on' # A text field holding which cards are going to get tokens.
+      for targetCard in targetCards:
+         targetCardlist += ' {},'.format(targetCard)
+   #confirm("TokensX List: {}".format(targetCardlist)) # Debug
    foundKey = False # We use this to see if the marker used in the AutoAction is already defined.
    infectTXT = '' # We only inject this into the announcement when this is an infect AutoAction.
    preventTXT = '' # Again for virus infections, to note down how much was prevented.
@@ -1851,9 +1878,9 @@ def TokensX(Autoscript, announceText, card, targetCard = None, notification = No
    else: # If the marker we're looking for it not defined, then either create a new one with a random color, or look for a token with the custom name we used above.
       if action.group(1) == 'Infect': 
          victim = ofwhom(Autoscript)
-         if not targetCard or targetCard == card: targetCard = getSpecial('Counter Hold',victim)
-      if targetCard.markers:
-         for key in targetCard.markers:
+         if targetCards[0] == card: targetCards[0] = getSpecial('Counter Hold',victim)
+      if targetCards[0].markers:
+         for key in targetCards[0].markers:
             #confirm("Key: {}\n\naction.group(3): {}".format(key[0],action.group(3))) # Debug
             if key[0] == action.group(3):
                foundKey = True
@@ -1867,60 +1894,63 @@ def TokensX(Autoscript, announceText, card, targetCard = None, notification = No
          token = ("{}".format(action.group(3)),"00000000-0000-0000-0000-00000000000{}".format(rndGUID)) #This GUID is one of the builtin ones
    #confirm("Bumpa") # Debug
    count = num(action.group(2))
-   multiplier = per(Autoscript, card, n, targetCard, notification)
-   if action.group(1) == 'Put': modtokens = count * multiplier
-   elif action.group(1) == 'Refill': modtokens = count - targetCard.markers[token]
-   elif action.group(1) == 'Infect':
-      victim = ofwhom(Autoscript)
-      if not targetCard or targetCard == card: targetCard = getSpecial('Counter Hold',victim) # For infecting targets, the target is never the card causing the effect.
-      modtokens = count * multiplier
-      if token != mdict['protectionVirus']: # We don't want us to prevent putting virus protection tokens, even though we put them with the "Infect" keyword.
-         Virusprevented = findVirusProtection(targetCard, victim, modtokens)
-         if Virusprevented > 0:
-            preventTXT = ' ({} prevented)'.format(Virusprevented)
-            modtokens -= Virusprevented
-      infectTXT = ' {} with'.format(victim)
-      #notify("Token is {}".format(token[0])) # Debug
-   elif action.group(1) == 'Use':
-      if not targetCard.markers[token] or count > targetCard.markers[token]: 
-         whisper("There's not enough counters left on the card to use this ability!")
-         return 'ABORT'
-      else: modtokens = -count * multiplier
-   else: #Last option is for removing tokens.
-      if count == 999: # 999 effectively means "all markers on card"
-         if action.group(3) == 'Virus': pass # We deal with removal of viruses later.
-         elif action.group(3) == 'BrainDMG': # We need to remove brain damage from the counter hold
-            victim = ofwhom(Autoscript)
-            if not targetCard or targetCard == card: targetCard = getSpecial('Counter Hold',victim)
-            if targetCard.markers[token]: count = targetCard.markers[token]
-            else: count = 0
-            #confirm("count: {}".format(count)) # Debug
-         elif targetCard.markers[token]: count = targetCard.markers[token]
-         else: 
-            whisper("There was nothing to remove.")
-            count = 0
-      modtokens = -count * multiplier
-   if action.group(3) == 'Virus' and count == 999: # This combination means that the Corp is cleaning all viruses.
-      targetCard.markers[mdict['virusButcherBoy']] = 0
-      targetCard.markers[mdict['virusCascade']] = 0
-      targetCard.markers[mdict['virusCockroach']] = 0
-      targetCard.markers[mdict['virusGremlin']] = 0
-      targetCard.markers[mdict['virusThought']] = 0      
-      targetCard.markers[mdict['virusBoardwalk']] = 0
-      targetCard.markers[mdict['virusIncubate']] = 0
-      for c in table: 
-         if c.Type == 'Data Fort' and c.owner == me: c.markers[mdict['virusFait']] = 0 # Fait viruses exist on Data Forts, so we clean all of them there.
-         if c.Type == 'Ice' and c.owner == me: c.markers[mdict['virusPattel']] = 0 # Pattel viruses exist on Ice, so we clean all of them there.
-   else: targetCard.markers[token] += modtokens
+   multiplier = per(Autoscript, card, n, targetCards, notification)
+   for targetCard in targetCards:
+      if action.group(1) == 'Put': modtokens = count * multiplier
+      elif action.group(1) == 'Refill': modtokens = count - targetCard.markers[token]
+      elif action.group(1) == 'Infect':
+         targetCardlist = '' #We don't want to mention the target card for infections. It's always the same.
+         victim = ofwhom(Autoscript)
+         if targetCard == card: targetCard = getSpecial('Counter Hold',victim) # For infecting targets, the target is never the card causing the effect.
+         modtokens = count * multiplier
+         if token != mdict['protectionVirus']: # We don't want us to prevent putting virus protection tokens, even though we put them with the "Infect" keyword.
+            Virusprevented = findVirusProtection(targetCard, victim, modtokens)
+            if Virusprevented > 0:
+               preventTXT = ' ({} prevented)'.format(Virusprevented)
+               modtokens -= Virusprevented
+         infectTXT = ' {} with'.format(victim)
+         #notify("Token is {}".format(token[0])) # Debug
+      elif action.group(1) == 'Use':
+         if not targetCard.markers[token] or count > targetCard.markers[token]: 
+            whisper("There's not enough counters left on the card to use this ability!")
+            return 'ABORT'
+         else: modtokens = -count * multiplier
+      else: #Last option is for removing tokens.
+         if count == 999: # 999 effectively means "all markers on card"
+            if action.group(3) == 'Virus': pass # We deal with removal of viruses later.
+            elif action.group(3) == 'BrainDMG': # We need to remove brain damage from the counter hold
+               targetCardlist = ''
+               victim = ofwhom(Autoscript)
+               if not targetCard or targetCard == card: targetCard = getSpecial('Counter Hold',victim)
+               if targetCard.markers[token]: count = targetCard.markers[token]
+               else: count = 0
+               #confirm("count: {}".format(count)) # Debug
+            elif targetCard.markers[token]: count = targetCard.markers[token]
+            else: 
+               whisper("There was nothing to remove.")
+               count = 0
+         modtokens = -count * multiplier
+      if action.group(3) == 'Virus' and count == 999: # This combination means that the Corp is cleaning all viruses.
+         targetCard.markers[mdict['virusButcherBoy']] = 0
+         targetCard.markers[mdict['virusCascade']] = 0
+         targetCard.markers[mdict['virusCockroach']] = 0
+         targetCard.markers[mdict['virusGremlin']] = 0
+         targetCard.markers[mdict['virusThought']] = 0      
+         targetCard.markers[mdict['virusBoardwalk']] = 0
+         targetCard.markers[mdict['virusIncubate']] = 0
+         for c in table: 
+            if c.Type == 'Data Fort' and c.owner == me: c.markers[mdict['virusFait']] = 0 # Fait viruses exist on Data Forts, so we clean all of them there.
+            if c.Type == 'Ice' and c.owner == me: c.markers[mdict['virusPattel']] = 0 # Pattel viruses exist on Ice, so we clean all of them there.
+      else: targetCard.markers[token] += modtokens
    if abs(num(action.group(2))) == abs(999): total = 'all'
    else: total = abs(modtokens)
    if action.group(1) == 'Refill': announceString = "{} {} to {} {}".format(announceText, action.group(1), count, token[0]) # We need a special announcement for refill, since it always needs to point out the max.
    elif re.search(r'\bRemove999Virus', Autoscript): announceString = "{} to clean all viruses from their corporate network".format(announceText)
-   else: announceString = "{} {}{} {} {} counters{}".format(announceText, action.group(1).lower(),infectTXT, total, token[0],preventTXT)
+   else: announceString = "{} {}{} {} {} counters{}{}".format(announceText, action.group(1).lower(),infectTXT, total, token[0],targetCardlist,preventTXT)
    if notification == 'Automatic' and modtokens != 0: notify('--> {}.'.format(announceString))
    return announceString
  
-def DrawX(Autoscript, announceText, card, targetCard = None, notification = None, n = 0): # Function for drawing X Cards from the house deck to your hand.
+def DrawX(Autoscript, announceText, card, targetCards = [], notification = None, n = 0): # Function for drawing X Cards from the house deck to your hand.
    destiVerb = 'draw'
    action = re.search(r'\bDraw([0-9]+)Card', Autoscript)
    targetPL = ofwhom(Autoscript)
@@ -1938,7 +1968,7 @@ def DrawX(Autoscript, announceText, card, targetCard = None, notification = None
       count = drawMany(source, currentHandSize(targetPL) - len(targetPL.hand), destination, True) # 999 means we refresh our hand
       #confirm("cards drawn: {}".format(count)) # Debug
    else: # Any other number just draws as many cards.
-      multiplier = per(Autoscript, card, n, targetCard, notification)
+      multiplier = per(Autoscript, card, n, targetCards, notification)
       count = drawMany(source, draw * multiplier, destination, True)
    if count == 0: return announceText # If there are no cards, then we effectively did nothing, so we don't change the notification.
    if notification == 'Quick': announceString = "{} draws {} cards".format(announceText, count)
@@ -1960,7 +1990,7 @@ def ofwhom(Autoscript):
    else: targetPL = me
    return targetPL
    
-def ReshuffleX(Autoscript, announceText, card, targetCard = None, notification = None, n = 0): # A Function for reshuffling a pile into the R&D/Stack
+def ReshuffleX(Autoscript, announceText, card, targetCards = [], notification = None, n = 0): # A Function for reshuffling a pile into the R&D/Stack
    mute()
    X = 0
    action = re.search(r'\bReshuffle([A-Za-z& ]+)', Autoscript)
@@ -1980,7 +2010,7 @@ def ReshuffleX(Autoscript, announceText, card, targetCard = None, notification =
    if notification: notify('--> {}.'.format(announceString))
    return (announceString, X)
 
-def ShuffleX(Autoscript, announceText, card, targetCard = None, notification = None, n = 0): # A Function for reshuffling a pile into the R&D/Stack
+def ShuffleX(Autoscript, announceText, card, targetCards = [], notification = None, n = 0): # A Function for reshuffling a pile into the R&D/Stack
    mute()
    action = re.search(r'\bShuffle([A-Za-z& ]+)', Autoscript)
    targetPL = ofwhom(Autoscript)
@@ -1994,31 +2024,31 @@ def ShuffleX(Autoscript, announceText, card, targetCard = None, notification = N
    if notification: notify('--> {}.'.format(announceString))
    return announceString
    
-def RollX(Autoscript, announceText, card, targetCard = None, notification = None, n = 0): # Function for drawing X Cards from the house deck to your hand.
+def RollX(Autoscript, announceText, card, targetCards = [], notification = None, n = 0): # Function for drawing X Cards from the house deck to your hand.
    action = re.search(r'\bRoll([0-9]+)Dice', Autoscript)
    count = num(action.group(1))
-   multiplier = per(Autoscript, card, n, targetCard, notification)
+   multiplier = per(Autoscript, card, n, targetCards, notification)
    d6 = rolld6(silent = True) # For now we always roll 1d6. If we ever have a autoaction which needs more then 1, I'll implement it.
    if notification == 'Quick': announceString = "{} rolls {} on a die".format(announceText, d6)
    else: announceString = "{} roll {} on a die".format(announceText, d6)
    if notification: notify('--> {}.'.format(announceString))
    return (announceString, d6)
    
-def RunX(Autoscript, announceText, card, targetCard = None, notification = None, n = 0): # Function for drawing X Cards from the house deck to your hand.
+def RunX(Autoscript, announceText, card, targetCards = [], notification = None, n = 0): # Function for drawing X Cards from the house deck to your hand.
    action = re.search(r'\bRun([A-Z][A-Za-z& ]+)', Autoscript)
    if notification == 'Quick': announceString = "{} starts a run on {}".format(announceText, action.group(1))
    else: announceString = "{} start a run on {}".format(announceText, action.group(1))
    if notification: notify('--> {}.'.format(announceString))
    return announceString
 
-def SimplyAnnounce(Autoscript, announceText, card, targetCard = None, notification = None, n = 0): # Function for drawing X Cards from the house deck to your hand.
+def SimplyAnnounce(Autoscript, announceText, card, targetCards = [], notification = None, n = 0): # Function for drawing X Cards from the house deck to your hand.
    action = re.search(r'\bSimplyAnnounce{([A-Za-z&,\. ]+)}', Autoscript)
    if notification == 'Quick': announceString = "{} {}".format(announceText, action.group(1))
    else: announceString = "{} {}".format(announceText, action.group(1))
    if notification: notify('--> {}.'.format(announceString))
    return announceString
    
-def TraceX(Autoscript, announceText, card, targetCard = None, notification = None, n = 0): # Function for drawing X Cards from the house deck to your hand.
+def TraceX(Autoscript, announceText, card, targetCards = [], notification = None, n = 0): # Function for drawing X Cards from the house deck to your hand.
    action = re.search(r'\bTrace([0-9]+)', Autoscript)
    inputTraceValue(card, limit = num(action.group(1)))
    if action.group(1) != '0': limitText = ' (max power: {})'.format(action.group(1))
@@ -2028,26 +2058,34 @@ def TraceX(Autoscript, announceText, card, targetCard = None, notification = Non
    if notification: notify('--> {}.'.format(announceString))
    return announceString
 
-def ModifyStatus(Autoscript, announceText, card, targetCard = None, notification = None, n = 0):
-   action = re.search(r'\b(Rez|Derez|Expose|Trash|Uninstall|Possess)(Target|Parent)', Autoscript)
-   if action.group(1) == 'Rez' and intRez(targetCard, silent = True) != 'ABORT': pass
-   elif action.group(1) == 'Derez'and derez(targetCard, silent = True) != 'ABORT': pass
-   elif action.group(1) == 'Expose' and expose(targetCard, silent = True) != 'ABORT': pass
-   elif action.group(1) == 'Uninstall' and uninstall(targetCard, silent = True) != 'ABORT': pass
-   elif action.group(1) == 'Possess' and possess(card, targetCard, silent = True) != 'ABORT': pass
-   elif action.group(1) == 'Trash': whisper(":::Note::: No automatic discard action is taken. Please ask the owner of the card to do take this action themselves.") # We do not discard automatically because it's easy to make a mistake that will be difficult to undo this way.
-   else: return 'ABORT'
-   if notification == 'Quick': announceString = "{} {}es {}".format(announceText, action.group(1), targetCard)
-   else: announceString = "{} {} {}".format(announceText, action.group(1), targetCard)
+def ModifyStatus(Autoscript, announceText, card, targetCards = [], notification = None, n = 0):
+   targetCardlist = ' on' # A text field holding which cards are going to get tokens.
+   for targetCard in targetCards: targetCardlist += ' {},'.format(targetCard)
+   action = re.search(r'\b(Rez|Derez|Expose|Trash|Uninstall|Possess)(Target|Parent|Multi)', Autoscript)
+   #confirm("List: {}".format(targetCards)) #Debug
+   #for targetCard in targetCards: notify("ModifyX TargetCard: {}".format(targetCard)) #Debug
+   for targetCard in targetCards:
+      if action.group(1) == 'Rez' and intRez(targetCard, silent = True) != 'ABORT': pass
+      elif action.group(1) == 'Derez'and derez(targetCard, silent = True) != 'ABORT': pass
+      elif action.group(1) == 'Expose' and expose(targetCard, silent = True) != 'ABORT': pass
+      elif action.group(1) == 'Uninstall' and uninstall(targetCard, silent = True) != 'ABORT': pass
+      elif action.group(1) == 'Possess' and possess(card, targetCard, silent = True) != 'ABORT': pass
+      elif action.group(1) == 'Trash':
+         if targetCard.owner != me: whisper(":::Note::: No automatic discard action is taken. Please ask the owner of the card to do take this action themselves.") # We do not discard automatically because it's easy to make a mistake that will be difficult to undo this way.
+         elif intTrashCard(targetCard, targetCard.Stat, "free", silent = True) == 'ABORT': return 'ABORT' # If we're the owner however, it means that most likely it's ok to proceed and trash it.
+      else: return 'ABORT'
+      if action.group(2) != 'Multi': break # If we're not doing a multi-targeting, abort after the first run.
+   if notification == 'Quick': announceString = "{} {}es {}".format(announceText, action.group(1), targetCardlist)
+   else: announceString = "{} {} {}".format(announceText, action.group(1), targetCardlist)
    if notification: notify('--> {}.'.format(announceString))
    return announceString
          
-def InflictX(Autoscript, announceText, card, targetCard = None, notification = None, n = 0): 
+def InflictX(Autoscript, announceText, card, targetCards = [], notification = None, n = 0): 
 #inflicts damage to a player
    global DMGwarn 
    localDMGwarn = True #A variable to check if we've already warned the player during this damage dealing.
    action = re.search(r'\b(Inflict)([0-9]+)(Meat|Net|Brain)Damage', Autoscript) # Find out what kind of damage we're going
-   multiplier = per(Autoscript, card, n, targetCard)
+   multiplier = per(Autoscript, card, n, targetCards)
    enhancer = findEnhancements(Autoscript) #See if any of our cards increases damage we deal
    if enhancer > 0: enhanceTXT = ' (Enhanced: +{})'.format(enhancer) #Also notify that this is the case
    else: enhanceTXT = ''
@@ -2129,55 +2167,55 @@ def findVirusProtection(card, targetPL, VirusInfected): # Find out if the player
          card.markers[mdict['protectionVirus']] -= 1 # We reduce the card's virus protection counters by 1
    return protectionFound
    
-def per(Autoscript, card = None, count = 0, targetCard = None, notification = None): # This function goes through the autoscript and looks for the words "per<Something>". Then figures out what the card multiplies its effect with, and returns the appropriate multiplier.
+def per(Autoscript, card = None, count = 0, targetCards = [], notification = None): # This function goes through the autoscript and looks for the words "per<Something>". Then figures out what the card multiplies its effect with, and returns the appropriate multiplier.
    #confirm("Bump per") #Debug
-   per = re.search(r'\b(per|upto)(Assigned|Target|Parent|Generated|Installed|Rezzed|Transferred|Bought|TraceAttempt)?([A-Z][A-Za-z0-9{} ]*)-?', Autoscript) # We're searching for the word per, and grabbing all after that, until the first dash "-" as the variable.   
+   per = re.search(r'\b(per|upto)(Assigned|Target|Parent|Generated|Installed|Rezzed|Transferred|Bought|TraceAttempt)?([A-Z][A-Za-z0-9{}_ ]*)-?', Autoscript) # We're searching for the word per, and grabbing all after that, until the first dash "-" as the variable.   
    if per: # If the  search was successful...
       #confirm("Groups: {}".format(per.groups())) #Debug
-      if per.group(2) and per.group(2) == 'Target': useC = targetCard # If the effect is targeted, we need to use the target's attributes
-      else: useC = card # If not, use our own.
-      if per.group(3) == 'X': multiplier = count      
-      elif re.search(r'Marker',per.group(3)):
-         marker = re.search(r'Marker{([\w ]+)}',per.group(3))
-         #confirm("Groups2: {}\n\nuseC: {}".format(marker.group(1),useC)) #Debug
-         multiplier = useC.markers[mdict[marker.group(1)]]
-      elif re.search(r'Property',per.group(3)):
-         property = re.search(r'Property{([\w ]+)}',per.group(3))
-         #confirm("Groups2: {}\n\nuseC: {}".format(marker.group(1),useC)) #Debug
-         multiplier = useC.properties[property.group(1)]
-      elif count: multiplier = num(count) * chkPlayer(Autoscript, card.controller, False) # All non-special-rules per<somcething> requests use this formula.
-                                                                                           # Usually there is a count sent to this function (eg, number of favour purchased) with which to multiply the end result with
-                                                                                           # and some cards may only work when a rival owns or does something.
-      else:
+      if per.group(2) and per.group(2) == 'Target': # If we're looking for a target, we need to scour the requested group for targets.
          #confirm("Bump per rest") #Debug
-         #if re.search(r'Targeted', Autoscript): return 1 # Temporary fix for that give according to the attached cards. So that they can still work manually until I implement that.         
-         perItems = per.group(3).split('_or_')     
+         perCHK = per.group(3).split('_on_') # First we check to see if in our conditions we're looking for markers or card properties, to remove them from the checks
+         #confirm("Group3: {}\nperCHK: {}".format(per.group(3),perCHK)) #Debug
+         for chkItem in perCHK:
+            if re.search(r'(Marker|Property|Any)',chkItem):
+               perCHK.remove(chkItem) # We remove markers and card.properties from names of the card keywords  we'll be looking for later.
+         #confirm("perCHK: {}".format(perCHK)) #Debug
          perItemMatch = [] # A list with all the properties we'll need to match on each card on the table.
          perItemExclusion = [] # A list with all the properties we'll need to match on each card on the table.
          cardProperties = [] #we're making a big list with all the properties of the card we need to match
          multiplier = 0
          iter = 0
-         for perItem in perItems:
-            subItems = perItem.split('_and_')
-            for subItem in subItems:
-               regexCondition = re.search(r'{?([A-Z][A-Za-z0-9, ]*)}?', subItem)
-               if re.search(r'no[nt]', subItem): # If this is an exclusion item, we put it on the exclusion list.
-                  perItemExclusion.append(regexCondition.group(1))
-               else:
-                  perItemMatch.append(regexCondition.group(1))
+         # We need to put all the different card keywords we'll be looking for in two lists. So we iterate through the available items and split on _or_ and _and_
+         # The following code is not perfect (it will not figure out two different card types with different exclusions for example, but there's no such cards (yet)
+         for chkItem in perCHK: 
+            perItems = chkItem.split('_or_')              
+            for perItem in perItems:
+               subItems = perItem.split('_and_')
+               for subItem in subItems:
+                  regexCondition = re.search(r'{?([A-Z][A-Za-z0-9, ]*)}?', subItem)
+                  if re.search(r'no[nt]', subItem): # If this is an exclusion item, we put it on the exclusion list.
+                     perItemExclusion.append(regexCondition.group(1))
+                  else:
+                     perItemMatch.append(regexCondition.group(1))
          #notify('Matches: {}\nExclusions: {}'.format(perItemMatch, perItemExclusion)) # Debug
          if re.search(r'fromHand', Autoscript): cardgroup = [c for c in me.hand]
          else: cardgroup = [c for c in table]
          for c in cardgroup: # Go through each card on the table and gather its properties, then see if they match.
             del cardProperties[:] # Cleaning the previous entries
-            cardProperties.append(c.name)
-            cardProperties.append(c.Type)
-            cardSubtypes = c.Keywords.split('-')
+            cFaceD = False # Variable to note down if a card was face-down when we were checking it, or not.
+            if c.targetedBy and not c.isFaceUp: # If the card we're checking is not face up, we turn it temporarily to grab its properties for checking. We only check targeted cards though.
+               c.isFaceUp = True
+               cFaceD = True
+               random = rnd(10,100) # Bug workaround.
+            cardProperties.append(c.name) # We are going to check its name
+            cardProperties.append(c.Type) # It's type
+            cardSubtypes = c.Keywords.split('-') # And each individual trait. Traits are separated by " - "
             for cardSubtype in cardSubtypes:
-               strippedCS = cardSubtype.strip() # Remove any leading/trailing spaces. We need to use a new variable, because we can't modify the loop iterator.
+               strippedCS = cardSubtype.strip() # Remove any leading/trailing spaces between traits. We need to use a new variable, because we can't modify the loop iterator.
                if strippedCS: cardProperties.append(strippedCS) # If there's anything left after the stip (i.e. it's not an empty string anymrore) add it to the list.
-            cardProperties.append(c.Player)
-            perCHK = True
+            cardProperties.append(c.Player) # We are also going to check if the card is for runner or corp.
+            if cFaceD: c.isFaceUp = False # If the card was originally face-down, return it to that state again.
+            perCHK = True # Variable to show us if the card we're checking is still passing all the requirements.
             #confirm("Bump") #Debug
             #notify("Starting check with {}.\nProperties: {}".format(c, cardProperties)) # Debug
             for perItem in perItemMatch: # Now we check if the card properties include all the properties we need
@@ -2185,10 +2223,11 @@ def per(Autoscript, card = None, count = 0, targetCard = None, notification = No
             for perItem in perItemExclusion:
                if perItem in cardProperties: perCHK = False # Pretty much the opposite of the above.
             if perCHK: # If we still have not dismissed the card...
-               if not ((re.search(r'isExposeTarget', Autoscript) and not c.isFaceUp and c.targetedBy == me)
-                    or (re.search(r'isRezzed', Autoscript) and c.isFaceUp and not c.markers[Not_rezzed])
-                    or ((re.search(r'Reveal&Shuffle', Autoscript) or re.search(r'Reveal&Recover', Autoscript)) and c.targetedBy and c.targetedBy == me)): 
-                  perCHK = False
+               if not ((re.search(r'isExposeTarget', Autoscript) and not c.isFaceUp and c.targetedBy == me) # For card like Encryption Breakthrough who check both targeted 
+                    or (re.search(r'isRezzed', Autoscript) and c.isFaceUp and not c.markers[Not_rezzed])    # AND untargeted cards.
+                    or ((re.search(r'Reveal&Shuffle', Autoscript) or re.search(r'Reveal&Recover', Autoscript)) and c.targetedBy and c.targetedBy == me) # These kind of autoscripts always need a target
+                    or (re.search(r'(Marker|Property|Any)',per.group(3))) and c.targetedBy and c.targetedBy == me): # Looking for markers or properties always needs a specific target.
+                  perCHK = False # If the Autoscript is not something known, do nothing (to avoid needless errors)
                   #confirm("Ignored.\nAutoscript is {}".format(Autoscript)) # Debug
                if re.search(r'isExposeTarget', Autoscript) and not c.isFaceUp and c.targetedBy == me: expose(c) # If the card is supposed to be exposed to get the benefit, then do so now.
                if (re.search(r'Reveal&Shuffle', Autoscript) or re.search(r'Reveal&Recover', Autoscript)) and c.targetedBy and c.targetedBy == me: 
@@ -2197,7 +2236,12 @@ def per(Autoscript, card = None, count = 0, targetCard = None, notification = No
                   notify("- {} reveals {} from their hand".format(me,c))
                   iter +=1
             if perCHK and c.isFaceUp: 
-               if re.search(r'extraPointsPerAP', Autoscript): multiplier += num(c.Stat) # Some cards give you points per some stat of the card. In this case agenda points.
+               if re.search(r'Marker',per.group(3)): #If we're looking for markers, then we go through each targeted card and check if it has any relevant markers
+                  marker = re.search(r'Marker{([\w ]+)}',per.group(3)) # If we're looking for markers on the card, increase the multiplier by the number of markers found.
+                  multiplier += c.markers[mdict[marker.group(1)]]
+               elif re.search(r'Property',per.group(3)): # If we're looking for a specific property on the card, increase the multiplier by the total of the properties on the cards found.
+                  property = re.search(r'Property{([\w ]+)}',per.group(3))
+                  multiplier += num(c.properties[property.group(1)]) # Don't forget to turn it into an integer first!
                else: multiplier += 1 * chkPlayer(Autoscript, c.controller, False) # If the perCHK remains 1 after the above loop, means that the card matches all our requirements. We only check faceup cards so that we don't take into acoount peeked face-down ones.
                                                                                   # We also multiply it with chkPlayer() which will return 0 if the player is not of the correct allegiance (i.e. Rival, or Me)
          revealedCards = [c for c in table if c.highlight == RevealedColor] # If we have any revealed cards that need to be reshuffled, we need to do so now.
@@ -2205,6 +2249,7 @@ def per(Autoscript, card = None, count = 0, targetCard = None, notification = No
             confirm("The cards you've just revealed will be reshuffled into your deck once your opponents have had a chance to look at them.\
                    \nOnce you are ready, press any button to reshuffle them back into your deck")
             for c in revealedCards: c.moveTo(me.piles['R&D/Stack'])
+            random = rnd(10,500) # Bug workaround.
             shuffle(me.piles['R&D/Stack'])
             notify("- {} Shuffles their revealed cards back into their deck".format(me))
          if re.search(r'Reveal&Recover', Autoscript) and len(revealedCards) > 0: 
@@ -2212,6 +2257,20 @@ def per(Autoscript, card = None, count = 0, targetCard = None, notification = No
                    \nOnce you are ready, press any button to return them to your hand.")
             for c in revealedCards: c.moveTo(me.hand)
             notify("- {} returns the revealed cards back into their hand".format(me))
+      else: #If we're not looking for a particular target, then we check for everything else.
+         #useC = card # If not looking for a target, use the current card being actioned.
+         if per.group(3) == 'X': multiplier = count      
+         elif count: multiplier = num(count) * chkPlayer(Autoscript, card.controller, False) # All non-special-rules per<somcething> requests use this formula.
+                                                                                              # Usually there is a count sent to this function (eg, number of favour purchased) with which to multiply the end result with
+                                                                                              # and some cards may only work when a rival owns or does something.
+         elif re.search(r'Marker',per.group(3)):
+            marker = re.search(r'Marker{([\w ]+)}',per.group(3))
+            #confirm("Groups2: {}\n\nuseC: {}".format(marker.group(1),card)) #Debug
+            multiplier = card.markers[mdict[marker.group(1)]]
+         elif re.search(r'Property',per.group(3)):
+            property = re.search(r'Property{([\w ]+)}',per.group(3))
+            #confirm("Groups2: {}\n\nuseC: {}".format(marker.group(1),card)) #Debug
+            multiplier = card.properties[property.group(1)]
    else: multiplier = 1
    return multiplier
 
@@ -2258,9 +2317,9 @@ def TrialError(group, x=0, y=0):
    testcards = ["9564ee0c-7009-42d3-a994-395c8f3cfff0", # Silver Lining Recovery
                 "d962a368-b3b0-402d-96e3-210e00a840df", # Startup Immolator
                 "facbc33b-e8e8-4179-a63b-956e57d5efd2", # Misc.for-sale
-                "b5712c36-5e00-4e5d-836a-43d9047b5a4a", # Arasaka Owns you.
-                "8934fae5-bb11-4434-8e50-7bd8f23372a1", # Armadillo
-                "4bba7ad5-0c78-4382-bc99-986226ab093a"] # Emergency Self-Reconstruct
+                "0f493d5f-84c4-4bea-ad03-a2a68a59eab9", # Cortical Scaner (Just random ICE)
+                "b6838762-3fcc-48bc-8ed8-d3d0370c5b14", # Corporate boon
+                "29d3428b-f7db-419e-84c3-90ab4665e254"] # Security Code WORM Chip
    if not ds: ds = "corp"
    me.setGlobalVariable('ds', ds) 
    me.counters['Bit Pool'].value = 50
