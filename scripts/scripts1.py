@@ -1048,7 +1048,7 @@ def chkTargeting(card):
 def playForFree(card, x = 0, y = 0):
 	intPlay(card,"free")
 
-def movetoTopOfStack (card):
+def movetoTopOfStack(card):
 	mute()
 	Stack = me.piles['R&D/Stack']
 	card.moveTo(Stack)
@@ -1057,7 +1057,7 @@ def movetoTopOfStack (card):
 
 	notify ( "{} moves a card to top of {}.".format(me,nameStack) )
 
-def movetoBottomOfStack (card):
+def movetoBottomOfStack(card):
 	mute()
 	Stack = me.piles['R&D/Stack']
 	card.moveToBottom(Stack)
@@ -1066,13 +1066,13 @@ def movetoBottomOfStack (card):
 
 	notify ( "{} moves a card to Bottom of {}.".format(me,nameStack) )
 
-def handtoArchives (card):
+def handtoArchives(card):
 	if ds == "runner": return
 	mute()
 	card.moveTo(me.piles['Trash/Archives(Face-up)'])
 	notify ("{} moves a card to their face-up Archives.".format(me))
 
-def handDiscard (card):
+def handDiscard(card):
     mute()
     if ds == "runner": 
         card.moveTo(me.piles['Trash/Archives(Face-up)'])
@@ -1459,8 +1459,8 @@ def executePlayScripts(card, action):
             #confirm("passedscript: {}".format(passedScript)) # Debug
             if GainX(passedScript, announceText, card, targetC, notification = 'Quick') == 'ABORT': return
          else: 
-            #passedScript = "{}".format(effect.group(0))
-            confirm("passedscript: {}".format(passedScript)) # Debug
+            passedScript = "{}".format(effect.group(0))
+            #confirm("passedscript: {}".format(passedScript)) # Debug
             if effect.group(1) == 'Draw': 
                if DrawX(passedScript, announceText, card, targetC, notification = 'Quick', n = X) == 'ABORT': return
             if re.search(r'(Put|Remove|Refill|Use|Infect)', effect.group(1)): 
@@ -1777,7 +1777,8 @@ def chkWarn(card, Autoscript):
             return 'ABORT'
    return 'OK'
 
-def GainX(Autoscript, announceText, card, targetCards = [], notification = None, n = 0):
+def GainX(Autoscript, announceText, card, targetCards = None, notification = None, n = 0):
+   if targetCards is None: targetCards = []
    global maxActions
    #confirm("Bump GainX") #Debug
    gain = 0
@@ -1849,7 +1850,8 @@ def GainX(Autoscript, announceText, card, targetCards = [], notification = None,
    if notification and multiplier > 0: notify('--> {}.'.format(announceString))
    return announceString
 
-def TransferX(Autoscript, announceText, card, targetCards = [], notification = None, n = 0):
+def TransferX(Autoscript, announceText, card, targetCards = None, notification = None, n = 0):
+   if targetCards is None: targetCards = []
    breakadd = 1
    targetCardlist = '' # A text field holding which cards are going to get tokens.
    if len(targetCards) == 0: targetCards.append(card) # If there's been to target card given, assume the target is the card itself.
@@ -1883,7 +1885,8 @@ def TransferX(Autoscript, announceText, card, targetCards = [], notification = N
    if notification: notify('--> {}.'.format(announceString))
    return announceString   
 
-def TokensX(Autoscript, announceText, card, targetCards = [], notification = None, n = 0):
+def TokensX(Autoscript, announceText, card, targetCards = None, notification = None, n = 0):
+   if targetCards is None: targetCards = []
    if len(targetCards) == 0:
       targetCards.append(card) # If there's been to target card given, assume the target is the card itself.
       targetCardlist = ' on it' 
@@ -1974,7 +1977,8 @@ def TokensX(Autoscript, announceText, card, targetCards = [], notification = Non
    if notification == 'Automatic' and modtokens != 0: notify('--> {}.'.format(announceString))
    return announceString
  
-def DrawX(Autoscript, announceText, card, targetCards = [], notification = None, n = 0): # Function for drawing X Cards from the house deck to your hand.
+def DrawX(Autoscript, announceText, card, targetCards = None, notification = None, n = 0): # Function for drawing X Cards from the house deck to your hand.
+   if targetCards is None: targetCards = []
    destiVerb = 'draw'
    action = re.search(r'\bDraw([0-9]+)Card', Autoscript)
    targetPL = ofwhom(Autoscript)
@@ -2014,7 +2018,8 @@ def ofwhom(Autoscript):
    else: targetPL = me
    return targetPL
    
-def ReshuffleX(Autoscript, announceText, card, targetCards = [], notification = None, n = 0): # A Function for reshuffling a pile into the R&D/Stack
+def ReshuffleX(Autoscript, announceText, card, targetCards = None, notification = None, n = 0): # A Function for reshuffling a pile into the R&D/Stack
+   if targetCards is None: targetCards = []
    mute()
    X = 0
    action = re.search(r'\bReshuffle([A-Za-z& ]+)', Autoscript)
@@ -2034,7 +2039,8 @@ def ReshuffleX(Autoscript, announceText, card, targetCards = [], notification = 
    if notification: notify('--> {}.'.format(announceString))
    return (announceString, X)
 
-def ShuffleX(Autoscript, announceText, card, targetCards = [], notification = None, n = 0): # A Function for reshuffling a pile into the R&D/Stack
+def ShuffleX(Autoscript, announceText, card, targetCards = None, notification = None, n = 0): # A Function for reshuffling a pile into the R&D/Stack
+   if targetCards is None: targetCards = []
    mute()
    action = re.search(r'\bShuffle([A-Za-z& ]+)', Autoscript)
    targetPL = ofwhom(Autoscript)
@@ -2048,7 +2054,8 @@ def ShuffleX(Autoscript, announceText, card, targetCards = [], notification = No
    if notification: notify('--> {}.'.format(announceString))
    return announceString
    
-def RollX(Autoscript, announceText, card, targetCards = [], notification = None, n = 0): # Function for drawing X Cards from the house deck to your hand.
+def RollX(Autoscript, announceText, card, targetCards = None, notification = None, n = 0): # Function for drawing X Cards from the house deck to your hand.
+   if targetCards is None: targetCards = []
    action = re.search(r'\bRoll([0-9]+)Dice', Autoscript)
    count = num(action.group(1))
    multiplier = per(Autoscript, card, n, targetCards, notification)
@@ -2058,7 +2065,8 @@ def RollX(Autoscript, announceText, card, targetCards = [], notification = None,
    if notification: notify('--> {}.'.format(announceString))
    return (announceString, d6)
    
-def RunX(Autoscript, announceText, card, targetCards = [], notification = None, n = 0): # Function for drawing X Cards from the house deck to your hand.
+def RunX(Autoscript, announceText, card, targetCards = None, notification = None, n = 0): # Function for drawing X Cards from the house deck to your hand.
+   if targetCards is None: targetCards = []
    action = re.search(r'\bRun([A-Z][A-Za-z& ]+)', Autoscript)
    if action.group(1) == 'Generic': runTarget = ''
    else: runTarget = ' on {}'.format(action.group(1))
@@ -2067,14 +2075,16 @@ def RunX(Autoscript, announceText, card, targetCards = [], notification = None, 
    if notification: notify('--> {}.'.format(announceString))
    return announceString
 
-def SimplyAnnounce(Autoscript, announceText, card, targetCards = [], notification = None, n = 0): # Function for drawing X Cards from the house deck to your hand.
+def SimplyAnnounce(Autoscript, announceText, card, targetCards = None, notification = None, n = 0): # Function for drawing X Cards from the house deck to your hand.
+   if targetCards is None: targetCards = []
    action = re.search(r'\bSimplyAnnounce{([A-Za-z&,\. ]+)}', Autoscript)
    if notification == 'Quick': announceString = "{} {}".format(announceText, action.group(1))
    else: announceString = "{} {}".format(announceText, action.group(1))
    if notification: notify('--> {}.'.format(announceString))
    return announceString
 
-def CreateDummy(Autoscript, announceText, card, targetCards = [], notification = None, n = 0): # Function for creating dummy cards.
+def CreateDummy(Autoscript, announceText, card, targetCards = None, notification = None, n = 0): # Function for creating dummy cards.
+   if targetCards is None: targetCards = []
    global Dummywarn
    action = re.search(r'\bCreateDummy(-with)?([A-Za-z0-9_]*)', Autoscript)
    #confirm('actions: {}'.format(action.groups())) # debug
@@ -2086,11 +2096,12 @@ def CreateDummy(Autoscript, announceText, card, targetCards = [], notification =
    dummyCard.highlight = DummyColor
    #confirm("Dummy ID: {}\n\nList Dummy ID: {}".format(dummyCard._id,passedlist[0]._id)) #Debug   
    card.moveTo(card.owner.piles['Trash/Archives(Face-up)'])
-   if action.group(1): announceText = TokensX('Put{}'.format(action.group(2)), announceText,dummyCard, []) # If we have a -with in our autoscript, this is meant to put some tokens on the dummy card.
+   if action.group(1): announceText = TokensX('Put{}'.format(action.group(2)), announceText,dummyCard) # If we have a -with in our autoscript, this is meant to put some tokens on the dummy card.
    return announceText # Creating a dummy isn't announced.
 
    
-def TraceX(Autoscript, announceText, card, targetCards = [], notification = None, n = 0): # Function for drawing X Cards from the house deck to your hand.
+def TraceX(Autoscript, announceText, card, targetCards = None, notification = None, n = 0): # Function for drawing X Cards from the house deck to your hand.
+   if targetCards is None: targetCards = []
    action = re.search(r'\bTrace([0-9]+)', Autoscript)
    inputTraceValue(card, limit = num(action.group(1)))
    if action.group(1) != '0': limitText = ' (max power: {})'.format(action.group(1))
@@ -2100,7 +2111,8 @@ def TraceX(Autoscript, announceText, card, targetCards = [], notification = None
    if notification: notify('--> {}.'.format(announceString))
    return announceString
 
-def ModifyStatus(Autoscript, announceText, card, targetCards = [], notification = None, n = 0):
+def ModifyStatus(Autoscript, announceText, card, targetCards = None, notification = None, n = 0):
+   if targetCards is None: targetCards = []
    targetCardlist = '' # A text field holding which cards are going to get tokens.
    action = re.search(r'\b(Rez|Derez|Expose|Trash|Uninstall|Possess|Exile)(Target|Parent|Multi|Myself)', Autoscript)
    if action.group(2) == 'Myself': 
@@ -2128,8 +2140,9 @@ def ModifyStatus(Autoscript, announceText, card, targetCards = [], notification 
    if notification: notify('--> {}.'.format(announceString))
    return announceString
          
-def InflictX(Autoscript, announceText, card, targetCards = [], notification = None, n = 0): 
+def InflictX(Autoscript, announceText, card, targetCards = None, notification = None, n = 0): 
 #inflicts damage to a player
+   if targetCards is None: targetCards = []
    global DMGwarn 
    localDMGwarn = True #A variable to check if we've already warned the player during this damage dealing.
    action = re.search(r'\b(Inflict)([0-9]+)(Meat|Net|Brain)Damage', Autoscript) # Find out what kind of damage we're going
@@ -2215,8 +2228,9 @@ def findVirusProtection(card, targetPL, VirusInfected): # Find out if the player
          card.markers[mdict['protectionVirus']] -= 1 # We reduce the card's virus protection counters by 1
    return protectionFound
    
-def per(Autoscript, card = None, count = 0, targetCards = [], notification = None): # This function goes through the autoscript and looks for the words "per<Something>". Then figures out what the card multiplies its effect with, and returns the appropriate multiplier.
+def per(Autoscript, card = None, count = 0, targetCards = None, notification = None): # This function goes through the autoscript and looks for the words "per<Something>". Then figures out what the card multiplies its effect with, and returns the appropriate multiplier.
    #confirm("Bump per") #Debug
+   if targetCards is None: targetCards = []
    per = re.search(r'\b(per|upto)(Assigned|Target|Parent|Generated|Installed|Rezzed|Transferred|Bought|TraceAttempt)?([A-Z][A-Za-z0-9{}_ ]*)-?', Autoscript) # We're searching for the word per, and grabbing all after that, until the first dash "-" as the variable.   
    if per: # If the  search was successful...
       #confirm("Groups: {}".format(per.groups())) #Debug
@@ -2273,7 +2287,7 @@ def per(Autoscript, card = None, count = 0, targetCards = [], notification = Non
             if perCHK: # If we still have not dismissed the card...
                if not ((re.search(r'isExposeTarget', Autoscript) and not c.isFaceUp and c.targetedBy == me) # For card like Encryption Breakthrough who check both targeted 
                     or (re.search(r'isRezzed', Autoscript) and c.isFaceUp and not c.markers[Not_rezzed])    # AND untargeted cards.
-                    or ((re.search(r'Reveal&Shuffle', Autoscript) or re.search(r'Reveal&Recover', Autoscript)) and c.targetedBy and c.targetedBy == me) # These kind of autoscripts always need a target
+                    or ((re.search(r'Reveal&Shuffle', Autoscript) or re.search(r'Reveal&Recover', Autoscript or re.search(r'SendToTrash', Autoscript))) and c.targetedBy and c.targetedBy == me) # These kind of autoscripts always need a target
                     or (re.search(r'(Marker|Property|Any)',per.group(3))) and c.targetedBy and c.targetedBy == me): # Looking for markers or properties always needs a specific target.
                   perCHK = False # If the Autoscript is not something known, do nothing (to avoid needless errors)
                   #confirm("Ignored.\nAutoscript is {}".format(Autoscript)) # Debug
@@ -2283,6 +2297,7 @@ def per(Autoscript, card = None, count = 0, targetCards = [], notification = Non
                   c.highlight = RevealedColor
                   notify("- {} reveals {} from their hand".format(me,c))
                   iter +=1
+               if re.search(r'SendToTrash', Autoscript) and c.targetedBy and c.targetedBy == me: handDiscard(c)
             if perCHK: 
                if re.search(r'Marker',per.group(3)): #If we're looking for markers, then we go through each targeted card and check if it has any relevant markers
                   marker = re.search(r'Marker{([\w ]+)}',per.group(3)) # If we're looking for markers on the card, increase the multiplier by the number of markers found.
@@ -2362,12 +2377,12 @@ def customScript(card):
    
 def TrialError(group, x=0, y=0):
    global TypeCard, CostCard, ds
-   testcards = ["838d533c-cf90-4802-ac43-18ccfb2ce2dc", # MIT West Tier
+   testcards = ["a5b5935d-c1d9-4652-bf1b-fb9843fa8d06", # Record Reconstructor
                 "5b084516-f9f2-43a6-94df-5c3cce80f473", # AI Chief Financial Officer
-                "413364d6-d82e-430b-b395-ce64e1cae6ff", # ACME Savings
+                "74571bf9-6a2e-4ad1-ba91-ec438df2da94", # Open-Ended Mileage Program
                 "8934fae5-bb11-4434-8e50-7bd8f23372a1", # Armadillo
-                "6955b9dc-99e9-4421-9c12-b2389ea11fbf", # Hunt Club BBS
-                "52bb55a9-1bf4-404b-be3b-0da2477a4421"] # Inside Job
+                "e75e20d8-2f25-4dea-9ac1-eb078877bc6a", # Raven Microcyb Owl
+                "920257b1-5285-49db-aaeb-976a84c70c41"] # Raven Microcyb Eagle
    if not ds: ds = "corp"
    me.setGlobalVariable('ds', ds) 
    me.counters['Bit Pool'].value = 50
@@ -2390,23 +2405,25 @@ def atTurnStartEndEffects(Time = 'Start'):
    if not Automations['Start/End-of-Turn']: return
    TitleDone = False
    for card in table:
-      effect = re.search(r'atTurn(Start|End):([A-Z][A-Za-z]+)([0-9]+)([A-Za-z0-9 ]+)(.*)', card.AutoScript)
-      if card.owner != me or not effect: continue
-      if effect.group(1) != Time: continue # If it's a start-of-turn effect and we're at the end, or vice-versa, do nothing.
-      if effect.group(5) and re.search(r'isOptional', effect.group(5)) and not confirm("{} can have the following optional ability activated at the start of your turn:\n\n[ {} {} {} ]\n\nDo you want to activate it?".format(card.name, effect.group(2), effect.group(3),effect.group(4))): continue
-      if not TitleDone: notify(":::{}'s {}-of-Turn Effects:::".format(me,effect.group(1)))
-      TitleDone = True
-      effectNR = num(effect.group(3))
-      passedScript = '{}'.format(effect.group(0))
-      announceText = "{}:".format(card)
-      if effect.group(2) == 'Gain' or effect.group(2) == 'Lose':
-         GainX(passedScript, announceText, card, notification = 'Automatic')
-      if effect.group(2) == 'Transfer':
-         TransferX(passedScript, announceText, card, notification = 'Automatic')
-      if effect.group(2) == 'Draw':
-         DrawX(passedScript, announceText, card, notification = 'Automatic')
-      if effect.group(2) == 'Refill':
-         TokensX(passedScript, announceText, card, notification = 'Automatic')
+      Autoscripts = card.AutoScript.split('||')
+      for AutoScript in Autoscripts:
+         effect = re.search(r'atTurn(Start|End):([A-Z][A-Za-z]+)([0-9]+)([A-Za-z0-9 ]+)(.*)', AutoScript)
+         if card.owner != me or not effect: continue
+         if effect.group(1) != Time: continue # If it's a start-of-turn effect and we're at the end, or vice-versa, do nothing.
+         if effect.group(5) and re.search(r'isOptional', effect.group(5)) and not confirm("{} can have the following optional ability activated at the start of your turn:\n\n[ {} {} {} ]\n\nDo you want to activate it?".format(card.name, effect.group(2), effect.group(3),effect.group(4))): continue
+         if not TitleDone: notify(":::{}'s {}-of-Turn Effects:::".format(me,effect.group(1)))
+         TitleDone = True
+         effectNR = num(effect.group(3))
+         passedScript = '{}'.format(effect.group(0))
+         announceText = "{}:".format(card)
+         if effect.group(2) == 'Gain' or effect.group(2) == 'Lose':
+            GainX(passedScript, announceText, card, notification = 'Automatic')
+         if effect.group(2) == 'Transfer':
+            TransferX(passedScript, announceText, card, notification = 'Automatic')
+         if effect.group(2) == 'Draw':
+            DrawX(passedScript, announceText, card, notification = 'Automatic')
+         if effect.group(2) == 'Refill':
+            TokensX(passedScript, announceText, card, notification = 'Automatic')
    if me.counters['Bit Pool'].value < 0: 
       notify(":::Warning::: {}'s {}-of-turn effects cost more Bits than they had in their Bit Pool!".format(me,effect.group(1)))
    if ds == 'corp' and Time =='Start': draw(me.piles['R&D/Stack'])
