@@ -1867,7 +1867,7 @@ def TransferX(Autoscript, announceText, card, targetCards = [], notification = N
    return announceString   
 
 def TokensX(Autoscript, announceText, card, targetCards = [], notification = None, n = 0):
-   if len(targetCards) == 0: 
+   if len(targetCards) == 0:
       targetCards.append(card) # If there's been to target card given, assume the target is the card itself.
       targetCardlist = ' on it' 
    else:
@@ -1902,6 +1902,7 @@ def TokensX(Autoscript, announceText, card, targetCards = [], notification = Non
    count = num(action.group(2))
    multiplier = per(Autoscript, card, n, targetCards, notification)
    for targetCard in targetCards:
+      #confirm("TargetCard ID: {}".format(targetCard._id)) # Debug
       if action.group(1) == 'Put': modtokens = count * multiplier
       elif action.group(1) == 'Refill': modtokens = count - targetCard.markers[token]
       elif action.group(1) == 'Infect':
@@ -2066,8 +2067,9 @@ def CreateDummy(Autoscript, announceText, card, targetCards = [], notification =
                              \n\nDo you want to see this warning again?"): Dummywarn = False
    dummyCard = table.create(card.model, 500, 50 * playerside, 1) # This will create a fake card like the one we just created.
    dummyCard.highlight = DummyColor
+   #confirm("Dummy ID: {}\n\nList Dummy ID: {}".format(dummyCard._id,passedlist[0]._id)) #Debug   
    card.moveTo(card.owner.piles['Trash/Archives(Face-up)'])
-   if action.group(1): TokensX('Put{}'.format(action.group(2)), announceText, dummyCard) # If we have a -with in our autoscript, this is meant to put some tokens on the dummy card.
+   if action.group(1): announceText = TokensX('Put{}'.format(action.group(2)), announceText,dummyCard, []) # If we have a -with in our autoscript, this is meant to put some tokens on the dummy card.
    return announceText # Creating a dummy isn't announced.
 
    
