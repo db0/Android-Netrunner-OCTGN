@@ -39,6 +39,7 @@ playeraxis = None # Variable to keep track on which axis the player is
 
 DMGwarn = True # A boolean varialbe to track whether we've warned the player about doing automatic damage.
 Dummywarn = True # Much like above, but it serves to remind the player not to trash some cards.
+DummyTrashWarn = True
 ExposeTargetsWarn = True # A boolean variable that reminds the player to select multiple targets to expose for used by specific cards like Encryption Breakthrough
 RevealandShuffleWarn = True # Similar to above.
 newturn = True #We use this variable to track whether a player has yet to do anything this turn.
@@ -781,19 +782,19 @@ def clear(card, x = 0, y = 0):
    card.target(False)
 
 def intTrashCard(card, stat, cost = "not free",  ActionCost = '', silent = False):
-    global trashEasterEggIDX
-    mute()
-    MUtext = ""
-    rc = ''
-    extraText = ''
-    if ActionCost == '': 
+   global trashEasterEggIDX, DummyTrashWarn
+   mute()
+   MUtext = ""
+   rc = ''
+   extraText = ''
+   if ActionCost == '': 
       ActionCost = '{} '.format(me) # If not actions were used, then just announce our name.
       goodGrammar = 'es' # LOL Grammar Nazi
-    else: 
+   else: 
       ActionCost += ' and '
       goodGrammar = ''
-    cardowner = card.owner
-    if card.Type == "Tracing" or card.Type == "Counter Hold" or card.Type == "Data Fort": 
+   cardowner = card.owner
+   if card.Type == "Tracing" or card.Type == "Counter Hold" or card.Type == "Data Fort": 
       whisper("{}".format(trashEasterEgg[trashEasterEggIDX]))
       if trashEasterEggIDX < 7:
          trashEasterEggIDX += 1
@@ -802,32 +803,35 @@ def intTrashCard(card, stat, cost = "not free",  ActionCost = '', silent = False
          card.moveToBottom(cardowner.piles['Trash/Archives(Face-up)'])
          trashEasterEggIDX = 0
          return
-    if card.highlight == DummyColor and not confirm(":::Warning!:::\n\nYou are about to trash a dummy card. You will not be able to restore it without using the effect that created it originally.\n\nAre you sure you want to proceed?"): return
-    reduction = reduceCost(card, 'Trash', stat)
-    if reduction: extraText = " (reduced by {})".format(uniBit(reduction))    
-    rc = payCost(num(stat) - reduction, cost)
-    if rc == "ABORT": return 'ABORT' # If the player didn't have enough money to pay and aborted the function, then do nothing.
-    elif rc == 0: 
+   if card.highlight == DummyColor and DummyTrashWarn and not confirm(":::Warning!:::\n\nYou are about to trash a dummy card. You will not be able to restore it without using the effect that created it originally.\n\nAre you sure you want to proceed? (This message will not appear again)"): 
+      DummyTrashWarn = False
+      return
+   else: DummyTrashWarn = False
+   reduction = reduceCost(card, 'Trash', stat)
+   if reduction: extraText = " (reduced by {})".format(uniBit(reduction))    
+   rc = payCost(num(stat) - reduction, cost)
+   if rc == "ABORT": return 'ABORT' # If the player didn't have enough money to pay and aborted the function, then do nothing.
+   elif rc == 0: 
       if ActionCost.endswith(' and'): ActionCost[:-len(' and')] # if we have no action cost, we don't need the connection.
-    else: 
+   else: 
       ActionCost += "pays {} to".format(rc) # If we have Bit cost, append it to the Action cost to be announced.
       goodGrammar = ''
-    if card.isFaceUp:
-        if num(card.properties["MU Required"]) > 0 and not card.markers[mdict['DaemonMU']]:
-            cardowner.Memory += num(card.properties["MU Required"])
-            MUtext = ", freeing up {} MUs".format(card.properties["MU Required"])
-        if rc == "free" and not silent: notify("{} trashed {} at no cost{}.".format(me, card, MUtext))
-        elif not silent: notify("{} trash{} {}{}{}.".format(ActionCost, goodGrammar, card, extraText, MUtext))
-        executeAutomations(card,'trash')
-        card.moveTo(cardowner.piles['Trash/Archives(Face-up)'])
-    elif (ds == "runner" and cardowner == me) or (ds == "corp" and cardowner != me ): #I'm the runner and I trash my card or I 'm the corp and I trash a runner card
-        card.moveTo(cardowner.piles['Trash/Archives(Face-up)'])
-        if rc == "free" and not silent: notify ("{} trashed {} at no cost.".format(me,card))
-        elif not silent: notify("{} trash{} {}{}.".format(ActionCost, goodGrammar, card, extraText))
-    else: #I'm the corp and I trash my card or I'm the runner and I trash a corp's card
-        card.moveTo(cardowner.piles['Archives(Hidden)'])
-        if rc == "free" and not silent: notify("{} trashed a hidden card at no cost.".format(me))
-        elif not silent: notify("{} trash{} a hidden card.".format(ActionCost, goodGrammar))
+   if card.isFaceUp:
+      if num(card.properties["MU Required"]) > 0 and not card.markers[mdict['DaemonMU']]:
+         cardowner.Memory += num(card.properties["MU Required"])
+         MUtext = ", freeing up {} MUs".format(card.properties["MU Required"])
+      if rc == "free" and not silent: notify("{} trashed {} at no cost{}.".format(me, card, MUtext))
+      elif not silent: notify("{} trash{} {}{}{}.".format(ActionCost, goodGrammar, card, extraText, MUtext))
+      executeAutomations(card,'trash')
+      card.moveTo(cardowner.piles['Trash/Archives(Face-up)'])
+   elif (ds == "runner" and cardowner == me) or (ds == "corp" and cardowner != me ): #I'm the runner and I trash my card or I 'm the corp and I trash a runner card
+      card.moveTo(cardowner.piles['Trash/Archives(Face-up)'])
+      if rc == "free" and not silent: notify ("{} trashed {} at no cost.".format(me,card))
+      elif not silent: notify("{} trash{} {}{}.".format(ActionCost, goodGrammar, card, extraText))
+   else: #I'm the corp and I trash my card or I'm the runner and I trash a corp's card
+      card.moveTo(cardowner.piles['Archives(Hidden)'])
+      if rc == "free" and not silent: notify("{} trashed a hidden card at no cost.".format(me))
+      elif not silent: notify("{} trash{} a hidden card.".format(ActionCost, goodGrammar))
 
 def trashCard (card, x = 0, y = 0):
 	intTrashCard(card, card.Stat)
@@ -1439,6 +1443,7 @@ def executePlayScripts(card, action):
             if GainX(passedScript, announceText, card, targetC, notification = 'Quick') == 'ABORT': return
          else: 
             passedScript = "{}".format(effect.group(0))
+            #confirm("passedscript: {}".format(passedScript)) # Debug
             if effect.group(1) == 'Draw': 
                if DrawX(passedScript, announceText, card, targetC, notification = 'Quick', n = X) == 'ABORT': return
             if re.search(r'(Put|Remove|Refill|Use|Infect)', effect.group(1)): 
@@ -1447,7 +1452,7 @@ def executePlayScripts(card, action):
                rollTuple = RollX(passedScript, announceText, card, targetC, notification = 'Quick', n = X)
                if rollTuple == 'ABORT': return
                X = rollTuple[1] 
-            if effect.group(1) == 'Run': 
+            if re.search(r'Run', effect.group(1)): 
                if RunX(passedScript, announceText, card, targetC, notification = 'Quick', n = X) == 'ABORT': return
             if effect.group(1) == 'Trace': 
                if TraceX(passedScript, announceText, card, targetC, notification = 'Quick', n = X) == 'ABORT': return
@@ -1457,6 +1462,8 @@ def executePlayScripts(card, action):
                X = reshuffleTuple[1]
             if effect.group(1) == 'Shuffle': 
                if ShuffleX(passedScript, announceText, card, targetC, notification = 'Quick', n = X) == 'ABORT': return
+            if effect.group(1) == 'CreateDummy': 
+               if CreateDummy(passedScript, announceText, card, targetC, notification = 'Quick', n = X) == 'ABORT': return
             if effect.group(1) == 'Inflict': 
                if InflictX(passedScript, announceText, card, targetC, notification = 'Quick', n = X) == 'ABORT': return
             if re.search(r'(Rez|Derez|Expose|Trash|Uninstall|Possess)(Target|Multi|Parent)', effect.group(1)): 
@@ -1620,6 +1627,7 @@ def useAbility(card, x = 0, y = 0):
       elif re.search(r'\bInflict([0-9]+)', activeAutoscript): announceText = InflictX(activeAutoscript, announceText, card, targetC, n = X)
       elif re.search(r'(Rez|Derez|Expose|Trash|Uninstall|Possess)(Target|Multi|Parent)', activeAutoscript): announceText = ModifyStatus(activeAutoscript, announceText, card, targetC, n = X)
       elif re.search(r'\bSimplyAnnounce', activeAutoscript): announceText = SimplyAnnounce(activeAutoscript, announceText, card, targetC, n = X)
+      elif re.search(r'\bCreateDummy', activeAutoscript): announceText = CreateDummy(activeAutoscript, announceText, card, targetC, n = X)
       elif re.search(r'\bUseCustomAbility', activeAutoscript): announceText = UseCustomAbility(activeAutoscript, announceText, card, targetC, n = X)
       else: timesNothingDone += 1
       if announceText == 'ABORT': 
@@ -1730,7 +1738,6 @@ def findTarget(Autoscript):
    return foundTargets
    
 def chkWarn(card, Autoscript):
-   global Dummywarn
    warning = re.search(r'warn([A-Z][A-Za-z0-9 ]+)-?', Autoscript)
    if warning:
       if warning.group(1) == 'Discard': 
@@ -1747,14 +1754,6 @@ def chkWarn(card, Autoscript):
             return 'ABORT'
       if warning.group(1) == 'Workaround':
          notify(":::Note:::{} is using a workaround autoscript".format(me))
-      if warning.group(1) == 'LeaveDummy': 
-         if Dummywarn and not confirm("This card's effect requires that you trash it, but its lingering effects will only work automatically while a copy is in play.\
-                                     \nFor this reason we've created a dummy card on the table and marked it with a special highlight so that you know that it's just a token.\
-                                   \n\nSome cards provide you with an ability that you can activate after they're been trashed. If this card has one, you can activate it by double clicking on the dummy. Very often, this will often remove the dummy since its effect will disappear.\
-                                   \n\nDo you want to see this warning again?"): Dummywarn = False
-         dummyCard = table.create(card.model, 500, 50 * playerside, 1) # This will create a fake card like the one we just created.
-         dummyCard.highlight = DummyColor
-         card.moveTo(card.owner.piles['Trash/Archives(Face-up)'])
       if warning.group(1) == 'LotsofStuff': 
          if not confirm("This card performs a lot of complex actions that will very difficult to undo. Are you sure you want to proceed?"):
             whisper("--> Aborting action.")
@@ -2043,8 +2042,10 @@ def RollX(Autoscript, announceText, card, targetCards = [], notification = None,
    
 def RunX(Autoscript, announceText, card, targetCards = [], notification = None, n = 0): # Function for drawing X Cards from the house deck to your hand.
    action = re.search(r'\bRun([A-Z][A-Za-z& ]+)', Autoscript)
-   if notification == 'Quick': announceString = "{} starts a run on {}".format(announceText, action.group(1))
-   else: announceString = "{} start a run on {}".format(announceText, action.group(1))
+   if action.group(1) == 'Generic': runTarget = ''
+   else: runTarget = ' on {}'.format(action.group(1))
+   if notification == 'Quick': announceString = "{} starts a run{}".format(announceText, runTarget)
+   else: announceString = "{} start a run{}".format(announceText, runTarget)
    if notification: notify('--> {}.'.format(announceString))
    return announceString
 
@@ -2054,6 +2055,21 @@ def SimplyAnnounce(Autoscript, announceText, card, targetCards = [], notificatio
    else: announceString = "{} {}".format(announceText, action.group(1))
    if notification: notify('--> {}.'.format(announceString))
    return announceString
+
+def CreateDummy(Autoscript, announceText, card, targetCards = [], notification = None, n = 0): # Function for creating dummy cards.
+   global Dummywarn
+   action = re.search(r'\bCreateDummy(-with)?([A-Za-z0-9_]*)', Autoscript)
+   #confirm('actions: {}'.format(action.groups())) # debug
+   if Dummywarn and not confirm("This card's effect requires that you trash it, but its lingering effects will only work automatically while a copy is in play.\
+                               \nFor this reason we've created a dummy card on the table and marked it with a special highlight so that you know that it's just a token.\
+                             \n\nSome cards provide you with an ability that you can activate after they're been trashed. If this card has one, you can activate it by double clicking on the dummy. Very often, this will often remove the dummy since its effect will disappear.\
+                             \n\nDo you want to see this warning again?"): Dummywarn = False
+   dummyCard = table.create(card.model, 500, 50 * playerside, 1) # This will create a fake card like the one we just created.
+   dummyCard.highlight = DummyColor
+   card.moveTo(card.owner.piles['Trash/Archives(Face-up)'])
+   if action.group(1): TokensX('Put{}'.format(action.group(2)), announceText, dummyCard) # If we have a -with in our autoscript, this is meant to put some tokens on the dummy card.
+   return announceText # Creating a dummy isn't announced.
+
    
 def TraceX(Autoscript, announceText, card, targetCards = [], notification = None, n = 0): # Function for drawing X Cards from the house deck to your hand.
    action = re.search(r'\bTrace([0-9]+)', Autoscript)
@@ -2323,10 +2339,10 @@ def TrialError(group, x=0, y=0):
    global TypeCard, CostCard, ds
    testcards = ["9564ee0c-7009-42d3-a994-395c8f3cfff0", # Silver Lining Recovery
                 "d962a368-b3b0-402d-96e3-210e00a840df", # Startup Immolator
-                "facbc33b-e8e8-4179-a63b-956e57d5efd2", # Misc.for-sale
-                "0f493d5f-84c4-4bea-ad03-a2a68a59eab9", # Cortical Scaner (Just random ICE)
-                "b6838762-3fcc-48bc-8ed8-d3d0370c5b14", # Corporate boon
-                "413364d6-d82e-430b-b395-ce64e1cae6ff"] # ACME Savings and Loan
+                "413364d6-d82e-430b-b395-ce64e1cae6ff", # ACME Savings
+                "8934fae5-bb11-4434-8e50-7bd8f23372a1", # Armadillo
+                "6955b9dc-99e9-4421-9c12-b2389ea11fbf", # Hunt Club BBS
+                "52bb55a9-1bf4-404b-be3b-0da2477a4421"] # Inside Job
    if not ds: ds = "corp"
    me.setGlobalVariable('ds', ds) 
    me.counters['Bit Pool'].value = 50
