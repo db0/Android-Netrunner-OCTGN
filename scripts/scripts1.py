@@ -726,9 +726,9 @@ def intRez (card, cost = 'not free', x=0, y=0, silent = False):
    card.isFaceUp = True
    card.markers[Not_rezzed] -= 1
    if not silent:
-      if card.Type == 'Ice': notify("{} has rezzed {}{}{}.".format(me, card, rc, extraText))
-      if card.Type == 'Node': notify("{} has acquired {}{}{}.".format(me, card, rc, extraText))
-      if card.Type == 'Upgrade': notify("{} has installed {}{}{}.".format(me, card, rc, extraText))
+      if card.Type == 'Ice': notify("{} has rezzed {} {}{}.".format(me, card, rc, extraText))
+      if card.Type == 'Node': notify("{} has acquired {} {}{}.".format(me, card, rc, extraText))
+      if card.Type == 'Upgrade': notify("{} has installed {} {}{}.".format(me, card, rc, extraText))
    executeAutomations(card,'rez')
     
 
@@ -2059,8 +2059,8 @@ def TraceX(Autoscript, announceText, card, targetCards = [], notification = None
    return announceString
 
 def ModifyStatus(Autoscript, announceText, card, targetCards = [], notification = None, n = 0):
-   targetCardlist = ' on' # A text field holding which cards are going to get tokens.
-   for targetCard in targetCards: targetCardlist += ' {},'.format(targetCard)
+   targetCardlist = '' # A text field holding which cards are going to get tokens.
+   for targetCard in targetCards: targetCardlist += '{},'.format(targetCard)
    action = re.search(r'\b(Rez|Derez|Expose|Trash|Uninstall|Possess)(Target|Parent|Multi)', Autoscript)
    #confirm("List: {}".format(targetCards)) #Debug
    #for targetCard in targetCards: notify("ModifyX TargetCard: {}".format(targetCard)) #Debug
@@ -2235,7 +2235,7 @@ def per(Autoscript, card = None, count = 0, targetCards = [], notification = Non
                   c.highlight = RevealedColor
                   notify("- {} reveals {} from their hand".format(me,c))
                   iter +=1
-            if perCHK and c.isFaceUp: 
+            if perCHK: 
                if re.search(r'Marker',per.group(3)): #If we're looking for markers, then we go through each targeted card and check if it has any relevant markers
                   marker = re.search(r'Marker{([\w ]+)}',per.group(3)) # If we're looking for markers on the card, increase the multiplier by the number of markers found.
                   multiplier += c.markers[mdict[marker.group(1)]]
