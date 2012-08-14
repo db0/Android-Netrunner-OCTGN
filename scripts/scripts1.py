@@ -27,6 +27,7 @@ TraceValue = 0
 DifficultyLevels = { }
 
 TypeCard = {}
+KeywordCard = {}
 CostCard = {}
 
 MemoryRequirements = { }
@@ -634,11 +635,6 @@ def payCost(count = 1, cost = 'not_free', counter = 'BP'): # A function that rem
 def reduceCost(card, type = 'Rez', fullCost = 0):
    #confirm("Bump ReduceCost") # Debug
    reduction = 0
-   faceD = False
-   if not card.isFaceUp:
-      card.isFaceUp = True # We need to turn the card we're checking face up temporarily in order to check its data
-      faceD = True
-      random = rnd(10,100) # Hack Workaround
    for c in table:
       #notify("Checking {} with AS: {}".format(c, c.AutoScript)) #Debug
       reductionSearch = re.search(r'Reduce([0-9#]+)Cost{}-for([A-Z][A-Za-z ]+)(-not[A-Za-z_& ]+)?'.format(type), c.AutoScript) 
@@ -646,8 +642,8 @@ def reduceCost(card, type = 'Rez', fullCost = 0):
          #confirm("Possible Match found in {}".format(c)) # Debug         
          if reductionSearch.group(3): 
             exclusion = re.search(r'-not([A-Za-z_& ]+)'.format(type), reductionSearch.group(3))
-            if exclusion and (re.search(r'{}'.format(exclusion.group(1)), card.Type) or re.search(r'{}'.format(exclusion.group(1)), card.Keywords)): continue
-         if reductionSearch.group(2) == 'All' or re.search(r'{}'.format(reductionSearch.group(2)), card.Type) or re.search(r'{}'.format(reductionSearch.group(2)), card.Keywords): #Looking for the type of card being reduced into the properties of the card we're currently paying.
+            if exclusion and (re.search(r'{}'.format(exclusion.group(1)), TypeCard[card]) or re.search(r'{}'.format(exclusion.group(1)), KeywordCard[card])): continue
+         if reductionSearch.group(2) == 'All' or re.search(r'{}'.format(reductionSearch.group(2)), TypeCard[card]) or re.search(r'{}'.format(reductionSearch.group(2)), KeywordCard[card]): #Looking for the type of card being reduced into the properties of the card we're currently paying.
             #confirm("Search match! Group is {}".format(reductionSearch.group(1))) # Debug
             if reductionSearch.group(1) != '#':
                reduction += num(reductionSearch.group(1)) # if there is a match, the total reduction for this card's cost is increased.
@@ -657,45 +653,52 @@ def reduceCost(card, type = 'Rez', fullCost = 0):
                   fullCost -= 1
                   c.markers[mdict['Bits']] -= 1
                   if fullCost == 0: break
-   if faceD: card.isFaceUp = False
    return reduction
    
 def scrAgenda(card, x = 0, y = 0):
-    #if DifficultyLevels[card] >= 1:
-    global TypeCard, scoredAgendas
-    mute()
-    if card.markers[Scored] > 0: 
-        notify ("This agenda has already been scored")
-        return
-    if ds == 'runner' and card.Type != "Agenda" and not card.isFaceUp:
-        card.isFaceUp = True
-        random = rnd(100,1000) # Hack Workaround
-        if card.Type != "Agenda":
-            whisper ("You can only score Agendas")
-            card.isFaceUp = False
-            return
-    if ds == 'runner': TypeCard[card] = card.Type
-    if TypeCard[card] == "Agenda":
-        if confirm("Do you want to score this agenda?") == True:
-            card.isFaceUp = True
-            if chkTargeting(card) == 'ABORT': 
-               card.isFaceUp = False
-               notify("{} cancels their action".format(me))
-               return
-            ap = num(card.Stat)
-            card.markers[Advance] = 0
-            card.markers[Not_rezzed] = 0
-            card.markers[Scored] += 1
-            me.counters['Agenda Points'].value += ap
-            card.moveToTable(-600 - scoredAgendas * cwidth(card) / 6, 60 - yaxisMove(card) + scoredAgendas * cheight(card) / 2 * playerside, False)
-            scoredAgendas += 1
-            if ds == "runner": agendaTxt = "liberate"
-            else: agendaTxt = "score"
-            notify("{} {}s {} and receives {} agenda point(s)".format(me, agendaTxt, card, ap))
-            if me.counters['Agenda Points'].value >= 7 : notify("{} wins the game!".format(me))
-            executeAutomations(card,agendaTxt)
-    else:
-        whisper ("You can't score this card")
+   global TypeCard, KeywordCard, scoredAgendas
+   mute()
+   cheapAgenda = False
+   if card.markers[mdict['Scored']] > 0: 
+      notify ("This agenda has already been scored")
+      return
+   if ds == 'runner' and card.Type != "Agenda" and not card.isFaceUp:
+      card.isFaceUp = True
+      random = rnd(100,1000) # Hack Workaround
+      if card.Type != "Agenda":
+         whisper ("You can only score Agendas")
+         card.isFaceUp = False
+         return
+   if ds == 'runner': 
+      TypeCard[card] = card.Type
+      KeywordCard[card] = card.Keywords
+   if TypeCard[card] == "Agenda":
+      if ds == 'corp' and card.markers[mdict['Advance']] < card.Stat:
+         if confirm("You have not advanced this agenda enough to score it. Bypass?"): 
+            cheapAgenda = True
+            currentAdv = card.markers[mdict['Advance']]
+         else: return
+      elif not confirm("Do you want to score this agenda?"): return
+      card.isFaceUp = True
+      if chkTargeting(card) == 'ABORT': 
+         card.isFaceUp = False
+         notify("{} cancels their action".format(me))
+         return
+      ap = num(card.Stat)
+      card.markers[mdict['Advance']] = 0
+      card.markers[mdict['Not_rezzed']] = 0
+      card.markers[mdict['Scored']] += 1
+      me.counters['Agenda Points'].value += ap
+      card.moveToTable(-600 - scoredAgendas * cwidth(card) / 6, 60 - yaxisMove(card) + scoredAgendas * cheight(card) / 2 * playerside, False)
+      scoredAgendas += 1
+      if ds == "runner": agendaTxt = "liberate"
+      else: agendaTxt = "score"
+      notify("{} {}s {} and receives {} agenda point(s)".format(me, agendaTxt, card, ap))
+      if cheapAgenda: notify(":::Warning:::{} did not have enough advance tokens ({} out of {})! ".format(card,currentAdv,card.Cost))
+      if me.counters['Agenda Points'].value >= 7 : notify("{} wins the game!".format(me))
+      executeAutomations(card,agendaTxt)
+   else:
+      whisper ("You can't score this card")
 
 def isRezzable (card):
 	mute()
@@ -918,7 +921,7 @@ def oncePerTurn(card, x = 0, y = 0, silent = False):
 # Hand Actions
 #------------------------------------------------------------------------------
 def intPlay(card, cost = 'not_free'):
-   global TypeCard, CostCard
+   global TypeCard, CostCard, KeywordCard
    extraText = ''
    mute() 
    chooseSide() # Just in case...
@@ -930,6 +933,7 @@ def intPlay(card, cost = 'not_free'):
    if checkUnique(card) == False: return #If the player has the unique card and opted not to trash it, do nothing.
    if not checkNotHardwareDeck(card): return	#If player already has a deck in play and doesnt want to play that card, do nothing.
    TypeCard[card] = card.Type
+   KeywordCard[card] = card.Keywords
    CostCard[card] = card.Cost
    MUtext = ''
    rc = ''
@@ -2334,6 +2338,7 @@ def TrialError(group, x=0, y=0):
    for idx in range(len(testcards)):
       test = table.create(testcards[idx], (70 * idx) - 150, 0, 1, True)
       TypeCard[test] = test.Type
+      KeywordCard[test] = test.Keywords
       CostCard[test] = test.Cost
       #random = rnd(10,500)
       if test.Type == 'Ice' or test.Type == 'Agenda' or test.Type == 'Node':
