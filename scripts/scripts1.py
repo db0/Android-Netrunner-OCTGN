@@ -1723,7 +1723,8 @@ def findTarget(Autoscript): # Function for finding the target of an autoscript
                validNamedTargets.append(regexCondition.group(1))
                validTargets.remove(chkTarget)
       for targetLookup in table: # Now that we have our list of restrictions, we go through each targeted card on the table to check if it matches.
-         if targetLookup.targetedBy and targetLookup.targetedBy == me and chkPlayer(Autoscript, targetLookup.controller, False): # The card needs to be targeted by the player. If the card needs to belong to a specific player (me or rival) this also is taken into account.
+         if ((targetLookup.targetedBy and targetLookup.targetedBy == me) or re.search(r'AutoTargeted', Autoscript)) and chkPlayer(Autoscript, targetLookup.controller, False): # The card needs to be targeted by the player. If the card needs to belong to a specific player (me or rival) this also is taken into account.
+            whisper('checking {}'.format(targetLookup)) # Debug
             if not targetLookup.isFaceUp: # If we've targeted a subdued card, we turn it temporarily face-up to grab its properties.
                targetLookup.isFaceUp = True
                cFaceD = True
@@ -1744,13 +1745,12 @@ def findTarget(Autoscript): # Function for finding the target of an autoscript
                for invalidtargetCHK in invalidNamedTargets:
                   if invalidtargetCHK == targetLookup.name:
                      targetC = None
-            #confirm("doing rezcheck") # Debug
             if re.search(r'isRezzed', Autoscript) and targetLookup.markers[mdict['Not_rezzed']]: targetC = None
             if re.search(r'isUnrezzed', Autoscript) and not targetLookup.markers[mdict['Not_rezzed']]: targetC = None
             if cFaceD: targetLookup.isFaceUp = False
-            #confirm("about to append target Card: {}".format(targetC.name)) # Debug
-            if targetC: foundTargets.append(targetC)
-      if targetC == None: 
+            #if targetC and not targetC in foundTargets: confirm("about to append target Card: {}".format(targetC.name)) # Debug
+            if targetC and not targetC in foundTargets: foundTargets.append(targetC) # I don't know why but the first match is always processed twice by the for loop.
+      if targetC == None and not re.search(r'AutoTargeted', Autoscript): 
          targetsText = ''
          if len(validTargets) > 0: targetsText += "\nValid Target types: {}.".format(validTargets)
          if len(validNamedTargets) > 0: targetsText += "\nSpecific Valid Targets: {}.".format(validNamedTargets)
@@ -2515,7 +2515,7 @@ def customScript(card, action = 'play'): # Scripts that are complex and fairly u
 def TrialError(group, x=0, y=0): # Debugging
    global TypeCard, CostCard, ds
    testcards = ["0374335d-33a4-4a63-90b2-5aeaff83cd54", # Euromarket Consorium (Should give 2 hand size, not 1)
-                "95b3dd01-9077-409c-8d62-a81d930da813", # Microtech AI Interface
+                "03954709-aa33-4957-bc10-0e94cdca5913", # Deal with Militech
                 "365fea7b-d400-49a2-8de8-666732a17e4e", # Crash Everett, Inventive Fixer
                 "bc5586c5-6488-4c53-81d4-049b9385cec8", # New Blood
                 "0b7ac768-183a-4377-9dc7-8ae308dde698", # Dr. Dreff

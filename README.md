@@ -21,6 +21,11 @@ How the custom fonts look like
 
 Changelog
 ---------
+
+### 2.1.4
+
+* Fixed bug with Deal with Militech and added an Autotargeting autoscript mechanism.
+
 ### 2.1.3
 
 Implemented the custom cards which have some of the more unique effects. With this all the core set is truly completed (as much as possible that is)
@@ -32,7 +37,6 @@ Implemented the custom cards which have some of the more unique effects. With th
 * Social Engineering
 * Corporate War
 * Mystery Box
-
 
 ### 2.1.2
 
