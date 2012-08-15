@@ -2161,7 +2161,6 @@ def ModifyStatus(Autoscript, announceText, card, targetCards = None, notificatio
    return announceString
          
 def InflictX(Autoscript, announceText, card, targetCards = None, notification = None, n = 0): # Function for inflicting Damage to players (even ourselves)
-#inflicts damage to a player
    if targetCards is None: targetCards = []
    global DMGwarn 
    localDMGwarn = True #A variable to check if we've already warned the player during this damage dealing.
