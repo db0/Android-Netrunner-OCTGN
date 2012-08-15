@@ -95,7 +95,7 @@ trashEasterEggIDX = 0
  
 ScoredColor = "#00ff44"
 SelectColor = "#009900"
-MakeRunColor = "#ff0000"
+EmergencyColor = "#ff0000"
 DummyColor = "#000000" # Marks cards which are supposed to be out of play, so that players can tell them apart.
 RevealedColor = "#ffffff"
 
@@ -291,11 +291,12 @@ def switchUniBits(group,x=0,y=0,command = 'Off'):
         UniBits = True
 
 def ImAProAtThis(group, x=0, y=0):
-   global DMGwarn, Dummywarn, ExposeTargetsWarn, RevealandShuffleWarn
+   global DMGwarn, Dummywarn, DummyTrashWarn, ExposeTargetsWarn, RevealandShuffleWarn
    DMGwarn = False 
    Dummywarn = False 
    ExposeTargetsWarn = False
    RevealandShuffleWarn = False
+   DummyTrashWarn = False
    whisper("-- All Newbie warnings have been disabled. Play safe.")
         
 def createStartingCards():
@@ -1045,6 +1046,13 @@ def chkTargeting(card):
          RevealandShuffleWarn = False
          return 'ABORT'
       else: RevealandShuffleWarn = False # Whatever happens, we don't show this message again. 
+   if re.search(r'HandTarget', card.AutoScript) or re.search(r'HandTarget', card.AutoAction):
+      hasTarget = False
+      for c in me.hand:
+         if c.targetedBy and c.targetedBy == me: hasTarget = True
+      if not hasTarget: 
+         whisper(":::Warning::: This card effect requires that you have one of more cards targeted from your hand. Aborting!")
+         return 'ABORT'
 
 def playForFree(card, x = 0, y = 0):
 	intPlay(card,"free")
@@ -1223,7 +1231,7 @@ def checkDeckNoLimit (group):
    loDeckCount = len(group)
    if ( loDeckCount < 45 ):
       ok = -1
-      notify ( "- Error: only {} cards in {}'s Deck.".format(loDeckCount,me) )
+      notify ( ":::ERROR::: Only {} cards in {}'s Deck.".format(loDeckCount,me) )
    mute()
    if ( ds == "corp"):
       loAP = 0.0
@@ -1235,10 +1243,10 @@ def checkDeckNoLimit (group):
          if card.Player == "runner": loRunner = 1
          card.moveToBottom(group)
       if loAP/loDeckCount < 2.0/5.0:
-         notify("- Error: only {} Agenda Points in {}'s R&D.".format(loAP/1,me))
+         notify(":::ERROR::: Only {} Agenda Points in {}'s R&D.".format(loAP/1,me))
          ok = -1
       if loRunner == 1:
-         notify("- Error: Runner Cards found in {}'s R&D.".format(me))
+         notify(":::ERROR::: Runner Cards found in {}'s R&D.".format(me))
          ok = -1
    else:
       loCorp = 0
@@ -1249,7 +1257,7 @@ def checkDeckNoLimit (group):
          card.moveToBottom(group)
 
       if loCorp == 1:
-         notify("- Error: Corp Cards found in {}'s Stack.".format(me))
+         notify(":::ERROR::: Corp Cards found in {}'s Stack.".format(me))
          ok = -1
    if ok == 0: notify("-> Deck of {} OK !".format(me))
    return ok
@@ -1422,8 +1430,8 @@ def executePlayScripts(card, action):
    AutoScriptsSnapshot = list(Autoscripts) # Need to work on a snapshot, because we'll be modifying the list.
    for autoS in AutoScriptsSnapshot: # Checking and removing any "AtTurnStart" actions.
       if re.search(r'atTurn(Start|End)', autoS): Autoscripts.remove(autoS)
-      if re.search(r'{Custom:', autoS): 
-         customScript(card)
+      if re.search(r'CustomScript', autoS): 
+         customScript(card,action)
          Autoscripts.remove(autoS)
    if len(Autoscripts) == 0: return
    announceText = "{}".format(me)
@@ -1433,7 +1441,7 @@ def executePlayScripts(card, action):
       if ((effectType.group(1) == 'onRez' and action != 'rez') or
           (effectType.group(1) == 'onPlay' and action != 'play') or
           (effectType.group(1) == 'onScore' and action != 'score') or
-          (effectType.group(1) == 'onTrash' and action != 'trash') or
+          (effectType.group(1) == 'onTrash' and (action != 'trash' or action!= 'uninstall')) or
           (effectType.group(1) == 'onDerez' and action != 'derez')): continue # We don't want onPlay effects to activate onTrash for example.
       selectedAutoscripts = AutoS.split('$$')
       #confirm('selectedAutoscripts: {}'.format(selectedAutoscripts)) # Debug
@@ -1498,7 +1506,7 @@ def inspectCard(card, x = 0, y = 0): # This function shows the player the card t
    else: ASText = "\n\nThis card is Auto-Scripted:\n[{}]".format(card.AutoScript)
    confirm("{}".format(ASText))
 
-def useAbility(card, x = 0, y = 0):
+def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
    mute()
    if (card in TypeCard and TypeCard[card] == 'Tracing') or card.model == 'c0f18b5a-adcd-4efe-b3f8-7d72d1bd1db8': # If the player double clicks on the Tracing card...
       if card.isFaceUp and not card.markers[Bits]: inputTraceValue(card, limit = 0)
@@ -1512,13 +1520,15 @@ def useAbility(card, x = 0, y = 0):
    elif not Automations['Play, Score and Rez'] or card.AutoAction == "": 
       useCard(card) # If card is face up but has no autoscripts, or automation is disabled just notify that we're using an action.
       return
-   elif re.search(r'{Custom:', card.AutoAction): 
-      customScript(card) # Some cards just have a fairly unique effect and there's no use in trying to make them work in the generic framework.
+   elif re.search(r'CustomScript', card.AutoAction): 
+      if chkTargeting(card) == 'ABORT': return
+      customScript(card,'use') # Some cards just have a fairly unique effect and there's no use in trying to make them work in the generic framework.
       return
    ### Checking if card has multiple autoscript options and providing choice to player.
    Autoscripts = card.AutoAction.split('||')
-   for autoS in Autoscripts: # Checking and removing any actionscripts which were put here in error.
-      if re.search(r'whileRezzed', autoS) or re.search(r'onInstall', autoS) or re.search(r'AtTurnStart', autoS): Autoscripts.remove(autoS)
+   AutoScriptSnapshot = list(Autoscripts)
+   for autoS in AutoScriptSnapshot: # Checking and removing any actionscripts which were put here in error.
+      if re.search(r'while(Rezzed|Scored)', autoS) or re.search(r'on(Play|Score|Install)', autoS) or re.search(r'AtTurn(Start|End)', autoS): Autoscripts.remove(autoS)
    if len(Autoscripts) == 0:
       useCard(card) # If the card had only "WhileInstalled"  or AtTurnStart effect, just announce that it is being used.
       return      
@@ -1664,7 +1674,7 @@ def useAbility(card, x = 0, y = 0):
          card.moveTo(card.owner.piles['Trash/Archives(Face-up)'])
       notify("{}.".format(announceText)) # Finally announce what the player just did by using the concatenated string.
 
-def autoscriptCostUndo(card, Autoscript):
+def autoscriptCostUndo(card, Autoscript): # Function for undoing the cost of an autoscript.
    whisper("--> Undoing action...")
    actionCost = re.match(r"A([0-9]+)B([0-9]+)G([0-9]+)T([0-9]+):", Autoscript)
    me.Actions += num(actionCost.group(1))
@@ -1674,7 +1684,7 @@ def autoscriptCostUndo(card, Autoscript):
       random = rnd(10,5000) # A little wait...
       card.orientation = Rot0
 
-def findTarget(Autoscript):
+def findTarget(Autoscript): # Function for finding the target of an autoscript
    targetC = None
    #confirm("Looking for targets.\n\nAutoscript: {}".format(Autoscript)) #Debug
    foundTargets = []
@@ -1757,7 +1767,7 @@ def findTarget(Autoscript):
    #for foundTarget in foundTargets: notify('found target: {}'.format(foundTarget)) # Debug
    return foundTargets
    
-def chkWarn(card, Autoscript):
+def chkWarn(card, Autoscript): # Function for checking that an autoscript announces a warning to the player
    warning = re.search(r'warn([A-Z][A-Za-z0-9 ]+)-?', Autoscript)
    if warning:
       if warning.group(1) == 'Discard': 
@@ -1780,7 +1790,7 @@ def chkWarn(card, Autoscript):
             return 'ABORT'
    return 'OK'
 
-def GainX(Autoscript, announceText, card, targetCards = None, notification = None, n = 0):
+def GainX(Autoscript, announceText, card, targetCards = None, notification = None, n = 0): # Function for modifying counters or global variables
    if targetCards is None: targetCards = []
    global maxActions
    #confirm("Bump GainX") #Debug
@@ -1860,7 +1870,7 @@ def GainX(Autoscript, announceText, card, targetCards = None, notification = Non
    if notification and multiplier > 0: notify('--> {}.'.format(announceString))
    return announceString
 
-def TransferX(Autoscript, announceText, card, targetCards = None, notification = None, n = 0):
+def TransferX(Autoscript, announceText, card, targetCards = None, notification = None, n = 0): # Function for converting tokens to counter values
    if targetCards is None: targetCards = []
    breakadd = 1
    targetCardlist = '' # A text field holding which cards are going to get tokens.
@@ -1895,7 +1905,7 @@ def TransferX(Autoscript, announceText, card, targetCards = None, notification =
    if notification: notify('--> {}.'.format(announceString))
    return announceString   
 
-def TokensX(Autoscript, announceText, card, targetCards = None, notification = None, n = 0):
+def TokensX(Autoscript, announceText, card, targetCards = None, notification = None, n = 0): # Function for adding tokens to cards
    if targetCards is None: targetCards = []
    if len(targetCards) == 0:
       targetCards.append(card) # If there's been to target card given, assume the target is the card itself.
@@ -2121,7 +2131,7 @@ def TraceX(Autoscript, announceText, card, targetCards = None, notification = No
    if notification: notify('--> {}.'.format(announceString))
    return announceString
 
-def ModifyStatus(Autoscript, announceText, card, targetCards = None, notification = None, n = 0):
+def ModifyStatus(Autoscript, announceText, card, targetCards = None, notification = None, n = 0): # Function for modifying the status of a card on the table.
    if targetCards is None: targetCards = []
    targetCardlist = '' # A text field holding which cards are going to get tokens.
    action = re.search(r'\b(Rez|Derez|Expose|Trash|Uninstall|Possess|Exile)(Target|Parent|Multi|Myself)', Autoscript)
@@ -2150,7 +2160,7 @@ def ModifyStatus(Autoscript, announceText, card, targetCards = None, notificatio
    if notification: notify('--> {}.'.format(announceString))
    return announceString
          
-def InflictX(Autoscript, announceText, card, targetCards = None, notification = None, n = 0): 
+def InflictX(Autoscript, announceText, card, targetCards = None, notification = None, n = 0): # Function for inflicting Damage to players (even ourselves)
 #inflicts damage to a player
    if targetCards is None: targetCards = []
    global DMGwarn 
@@ -2295,7 +2305,7 @@ def per(Autoscript, card = None, count = 0, targetCards = None, notification = N
                if perItem not in cardProperties: perCHK = False # The perCHK starts as True. We only need one missing item to turn it to False, since they all have to exist.
             for perItem in perItemExclusion:
                if perItem in cardProperties: perCHK = False # Pretty much the opposite of the above.
-            if perCHK: # If we still have not dismissed the card...
+            if perCHK: # If we still have not dismissed the card and we're supposed to reveal them to the other players...
                if not ((re.search(r'isExposeTarget', Autoscript) and not c.isFaceUp and c.targetedBy == me) # For card like Encryption Breakthrough who check both targeted 
                     or (re.search(r'isRezzed', Autoscript) and c.isFaceUp and not c.markers[Not_rezzed])    # AND untargeted cards.
                     or ((re.search(r'Reveal&Shuffle', Autoscript) or re.search(r'Reveal&Recover', Autoscript or re.search(r'SendToTrash', Autoscript))) and c.targetedBy and c.targetedBy == me) # These kind of autoscripts always need a target
@@ -2309,7 +2319,7 @@ def per(Autoscript, card = None, count = 0, targetCards = None, notification = N
                   notify("- {} reveals {} from their hand".format(me,c))
                   iter +=1
                if re.search(r'SendToTrash', Autoscript) and c.targetedBy and c.targetedBy == me: handDiscard(c)
-            if perCHK: 
+            if perCHK: # Here we find out how much multiplier we get from those cards.
                if re.search(r'Marker',per.group(3)): #If we're looking for markers, then we go through each targeted card and check if it has any relevant markers
                   marker = re.search(r'Marker{([\w ]+)}',per.group(3)) # If we're looking for markers on the card, increase the multiplier by the number of markers found.
                   multiplier += c.markers[mdict[marker.group(1)]]
@@ -2348,7 +2358,7 @@ def per(Autoscript, card = None, count = 0, targetCards = None, notification = N
    else: multiplier = 1
    return multiplier
 
-def chkPlayer(Autoscript, controller, manual):
+def chkPlayer(Autoscript, controller, manual): # Function for figuring out if an autoscript is supposed to target an opponent's cards or ours.
 # Function returns 1 if the card is not only for rivals, or if it is for rivals and the card being activated it not ours.
 # This is then multiplied by the multiplier, which means that if the card activated only works for Rival's cards, our cards will have a 0 gain.
 # This will probably make no sense when I read it in 10 years...
@@ -2360,7 +2370,7 @@ def chkPlayer(Autoscript, controller, manual):
    elif byMe and controller == me: return 1 # If the card needs to be played by us.
    else: return 0 # If all the above fail, it means that we're not supposed to be triggering, so we'll return 0 which will make the multiplier 0.
    
-def autoscriptOtherPlayers(lookup, count = 1):
+def autoscriptOtherPlayers(lookup, count = 1): # Function that triggers effects based on the opponent's cards.
 # This function is called from other functions in order to go through the table and see if other players have any cards which would be activated by it.
 # For example a card that would produce bits whenever a trace was attempted. 
    if not Automations['Play, Score and Rez']: return # If automations have been disabled, do nothing.
@@ -2384,17 +2394,134 @@ def autoscriptOtherPlayers(lookup, count = 1):
             if re.search(r'(Put|Remove|Refill|Use|Infect)', effect.group(1)): 
                TokensX(passedScript, costText, card, notification = 'Automatic', n = count)
    
-def customScript(card):
-   useCard(card) # Not in use atm.
+def customScript(card, action = 'play'): # Scripts that are complex and fairly unique to specific cards, not worth making a whole generic function for them.
+   global ModifyDraw
+   #confirm("Customscript") # Debug
+   if card.name == 'Microtech AI Interface' and action == 'use':
+      targetPL = ofwhom('ofOpponent')
+      group = targetPL.piles['R&D/Stack']
+      cut = askInteger("How many cards from your opponent's deck do you wish to cut to the bottom?", 20)
+      for c in group.top(cut): c.moveToBottom(group)
+      notify("{} cuts the top {} cards from {}'s R&D to the bottom.".format(me, cut, targetPL))
+   elif card.name == 'Crash Everett, Inventive Fixer':
+      if action == 'play': ModifyDraw = True
+      elif action == 'trash' or action =='uninstall': ModifyDraw = False
+   elif card.name == 'New Blood' and action == 'play':
+      previousIce = None
+      firstIce = None
+      lastIce = None # Just being thorough...
+      for c in table:
+         if c.controller == me and c in TypeCard and TypeCard[c] == 'Ice' and c.markers[Not_rezzed]:
+            if not firstIce: firstIce = c
+            c.isFaceUp = False
+            if previousIce:
+               coinflip = rnd(1,2) # As I said, just being thoroughly random ^_^
+               if coinflip == 1: # We switch the current one with the previous one
+                  xp, yp = previousIce.position # We save the previous Ice's position we checked in order to move them later
+                  previousIce.moveToTable(c.position[0],c.position[1]) # We move the previous Ice we found to this position
+                  c.moveToTable(xp,yp) # And we move the Ice we're currently checking to the previous position.
+               else: #We move the first one to the current one's position, the previous one to the first one's position, and the current one to the previous one's position.
+                  if previousIce == firstIce: continue # However do nothing if it's on the first pair of Ice, as the first is going to be the same as the previous one.
+                  xp, yp = previousIce.position
+                  xf, yf = firstIce.position
+                  firstIce.moveToTable(c.position[0],c.position[1]) 
+                  previousIce.moveToTable(xf, yf) 
+                  c.moveToTable(xp,yp) 
+               previousIce = None
+            else: previousIce = c
+      if previousIce: # If we have a "previous Ice" it means this is the last card, and it was an odd number of Ice, so it hasn't been swapped at all.
+         coinflip = rnd(1,2)
+         if coinflip == 1: # We switch the current one with the first one
+            xp, yp = previousIce.position 
+            previousIce.moveToTable(firstIce.position[0],firstIce.position[1]) 
+            firstIce.moveToTable(xp,yp) 
+         else: pass # We leave the last ice were it was.
+      confirm("Your unrezzed Ice has been turn face down and slightly scrambled to throw off your opponent. You can close this window and continue exchanging pairs")
+   elif card.name == 'Dr. Dreff' and action == 'use':
+      for c in me.hand:
+         if c.targetedBy and c.targetedBy == me:
+            if c.type != 'Ice':
+               whisper(":::ERROR::: Invalid Card. Please Select an Ice")
+               return
+            if payCost(num(c.Cost) / 2) == 'ABORT': return
+            c.moveToTable(0,cheight(c) * playerside)
+            c.highlight = EmergencyColor
+            notify("{} activates {} in order to emergency rez {} for {} for this run".format(me,card,c,uniBit(num(c.Cost) / 2)))
+            return # We don't want to play more than one Ice if the player has for some reason targeted more than 1.
+   elif card.name == 'Social Engineering' and action == 'play':
+      hiddenCount = askInteger("How many bits do you want to hide?\n\nMin: 2\nMax: {}".format(me.counters['Bit Pool'].value),2)
+      while me.counters['Bit Pool'].value < hiddenCount or hiddenCount < 2:
+         hiddenCount = askInteger(":::ERROR::: You cannot hide more bits than you have in your Bit Pool, or less than 2. Close this window to abort!\
+                               \n\nHow many bits do you want to hide?\n\nMin: 2\nMax: {}".format(me.counters['Bit Pool'].value),2)
+         if hiddenCount == None: 
+            notify("{} has aborted their Social Engineering attempt".format(me))
+            card.moveTo(me.hand)
+            me.counters['Bit Pool'].value += 1
+            me.counters['Actions'].value += 1
+            return
+      targetPL = ofwhom('ofOpponent')
+      notify(":::Warning::: {} is making a social engineering attempt! {} must now try to guess how many bits they are hiding (min 2, max {})".format(me, targetPL, me.counters['Bit Pool'].value))
+      confirm("You have now hidden this amount of bits. Once your opponent makes a guess, press any button to reveal the true amount.")
+      notify("{} was hiding {} bits".format(me,hiddenCount))
+   elif card.name == 'Corporate War' and action == 'score':
+      if me.counters['Bit Pool'].value >= 12:
+         notify("{} has won the corporate war and their spoils are 12 Bits".format(me))
+         me.counters['Bit Pool'].value += 12
+      else:
+         notify("{} has lost the corporate war and their Bit Pool is reduced to 0".format(me))
+         me.counters['Bit Pool'].value = 0
+   elif card.name == 'Mystery Box' and action == 'use':
+      group = me.piles['R&D/Stack']
+      haveTarget = False
+      foundPrograms = [c for c in table if c.highlight == RevealedColor]
+      for targetCHK in foundPrograms: # We quickly check if the player has selected a target before using the Mystery Box again.
+         if targetCHK.targetedBy and targetCHK.targetedBy == me: haveTarget = True
+      if len(foundPrograms) == 1: # If we only found one program then it's necessarily selected by default.
+         selectedProgram = foundPrograms[0]
+         selectedProgram.highlight = None
+         selectedProgram.moveToTable(-150, 65 * playerside - yaxisMove(card), False) # Move it to the normal position we install programs
+         card.moveTo(me.piles['Trash/Archives(Face-up)'])
+         shuffle(group)
+         notify("{}'s Mystery Box has automatically installed {} free of cost".format(me,selectedProgram))
+      elif len(foundPrograms) > 1:
+         if not haveTarget: 
+            whisper(":::ERROR::: Please select a target before using the Mystery Box again. Aborting!")
+            return
+         selectedProgram = None
+         for targetSeek in foundPrograms:
+            if not selectedProgram and targetSeek.targetedBy and targetSeek.targetedBy == me: # We only want to select the first program we find. The rest we ignore.
+               selectedProgram = targetSeek
+               selectedProgram.highlight = None
+               selectedProgram.moveToTable(-150, 65 * playerside - yaxisMove(card), False) # Move it to the normal position we install programs
+            else: targetSeek.moveToBottom(group) # If the program is highlighted but not targeted, then send it back to the stack.
+         shuffle(group)                  
+         card.moveTo(me.piles['Trash/Archives(Face-up)'])
+         notify("{}'s Mystery Box has automatically installed {} free of cost".format(me,selectedProgram))
+      else:
+         iter = 0
+         for c in group.top(5):
+            c.moveToTable((70 * iter) - 150, 0 - yaxisMove(card), False)
+            c.highlight = RevealedColor
+            if c.type != 'Program': c.moveToBottom(group)
+            else: iter +=1
+         if iter > 1: # If we found any programs in the top 5
+            notify("{} activates the Mystery Box and reveals {} Programs from the top of their Stack. They now have to select one to bring into play at no cost".format(me, iter))
+            confirm("The cards with the white highlight on the table are the programs that existed within the top 5 cards of your Stack\
+                   \nPlease Target one of them (shift + click) and then double click on the Mystery Box again to complete this action")
+         elif iter == 1: customScript(card,'use') # Recursion FTW!
+         else: notify("{} activates the Mystery Box but it fizzles out.".format(me))
+   elif action == 'use': useCard(card)
    
-def TrialError(group, x=0, y=0):
+def TrialError(group, x=0, y=0): # Debugging
    global TypeCard, CostCard, ds
-   testcards = ["70b34d6f-b157-4711-929e-f13269da79da", # Zetatech Mem Chip
-                "5b084516-f9f2-43a6-94df-5c3cce80f473", # AI Chief Financial Officer
-                "74571bf9-6a2e-4ad1-ba91-ec438df2da94", # Open-Ended Mileage Program
-                "8934fae5-bb11-4434-8e50-7bd8f23372a1", # Armadillo
-                "e75e20d8-2f25-4dea-9ac1-eb078877bc6a", # Raven Microcyb Owl
-                "920257b1-5285-49db-aaeb-976a84c70c41"] # Raven Microcyb Eagle
+   testcards = ["0374335d-33a4-4a63-90b2-5aeaff83cd54", # Euromarket Consorium (Should give 2 hand size, not 1)
+                "95b3dd01-9077-409c-8d62-a81d930da813", # Microtech AI Interface
+                "365fea7b-d400-49a2-8de8-666732a17e4e", # Crash Everett, Inventive Fixer
+                "bc5586c5-6488-4c53-81d4-049b9385cec8", # New Blood
+                "0b7ac768-183a-4377-9dc7-8ae308dde698", # Dr. Dreff
+                "f9620ff6-046a-46e0-b502-5807f6de60c7", # Social Engineering
+                "23b7487c-7093-47ae-a6e9-d3911ad58c5a", # Corporate War
+                "92725a30-5f2a-439e-a5e1-4c818780ed1c"] # Mystery Box
    if not ds: ds = "corp"
    me.setGlobalVariable('ds', ds) 
    me.counters['Bit Pool'].value = 50
@@ -2413,7 +2540,7 @@ def TrialError(group, x=0, y=0):
          test.isFaceUp = False
          test.markers[Not_rezzed] += 1
    
-def atTurnStartEndEffects(Time = 'Start'):
+def atTurnStartEndEffects(Time = 'Start'): # Function which triggers card effects at the start or end of the turn.
    if not Automations['Start/End-of-Turn']: return
    TitleDone = False
    for card in table:
