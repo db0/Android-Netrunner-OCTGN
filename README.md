@@ -13,22 +13,22 @@ Some basic instructions on how to use the new system will be forthcoming, but th
 * First thing you do after you load a deck is Setup (Ctrl+Shift+S)
 * At the start of your turn, declare it with F1
 * At the end of your turn, declare it with F12. Make sure the game announces that your turn has ended and is not expecting you to discard down to your max hand size ;)
-* Play cards from Hand with the Pay and Install or pay at no cost[/list]
+* Play cards from Hand with the Pay and Install or pay at no cost
 
 And some more advanced stuff starting from version 2.1.x
 
 * Most card will automatically trigger their abilities when played/scored/rezzed so you don't need to do anything else. Pay attention to the notification area for messages from them.
-* Cards with abilities which increase your MU, Hand Size, etc will automatically increase it when they come into play and reduce it when they go away, [b]as long as you don't drag&drop them in or out of the table manually[/b]. Use the built-in commands for that. Rez, Derez, Trash etc
+* Cards with abilities which increase your MU, Hand Size, etc will automatically increase it when they come into play and reduce it when they go away, as long as you don't drag&drop them in or out of the table manually. Use the built-in commands for that. Rez, Derez, Trash etc
 * Cards with abilities you activate while they're in play (like programs, agendas, upgrades etc) will trigger them when you double-click on them. If they have more than one ability (such as most icebreakers), the game will prompt you to select one and pay the appropriate cost.
-* Cards which reduce the cost of other card's abilities, will [b]also[/b] automatically work. If you have a card which has tokens which can pay the cost for activating icebreakers, they will be automatically used when you use one such ability. If you have more than one of these cards which can affect such costs they will be triggered in the order you put them on the table. If you wanted to use the tokens from another card instead, you can simply drag the token manually to the other card afterwards.
+* Cards which reduce the cost of other card's abilities, will also automatically work. If you have a card which has tokens which can pay the cost for activating icebreakers, they will be automatically used when you use one such ability. If you have more than one of these cards which can affect such costs they will be triggered in the order you put them on the table. If you wanted to use the tokens from another card instead, you can simply drag the token manually to the other card afterwards.
 * There are cards which will automatically do damage to your opponent and thus discard random cards from their hand. Due to the way OCTGN works, this may crash the game if you opponent was manipulating the same card. There is a warning before all such damage that will warn you to inform your opponent to be hands-off while the effect is in progress. This warning will also give your opponent the opportunity to play cards which prevent damage.
 * Yes, cards which reduce damage taken have been automated and work automatically depending on the kind of damage you take. As before, they too get triggered by the order they've been put on the table, so if you didn't want to lose the counters from one particular card, just drag them in from the card you did want to use.
-* Some cards require that you select a target from the table or your hand. [b]Do this before you play or activate the card[/b]. If you don't the action will abort and the game will inform you to select your targets first.  As always, keep your eye on the chatbox for such warnings.
+* Some cards require that you select a target from the table or your hand. Do this before you play or activate the card. If you don't the action will abort and the game will inform you to select your targets first.  As always, keep your eye on the chatbox for such warnings.
 * Cards which have effects which trigger at start/end of turn (i.e. refilling bit markers on them) will automatically work.
 * If you don't like some or all the automations, you can disable some or all of them. Go to the game menu, and you can disable damage automations (i.e. your opponent will have to use the damage options manually but those won't automatically use the damage prevention cards), Turn Start/End automations and Play/Score/Rez Automations (i.e. mostly everything). If you find that you'd rather do everything manually, just disable all of them and you'll have an experience as with most generic card game engines.
 
 
-Phew, that should be the most basic things about the new automations. In general if you're not sure if a card is automated, simply play it and see what happens. You will be surprised at how many cards [b]just work[/b].
+Phew, that should be the most basic things about the new automations. In general if you're not sure if a card is automated, simply play it and see what happens. You will be surprised at how many cards just work.
 
 Enjoy!
 
