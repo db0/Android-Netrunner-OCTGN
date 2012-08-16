@@ -1489,6 +1489,10 @@ def executePlayScripts(card, action):
           (effectType.group(1) == 'onScore' and action != 'score') or
           (effectType.group(1) == 'onTrash' and (action != 'trash' or action!= 'uninstall')) or
           (effectType.group(1) == 'onDerez' and action != 'derez')): continue # We don't want onPlay effects to activate onTrash for example.
+      if re.search(r'-isOptional', AutoS) and not confirm("This card has an optional ability you can activate at this point. Do you want to do so?"): 
+         notify("{} opts not to activate {}'s optional ability".format(me,card))
+         return 'ABORT'
+      else: notify("{} activates {}'s optional ability".format(me,card))
       selectedAutoscripts = AutoS.split('$$')
       #confirm('selectedAutoscripts: {}'.format(selectedAutoscripts)) # Debug
       for activeAutoscript in selectedAutoscripts:
@@ -1548,7 +1552,6 @@ def executePlayScripts(card, action):
 #------------------------------------------------------------------------------
 # Autoactions
 #------------------------------------------------------------------------------
-#                                         a  b  c  d  e  f  g  h i j k l
 def inspectCard(card, x = 0, y = 0): # This function shows the player the card text, to allow for easy reading until High Quality scans are procured.
    ASText = "This card has the following automations:\n"
    if re.search(r'onPlay', card.Autoscript): ASText += '\n * It will have an effect when coming into play from your hand.'
@@ -1931,10 +1934,18 @@ def GainX(Autoscript, announceText, card, targetCards = None, notification = Non
    else: 
       whisper("Gain what?! (Bad autoscript)")
       return 'ABORT'
+   if action.group(1) == 'Gain': verb = 'gain'
+   elif action.group(1) == 'Lose': 
+      if re.search(r'isCost', Autoscript): verb = 'pay'
+      else: verb = 'lose'
+   else: verb = 'set to'
+   if notification == 'Quick':
+      if verb == 'gain' or verb == 'lose' or verb == 'pay': verb += 's'
+      else: verb = 'sets to'
    if abs(gain) == abs(999): total = 'all' # If we have +/-999 as the count, then this mean "all" of the particular counter.
    else: total = abs(gain * multiplier) # Else it's just the absolute value which we announce they "gain" or "lose"
-   if notification == 'Quick': announceString = "{} {}s {} {}".format(announceText, action.group(1).lower(), total, action.group(3))
-   else: announceString = "{}{} {} {} {}".format(announceText, otherTXT, action.group(1).lower(), total, action.group(3))
+   if notification == 'Quick': announceString = "{}{} {} {} {}".format(announceText, otherTXT, verb, total, action.group(3))
+   else: announceString = "{}{} {} {} {}".format(announceText, otherTXT, verb, total, action.group(3))
    if notification and multiplier > 0: notify('--> {}.'.format(announceString))
    return announceString
 
@@ -2200,8 +2211,10 @@ def ChooseKeyword(Autoscript, announceText, card, targetCards = None, notificati
    #confirm("search results: {}".format(action.groups())) # Debug
    keywords = action.group(1).split('|')
    #confirm("List: {}".format(keywords)) # Debug
-   for i in range(len(keywords)): choiceTXT += '{}: {}\n'.format(i, keywords[i])
-   choice = len(keywords)
+   if len(keywords) > 1:
+      for i in range(len(keywords)): choiceTXT += '{}: {}\n'.format(i, keywords[i])
+      choice = len(keywords)
+   else: choice = 0
    while choice > len(keywords) - 1: 
       choice = askInteger("Choose one of the following keywords to assign to this card:\n\n{}".format(choiceTXT),0)
       if choice == None: return 'ABORT'
@@ -2212,9 +2225,9 @@ def ChooseKeyword(Autoscript, announceText, card, targetCards = None, notificati
             if re.search('Keyword:',key[0]):
                existingKeyword = key
                #confirm("Added:{}".format(existingKeyword))
-      if re.search(r'{}'.format(keywords[choice]),getKeywords(targetCard)):
+      if re.search(r'{}'.format(keywords[choice]),targetCard.Keywords):
          if existingKeyword: targetCard.markers[existingKeyword] = 0
-         else: pass # If the keyword is anyway the same, and it had no previous keyword, there is nothing to do
+         else: pass # If the keyword is anyway the same printed on the card, and it had no previous keyword, there is nothing to do
       elif existingKeyword:
          #confirm("Searching for {} in {}".format(keywords[choice],existingKeyword[0])) # Debug               
          if re.search(r'{}'.format(keywords[choice]),existingKeyword[0]): pass # If the keyword is the same as is already there, do nothing.
@@ -2438,6 +2451,7 @@ def per(Autoscript, card = None, count = 0, targetCards = None, notification = N
                   multiplier += num(c.properties[property.group(1)]) # Don't forget to turn it into an integer first!
                else: multiplier += 1 * chkPlayer(Autoscript, c.controller, False) # If the perCHK remains 1 after the above loop, means that the card matches all our requirements. We only check faceup cards so that we don't take into acoount peeked face-down ones.
                                                                                   # We also multiply it with chkPlayer() which will return 0 if the player is not of the correct allegiance (i.e. Rival, or Me)
+         #confirm("Finished checking") # Debug
          revealedCards = [c for c in table if c.highlight == RevealedColor] # If we have any revealed cards that need to be reshuffled, we need to do so now.
          if re.search(r'Reveal&Shuffle', Autoscript) and len(revealedCards) > 0: 
             confirm("The cards you've just revealed will be reshuffled into your deck once your opponents have had a chance to look at them.\
@@ -2464,6 +2478,7 @@ def per(Autoscript, card = None, count = 0, targetCards = None, notification = N
             property = re.search(r'Property{([\w ]+)}',per.group(3))
             multiplier = card.properties[property.group(1)]
    else: multiplier = 1
+   #confirm("Final Stretch") # Debug
    return multiplier
 
 def chkPlayer(Autoscript, controller, manual): # Function for figuring out if an autoscript is supposed to target an opponent's cards or ours.
