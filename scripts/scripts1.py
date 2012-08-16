@@ -197,6 +197,32 @@ def yaxisMove(card):
    else: cardmove = cardmove = 0
    return cardmove
 
+def getKeywords(card): # A function which combines the existing card keywords, with markers which give it extra ones.
+   global KeywordCard
+   #notify("getKeywords") # Debug
+   keywordsList = []
+   strippedKeywordsList = getKeywords(card).split('-')
+   for cardKW in strippedKeywordsList:
+      strippedKW = cardKW.strip() # Remove any leading/trailing spaces between traits. We need to use a new variable, because we can't modify the loop iterator.
+      if strippedKW: keywordsList.append(strippedKW) # If there's anything left after the stip (i.e. it's not an empty string anymrore) add it to the list.   
+   if card.markers:
+      for key in card.markers:
+         markerKeyword = re.search('Keyword:([\w ]+)',key[0])
+         if markerKeyword:
+            #confirm("marker found: {}\n key: {}".format(markerKeyword.groups(),key[0])) # Debug
+            if markerKeyword.group(1) == 'Wall' or markerKeyword.group(1) == 'Sentry' or markerKeyword.group(1) == 'Code Gate': #These keywords are mutually exclusive. An Ice can't be more than 1 of these
+               if 'Wall' in keywordsList: keywordsList.remove('Wall')
+               if 'Sentry' in keywordsList: keywordsList.remove('Sentry')
+               if 'Code Gate' in keywordsList: keywordsList.remove('Code Gate')
+               keywordsList.append(markerKeyword.group(1))
+            else: keywordsList.append(markerKeyword.group(1))
+            
+   keywords = ''
+   for KW in keywordsList:
+      keywords += '{}-'.format(KW)
+   KeywordCard[card] = keywords[:-1] # We also update the global variable for this card, which is used by many functions.
+   #notify("List {}\n\nResult: {}".format(keywordsList,keywords[:-1])) # Debug
+   return keywords[:-1] # We need to remove the trailing dash '-'
    
 #---------------------------------------------------------------------------
 # Actions indication
@@ -690,7 +716,7 @@ def scrAgenda(card, x = 0, y = 0):
          return
    if ds == 'runner': 
       TypeCard[card] = card.Type
-      KeywordCard[card] = card.Keywords
+      KeywordCard[card] = getKeywords(card)
       agendaTxt = "liberate"
    else: agendaTxt = "score"
    if TypeCard[card] == "Agenda":
@@ -933,9 +959,9 @@ def rulings(card, x = 0, y = 0):
 
 def checkNotHardwareDeck (card):
    mute()
-   if card.Type != "Hardware" or not re.search(r'Deck', card.Keywords): return True
+   if card.Type != "Hardware" or not re.search(r'Deck', getKeywords(card)): return True
    ExistingDecks = [ c for c in table
-         if c.owner == me and c.isFaceUp and re.search(r'Deck', c.Keywords) ]
+         if c.owner == me and c.isFaceUp and re.search(r'Deck', getKeywords(c)) ]
    if len(ExistingDecks) != 0 and not confirm("You already have at least one hardware deck in play. Are you sure you want to install {}?\n\n(If you do, your installed Decks will be automatically trashed at no cost)".format(card.name)): return False
    else: 
       for HWDeck in ExistingDecks: trashForFree(HWDeck)
@@ -943,9 +969,9 @@ def checkNotHardwareDeck (card):
 
 def checkUnique (card):
    mute()
-   if not re.search(r'Unique', card.Keywords): return True #If the played card isn't unique do nothing.
+   if not re.search(r'Unique', getKeywords(card)): return True #If the played card isn't unique do nothing.
    ExistingUniques = [ c for c in table
-         if c.owner == me and c.isFaceUp and c.name == card.name and re.search(r'Unique', c.Keywords) ]
+         if c.owner == me and c.isFaceUp and c.name == card.name and re.search(r'Unique', getKeywords(c)) ]
    if len(ExistingUniques) != 0 and not confirm("This unique card is already in play. Are you sure you want to play {}?\n\n(If you do, your existing unique card will be trashed at no cost)".format(card.name)) : return False
    else:
       for uniqueC in ExistingUniques: trashForFree(uniqueC)
@@ -969,20 +995,20 @@ def intPlay(card, cost = 'not_free'):
    mute() 
    chooseSide() # Just in case...
    if (card.Type == 'Operation' or card.Type == 'Prep') and chkTargeting(card) == 'ABORT': return # If it's an Operation or Prep and has targeting requirements, check with the user first.
-   if re.search(r'Double', card.Keywords): NbReq = 2 # Some cards require two actions to play. This variable is passed to the useAction() function.
+   if re.search(r'Double', getKeywords(card)): NbReq = 2 # Some cards require two actions to play. This variable is passed to the useAction() function.
    else: NbReq = 1 #In case it's not a "Double" card. Then it only uses one action to play.
    ActionCost = useAction(count = NbReq)
    if ActionCost == 'ABORT': return  #If the player didn't have enough actions and opted not to proceed, do nothing.
    if checkUnique(card) == False: return #If the player has the unique card and opted not to trash it, do nothing.
    if not checkNotHardwareDeck(card): return	#If player already has a deck in play and doesnt want to play that card, do nothing.
    TypeCard[card] = card.Type
-   KeywordCard[card] = card.Keywords
+   KeywordCard[card] = getKeywords(card)
    CostCard[card] = card.Cost
    MUtext = ''
    rc = ''
-   if card.Type == 'Resource' and re.search(r'Hidden', card.Keywords): hiddenresource = 'yes'
+   if card.Type == 'Resource' and re.search(r'Hidden', getKeywords(card)): hiddenresource = 'yes'
    else: hiddenresource = 'no'
-   if card.Type == 'Ice' or card.Type == 'Agenda' or card.Type == 'Node' or (card.Type == 'Upgrade' and not re.search(r'Region', card.Keywords)):
+   if card.Type == 'Ice' or card.Type == 'Agenda' or card.Type == 'Node' or (card.Type == 'Upgrade' and not re.search(r'Region', getKeywords(card))):
       card.moveToTable(-180, 160 * playerside - yaxisMove(card), True) # Agendas, Nodes and non-region Upgrades all are played to the same spot now.
       if TypeCard[card] == 'Ice': 
          card.orientation ^= Rot90
@@ -1009,7 +1035,7 @@ def intPlay(card, cost = 'not_free'):
       if card.Type == 'Program':
          card.moveToTable(-150, 65 * playerside - yaxisMove(card), False)
          for targetLookup in table: # We check if we're targeting a daemon to install the program in.
-            if targetLookup.targetedBy and targetLookup.targetedBy == me and re.search(r'Daemon',targetLookup.Keywords) and possess(targetLookup, card, silent = True) != 'ABORT':
+            if targetLookup.targetedBy and targetLookup.targetedBy == me and re.search(r'Daemon',getKeywords(targetLookup)) and possess(targetLookup, card, silent = True) != 'ABORT':
                MUtext = ", installing it into {}".format(targetLookup)
                break         
          notify("{}{} to install {}{}{}.".format(ActionCost, rc, card, extraText,MUtext))
@@ -1035,7 +1061,7 @@ def intPlay(card, cost = 'not_free'):
       if card.Type == 'Operation':
          card.moveToTable(0, 0 * playerside - yaxisMove(card), False)
          notify("{}{} to initiate {}{}.".format(ActionCost, rc, card, extraText))
-      elif card.Type == 'Upgrade' and re.search(r'Region', card.Keywords):
+      elif card.Type == 'Upgrade' and re.search(r'Region', getKeywords(card)):
          card.moveToTable(-220, 240 * playerside - yaxisMove(card), False)
          notify("{}{} to open a base of operations in {}{}.".format(ActionCost, rc, card, extraText))
       else:
@@ -1774,14 +1800,14 @@ def findTarget(Autoscript): # Function for finding the target of an autoscript
             if len(validTargets) == 0 and len(validNamedTargets) == 0: targetC = targetLookup # If we have no target restrictions, any targeted  card will do.
             else:
                for validtargetCHK in validTargets: # look if the card we're going through matches our valid target checks
-                  if re.search(r'{}'.format(validtargetCHK), targetLookup.Type) or re.search(r'{}'.format(validtargetCHK), targetLookup.Keywords) or re.search(r'{}'.format(validtargetCHK), targetLookup.Player):
+                  if re.search(r'{}'.format(validtargetCHK), targetLookup.Type) or re.search(r'{}'.format(validtargetCHK), getKeywords(targetLookup)) or re.search(r'{}'.format(validtargetCHK), targetLookup.Player):
                      targetC = targetLookup
                for validtargetCHK in validNamedTargets: # look if the card we're going through matches our valid target checks
                   if validtargetCHK == targetLookup.name:
                      targetC = targetLookup
             if len(invalidTargets) > 0: # If we have no target restrictions, any selected card will do as long as it's a valid target.
                for invalidtargetCHK in invalidTargets:
-                  if re.search(r'{}'.format(invalidtargetCHK), targetLookup.Type) or re.search(r'{}'.format(invalidtargetCHK), targetLookup.Keywords) or re.search(r'{}'.format(invalidtargetCHK), targetLookup.Player):
+                  if re.search(r'{}'.format(invalidtargetCHK), targetLookup.Type) or re.search(r'{}'.format(invalidtargetCHK), getKeywords(targetLookup)) or re.search(r'{}'.format(invalidtargetCHK), targetLookup.Player):
                      targetC = None
             if len(invalidNamedTargets) > 0: # If we have no target restrictions, any selected card will do as long as it's a valid target.
                for invalidtargetCHK in invalidNamedTargets:
@@ -2180,14 +2206,13 @@ def ChooseKeyword(Autoscript, announceText, card, targetCards = None, notificati
       choice = askInteger("Choose one of the following keywords to assign to this card:\n\n{}".format(choiceTXT),0)
       if choice == None: return 'ABORT'
    for targetCard in targetCards:
-      getKeywords(card)
       if targetCard.markers:
          for key in targetCard.markers:
             #confirm("Key: {}\n\nChoice: {}".format(key[0],keywords[choice])) # Debug
             if re.search('Keyword:',key[0]):
                existingKeyword = key
                #confirm("Added:{}".format(existingKeyword))
-      if re.search(r'{}'.format(keywords[choice]),targetCard.Keywords):
+      if re.search(r'{}'.format(keywords[choice]),getKeywords(targetCard)):
          if existingKeyword: targetCard.markers[existingKeyword] = 0
          else: pass # If the keyword is anyway the same, and it had no previous keyword, there is nothing to do
       elif existingKeyword:
@@ -2201,32 +2226,6 @@ def ChooseKeyword(Autoscript, announceText, card, targetCards = None, notificati
    else: announceString = "{} mark {} as being {} now".format(announceText, targetCardlist, keywords[choice])
    if notification: notify('--> {}.'.format(announceString))
    return announceString
-
-def getKeywords(card): # A function which combines the existing card keywords, with markers which give it extra ones.
-   #notify("getKeywords") # Debug
-   keywordsList = []
-   strippedKeywordsList = card.Keywords.split('-')
-   for cardKW in strippedKeywordsList:
-      strippedKW = cardKW.strip() # Remove any leading/trailing spaces between traits. We need to use a new variable, because we can't modify the loop iterator.
-      if strippedKW: keywordsList.append(strippedKW) # If there's anything left after the stip (i.e. it's not an empty string anymrore) add it to the list.   
-   if card.markers:
-      for key in card.markers:
-         markerKeyword = re.search('Keyword:([\w ]+)',key[0])
-         if markerKeyword:
-            #confirm("marker found: {}\n key: {}".format(markerKeyword.groups(),key[0])) # Debug
-            if markerKeyword.group(1) == 'Wall' or markerKeyword.group(1) == 'Sentry' or markerKeyword.group(1) == 'Code Gate': #These keywords are mutually exclusive. An Ice can't be more than 1 of these
-               if 'Wall' in keywordsList: keywordsList.remove('Wall')
-               if 'Sentry' in keywordsList: keywordsList.remove('Sentry')
-               if 'Code Gate' in keywordsList: keywordsList.remove('Code Gate')
-               keywordsList.append(markerKeyword.group(1))
-            else: keywordsList.append(markerKeyword.group(1))
-            
-   keywords = ''
-   for KW in keywordsList:
-      keywords += '{}-'.format(KW)
-   #notify("List {}\n\nResult: {}".format(keywordsList,keywords[:-1])) # Debug
-   return keywords[:-1]
-   
             
 def TraceX(Autoscript, announceText, card, targetCards = None, notification = None, n = 0): # Function for drawing X Cards from the house deck to your hand.
    if targetCards is None: targetCards = []
@@ -2403,7 +2402,7 @@ def per(Autoscript, card = None, count = 0, targetCards = None, notification = N
                random = rnd(10,100) # Bug workaround.
             cardProperties.append(c.name) # We are going to check its name
             cardProperties.append(c.Type) # It's type
-            cardSubtypes = c.Keywords.split('-') # And each individual trait. Traits are separated by " - "
+            cardSubtypes = getKeywords(c).split('-') # And each individual trait. Traits are separated by " - "
             for cardSubtype in cardSubtypes:
                strippedCS = cardSubtype.strip() # Remove any leading/trailing spaces between traits. We need to use a new variable, because we can't modify the loop iterator.
                if strippedCS: cardProperties.append(strippedCS) # If there's anything left after the stip (i.e. it's not an empty string anymrore) add it to the list.
@@ -2642,7 +2641,7 @@ def TrialError(group, x=0, y=0): # Debugging
    for idx in range(len(testcards)):
       test = table.create(testcards[idx], (70 * idx) - 150, 0, 1, True)
       TypeCard[test] = test.Type
-      KeywordCard[test] = test.Keywords
+      KeywordCard[test] = getKeywords(test)
       CostCard[test] = test.Cost
       #random = rnd(10,500)
       if test.Type == 'Ice' or test.Type == 'Agenda' or test.Type == 'Node':
