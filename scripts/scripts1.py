@@ -1520,18 +1520,30 @@ def executePlayScripts(card, action):
 #------------------------------------------------------------------------------
 # Autoactions
 #------------------------------------------------------------------------------
-
+#                                         a  b  c  d  e  f  g  h i j k l
 def inspectCard(card, x = 0, y = 0): # This function shows the player the card text, to allow for easy reading until High Quality scans are procured.
-   ASText = 'This card has the following automations:\n'
-   if re.search(r'onPlay', card.Autoscript): ASText += '\n * It will have an effect when coming into play from your hand'
-   if re.search(r'onScore', card.Autoscript): ASText += '\n * It will have an effect when being scored'
-   if re.search(r'onRez', card.Autoscript): ASText += '\n * It will have an effect when its being rezzed'
-   if re.search(r'whileRezzed', card.Autoscript): ASText += '\n * It will has a continous effect while in play'
-   if re.search(r'whileScored', card.Autoscript): ASText += '\n * It will has a continous effect while scored'
-   if re.search(r'atTurnStart', card.Autoscript): ASText += '\n * It will perform an automation at the start of your turn'
-   if re.search(r'atTurnEnd', card.Autoscript): ASText += '\n * It will perform an automation at the end of your turn'
-   if card.Autoscript != '': ASText += '\n\n This card will also perform one or more actions when you double click on it'
-   confirm("Card Text:{}\n\n{}".format(card.Rules,ASText))
+   ASText = "This card has the following automations:\n"
+   if re.search(r'onPlay', card.Autoscript): ASText += '\n * It will have an effect when coming into play from your hand.'
+   if re.search(r'onScore', card.Autoscript): ASText += '\n * It will have an effect when being scored.'
+   if re.search(r'onRez', card.Autoscript): ASText += '\n * It will have an effect when its being rezzed.'
+   if re.search(r'whileRezzed', card.Autoscript): ASText += '\n * It will has a continous effect while in play.'
+   if re.search(r'whileScored', card.Autoscript): ASText += '\n * It will has a continous effect while scored.'
+   if re.search(r'atTurnStart', card.Autoscript): ASText += '\n * It will perform an automation at the start of your turn.'
+   if re.search(r'atTurnEnd', card.Autoscript): ASText += '\n * It will perform an automation at the end of your turn.'
+   if card.AutoAction != '': 
+      if ASText == 'This card has the following automations:\n': ASText == '\nThis card will perform one or more automated actions when you double click on it.'
+      else: ASText += '\n\nThis card will also perform one or more automated actions when you double click on it.'
+   if ASText == 'This card has the following automations:\n': ASText = '\nThis card has no automations.'
+   if card.type == 'Tracing': confirm("This is your tracing card. Double click on it to start a tracing bid. It will ask you for your bid and then hide the amount.\
+                                   \n\nOnce both players have made their bid, double-click on it again to reveal your hidden total.\
+                                   \n\nAfter deciding who won the trace attempt, double click on the card one last time to pay the cost. This will automatically use bits from cards that pay for tracing if you have any.")
+   elif card.type == 'Data Fort': confirm("These are your data forts. Start stacking your Ice above them and your Agendas, Upgrades and Nodes below them.\
+                                     \nThey have no automated abilities")
+   elif card.type == 'Counter Hold': confirm("This is your Counter Hold. This card stores all the beneficial and harmful counters you might accumulate over the course of the game.\
+                                          \n\nIf you're playing a corp, viruses and other such tokens will be put here. By double clicking them, you'll spend three actions to clean all viruses from your cards.\
+                                          \nIf you're playing a runner, brain damage markers and any tokens the corp gives you will be put here.\
+                                        \n\nTo remove any token manually, simply drag & drop it out of this card.")
+   else: confirm("Card Text: {}\n\n{}".format(card.Rules,ASText))
 
 def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
    mute()
