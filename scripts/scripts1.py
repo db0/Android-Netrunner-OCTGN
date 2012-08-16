@@ -199,9 +199,9 @@ def yaxisMove(card):
 
 def getKeywords(card): # A function which combines the existing card keywords, with markers which give it extra ones.
    global KeywordCard
-   #notify("getKeywords") # Debug
+   #confirm("getKeywords") # Debug
    keywordsList = []
-   strippedKeywordsList = getKeywords(card).split('-')
+   strippedKeywordsList = card.Keywords.split('-')
    for cardKW in strippedKeywordsList:
       strippedKW = cardKW.strip() # Remove any leading/trailing spaces between traits. We need to use a new variable, because we can't modify the loop iterator.
       if strippedKW: keywordsList.append(strippedKW) # If there's anything left after the stip (i.e. it's not an empty string anymrore) add it to the list.   
@@ -2621,7 +2621,7 @@ def customScript(card, action = 'play'): # Scripts that are complex and fairly u
    elif action == 'use': useCard(card)
    
 def TrialError(group, x=0, y=0): # Debugging
-   global TypeCard, CostCard, ds
+   global TypeCard, CostCard, ds, KeywordCard
    testcards = ["185ef5c7-5fb5-4b57-b67a-8d1dc311a0b9", # Bel-Digmo Antibody
                 "692b1e14-e381-40f6-beb0-ba55b9bbd3e5", # Bug Zapper
                 "5045ca08-46b8-456f-88cd-9ce3acf49f22", # Hacker Tracker Central
