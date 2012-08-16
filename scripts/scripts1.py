@@ -1522,9 +1522,16 @@ def executePlayScripts(card, action):
 #------------------------------------------------------------------------------
 
 def inspectCard(card, x = 0, y = 0): # This function shows the player the card text, to allow for easy reading until High Quality scans are procured.
-   if card.Autoscript == "": ASText = "\n\nThis card is not Auto-Scripted!"
-   else: ASText = "\n\nThis card is Auto-Scripted:\n[{}]".format(card.AutoScript)
-   confirm("{}".format(ASText))
+   ASText = 'This card has the following automations:\n'
+   if re.search(r'onPlay', card.Autoscript): ASText += '\n * It will have an effect when coming into play from your hand'
+   if re.search(r'onScore', card.Autoscript): ASText += '\n * It will have an effect when being scored'
+   if re.search(r'onRez', card.Autoscript): ASText += '\n * It will have an effect when its being rezzed'
+   if re.search(r'whileRezzed', card.Autoscript): ASText += '\n * It will has a continous effect while in play'
+   if re.search(r'whileScored', card.Autoscript): ASText += '\n * It will has a continous effect while scored'
+   if re.search(r'atTurnStart', card.Autoscript): ASText += '\n * It will perform an automation at the start of your turn'
+   if re.search(r'atTurnEnd', card.Autoscript): ASText += '\n * It will perform an automation at the end of your turn'
+   if card.Autoscript != '': ASText += '\n\n This card will also perform one or more actions when you double click on it'
+   confirm("Card Text:{}\n\n{}".format(card.Rules,ASText))
 
 def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
    mute()

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<game xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="Netrunner" id="13568561-7a2e-4572-8f31-3d99580ab245" octgnVersion="3.0.1.2" version="2.1.5" markersize="16">
+<game xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="Netrunner" id="13568561-7a2e-4572-8f31-3d99580ab245" octgnVersion="3.0.1.2" version="2.1.6" markersize="16">
    <globalvariables> 
      <globalvariable name="fontsize" value="11"/>
      <globalvariable name="chatsize" value="11"/>
@@ -36,8 +36,8 @@
 			<groupaction menu="Switch Start/End-of-Turn Automation ON/OFF" default="false" execute="switchStartEndAutomation" />  
 			<groupaction menu="Switch Damage Automation ON/OFF" default="false" execute="switchDMGAutomation" />  
 			<groupaction menu="Disable all &quot;Newbie&quot; Warnings" default="false" execute="ImAProAtThis" />  
-			<groupaction menu="Debug" default="false" shortcut="Ctrl+Shift+D" execute="TrialError" />
-			<!-- <groupaction menu="Inspect" default="false" shortcut="Ctrl+Shift+I" execute="inspectCard" /> -->
+			<groupaction menu="Debug" default="false" shortcut="Ctrl+Shift+D" execute="TrialError" /> 
+			<groupaction menu="Inspect" default="false" shortcut="Ctrl+Shift+I" execute="inspectCard" />
 		</groupactions>
 		<groupactions menu="Turns/Actions...">
 			<groupaction menu="Declare Start of Turn" default="false" shortcut="F1" execute="goToSot" />
