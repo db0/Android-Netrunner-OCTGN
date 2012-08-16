@@ -1470,7 +1470,7 @@ def executePlayScripts(card, action):
          if chkWarn(card, activeAutoscript) == 'ABORT': return
          targetC = findTarget(activeAutoscript)
          #confirm("targetC: {}".format(targetC)) # Debug
-         effect = re.search(r'\b([A-Z][A-Za-z]+)([0-9]*)([A-Za-z& ]*)\b([^:]?[A-Za-z0-9_&{} -]*)', activeAutoscript)
+         effect = re.search(r'\b([A-Z][A-Za-z]+)([0-9]*)([A-Za-z& ]*)\b([^:]?[A-Za-z0-9_&{}\| -]*)', activeAutoscript)
          #confirm('effects: {}'.format(effect.groups())) #Debug
          if effectType.group(1) == 'whileRezzed' or effectType.group(1) == 'whileScored':
             if action == 'derez' or ((action == 'trash' or action == 'uninstall') and card.markers[Not_rezzed] == 0): Removal = True
@@ -1512,6 +1512,8 @@ def executePlayScripts(card, action):
                if ShuffleX(passedScript, announceText, card, targetC, notification = 'Quick', n = X) == 'ABORT': return
             if effect.group(1) == 'CreateDummy': 
                if CreateDummy(passedScript, announceText, card, targetC, notification = 'Quick', n = X) == 'ABORT': return
+            if effect.group(1) == 'ChooseKeyword': 
+               if ChooseKeyword(passedScript, announceText, card, targetC, notification = 'Quick', n = X) == 'ABORT': return
             if effect.group(1) == 'Inflict': 
                if InflictX(passedScript, announceText, card, targetC, notification = 'Quick', n = X) == 'ABORT': return
             if re.search(r'(Rez|Derez|Expose|Trash|Uninstall|Possess|Exile)', effect.group(1)): 
@@ -1697,6 +1699,7 @@ def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
       elif re.search(r'(Rez|Derez|Expose|Trash|Uninstall|Possess|Exile)', activeAutoscript): announceText = ModifyStatus(activeAutoscript, announceText, card, targetC, n = X)
       elif re.search(r'\bSimplyAnnounce', activeAutoscript): announceText = SimplyAnnounce(activeAutoscript, announceText, card, targetC, n = X)
       elif re.search(r'\bCreateDummy', activeAutoscript): announceText = CreateDummy(activeAutoscript, announceText, card, targetC, n = X)
+      elif re.search(r'\bChooseKeyword', activeAutoscript): announceText = ChooseKeyword(activeAutoscript, announceText, card, targetC, n = X)
       elif re.search(r'\bUseCustomAbility', activeAutoscript): announceText = UseCustomAbility(activeAutoscript, announceText, card, targetC, n = X)
       else: timesNothingDone += 1
       if announceText == 'ABORT': 
@@ -1957,7 +1960,7 @@ def TokensX(Autoscript, announceText, card, targetCards = None, notification = N
    foundKey = False # We use this to see if the marker used in the AutoAction is already defined.
    infectTXT = '' # We only inject this into the announcement when this is an infect AutoAction.
    preventTXT = '' # Again for virus infections, to note down how much was prevented.
-   action = re.search(r'\b(Put|Remove|Refill|Use|Infect)([0-9]+)([A-Za-z ]+)-?', Autoscript)
+   action = re.search(r'\b(Put|Remove|Refill|Use|Infect)([0-9]+)([A-Za-z: ]+)-?', Autoscript)
    #confirm("{}".format(action.group(3))) # Debug
    if action.group(3) in mdict: token = mdict[action.group(3)]
    else: # If the marker we're looking for it not defined, then either create a new one with a random color, or look for a token with the custom name we used above.
@@ -2159,7 +2162,72 @@ def CreateDummy(Autoscript, announceText, card, targetCards = None, notification
    if action.group(1): announceString = TokensX('Put{}'.format(action.group(2)), announceText,dummyCard) # If we have a -with in our autoscript, this is meant to put some tokens on the dummy card.
    return announceString # Creating a dummy isn't announced.
 
+def ChooseKeyword(Autoscript, announceText, card, targetCards = None, notification = None, n = 0): # Function for marking cards to be of a different keyword than they are
+   #confirm("Reached ChooseKeyword") # Debug
+   choiceTXT = ''
+   targetCardlist = ''
+   existingKeyword = None
+   if targetCards is None: targetCards = []
+   if len(targetCards) == 0: targetCards.append(card) # If there's been to target card given, assume the target is the card itself.
+   for targetCard in targetCards: targetCardlist += '{},'.format(targetCard)
+   action = re.search(r'\bChooseKeyword{([A-Za-z\| ]+)}', Autoscript)
+   #confirm("search results: {}".format(action.groups())) # Debug
+   keywords = action.group(1).split('|')
+   #confirm("List: {}".format(keywords)) # Debug
+   for i in range(len(keywords)): choiceTXT += '{}: {}\n'.format(i, keywords[i])
+   choice = len(keywords)
+   while choice > len(keywords) - 1: 
+      choice = askInteger("Choose one of the following keywords to assign to this card:\n\n{}".format(choiceTXT),0)
+      if choice == None: return 'ABORT'
+   for targetCard in targetCards:
+      getKeywords(card)
+      if targetCard.markers:
+         for key in targetCard.markers:
+            #confirm("Key: {}\n\nChoice: {}".format(key[0],keywords[choice])) # Debug
+            if re.search('Keyword:',key[0]):
+               existingKeyword = key
+               #confirm("Added:{}".format(existingKeyword))
+      if re.search(r'{}'.format(keywords[choice]),targetCard.Keywords):
+         if existingKeyword: targetCard.markers[existingKeyword] = 0
+         else: pass # If the keyword is anyway the same, and it had no previous keyword, there is nothing to do
+      elif existingKeyword:
+         #confirm("Searching for {} in {}".format(keywords[choice],existingKeyword[0])) # Debug               
+         if re.search(r'{}'.format(keywords[choice]),existingKeyword[0]): pass # If the keyword is the same as is already there, do nothing.
+         else: 
+            targetCard.markers[existingKeyword] = 0
+            TokensX('Put1Keyword:{}'.format(keywords[choice]), '', targetCard)
+      else: TokensX('Put1Keyword:{}'.format(keywords[choice]), '', targetCard)
+   if notification == 'Quick': announceString = "{} marks {} as being {} now".format(announceText, targetCardlist, keywords[choice])
+   else: announceString = "{} mark {} as being {} now".format(announceText, targetCardlist, keywords[choice])
+   if notification: notify('--> {}.'.format(announceString))
+   return announceString
+
+def getKeywords(card): # A function which combines the existing card keywords, with markers which give it extra ones.
+   #notify("getKeywords") # Debug
+   keywordsList = []
+   strippedKeywordsList = card.Keywords.split('-')
+   for cardKW in strippedKeywordsList:
+      strippedKW = cardKW.strip() # Remove any leading/trailing spaces between traits. We need to use a new variable, because we can't modify the loop iterator.
+      if strippedKW: keywordsList.append(strippedKW) # If there's anything left after the stip (i.e. it's not an empty string anymrore) add it to the list.   
+   if card.markers:
+      for key in card.markers:
+         markerKeyword = re.search('Keyword:([\w ]+)',key[0])
+         if markerKeyword:
+            #confirm("marker found: {}\n key: {}".format(markerKeyword.groups(),key[0])) # Debug
+            if markerKeyword.group(1) == 'Wall' or markerKeyword.group(1) == 'Sentry' or markerKeyword.group(1) == 'Code Gate': #These keywords are mutually exclusive. An Ice can't be more than 1 of these
+               if 'Wall' in keywordsList: keywordsList.remove('Wall')
+               if 'Sentry' in keywordsList: keywordsList.remove('Sentry')
+               if 'Code Gate' in keywordsList: keywordsList.remove('Code Gate')
+               keywordsList.append(markerKeyword.group(1))
+            else: keywordsList.append(markerKeyword.group(1))
+            
+   keywords = ''
+   for KW in keywordsList:
+      keywords += '{}-'.format(KW)
+   #notify("List {}\n\nResult: {}".format(keywordsList,keywords[:-1])) # Debug
+   return keywords[:-1]
    
+            
 def TraceX(Autoscript, announceText, card, targetCards = None, notification = None, n = 0): # Function for drawing X Cards from the house deck to your hand.
    if targetCards is None: targetCards = []
    action = re.search(r'\bTrace([0-9]+)', Autoscript)
@@ -2560,7 +2628,7 @@ def TrialError(group, x=0, y=0): # Debugging
                 "5045ca08-46b8-456f-88cd-9ce3acf49f22", # Hacker Tracker Central
                 "c48c91d0-8253-42b3-9c69-918a464445e0", # Encryption breakthrough
                 "2cd201db-a2fe-49d0-b5e1-14197b88172e", # Corp. negotiation centre.
-                "f9620ff6-046a-46e0-b502-5807f6de60c7", # Social Engineering
+                "3db0bf1a-f262-4fcd-a3e7-1993f90dffc7", # Caryatid
                 "23b7487c-7093-47ae-a6e9-d3911ad58c5a", # Corporate War
                 "92725a30-5f2a-439e-a5e1-4c818780ed1c"] # Mystery Box
    if not ds: ds = "corp"
