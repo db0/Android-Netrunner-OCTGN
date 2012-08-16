@@ -751,6 +751,7 @@ def intRez (card, cost = 'not free', x=0, y=0, silent = False):
       if card.Type == 'Ice': notify("{} has rezzed {} {}{}.".format(me, card, rc, extraText))
       if card.Type == 'Node': notify("{} has acquired {} {}{}.".format(me, card, rc, extraText))
       if card.Type == 'Upgrade': notify("{} has installed {} {}{}.".format(me, card, rc, extraText))
+   random = rnd(10,100) # Bug workaround.
    executeAutomations(card,'rez')
     
 
@@ -879,9 +880,12 @@ def exileCard(card, silent = False):
    if not silent: notify("{} exiled {}.".format(me,card))
    
    
-def uninstall(card, silent = False):
+def uninstall(card, destination = 'hand', silent = False):
    # Returns an installed card into our hand.
    mute()
+   if destination == 'R&D' or destination == 'Stack': group = me.piles['R&D/Stack']
+   else: group = me.hand
+   #confirm("destination: {}".format(destination)) # Debug
    if card.Type == "Tracing" or card.Type == "Counter Hold" or card.Type == "Data Fort": 
       whisper("This kind of card cannot be uninstalled!")
       return 'ABORT'
@@ -892,7 +896,7 @@ def uninstall(card, silent = False):
       if card.isFaceUp and num(card.properties["MU Required"]) > 0 and not card.markers[mdict['DaemonMU']]:
          card.owner.Memory += num(card.properties["MU Required"])      
       executeAutomations(card,'uninstall')
-      card.moveTo(me.hand)
+      card.moveTo(group)
    if not silent: notify("{} uninstalled {}.".format(me,card))
 
 def possess(daemonCard, programCard, silent = False):
@@ -1445,7 +1449,7 @@ def executePlayScripts(card, action):
    Autoscripts = card.AutoScript.split('||') # When playing cards, the || is used as an "and" separator, rather than "or". i.e. we don't do choices (yet)
    AutoScriptsSnapshot = list(Autoscripts) # Need to work on a snapshot, because we'll be modifying the list.
    for autoS in AutoScriptsSnapshot: # Checking and removing any "AtTurnStart" actions.
-      if re.search(r'atTurn(Start|End)', autoS): Autoscripts.remove(autoS)
+      if re.search(r'atTurn(Start|End)', autoS) or re.search(r'-isTrigger', autoS): Autoscripts.remove(autoS)
       if re.search(r'CustomScript', autoS): 
          customScript(card,action)
          Autoscripts.remove(autoS)
@@ -1740,7 +1744,7 @@ def findTarget(Autoscript): # Function for finding the target of an autoscript
                validTargets.remove(chkTarget)
       for targetLookup in table: # Now that we have our list of restrictions, we go through each targeted card on the table to check if it matches.
          if ((targetLookup.targetedBy and targetLookup.targetedBy == me) or re.search(r'AutoTargeted', Autoscript)) and chkPlayer(Autoscript, targetLookup.controller, False): # The card needs to be targeted by the player. If the card needs to belong to a specific player (me or rival) this also is taken into account.
-            whisper('checking {}'.format(targetLookup)) # Debug
+            #whisper('checking {}'.format(targetLookup)) # Debug
             if not targetLookup.isFaceUp: # If we've targeted a subdued card, we turn it temporarily face-up to grab its properties.
                targetLookup.isFaceUp = True
                cFaceD = True
@@ -2080,9 +2084,10 @@ def ShuffleX(Autoscript, announceText, card, targetCards = None, notification = 
    mute()
    action = re.search(r'\bShuffle([A-Za-z& ]+)', Autoscript)
    targetPL = ofwhom(Autoscript)
-   if action.group(1) == 'Trash': pile = targetPL.piles['Trash/Archives(Face-up)']
-   elif action.group(1) == 'Stack': pile = targetPL.piles['R&D/Stack']
+   if action.group(1) == 'Trash' or action.group(1) == 'Archives': pile = targetPL.piles['Trash/Archives(Face-up)']
+   elif action.group(1) == 'Stack' or action.group(1) == 'R&D': pile = targetPL.piles['R&D/Stack']
    elif action.group(1) == 'Hidden Archives': pile = targetPL.piles['Archives(Hidden)']
+   random = rnd(10,100) # Small wait (bug workaround) to make sure all animations are done.
    shuffle(pile)
    if notification == 'Quick': announceString = "{} shuffles their {}".format(announceText, pile.name)
    elif targetPL == me: announceString = "{} shuffle their {}".format(announceText, pile.name)
@@ -2150,10 +2155,14 @@ def TraceX(Autoscript, announceText, card, targetCards = None, notification = No
 def ModifyStatus(Autoscript, announceText, card, targetCards = None, notification = None, n = 0): # Function for modifying the status of a card on the table.
    if targetCards is None: targetCards = []
    targetCardlist = '' # A text field holding which cards are going to get tokens.
-   action = re.search(r'\b(Rez|Derez|Expose|Trash|Uninstall|Possess|Exile)(Target|Parent|Multi|Myself)', Autoscript)
+   action = re.search(r'\b(Rez|Derez|Expose|Trash|Uninstall|Possess|Exile)(Target|Parent|Multi|Myself)[-to]*([A-Z][A-Za-z&_ ]+)?', Autoscript)
    if action.group(2) == 'Myself': 
       del targetCards[:] # Empty the list, just in case.
       targetCards.append(card)
+   #confirm("groups: {}".format(action.groups())) #  Debug
+   if action.group(3): dest = action.group(3)
+   else: dest = 'hand'
+   #confirm("dest: {}".format(dest)) # Debug
    for targetCard in targetCards: targetCardlist += '{},'.format(targetCard)
    #confirm("List: {}".format(targetCards)) #Debug
    #for targetCard in targetCards: notify("ModifyX TargetCard: {}".format(targetCard)) #Debug
@@ -2161,7 +2170,7 @@ def ModifyStatus(Autoscript, announceText, card, targetCards = None, notificatio
       if action.group(1) == 'Rez' and intRez(targetCard, silent = True) != 'ABORT': pass
       elif action.group(1) == 'Derez'and derez(targetCard, silent = True) != 'ABORT': pass
       elif action.group(1) == 'Expose' and expose(targetCard, silent = True) != 'ABORT': pass
-      elif action.group(1) == 'Uninstall' and uninstall(targetCard, silent = True) != 'ABORT': pass
+      elif action.group(1) == 'Uninstall' and uninstall(targetCard, dest, silent = True) != 'ABORT': pass
       elif action.group(1) == 'Possess' and possess(card, targetCard, silent = True) != 'ABORT': pass
       elif action.group(1) == 'Trash':
          if targetCard.owner != me: whisper(":::Note::: No automatic discard action is taken. Please ask the owner of the card to do take this action themselves.") # We do not discard automatically because it's easy to make a mistake that will be difficult to undo this way.
@@ -2266,11 +2275,11 @@ def findVirusProtection(card, targetPL, VirusInfected): # Find out if the player
 def per(Autoscript, card = None, count = 0, targetCards = None, notification = None): # This function goes through the autoscript and looks for the words "per<Something>". Then figures out what the card multiplies its effect with, and returns the appropriate multiplier.
    #confirm("Bump per") #Debug
    if targetCards is None: targetCards = []
-   per = re.search(r'\b(per|upto)(Assigned|Target|Parent|Generated|Installed|Rezzed|Transferred|Bought|TraceAttempt)?([A-Z][A-Za-z0-9{}_ ]*)-?', Autoscript) # We're searching for the word per, and grabbing all after that, until the first dash "-" as the variable.   
+   per = re.search(r'\b(per|upto)(Target|Parent|Every)?([A-Z][A-Za-z0-9{}_ ]*)-?', Autoscript) # We're searching for the word per, and grabbing all after that, until the first dash "-" as the variable.   
    if per: # If the  search was successful...
-      #confirm("Groups: {}".format(per.groups())) #Debug
-      if per.group(2) and per.group(2) == 'Target': # If we're looking for a target, we need to scour the requested group for targets.
-         #confirm("Bump per rest") #Debug
+      #confirm("Groups: {}. Count: {}".format(per.groups(),count)) #Debug
+      if per.group(2) and (per.group(2) == 'Target' or per.group(2) == 'Every'): # If we're looking for a target or any specific type of card, we need to scour the requested group for targets.
+         #confirm("Bump per Tablesearch") #Debug
          perCHK = per.group(3).split('_on_') # First we check to see if in our conditions we're looking for markers or card properties, to remove them from the checks
          perCHKSnapshot = list(perCHK)
          #confirm("Group3: {}\nperCHK: {}".format(per.group(3),perCHK)) #Debug
@@ -2321,20 +2330,20 @@ def per(Autoscript, card = None, count = 0, targetCards = None, notification = N
             for perItem in perItemExclusion:
                if perItem in cardProperties: perCHK = False # Pretty much the opposite of the above.
             if perCHK: # If we still have not dismissed the card and we're supposed to reveal them to the other players...
-               if not ((re.search(r'isExposeTarget', Autoscript) and not c.isFaceUp and c.targetedBy == me) # For card like Encryption Breakthrough who check both targeted 
-                    or (re.search(r'isRezzed', Autoscript) and c.isFaceUp and not c.markers[Not_rezzed])    # AND untargeted cards.
-                    or ((re.search(r'Reveal&Shuffle', Autoscript) or re.search(r'Reveal&Recover', Autoscript or re.search(r'SendToTrash', Autoscript))) and c.targetedBy and c.targetedBy == me) # These kind of autoscripts always need a target
-                    or (re.search(r'(Marker|Property|Any)',per.group(3))) and c.targetedBy and c.targetedBy == me): # Looking for markers or properties always needs a specific target.
-                  perCHK = False # If the Autoscript is not something known, do nothing (to avoid needless errors)
-                  #confirm("Ignored.\nAutoscript is {}".format(Autoscript)) # Debug
+               #notify("group2: {}. card is: {}. Targeting is: {}".format(per.group(2),c,c.targetedBy))
+               if re.search(r'isExposeTarget', Autoscript) and c.isFaceUp: perCHK = False                             # We exclude the card if it's supposed to get exposed but can't (i.e. see encryption breakthrough)
+               if re.search(r'isRezzed', Autoscript) and (c.markers[Not_rezzed] or not c.isFaceUp): perCHK = False    # We exclude the card if it's supposed to be rezzed but isn't
+               if re.search(r'isUnrezzed', Autoscript) and (c.isFaceUp or not c.markers[Not_rezzed]): perCHK = False  # We exclude the card if it's supposed to be unrezzed but isn't
+               if re.search(r'Target',per.group(2)) and (not c.targetedBy or not c.targetedBy == me): perCHK = False  # We exclude the card if we only gather targets but it's not one.
+            if perCHK: # Here we find out how much multiplier we get from those cards.
+               #notify("Found: {}".format(c)) # Debug
                if re.search(r'isExposeTarget', Autoscript) and not c.isFaceUp and c.targetedBy == me: expose(c) # If the card is supposed to be exposed to get the benefit, then do so now.
-               if (re.search(r'Reveal&Shuffle', Autoscript) or re.search(r'Reveal&Recover', Autoscript)) and c.targetedBy and c.targetedBy == me: 
+               if re.search(r'(Reveal&Shuffle|Reveal&Recover)', Autoscript) and c.targetedBy and c.targetedBy == me: 
                   c.moveToTable((70 * iter) - 150, 0 - yaxisMove(card), False) # If the card is supposed to be revealed to get the benefit, then we do so now
                   c.highlight = RevealedColor
                   notify("- {} reveals {} from their hand".format(me,c))
                   iter +=1
                if re.search(r'SendToTrash', Autoscript) and c.targetedBy and c.targetedBy == me: handDiscard(c)
-            if perCHK: # Here we find out how much multiplier we get from those cards.
                if re.search(r'Marker',per.group(3)): #If we're looking for markers, then we go through each targeted card and check if it has any relevant markers
                   marker = re.search(r'Marker{([\w ]+)}',per.group(3)) # If we're looking for markers on the card, increase the multiplier by the number of markers found.
                   multiplier += c.markers[mdict[marker.group(1)]]
@@ -2357,18 +2366,16 @@ def per(Autoscript, card = None, count = 0, targetCards = None, notification = N
             for c in revealedCards: c.moveTo(me.hand)
             notify("- {} returns the revealed cards back into their hand".format(me))
       else: #If we're not looking for a particular target, then we check for everything else.
-         #useC = card # If not looking for a target, use the current card being actioned.
+         #confirm("No table lookup done") # Debug.
          if per.group(3) == 'X': multiplier = count      
          elif count: multiplier = num(count) * chkPlayer(Autoscript, card.controller, False) # All non-special-rules per<somcething> requests use this formula.
                                                                                               # Usually there is a count sent to this function (eg, number of favour purchased) with which to multiply the end result with
                                                                                               # and some cards may only work when a rival owns or does something.
          elif re.search(r'Marker',per.group(3)):
             marker = re.search(r'Marker{([\w ]+)}',per.group(3))
-            #confirm("Groups2: {}\n\nuseC: {}".format(marker.group(1),card)) #Debug
             multiplier = card.markers[mdict[marker.group(1)]]
          elif re.search(r'Property',per.group(3)):
             property = re.search(r'Property{([\w ]+)}',per.group(3))
-            #confirm("Groups2: {}\n\nuseC: {}".format(marker.group(1),card)) #Debug
             multiplier = card.properties[property.group(1)]
    else: multiplier = 1
    return multiplier
@@ -2403,7 +2410,7 @@ def autoscriptOtherPlayers(lookup, count = 1): # Function that triggers effects 
             #confirm('Autoscripts: {}'.format(AutoS)) # Debug
             effect = re.search(r'\b([A-Z][A-Za-z]+)([0-9]*)([A-Za-z& ]*)\b([^:]?[A-Za-z0-9_& -]*)', AutoS)
             passedScript = "{}".format(effect.group(0))
-            confirm('effects: {}'.format(passedScript)) #Debug
+            #confirm('effects: {}'.format(passedScript)) #Debug
             if effect.group(1) == 'Gain' or effect.group(1) == 'Lose':
                GainX(passedScript, costText, card, notification = 'Automatic', n = count) # If it exists, then call the GainX() function, because cards that automatically do something when other players do something else, always give the player something directly.
             if re.search(r'(Put|Remove|Refill|Use|Infect)', effect.group(1)): 
@@ -2529,11 +2536,11 @@ def customScript(card, action = 'play'): # Scripts that are complex and fairly u
    
 def TrialError(group, x=0, y=0): # Debugging
    global TypeCard, CostCard, ds
-   testcards = ["0374335d-33a4-4a63-90b2-5aeaff83cd54", # Euromarket Consorium (Should give 2 hand size, not 1)
-                "03954709-aa33-4957-bc10-0e94cdca5913", # Deal with Militech
-                "365fea7b-d400-49a2-8de8-666732a17e4e", # Crash Everett, Inventive Fixer
-                "bc5586c5-6488-4c53-81d4-049b9385cec8", # New Blood
-                "0b7ac768-183a-4377-9dc7-8ae308dde698", # Dr. Dreff
+   testcards = ["185ef5c7-5fb5-4b57-b67a-8d1dc311a0b9", # Bel-Digmo Antibody
+                "692b1e14-e381-40f6-beb0-ba55b9bbd3e5", # Bug Zapper
+                "5045ca08-46b8-456f-88cd-9ce3acf49f22", # Hacker Tracker Central
+                "c48c91d0-8253-42b3-9c69-918a464445e0", # Encryption breakthrough
+                "2cd201db-a2fe-49d0-b5e1-14197b88172e", # Corp. negotiation centre.
                 "f9620ff6-046a-46e0-b502-5807f6de60c7", # Social Engineering
                 "23b7487c-7093-47ae-a6e9-d3911ad58c5a", # Corporate War
                 "92725a30-5f2a-439e-a5e1-4c818780ed1c"] # Mystery Box

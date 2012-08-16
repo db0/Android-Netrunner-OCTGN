@@ -48,6 +48,9 @@ How the custom fonts look like
 
 Changelog
 ---------
+### 2.1.6 
+
+Fixed some regression bugs on the autoscripts.  You'll need to download the new patch.
 
 ### 2.1.5 
 
