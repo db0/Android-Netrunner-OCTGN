@@ -48,6 +48,15 @@ How the custom fonts look like
 
 Changelog
 ---------
+### 2.1.6
+
+ * Added function which intercepts and reduces counter increase commands depending on specific markers. 
+ * Autoscrip to request and number and re-use it elsewhere.
+ * Current action is now displayed via a global variable.
+ * TransferX now works for counter "forfeit" effects
+ * Made invalid Start-of-Turn check work more robustly.
+ * Many other bugfixes
+
 ### 2.1.6 
 
 Fixed some regression bugs on the autoscripts.  You'll need to download the new patch.
