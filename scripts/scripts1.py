@@ -50,6 +50,7 @@ MemoryRequirements = { }
 InstallationCosts = { }
 maxActions = 3
 scoredAgendas = 0
+currAction = 0
 playerside = None # Variable to keep track on which side each player is
 playeraxis = None # Variable to keep track on which axis the player is
 
@@ -229,70 +230,77 @@ def getKeywords(card): # A function which combines the existing card keywords, w
 #---------------------------------------------------------------------------
 
 def useAction(group = table, x=0, y=0, count = 1):
+   global currAction
    mute()
    extraText = ''
+   actionsReduce = findCounterPrevention(me.Actions, 'Actions', me)
+   if actionsReduce: notify(":::WARNING::: {} had to forfeit their next {} actions".format(me, actionsReduce))
+   me.Actions -= actionsReduce
    if me.Actions < count: 
-      if not confirm("You have no more actions left. Are you sure you want to continue?"): return 'ABORT'
+      if not confirm("You have no more actions left for this turn. Are you sure you want to continue?"): return 'ABORT'
       else: extraText = ' (Exceeding Max!)'
-   act = (maxActions - me.Actions) + 1# maxActions is different for corp and runner and is set during jackIn()
-                                      # We give act +1 because otherwise the first action would be action #0.
    me.Actions -= count
-   if count == 2: return "{} {} {} takes Double Action #{} and #{}{}".format(uniAction(),uniAction(),me,act, act + 1,extraText)
-   elif count == 3: return "{} {} {} {} takes Triple Action #{}, #{} and #{}{}".format(uniAction(),uniAction(),uniAction(),me,act, act + 1,act + 2,extraText)
-   else: return "{} {} takes Action #{}{}".format(uniAction(),me,act,extraText) # We give act +1 because otherwise the first action would be action #0.
+   currAction += count
+   if count == 2: return "{} {} {} takes Double Action #{} and #{}{}".format(uniAction(),uniAction(),me,currAction - 1, currAction,extraText)
+   elif count == 3: return "{} {} {} {} takes Triple Action #{}, #{} and #{}{}".format(uniAction(),uniAction(),uniAction(),me,currAction - 2, currAction - 1, currAction,extraText)
+   else: return "{} {} takes Action #{}{}".format(uniAction(),me,currAction,extraText) # We give act +1 because otherwise the first action would be action #0.
 
 def goToEndTurn(group, x = 0, y = 0):
-    mute()
-    global endofturn
-    if ds == "":
-        whisper ("Please perform the game setup first (Ctrl+Shift+S)")
-        return
-    if me.Actions > 0: # If the player has not used all their actions for this turn, remind them, just in case.
-        if not confirm("You have not taken all your actions for this turn, are you sure you want to declare end of turn"): return
-    if len(me.hand) > currentHandSize(): #If the player is holding more cards than their hand max. remind them that they need to discard some 
-                                                       # and put them in the end of turn to allow them to do so.
-        if endofturn: #If the player has gone through the end of turn phase and still has more hands, allow them to continue but let everyone know.
-            if not confirm("You still hold more cards than your hand size maximum. Are you sure you want to proceed?"): return
-            else: notify(":::Warning::: {} has ended their turn holding more cards ({}) than their hand size maximum of {}".format(me,len(me.hand),currentHandSize()))
-        else: # If the player just ended their turn, give them a chance to discard down to their hand maximum.
-            if ds == "corp": notify ("The Corporation of {} is performing an Internal Audit before CoB.".format(me))
-            else: notify ("Runner {} is rebooting all systems for the day.".format(me))
-            confirm(':::Warning:::\n\n You have more card in your hand than your current hand size maximum of {}. Please discard enough and then use the "Declare End of Turn" action again.'.format(currentHandSize()))
-            endofturn = True
-            return
-    endofturn = False
-    newturn = False
-    atTurnStartEndEffects('End')
-    if ds == "corp": notify ("=> The Corporation of {} has reached CoB (Close of Business hours).".format(me))
-    else: notify ("=> Runner {} has gone to sleep for the day.".format(me))
+   mute()
+   global endofturn, currAction, newturn
+   if ds == "":
+      whisper ("Please perform the game setup first (Ctrl+Shift+S)")
+      return
+   if me.Actions > 0: # If the player has not used all their actions for this turn, remind them, just in case.
+      if not confirm("You have not taken all your actions for this turn, are you sure you want to declare end of turn"): return
+   if len(me.hand) > currentHandSize(): #If the player is holding more cards than their hand max. remind them that they need to discard some 
+                                        # and put them in the end of turn to allow them to do so.
+      if endofturn: #If the player has gone through the end of turn phase and still has more hands, allow them to continue but let everyone know.
+         if not confirm("You still hold more cards than your hand size maximum. Are you sure you want to proceed?"): return
+         else: notify(":::Warning::: {} has ended their turn holding more cards ({}) than their hand size maximum of {}".format(me,len(me.hand),currentHandSize()))
+      else: # If the player just ended their turn, give them a chance to discard down to their hand maximum.
+         if ds == "corp": notify ("The Corporation of {} is performing an Internal Audit before CoB.".format(me))
+         else: notify ("Runner {} is rebooting all systems for the day.".format(me))
+         confirm(':::Warning:::\n\n You have more card in your hand than your current hand size maximum of {}. Please discard enough and then use the "Declare End of Turn" action again.'.format(currentHandSize()))
+         endofturn = True
+         return
+   endofturn = False
+   newturn = False
+   currAction = 0
+   atTurnStartEndEffects('End')
+   if ds == "corp": notify ("=> The Corporation of {} has reached CoB (Close of Business hours).".format(me))
+   else: notify ("=> Runner {} has gone to sleep for the day.".format(me))
 
 def goToSot (group, x=0,y=0):
-    global newturn, endofturn
-    mute()
-    if endofturn:
-        if not confirm("You have not yet properly ended you previous turn. Are you sure you want to continue?"): return
-        else: 
-            if len(me.hand) > currentHandSize(): # Just made sure to notify of any shenanigans
-                notify(":::Warning::: {} has skipped their End-of-Turn phase and they are holding more cards ({}) than their hand size maximum of {}".format(me,len(me.hand),currentHandSize()))
-            else: notify(":::Warning::: {} has skipped their End-of-Turn phase".format(me))
-            endofturn = False
-    if ds == "":
-        whisper ("Please perform the game setup first (Ctrl+Shift+S)")
-        return
-    if me.Actions < 0: 
-        if not confirm("Your actions were negative from last turn. Was this a result of a penalty you suffered from a card?"): 
-            me.Actions = maxActions # If the player did not have a penalty, then we assume those were extra actions granted by some card effect, so we make sure they have their full maximum
-        else: 
-            me.Actions += maxActions # If it was a penalty, then it remains with them for this round, which means they have less actions to use.
-            notify("{} is starting with {} less actions this turn, due to a penalty from a previous turn. They have {} actions this turn".format(me,maxActions - me.Actions, me.Actions))
-    else: me.Actions = maxActions
-    myCards = (card for card in table if card.controller == me and card.owner == me)
-    for card in myCards: 
+   global newturn, endofturn
+   mute()
+   if endofturn or currAction or newturn:
+      if not confirm("You have not yet properly ended you previous turn. You need to use F12 after you've finished all your actions.\n\nAre you sure you want to continue?"): return
+      else: 
+         if len(me.hand) > currentHandSize(): # Just made sure to notify of any shenanigans
+            notify(":::Warning::: {} has skipped their End-of-Turn phase and they are holding more cards ({}) than their hand size maximum of {}".format(me,len(me.hand),currentHandSize()))
+         else: notify(":::Warning::: {} has skipped their End-of-Turn phase".format(me))
+         endofturn = False
+   if ds == "":
+      whisper ("Please perform the game setup first (Ctrl+Shift+S)")
+      return
+   actionsReduce = findCounterPrevention(maxActions, 'Actions', me) # Checking if the player has any effects which force them to forfeit actions.
+   if actionsReduce: extraTXT = " ({} forfeited)".format(actionsReduce)
+   else: extraTXT = ''
+   if me.Actions < 0: 
+      if not confirm("Your actions were negative from last turn. Was this a result of a penalty you suffered from a card?"): 
+         me.Actions = maxActions - actionsReduce # If the player did not have a penalty, then we assume those were extra actions granted by some card effect, so we make sure they have their full maximum
+      else: 
+         me.Actions += maxActions - actionsReduce # If it was a penalty, then it remains with them for this round, which means they have less actions to use.
+         notify("{} is starting with {} less actions this turn, due to a penalty from a previous turn.")
+   else: me.Actions = maxActions - actionsReduce
+   myCards = (card for card in table if card.controller == me and card.owner == me)
+   for card in myCards: 
       if card in TypeCard and TypeCard[card] != 'Ice': card.orientation &= ~Rot90 # Refresh all cards which can be used once a turn.
-    newturn = True
-    atTurnStartEndEffects('Start') # Check all our cards to see if there's any Start of Turn effects active.
-    if ds == "corp": notify("=> The offices of {}'s Corporation are now open for business.".format(me))
-    else: notify ("=> Runner {} has woken up".format(me))
+   newturn = True
+   atTurnStartEndEffects('Start') # Check all our cards to see if there's any Start of Turn effects active.
+   if ds == "corp": notify("=> The offices of {}'s Corporation are now open for business. They have {} actions for this turn{}.".format(me,me.Actions,extraTXT))
+   else: notify ("=> Runner {} has woken up. They have {} actions for this turn{}.".format(me,me.Actions,extraTXT))
 
 def modActions(group,x=0,y=0):
    global maxActions
@@ -355,45 +363,48 @@ def createStartingCards():
       storeSpecial(TC)      
 
 def intJackin(group, x = 0, y = 0):
-    global ds, maxActions
-    mute()
-    ds = ""
-    if not table.isTwoSided(): 
-        if not confirm("This game is designed to be played on a two-sided table. Things will be wonky otherwise!! Please start a new game and makde sure the  the appropriate button is checked. Are you sure you want to continue?"): return   
-    chooseSide()
-    stack = me.piles['R&D/Stack']
-    if len(stack) == 0:
-        whisper ("Please load a deck first!")
-        return
-    TopCard = stack[0]
-    TopCard.moveTo(me.piles['Trash/Archives(Face-up)'])
-    if len(players) > 1: random = rnd(1,100) # Fix for multiplayer only. Makes Singleplayer setup very slow otherwise.
-    ds = TopCard.Player
-    me.setGlobalVariable('ds', ds)
-    TopCard.moveTo(me.piles['R&D/Stack'])
-    if checkDeckNoLimit(stack) != 0: notify ("SHOULD RETURN")
-    me.counters['Bit Pool'].value = 5
-    me.counters['Max Hand Size'].value = 5
-    me.counters['Tags'].value = 0
-    me.counters['Agenda Points'].value = 0
-    me.counters['Bad Publicity'].value = 0
-    if ds == "corp":
-        maxActions = 3
-        me.Actions = maxActions
-        me.Memory = 0
-        NameDeck = "R&D"
-        notify("{} is playing as Corporation".format(me))      
-    else:
-        maxActions = 4
-        me.Actions = maxActions
-        me.Memory = 4
-        NameDeck = "Stack"
-        notify("{} is playing as Runner".format(me))
-    createStartingCards()
-    for type in Automations: switchAutomation(type,'Announce')
-    shuffle(me.piles['R&D/Stack'])
-    notify ("{}'s {} is shuffled ".format(me,NameDeck) )
-    drawMany (me.piles['R&D/Stack'], 5) 
+   global ds, maxActions,newturn,endofturn, currAction
+   mute()
+   ds = ""
+   if not table.isTwoSided(): 
+      if not confirm("This game is designed to be played on a two-sided table. Things will be wonky otherwise!! Please start a new game and makde sure the  the appropriate button is checked. Are you sure you want to continue?"): return   
+   chooseSide()
+   stack = me.piles['R&D/Stack']
+   if len(stack) == 0:
+      whisper ("Please load a deck first!")
+      return
+   TopCard = stack[0]
+   TopCard.moveTo(me.piles['Trash/Archives(Face-up)'])
+   if len(players) > 1: random = rnd(1,100) # Fix for multiplayer only. Makes Singleplayer setup very slow otherwise.
+   ds = TopCard.Player
+   me.setGlobalVariable('ds', ds)
+   TopCard.moveTo(me.piles['R&D/Stack'])
+   if checkDeckNoLimit(stack) != 0: notify ("SHOULD RETURN")
+   me.counters['Bit Pool'].value = 5
+   me.counters['Max Hand Size'].value = 5
+   me.counters['Tags'].value = 0
+   me.counters['Agenda Points'].value = 0
+   me.counters['Bad Publicity'].value = 0
+   newturn = False 
+   endofturn = False
+   currAction = 0
+   if ds == "corp":
+      maxActions = 3
+      me.Actions = maxActions # We now do that during SoT
+      me.Memory = 0
+      NameDeck = "R&D"
+      notify("{} is playing as Corporation".format(me))      
+   else:
+      maxActions = 4
+      #me.Actions = maxActions # We now do that during SoT
+      me.Memory = 4
+      NameDeck = "Stack"
+      notify("{} is playing as Runner".format(me))
+   createStartingCards()
+   for type in Automations: switchAutomation(type,'Announce')
+   shuffle(me.piles['R&D/Stack'])
+   notify ("{}'s {} is shuffled ".format(me,NameDeck) )
+   drawMany (me.piles['R&D/Stack'], 5) 
 
 def storeSpecial(card): 
 # Function stores into a shared variable some special cards that other players might look up.
@@ -654,10 +665,13 @@ def addMeatNetDmg(group, x = 0, y = 0):
     intdamageDiscard(me.hand)
 
 def getBit(group, x = 0, y = 0):
-    ActionCost = useAction()
-    if ActionCost == 'ABORT': return
-    notify ("{} and receives {}.".format(ActionCost,uniBit(1)))
-    me.counters['Bit Pool'].value += 1
+   ActionCost = useAction()
+   if ActionCost == 'ABORT': return
+   bitsReduce = findCounterPrevention(1, 'Bits', me)
+   if bitsReduce: extraTXT = " ({} forfeited)".format(uniBit(bitsReduce))
+   else: extraTXT = ''
+   notify ("{} and receives {}{}.".format(ActionCost,uniBit(1 - bitsReduce),extraTXT))
+   me.counters['Bit Pool'].value += 1 - bitsReduce
     
 #------------------------------------------------------------------------------
 # Other functions on card
@@ -735,10 +749,13 @@ def scrAgenda(card, x = 0, y = 0):
       card.markers[mdict['Advance']] = 0
       card.markers[mdict['Not_rezzed']] = 0
       card.markers[mdict['Scored']] += 1
-      me.counters['Agenda Points'].value += ap
+      apReduce = findCounterPrevention(ap, 'Agenda Points', me)
+      if apReduce: extraTXT = " ({} forfeited)".format(apReduce)
+      else: extraTXT = ''      
+      me.counters['Agenda Points'].value += ap - apReduce
       card.moveToTable(-600 - scoredAgendas * cwidth(card) / 6, 60 - yaxisMove(card) + scoredAgendas * cheight(card) / 2 * playerside, False)
       scoredAgendas += 1
-      notify("{} {}s {} and receives {} agenda point(s)".format(me, agendaTxt, card, ap))
+      notify("{} {}s {} and receives {} agenda point(s){}".format(me, agendaTxt, card, ap - apReduce,extraTXT))
       if cheapAgenda: notify(":::Warning:::{} did not have enough advance tokens ({} out of {})! ".format(card,currentAdv,card.Cost))
       if me.counters['Agenda Points'].value >= 7 : notify("{} wins the game!".format(me))
       executeAutomations(card,agendaTxt)
@@ -819,8 +836,9 @@ def selectAsTarget (card, x = 0, y = 0):
     card.target(True)
 
 def clear(card, x = 0, y = 0):
+   mute()
    notify("{} clears {}.".format(me, card))
-   card.highlight = None
+   if card.highlight != DummyColor :card.highlight = None
    card.markers[mdict['BaseLink']] = 0
    card.markers[mdict['PlusOne']] = 0
    card.markers[mdict['MinusOne']] = 0
@@ -1032,6 +1050,7 @@ def intPlay(card, cost = 'not_free'):
          return # If the player didn't have enough money to pay and aborted the function, then do nothing.
       elif rc == "free": extraText = " at no cost"
       elif rc != 0: rc = " and pays {}".format(rc)
+      else: rc = ''
       if card.Type == 'Program':
          card.moveToTable(-150, 65 * playerside - yaxisMove(card), False)
          for targetLookup in table: # We check if we're targeting a daemon to install the program in.
@@ -1058,6 +1077,7 @@ def intPlay(card, cost = 'not_free'):
          return # If the player didn't have enough money to pay and aborted the function, then do nothing.
       elif rc == "free": extraText = " at no cost"
       elif rc != 0: rc = " and pays {}".format(rc)
+      else: rc = '' # When the cast costs nothing, we don't include the cost.
       if card.Type == 'Operation':
          card.moveToTable(0, 0 * playerside - yaxisMove(card), False)
          notify("{}{} to initiate {}{}.".format(ActionCost, rc, card, extraText))
@@ -1489,10 +1509,11 @@ def executePlayScripts(card, action):
           (effectType.group(1) == 'onScore' and action != 'score') or
           (effectType.group(1) == 'onTrash' and (action != 'trash' or action!= 'uninstall')) or
           (effectType.group(1) == 'onDerez' and action != 'derez')): continue # We don't want onPlay effects to activate onTrash for example.
-      if re.search(r'-isOptional', AutoS) and not confirm("This card has an optional ability you can activate at this point. Do you want to do so?"): 
-         notify("{} opts not to activate {}'s optional ability".format(me,card))
-         return 'ABORT'
-      else: notify("{} activates {}'s optional ability".format(me,card))
+      if re.search(r'-isOptional', AutoS):
+         if not confirm("This card has an optional ability you can activate at this point. Do you want to do so?"): 
+            notify("{} opts not to activate {}'s optional ability".format(me,card))
+            return 'ABORT'
+         else: notify("{} activates {}'s optional ability".format(me,card))
       selectedAutoscripts = AutoS.split('$$')
       #confirm('selectedAutoscripts: {}'.format(selectedAutoscripts)) # Debug
       for activeAutoscript in selectedAutoscripts:
@@ -1500,7 +1521,7 @@ def executePlayScripts(card, action):
          if chkWarn(card, activeAutoscript) == 'ABORT': return
          targetC = findTarget(activeAutoscript)
          #confirm("targetC: {}".format(targetC)) # Debug
-         effect = re.search(r'\b([A-Z][A-Za-z]+)([0-9]*)([A-Za-z& ]*)\b([^:]?[A-Za-z0-9_&{}\| -]*)', activeAutoscript)
+         effect = re.search(r'\b([A-Z][A-Za-z]+)([0-9]*)([A-Za-z& ]*)\b([^:]?[A-Za-z0-9_&{}\|: -]*)', activeAutoscript)
          #confirm('effects: {}'.format(effect.groups())) #Debug
          if effectType.group(1) == 'whileRezzed' or effectType.group(1) == 'whileScored':
             if action == 'derez' or ((action == 'trash' or action == 'uninstall') and card.markers[Not_rezzed] == 0): Removal = True
@@ -1530,6 +1551,10 @@ def executePlayScripts(card, action):
                rollTuple = RollX(passedScript, announceText, card, targetC, notification = 'Quick', n = X)
                if rollTuple == 'ABORT': return
                X = rollTuple[1] 
+            if effect.group(1) == 'RequestInt': 
+               numberTuple = RequestInt(passedScript, announceText, card, targetC, notification = 'Quick', n = X)
+               if numberTuple == 'ABORT': return
+               X = numberTuple[1] 
             if re.search(r'Run', effect.group(1)): 
                if RunX(passedScript, announceText, card, targetC, notification = 'Quick', n = X) == 'ABORT': return
             if effect.group(1) == 'Trace': 
@@ -1606,7 +1631,7 @@ def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
       abilConcat = "This card has multiple abilities.\nWhich one would you like to use?\n\n" # We start a concat which we use in our confirm window.
       for idx in range(len(Autoscripts)): # If a card has multiple abilities, we go through each of them to create a nicely written option for the player.
          #notify("Autoscripts {}".format(Autoscripts)) # Debug
-         abilRegex = re.search(r"A([0-9]+)B([0-9]+)G([0-9]+)T([0-9]+):([A-Z][a-z ]+)([0-9]*)([A-Za-z ]*)-?([A-Za-z -{},]*)", Autoscripts[idx]) # This regexp returns 3-4 groups, which we then reformat and put in the confirm dialogue in a better readable format.
+         abilRegex = re.search(r"A([0-9]+)B([0-9]+)G([0-9]+)T([0-9]+):([A-Z][A-Za-z ]+)([0-9]*)([A-Za-z ]*)-?(.*)", Autoscripts[idx]) # This regexp returns 3-4 groups, which we then reformat and put in the confirm dialogue in a better readable format.
          #confirm("abilRegex is {}".format(abilRegex.groups())) # Debug
          if abilRegex.group(1) != '0': abilCost = 'Use {} Actions'.format(abilRegex.group(1))
          else: abilCost = '' 
@@ -1718,6 +1743,10 @@ def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
          rollTuple = RollX(activeAutoscript, announceText, card) # Returns like reshuffleX()
          announceText = rollTuple[0] 
          X = rollTuple[1] 
+      elif re.search(r'RequestInt', activeAutoscript): 
+         numberTuple = RequestInt(activeAutoscript, announceText, card) # Returns like reshuffleX()
+         announceText = numberTuple[0] 
+         X = numberTuple[1] 
       elif re.search(r'\b(Put|Remove|Refill|Use|Infect)([0-9]+)', activeAutoscript): announceText = TokensX(activeAutoscript, announceText, card, targetC, n = X)
       elif re.search(r'\bTransfer([0-9]+)', activeAutoscript): announceText = TransferX(activeAutoscript, announceText, card, targetC, n = X)
       elif re.search(r'\bDraw([0-9]+)', activeAutoscript): announceText = DrawX(activeAutoscript, announceText, card, targetC, n = X)
@@ -1867,7 +1896,7 @@ def GainX(Autoscript, announceText, card, targetCards = None, notification = Non
    #confirm("Bump GainX") #Debug
    gain = 0
    action = re.search(r'\b(Gain|Lose|SetTo)([0-9]+)([A-Z][A-Za-z &]+)-?', Autoscript)
-   #confirm("Bump1: {}".format(action.groups(0))) # Debug
+   #confirm("Groups: {}".format(action.groups(0))) # Debug
    gain += num(action.group(2))
    targetPL = ofwhom(Autoscript)
    if targetPL != me: otherTXT = ' force {} to'.format(targetPL)
@@ -1875,31 +1904,36 @@ def GainX(Autoscript, announceText, card, targetCards = None, notification = Non
    if re.search(r'ifTagged', Autoscript) and targetPL.Tags == 0:
       whisper("Your opponent needs to be tagged to use this action")
       return 'ABORT'
-   if action.group(1) == 'Lose': gain *= -1
    multiplier = per(Autoscript, card, n, targetCards) # We check if the card provides a gain based on something else, such as favour bought, or number of dune fiefs controlled by rivals.
-   if re.match(r'Bit', action.group(3)): # Note to self: I can probably comprress the following, by using variables and by putting the counter object into a variable as well.
+   #confirm("GainX after per") #Debug
+   if action.group(1) == 'Lose': 
+      gain *= -1
+      gainReduce = 0
+   else: gainReduce = findCounterPrevention(gain * multiplier, action.group(3), targetPL) # If we're going to gain counter, then we check to see if we have any markers which might reduce the cost.
+   #confirm("multiplier: {}, gain: {}, reduction: {}".format(multiplier, gain, gainReduce)) # Debug
+   if re.match(r'Bits', action.group(3)): # Note to self: I can probably comprress the following, by using variables and by putting the counter object into a variable as well.
       if action.group(1) == 'SetTo': targetPL.counters['Bit Pool'].value = 0 # If we're setting to a specific value, we wipe what it's currently.
       if gain == -999: targetPL.counters['Bit Pool'].value = 0
-      else: targetPL.counters['Bit Pool'].value += gain * multiplier
+      else: targetPL.counters['Bit Pool'].value += (gain * multiplier) - gainReduce
       if targetPL.counters['Bit Pool'].value < 0: 
          if re.search(r'isCost', Autoscript): notify(":::Warning:::{} did not have enough {} to pay the cost of this action".format(targetPL,action.group(3)))
          elif re.search(r'isPenalty', Autoscript): pass #If an action is marked as penalty, it means that the value can go negative and the player will have to recover that amount.
          else: targetPL.counters['Bit Pool'].value = 0
-   elif re.match(r'Agenda Point', action.group(3)): 
+   elif re.match(r'Agenda Points', action.group(3)): 
       if action.group(1) == 'SetTo': targetPL.counters['Agenda Points'].value = 0 # If we're setting to a specific value, we wipe what it's currently.
       if gain == -999: targetPL.counters['Agenda Points'].value = 0
-      else: targetPL.counters['Agenda Points'].value += gain * multiplier
+      else: targetPL.counters['Agenda Points'].value += (gain * multiplier) - gainReduce
       if targetPL.counters['Agenda Points'].value < 0: 
          if re.search(r'isCost', Autoscript): notify(":::Warning:::{} did not have enough {} to pay the cost of this action".format(targetPL,action.group(3)))
          elif re.search(r'isPenalty', Autoscript): pass #If an action is marked as penalty, it means that the value can go negative and the player will have to recover that amount.
          else: targetPL.counters['Agenda Points'].value = 0
-   elif re.match(r'Action', action.group(3)): 
+   elif re.match(r'Actions', action.group(3)): 
       if action.group(1) == 'SetTo': targetPL.Actions = 0 # If we're setting to a specific value, we wipe what it's currently.
       if gain == -999: targetPL.Actions = 0
-      else: targetPL.Actions += gain * multiplier
+      else: targetPL.Actions += (gain * multiplier) - gainReduce
    elif re.match(r'MU', action.group(3)): 
       if action.group(1) == 'SetTo': targetPL.Memory = 0 # If we're setting to a specific value, we wipe what it's currently.
-      else: targetPL.Memory += gain * multiplier
+      else: targetPL.Memory += (gain * multiplier) - gainReduce
       if targetPL.Memory < 0: 
          if re.search(r'isCost', Autoscript): notify(":::Warning:::{} did not have enough {} to pay the cost of this action".format(targetPL,action.group(3)))
          elif re.search(r'isPenalty', Autoscript): pass #If an action is marked as penalty, it means that the value can go negative and the player will have to recover that amount.
@@ -1907,15 +1941,15 @@ def GainX(Autoscript, announceText, card, targetCards = None, notification = Non
    elif re.match(r'Bad Publicity', action.group(3)): 
       if action.group(1) == 'SetTo': targetPL.counters['Bad Publicity'].value = 0 # If we're setting to a specific value, we wipe what it's currently.
       if gain == -999: targetPL.counters['Bad Publicity'].value = 0
-      else: targetPL.counters['Bad Publicity'].value += gain * multiplier
+      else: targetPL.counters['Bad Publicity'].value += (gain * multiplier) - gainReduce
       if targetPL.counters['Bad Publicity'].value < 0: 
          if re.search(r'isCost', Autoscript): notify(":::Warning:::{} did not have enough {} to pay the cost of this action".format(targetPL,action.group(3)))
          elif re.search(r'isPenalty', Autoscript): pass #If an action is marked as penalty, it means that the value can go negative and the player will have to recover that amount.
          else: targetPL.counters['Bad Publicity'].value = 0
-   elif re.match(r'Tag', action.group(3)): 
+   elif re.match(r'Tags', action.group(3)): 
       if action.group(1) == 'SetTo': targetPL.Tags = 0 # If we're setting to a specific value, we wipe what it's currently.
       if gain == -999: targetPL.Tags = 0
-      else: targetPL.Tags += gain * multiplier
+      else: targetPL.Tags += (gain * multiplier) - gainReduce
       if targetPL.Tags < 0: 
          if re.search(r'isCost', Autoscript): notify(":::Warning:::{} did not have enough {} to pay the cost of this action".format(targetPL,action.group(3)))
          elif re.search(r'isPenalty', Autoscript): pass #If an action is marked as penalty, it means that the value can go negative and the player will have to recover that amount.
@@ -1951,36 +1985,54 @@ def GainX(Autoscript, announceText, card, targetCards = None, notification = Non
 
 def TransferX(Autoscript, announceText, card, targetCards = None, notification = None, n = 0): # Function for converting tokens to counter values
    if targetCards is None: targetCards = []
-   breakadd = 1
+   #breakadd = 1
+   total = 0
+   totalReduce = 0
    targetCardlist = '' # A text field holding which cards are going to get tokens.
    if len(targetCards) == 0: targetCards.append(card) # If there's been to target card given, assume the target is the card itself.
    for targetCard in targetCards: targetCardlist += '{},'.format(targetCard)
-   action = re.search(r'\bTransfer([0-9]+)Bits?-to(Bit Pool|Discard)', Autoscript)
+   action = re.search(r'\bTransfer([0-9]+)([A-Za-z ]+)-?', Autoscript)
+   if action.group(2) == 'Bits': destGroup = me.counters['Bit Pool']
+   elif action.group(2) == 'Actions': destGroup = me.counters['Actions']
+   else:
+      whisper(":::WARNING::: Not a valid transfer. Aborting!")
+      return 'ABORT'
    for targetCard in targetCards:
+      foundMarker = None
+      for key in targetCard.markers:
+         #confirm("Key: {}\n\nChoice: {}".format(key[0],keywords[choice])) # Debug
+         if key[0] == action.group(2):
+            foundMarker = key
+            #confirm("Added:{}".format(existingKeyword))
+      if not foundMarker: 
+         whisper("There was nothing to transfer from {}.".format(targetCard))
+         continue
       if action.group(1) == '999':
-         if targetCard.markers[Bits]: count = targetCard.markers[Bits]
+         if targetCard.markers[foundMarker]: count = targetCard.markers[foundMarker]
          else: count = 0
       else: count = num(action.group(1))
-      if targetCard.markers[Bits] < count: 
+      if targetCard.markers[foundMarker] < count: 
          if re.search(r'isCost', Autoscript):
-            whisper("You must have at least {} Bits on the card to take this action".format(action.group(1)))
+            whisper("You must have at least {} {} on the card to take this action".format(action.group(1),action.group(2)))
             return 'ABORT'
-         elif targetCard.markers[Bits] == 0 and not notification: 
-            whisper("There was nothing to transfer.")
-            return 'ABORT'
-         elif targetCard.markers[Bits] == 0 and notification: return 'ABORT'
+         elif targetCard.markers[foundMarker] == 0 and notification: return 'ABORT'
       for transfer in range(count):
-         if targetCard.markers[Bits] > 0: 
-            targetCard.markers[Bits] -= 1
-            if action.group(2) == 'Bit Pool': 
-               card.owner.counters['Bit Pool'].value += 1
-               destination = "{}'s bit pool".format(card.owner)
-            elif action.group(2) == 'Discard': destination = "the Discard Pile" # If the tokens are discarded, do nothing more.
-         else: 
-            breakadd -= 1 # We decrease the transfer variable by one, to make sure we announce the correct total.
+         if targetCard.markers[foundMarker] > 0: 
+            transferReduce = findCounterPrevention(1, action.group(2), me) 
+            targetCard.markers[foundMarker] -= 1
+            if transferReduce: totalReduce += 1
+            total += 1 - totalReduce
+            destGroup.value += 1 - transferReduce
+         else:
+            #breakadd -= 1 # We decrease the transfer variable by one, to make sure we announce the correct total.
             break # If there's no more tokens to transfer, break out of the loop.
-   if notification == 'Quick': announceString = "{} takes {} bits".format(announceText, transfer + breakadd)
-   else: announceString = "{} transfer {} bits from {} to {}".format(announceText, transfer + breakadd, targetCardlist, destination)
+   #confirm("total: {}".format(total)) # Debug
+   if total == 0 and totalReduce == 0: return 'ABORT' # If both totals are 0, it means nothing was generated, so there's no need to mention anything.
+   if totalReduce: reduceTXT = " ({} forfeited)".format(totalReduce)
+   else: reduceTXT = ''
+   if notification == 'Quick': announceString = "{} takes {} {}{}.".format(announceText, total,action.group(2),reduceTXT)
+   elif notification == 'Automatic': announceString = "{} Transfers {} {} to {}{}.".format(announceText, total,action.group(2),me,reduceTXT)
+   else: announceString = "{} takes {} {} from {}{}.".format(announceText, total, action.group(2), targetCardlist,reduceTXT)
    if notification: notify('--> {}.'.format(announceString))
    return announceString   
 
@@ -2072,8 +2124,12 @@ def TokensX(Autoscript, announceText, card, targetCards = None, notification = N
    else: total = abs(modtokens)
    if action.group(1) == 'Refill': announceString = "{} {} to {} {}".format(announceText, action.group(1), count, token[0]) # We need a special announcement for refill, since it always needs to point out the max.
    elif re.search(r'\bRemove999Virus', Autoscript): announceString = "{} to clean all viruses from their corporate network".format(announceText)
+   elif re.search(r'forfeitCounter:',action.group(3)): announceString = announceText # If we're putting on forfeit counters, we don't announce it as an infection.
    else: announceString = "{} {}{} {} {} counters{}{}".format(announceText, action.group(1).lower(),infectTXT, total, token[0],targetCardlist,preventTXT)
    if notification == 'Automatic' and modtokens != 0: notify('--> {}.'.format(announceString))
+   if re.search(r'forfeitCounter:',action.group(3)) and modtokens != 0: # We only notify when playing cards, when we are going to forfeit something in the future.
+      counter = re.search(r'forfeitCounter:([\w ]+)',action.group(3))
+      notify('--> {} forfeits their next {} {}.'.format(me,total,counter.group(1)))
    return announceString
  
 def DrawX(Autoscript, announceText, card, targetCards = None, notification = None, n = 0): # Function for drawing X Cards from the house deck to your hand.
@@ -2092,7 +2148,9 @@ def DrawX(Autoscript, announceText, card, targetCards = None, notification = Non
    draw = num(action.group(1))
    if draw == 999:
       multiplier = 1
-      count = drawMany(source, currentHandSize(targetPL) - len(targetPL.hand), destination, True) # 999 means we refresh our hand
+      if currentHandSize(targetPL) >= len(targetPL.hand): # Otherwise drawMany() is going to try and draw "-1" cards which somehow draws our whole deck except one card.
+         count = drawMany(source, currentHandSize(targetPL) - len(targetPL.hand), destination, True) # 999 means we refresh our hand
+      else: count = 0 
       #confirm("cards drawn: {}".format(count)) # Debug
    else: # Any other number just draws as many cards.
       multiplier = per(Autoscript, card, n, targetCards, notification)
@@ -2164,6 +2222,12 @@ def RollX(Autoscript, announceText, card, targetCards = None, notification = Non
    else: announceString = "{} roll {} on a die".format(announceText, d6)
    if notification: notify('--> {}.'.format(announceString))
    return (announceString, d6)
+
+def RequestInt(Autoscript, announceText, card, targetCards = None, notification = None, n = 0): # Function for drawing X Cards from the house deck to your hand.
+   if targetCards is None: targetCards = []
+   action = re.search(r'\bRequestInt', Autoscript)
+   number = askInteger("This effect requires that you provide an 'X'. What should that number be?",0)
+   return (announceText, number) # We do not modify the announcement with this function.
    
 def RunX(Autoscript, announceText, card, targetCards = None, notification = None, n = 0): # Function for drawing X Cards from the house deck to your hand.
    if targetCards is None: targetCards = []
@@ -2186,7 +2250,7 @@ def SimplyAnnounce(Autoscript, announceText, card, targetCards = None, notificat
 def CreateDummy(Autoscript, announceText, card, targetCards = None, notification = None, n = 0): # Function for creating dummy cards.
    if targetCards is None: targetCards = []
    global Dummywarn
-   action = re.search(r'\bCreateDummy(-with)?([A-Za-z0-9_]*)', Autoscript)
+   action = re.search(r'\bCreateDummy(-with)?([A-Za-z0-9_ -]*)', Autoscript)
    #confirm('actions: {}'.format(action.groups())) # debug
    if Dummywarn and not confirm("This card's effect requires that you trash it, but its lingering effects will only work automatically while a copy is in play.\
                                \nFor this reason we've created a dummy card on the table and marked it with a special highlight so that you know that it's just a token.\
@@ -2196,7 +2260,7 @@ def CreateDummy(Autoscript, announceText, card, targetCards = None, notification
    dummyCard.highlight = DummyColor
    #confirm("Dummy ID: {}\n\nList Dummy ID: {}".format(dummyCard._id,passedlist[0]._id)) #Debug   
    card.moveTo(card.owner.piles['Trash/Archives(Face-up)'])
-   if action.group(1): announceString = TokensX('Put{}'.format(action.group(2)), announceText,dummyCard) # If we have a -with in our autoscript, this is meant to put some tokens on the dummy card.
+   if action.group(1): announceString = TokensX('Put{}'.format(action.group(2)), announceText,dummyCard, n = n) # If we have a -with in our autoscript, this is meant to put some tokens on the dummy card.
    return announceString # Creating a dummy isn't announced.
 
 def ChooseKeyword(Autoscript, announceText, card, targetCards = None, notification = None, n = 0): # Function for marking cards to be of a different keyword than they are
@@ -2370,6 +2434,32 @@ def findVirusProtection(card, targetPL, VirusInfected): # Find out if the player
          VirusInfected -= 1 # We reduce how much viruses we still need to prevent by 1
          card.markers[mdict['protectionVirus']] -= 1 # We reduce the card's virus protection counters by 1
    return protectionFound
+
+def findCounterPrevention(count, counter, targetPL): # Find out if the player has any markers preventing them form gaining specific counters (Bits, Agenda Points etc)
+   #confirm("Looking for Counter Prevention") # Debug
+   preventionFound = 0
+   forfeit = None
+   preventionType = 'preventCounter:{}'.format(counter)
+   forfeitType = 'forfeitCounter:{}'.format(counter)
+   #confirm("Wut") # Debug
+   for card in table:
+      foundMarker = None # We clear the found markers before checking each card.
+      if card.controller == targetPL and card.markers:
+         for key in card.markers:
+            #confirm("Key: {}\n\nChoice: {}".format(key[0],keywords[choice])) # Debug
+            if key[0] == preventionType or key[0] == forfeitType:
+               foundMarker = key
+               #confirm("Added:{}".format(existingKeyword))
+      else: continue # If the card doesn't have any markers, it doesn't offer any prevention.
+      #confirm("Wutwut") # Debug
+      if foundMarker: # If we found a counter prevention marker of the specific type we're looking for...
+         while count > 0 and card.markers[foundMarker] > 0: # For each point of damage we do.
+            preventionFound += 1 # We increase the prevention found by 1
+            count -= 1 # We reduce how much counter we still need to add by 1
+            card.markers[foundMarker] -= 1 # We reduce the specific counter prevention counters by 1
+         if count == 0: break # If we've found enough protection to alleviate all counters, stop the search.
+   return preventionFound
+
    
 def per(Autoscript, card = None, count = 0, targetCards = None, notification = None): # This function goes through the autoscript and looks for the words "per<Something>". Then figures out what the card multiplies its effect with, and returns the appropriate multiplier.
    #confirm("Bump per") #Debug
@@ -2588,8 +2678,11 @@ def customScript(card, action = 'play'): # Scripts that are complex and fairly u
       notify("{} was hiding {} bits".format(me,hiddenCount))
    elif card.name == 'Corporate War' and action == 'score':
       if me.counters['Bit Pool'].value >= 12:
-         notify("{} has won the corporate war and their spoils are 12 Bits".format(me))
-         me.counters['Bit Pool'].value += 12
+         bitsReduce = findCounterPrevention(12, 'Bits', me)
+         if bitsReduce: extraTXT = " ({} forfeited)".format(uniBit(bitsReduce))
+         else: extraTXT = ''               
+         notify("{} has won the corporate war and their spoils are {} Bits{}".format(me,12 - bitsReduce,extraTXT))
+         me.counters['Bit Pool'].value += 12 - bitsReduce
       else:
          notify("{} has lost the corporate war and their Bit Pool is reduced to 0".format(me))
          me.counters['Bit Pool'].value = 0
@@ -2640,11 +2733,11 @@ def TrialError(group, x=0, y=0): # Debugging
    testcards = ["185ef5c7-5fb5-4b57-b67a-8d1dc311a0b9", # Bel-Digmo Antibody
                 "692b1e14-e381-40f6-beb0-ba55b9bbd3e5", # Bug Zapper
                 "5045ca08-46b8-456f-88cd-9ce3acf49f22", # Hacker Tracker Central
-                "c48c91d0-8253-42b3-9c69-918a464445e0", # Encryption breakthrough
-                "2cd201db-a2fe-49d0-b5e1-14197b88172e", # Corp. negotiation centre.
-                "3db0bf1a-f262-4fcd-a3e7-1993f90dffc7", # Caryatid
-                "23b7487c-7093-47ae-a6e9-d3911ad58c5a", # Corporate War
-                "92725a30-5f2a-439e-a5e1-4c818780ed1c"] # Mystery Box
+                "158fa070-85f8-4bf4-838a-09bbbc31b240", # Rigged Ivestments
+                "76018711-c56f-4e37-9b01-85abf512d2de", # Corporate Guard® Temps.
+                "901547b2-eae1-43ae-b764-c70623a6c54f", # T.K.0 2.0
+                "78357861-b3b8-4451-9387-c1632c413a05", # Japanese Water Torture
+                "b5712c36-5e00-4e5d-836a-43d9047b5a4a"] # Arasaka Owns You
    if not ds: ds = "corp"
    me.setGlobalVariable('ds', ds) 
    me.counters['Bit Pool'].value = 50
@@ -2653,6 +2746,8 @@ def TrialError(group, x=0, y=0): # Debugging
    me.counters['Agenda Points'].value = 0
    me.counters['Bad Publicity'].value = 10
    me.Actions = 15
+   chooseSide()
+   createStartingCards()
    for idx in range(len(testcards)):
       test = table.create(testcards[idx], (70 * idx) - 150, 0, 1, True)
       TypeCard[test] = test.Type
@@ -2687,6 +2782,6 @@ def atTurnStartEndEffects(Time = 'Start'): # Function which triggers card effect
          if effect.group(2) == 'Refill':
             TokensX(passedScript, announceText, card, notification = 'Automatic')
    if me.counters['Bit Pool'].value < 0: 
-      notify(":::Warning::: {}'s {}-of-turn effects cost more Bits than they had in their Bit Pool!".format(me,effect.group(1)))
+      notify(":::Warning::: {}'s {}-of-turn effects cost more Bits than {} had in their Bit Pool!".format(me,Time,me))
    if ds == 'corp' and Time =='Start': draw(me.piles['R&D/Stack'])
    if TitleDone: notify(":::--------------------------:::".format(me))
