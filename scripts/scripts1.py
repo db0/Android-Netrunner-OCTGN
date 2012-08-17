@@ -61,6 +61,7 @@ ExposeTargetsWarn = True # A boolean variable that reminds the player to select 
 RevealandShuffleWarn = True # Similar to above.
 newturn = True #We use this variable to track whether a player has yet to do anything this turn.
 endofturn = False #We use this variable to know if the player is in the end-of-turn phase.
+failedCost = True #A Global boolean that we set in case an Autoscript cost cannot be paid, so that we know to abort the rest of the script.
 #---------------------------------------------------------------------------
 # Constants
 #---------------------------------------------------------------------------
@@ -390,7 +391,7 @@ def intJackin(group, x = 0, y = 0):
    currAction = 0
    if ds == "corp":
       maxActions = 3
-      me.Actions = maxActions # We now do that during SoT
+      #me.Actions = maxActions # We now do that during SoT
       me.Memory = 0
       NameDeck = "R&D"
       notify("{} is playing as Corporation".format(me))      
@@ -1491,6 +1492,8 @@ def autoRefreshHand ( card, Param1):
 	notify (" --> {} shuffles and draws {} cards.".format(me,ToDraw) )
 
 def executePlayScripts(card, action):
+   global failedCost
+   failedCost = False
    X = 0
    Autoscripts = card.AutoScript.split('||') # When playing cards, the || is used as an "and" separator, rather than "or". i.e. we don't do choices (yet)
    AutoScriptsSnapshot = list(Autoscripts) # Need to work on a snapshot, because we'll be modifying the list.
@@ -1573,7 +1576,7 @@ def executePlayScripts(card, action):
                if InflictX(passedScript, announceText, card, targetC, notification = 'Quick', n = X) == 'ABORT': return
             if re.search(r'(Rez|Derez|Expose|Trash|Uninstall|Possess|Exile)', effect.group(1)): 
                if ModifyStatus(passedScript, announceText, card, targetC, notification = 'Quick', n = X) == 'ABORT': return
-         
+         if failedCost: break # If one of the Autoscripts was a cost that couldn't be paid, stop everything else.
 #------------------------------------------------------------------------------
 # Autoactions
 #------------------------------------------------------------------------------
@@ -1603,6 +1606,8 @@ def inspectCard(card, x = 0, y = 0): # This function shows the player the card t
 
 def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
    mute()
+   global failedCost
+   failedCost = False # We set it to false when we start a new autoscript.
    if (card in TypeCard and TypeCard[card] == 'Tracing') or card.model == 'c0f18b5a-adcd-4efe-b3f8-7d72d1bd1db8': # If the player double clicks on the Tracing card...
       if card.isFaceUp and not card.markers[Bits]: inputTraceValue(card, limit = 0)
       elif card.isFaceUp and card.markers[Bits]: payTraceValue(card)
@@ -1763,6 +1768,7 @@ def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
       if announceText == 'ABORT': 
          autoscriptCostUndo(card, selectedAutoscripts[0]) # If nothing was done, try to undo. The first item in selectedAutoscripts[] contains the cost.
          return
+      if failedCost: break # If part of an AutoAction could not pay the cost, we stop the rest of it.
    if announceText.endswith(' in order to'): # If our text annouce ends with " to", it means that nothing happened. Try to undo and inform player.
       autoscriptCostUndo(card, selectedAutoscripts[0])
       notify("{} but there was nothing to do.".format(announceText[:-len(' in order to')]))
@@ -2350,7 +2356,7 @@ def ModifyStatus(Autoscript, announceText, card, targetCards = None, notificatio
          
 def InflictX(Autoscript, announceText, card, targetCards = None, notification = None, n = 0): # Function for inflicting Damage to players (even ourselves)
    if targetCards is None: targetCards = []
-   global DMGwarn 
+   global DMGwarn, failedCost
    localDMGwarn = True #A variable to check if we've already warned the player during this damage dealing.
    action = re.search(r'\b(Inflict)([0-9]+)(Meat|Net|Brain)Damage', Autoscript) # Find out what kind of damage we're going
    multiplier = per(Autoscript, card, n, targetCards)
@@ -2391,7 +2397,8 @@ def InflictX(Autoscript, announceText, card, targetCards = None, notification = 
             if action.group(3) == 'Brain':  
                #targetPL.counters['Max Hand Size'].value -= 1 # If it's brain damage, also reduce the player's maximum handsize.               
                applyBrainDmg(targetPL)
-   if notification == 'Quick': announceString = "{} suffers {} {} damage".format(announceText,DMG,action.group(3))
+   if re.search(r'isCost', Autoscript) and DMG < 1: failedCost = True # Failed means that the cost is still paid but other actions are not going to follow.
+   if notification == 'Quick': announceString = "{} suffers {} {} damage{}".format(announceText,DMG,action.group(3),preventTXT)
    else: announceString = "{} inflict {} {} damage{} to {}{}".format(announceText,DMG,action.group(3),enhanceTXT,targetPL,preventTXT)
    if notification and multiplier > 0: notify('--> {}.'.format(announceString))
    return announceString
@@ -2730,7 +2737,14 @@ def customScript(card, action = 'play'): # Scripts that are complex and fairly u
    
 def TrialError(group, x=0, y=0): # Debugging
    global TypeCard, CostCard, ds, KeywordCard
-   testcards = ["185ef5c7-5fb5-4b57-b67a-8d1dc311a0b9", # Bel-Digmo Antibody
+   mute()
+   developerAccess = False
+   for player in players:
+      if player.name == 'db0' or player.name == 'dbzer0': developerAccess = True
+   if not (len(players) == 1 or developerAccess): 
+      whisper("This function is only for development purposes")
+      return
+   testcards = ["4fbc20e7-35f6-4966-b8c7-cb465864728a", # Corporate Headhunters
                 "692b1e14-e381-40f6-beb0-ba55b9bbd3e5", # Bug Zapper
                 "5045ca08-46b8-456f-88cd-9ce3acf49f22", # Hacker Tracker Central
                 "158fa070-85f8-4bf4-838a-09bbbc31b240", # Rigged Ivestments
