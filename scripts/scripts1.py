@@ -61,7 +61,7 @@ ExposeTargetsWarn = True # A boolean variable that reminds the player to select 
 RevealandShuffleWarn = True # Similar to above.
 newturn = True #We use this variable to track whether a player has yet to do anything this turn.
 endofturn = False #We use this variable to know if the player is in the end-of-turn phase.
-failedCost = True #A Global boolean that we set in case an Autoscript cost cannot be paid, so that we know to abort the rest of the script.
+failedRequirement = True #A Global boolean that we set in case an Autoscript cost cannot be paid, so that we know to abort the rest of the script.
 #---------------------------------------------------------------------------
 # Constants
 #---------------------------------------------------------------------------
@@ -74,8 +74,9 @@ mdict = dict(Advance = ("Advance", "73b8d1f2-cd54-41a9-b689-3726b7b86f4f"),
              Derezzed = ("Derezzed", "ae34ee21-5309-46b3-98de-9d428f59e243"),
              Trace_value = ("Trace value", "01feb523-ac36-4dcd-970a-515aa8d73e37"),
              Link_value = ("Link value", "3c429e4c-3c7a-49fb-96cc-7f84a63cc672"),
-             PlusOne= ("+1", "aa261722-e12a-41d4-a475-3cc1043166a7"),
-             MinusOne= ("-1", "48ceb18b-5521-4d3f-b5fb-c8212e8bcbae"),
+             PlusOnePerm = ("Permanent +1", "f6230db2-d222-445f-85dd-406ea12d92f6"),
+             PlusOne= ("Temporary+1", "aa261722-e12a-41d4-a475-3cc1043166a7"),
+             MinusOne= ("Temporary-1", "48ceb18b-5521-4d3f-b5fb-c8212e8bcbae"),
              DaemonMU = ("Daemon MU", "6e46d937-786c-4618-b02c-d7d5ffd3b1a5"),
              BaseLink = ("Base Link", "226b0f44-bbdc-4960-86cd-21f404265562"),
              virusButcherBoy = ("Butcher Boy","5831fb18-7cdf-44d2-8685-bdd392bb9f1c"),
@@ -1492,8 +1493,8 @@ def autoRefreshHand ( card, Param1):
 	notify (" --> {} shuffles and draws {} cards.".format(me,ToDraw) )
 
 def executePlayScripts(card, action):
-   global failedCost
-   failedCost = False
+   global failedRequirement
+   failedRequirement = False
    X = 0
    Autoscripts = card.AutoScript.split('||') # When playing cards, the || is used as an "and" separator, rather than "or". i.e. we don't do choices (yet)
    AutoScriptsSnapshot = list(Autoscripts) # Need to work on a snapshot, because we'll be modifying the list.
@@ -1576,7 +1577,7 @@ def executePlayScripts(card, action):
                if InflictX(passedScript, announceText, card, targetC, notification = 'Quick', n = X) == 'ABORT': return
             if re.search(r'(Rez|Derez|Expose|Trash|Uninstall|Possess|Exile)', effect.group(1)): 
                if ModifyStatus(passedScript, announceText, card, targetC, notification = 'Quick', n = X) == 'ABORT': return
-         if failedCost: break # If one of the Autoscripts was a cost that couldn't be paid, stop everything else.
+         if failedRequirement: break # If one of the Autoscripts was a cost that couldn't be paid, stop everything else.
 #------------------------------------------------------------------------------
 # Autoactions
 #------------------------------------------------------------------------------
@@ -1606,8 +1607,8 @@ def inspectCard(card, x = 0, y = 0): # This function shows the player the card t
 
 def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
    mute()
-   global failedCost
-   failedCost = False # We set it to false when we start a new autoscript.
+   global failedRequirement
+   failedRequirement = False # We set it to false when we start a new autoscript.
    if (card in TypeCard and TypeCard[card] == 'Tracing') or card.model == 'c0f18b5a-adcd-4efe-b3f8-7d72d1bd1db8': # If the player double clicks on the Tracing card...
       if card.isFaceUp and not card.markers[Bits]: inputTraceValue(card, limit = 0)
       elif card.isFaceUp and card.markers[Bits]: payTraceValue(card)
@@ -1734,7 +1735,8 @@ def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
             else: announceText += 'activates the once-per-turn ability of {}'.format(card)
          else: announceText += ' to activate {}'.format(card) # If we don't have to trash the card, we need to still announce the name of the card we're using.
          if actionCost.group(1) == '0' and actionCost.group(2) == '0' and actionCost.group(3) == '0' and actionCost.group(4) == '0':
-            announceText = '{} activates the free ability of {}'.format(me, card)
+            if card.Type == 'Ice': announceText = '{} activates the subroutine of {}'.format(me, card)
+            else: announceText = '{} activates the free ability of {}'.format(me, card)
          announceText += ' in order to'
       elif not announceText.endswith(' in order to') and not announceText.endswith(' and'): announceText += ' and'
       #confirm("Bump: {}".format(activeAutoscript)) # Debug
@@ -1768,7 +1770,7 @@ def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
       if announceText == 'ABORT': 
          autoscriptCostUndo(card, selectedAutoscripts[0]) # If nothing was done, try to undo. The first item in selectedAutoscripts[] contains the cost.
          return
-      if failedCost: break # If part of an AutoAction could not pay the cost, we stop the rest of it.
+      if failedRequirement: break # If part of an AutoAction could not pay the cost, we stop the rest of it.
    if announceText.endswith(' in order to'): # If our text annouce ends with " to", it means that nothing happened. Try to undo and inform player.
       autoscriptCostUndo(card, selectedAutoscripts[0])
       notify("{} but there was nothing to do.".format(announceText[:-len(' in order to')]))
@@ -2113,6 +2115,11 @@ def TokensX(Autoscript, announceText, card, targetCards = None, notification = N
             else: 
                whisper("There was nothing to remove.")
                count = 0
+         elif re.search(r'isCost', Autoscript) and (not targetCard.markers[token] or (targetCard.markers[token] and count > targetCard.markers[token])):
+            return 'ABORT'
+         elif not targetCard.markers[token]: 
+            whisper("There was nothing to remove.")        
+            count = 0 # If we don't have any markers, we have obviously nothing to remove.
          modtokens = -count * multiplier
       if action.group(3) == 'Virus' and count == 999: # This combination means that the Corp is cleaning all viruses.
          targetCard.markers[mdict['virusButcherBoy']] = 0
@@ -2356,7 +2363,7 @@ def ModifyStatus(Autoscript, announceText, card, targetCards = None, notificatio
          
 def InflictX(Autoscript, announceText, card, targetCards = None, notification = None, n = 0): # Function for inflicting Damage to players (even ourselves)
    if targetCards is None: targetCards = []
-   global DMGwarn, failedCost
+   global DMGwarn, failedRequirement
    localDMGwarn = True #A variable to check if we've already warned the player during this damage dealing.
    action = re.search(r'\b(Inflict)([0-9]+)(Meat|Net|Brain)Damage', Autoscript) # Find out what kind of damage we're going
    multiplier = per(Autoscript, card, n, targetCards)
@@ -2397,7 +2404,7 @@ def InflictX(Autoscript, announceText, card, targetCards = None, notification = 
             if action.group(3) == 'Brain':  
                #targetPL.counters['Max Hand Size'].value -= 1 # If it's brain damage, also reduce the player's maximum handsize.               
                applyBrainDmg(targetPL)
-   if re.search(r'isCost', Autoscript) and DMG < 1: failedCost = True # Failed means that the cost is still paid but other actions are not going to follow.
+   if re.search(r'isRequirement', Autoscript) and DMG < 1: failedRequirement = True # Requirement means that the cost is still paid but other actions are not going to follow.
    if notification == 'Quick': announceString = "{} suffers {} {} damage{}".format(announceText,DMG,action.group(3),preventTXT)
    else: announceString = "{} inflict {} {} damage{} to {}{}".format(announceText,DMG,action.group(3),enhanceTXT,targetPL,preventTXT)
    if notification and multiplier > 0: notify('--> {}.'.format(announceString))
@@ -2428,9 +2435,15 @@ def findEnhancements(Autoscript): #Find out if the player has any cards increasi
    enhancer = 0
    DMGtype = re.search(r'\bInflict[0-9]+(Meat|Net|Brain)Damage', Autoscript)
    if DMGtype:
+      enhancerMarker = 'enhanceDamage:{}'.format(DMGtype.group(1))
       for card in table:
          cardENH = re.search(r'Enhance([0-9]+){}Damage'.format(DMGtype.group(1)), card.AutoScript)
          if card.controller == me and not card.markers[Not_rezzed] and cardENH: enhancer += num(cardENH.group(1))
+         foundMarker = None # We clear the found markers before checking each card.
+         if card.controller == me and card.markers and not card.markers[Not_rezzed]:
+            for key in card.markers:
+               if key[0] == enhancerMarker: enhancer += card.markers[key]
+               card.markers[key] = 0
    return enhancer
 
 def findVirusProtection(card, targetPL, VirusInfected): # Find out if the player has any virus preventing counters.
@@ -2738,14 +2751,14 @@ def customScript(card, action = 'play'): # Scripts that are complex and fairly u
 def TrialError(group, x=0, y=0): # Debugging
    global TypeCard, CostCard, ds, KeywordCard
    mute()
-   developerAccess = False
+   developerAccess = False # I can't be bothered to comment out the command every time. So I just prevent people from using it unless they're me ^_^
    for player in players:
       if player.name == 'db0' or player.name == 'dbzer0': developerAccess = True
    if not (len(players) == 1 or developerAccess): 
       whisper("This function is only for development purposes")
       return
    testcards = ["4fbc20e7-35f6-4966-b8c7-cb465864728a", # Corporate Headhunters
-                "692b1e14-e381-40f6-beb0-ba55b9bbd3e5", # Bug Zapper
+                "6628e5b5-3fb9-48c3-91b4-d78b87a4f969", # Cybertech Think Tank
                 "5045ca08-46b8-456f-88cd-9ce3acf49f22", # Hacker Tracker Central
                 "158fa070-85f8-4bf4-838a-09bbbc31b240", # Rigged Ivestments
                 "76018711-c56f-4e37-9b01-85abf512d2de", # Corporate Guard® Temps.
