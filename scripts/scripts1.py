@@ -62,6 +62,9 @@ RevealandShuffleWarn = True # Similar to above.
 newturn = True #We use this variable to track whether a player has yet to do anything this turn.
 endofturn = False #We use this variable to know if the player is in the end-of-turn phase.
 failedRequirement = True #A Global boolean that we set in case an Autoscript cost cannot be paid, so that we know to abort the rest of the script.
+
+developerAccess = False # Enable debugging messages.
+debugVerbosity = 'v'
 #---------------------------------------------------------------------------
 # Constants
 #---------------------------------------------------------------------------
@@ -125,6 +128,7 @@ Yaxis = 'y'
 #---------------------------------------------------------------------------
 
 def num (s):
+   if developerAccess and debugVerbosity == 'vvv': notify("Function: num()") #Debug
    if not s: return 0
    try:
       return int(s)
@@ -132,6 +136,7 @@ def num (s):
       return 0
 
 def chooseSide(): # Called from many functions to check if the player has chosen a side for this game.
+   if developerAccess and debugVerbosity == 'vv': notify("Function: chooseSide()") #Debug
    mute()
    global playerside, playeraxis
    if playerside == None:  # Has the player selected a side yet? If not, then...
@@ -143,26 +148,29 @@ def chooseSide(): # Called from many functions to check if the player has chosen
         playerside = 1
 
 def uniBit(count):
-    count = num(count)
-    if UniBits:
-        if count == 1: return '❶'
-        elif count == 2: return '❷'
-        elif count == 3: return '❸'
-        elif count == 4: return '❹'
-        elif count == 5: return '❺'
-        elif count == 6: return '❻'
-        elif count == 7: return '❼'
-        elif count == 8: return '❽'
-        elif count == 9: return '❾'
-        elif count == 10: return '❿'
-        else: return "({})".format(count)
-    else: return "({})".format(count)
+   if developerAccess and debugVerbosity == 'vvv': notify("Function: uniBit()") #Debug
+   count = num(count)
+   if UniBits:
+      if count == 1: return '❶'
+      elif count == 2: return '❷'
+      elif count == 3: return '❸'
+      elif count == 4: return '❹'
+      elif count == 5: return '❺'
+      elif count == 6: return '❻'
+      elif count == 7: return '❼'
+      elif count == 8: return '❽'
+      elif count == 9: return '❾'
+      elif count == 10: return '❿'
+      else: return "({})".format(count)
+   else: return "({})".format(count)
  
 def uniAction():
+   if developerAccess and debugVerbosity == 'vvv': notify("Function: uniAction()") #Debug
    if UniBits: return '⏎'
    else: return '|>'
 
 def chooseWell(limit, choiceText, default = None):
+   if developerAccess and debugVerbosity == 'vvv': notify("Function: chooseWell()") #Debug
    if default == None: default = 0# If the player has not provided a default value for askInteger, just assume it's the max.
    choice = limit # limit is the number of choices we have
    if limit > 1: # But since we use 0 as a valid choice, then we can't actually select the limit as a number
@@ -1629,7 +1637,11 @@ def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
    Autoscripts = card.AutoAction.split('||')
    AutoScriptSnapshot = list(Autoscripts)
    for autoS in AutoScriptSnapshot: # Checking and removing any actionscripts which were put here in error.
-      if re.search(r'while(Rezzed|Scored)', autoS) or re.search(r'on(Play|Score|Install)', autoS) or re.search(r'AtTurn(Start|End)', autoS): Autoscripts.remove(autoS)
+      if (re.search(r'while(Rezzed|Scored)', autoS) 
+         or re.search(r'on(Play|Score|Install)', autoS) 
+         or re.search(r'AtTurn(Start|End)', autoS)
+         or (re.search(r'CreateDummy', autoS) and card.highlight == DummyColor)): # Dummies in general don't create new dummies
+         Autoscripts.remove(autoS)
    if len(Autoscripts) == 0:
       useCard(card) # If the card had only "WhileInstalled"  or AtTurnStart effect, just announce that it is being used.
       return      
@@ -1742,15 +1754,16 @@ def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
       #confirm("Bump: {}".format(activeAutoscript)) # Debug
       ### Calling the relevant function depending on if we're increasing our own counters, the hoard's or putting card markers.
       if re.search(r'\b(Gain|Lose|SetTo)([0-9]+)', activeAutoscript): announceText = GainX(activeAutoscript, announceText, card, targetC, n = X)
+      elif re.search(r'\bCreateDummy', activeAutoscript): announceText = CreateDummy(activeAutoscript, announceText, card, targetC, n = X)
       elif re.search(r'\bReshuffle([A-Za-z& ]+)', activeAutoscript): 
          reshuffleTuple = ReshuffleX(activeAutoscript, announceText, card) # The reshuffleX() function is special because it returns a tuple.
          announceText = reshuffleTuple[0] # The first element of the tuple contains the announceText string
          X = reshuffleTuple[1] # The second element of the tuple contains the number of cards that were reshuffled from the hand in the deck.
-      elif re.search(r'Roll([0-9]+)', activeAutoscript): 
+      elif re.search(r'\bRoll([0-9]+)', activeAutoscript): 
          rollTuple = RollX(activeAutoscript, announceText, card) # Returns like reshuffleX()
          announceText = rollTuple[0] 
          X = rollTuple[1] 
-      elif re.search(r'RequestInt', activeAutoscript): 
+      elif re.search(r'\bRequestInt', activeAutoscript): 
          numberTuple = RequestInt(activeAutoscript, announceText, card) # Returns like reshuffleX()
          announceText = numberTuple[0] 
          X = numberTuple[1] 
@@ -1763,7 +1776,6 @@ def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
       elif re.search(r'\bInflict([0-9]+)', activeAutoscript): announceText = InflictX(activeAutoscript, announceText, card, targetC, n = X)
       elif re.search(r'(Rez|Derez|Expose|Trash|Uninstall|Possess|Exile)', activeAutoscript): announceText = ModifyStatus(activeAutoscript, announceText, card, targetC, n = X)
       elif re.search(r'\bSimplyAnnounce', activeAutoscript): announceText = SimplyAnnounce(activeAutoscript, announceText, card, targetC, n = X)
-      elif re.search(r'\bCreateDummy', activeAutoscript): announceText = CreateDummy(activeAutoscript, announceText, card, targetC, n = X)
       elif re.search(r'\bChooseKeyword', activeAutoscript): announceText = ChooseKeyword(activeAutoscript, announceText, card, targetC, n = X)
       elif re.search(r'\bUseCustomAbility', activeAutoscript): announceText = UseCustomAbility(activeAutoscript, announceText, card, targetC, n = X)
       else: timesNothingDone += 1
@@ -1876,6 +1888,7 @@ def findTarget(Autoscript): # Function for finding the target of an autoscript
    return foundTargets
    
 def chkWarn(card, Autoscript): # Function for checking that an autoscript announces a warning to the player
+   if developerAccess: notify("Function: chkWarn") #Debug
    warning = re.search(r'warn([A-Z][A-Za-z0-9 ]+)-?', Autoscript)
    if warning:
       if warning.group(1) == 'Discard': 
@@ -1899,9 +1912,9 @@ def chkWarn(card, Autoscript): # Function for checking that an autoscript announ
    return 'OK'
 
 def GainX(Autoscript, announceText, card, targetCards = None, notification = None, n = 0): # Function for modifying counters or global variables
+   if developerAccess: notify("Function: GainX") #Debug
    if targetCards is None: targetCards = []
    global maxActions
-   #confirm("Bump GainX") #Debug
    gain = 0
    action = re.search(r'\b(Gain|Lose|SetTo)([0-9]+)([A-Z][A-Za-z &]+)-?', Autoscript)
    #confirm("Groups: {}".format(action.groups(0))) # Debug
@@ -1913,7 +1926,7 @@ def GainX(Autoscript, announceText, card, targetCards = None, notification = Non
       whisper("Your opponent needs to be tagged to use this action")
       return 'ABORT'
    multiplier = per(Autoscript, card, n, targetCards) # We check if the card provides a gain based on something else, such as favour bought, or number of dune fiefs controlled by rivals.
-   #confirm("GainX after per") #Debug
+   confirm("GainX after per") #Debug
    if action.group(1) == 'Lose': 
       gain *= -1
       gainReduce = 0
@@ -2261,18 +2274,24 @@ def SimplyAnnounce(Autoscript, announceText, card, targetCards = None, notificat
    return announceString
 
 def CreateDummy(Autoscript, announceText, card, targetCards = None, notification = None, n = 0): # Function for creating dummy cards.
+   #confirm("Wat") #Debug
    if targetCards is None: targetCards = []
    global Dummywarn
-   action = re.search(r'\bCreateDummy(-with)?([A-Za-z0-9_ -]*)', Autoscript)
+   dummyCard = None
+   action = re.search(r'\bCreateDummy[A-Za-z0-9_ -]*(-with)(?!onOpponent|-doNotTrash)([A-Za-z0-9_ -]*)', Autoscript)
    #confirm('actions: {}'.format(action.groups())) # debug
-   if Dummywarn and not confirm("This card's effect requires that you trash it, but its lingering effects will only work automatically while a copy is in play.\
-                               \nFor this reason we've created a dummy card on the table and marked it with a special highlight so that you know that it's just a token.\
-                             \n\nSome cards provide you with an ability that you can activate after they're been trashed. If this card has one, you can activate it by double clicking on the dummy. Very often, this will often remove the dummy since its effect will disappear.\
-                             \n\nDo you want to see this warning again?"): Dummywarn = False
-   dummyCard = table.create(card.model, 500, 50 * playerside, 1) # This will create a fake card like the one we just created.
-   dummyCard.highlight = DummyColor
-   #confirm("Dummy ID: {}\n\nList Dummy ID: {}".format(dummyCard._id,passedlist[0]._id)) #Debug   
-   card.moveTo(card.owner.piles['Trash/Archives(Face-up)'])
+   targetPL = ofwhom(Autoscript)
+   for c in table:
+      if c.model == card.model and c.controller == targetPL and c.highlight == DummyColor: dummyCard = c # We check if already have a dummy of the same type on the table.
+   if not dummyCard:
+      if Dummywarn and not confirm("This card's effect requires that you trash it, but its lingering effects will only work automatically while a copy is in play.\
+                                  \nFor this reason we've created a dummy card on the table and marked it with a special highlight so that you know that it's just a token.\
+                                \n\nSome cards provide you with an ability that you can activate after they're been trashed. If this card has one, you can activate it by double clicking on the dummy. Very often, this will often remove the dummy since its effect will disappear.\
+                                \n\nDo you want to see this warning again?"): Dummywarn = False
+      dummyCard = table.create(card.model, 500, 50 * playerside, 1) # This will create a fake card like the one we just created.
+      dummyCard.highlight = DummyColor
+   #confirm("Dummy ID: {}\n\nList Dummy ID: {}".format(dummyCard._id,passedlist[0]._id)) #Debug
+   if not re.search(r'doNotTrash',Autoscript): card.moveTo(card.owner.piles['Trash/Archives(Face-up)'])
    if action.group(1): announceString = TokensX('Put{}'.format(action.group(2)), announceText,dummyCard, n = n) # If we have a -with in our autoscript, this is meant to put some tokens on the dummy card.
    return announceString # Creating a dummy isn't announced.
 
@@ -2619,7 +2638,7 @@ def autoscriptOtherPlayers(lookup, count = 1): # Function that triggers effects 
          if len(Autoscripts) == 0: return
          for AutoS in Autoscripts:
             #confirm('Autoscripts: {}'.format(AutoS)) # Debug
-            effect = re.search(r'\b([A-Z][A-Za-z]+)([0-9]*)([A-Za-z& ]*)\b([^:]?[A-Za-z0-9_& -]*)', AutoS)
+            effect = re.search(r'\b([A-Z][A-Za-z]+)([0-9]*)([A-Za-z& ]*)\b([^:]?[A-Za-z0-9_&{} -]*)', AutoS)
             passedScript = "{}".format(effect.group(0))
             #confirm('effects: {}'.format(passedScript)) #Debug
             if effect.group(1) == 'Gain' or effect.group(1) == 'Lose':
@@ -2747,11 +2766,51 @@ def customScript(card, action = 'play'): # Scripts that are complex and fairly u
          elif iter == 1: customScript(card,'use') # Recursion FTW!
          else: notify("{} activates the Mystery Box but it fizzles out.".format(me))
    elif action == 'use': useCard(card)
+
+def atTurnStartEndEffects(Time = 'Start'): # Function which triggers card effects at the start or end of the turn.
+   if not Automations['Start/End-of-Turn']: return
+   #confirm("start/end automations") #Debug
+   TitleDone = False
+   for card in table:
+      Autoscripts = card.AutoScript.split('||')
+      for AutoScript in Autoscripts:
+         effect = re.search(r'atTurn(Start|End):([A-Z][A-Za-z]+)([0-9]+)([A-Za-z0-9 ]+)(.*)', AutoScript)
+         if card.owner != me or not effect: continue
+         if effect.group(1) != Time: continue # If it's a start-of-turn effect and we're at the end, or vice-versa, do nothing.
+         if effect.group(5) and re.search(r'isOptional', effect.group(5)) and not confirm("{} can have the following optional ability activated at the start of your turn:\n\n[ {} {} {} ]\n\nDo you want to activate it?".format(card.name, effect.group(2), effect.group(3),effect.group(4))): continue
+         if not TitleDone: notify(":::{}'s {}-of-Turn Effects:::".format(me,effect.group(1)))
+         TitleDone = True
+         #confirm("effects: {}".format(effect.groups())) # Debug
+         effectNR = num(effect.group(3))
+         passedScript = '{}'.format(effect.group(0))
+         #confirm("passedscript: {}".format(passedScript))
+         announceText = "{}:".format(card)
+         if effect.group(2) == 'Gain' or effect.group(2) == 'Lose':
+            GainX(passedScript, announceText, card, notification = 'Automatic')
+         if effect.group(2) == 'Transfer':
+            TransferX(passedScript, announceText, card, notification = 'Automatic')
+         if effect.group(2) == 'Draw':
+            DrawX(passedScript, announceText, card, notification = 'Automatic')
+         if effect.group(2) == 'Refill':
+            TokensX(passedScript, announceText, card, notification = 'Automatic')
+   if me.counters['Bit Pool'].value < 0: 
+      notify(":::Warning::: {}'s {}-of-turn effects cost more Bits than {} had in their Bit Pool!".format(me,Time,me))
+   if ds == 'corp' and Time =='Start': draw(me.piles['R&D/Stack'])
+   if TitleDone: notify(":::--------------------------:::".format(me))
+
+#------------------------------------------------------------------------------
+# Debugging
+#------------------------------------------------------------------------------
    
 def TrialError(group, x=0, y=0): # Debugging
-   global TypeCard, CostCard, ds, KeywordCard
+   global TypeCard, CostCard, ds, KeywordCard, developerAccess, debugVerbosity
    mute()
-   developerAccess = False # I can't be bothered to comment out the command every time. So I just prevent people from using it unless they're me ^_^
+   if developerAccess:
+      if debugVerbosity == 'v': debugVerbosity = 'vv'
+      elif debugVerbosity == 'vv': debugVerbosity = 'vvv'
+      elif debugVerbosity == 'vvv': debugVerbosity = 'v'
+      notify("Debug verbosity is now: {}".format(debugVerbosity))
+      return
    for player in players:
       if player.name == 'db0' or player.name == 'dbzer0': developerAccess = True
    if not (len(players) == 1 or developerAccess): 
@@ -2759,7 +2818,7 @@ def TrialError(group, x=0, y=0): # Debugging
       return
    testcards = ["4fbc20e7-35f6-4966-b8c7-cb465864728a", # Corporate Headhunters
                 "6628e5b5-3fb9-48c3-91b4-d78b87a4f969", # Cybertech Think Tank
-                "5045ca08-46b8-456f-88cd-9ce3acf49f22", # Hacker Tracker Central
+                "a92eaff1-65f4-4717-b1a9-e89b1ed4e647", # Doppleganger
                 "158fa070-85f8-4bf4-838a-09bbbc31b240", # Rigged Ivestments
                 "76018711-c56f-4e37-9b01-85abf512d2de", # Corporate Guard® Temps.
                 "901547b2-eae1-43ae-b764-c70623a6c54f", # T.K.0 2.0
@@ -2784,31 +2843,3 @@ def TrialError(group, x=0, y=0): # Debugging
       if test.Type == 'Ice' or test.Type == 'Agenda' or test.Type == 'Node':
          test.isFaceUp = False
          test.markers[Not_rezzed] += 1
-   
-def atTurnStartEndEffects(Time = 'Start'): # Function which triggers card effects at the start or end of the turn.
-   if not Automations['Start/End-of-Turn']: return
-   TitleDone = False
-   for card in table:
-      Autoscripts = card.AutoScript.split('||')
-      for AutoScript in Autoscripts:
-         effect = re.search(r'atTurn(Start|End):([A-Z][A-Za-z]+)([0-9]+)([A-Za-z0-9 ]+)(.*)', AutoScript)
-         if card.owner != me or not effect: continue
-         if effect.group(1) != Time: continue # If it's a start-of-turn effect and we're at the end, or vice-versa, do nothing.
-         if effect.group(5) and re.search(r'isOptional', effect.group(5)) and not confirm("{} can have the following optional ability activated at the start of your turn:\n\n[ {} {} {} ]\n\nDo you want to activate it?".format(card.name, effect.group(2), effect.group(3),effect.group(4))): continue
-         if not TitleDone: notify(":::{}'s {}-of-Turn Effects:::".format(me,effect.group(1)))
-         TitleDone = True
-         effectNR = num(effect.group(3))
-         passedScript = '{}'.format(effect.group(0))
-         announceText = "{}:".format(card)
-         if effect.group(2) == 'Gain' or effect.group(2) == 'Lose':
-            GainX(passedScript, announceText, card, notification = 'Automatic')
-         if effect.group(2) == 'Transfer':
-            TransferX(passedScript, announceText, card, notification = 'Automatic')
-         if effect.group(2) == 'Draw':
-            DrawX(passedScript, announceText, card, notification = 'Automatic')
-         if effect.group(2) == 'Refill':
-            TokensX(passedScript, announceText, card, notification = 'Automatic')
-   if me.counters['Bit Pool'].value < 0: 
-      notify(":::Warning::: {}'s {}-of-turn effects cost more Bits than {} had in their Bit Pool!".format(me,Time,me))
-   if ds == 'corp' and Time =='Start': draw(me.piles['R&D/Stack'])
-   if TitleDone: notify(":::--------------------------:::".format(me))
