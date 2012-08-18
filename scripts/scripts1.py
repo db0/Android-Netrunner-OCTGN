@@ -146,6 +146,10 @@ def chooseSide(): # Called from many functions to check if the player has chosen
         playeraxis = Yaxis
         playerside = 1
 
+#---------------------------------------------------------------------------
+# Generic Netrunner functions
+#---------------------------------------------------------------------------
+
 def uniBit(count):
    if debugVerbosity >= 4: notify(">>> Function: uniBit(){}".format(extraASDebug())) #Debug
    count = num(count)
@@ -178,7 +182,46 @@ def chooseWell(limit, choiceText, default = None):
          if not choice: return False
          if choice > limit: whisper("You must choose between 0 and {}".format(limit - 1))
    else: choice = 0 # If our limit is 1, it means there's only one choice, 0.
-   return choice   
+   return choice
+
+def findMarker(card, markerDesc): # Goes through the markers on the card and looks if one exist with a specific description
+   if debugVerbosity >= 2: notify("> Function: findKey(){}".format(extraASDebug())) #Debug
+   foundKey = None
+   for key in card.markers:
+      if debugVerbosity >= 3: notify("Key: {}\n\nChoice: {}".format(key[0],keywords[choice])) # Debug
+      if re.search(markerDesc,key[0]):
+         foundKey = key
+         if debugVerbosity >= 2: notify("Found {} on {}".format(key[0],card))
+         break
+   return foundKey
+   
+def getKeywords(card): # A function which combines the existing card keywords, with markers which give it extra ones.
+   if debugVerbosity >= 2: notify(">> Function: getKeywords(){}".format(extraASDebug())) #Debug
+   global KeywordCard
+   #confirm("getKeywords") # Debug
+   keywordsList = []
+   strippedKeywordsList = card.Keywords.split('-')
+   for cardKW in strippedKeywordsList:
+      strippedKW = cardKW.strip() # Remove any leading/trailing spaces between traits. We need to use a new variable, because we can't modify the loop iterator.
+      if strippedKW: keywordsList.append(strippedKW) # If there's anything left after the stip (i.e. it's not an empty string anymrore) add it to the list.   
+   if card.markers:
+      for key in card.markers:
+         markerKeyword = re.search('Keyword:([\w ]+)',key[0])
+         if markerKeyword:
+            #confirm("marker found: {}\n key: {}".format(markerKeyword.groups(),key[0])) # Debug
+            if markerKeyword.group(1) == 'Wall' or markerKeyword.group(1) == 'Sentry' or markerKeyword.group(1) == 'Code Gate': #These keywords are mutually exclusive. An Ice can't be more than 1 of these
+               if 'Wall' in keywordsList: keywordsList.remove('Wall')
+               if 'Sentry' in keywordsList: keywordsList.remove('Sentry')
+               if 'Code Gate' in keywordsList: keywordsList.remove('Code Gate')
+               keywordsList.append(markerKeyword.group(1))
+            else: keywordsList.append(markerKeyword.group(1))
+            
+   keywords = ''
+   for KW in keywordsList:
+      keywords += '{}-'.format(KW)
+   KeywordCard[card] = keywords[:-1] # We also update the global variable for this card, which is used by many functions.
+   #notify("List {}\n\nResult: {}".format(keywordsList,keywords[:-1])) # Debug
+   return keywords[:-1] # We need to remove the trailing dash '-'
 #---------------------------------------------------------------------------
 # Card Placement functions
 #---------------------------------------------------------------------------
@@ -210,33 +253,7 @@ def yaxisMove(card):
    else: cardmove = cardmove = 0
    return cardmove
 
-def getKeywords(card): # A function which combines the existing card keywords, with markers which give it extra ones.
-   if debugVerbosity >= 2: notify(">> Function: getKeywords(){}".format(extraASDebug())) #Debug
-   global KeywordCard
-   #confirm("getKeywords") # Debug
-   keywordsList = []
-   strippedKeywordsList = card.Keywords.split('-')
-   for cardKW in strippedKeywordsList:
-      strippedKW = cardKW.strip() # Remove any leading/trailing spaces between traits. We need to use a new variable, because we can't modify the loop iterator.
-      if strippedKW: keywordsList.append(strippedKW) # If there's anything left after the stip (i.e. it's not an empty string anymrore) add it to the list.   
-   if card.markers:
-      for key in card.markers:
-         markerKeyword = re.search('Keyword:([\w ]+)',key[0])
-         if markerKeyword:
-            #confirm("marker found: {}\n key: {}".format(markerKeyword.groups(),key[0])) # Debug
-            if markerKeyword.group(1) == 'Wall' or markerKeyword.group(1) == 'Sentry' or markerKeyword.group(1) == 'Code Gate': #These keywords are mutually exclusive. An Ice can't be more than 1 of these
-               if 'Wall' in keywordsList: keywordsList.remove('Wall')
-               if 'Sentry' in keywordsList: keywordsList.remove('Sentry')
-               if 'Code Gate' in keywordsList: keywordsList.remove('Code Gate')
-               keywordsList.append(markerKeyword.group(1))
-            else: keywordsList.append(markerKeyword.group(1))
-            
-   keywords = ''
-   for KW in keywordsList:
-      keywords += '{}-'.format(KW)
-   KeywordCard[card] = keywords[:-1] # We also update the global variable for this card, which is used by many functions.
-   #notify("List {}\n\nResult: {}".format(keywordsList,keywords[:-1])) # Debug
-   return keywords[:-1] # We need to remove the trailing dash '-'
+
    
 #---------------------------------------------------------------------------
 # Actions indication
@@ -451,6 +468,10 @@ def start_token(group, x = 0, y = 0):
    if quantity == 0: return
    table.create(card, x, y, quantity)
 
+def createSDF(group,x=0,y=0):
+   if debugVerbosity >= 3: notify(">>> Function: createSDF(){}".format(extraASDebug())) #Debug
+   table.create("98a40fb6-1fea-4283-a036-567c8adade8e", x, y, 1, True)
+   
 #------------------------------------------------------------------------------
 # Run...
 #------------------------------------------------------------------------------
@@ -679,60 +700,8 @@ def cancelTrace ( card, x=0,y=0):
    notify ("{} cancels the Trace Value.".format(me) )
 
 #------------------------------------------------------------------------------
-# Other functions
+# Counter & Damage Functions
 #-----------------------------------------------------------------------------
-
-def createSDF(group,x=0,y=0):
-   if debugVerbosity >= 3: notify(">>> Function: createSDF(){}".format(extraASDebug())) #Debug
-   table.create("98a40fb6-1fea-4283-a036-567c8adade8e", x, y, 1, True)
-
-def intdamageDiscard(group,x=0,y=0):
-   if debugVerbosity >= 2: notify(">> Function: intdamageDiscard(){}".format(extraASDebug())) #Debug
-   mute()
-   if len(group) == 0:
-      notify ("{} cannot discard at random. Have they flatlined?".format(me))
-   else:
-      card = group.random()
-      if ds == 'corp': card.moveTo(me.piles['Archives(Hidden)'])
-      else: card.moveTo(me.piles['Trash/Archives(Face-up)'])
-      notify("{} discards {} at random.".format(me,card))
-
-def addBrainDmg(group, x = 0, y = 0):
-   if debugVerbosity >= 2: notify(">> Function: addBrainDmg(){}".format(extraASDebug())) #Debug
-   applyBrainDmg()
-   notify ("{} suffers 1 Brain Damage.".format(me) )
-   intdamageDiscard(me.hand)
-
-def applyBrainDmg(player = me):
-   if debugVerbosity >= 2: notify(">> Function: applyBrainDmg(){}".format(extraASDebug())) #Debug
-   specialCard = getSpecial('Counter Hold', player)
-   specialCard.markers[mdict['BrainDMG']] += 1
-
-def currentHandSize(player = me):
-   if debugVerbosity >= 3: notify(">>> Function: currentHandSizel(){}".format(extraASDebug())) #Debug
-   specialCard = getSpecial('Counter Hold', player)
-   if specialCard.markers[mdict['BrainDMG']]: currHandSize =  player.counters['Max Hand Size'].value - specialCard.markers[mdict['BrainDMG']]
-   else: currHandSize = player.counters['Max Hand Size'].value
-   return currHandSize
-   
-def addMeatNetDmg(group, x = 0, y = 0):
-   if debugVerbosity >= 2: notify(">> Function: addMeatNetDmg(){}".format(extraASDebug())) #Debug
-   notify ("{} suffers 1 Net or Meat Damage.".format(me) )
-   intdamageDiscard(me.hand)
-
-def getBit(group, x = 0, y = 0):
-   if debugVerbosity >= 2: notify(">> Function: getBit(){}".format(extraASDebug())) #Debug
-   ActionCost = useAction()
-   if ActionCost == 'ABORT': return
-   bitsReduce = findCounterPrevention(1, 'Bits', me)
-   if bitsReduce: extraTXT = " ({} forfeited)".format(uniBit(bitsReduce))
-   else: extraTXT = ''
-   notify ("{} and receives {}{}.".format(ActionCost,uniBit(1 - bitsReduce),extraTXT))
-   me.counters['Bit Pool'].value += 1 - bitsReduce
-    
-#------------------------------------------------------------------------------
-# Other functions on card
-#------------------------------------------------------------------------------
 
 def payCost(count = 1, cost = 'not_free', counter = 'BP'): # A function that removed the cost provided from our bit pool, after checking that we have enough.
    if debugVerbosity >= 3: notify(">> Function: payCost(){}".format(extraASDebug())) #Debug
@@ -772,6 +741,47 @@ def reduceCost(card, type = 'Rez', fullCost = 0):
                   c.markers[mdict['Bits']] -= 1
                   if fullCost == 0: break
    return reduction
+
+def intdamageDiscard(group,x=0,y=0):
+   if debugVerbosity >= 2: notify(">> Function: intdamageDiscard(){}".format(extraASDebug())) #Debug
+   mute()
+   if len(group) == 0:
+      notify ("{} cannot discard at random. Have they flatlined?".format(me))
+   else:
+      card = group.random()
+      if ds == 'corp': card.moveTo(me.piles['Archives(Hidden)'])
+      else: card.moveTo(me.piles['Trash/Archives(Face-up)'])
+      notify("{} discards {} at random.".format(me,card))
+
+def addBrainDmg(group, x = 0, y = 0):
+   if debugVerbosity >= 2: notify(">> Function: addBrainDmg(){}".format(extraASDebug())) #Debug
+   applyBrainDmg()
+   notify ("{} suffers 1 Brain Damage.".format(me) )
+   intdamageDiscard(me.hand)
+
+def applyBrainDmg(player = me):
+   if debugVerbosity >= 2: notify(">> Function: applyBrainDmg(){}".format(extraASDebug())) #Debug
+   specialCard = getSpecial('Counter Hold', player)
+   specialCard.markers[mdict['BrainDMG']] += 1
+   
+def addMeatNetDmg(group, x = 0, y = 0):
+   if debugVerbosity >= 2: notify(">> Function: addMeatNetDmg(){}".format(extraASDebug())) #Debug
+   notify ("{} suffers 1 Net or Meat Damage.".format(me) )
+   intdamageDiscard(me.hand)
+
+def getBit(group, x = 0, y = 0):
+   if debugVerbosity >= 2: notify(">> Function: getBit(){}".format(extraASDebug())) #Debug
+   ActionCost = useAction()
+   if ActionCost == 'ABORT': return
+   bitsReduce = findCounterPrevention(1, 'Bits', me)
+   if bitsReduce: extraTXT = " ({} forfeited)".format(uniBit(bitsReduce))
+   else: extraTXT = ''
+   notify ("{} and receives {}{}.".format(ActionCost,uniBit(1 - bitsReduce),extraTXT))
+   me.counters['Bit Pool'].value += 1 - bitsReduce
+    
+#------------------------------------------------------------------------------
+# Card Actions
+#------------------------------------------------------------------------------
    
 def scrAgenda(card, x = 0, y = 0):
    if debugVerbosity >= 1: notify("> Function: scrAgenda(){}".format(extraASDebug())) #Debug
@@ -1053,17 +1063,6 @@ def rulings(card, x = 0, y = 0):
    #openUrl('http://www.netrunneronline.com/cards/{}/'.format(card.Errata))
    openUrl('http://www.netrunneronline.com/search/?q={}'.format(card.name)) # Errata is not filled in most card so this works better until then
 
-def checkNotHardwareDeck (card):
-   if debugVerbosity >= 1: notify(">> Function: checkNotHardwareDeck(){}".format(extraASDebug())) #Debug
-   mute()
-   if card.Type != "Hardware" or not re.search(r'Deck', getKeywords(card)): return True
-   ExistingDecks = [ c for c in table
-         if c.owner == me and c.isFaceUp and re.search(r'Deck', getKeywords(c)) ]
-   if len(ExistingDecks) != 0 and not confirm("You already have at least one hardware deck in play. Are you sure you want to install {}?\n\n(If you do, your installed Decks will be automatically trashed at no cost)".format(card.name)): return False
-   else: 
-      for HWDeck in ExistingDecks: trashForFree(HWDeck)
-   return True   
-
 def checkUnique (card):
    if debugVerbosity >= 1: notify(">> Function: checkUnique(){}".format(extraASDebug())) #Debug
    mute()
@@ -1088,6 +1087,14 @@ def oncePerTurn(card, x = 0, y = 0, silent = False):
 #------------------------------------------------------------------------------
 # Hand Actions
 #------------------------------------------------------------------------------
+
+def currentHandSize(player = me):
+   if debugVerbosity >= 3: notify(">>> Function: currentHandSizel(){}".format(extraASDebug())) #Debug
+   specialCard = getSpecial('Counter Hold', player)
+   if specialCard.markers[mdict['BrainDMG']]: currHandSize =  player.counters['Max Hand Size'].value - specialCard.markers[mdict['BrainDMG']]
+   else: currHandSize = player.counters['Max Hand Size'].value
+   return currHandSize
+
 def intPlay(card, cost = 'not_free'):
    if debugVerbosity >= 1: notify("> Function: intPlay(){}".format(extraASDebug())) #Debug
    global TypeCard, CostCard, KeywordCard
@@ -1203,6 +1210,17 @@ def chkTargeting(card):
          whisper(":::Warning::: This card effect requires that you have one of more cards targeted from your hand. Aborting!")
          return 'ABORT'
 
+def checkNotHardwareDeck (card):
+   if debugVerbosity >= 1: notify(">> Function: checkNotHardwareDeck(){}".format(extraASDebug())) #Debug
+   mute()
+   if card.Type != "Hardware" or not re.search(r'Deck', getKeywords(card)): return True
+   ExistingDecks = [ c for c in table
+         if c.owner == me and c.isFaceUp and re.search(r'Deck', getKeywords(c)) ]
+   if len(ExistingDecks) != 0 and not confirm("You already have at least one hardware deck in play. Are you sure you want to install {}?\n\n(If you do, your installed Decks will be automatically trashed at no cost)".format(card.name)): return False
+   else: 
+      for HWDeck in ExistingDecks: trashForFree(HWDeck)
+   return True   
+   
 def playForFree(card, x = 0, y = 0):
    if debugVerbosity >= 2: notify(">> Function: playForFree(){}".format(extraASDebug())) #Debug
    intPlay(card,"free")
@@ -2894,17 +2912,6 @@ def atTurnStartEndEffects(Time = 'Start'): # Function which triggers card effect
    if ds == 'corp' and Time =='Start': draw(me.piles['R&D/Stack'])
    if TitleDone: notify(":::--------------------------:::".format(me))
 
-def findMarker(card, markerDesc): # Goes through the markers on the card and looks if one exist with a specific description
-   if debugVerbosity >= 2: notify("> Function: findKey(){}".format(extraASDebug())) #Debug
-   foundKey = None
-   for key in card.markers:
-      if debugVerbosity >= 3: notify("Key: {}\n\nChoice: {}".format(key[0],keywords[choice])) # Debug
-      if re.search(markerDesc,key[0]):
-         foundKey = key
-         if debugVerbosity >= 2: notify("Found {} on {}".format(key[0],card))
-         break
-   return foundKey
-   
 #------------------------------------------------------------------------------
 # Debugging
 #------------------------------------------------------------------------------
