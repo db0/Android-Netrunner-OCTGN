@@ -48,7 +48,7 @@ How the custom fonts look like
 
 Changelog
 ---------
-### 2.1.6
+### 2.1.7
 
  * Added function which intercepts and reduces counter increase commands depending on specific markers. 
  * Autoscrip to request and number and re-use it elsewhere.
@@ -56,6 +56,8 @@ Changelog
  * TransferX now works for counter "forfeit" effects
  * Made invalid Start-of-Turn check work more robustly.
  * Many other bugfixes
+ * Now InflictX can be used as a cost with -isCost. As long as some damage is inflicted, the next part of the Autoscript will work, otherwise it will exit but the cost will remain paid (eg see Corporate headhunters)
+ * Added debugging functionality and hooks based on verbosity setting. Should make my life easier from now on.
 
 ### 2.1.6 
 
