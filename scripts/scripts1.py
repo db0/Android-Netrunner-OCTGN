@@ -1050,8 +1050,12 @@ def useCard(card,x=0,y=0):
       card.highlight = SelectColor
       notify ( "{} uses the ability of {}.".format(me,card) )
    else:
-      if card.highlight == DummyColor and not confirm("This highlight signifies that this card is technically trashed\nAre you sure you want to clear the card's highlight?"):
+      if card.highlight == DummyColor and not confirm("This highlight signifies that this card is technically trashed\
+                                                     \nIn other words, this is a dummy card to signify a lingering effect left behind\
+                                                     \nClearing this dummy card will automatically remove it from the game.\
+                                                   \n\nAre you sure you want to continue?"):
          return
+      else: card.moveTo(me.piles['Trash/Archives(Face-up)'])
       notify("{} clears {}.".format(me, card))
       card.highlight = None
       card.target(False)
@@ -1277,17 +1281,28 @@ def handDiscard(card):
             notify("{} has now discarded down to their max handsize of {}".format(me, currentHandSize()))
       else: notify("{} discards a card.".format(me))
     
-def handRandomDiscard(group):
-   if debugVerbosity >= 2: notify(">> Function: handRandomDiscard(){}".format(extraASDebug())) #Debug
+def handRandomDiscard(group, count = None, player = None, destination = None, silent = False):
+   if debugVerbosity >= 1: notify("> Function: handRandomDiscard(){}".format(extraASDebug())) #Debug
    mute()
-   card = group.random()
-   if card == None: return
-   if ds == "corp" :
-      card.moveTo(me.piles['Archives(Hidden)'])
-      notify("{} discards a card at random.".format(me))
-   else:
-      card.moveTo(me.piles['Trash/Archives(Face-up)'])
-      notify("{} discards {} at random.".format(me,card))
+   if not player: player = me
+   if not destination: 
+      if ds == "runner": destination = player.piles['Trash/Archives(Face-up)']
+      else: destination = player.piles['Archives(Hidden)']
+   SSize = len(group)
+   if SSize == 0: return 0
+   if count == None: count = askInteger("Discard how many cards?", 1)
+   if count == None: return 0
+   if count > SSize : 
+      count = SSize
+      whisper("You do not have enough cards in your hand to complete this action. Will discard as many as possible")   
+   for iter in range(count):
+      if debugVerbosity >= 4: notify(">>>> : handRandomDiscard() iter: {}".format(iter + 1)) # Debug
+      card = group.random()
+      if card == None: return iter + 1 # If we have no more cards, then return how many we managed to discard.
+      card.moveTo(destination)
+      if not silent: notify("{} discards {} at random.".format(player,card))
+   if debugVerbosity >= 2: notify(">> : Discarded {} cards at random".format(iter)) #Debug
+   return iter + 1 #We need to increase the iter by 1 because it starts iterating from 0
     		
 def showatrandom(group):
    if debugVerbosity >= 2: notify(">> Function: showatrandom(){}".format(extraASDebug())) #Debug
@@ -1615,6 +1630,7 @@ def executePlayScripts(card, action):
    AutoScriptsSnapshot = list(Autoscripts) # Need to work on a snapshot, because we'll be modifying the list.
    for autoS in AutoScriptsSnapshot: # Checking and removing any "AtTurnStart" actions.
       if re.search(r'atTurn(Start|End)', autoS) or re.search(r'-isTrigger', autoS): Autoscripts.remove(autoS)
+      if re.search(r'excludeDummy', autoS) and card.highlight == DummyColor: Autoscripts.remove(autoS)
       if re.search(r'CustomScript', autoS): 
          customScript(card,action)
          Autoscripts.remove(autoS)
@@ -1674,6 +1690,10 @@ def executePlayScripts(card, action):
                numberTuple = RequestInt(passedScript, announceText, card, targetC, notification = 'Quick', n = X)
                if numberTuple == 'ABORT': return
                X = numberTuple[1] 
+            if effect.group(1) == 'Discard': 
+               numberTuple = RequestInt(passedScript, announceText, card, targetC, notification = 'Quick', n = X)
+               if discardTuple == 'ABORT': return
+               X = discardTuple[1] 
             if re.search(r'Run', effect.group(1)): 
                if RunX(passedScript, announceText, card, targetC, notification = 'Quick', n = X) == 'ABORT': return
             if effect.group(1) == 'Trace': 
@@ -1725,7 +1745,7 @@ def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
       if (re.search(r'while(Rezzed|Scored)', autoS) 
          or re.search(r'on(Play|Score|Install)', autoS) 
          or re.search(r'AtTurn(Start|End)', autoS)
-         or (re.search(r'CreateDummy', autoS) and card.highlight == DummyColor)): # Dummies in general don't create new dummies
+         or (re.search(r'(CreateDummy|excludeDummy)', autoS) and card.highlight == DummyColor)): # Dummies in general don't create new dummies
          Autoscripts.remove(autoS)
    if len(Autoscripts) == 0:
       useCard(card) # If the card had only "WhileInstalled"  or AtTurnStart effect, just announce that it is being used.
@@ -1776,6 +1796,8 @@ def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
    else: selectedAutoscripts = Autoscripts[0].split('$$')
    timesNothingDone = 0 # A variable that keeps track if we've done any of the autoscripts defined. If none have been coded, we just engage the card.
    X = 0 # Variable for special costs.
+   if card.highlight == DummyColor: lingering = ' lingering effect of' # A text that we append to point out when a player is using a lingering effect in the form of a dummy card.
+   else: lingering = ''
    for activeAutoscript in selectedAutoscripts:
       #confirm("Active Autoscript: {}".format(activeAutoscript)) #Debug
       ### Checking if any of the card's effects requires one or more targets first
@@ -1829,11 +1851,11 @@ def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
             if actionCost.group(1) != '0' or actionCost.group(2) != '0' or actionCost.group(3) != '0': announceText += ' and '
             else: announceText += ' '
             if actionCost.group(4) == '1': announceText += 'trashes {} to use its ability'.format(card)
-            else: announceText += 'activates the once-per-turn ability of {}'.format(card)
-         else: announceText += ' to activate {}'.format(card) # If we don't have to trash the card, we need to still announce the name of the card we're using.
+            else: announceText += 'activates the once-per-turn ability of{} {}'.format(lingering,card)
+         else: announceText += ' to activate{} {}'.format(lingering,card) # If we don't have to trash the card, we need to still announce the name of the card we're using.
          if actionCost.group(1) == '0' and actionCost.group(2) == '0' and actionCost.group(3) == '0' and actionCost.group(4) == '0':
             if card.Type == 'Ice': announceText = '{} activates the subroutine of {}'.format(me, card)
-            else: announceText = '{} activates the free ability of {}'.format(me, card)
+            else: announceText = '{} activates the free ability of{} {}'.format(me, lingering, card)
          announceText += ' in order to'
       elif not announceText.endswith(' in order to') and not announceText.endswith(' and'): announceText += ' and'
       if debugVerbosity >= 3: notify(">>> Entering useAbility() Choice with Autoscript: {}".format(activeAutoscript)) # Debug
@@ -1852,6 +1874,10 @@ def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
          numberTuple = RequestInt(activeAutoscript, announceText, card) # Returns like reshuffleX()
          announceText = numberTuple[0] 
          X = numberTuple[1] 
+      elif re.search(r'\bDiscard[0-9]+', activeAutoscript): 
+         discardTuple = DiscardX(activeAutoscript, announceText, card, targetC, n = X) # Returns like reshuffleX()
+         announceText = discardTuple[0] 
+         X = discardTuple[1] 
       elif re.search(r'\b(Put|Remove|Refill|Use|Infect)([0-9]+)', activeAutoscript): announceText = TokensX(activeAutoscript, announceText, card, targetC, n = X)
       elif re.search(r'\bTransfer([0-9]+)', activeAutoscript): announceText = TransferX(activeAutoscript, announceText, card, targetC, n = X)
       elif re.search(r'\bDraw([0-9]+)', activeAutoscript): announceText = DrawX(activeAutoscript, announceText, card, targetC, n = X)
@@ -2087,7 +2113,7 @@ def GainX(Autoscript, announceText, card, targetCards = None, notification = Non
       else: verb = 'sets to'
    if abs(gain) == abs(999): total = 'all' # If we have +/-999 as the count, then this mean "all" of the particular counter.
    else: total = abs(gain * multiplier) # Else it's just the absolute value which we announce they "gain" or "lose"
-   if notification == 'Quick': announceString = "{}{} {} {} {}".format(announceText, otherTXT, verb, total, action.group(3))
+   if notification == 'Quick': announceString = "{}{} {} {} {}".format(announceText, otherTXT, action.group(1), total, action.group(3))
    else: announceString = "{}{} {} {} {}".format(announceText, otherTXT, verb, total, action.group(3))
    if notification and multiplier > 0: notify('--> {}.'.format(announceString))
    return announceString
@@ -2280,20 +2306,29 @@ def DrawX(Autoscript, announceText, card, targetCards = None, notification = Non
    if notification and multiplier > 0: notify('--> {}.'.format(announceString))
    return announceString
 
-def ofwhom(Autoscript):
-   if debugVerbosity >= 2: notify(">> Function: ofwhom(){}".format(extraASDebug())) #Debug
-   if re.search(r'o[fn]Opponent', Autoscript):
-      if len(players) > 1:
-         for player in players:
-            if player != me and player.getGlobalVariable('ds') != ds: 
-               targetPL = player # Opponent needs to be not us, and of a different type. 
-                                 # In the future I'll also be checking for teams by using a global player variable for it and having players select their team on startup.
-      else : 
-         whisper("There's no Opponents! Selecting myself.")
-         targetPL = me
-   else: targetPL = me
-   return targetPL
-   
+def DiscardX(Autoscript, announceText, card, targetCards = None, notification = None, n = 0): # Function for drawing X Cards from the house deck to your hand.
+   if debugVerbosity >= 1: notify("> Function: DiscardX(){}".format(extraASDebug())) #Debug
+   if targetCards is None: targetCards = []
+   action = re.search(r'\bDiscard([0-9]+)Card', Autoscript)
+   targetPL = ofwhom(Autoscript)
+   if targetPL != me: otherTXT = ' force {} to'.format(targetPL)
+   else: otherTXT = ''
+   discardNR = num(action.group(1))
+   if discardNR == 999:
+      multiplier = 1
+      discardNR = len(targetPL.hand) # 999 means we discard our whole hand
+   else: # Any other number just discard as many cards at random.
+      multiplier = per(Autoscript, card, n, targetCards, notification)
+      count = handRandomDiscard(targetPL.hand, discardNR * multiplier, targetPL, silent = True)
+      if re.search(r'isCost', Autoscript) and count < discardNR:
+         whisper("You do not have enough cards in your hand to discard")
+         return ('ABORT',0)
+   if count == 0: return (announceText,count) # If there are no cards, then we effectively did nothing, so we don't change the notification.
+   if notification == 'Quick': announceString = "{} discards {} cards".format(announceText, count)
+   else: announceString = "{}{} discard {} cards from their hand".format(announceText,otherTXT, count)
+   if notification and multiplier > 0: notify('--> {}.'.format(announceString))
+   return (announceString,count)
+         
 def ReshuffleX(Autoscript, announceText, card, targetCards = None, notification = None, n = 0): # A Function for reshuffling a pile into the R&D/Stack
    if debugVerbosity >= 1: notify("> Function: ReshuffleX(){}".format(extraASDebug())) #Debug
    if targetCards is None: targetCards = []
@@ -2617,6 +2652,19 @@ def findCounterPrevention(count, counter, targetPL): # Find out if the player ha
          if count == 0: break # If we've found enough protection to alleviate all counters, stop the search.
    return preventionFound
 
+def ofwhom(Autoscript):
+   if debugVerbosity >= 2: notify(">> Function: ofwhom(){}".format(extraASDebug())) #Debug
+   if re.search(r'o[fn]Opponent', Autoscript):
+      if len(players) > 1:
+         for player in players:
+            if player != me and player.getGlobalVariable('ds') != ds: 
+               targetPL = player # Opponent needs to be not us, and of a different type. 
+                                 # In the future I'll also be checking for teams by using a global player variable for it and having players select their team on startup.
+      else : 
+         whisper("There's no valid Opponents! Selecting myself.")
+         targetPL = me
+   else: targetPL = me
+   return targetPL
    
 def per(Autoscript, card = None, count = 0, targetCards = None, notification = None): # This function goes through the autoscript and looks for the words "per<Something>". Then figures out what the card multiplies its effect with, and returns the appropriate multiplier.
    if debugVerbosity >= 1: notify("> Function: per(){}".format(extraASDebug(Autoscript))) #Debug
@@ -2900,8 +2948,9 @@ def atTurnStartEndEffects(Time = 'Start'): # Function which triggers card effect
       Autoscripts = card.AutoScript.split('||')
       for AutoScript in Autoscripts:
          if debugVerbosity >= 4: notify(">>>> split Autoscript: {}".format(AutoScript))
-         effect = re.search(r'atTurn(Start|End):([A-Z][A-Za-z]+)([0-9]+)([A-Za-z0-9 ]+)([A-Za-z0-9_&\|:{} -]*)', AutoScript)
+         effect = re.search(r'atTurn(Start|End):([A-Z][A-Za-z]+)([0-9]+)([A-Za-z0-9 ]+)(.*)', AutoScript)
          if card.owner != me or not effect: continue
+         if re.search(r'excludeDummy', AutoScript) and card.highlight == DummyColor: return
          if effect.group(1) != Time: continue # If it's a start-of-turn effect and we're at the end, or vice-versa, do nothing.
          if effect.group(5) and re.search(r'isOptional', effect.group(5)) and not confirm("{} can have the following optional ability activated at the start of your turn:\n\n[ {} {} {} ]\n\nDo you want to activate it?".format(card.name, effect.group(2), effect.group(3),effect.group(4))): continue
          if not TitleDone: notify(":::{}'s {}-of-Turn Effects:::".format(me,effect.group(1)))
@@ -2910,7 +2959,8 @@ def atTurnStartEndEffects(Time = 'Start'): # Function which triggers card effect
          effectNR = num(effect.group(3))
          passedScript = '{}'.format(effect.group(0))
          if debugVerbosity >= 3: notify(">>> passedScript: {}".format(passedScript))
-         announceText = "{}:".format(card)
+         if card.highlight == DummyColor: announceText = "{}'s lingering effects:".format(card)
+         else: announceText = "{}:".format(card)
          if effect.group(2) == 'Gain' or effect.group(2) == 'Lose':
             GainX(passedScript, announceText, card, notification = 'Automatic')
          if effect.group(2) == 'Transfer':
@@ -2947,9 +2997,9 @@ def TrialError(group, x=0, y=0): # Debugging
                 "6628e5b5-3fb9-48c3-91b4-d78b87a4f969", # Cybertech Think Tank
                 "a92eaff1-65f4-4717-b1a9-e89b1ed4e647", # Doppleganger
                 "b08f2b3b-a5b4-4d83-a1e1-f6093e9b4ac7", # Emergency Rig
-                "76018711-c56f-4e37-9b01-85abf512d2de", # Corporate Guard® Temps.
+                "a18d1b13-452d-4b33-85ad-f04dceccdfa0", # Executive Boot Camp
                 "901547b2-eae1-43ae-b764-c70623a6c54f", # T.K.0 2.0
-                "78357861-b3b8-4451-9387-c1632c413a05", # Japanese Water Torture
+                "8934fae5-bb11-4434-8e50-7bd8f23372a1", # Armadillo
                 "b5712c36-5e00-4e5d-836a-43d9047b5a4a"] # Arasaka Owns You
    if not ds: ds = "corp"
    me.setGlobalVariable('ds', ds) 
@@ -2959,8 +3009,9 @@ def TrialError(group, x=0, y=0): # Debugging
    me.counters['Agenda Points'].value = 0
    me.counters['Bad Publicity'].value = 10
    me.Actions = 15
-   chooseSide()
-   createStartingCards()
+   if not playerside:  # If we've already run this command once, don't recreate the cards.
+      chooseSide()
+      createStartingCards()
    for idx in range(len(testcards)):
       test = table.create(testcards[idx], (70 * idx) - 150, 0, 1, True)
       TypeCard[test] = test.Type
