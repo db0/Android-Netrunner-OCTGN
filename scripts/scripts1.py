@@ -2180,7 +2180,6 @@ def TokensX(Autoscript, announceText, card, targetCards = None, notification = N
          #else:
          rndGUID = rnd(1,8)
          token = ("{}".format(action.group(3)),"00000000-0000-0000-0000-00000000000{}".format(rndGUID)) #This GUID is one of the builtin ones
-   #confirm("Bumpa") # Debug
    count = num(action.group(2))
    multiplier = per(Autoscript, card, n, targetCards, notification)
    for targetCard in targetCards:
@@ -2219,6 +2218,7 @@ def TokensX(Autoscript, announceText, card, targetCards = None, notification = N
                whisper("There was nothing to remove.")
                count = 0
          elif re.search(r'isCost', Autoscript) and (not targetCard.markers[token] or (targetCard.markers[token] and count > targetCard.markers[token])):
+            whisper ("No markers to remove. Aborting!")
             return 'ABORT'
          elif not targetCard.markers[token]: 
             whisper("There was nothing to remove.")        
@@ -2246,6 +2246,7 @@ def TokensX(Autoscript, announceText, card, targetCards = None, notification = N
    if re.search(r'forfeitCounter:',action.group(3)) and modtokens != 0: # We only notify when playing cards, when we are going to forfeit something in the future.
       counter = re.search(r'forfeitCounter:([\w ]+)',action.group(3))
       notify('--> {} forfeits their next {} {}.'.format(me,total,counter.group(1)))
+   if debugVerbosity >= 2: notify(">> TokensX() String: {}".format(announceString)) #Debug
    return announceString
  
 def DrawX(Autoscript, announceText, card, targetCards = None, notification = None, n = 0): # Function for drawing X Cards from the house deck to your hand.
@@ -2347,8 +2348,19 @@ def RollX(Autoscript, announceText, card, targetCards = None, notification = Non
 def RequestInt(Autoscript, announceText, card, targetCards = None, notification = None, n = 0): # Function for drawing X Cards from the house deck to your hand.
    if debugVerbosity >= 1: notify("> Function: RequestInt(){}".format(extraASDebug())) #Debug
    if targetCards is None: targetCards = []
-   action = re.search(r'\bRequestInt', Autoscript)
-   number = askInteger("This effect requires that you provide an 'X'. What should that number be?",0)
+   action = re.search(r'\bRequestInt(-Min)?([0-9]*)', Autoscript)
+   if action.group(2): 
+      min = num(action.group(2))
+      minTXT = ' (minimum {})'.format(min)
+   else: 
+      min = 0
+      minTXT = ''
+   number = min - 1
+   while number < min:
+      number = askInteger("This effect requires that you provide an 'X'. What should that number be?{}".format(minTXT),min)
+      if number == None: 
+         whisper("Aborting Function")
+         return 'ABORT'
    return (announceText, number) # We do not modify the announcement with this function.
    
 def RunX(Autoscript, announceText, card, targetCards = None, notification = None, n = 0): # Function for drawing X Cards from the house deck to your hand.
@@ -2463,7 +2475,7 @@ def ModifyStatus(Autoscript, announceText, card, targetCards = None, notificatio
    #confirm("List: {}".format(targetCards)) #Debug
    #for targetCard in targetCards: notify("ModifyX TargetCard: {}".format(targetCard)) #Debug
    for targetCard in targetCards:
-      if action.group(1) == 'Rez' and intRez(targetCard, silent = True) != 'ABORT': pass
+      if action.group(1) == 'Rez' and intRez(targetCard, 'free', silent = True) != 'ABORT': pass
       elif action.group(1) == 'Derez'and derez(targetCard, silent = True) != 'ABORT': pass
       elif action.group(1) == 'Expose' and expose(targetCard, silent = True) != 'ABORT': pass
       elif action.group(1) == 'Uninstall' and uninstall(targetCard, dest, silent = True) != 'ABORT': pass
@@ -2489,8 +2501,6 @@ def InflictX(Autoscript, announceText, card, targetCards = None, notification = 
    action = re.search(r'\b(Inflict)([0-9]+)(Meat|Net|Brain)Damage', Autoscript) # Find out what kind of damage we're going
    multiplier = per(Autoscript, card, n, targetCards)
    enhancer = findEnhancements(Autoscript) #See if any of our cards increases damage we deal
-   if enhancer > 0: enhanceTXT = ' (Enhanced: +{})'.format(enhancer) #Also notify that this is the case
-   else: enhanceTXT = ''
    targetPL = ofwhom(Autoscript) #Find out who the target is
    if re.search(r'ifTagged', Autoscript) and targetPL.Tags == 0: #See if the target needs to be tagged.
       whisper("Your opponent needs to be tagged to use this action")
@@ -2498,6 +2508,8 @@ def InflictX(Autoscript, announceText, card, targetCards = None, notification = 
    elif re.search(r'ifTagged2', Autoscript) and targetPL.Tags < 2: #See if the target needs to be double tagged.
       whisper("Your opponent needs to be tagged twice to use this action")
       return 'ABORT'
+   if enhancer > 0: enhanceTXT = ' (Enhanced: +{})'.format(enhancer) #Also notify that this is the case
+   else: enhanceTXT = ''
    DMG = (num(action.group(2)) * multiplier) + enhancer #Calculate our damage
    preventTXT = ''
    if Automations['Damage']: #The actual effects happen only if the Damage automation switch is ON. It should be ON by default.
@@ -2934,7 +2946,7 @@ def TrialError(group, x=0, y=0): # Debugging
    testcards = ["4fbc20e7-35f6-4966-b8c7-cb465864728a", # Corporate Headhunters
                 "6628e5b5-3fb9-48c3-91b4-d78b87a4f969", # Cybertech Think Tank
                 "a92eaff1-65f4-4717-b1a9-e89b1ed4e647", # Doppleganger
-                "158fa070-85f8-4bf4-838a-09bbbc31b240", # Rigged Ivestments
+                "b08f2b3b-a5b4-4d83-a1e1-f6093e9b4ac7", # Emergency Rig
                 "76018711-c56f-4e37-9b01-85abf512d2de", # Corporate Guard® Temps.
                 "901547b2-eae1-43ae-b764-c70623a6c54f", # T.K.0 2.0
                 "78357861-b3b8-4451-9387-c1632c413a05", # Japanese Water Torture
