@@ -35,7 +35,8 @@
 			<groupaction menu="Switch Play, Score and Rez Automation ON/OFF" default="false" execute="switchPlayAutomation" />  
 			<groupaction menu="Switch Start/End-of-Turn Automation ON/OFF" default="false" execute="switchStartEndAutomation" />  
 			<groupaction menu="Switch Damage Automation ON/OFF" default="false" execute="switchDMGAutomation" />  
-			<groupaction menu="Disable all &quot;Newbie&quot; Warnings" default="false" execute="ImAProAtThis" />  
+			<groupaction menu="Switch Automatic Damage Prevention ON/OFF" default="false" execute="switchPreventDMGAutomation" />  
+			<groupaction menu="Disable all &quot;Newbie&quot; Warnings" default="false" shortcut="Ctrl+Shift+N" execute="ImAProAtThis" />  
 			<groupaction menu="Debug" default="false" shortcut="Ctrl+Shift+D" execute="TrialError" /> 
 		</groupactions>
 		<groupactions menu="Turns/Actions...">
@@ -44,8 +45,9 @@
 			<groupaction menu="Declare End of Turn" default="false" shortcut="F12" execute="goToEndTurn" />
 		</groupactions>
 		<groupactions menu="Runner Actions...">
-			<groupaction menu="Take 1 Brain Damage" default="false" execute="addBrainDmg" />
-			<groupaction menu="Take 1 Meat Or Net Damage" default="false" execute="addMeatNetDmg" />
+			<groupaction menu="Suffer 1 Meat Damage" default="false" execute="addMeatDmg" />
+			<groupaction menu="Suffer 1 Net Damage" default="false" execute="addNetDmg" />
+			<groupaction menu="Suffer 1 Brain Damage" default="false" execute="addBrainDmg" />
          <groupaction menu="&#9166; Pay &#10123; and lose a Tag" default="false" execute="pay2andDelTag" />
 			<groupaction menu="&#9166; Run on HQ" default="false" execute="runHQ" />
 			<groupaction menu="&#9166; Run on R&amp;D" default="false" execute="runRD" />
@@ -81,7 +83,7 @@
 			<cardaction menu="Cancel Trace" default="false" execute="cancelTrace" />
 		</cardactions>
       <groupaction menu="Modify your max actions per turn" default="false" execute="modActions" />
-		<cardaction menu="Inspect" default="false" shortcut="Ctrl+Shift+I" execute="inspectCard" />
+		<cardaction menu="Inspect" default="false" shortcut="Ctrl+I" execute="inspectCard" />
 		<cardaction menu="Expose card" default="false" execute="expose" />
 		<cardaction menu="Score Agenda" default="false" execute="scrAgenda" />      
 		<groupaction menu="Create new Subsidiary Data Fort" default="false" execute="createSDF" />
@@ -101,7 +103,7 @@
 				<cardaction menu ="To Bottom of R&amp;D/Stack" default="false" execute="movetoBottomOfStack" />
 				<cardaction menu ="To Face-up Archives" default="false" execute="handtoArchives" />
 			</cardactions>
-         <cardaction menu="Inspect" default="false" shortcut="Ctrl+Shift+I" execute="inspectCard" />
+         <cardaction menu="Inspect" default="false" shortcut="Ctrl+I" execute="inspectCard" />
 			<cardaction menu="Trash/Archive" default="false" shortcut="del" execute="handDiscard" />           
 			<groupaction menu="Trash/Archive a Card at Random" default="false" execute="handRandomDiscard" />
 			<groupaction menu="Show a Card at Random" default="false" execute="showatrandom"/>
