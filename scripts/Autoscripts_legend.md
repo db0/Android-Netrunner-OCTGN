@@ -139,7 +139,7 @@ This means that `Lose2Bits-ofOpponent` will reduce the "Bit Pool" counter of you
 
 #### -isRezzed / -isUnrezzed
 
-This is used by both -per and -Targeteted as a requirement for valid targets. 
+This is used by both -per and -Targeted as a requirement for valid targets. 
 
 #### -byMe / -byOpponent
 
@@ -208,3 +208,7 @@ For example: `Reduce#CostUse-forProgram`
 
 Will reduce the cost for using programs by the number of bit tokens on the card itself.
 
+### * -div
+
+This Is used in combination with -perX usually and it merely divides the multiplier by the given amount. (E.g. see Food Fight)
+When used in the RequestInt core command, it makes sure the player gives a number that can be cleanly divided.

@@ -2265,7 +2265,7 @@ def TokensX(Autoscript, announceText, card, targetCards = None, notification = N
          victim = ofwhom(Autoscript)
          if targetCard == card: targetCard = getSpecial('Counter Hold',victim) # For infecting targets, the target is never the card causing the effect.
          modtokens = count * multiplier
-         if token != mdict['protectionVirus']: # We don't want us to prevent putting virus protection tokens, even though we put them with the "Infect" keyword.
+         if re.search('virus',token[0]) and token != mdict['protectionVirus']: # We don't want us to prevent putting virus protection tokens, even though we put them with the "Infect" keyword.
             Virusprevented = findVirusProtection(targetCard, victim, modtokens)
             if Virusprevented > 0:
                preventTXT = ' ({} prevented)'.format(Virusprevented)
@@ -2314,12 +2314,12 @@ def TokensX(Autoscript, announceText, card, targetCards = None, notification = N
    else: total = abs(modtokens)
    if action.group(1) == 'Refill': announceString = "{} {} to {} {}".format(announceText, action.group(1), count, token[0]) # We need a special announcement for refill, since it always needs to point out the max.
    elif re.search(r'\bRemove999Virus', Autoscript): announceString = "{} to clean all viruses from their corporate network".format(announceText)
-   elif re.search(r'forfeitCounter:',action.group(3)): announceString = announceText # If we're putting on forfeit counters, we don't announce it as an infection.
+   elif re.search(r'forfeitCounter:',action.group(3)):
+      counter = re.search(r'forfeitCounter:(\w+)',action.group(3))
+      if not victim or victim == me: announceString = '{} forfeit their next {} {}'.format(announceText,total,counter.group(1)) # If we're putting on forfeit counters, we don't announce it as an infection.
+      else: announceString = '{} force {} to forfeit their next {} {}'.format(announceText, victim, total,counter.group(1))
    else: announceString = "{} {}{} {} {} counters{}{}".format(announceText, action.group(1).lower(),infectTXT, total, token[0],targetCardlist,preventTXT)
    if notification == 'Automatic' and modtokens != 0: notify('--> {}.'.format(announceString))
-   if re.search(r'forfeitCounter:',action.group(3)) and modtokens != 0: # We only notify when playing cards, when we are going to forfeit something in the future.
-      counter = re.search(r'forfeitCounter:([\w ]+)',action.group(3))
-      notify('--> {} forfeits their next {} {}.'.format(me,total,counter.group(1)))
    if debugVerbosity >= 2: notify("### TokensX() String: {}".format(announceString)) #Debug
    if debugVerbosity >= 4: notify("<<< TokensX()")
    return announceString
@@ -2437,15 +2437,19 @@ def RollX(Autoscript, announceText, card, targetCards = None, notification = Non
 def RequestInt(Autoscript, announceText, card, targetCards = None, notification = None, n = 0): # Core Command for drawing X Cards from the house deck to your hand.
    if debugVerbosity >= 1: notify(">>> RequestInt(){}".format(extraASDebug())) #Debug
    if targetCards is None: targetCards = []
-   action = re.search(r'\bRequestInt(-Min)?([0-9]*)', Autoscript)
+   action = re.search(r'\bRequestInt(-Min)?([0-9]*)(-div)?([0-9]*)', Autoscript)
    if action.group(2): 
       min = num(action.group(2))
       minTXT = ' (minimum {})'.format(min)
    else: 
       min = 0
       minTXT = ''
+   if action.group(4): 
+      div = num(action.group(4))
+      minTXT += ' (must be a multiple of {})'.format(div)
+   else: div = 1
    number = min - 1
-   while number < min:
+   while number < min or number % div:
       number = askInteger("This effect requires that you provide an 'X'. What should that number be?{}".format(minTXT),min)
       if number == None: 
          whisper("Aborting Function")
@@ -2719,6 +2723,7 @@ def findCounterPrevention(count, counter, targetPL): # Find out if the player ha
             count -= 1 # We reduce how much counter we still need to add by 1
             card.markers[foundMarker] -= 1 # We reduce the specific counter prevention counters by 1
          if count == 0: break # If we've found enough protection to alleviate all counters, stop the search.
+   if debugVerbosity >= 4: notify("<<< findCounterPrevention() by returning: {}".format(preventionFound))
    return preventionFound
 
 def ofwhom(Autoscript): 
@@ -2730,7 +2735,7 @@ def ofwhom(Autoscript):
                targetPL = player # Opponent needs to be not us, and of a different type. 
                                  # In the future I'll also be checking for teams by using a global player variable for it and having players select their team on startup.
       else : 
-         whisper("There's no valid Opponents! Selecting myself.")
+         if debugVerbosity >= 1: whisper("There's no valid Opponents! Selecting myself.")
          targetPL = me
    else: targetPL = me
    return targetPL
@@ -2738,7 +2743,8 @@ def ofwhom(Autoscript):
 def per(Autoscript, card = None, count = 0, targetCards = None, notification = None): # This function goes through the autoscript and looks for the words "per<Something>". Then figures out what the card multiplies its effect with, and returns the appropriate multiplier.
    if debugVerbosity >= 1: notify(">>> per(){}".format(extraASDebug(Autoscript))) #Debug
    if targetCards is None: targetCards = []
-   per = re.search(r'\b(per|upto)(Target|Parent|Every)?([A-Z].*)-?', Autoscript) # We're searching for the word per, and grabbing all after that, until the first dash "-" as the variable.   
+   div = 1
+   per = re.search(r'\b(per|upto)(Target|Parent|Every)?([A-Z][^-]*)-?', Autoscript) # We're searching for the word per, and grabbing all after that, until the first dash "-" as the variable.   
    if per: # If the  search was successful...
       if debugVerbosity >= 2: notify("Groups: {}. Count: {}".format(per.groups(),count)) #Debug
       if per.group(2) and (per.group(2) == 'Target' or per.group(2) == 'Every'): # If we're looking for a target or any specific type of card, we need to scour the requested group for targets.
@@ -2767,7 +2773,7 @@ def per(Autoscript, card = None, count = 0, targetCards = None, notification = N
                      perItemExclusion.append(regexCondition.group(1))
                   else:
                      perItemMatch.append(regexCondition.group(1))
-         if debugVerbosity >= 2: notify('Matches: {}\nExclusions: {}'.format(perItemMatch, perItemExclusion)) # Debug
+         if debugVerbosity >= 2: notify('+++ Matches: {}\nExclusions: {}'.format(perItemMatch, perItemExclusion)) # Debug
          if re.search(r'fromHand', Autoscript): cardgroup = [c for c in me.hand]
          else: cardgroup = [c for c in table]
          for c in cardgroup: # Go through each card on the table and gather its properties, then see if they match.
@@ -2787,7 +2793,7 @@ def per(Autoscript, card = None, count = 0, targetCards = None, notification = N
             if cFaceD: c.isFaceUp = False # If the card was originally face-down, return it to that state again.
             perCHK = True # Variable to show us if the card we're checking is still passing all the requirements.
             #confirm("Bump") #Debug
-            if debugVerbosity >= 2: notify("Starting check with {}.\nProperties: {}".format(c, cardProperties)) # Debug
+            if debugVerbosity >= 3: notify("### Starting check with {}.\nProperties: {}".format(c, cardProperties)) # Debug
             for perItem in perItemMatch: # Now we check if the card properties include all the properties we need
                if perItem not in cardProperties: perCHK = False # The perCHK starts as True. We only need one missing item to turn it to False, since they all have to exist.
             for perItem in perItemExclusion:
@@ -2799,7 +2805,7 @@ def per(Autoscript, card = None, count = 0, targetCards = None, notification = N
                if re.search(r'isUnrezzed', Autoscript) and (c.isFaceUp or not c.markers[Not_rezzed]): perCHK = False  # We exclude the card if it's supposed to be unrezzed but isn't
                if re.search(r'Target',per.group(2)) and (not c.targetedBy or not c.targetedBy == me): perCHK = False  # We exclude the card if we only gather targets but it's not one.
             if perCHK: # Here we find out how much multiplier we get from those cards.
-               if debugVerbosity >= 4: notify("per() Target Found: {}".format(c)) # Debug
+               if debugVerbosity >= 3: notify("### Target Found: {}".format(c)) # Debug
                if re.search(r'isExposeTarget', Autoscript) and not c.isFaceUp and c.targetedBy == me: expose(c) # If the card is supposed to be exposed to get the benefit, then do so now.
                if re.search(r'(Reveal&Shuffle|Reveal&Recover)', Autoscript) and c.targetedBy and c.targetedBy == me: 
                   c.moveToTable((70 * iter) - 150, 0 - yaxisMove(card), False) # If the card is supposed to be revealed to get the benefit, then we do so now
@@ -2831,8 +2837,8 @@ def per(Autoscript, card = None, count = 0, targetCards = None, notification = N
             for c in revealedCards: c.moveTo(me.hand)
             notify("- {} returns the revealed cards back into their hand".format(me))
       else: #If we're not looking for a particular target, then we check for everything else.
-         if debugVerbosity >= 2: notify("### per(): Doing no table lookup") # Debug.
-         if per.group(3) == 'X': multiplier = count      
+         if debugVerbosity >= 3: notify("### Doing no table lookup") # Debug.
+         if per.group(3) == 'X': multiplier = count # Probably not needed and the next elif can handle alone anyway.
          elif count: multiplier = num(count) * chkPlayer(Autoscript, card.controller, False) # All non-special-rules per<somcething> requests use this formula.
                                                                                               # Usually there is a count sent to this function (eg, number of favour purchased) with which to multiply the end result with
                                                                                               # and some cards may only work when a rival owns or does something.
@@ -2844,9 +2850,12 @@ def per(Autoscript, card = None, count = 0, targetCards = None, notification = N
          elif re.search(r'Property',per.group(3)):
             property = re.search(r'Property{([\w ]+)}',per.group(3))
             multiplier = card.properties[property.group(1)]
+      if debugVerbosity >= 3: notify("### Checking div") # Debug.            
+      divS = re.search(r'-div([0-9]+)',Autoscript)
+      if divS: div = num(divS.group(1))
    else: multiplier = 1
-   if debugVerbosity >= 3: notify("<<< per() with Multiplier: {}".format(multiplier)) # Debug
-   return multiplier
+   if debugVerbosity >= 3: notify("<<< per() with Multiplier: {}".format(multiplier / div)) # Debug
+   return multiplier / div
 
 def chkPlayer(Autoscript, controller, manual): # Function for figuring out if an autoscript is supposed to target an opponent's cards or ours.
 # Function returns 1 if the card is not only for rivals, or if it is for rivals and the card being activated it not ours.
@@ -2855,6 +2864,7 @@ def chkPlayer(Autoscript, controller, manual): # Function for figuring out if an
    if debugVerbosity >= 1: notify(">>> chkPlayer(){}".format(extraASDebug())) #Debug
    byOpponent = re.search(r'byOpponent', Autoscript)
    byMe = re.search(r'byMe', Autoscript)
+   if debugVerbosity >= 3: notify("### byMe: {}. byOpponent: {}".format(byMe,byOpponent))
    if manual: return 1 #manual means that the actions was called by a player double clicking on the card. In which case we always do it.
    elif not byOpponent and not byMe: return 1 # If the card has no restrictions on being us or a rival.
    elif byOpponent and controller != me: return 1 # If the card needs to be played by a rival.
@@ -3067,7 +3077,7 @@ def TrialError(group, x=0, y=0): # Debugging
       return
    testcards = ["69c20033-c399-423b-99e5-aa9fcd1dc6ee", # Fetal AI
                 "c241c38c-7327-4ec7-aa98-5b55a247fbb1", # Terrorist Reprisal
-                "a92eaff1-65f4-4717-b1a9-e89b1ed4e647", # Doppleganger
+                "8b1d2a26-6a13-430f-8dc6-a0c8174d779d", # Food Fight
                 "b08f2b3b-a5b4-4d83-a1e1-f6093e9b4ac7", # Emergency Rig
                 "a18d1b13-452d-4b33-85ad-f04dceccdfa0", # Executive Boot Camp
                 "901547b2-eae1-43ae-b764-c70623a6c54f", # T.K.0 2.0
