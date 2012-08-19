@@ -1332,7 +1332,7 @@ def handRandomDiscard(group, count = None, player = None, destination = None, si
       if card == None: return iter + 1 # If we have no more cards, then return how many we managed to discard.
       card.moveTo(destination)
       if not silent: notify("{} discards {} at random.".format(player,card))
-   if debugVerbosity >= 2: notify("### : Discarded {} cards at random".format(iter)) #Debug
+   if debugVerbosity >= 2: notify("<<< handRandomDiscard() with return {}".format(iter + 1)) #Debug
    return iter + 1 #We need to increase the iter by 1 because it starts iterating from 0
     		
 def showatrandom(group):
@@ -1723,7 +1723,7 @@ def executePlayScripts(card, action):
                if numberTuple == 'ABORT': return
                X = numberTuple[1] 
             if effect.group(1) == 'Discard': 
-               numberTuple = RequestInt(passedScript, announceText, card, targetC, notification = 'Quick', n = X)
+               discardTuple = DiscardX(passedScript, announceText, card, targetC, notification = 'Quick', n = X)
                if discardTuple == 'ABORT': return
                X = discardTuple[1] 
             if re.search(r'Run', effect.group(1)): 
