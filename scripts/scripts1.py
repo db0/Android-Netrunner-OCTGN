@@ -3048,7 +3048,7 @@ def atTurnStartEndEffects(Time = 'Start'): # Function which triggers card effect
             TransferX(passedScript, announceText, card, notification = 'Automatic')
          if effect.group(2) == 'Draw':
             DrawX(passedScript, announceText, card, notification = 'Automatic')
-         if effect.group(2) == 'Refill':
+         if effect.group(2) == 'Refill' or effect.group(2) == 'Remove':
             TokensX(passedScript, announceText, card, notification = 'Automatic')
    if me.counters['Bit Pool'].value < 0: 
       notify(":::Warning::: {}'s {}-of-turn effects cost more Bits than {} had in their Bit Pool!".format(me,Time,me))
@@ -3078,7 +3078,7 @@ def TrialError(group, x=0, y=0): # Debugging
    testcards = ["69c20033-c399-423b-99e5-aa9fcd1dc6ee", # Fetal AI
                 "c241c38c-7327-4ec7-aa98-5b55a247fbb1", # Terrorist Reprisal
                 "8b1d2a26-6a13-430f-8dc6-a0c8174d779d", # Food Fight
-                "b08f2b3b-a5b4-4d83-a1e1-f6093e9b4ac7", # Emergency Rig
+                "b38002e9-f6a5-40a2-a458-cbeab6902d4d", # Government Contract
                 "a18d1b13-452d-4b33-85ad-f04dceccdfa0", # Executive Boot Camp
                 "901547b2-eae1-43ae-b764-c70623a6c54f", # T.K.0 2.0
                 "8934fae5-bb11-4434-8e50-7bd8f23372a1", # Armadillo
