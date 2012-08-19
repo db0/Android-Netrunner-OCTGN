@@ -240,3 +240,7 @@ The player will be prompted if this is what they want.
 ### -nonPreventable
 
 Used by the InflictX core command. Any damage modded like this will not trigger damage prevention cards and will always discard cards from the target player's hand.
+
+### -warn
+
+The warn modulator merely provides some information to the player, and occasionally allows them to abort the operation, if they're not ready.

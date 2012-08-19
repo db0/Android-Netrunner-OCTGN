@@ -763,6 +763,7 @@ def reduceCost(card, type = 'Rez', fullCost = 0):
       for autoS in Autoscripts:
          if debugVerbosity >= 3: notify("### Checking {} with AS: {}".format(c, autoS)) #Debug
          reductionSearch = re.search(r'Reduce([0-9#]+)Cost({}|All)-for([A-Z][A-Za-z ]+)(-not[A-Za-z_& ]+)?'.format(type), autoS) 
+         if debugVerbosity >= 2: notify("!!! Regex is {}".format(reductionSearch.groups())) #Debug
          if c.controller == me and reductionSearch and c.markers[Not_rezzed] == 0 and c.isFaceUp: # If the above search matches (i.e. we have a card with reduction for Rez and a condition we continue to check if our card matches the condition)
             if debugVerbosity >= 4: notify("### Possible Match found in {}".format(c)) # Debug         
             if reductionSearch.group(4): 
@@ -1670,9 +1671,9 @@ def executePlayScripts(card, action):
    AutoScriptsSnapshot = list(Autoscripts) # Need to work on a snapshot, because we'll be modifying the list.
    for autoS in AutoScriptsSnapshot: # Checking and removing any "AtTurnStart" actions.
       if re.search(r'atTurn(Start|End)', autoS) or re.search(r'-isTrigger', autoS): Autoscripts.remove(autoS)
-      if re.search(r'excludeDummy', autoS) and card.highlight == DummyColor: Autoscripts.remove(autoS)
-      if re.search(r'onlyforDummy', autoS) and card.highlight != DummyColor: Autoscripts.remove(autoS)
-      if re.search(r'CustomScript', autoS): 
+      elif re.search(r'excludeDummy', autoS) and card.highlight == DummyColor: Autoscripts.remove(autoS)
+      elif re.search(r'onlyforDummy', autoS) and card.highlight != DummyColor: Autoscripts.remove(autoS)
+      elif re.search(r'CustomScript', autoS): 
          customScript(card,action)
          Autoscripts.remove(autoS)
    if len(Autoscripts) == 0: return
@@ -1697,6 +1698,7 @@ def executePlayScripts(card, action):
       for activeAutoscript in selectedAutoscripts:
          if debugVerbosity >= 2: notify("### Second Processing: {}".format(activeAutoscript)) # Debug
          if chkWarn(card, activeAutoscript) == 'ABORT': return
+         if re.search(r':Pass\b', activeAutoscript): return # Pass is a simple command of doing nothing ^_^
          targetC = findTarget(activeAutoscript)
          if debugVerbosity >= 4: notify("#### targetC: {}".format(targetC)) # Debug
          effect = re.search(r'\b([A-Z][A-Za-z]+)([0-9]*)([A-Za-z& ]*)\b([^:]?[A-Za-z0-9_&{}\|: -]*)', activeAutoscript)
@@ -1756,6 +1758,7 @@ def executePlayScripts(card, action):
             if re.search(r'(Rez|Derez|Expose|Trash|Uninstall|Possess|Exile)', effect.group(1)): 
                if ModifyStatus(passedScript, announceText, card, targetC, notification = 'Quick', n = X) == 'ABORT': return
          if failedRequirement: break # If one of the Autoscripts was a cost that couldn't be paid, stop everything else.
+         if debugVerbosity >= 3: notify ("Loop for scipt {} finished".format(passedScript))
 #------------------------------------------------------------------------------
 # Autoactions
 #------------------------------------------------------------------------------
@@ -2078,6 +2081,7 @@ def chkWarn(card, Autoscript): # Function for checking that an autoscript announ
          if not confirm("This action will reshuffle your opponent's pile. Are you sure?\n\n[Important: Please ask your opponent not to take any actions with their piles until this actions is complete or the game might crash]"):
             whisper("--> Aborting action.")
             return 'ABORT'
+      if warning.group(1) == 'GiveToOpponent': confirm('This card has an effect which needs to be activated you your opponent. Please use the menu option "pass control to" to give them control.')
       if warning.group(1) == 'Reshuffle': 
          if not confirm("This action will reshuffle your piles. Are you sure?"):
             whisper("--> Aborting action.")
@@ -2203,12 +2207,7 @@ def TransferX(Autoscript, announceText, card, targetCards = None, notification =
       whisper(":::WARNING::: Not a valid transfer. Aborting!")
       return 'ABORT'
    for targetCard in targetCards:
-      foundMarker = None
-      for key in targetCard.markers:
-         #confirm("Key: {}\n\nChoice: {}".format(key[0],keywords[choice])) # Debug
-         if key[0] == action.group(2):
-            foundMarker = key
-            #confirm("Added:{}".format(existingKeyword))
+      foundMarker = findMarker(targetCard, action.group(2))
       if not foundMarker: 
          whisper("There was nothing to transfer from {}.".format(targetCard))
          continue
@@ -2521,18 +2520,19 @@ def CreateDummy(Autoscript, announceText, card, targetCards = None, notification
    if debugVerbosity >= 1: notify(">>> CreateDummy(){}".format(extraASDebug())) #Debug
    if targetCards is None: targetCards = []
    global Dummywarn
+   global Stored_Type, Stored_Cost, Stored_Keywords, Stored_AutoActions
    dummyCard = None
-   action = re.search(r'\bCreateDummy[A-Za-z0-9_ -]*(-with)(?!onOpponent|-doNotTrash)([A-Za-z0-9_ -]*)', Autoscript)
-   #confirm('actions: {}'.format(action.groups())) # debug
+   action = re.search(r'\bCreateDummy[A-Za-z0-9_ -]*(-with)(?!onOpponent|-doNotTrash|-nonUnique)([A-Za-z0-9_ -]*)', Autoscript)
+   if debugVerbosity >= 3 and action: notify('actions regex: {}'.format(action.groups())) # debug
    targetPL = ofwhom(Autoscript)
    for c in table:
       if c.model == card.model and c.controller == targetPL and c.highlight == DummyColor: dummyCard = c # We check if already have a dummy of the same type on the table.
-   if not dummyCard:
+   if not dummyCard or re.search(r'nonUnique',Autoscript): #Some create dummy effects allow for creating multiple copies of the same card model.
       if Dummywarn and re.search('onOpponent',Autoscript):
          if not confirm("This action creates an effect for your opponent and a way for them to remove it.\
                        \nFor this reason we've created a dummy card on the table and marked it with a special highlight so that you know that it's just a token.\
                      \n\nYou opponent can activate any abilities meant for them on the Dummy card. If this card has one, they can activate it by double clicking on the dummy. Very often, this will often remove the dummy since its effect will disappear.\
-                     \n\nOnce the dummy card is on the table, please right-click on it and select 'Pass control to {}'\
+                     \n\nOnce the   dummy card is on the table, please right-click on it and select 'Pass control to {}'\
                      \n\nDo you want to see this warning again?".format(targetPL)): Dummywarn = False      
       elif Dummywarn:
          if not confirm("This card's effect requires that you trash it, but its lingering effects will only work automatically while a copy is in play.\
@@ -2542,11 +2542,16 @@ def CreateDummy(Autoscript, announceText, card, targetCards = None, notification
       elif re.search(r'onOpponent', Autoscript): confirm('The dummy card just created is meant for your opponent. Please right-click on it and select "Pass control to {}"'.format(targetPL))
       dummyCard = table.create(card.model, 500, 50 * playerside, 1) # This will create a fake card like the one we just created.
       dummyCard.highlight = DummyColor
+      Stored_Type[dummyCard] = dummyCard.Type
+      Stored_Keywords[dummyCard] = dummyCard.Keywords
+      Stored_AutoActions[dummyCard] = dummyCard.AutoAction
+      Stored_Cost[dummyCard] = dummyCard.Cost
    #confirm("Dummy ID: {}\n\nList Dummy ID: {}".format(dummyCard._id,passedlist[0]._id)) #Debug
    if not re.search(r'doNotTrash',Autoscript): card.moveTo(card.owner.piles['Trash/Archives(Face-up)'])
-   if action.group(1): announceString = TokensX('Put{}'.format(action.group(2)), announceText,dummyCard, n = n) # If we have a -with in our autoscript, this is meant to put some tokens on the dummy card.
+   if action: announceString = TokensX('Put{}'.format(action.group(2)), announceText,dummyCard, n = n) # If we have a -with in our autoscript, this is meant to put some tokens on the dummy card.
+   else: announceString = announceText + 'create a lingering effect for {}'.format(targetPL)
    if debugVerbosity >= 4: notify("<<< CreateDummy()")
-   return announceString # Creating a dummy isn't announced.
+   return announceString # Creating a dummy isn't usually announced.
 
 def ChooseKeyword(Autoscript, announceText, card, targetCards = None, notification = None, n = 0): # Core Command for marking cards to be of a different keyword than they are
    if debugVerbosity >= 1: notify(">>> ChooseKeyword(){}".format(extraASDebug())) #Debug
@@ -2698,6 +2703,13 @@ def findDMGProtection(DMGdone, DMGtype, targetPL): # Find out if the player has 
    if not Automations['Damage Prevention']: return 0
    protectionFound = 0
    protectionType = 'protection{}DMG'.format(DMGtype) # This is the string key that we use in the mdict{} dictionary
+   for card in table: # First we check for complete damage protection (i.e. protection from all types), which is always temporary.
+      if card.controller == targetPL and card.markers[mdict['protectionAllDMG']]:
+         while DMGdone > 0 and card.markers[mdict['protectionAllDMG']] > 0: 
+            protectionFound += 1 
+            DMGdone -= 1
+            card.markers[mdict['protectionAllDMG']] -= 1 
+         if DMGdone == 0: break
    for card in table:
       if card.controller == targetPL and card.markers[mdict[protectionType]]:
          while DMGdone > 0 and card.markers[mdict[protectionType]] > 0: # For each point of damage we do.
@@ -2709,18 +2721,11 @@ def findDMGProtection(DMGdone, DMGtype, targetPL): # Find out if the player has 
    else: altprotectionType = None
    for card in table: # We check for the combined protections after we use the single protectors.
       if card.controller == targetPL and altprotectionType and card.markers[mdict[altprotectionType]]:
-         while DMGdone > 0 and card.markers[mdict[altprotectionType]] > 0: # For each point of damage we do.
-            protectionFound += 1 # We increase the protection found by 1
-            DMGdone -= 1 # We reduce how much damage we still need to prevent by 1
-            card.markers[mdict[altprotectionType]] -= 1 # We reduce the card's damage protection counters by 1
-         if DMGdone == 0: break # If we've found enough protection to alleviate all damage, stop the search.
-   for card in table: # Finally we check for complete damage protection (i.e. protection from all types)
-      if card.controller == targetPL and card.markers[mdict['protectionAllDMG']]:
-         while DMGdone > 0 and card.markers[mdict['protectionAllDMG']] > 0: 
-            protectionFound += 1 
-            DMGdone -= 1
-            card.markers[mdict['protectionAllDMG']] -= 1 
-         if DMGdone == 0: break
+         while DMGdone > 0 and card.markers[mdict[altprotectionType]] > 0: 
+            protectionFound += 1 #
+            DMGdone -= 1 
+            card.markers[mdict[altprotectionType]] -= 1 
+         if DMGdone == 0: break 
    if debugVerbosity >= 4: notify("<<< findDMGProtection() by returning: {}".format(protectionFound))
    return protectionFound
 
@@ -3138,14 +3143,14 @@ def TrialError(group, x=0, y=0): # Debugging
    if not (len(players) == 1 or debugVerbosity >= 0): 
       whisper("This function is only for development purposes")
       return
-   testcards = ["429dc83b-8c45-439b-b31a-b08afcb61314", # Project Zurich
-                "f2ddb0b1-af2b-4d8d-bac1-ea0cd8a2a43d", # Death from Above
-                "c7ac08e2-2190-47de-a345-6b1e9e5e770b", # Raymond Ellison
+   testcards = ["413364d6-d82e-430b-b395-ce64e1cae6ff", # ACME Savings and Loan
+                "47860d05-7874-4471-b872-185d031af848", # Streetware Distributor
+                "55701d77-7a54-4bcc-ab3a-6e21192a8cff", # Cerberus
                 "31cb5ed8-ca36-4637-b78f-ec10c1c28526", # Rent-to-Own Contract # This will need one of those markers that have their own abilities
-                "b10c3681-9bb3-481b-af86-64649b6e78db", # Morphing Tool
-                "a159245f-3527-4a0b-895a-0db43515231d", # Liberated Savings Account
-                "d0d575f8-fbd4-4da1-8c0e-bca28a7310ea", # Please Don't Choke Anyone
-                "b5712c36-5e00-4e5d-836a-43d9047b5a4a"] # Arasaka Owns You
+                "63818d50-46e4-4ca9-b009-6290cefd53da", # Prearranged Drop
+                "bf9ede81-feac-489b-b9ec-f690f6b68d63", # Precision Bribery
+                "ca9c6887-8db7-444e-9c83-d7cd59ee4774", # Sunburst Cranial Interface
+                "8d326b53-11f3-4e29-bd2b-35b3eb5472ec"] # Viral Pipeline
    if not ds: ds = "corp"
    me.setGlobalVariable('ds', ds) 
    me.counters['Bit Pool'].value = 50
