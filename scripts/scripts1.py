@@ -1165,6 +1165,8 @@ def intPlay(card, cost = 'not_free'):
    Stored_Keywords[card] = getKeywords(card)
    Stored_Cost[card] = card.Cost
    Stored_AutoActions[card] = card.AutoAction
+   if card.Type == 'Prep' or card.Type == 'Operation': action = 'play'
+   else: action = 'install'
    MUtext = ''
    rc = ''
    if card.Type == 'Resource' and re.search(r'Hidden', getKeywords(card)): hiddenresource = 'yes'
@@ -1183,9 +1185,9 @@ def intPlay(card, cost = 'not_free'):
       if card.Type == 'Resource' and hiddenresource == 'yes':
          card.moveToTable(-180, 230 * playerside - yaxisMove(card), True)
          notify("{} to install a card.".format(ActionCost))
-         executeAutomations(card,'play')
+         executeAutomations(card,action)
          return
-      reduction = reduceCost(card, 'Install', num(card.Cost)) #Checking to see if the cost is going to be reduced by cards we have in play.
+      reduction = reduceCost(card, action, num(card.Cost)) #Checking to see if the cost is going to be reduced by cards we have in play.
       if reduction: extraText = " (reduced by {})".format(uniBit(reduction)) #If it is, make sure to inform.
       rc = payCost(num(card.Cost) - reduction, cost)
       if rc == "ABORT": 
@@ -1214,7 +1216,9 @@ def intPlay(card, cost = 'not_free'):
          card.moveToTable(0, 0 * playerside - yaxisMove(card), False)
          notify("{}{} to play {}{}{}.".format(ActionCost, rc, card, extraText,MUtext))
    else:
-      rc = payCost(card.Cost, cost)
+      reduction = reduceCost(card, action, num(card.Cost)) #Checking to see if the cost is going to be reduced by cards we have in play.
+      if reduction: extraText = " (reduced by {})".format(uniBit(reduction)) #If it is, make sure to inform.
+      rc = payCost(num(card.Cost) - reduction, cost)
       if rc == "ABORT": 
          me.Actions += NbReq # If the player didn't notice they didn't have enough bits, we give them back their action
          return # If the player didn't have enough money to pay and aborted the function, then do nothing.
@@ -1230,7 +1234,7 @@ def intPlay(card, cost = 'not_free'):
       else:
          card.moveToTable(0, 0 * playerside - yaxisMove(card), False)
          notify("{}{} to play {}{}.".format(ActionCost, rc, card, extraText))           
-   executeAutomations(card,'play')
+   executeAutomations(card,action)
 
 def chkTargeting(card):
    if debugVerbosity >= 1: notify(">>> chkTargeting(){}".format(extraASDebug())) #Debug
@@ -1670,6 +1674,7 @@ def executePlayScripts(card, action):
       effectType = re.search(r'(on[A-Za-z]+|while[A-Za-z]+):', AutoS)
       if ((effectType.group(1) == 'onRez' and action != 'rez') or
           (effectType.group(1) == 'onPlay' and action != 'play') or
+          (effectType.group(1) == 'onInstall' and action != 'install') or
           (effectType.group(1) == 'onScore' and action != 'score') or
           (effectType.group(1) == 'onLiberation' and action != 'liberate') or
           (effectType.group(1) == 'onTrash' and (action != 'trash' or action!= 'uninstall' or action != 'derez')) or
@@ -3035,34 +3040,35 @@ def customScript(card, action = 'play'): # Scripts that are complex and fairly u
          shuffle(group)                  
          card.moveTo(me.piles['Trash/Archives(Face-up)'])
          notify("{}'s Mystery Box has automatically installed {} free of cost".format(me,selectedProgram))
-      else:
-         iter = 0
-         for c in group.top(5):
-            c.moveToTable((70 * iter) - 150, 0 - yaxisMove(card), False)
-            c.highlight = RevealedColor
-            if c.type != 'Program': c.moveToBottom(group)
-            else: iter +=1
-         if iter > 1: # If we found any programs in the top 5
-            notify("{} activates the Mystery Box and reveals {} Programs from the top of their Stack. They now have to select one to bring into play at no cost".format(me, iter))
-            confirm("The cards with the white highlight on the table are the programs that existed within the top 5 cards of your Stack\
-                   \nPlease Target one of them (shift + click) and then double click on the Mystery Box again to complete this action")
-         elif iter == 1: customScript(card,'use') # Recursion FTW!
-         else: notify("{} activates the Mystery Box but it fizzles out.".format(me))
+   elif card.name == 'Security Purge' and action == 'score':
+      group = me.piles['R&D/Stack']
+      haveTarget = False
+      iter = 0
+      for c in group.top(3):
+         c.moveToTable((70 * iter) - 150, 0 - yaxisMove(card), False)
+         c.orientation ^= Rot90
+         if c.type != 'Ice': c.moveTo(me.piles['Trash/Archives(Face-up)'])
+         else: iter +=1
+      if iter: # If we found any ice in the top 3
+         notify("{} initiates a Security Purge and reveals {} Ice from the top of their R&D. These ice are automatically installed and rezzed".format(me, iter))
+      else: notify("{} initiates a Security Purge but it finds nothing to purge.".format(me))
    elif action == 'use': useCard(card)
 
 def atTurnStartEndEffects(Time = 'Start'): # Function which triggers card effects at the start or end of the turn.
-   if debugVerbosity >= 1: notify(">>> atTurnStartEndEffects(){}".format(extraASDebug())) #Debug
+   if debugVerbosity >= 1: notify(">>> atTurnStartEndEffects() at time: {}".format(Time)) #Debug
    if not Automations['Start/End-of-Turn']: return
    TitleDone = False
    for card in table:
-      if debugVerbosity >= 4: notify("#### {} Autoscript: {}".format(card, card.AutoScript))
+      if card.controller != me: continue
+      if debugVerbosity >= 4: notify("### {} Autoscript: {}".format(card, card.AutoScript))
       Autoscripts = card.AutoScript.split('||')
       for AutoScript in Autoscripts:
-         if debugVerbosity >= 4: notify("#### split Autoscript: {}".format(AutoScript))
+         if debugVerbosity >= 4: notify("### split Autoscript: {}".format(AutoScript))
          effect = re.search(r'atTurn(Start|End):([A-Z][A-Za-z]+)([0-9]+)([A-Za-z0-9 ]+)(.*)', AutoScript)
-         if card.owner != me or not effect: continue
-         if re.search(r'excludeDummy', AutoScript) and card.highlight == DummyColor: return
-         if re.search(r'onlyforDummy', AutoScript) and card.highlight != DummyColor: return
+         if debugVerbosity >= 2 and effect: notify("!!! effects: {}".format(effect.groups()))
+         if not effect: continue
+         if re.search(r'excludeDummy', AutoScript) and card.highlight == DummyColor: continue
+         if re.search(r'onlyforDummy', AutoScript) and card.highlight != DummyColor: continue
          if effect.group(1) != Time: continue # If it's a start-of-turn effect and we're at the end, or vice-versa, do nothing.
          if effect.group(5) and re.search(r'isOptional', effect.group(5)) and not confirm("{} can have the following optional ability activated at the start of your turn:\n\n[ {} {} {} ]\n\nDo you want to activate it?".format(card.name, effect.group(2), effect.group(3),effect.group(4))): continue
          if not TitleDone: notify(":::{}'s {}-of-Turn Effects:::".format(me,effect.group(1)))
@@ -3081,6 +3087,8 @@ def atTurnStartEndEffects(Time = 'Start'): # Function which triggers card effect
             DrawX(passedScript, announceText, card, notification = 'Automatic')
          if effect.group(2) == 'Refill' or effect.group(2) == 'Remove':
             TokensX(passedScript, announceText, card, notification = 'Automatic')
+         if effect.group(2) == 'Inflict':
+            InflictX(passedScript, announceText, card, notification = 'Automatic')
    if me.counters['Bit Pool'].value < 0: 
       notify(":::Warning::: {}'s {}-of-turn effects cost more Bits than {} had in their Bit Pool!".format(me,Time,me))
    if ds == 'corp' and Time =='Start': draw(me.piles['R&D/Stack'])
@@ -3107,12 +3115,12 @@ def TrialError(group, x=0, y=0): # Debugging
       whisper("This function is only for development purposes")
       return
    testcards = ["777b9d2d-c80b-48b7-bfb6-b914506a7c10", # Iceberg
-                "b831a447-7e27-46ee-9af0-39280b74809e", # Marcel DeSoleil
-                "8b1d2a26-6a13-430f-8dc6-a0c8174d779d", # Food Fight
+                "021db7be-99df-43a3-9f71-833ca5df8313", # Security Purge
+                "55701d77-7a54-4bcc-ab3a-6e21192a8cff", # Cerberus
                 "b38002e9-f6a5-40a2-a458-cbeab6902d4d", # Government Contract
                 "12c24446-1d49-4c37-a14d-3bb3c7360317", # Mobile Barricade
                 "a7a021a5-7321-42d8-b3b0-7a627b71ca9c", # Mastermind
-                "6d78bc38-5d0c-4fe4-97c1-74492c2156e7", # Hunting Pack
+                "cf31bca5-829e-47ef-ac80-5d881dd72f27", # Pattel Antibody
                 "b5712c36-5e00-4e5d-836a-43d9047b5a4a"] # Arasaka Owns You
    if not ds: ds = "corp"
    me.setGlobalVariable('ds', ds) 
