@@ -217,6 +217,10 @@ Will reduce the cost for using programs by the number of bit tokens on the card 
 This Is used in combination with -perX usually and it merely divides the multiplier by the given amount. (E.g. see Food Fight)
 When used in the RequestInt core command, it makes sure the player gives a number that can be cleanly divided.
 
+### -ignore
+
+It is used for cards like Project Venice, where we need to start counting a multiplier after a certain level.
+
 ### -from / -to 
 
 Used by the DrawX core command to decide on from which pile and to which pile to send the cards it's drawing. 

@@ -648,7 +648,7 @@ def addXadvancementCounter(card, x=0, y=0):
    mute()
    count = askInteger("Add how many counters?", 1)
    if count == None: return
-   card.markers[Advance] += count
+   card.markers[mdict['Advance']] += count
    if card.isFaceUp == True: notify("{} adds {} advancement counters on {}.".format(me,count,card))
    else: notify("{} adds {} advancement counters on a card.".format(me,count))
 
@@ -665,8 +665,8 @@ def delXadvancementCounter(card, x = 0, y = 0):
 def advanceCardM(card, x = 0, y = 0):
    if debugVerbosity >= 1: notify(">>> advanceCardM(){}".format(extraASDebug())) #Debug
    mute()
-   card.markers[Advance] -= 1
-   if ( card.isFaceUp == True): notify("{} removes 1 advancement counter on {}.".format(me,card))
+   card.markers[mdict['Advance']] -= 1
+   if (card.isFaceUp == True): notify("{} removes 1 advancement counter on {}.".format(me,card))
    else: notify("{} removes 1 advancement counter on a card.".format(me))
 
 #---------------------
@@ -835,7 +835,7 @@ def getBit(group, x = 0, y = 0):
    
 def scrAgenda(card, x = 0, y = 0):
    if debugVerbosity >= 1: notify(">>> scrAgenda(){}".format(extraASDebug())) #Debug
-   global Stored_Type, Stored_Keywords, scoredAgendas
+   global Stored_Type, Stored_Keywords, Stored_AutoActions, scoredAgendas
    mute()
    cheapAgenda = False
    if card.markers[mdict['Scored']] > 0: 
@@ -851,10 +851,11 @@ def scrAgenda(card, x = 0, y = 0):
    if ds == 'runner': 
       Stored_Type[card] = card.Type
       Stored_Keywords[card] = getKeywords(card)
+      Stored_AutoActions[card] = card.AutoAction
       agendaTxt = "liberate"
    else: agendaTxt = "score"
    if Stored_Type[card] == "Agenda":
-      if ds == 'corp' and card.markers[mdict['Advance']] < card.Stat:
+      if ds == 'corp' and card.markers[mdict['Advance']] < Stored_Cost[card]:
          if confirm("You have not advanced this agenda enough to score it. Bypass?"): 
             cheapAgenda = True
             currentAdv = card.markers[mdict['Advance']]
@@ -866,7 +867,6 @@ def scrAgenda(card, x = 0, y = 0):
          notify("{} cancels their action".format(me))
          return
       ap = num(card.Stat)
-      card.markers[mdict['Advance']] = 0
       card.markers[mdict['Not_rezzed']] = 0
       card.markers[mdict['Scored']] += 1
       apReduce = findCounterPrevention(ap, 'Agenda Points', me)
@@ -879,6 +879,7 @@ def scrAgenda(card, x = 0, y = 0):
       if cheapAgenda: notify(":::Warning:::{} did not have enough advance tokens ({} out of {})! ".format(card,currentAdv,card.Cost))
       if me.counters['Agenda Points'].value >= 7 : notify("{} wins the game!".format(me))
       executeAutomations(card,agendaTxt)
+      card.markers[mdict['Advance']] = 0 # We only want to clear the advance counters after the automations, as they may still be used.
    else:
       whisper ("You can't score this card")
 
@@ -2893,12 +2894,15 @@ def per(Autoscript, card = None, count = 0, targetCards = None, notification = N
          elif re.search(r'Property',per.group(3)):
             property = re.search(r'Property{([\w ]+)}',per.group(3))
             multiplier = card.properties[property.group(1)]
+      if debugVerbosity >= 3: notify("### Checking ignore") # Debug.            
+      ignS = re.search(r'-ignore([0-9]+)',Autoscript)
+      if ignS: ignore = num(ignS.group(1))
       if debugVerbosity >= 3: notify("### Checking div") # Debug.            
       divS = re.search(r'-div([0-9]+)',Autoscript)
       if divS: div = num(divS.group(1))
    else: multiplier = 1
-   if debugVerbosity >= 3: notify("<<< per() with Multiplier: {}".format(multiplier / div)) # Debug
-   return multiplier / div
+   if debugVerbosity >= 3: notify("<<< per() with Multiplier: {}".format((multiplier - ignore) / div)) # Debug
+   return (multiplier - ignore) / div
 
 def chkPlayer(Autoscript, controller, manual): # Function for figuring out if an autoscript is supposed to target an opponent's cards or ours.
 # Function returns 1 if the card is not only for rivals, or if it is for rivals and the card being activated it not ours.
@@ -3122,7 +3126,7 @@ def TrialError(group, x=0, y=0): # Debugging
    if not (len(players) == 1 or debugVerbosity >= 0): 
       whisper("This function is only for development purposes")
       return
-   testcards = ["777b9d2d-c80b-48b7-bfb6-b914506a7c10", # Iceberg
+   testcards = ["726261ca-6517-4b4c-86bb-85851d3be67d", # Project Venice
                 "021db7be-99df-43a3-9f71-833ca5df8313", # Security Purge
                 "55701d77-7a54-4bcc-ab3a-6e21192a8cff", # Cerberus
                 "b38002e9-f6a5-40a2-a458-cbeab6902d4d", # Government Contract
