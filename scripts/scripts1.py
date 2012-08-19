@@ -65,7 +65,7 @@ newturn = True #We use this variable to track whether a player has yet to do any
 endofturn = False #We use this variable to know if the player is in the end-of-turn phase.
 failedRequirement = True #A Global boolean that we set in case an Autoscript cost cannot be paid, so that we know to abort the rest of the script.
 
-debugVerbosity = 0
+debugVerbosity = -1
 #---------------------------------------------------------------------------
 # Constants
 #---------------------------------------------------------------------------
@@ -415,7 +415,7 @@ def intJackin(group, x = 0, y = 0):
    global ds, maxActions,newturn,endofturn, currAction, debugVerbosity
    global Stored_Type, Stored_Cost, Stored_Keywords, Stored_AutoActions
    mute()
-   debugVerbosity = 0 # Jackin means normal game.
+   debugVerbosity = -1 # Jackin means normal game.
    ds = ""
    if not table.isTwoSided(): 
       if not confirm("This game is designed to be played on a two-sided table. Things will be wonky otherwise!! Please start a new game and makde sure the  the appropriate button is checked. Are you sure you want to continue?"): return   
@@ -3052,7 +3052,7 @@ def atTurnStartEndEffects(Time = 'Start'): # Function which triggers card effect
 def TrialError(group, x=0, y=0): # Debugging
    global Stored_Type, Stored_Cost, ds, Stored_Keywords, debugVerbosity
    mute()
-   if debugVerbosity:
+   if debugVerbosity >=0:
       if debugVerbosity == 0: debugVerbosity = 1
       elif debugVerbosity == 1: debugVerbosity = 2
       elif debugVerbosity == 2: debugVerbosity = 3
@@ -3061,12 +3061,12 @@ def TrialError(group, x=0, y=0): # Debugging
       notify("Debug verbosity is now: {}".format(debugVerbosity))
       return
    for player in players:
-      if player.name == 'db0' or player.name == 'dbzer0': debugVerbosity = 1
-   if not (len(players) == 1 or debugVerbosity): 
+      if player.name == 'db0' or player.name == 'dbzer0': debugVerbosity = 0
+   if not (len(players) == 1 or debugVerbosity >= 0): 
       whisper("This function is only for development purposes")
       return
    testcards = ["69c20033-c399-423b-99e5-aa9fcd1dc6ee", # Fetal AI
-                "6628e5b5-3fb9-48c3-91b4-d78b87a4f969", # Cybertech Think Tank
+                "c241c38c-7327-4ec7-aa98-5b55a247fbb1", # Terrorist Reprisal
                 "a92eaff1-65f4-4717-b1a9-e89b1ed4e647", # Doppleganger
                 "b08f2b3b-a5b4-4d83-a1e1-f6093e9b4ac7", # Emergency Rig
                 "a18d1b13-452d-4b33-85ad-f04dceccdfa0", # Executive Boot Camp
