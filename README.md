@@ -58,7 +58,11 @@ Changelog
  * Many other bugfixes
  * Now InflictX can be used as a cost with -isCost. As long as some damage is inflicted, the next part of the Autoscript will work, otherwise it will exit but the cost will remain paid (eg see Corporate headhunters)
  * Added debugging functionality and hooks based on verbosity setting. Should make my life easier from now on.
-
+ * Autoscript for discarding cards from hand.
+ * Automatic Damage prevention can now be switched on/off
+ * Actions for damage now take account damage prevention
+ * Added a way for cards with abilities on access to be activated by the corp even when unrezzed.
+ 
 ### 2.1.6 
 
 Fixed some regression bugs on the autoscripts.  You'll need to download the new patch.
