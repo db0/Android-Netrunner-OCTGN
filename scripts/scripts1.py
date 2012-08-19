@@ -236,10 +236,10 @@ def pileName(group):
    elif group.name == 'R&D/Stack':
       if group.player.getGlobalVariable('ds') == 'corp': name = 'R&D'
       else: name = 'Stack'
-   elif group.name == 'HQ/hand':
+   elif group.name == 'Archives(Hidden)': name = 'Hidden Archives'
+   else:
       if group.player.getGlobalVariable('ds') == 'corp': name = 'HQ'
       else: name = 'Hand'
-   else: name = 'Hidden Archives'
    if debugVerbosity >= 4: notify("<<< pileName() by returning: {}".format(name))
    return name
    
@@ -1282,20 +1282,16 @@ def playForFree(card, x = 0, y = 0):
 def movetoTopOfStack(card):
    if debugVerbosity >= 1: notify(">>> movetoTopOfStack(){}".format(extraASDebug())) #Debug
    mute()
-   Stack = me.piles['R&D/Stack']
-   card.moveTo(Stack)
-   if ( ds == "runner"): nameStack = "Stack"
-   else: nameStack = "R&D"
-   notify ( "{} moves a card to top of {}.".format(me,nameStack) )
+   deck = me.piles['R&D/Stack']
+   card.moveTo(deck)
+   notify ("{} moves a card to top of their {}.".format(me,pileName(deck)))
 
 def movetoBottomOfStack(card):
    if debugVerbosity >= 1: notify(">>> movetoBottomOfStack(){}".format(extraASDebug())) #Debug
    mute()
-   Stack = me.piles['R&D/Stack']
-   card.moveToBottom(Stack)
-   if ( ds == "runner"): nameStack = "Stack"
-   else: nameStack = "R&D"
-   notify ( "{} moves a card to Bottom of {}.".format(me,nameStack) )
+   deck = me.piles['R&D/Stack']
+   card.moveToBottom(deck)
+   notify ("{} moves a card to Bottom of their {}.".format(me,pileName(deck)))
 
 def handtoArchives(card):
    if debugVerbosity >= 1: notify(">>> handtoArchives(){}".format(extraASDebug())) #Debug
@@ -1365,17 +1361,10 @@ def showatrandom(group):
 def handtoStack (group, silent = False):
    if debugVerbosity >= 1: notify(">>> handtoStack(){}".format(extraASDebug())) #Debug
    mute()
-   Stack = me.piles['R&D/Stack']
-   handlength = len(me.hand)
-   for c in me.hand: c.moveTo(Stack)
-   if ds == "runner":
-      nameHand = "Hand"
-      nameStack = "Stack"
-   else:
-      nameHand = "HQ"
-      nameStack = "R&D"
-   if not silent: notify ("{} moves {} to {}.".format(me,nameHand,nameStack))
-   else: return(nameHand,nameStack,handlength) # Return a tuple with the names of the groups.
+   deck = me.piles['R&D/Stack']
+   for c in group: c.moveTo(deck)
+   if not silent: notify ("{} moves their whole {} to their {}.".format(me,pileName(group),pileName(deck)))
+   else: return(pileName(group),pileName(deck),len(group)) # Return a tuple with the names of the groups.
 
 
 #------------------------------------------------------------------------------
@@ -1421,25 +1410,19 @@ def drawMany(group, count = None, destination = None, silent = False):
 def toarchives(group = me.piles['Archives(Hidden)']):
    if debugVerbosity >= 1: notify(">>> toarchives(){}".format(extraASDebug())) #Debug
    mute()
-   Archives = me.piles['Archives(Hidden)']
+   Archives = me.piles['Trash/Archives(Face-up)']
    for c in group: c.moveTo(Archives)
    #Archives.shuffle()
-   notify ("{} moves Hidden Archives to Archives.".format(me))
+   notify ("{} moves Hidden Archives to their Face-Up Archives.".format(me))
 
 def archivestoStack(group, silent = False):
    if debugVerbosity >= 1: notify(">>> archivestoStack(){}".format(extraASDebug())) #Debug
    mute()
-   Stack = me.piles['R&D/Stack']
-   for c in group: c.moveTo(Stack)
+   deck = me.piles['R&D/Stack']
+   for c in group: c.moveTo(deck)
    #Archives.shuffle()
-   if ( ds == "runner"):
-      nameTrash = "Trash"
-      nameStack = "Stack"
-   else:
-      nameTrash = "Archives"
-      nameStack = "R&D"
-   if not silent: notify ("{} moves {} to {}.".format(me,nameTrash,nameStack))
-   else: return(nameTrash,nameStack)
+   if not silent: notify ("{} moves their {} to {}.".format(me,pileName(group),pileName(deck)))
+   else: return(pileName(group),pileName(deck))
 
 def mill(group):
    if debugVerbosity >= 1: notify(">>> mill(){}".format(extraASDebug())) #Debug
@@ -1447,15 +1430,10 @@ def mill(group):
    mute()
    count = askInteger("Mill how many cards?", 1)
    if count == None: return
-   if ( ds == "runner"):
-      for c in group.top(count): c.moveTo(me.piles['Trash/Archives(Face-up)'])
-      nameStack = "Stack"
-      nameTrash = "Trash"
-   else:
-      for c in group.top(count): c.moveTo(me.piles['Archives(Hidden)'])
-      nameStack = "HQ"
-      nameTrash = "Archives H"
-      notify("{} mills the top {} cards from {} to {}.".format(me, count,nameStack,nameTrash))
+   if ds == "runner": destination = me.piles['Trash/Archives(Face-up)']
+   else: destination = me.piles['Archives(Hidden)']
+   for c in group.top(count): c.moveTo(destination)
+   notify("{} mills the top {} cards from their {} to {}.".format(me, count,pileName(group),pileName(destination)))
 
 def moveXtopCardtoBottomStack(group):
    if debugVerbosity >= 1: notify(">>> moveXtopCardtoBottomStack(){}".format(extraASDebug())) #Debug
@@ -1464,9 +1442,7 @@ def moveXtopCardtoBottomStack(group):
    count = askInteger("Move how many cards?", 1)
    if count == None: return
    for c in group.top(count): c.moveToBottom(group)
-   if ds == "runner": nameStack = "Stack"
-   else: nameStack = "R&D"
-   notify("{} moves the top {} cards from {} to bottom of {}.".format(me, count,nameStack,nameStack))
+   notify("{} moves the top {} cards from their {} to the bottom of {}.".format(me, count,pileName(group),pileName(group)))
 
 
 def checkDeckNoLimit (group):

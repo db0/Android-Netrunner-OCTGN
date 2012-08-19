@@ -212,7 +212,13 @@ For example: `Reduce#CostUse-forProgram`
 
 Will reduce the cost for using programs by the number of bit tokens on the card itself.
 
-### * -div
+### -div
 
 This Is used in combination with -perX usually and it merely divides the multiplier by the given amount. (E.g. see Food Fight)
 When used in the RequestInt core command, it makes sure the player gives a number that can be cleanly divided.
+
+### -from / -to 
+
+Used by the DrawX core command to decide on from which pile and to which pile to send the cards it's drawing. 
+
+For example: `Draw2Cards-toTrash` would send 2 cards from the player's R&D or Stack to their trash.
