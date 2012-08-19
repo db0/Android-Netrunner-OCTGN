@@ -48,6 +48,13 @@ How the custom fonts look like
 
 Changelog
 ---------
+
+### 2.1.8
+
+Proteus now Fully Automated!
+
+Most changes in 2.1.7, so take a look there for an idea of what to expect ;)
+
 ### 2.1.7
 
  * Added function which intercepts and reduces counter increase commands depending on specific markers. 
@@ -68,6 +75,7 @@ Changelog
  * CreateDummy will now inform to pass control if the Dummy card is for the opponent
  * InflictX now works though atTurnStart/End (e.g. Cerberus)
  * Fixed the Agenda scoring checking the advance counters against the wrong number.
+ * Made hidden resources work normally for auto-actions
  
 ### 2.1.6 
 

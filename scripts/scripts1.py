@@ -83,15 +83,15 @@ mdict = dict(Advance = ("Advance", "73b8d1f2-cd54-41a9-b689-3726b7b86f4f"),
              MinusOne= ("Temporary-1", "48ceb18b-5521-4d3f-b5fb-c8212e8bcbae"),
              DaemonMU = ("Daemon MU", "6e46d937-786c-4618-b02c-d7d5ffd3b1a5"),
              BaseLink = ("Base Link", "226b0f44-bbdc-4960-86cd-21f404265562"),
-             virusButcherBoy = ("Butcher Boy","5831fb18-7cdf-44d2-8685-bdd392bb9f1c"),
-             virusCascade = ("Cascade","723a0cca-7a05-46a8-a681-6e06666042ee"),
-             virusCockroach = ("Cockroach","cda4cfcb-6f2d-4a7f-acaf-d796b8d1edee"),
-             virusGremlin = ("Gremlin","032d2efa-e722-4218-ba2b-699dc80f0b94"),
-             virusThought = ("Thought","811b9153-93cb-4898-ad9f-68864452b9f4"),
-             virusFait = ("Fait","72c89567-72aa-446d-a9ea-e158c22c113a"),
-             virusBoardwalk = ("Boardwalk","8c48db01-4f12-4653-a31a-3d22e9f5b6e9"),
-             virusIncubate = ("Incubate","eccc2ee3-2bca-4563-8196-54de4909d313"),
-             virusPattel = ("Pattel","93a124c4-d2fe-4f58-9531-1396675c64dd"),
+             virusButcherBoy = ("Butcher Boy virus","5831fb18-7cdf-44d2-8685-bdd392bb9f1c"),
+             virusCascade = ("Cascade virus","723a0cca-7a05-46a8-a681-6e06666042ee"),
+             virusCockroach = ("Cockroach virus","cda4cfcb-6f2d-4a7f-acaf-d796b8d1edee"),
+             virusGremlin = ("Gremlin virus","032d2efa-e722-4218-ba2b-699dc80f0b94"),
+             virusThought = ("Thought virus","811b9153-93cb-4898-ad9f-68864452b9f4"),
+             virusFait = ("Fait virus","72c89567-72aa-446d-a9ea-e158c22c113a"),
+             virusBoardwalk = ("Boardwalk virus","8c48db01-4f12-4653-a31a-3d22e9f5b6e9"),
+             virusIncubate = ("Incubate virus","eccc2ee3-2bca-4563-8196-54de4909d313"),
+             virusPattel = ("Pattel virus","93a124c4-d2fe-4f58-9531-1396675c64dd"),
              protectionMeatDMG = ("Meat Damage protection","f50fbac7-a147-4941-8d77-56cf9ea672ea"),
              protectionNetDMG = ("Net Damage protection","84527bb1-6b34-4ace-9b11-7e19a6e353c7"),
              protectionBrainDMG = ("Brain damage protection","8a0612d7-202b-44ec-acdc-84ff93e7968d"),
@@ -2320,16 +2320,10 @@ def TokensX(Autoscript, announceText, card, targetCards = None, notification = N
             count = 0 # If we don't have any markers, we have obviously nothing to remove.
          modtokens = -count * multiplier
       if action.group(3) == 'Virus' and count == 999: # This combination means that the Corp is cleaning all viruses.
-         targetCard.markers[mdict['virusButcherBoy']] = 0
-         targetCard.markers[mdict['virusCascade']] = 0
-         targetCard.markers[mdict['virusCockroach']] = 0
-         targetCard.markers[mdict['virusGremlin']] = 0
-         targetCard.markers[mdict['virusThought']] = 0      
-         targetCard.markers[mdict['virusBoardwalk']] = 0
-         targetCard.markers[mdict['virusIncubate']] = 0
          for c in table: 
-            if c.Type == 'Data Fort' and c.owner == me: c.markers[mdict['virusFait']] = 0 # Fait viruses exist on Data Forts, so we clean all of them there.
-            if c.Type == 'Ice' and c.owner == me: c.markers[mdict['virusPattel']] = 0 # Pattel viruses exist on Ice, so we clean all of them there.
+            if c.owner != me: continue # We only clear our own viruses.
+            for key in c.markers: # New style to grab every virus.
+               if re.search(r'virus',key[0]): c.markers[key] = 0
       else: targetCard.markers[token] += modtokens
    if abs(num(action.group(2))) == abs(999): total = 'all'
    else: total = abs(modtokens)
@@ -3143,13 +3137,13 @@ def TrialError(group, x=0, y=0): # Debugging
    if not (len(players) == 1 or debugVerbosity >= 0): 
       whisper("This function is only for development purposes")
       return
-   testcards = ["413364d6-d82e-430b-b395-ce64e1cae6ff", # ACME Savings and Loan
-                "47860d05-7874-4471-b872-185d031af848", # Streetware Distributor
-                "55701d77-7a54-4bcc-ab3a-6e21192a8cff", # Cerberus
+   testcards = ["2923281e-0a03-45bb-8290-3e77e4df1f32", # Scaldan
+                "e784b4d2-556c-4f36-a980-c2972ae050fa", # Taxman
+                "8d182806-6834-4795-bad4-f51899490607", # Vienna 22
                 "31cb5ed8-ca36-4637-b78f-ec10c1c28526", # Rent-to-Own Contract # This will need one of those markers that have their own abilities
                 "63818d50-46e4-4ca9-b009-6290cefd53da", # Prearranged Drop
                 "bf9ede81-feac-489b-b9ec-f690f6b68d63", # Precision Bribery
-                "ca9c6887-8db7-444e-9c83-d7cd59ee4774", # Sunburst Cranial Interface
+                "b5712c36-5e00-4e5d-836a-43d9047b5a4a", # Arasaka Owns
                 "8d326b53-11f3-4e29-bd2b-35b3eb5472ec"] # Viral Pipeline
    if not ds: ds = "corp"
    me.setGlobalVariable('ds', ds) 
