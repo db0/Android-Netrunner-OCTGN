@@ -1674,7 +1674,7 @@ def executePlayScripts(card, action):
           (effectType.group(1) == 'onPlay' and action != 'play') or
           (effectType.group(1) == 'onScore' and action != 'score') or
           (effectType.group(1) == 'onLiberation' and action != 'liberate') or
-          (effectType.group(1) == 'onTrash' and (action != 'trash' or action!= 'uninstall')) or
+          (effectType.group(1) == 'onTrash' and (action != 'trash' or action!= 'uninstall' or action != 'derez')) or
           (effectType.group(1) == 'onDerez' and action != 'derez')): continue # We don't want onPlay effects to activate onTrash for example.
       if re.search(r'-isOptional', AutoS):
          if not confirm("This card has an optional ability you can activate at this point. Do you want to do so?"): 
@@ -2070,7 +2070,7 @@ def chkWarn(card, Autoscript): # Function for checking that an autoscript announ
             return 'ABORT'
    return 'OK'
 
-def GainX(Autoscript, announceText, card, targetCards = None, notification = None, n = 0): # Function for modifying counters or global variables
+def GainX(Autoscript, announceText, card, targetCards = None, notification = None, n = 0): # Core Command for modifying counters or global variables
    if debugVerbosity >= 1: notify(">>> GainX(){}".format(extraASDebug(Autoscript))) #Debug
    if targetCards is None: targetCards = []
    global maxActions
@@ -2165,7 +2165,7 @@ def GainX(Autoscript, announceText, card, targetCards = None, notification = Non
    if debugVerbosity >= 4: notify("<<< Gain()")
    return announceString
 
-def TransferX(Autoscript, announceText, card, targetCards = None, notification = None, n = 0): # Function for converting tokens to counter values
+def TransferX(Autoscript, announceText, card, targetCards = None, notification = None, n = 0): # Core Command for converting tokens to counter values
    if debugVerbosity >= 1: notify(">>> TransferX(){}".format(extraASDebug())) #Debug
    if targetCards is None: targetCards = []
    #breakadd = 1
@@ -2220,7 +2220,7 @@ def TransferX(Autoscript, announceText, card, targetCards = None, notification =
    if debugVerbosity >= 4: notify("<<< TransferX()")
    return announceString   
 
-def TokensX(Autoscript, announceText, card, targetCards = None, notification = None, n = 0): # Function for adding tokens to cards
+def TokensX(Autoscript, announceText, card, targetCards = None, notification = None, n = 0): # Core Command for adding tokens to cards
    if debugVerbosity >= 1: notify(">>> TokensX(){}".format(extraASDebug())) #Debug
    if targetCards is None: targetCards = []
    if len(targetCards) == 0:
@@ -2324,7 +2324,7 @@ def TokensX(Autoscript, announceText, card, targetCards = None, notification = N
    if debugVerbosity >= 4: notify("<<< TokensX()")
    return announceString
  
-def DrawX(Autoscript, announceText, card, targetCards = None, notification = None, n = 0): # Function for drawing X Cards from the house deck to your hand.
+def DrawX(Autoscript, announceText, card, targetCards = None, notification = None, n = 0): # Core Command for drawing X Cards from the house deck to your hand.
    if debugVerbosity >= 1: notify(">>> DrawX(){}".format(extraASDebug())) #Debug
    if targetCards is None: targetCards = []
    destiVerb = 'draw'
@@ -2356,7 +2356,7 @@ def DrawX(Autoscript, announceText, card, targetCards = None, notification = Non
    if debugVerbosity >= 4: notify("<<< DrawX()")
    return announceString
 
-def DiscardX(Autoscript, announceText, card, targetCards = None, notification = None, n = 0): # Function for drawing X Cards from the house deck to your hand.
+def DiscardX(Autoscript, announceText, card, targetCards = None, notification = None, n = 0): # Core Command for drawing X Cards from the house deck to your hand.
    if debugVerbosity >= 1: notify(">>> DiscardX(){}".format(extraASDebug())) #Debug
    if targetCards is None: targetCards = []
    action = re.search(r'\bDiscard([0-9]+)Card', Autoscript)
@@ -2380,7 +2380,7 @@ def DiscardX(Autoscript, announceText, card, targetCards = None, notification = 
    if debugVerbosity >= 4: notify("<<< DiscardX()")
    return (announceString,count)
          
-def ReshuffleX(Autoscript, announceText, card, targetCards = None, notification = None, n = 0): # A Function for reshuffling a pile into the R&D/Stack
+def ReshuffleX(Autoscript, announceText, card, targetCards = None, notification = None, n = 0): # A Core Command for reshuffling a pile into the R&D/Stack
    if debugVerbosity >= 1: notify(">>> ReshuffleX(){}".format(extraASDebug())) #Debug
    if targetCards is None: targetCards = []
    mute()
@@ -2403,7 +2403,7 @@ def ReshuffleX(Autoscript, announceText, card, targetCards = None, notification 
    if debugVerbosity >= 4: notify("<<< ReshuffleX()")
    return (announceString, X)
 
-def ShuffleX(Autoscript, announceText, card, targetCards = None, notification = None, n = 0): # A Function for reshuffling a pile into the R&D/Stack
+def ShuffleX(Autoscript, announceText, card, targetCards = None, notification = None, n = 0): # A Core Command for reshuffling a pile into the R&D/Stack
    if debugVerbosity >= 1: notify(">>> ShuffleX(){}".format(extraASDebug())) #Debug
    if targetCards is None: targetCards = []
    mute()
@@ -2421,7 +2421,7 @@ def ShuffleX(Autoscript, announceText, card, targetCards = None, notification = 
    if debugVerbosity >= 4: notify("<<< ShuffleX()")
    return announceString
    
-def RollX(Autoscript, announceText, card, targetCards = None, notification = None, n = 0): # Function for drawing X Cards from the house deck to your hand.
+def RollX(Autoscript, announceText, card, targetCards = None, notification = None, n = 0): # Core Command for drawing X Cards from the house deck to your hand.
    if debugVerbosity >= 1: notify(">>> RollX(){}".format(extraASDebug())) #Debug
    if targetCards is None: targetCards = []
    action = re.search(r'\bRoll([0-9]+)Dice', Autoscript)
@@ -2434,7 +2434,7 @@ def RollX(Autoscript, announceText, card, targetCards = None, notification = Non
    if debugVerbosity >= 4: notify("<<< RollX()")
    return (announceString, d6)
 
-def RequestInt(Autoscript, announceText, card, targetCards = None, notification = None, n = 0): # Function for drawing X Cards from the house deck to your hand.
+def RequestInt(Autoscript, announceText, card, targetCards = None, notification = None, n = 0): # Core Command for drawing X Cards from the house deck to your hand.
    if debugVerbosity >= 1: notify(">>> RequestInt(){}".format(extraASDebug())) #Debug
    if targetCards is None: targetCards = []
    action = re.search(r'\bRequestInt(-Min)?([0-9]*)', Autoscript)
@@ -2453,7 +2453,7 @@ def RequestInt(Autoscript, announceText, card, targetCards = None, notification 
    if debugVerbosity >= 4: notify("<<< RequestInt()")
    return (announceText, number) # We do not modify the announcement with this function.
    
-def RunX(Autoscript, announceText, card, targetCards = None, notification = None, n = 0): # Function for drawing X Cards from the house deck to your hand.
+def RunX(Autoscript, announceText, card, targetCards = None, notification = None, n = 0): # Core Command for drawing X Cards from the house deck to your hand.
    if debugVerbosity >= 1: notify(">>> RunX(){}".format(extraASDebug())) #Debug
    if targetCards is None: targetCards = []
    action = re.search(r'\bRun([A-Z][A-Za-z& ]+)', Autoscript)
@@ -2465,7 +2465,7 @@ def RunX(Autoscript, announceText, card, targetCards = None, notification = None
    if debugVerbosity >= 4: notify("<<< RunX()")
    return announceString
 
-def SimplyAnnounce(Autoscript, announceText, card, targetCards = None, notification = None, n = 0): # Function for drawing X Cards from the house deck to your hand.
+def SimplyAnnounce(Autoscript, announceText, card, targetCards = None, notification = None, n = 0): # Core Command for drawing X Cards from the house deck to your hand.
    if debugVerbosity >= 1: notify(">>> SimplyAnnounce(){}".format(extraASDebug())) #Debug
    if targetCards is None: targetCards = []
    action = re.search(r'\bSimplyAnnounce{([A-Za-z&,\. ]+)}', Autoscript)
@@ -2475,7 +2475,7 @@ def SimplyAnnounce(Autoscript, announceText, card, targetCards = None, notificat
    if debugVerbosity >= 4: notify("<<< SimplyAnnounce()")
    return announceString
 
-def CreateDummy(Autoscript, announceText, card, targetCards = None, notification = None, n = 0): # Function for creating dummy cards.
+def CreateDummy(Autoscript, announceText, card, targetCards = None, notification = None, n = 0): # Core Command for creating dummy cards.
    if debugVerbosity >= 1: notify(">>> CreateDummy(){}".format(extraASDebug())) #Debug
    if targetCards is None: targetCards = []
    global Dummywarn
@@ -2498,7 +2498,7 @@ def CreateDummy(Autoscript, announceText, card, targetCards = None, notification
    if debugVerbosity >= 4: notify("<<< CreateDummy()")
    return announceString # Creating a dummy isn't announced.
 
-def ChooseKeyword(Autoscript, announceText, card, targetCards = None, notification = None, n = 0): # Function for marking cards to be of a different keyword than they are
+def ChooseKeyword(Autoscript, announceText, card, targetCards = None, notification = None, n = 0): # Core Command for marking cards to be of a different keyword than they are
    if debugVerbosity >= 1: notify(">>> ChooseKeyword(){}".format(extraASDebug())) #Debug
    #confirm("Reached ChooseKeyword") # Debug
    choiceTXT = ''
@@ -2541,7 +2541,7 @@ def ChooseKeyword(Autoscript, announceText, card, targetCards = None, notificati
    if debugVerbosity >= 4: notify("<<< ChooseKeyword()")
    return announceString
             
-def TraceX(Autoscript, announceText, card, targetCards = None, notification = None, n = 0): # Function for drawing X Cards from the house deck to your hand.
+def TraceX(Autoscript, announceText, card, targetCards = None, notification = None, n = 0): # Core Command for drawing X Cards from the house deck to your hand.
    if debugVerbosity >= 1: notify(">>> TraceX(){}".format(extraASDebug())) #Debug
    if targetCards is None: targetCards = []
    action = re.search(r'\bTrace([0-9]+)', Autoscript)
@@ -2554,7 +2554,7 @@ def TraceX(Autoscript, announceText, card, targetCards = None, notification = No
    if debugVerbosity >= 4: notify("<<< TraceX()")
    return announceString
 
-def ModifyStatus(Autoscript, announceText, card, targetCards = None, notification = None, n = 0): # Function for modifying the status of a card on the table.
+def ModifyStatus(Autoscript, announceText, card, targetCards = None, notification = None, n = 0): # Core Command for modifying the status of a card on the table.
    if debugVerbosity >= 1: notify(">>> ModifyStatus(){}".format(extraASDebug())) #Debug
    if targetCards is None: targetCards = []
    targetCardlist = '' # A text field holding which cards are going to get tokens.
@@ -2589,7 +2589,7 @@ def ModifyStatus(Autoscript, announceText, card, targetCards = None, notificatio
    if debugVerbosity >= 4: notify("<<< ModifyStatus()")
    return announceString
          
-def InflictX(Autoscript, announceText, card, targetCards = None, notification = None, n = 0): # Function for inflicting Damage to players (even ourselves)
+def InflictX(Autoscript, announceText, card, targetCards = None, notification = None, n = 0): # Core Command for inflicting Damage to players (even ourselves)
    if debugVerbosity >= 1: notify(">>> InflictX(){}".format(extraASDebug())) #Debug
    if targetCards is None: targetCards = []
    global DMGwarn, failedRequirement
@@ -2721,7 +2721,7 @@ def findCounterPrevention(count, counter, targetPL): # Find out if the player ha
          if count == 0: break # If we've found enough protection to alleviate all counters, stop the search.
    return preventionFound
 
-def ofwhom(Autoscript):
+def ofwhom(Autoscript): 
    if debugVerbosity >= 1: notify(">>> ofwhom(){}".format(extraASDebug())) #Debug
    if re.search(r'o[fn]Opponent', Autoscript):
       if len(players) > 1:
