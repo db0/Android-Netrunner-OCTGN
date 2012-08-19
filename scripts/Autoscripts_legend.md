@@ -145,6 +145,10 @@ This is used by both -per and -Targeted as a requirement for valid targets.
 
 Used as a requirement by -Targeted. It checks to see who the owner of the targeted card must be.
 
+#### -AutoTargeted
+
+Instead of the player selecting each target, the game engine will target all cards of the specific type.
+
 ### -per
 
 Another very important modulator. It tells the engine what the multiplier for a specific action will be. The items after -per explain how it will be used.  
@@ -233,3 +237,6 @@ When used on an AutoAction, then that autoscript can be activated even if the ca
 
 The player will be prompted if this is what they want.
 
+### -nonPreventable
+
+Used by the InflictX core command. Any damage modded like this will not trigger damage prevention cards and will always discard cards from the target player's hand.

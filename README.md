@@ -67,6 +67,7 @@ Changelog
  * Fixed a bug when trying to find a marker by its mdict keyname
  * CreateDummy will now inform to pass control if the Dummy card is for the opponent
  * InflictX now works though atTurnStart/End (e.g. Cerberus)
+ * Fixed the Agenda scoring checking the advance counters against the wrong number.
  
 ### 2.1.6 
 

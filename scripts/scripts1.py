@@ -855,7 +855,7 @@ def scrAgenda(card, x = 0, y = 0):
       agendaTxt = "liberate"
    else: agendaTxt = "score"
    if Stored_Type[card] == "Agenda":
-      if ds == 'corp' and card.markers[mdict['Advance']] < Stored_Cost[card]:
+      if ds == 'corp' and card.markers[mdict['Advance']] < num(Stored_Cost[card]):
          if confirm("You have not advanced this agenda enough to score it. Bypass?"): 
             cheapAgenda = True
             currentAdv = card.markers[mdict['Advance']]
@@ -877,8 +877,8 @@ def scrAgenda(card, x = 0, y = 0):
       scoredAgendas += 1
       notify("{} {}s {} and receives {} agenda point(s){}".format(me, agendaTxt, card, ap - apReduce,extraTXT))
       if cheapAgenda: notify(":::Warning:::{} did not have enough advance tokens ({} out of {})! ".format(card,currentAdv,card.Cost))
-      if me.counters['Agenda Points'].value >= 7 : notify("{} wins the game!".format(me))
       executeAutomations(card,agendaTxt)
+      if me.counters['Agenda Points'].value >= 7 : notify("{} wins the game!".format(me))
       card.markers[mdict['Advance']] = 0 # We only want to clear the advance counters after the automations, as they may still be used.
    else:
       whisper ("You can't score this card")
@@ -3126,12 +3126,12 @@ def TrialError(group, x=0, y=0): # Debugging
    if not (len(players) == 1 or debugVerbosity >= 0): 
       whisper("This function is only for development purposes")
       return
-   testcards = ["726261ca-6517-4b4c-86bb-85851d3be67d", # Project Venice
+   testcards = ["429dc83b-8c45-439b-b31a-b08afcb61314", # Project Zurich
                 "021db7be-99df-43a3-9f71-833ca5df8313", # Security Purge
-                "55701d77-7a54-4bcc-ab3a-6e21192a8cff", # Cerberus
-                "b38002e9-f6a5-40a2-a458-cbeab6902d4d", # Government Contract
-                "12c24446-1d49-4c37-a14d-3bb3c7360317", # Mobile Barricade
-                "a7a021a5-7321-42d8-b3b0-7a627b71ca9c", # Mastermind
+                "c7ac08e2-2190-47de-a345-6b1e9e5e770b", # Raymond Ellison
+                "31cb5ed8-ca36-4637-b78f-ec10c1c28526", # Rent-to-Own Contract # This will need one of those markers that have their own abilities
+                "40c7c36e-e055-41d1-abe4-37895d43fc4c", # Fubar
+                "076ffe36-74ac-4ff9-b6c6-c080aab0cbf0", # Hijack
                 "d0d575f8-fbd4-4da1-8c0e-bca28a7310ea", # Please Don't Choke Anyone
                 "b5712c36-5e00-4e5d-836a-43d9047b5a4a"] # Arasaka Owns You
    if not ds: ds = "corp"
