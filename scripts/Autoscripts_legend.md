@@ -1,7 +1,8 @@
 AutoScripts Legend
 ==================
 
-Some info to remember when building newer autoscripts.
+This is how the autoscripts in the Netrunner game are formatted and work.  
+For future reference and possibly benefit of other developers.
 
 
 card.AutoScript
@@ -53,7 +54,7 @@ To put this all together: lets take a script like: `A1B1G0T0:Draw2Cards$$Gain3Bi
 
 It will be parsed as follows:
 
-*Use 1 Action, and pay 1 Bit to: Draw 2 cards and Gain 3 Bits, OR Gain 1 Dgenda point.*
+*Use 1 Action, and pay 1 Bit to: Draw 2 cards and Gain 3 Bits, OR Gain 1 Agenda point.*
 
 The core commands are usually written in a form like Gain3Bits, Put1virusPattel, or TrashTarget  
 Any number is always attempted to put in the middle of the core command as part of the standard I'm using.
