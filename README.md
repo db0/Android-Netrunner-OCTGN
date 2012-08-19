@@ -62,6 +62,10 @@ Changelog
  * Automatic Damage prevention can now be switched on/off
  * Actions for damage now take account damage prevention
  * Added a way for cards with abilities on access to be activated by the corp even when unrezzed.
+ * New modulator -onlyforDummy which restricts an ability only for Dummy cards.
+ * Fixed a bug when trying to use abilities on Dummy cards
+ * Fixed a bug when trying to find a marker by its mdict keyname
+ * CreateDummy will now inform to pass control if the Dummy card is for the opponent
  
 ### 2.1.6 
 

@@ -226,6 +226,23 @@ def getKeywords(card): # A function which combines the existing card keywords, w
    Stored_Keywords[card] = keywords[:-1] # We also update the global variable for this card, which is used by many functions.
    if debugVerbosity >= 4: notify("<<< getKeywords() by returning: {}".format(keywords[:-1]))
    return keywords[:-1] # We need to remove the trailing dash '-'
+   
+def pileName(group):
+   if debugVerbosity >= 1: notify(">>> pileName(){}".format(extraASDebug())) #Debug   
+   if debugVerbosity >= 3: notify(">>> pile player: {}".format(group.player)) #Debug   
+   if group.name == 'Trash/Archives(Face-up)':
+      if group.player.getGlobalVariable('ds') == 'corp': name = 'Face-up Archives'
+      else: name = 'Trash'
+   elif group.name == 'R&D/Stack':
+      if group.player.getGlobalVariable('ds') == 'corp': name = 'R&D'
+      else: name = 'Stack'
+   elif group.name == 'HQ/hand':
+      if group.player.getGlobalVariable('ds') == 'corp': name = 'HQ'
+      else: name = 'Hand'
+   else: name = 'Hidden Archives'
+   if debugVerbosity >= 4: notify("<<< pileName() by returning: {}".format(name))
+   return name
+   
 #---------------------------------------------------------------------------
 # Card Placement functions
 #---------------------------------------------------------------------------
@@ -1386,8 +1403,9 @@ def draw(group):
 
 def drawMany(group, count = None, destination = None, silent = False):
    if debugVerbosity >= 1: notify(">>> drawMany(){}".format(extraASDebug())) #Debug
+   if debugVerbosity >= 3: notify("source: {}\ndestination: {}".format(group.name,destination.name))
    mute()
-   if not destination: destination = me.hand
+   if destination == None: destination = me.hand
    SSize = len(group)
    if SSize == 0: return 0
    if count == None: count = askInteger("Draw how many cards?", 5)
@@ -1397,6 +1415,7 @@ def drawMany(group, count = None, destination = None, silent = False):
       whisper("You do not have enough cards in your deck to complete this action. Will draw as many as possible")
    for c in group.top(count): c.moveTo(destination)
    if not silent: notify("{} draws {} cards.".format(me, count))
+   if debugVerbosity >= 4: notify("<<< drawMany() woth return: {}".format(count))
    return count
 
 def toarchives(group = me.piles['Archives(Hidden)']):
@@ -2344,6 +2363,10 @@ def DrawX(Autoscript, announceText, card, targetCards = None, notification = Non
    if re.search(r'-toStack', Autoscript): 
       destination = targetPL.piles['R&D/Stack']
       destiVerb = 'move'
+   elif re.search(r'-toTrash', Autoscript):
+      if targetPL.getGlobalVariable('ds') == 'corp': destination = targetPL.piles['Archives(Hidden)']
+      else: destination = targetPL.piles['Trash/Archives(Face-up)']
+      destiVerb = 'trash'   
    else: destination = targetPL.hand
    if destiVerb == 'draw' and ModifyDraw and not confirm("You have a card effect in play that modifies the amount of cards you draw. Have you already looked at the relevant cards on the top of your deck before taking this action?\n\n(Answering 'No' will abort this action so that you can first check your deck"): return 'ABORT'
    draw = num(action.group(1))
@@ -2356,10 +2379,17 @@ def DrawX(Autoscript, announceText, card, targetCards = None, notification = Non
    else: # Any other number just draws as many cards.
       multiplier = per(Autoscript, card, n, targetCards, notification)
       count = drawMany(source, draw * multiplier, destination, True)
+   if targetPL == me:
+      if destiVerb != 'trash': destPath = " to their {}".format(destination.name)
+      else: destPath = ''
+   else: 
+      if destiVerb != 'trash': destPath = " to {}'s {}".format(targetPL,destination.name)
+      else: destPath = ''
+   if debugVerbosity >= 3: notify("### About to announce.")
    if count == 0: return announceText # If there are no cards, then we effectively did nothing, so we don't change the notification.
    if notification == 'Quick': announceString = "{} draws {} cards".format(announceText, count)
-   elif targetPL == me: announceString = "{} {} {} cards from their {} to their {}".format(announceText, destiVerb, count, source.name, destination.name)
-   else: announceString = "{} {} {} cards from {}'s {} to {}'s {}".format(announceText, destiVerb, count, targetPL, source.name, targetPL, destination.name)
+   elif targetPL == me: announceString = "{} {} {} cards from their {}{}".format(announceText, destiVerb, count, pileName(source), destPath)
+   else: announceString = "{} {} {} cards from {}'s {}".format(announceText, destiVerb, count, targetPL, pileName(source), destPath)
    if notification and multiplier > 0: notify('--> {}.'.format(announceString))
    if debugVerbosity >= 4: notify("<<< DrawX()")
    return announceString
@@ -3099,13 +3129,13 @@ def TrialError(group, x=0, y=0): # Debugging
    if not (len(players) == 1 or debugVerbosity >= 0): 
       whisper("This function is only for development purposes")
       return
-   testcards = ["69c20033-c399-423b-99e5-aa9fcd1dc6ee", # Fetal AI
-                "c241c38c-7327-4ec7-aa98-5b55a247fbb1", # Terrorist Reprisal
+   testcards = ["777b9d2d-c80b-48b7-bfb6-b914506a7c10", # Iceberg
+                "b831a447-7e27-46ee-9af0-39280b74809e", # Marcel DeSoleil
                 "8b1d2a26-6a13-430f-8dc6-a0c8174d779d", # Food Fight
                 "b38002e9-f6a5-40a2-a458-cbeab6902d4d", # Government Contract
                 "a18d1b13-452d-4b33-85ad-f04dceccdfa0", # Executive Boot Camp
                 "67dc3672-3eee-4f7f-ab56-cf6f4a7beb5c", # Homing Missile
-                "8934fae5-bb11-4434-8e50-7bd8f23372a1", # Armadillo
+                "6d78bc38-5d0c-4fe4-97c1-74492c2156e7", # Hunting Pack
                 "b5712c36-5e00-4e5d-836a-43d9047b5a4a"] # Arasaka Owns You
    if not ds: ds = "corp"
    me.setGlobalVariable('ds', ds) 
