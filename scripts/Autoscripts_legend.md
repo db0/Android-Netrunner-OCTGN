@@ -222,3 +222,10 @@ When used in the RequestInt core command, it makes sure the player gives a numbe
 Used by the DrawX core command to decide on from which pile and to which pile to send the cards it's drawing. 
 
 For example: `Draw2Cards-toTrash` would send 2 cards from the player's R&D or Stack to their trash.
+
+### -onAccess
+
+When used on an AutoAction, then that autoscript can be activated even if the card is unrezzed (normally unrezzed cards try to rez or score on double-click)
+
+The player will be prompted if this is what they want.
+

@@ -1767,7 +1767,7 @@ def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
       Stored_AutoActions[card] = card.AutoAction
       if cFaceD: card.isFaceUp = False
    if not card.isFaceUp or card.markers[Not_rezzed]:
-      if re.search(r'onAccess',Stored_AutoActions[card]) and confirm("This card has an ability that can be activated even when unrezzed. Would you like to activate that now?"): pass
+      if re.search(r'onAccess',Stored_AutoActions[card]) and confirm("This card has an ability that can be activated even when unrezzed. Would you like to activate that now?"): card.isFaceUp = True # Activating an on-access ability requires the card to be exposed, it it's no already.
       elif Stored_Type[card] == 'Agenda': 
          scrAgenda(card) # If the player double-clicks on an Agenda card, assume they wanted to Score it.
          return
@@ -1788,6 +1788,7 @@ def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
       if (re.search(r'while(Rezzed|Scored)', autoS) 
          or re.search(r'on(Play|Score|Install)', autoS) 
          or re.search(r'AtTurn(Start|End)', autoS)
+         or card.markers[Not_rezzed] and not re.search(r'onAccess', autoS) # If the card is still unrezzed and the ability does not have "onAccess" on it, it can't be used.
          or (re.search(r'onlyforDummy', autoS) and card.highlight != DummyColor)
          or (re.search(r'(CreateDummy|excludeDummy)', autoS) and card.highlight == DummyColor)): # Dummies in general don't create new dummies
          Autoscripts.remove(autoS)
@@ -3109,8 +3110,8 @@ def TrialError(group, x=0, y=0): # Debugging
                 "b831a447-7e27-46ee-9af0-39280b74809e", # Marcel DeSoleil
                 "8b1d2a26-6a13-430f-8dc6-a0c8174d779d", # Food Fight
                 "b38002e9-f6a5-40a2-a458-cbeab6902d4d", # Government Contract
-                "a18d1b13-452d-4b33-85ad-f04dceccdfa0", # Executive Boot Camp
-                "67dc3672-3eee-4f7f-ab56-cf6f4a7beb5c", # Homing Missile
+                "12c24446-1d49-4c37-a14d-3bb3c7360317", # Mobile Barricade
+                "a7a021a5-7321-42d8-b3b0-7a627b71ca9c", # Mastermind
                 "6d78bc38-5d0c-4fe4-97c1-74492c2156e7", # Hunting Pack
                 "b5712c36-5e00-4e5d-836a-43d9047b5a4a"] # Arasaka Owns You
    if not ds: ds = "corp"
