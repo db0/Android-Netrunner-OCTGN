@@ -166,7 +166,7 @@ def uniBit(count):
       elif count == 7: return '❼'
       elif count == 8: return '❽'
       elif count == 9: return '❾'
-      elif count == 10: return '❿'
+      #elif count == 10: return '❿' Doesn't display that well. Need to fix the font.
       else: return "({})".format(count)
    else: return "({})".format(count)
  
@@ -218,8 +218,11 @@ def getKeywords(card): # A function which combines the existing card keywords, w
                if 'Wall' in keywordsList: keywordsList.remove('Wall')
                if 'Sentry' in keywordsList: keywordsList.remove('Sentry')
                if 'Code Gate' in keywordsList: keywordsList.remove('Code Gate')
-               keywordsList.append(markerKeyword.group(1))
-            else: keywordsList.append(markerKeyword.group(1))
+            if re.search(r'Breaker',markerKeyword.group(1)):
+               if 'Wall Breaker' in keywordsList: keywordsList.remove('Wall Breaker')
+               if 'Sentry Breaker' in keywordsList: keywordsList.remove('Sentry Breaker')
+               if 'Code Gate Breaker' in keywordsList: keywordsList.remove('Code Gate Breaker')
+            keywordsList.append(markerKeyword.group(1))
             
    keywords = ''
    for KW in keywordsList:
@@ -306,16 +309,16 @@ def goToEndTurn(group, x = 0, y = 0):
       whisper ("Please perform the game setup first (Ctrl+Shift+S)")
       return
    if me.Actions > 0: # If the player has not used all their actions for this turn, remind them, just in case.
-      if not confirm("You have not taken all your actions for this turn, are you sure you want to declare end of turn"): return
+      if not debugVerbosity and not confirm("You have not taken all your actions for this turn, are you sure you want to declare end of turn"): return
    if len(me.hand) > currentHandSize(): #If the player is holding more cards than their hand max. remind them that they need to discard some 
                                         # and put them in the end of turn to allow them to do so.
       if endofturn: #If the player has gone through the end of turn phase and still has more hands, allow them to continue but let everyone know.
-         if not confirm("You still hold more cards than your hand size maximum. Are you sure you want to proceed?"): return
+         if not debugVerbosity and not confirm("You still hold more cards than your hand size maximum. Are you sure you want to proceed?"): return
          else: notify(":::Warning::: {} has ended their turn holding more cards ({}) than their hand size maximum of {}".format(me,len(me.hand),currentHandSize()))
       else: # If the player just ended their turn, give them a chance to discard down to their hand maximum.
          if ds == "corp": notify ("The Corporation of {} is performing an Internal Audit before CoB.".format(me))
          else: notify ("Runner {} is rebooting all systems for the day.".format(me))
-         confirm(':::Warning:::\n\n You have more card in your hand than your current hand size maximum of {}. Please discard enough and then use the "Declare End of Turn" action again.'.format(currentHandSize()))
+         if not debugVerbosity: andconfirm(':::Warning:::\n\n You have more card in your hand than your current hand size maximum of {}. Please discard enough and then use the "Declare End of Turn" action again.'.format(currentHandSize()))
          endofturn = True
          return
    endofturn = False
@@ -330,7 +333,7 @@ def goToSot (group, x=0,y=0):
    global newturn, endofturn
    mute()
    if endofturn or currAction or newturn:
-      if not confirm("You have not yet properly ended you previous turn. You need to use F12 after you've finished all your actions.\n\nAre you sure you want to continue?"): return
+      if not debugVerbosity and not confirm("You have not yet properly ended you previous turn. You need to use F12 after you've finished all your actions.\n\nAre you sure you want to continue?"): return
       else: 
          if len(me.hand) > currentHandSize(): # Just made sure to notify of any shenanigans
             notify(":::Warning::: {} has skipped their End-of-Turn phase and they are holding more cards ({}) than their hand size maximum of {}".format(me,len(me.hand),currentHandSize()))
@@ -343,7 +346,7 @@ def goToSot (group, x=0,y=0):
    if actionsReduce: extraTXT = " ({} forfeited)".format(actionsReduce)
    else: extraTXT = ''
    if me.Actions < 0: 
-      if not confirm("Your actions were negative from last turn. Was this a result of a penalty you suffered from a card?"): 
+      if not debugVerbosity and not confirm("Your actions were negative from last turn. Was this a result of a penalty you suffered from a card?"): 
          me.Actions = maxActions - actionsReduce # If the player did not have a penalty, then we assume those were extra actions granted by some card effect, so we make sure they have their full maximum
       else: 
          me.Actions += maxActions - actionsReduce # If it was a penalty, then it remains with them for this round, which means they have less actions to use.
@@ -752,27 +755,29 @@ def payCost(count = 1, cost = 'not_free', counter = 'BP'): # A function that rem
    return uniBit(count)
 
 def reduceCost(card, type = 'Rez', fullCost = 0):
-   if debugVerbosity >= 1: notify(">>> reduceCost(){}".format(extraASDebug())) #Debug
+   if debugVerbosity >= 1: notify(">>> reduceCost(). Action is: {}".format(type)) #Debug
    #confirm("Bump ReduceCost") # Debug
    reduction = 0
    for c in table:
-      #notify("Checking {} with AS: {}".format(c, c.AutoScript)) #Debug
-      reductionSearch = re.search(r'Reduce([0-9#]+)Cost({}|All)-for([A-Z][A-Za-z ]+)(-not[A-Za-z_& ]+)?'.format(type), c.AutoScript) 
-      if c.controller == me and reductionSearch and c.markers[Not_rezzed] == 0 and c.isFaceUp: # If the above search matches (i.e. we have a card with reduction for Rez and a condition we continue to check if our card matches the condition)
-         #confirm("Possible Match found in {}".format(c)) # Debug         
-         if reductionSearch.group(3): 
-            exclusion = re.search(r'-not([A-Za-z_& ]+)'.format(type), reductionSearch.group(3))
-            if exclusion and (re.search(r'{}'.format(exclusion.group(1)), Stored_Type[card]) or re.search(r'{}'.format(exclusion.group(1)), Stored_Keywords[card])): continue
-         if reductionSearch.group(2) == 'All' or re.search(r'{}'.format(reductionSearch.group(2)), Stored_Type[card]) or re.search(r'{}'.format(reductionSearch.group(2)), Stored_Keywords[card]): #Looking for the type of card being reduced into the properties of the card we're currently paying.
-            #confirm("Search match! Group is {}".format(reductionSearch.group(1))) # Debug
-            if reductionSearch.group(1) != '#':
-               reduction += num(reductionSearch.group(1)) # if there is a match, the total reduction for this card's cost is increased.
-            else: 
-               while fullCost > 0 and c.markers[mdict['Bits']] > 0: 
-                  reduction += 1
-                  fullCost -= 1
-                  c.markers[mdict['Bits']] -= 1
-                  if fullCost == 0: break
+      Autoscripts = c.AutoScript.split('||')
+      for autoS in Autoscripts:
+         if debugVerbosity >= 3: notify("### Checking {} with AS: {}".format(c, autoS)) #Debug
+         reductionSearch = re.search(r'Reduce([0-9#]+)Cost({}|All)-for([A-Z][A-Za-z ]+)(-not[A-Za-z_& ]+)?'.format(type), autoS) 
+         if c.controller == me and reductionSearch and c.markers[Not_rezzed] == 0 and c.isFaceUp: # If the above search matches (i.e. we have a card with reduction for Rez and a condition we continue to check if our card matches the condition)
+            if debugVerbosity >= 4: notify("### Possible Match found in {}".format(c)) # Debug         
+            if reductionSearch.group(4): 
+               exclusion = re.search(r'-not([A-Za-z_& ]+)'.format(type), reductionSearch.group(4))
+               if exclusion and (re.search(r'{}'.format(exclusion.group(1)), Stored_Type[card]) or re.search(r'{}'.format(exclusion.group(1)), Stored_Keywords[card])): continue
+            if reductionSearch.group(3) == 'All' or re.search(r'{}'.format(reductionSearch.group(3)), Stored_Type[card]) or re.search(r'{}'.format(reductionSearch.group(3)), Stored_Keywords[card]): #Looking for the type of card being reduced into the properties of the card we're currently paying.
+               if debugVerbosity >= 3: notify(" ### Search match! Group is {}".format(reductionSearch.group(1))) # Debug
+               if reductionSearch.group(1) != '#':
+                  reduction += num(reductionSearch.group(1)) # if there is a match, the total reduction for this card's cost is increased.
+               else: 
+                  while fullCost > 0 and c.markers[mdict['Bits']] > 0: 
+                     reduction += 1
+                     fullCost -= 1
+                     c.markers[mdict['Bits']] -= 1
+                     if fullCost == 0: break
    return reduction
 
 def intdamageDiscard(group,x=0,y=0):
@@ -1101,12 +1106,13 @@ def useCard(card,x=0,y=0):
       card.highlight = SelectColor
       notify ( "{} uses the ability of {}.".format(me,card) )
    else:
-      if card.highlight == DummyColor and not confirm("This highlight signifies that this card is technically trashed\
-                                                     \nIn other words, this is a dummy card to signify a lingering effect left behind\
-                                                     \nClearing this dummy card will automatically remove it from the game.\
-                                                   \n\nAre you sure you want to continue?"):
-         return
-      else: card.moveTo(me.piles['Trash/Archives(Face-up)'])
+      if card.highlight == DummyColor:
+         if not confirm("This highlight signifies that this card is technically trashed\
+                       \nIn other words, this is a dummy card to signify a lingering effect left behind\
+                       \nClearing this dummy card will automatically remove it from the game.\
+                     \n\nAre you sure you want to continue?"):
+            return
+         else: card.moveTo(me.piles['Trash/Archives(Face-up)'])
       notify("{} clears {}.".format(me, card))
       card.highlight = None
       card.target(False)
@@ -1167,8 +1173,8 @@ def intPlay(card, cost = 'not_free'):
    Stored_Keywords[card] = getKeywords(card)
    Stored_Cost[card] = card.Cost
    Stored_AutoActions[card] = card.AutoAction
-   if card.Type == 'Prep' or card.Type == 'Operation': action = 'play'
-   else: action = 'install'
+   if card.Type == 'Prep' or card.Type == 'Operation': action = 'Play'
+   else: action = 'Install'
    MUtext = ''
    rc = ''
    if card.Type == 'Resource' and re.search(r'Hidden', getKeywords(card)): hiddenresource = 'yes'
@@ -1186,8 +1192,8 @@ def intPlay(card, cost = 'not_free'):
          MUtext = ", using up {} MUs".format(card.properties["MU Required"])
       if card.Type == 'Resource' and hiddenresource == 'yes':
          card.moveToTable(-180, 230 * playerside - yaxisMove(card), True)
-         notify("{} to install a card.".format(ActionCost))
-         executeAutomations(card,action)
+         notify("{} to install a hidden resource.".format(ActionCost))
+         executeAutomations(card,action.lower())
          return
       reduction = reduceCost(card, action, num(card.Cost)) #Checking to see if the cost is going to be reduced by cards we have in play.
       if reduction: extraText = " (reduced by {})".format(uniBit(reduction)) #If it is, make sure to inform.
@@ -1236,7 +1242,7 @@ def intPlay(card, cost = 'not_free'):
       else:
          card.moveToTable(0, 0 * playerside - yaxisMove(card), False)
          notify("{}{} to play {}{}.".format(ActionCost, rc, card, extraText))           
-   executeAutomations(card,action)
+   executeAutomations(card,action.lower())
 
 def chkTargeting(card):
    if debugVerbosity >= 1: notify(">>> chkTargeting(){}".format(extraASDebug())) #Debug
@@ -1672,7 +1678,7 @@ def executePlayScripts(card, action):
    if len(Autoscripts) == 0: return
    announceText = "{}".format(me)
    for AutoS in Autoscripts:
-      if debugVerbosity >= 3: notify(">>> Processing: {}".format(AutoS)) # Debug
+      if debugVerbosity >= 3: notify("### First Processing: {}".format(AutoS)) # Debug
       effectType = re.search(r'(on[A-Za-z]+|while[A-Za-z]+):', AutoS)
       if ((effectType.group(1) == 'onRez' and action != 'rez') or
           (effectType.group(1) == 'onPlay' and action != 'play') or
@@ -1689,7 +1695,7 @@ def executePlayScripts(card, action):
       selectedAutoscripts = AutoS.split('$$')
       if debugVerbosity >= 3: notify ('### selectedAutoscripts: {}'.format(selectedAutoscripts)) # Debug
       for activeAutoscript in selectedAutoscripts:
-         if debugVerbosity >= 2: notify("### Processing: {}".format(activeAutoscript)) # Debug
+         if debugVerbosity >= 2: notify("### Second Processing: {}".format(activeAutoscript)) # Debug
          if chkWarn(card, activeAutoscript) == 'ABORT': return
          targetC = findTarget(activeAutoscript)
          if debugVerbosity >= 4: notify("#### targetC: {}".format(targetC)) # Debug
@@ -1775,6 +1781,7 @@ def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
       if cFaceD: card.isFaceUp = False
    if not card.isFaceUp or card.markers[Not_rezzed]:
       if re.search(r'onAccess',Stored_AutoActions[card]) and confirm("This card has an ability that can be activated even when unrezzed. Would you like to activate that now?"): card.isFaceUp = True # Activating an on-access ability requires the card to be exposed, it it's no already.
+      elif re.search(r'Hidden',Stored_Keywords[card]): card.isFaceUp # If the card is a hidden resource, just turn it face up for its imminent use.
       elif Stored_Type[card] == 'Agenda': 
          scrAgenda(card) # If the player double-clicks on an Agenda card, assume they wanted to Score it.
          return
@@ -1806,9 +1813,9 @@ def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
    if len(Autoscripts) > 1: 
       abilConcat = "This card has multiple abilities.\nWhich one would you like to use?\n\n" # We start a concat which we use in our confirm window.
       for idx in range(len(Autoscripts)): # If a card has multiple abilities, we go through each of them to create a nicely written option for the player.
-         #notify("Autoscripts {}".format(Autoscripts)) # Debug
+         notify("Autoscripts {}".format(Autoscripts)) # Debug
          abilRegex = re.search(r"A([0-9]+)B([0-9]+)G([0-9]+)T([0-9]+):([A-Z][A-Za-z ]+)([0-9]*)([A-Za-z ]*)-?(.*)", Autoscripts[idx]) # This regexp returns 3-4 groups, which we then reformat and put in the confirm dialogue in a better readable format.
-         if debugVerbosity >= 2: notify("abilRegex is {}".format(abilRegex.groups())) # Debug
+         if debugVerbosity >= 2: notify("### Choice Regex is {}".format(abilRegex.groups())) # Debug
          if abilRegex.group(1) != '0': abilCost = 'Use {} Actions'.format(abilRegex.group(1))
          else: abilCost = '' 
          if abilRegex.group(2) != '0': 
@@ -1832,12 +1839,14 @@ def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
             else: abilX = abilRegex.group(6)
          else: abilX = abilRegex.group(6)
          abilConcat += '{}: {} to {} {} {}'.format(idx, abilCost, abilRegex.group(5), abilX, abilRegex.group(7)) # We add the first three groups to the concat. Those groups are always Gain/Hoard/Prod ## Favo/Solaris/Spice
+         if debugVerbosity >= 4: notify("### About to check rest of choice regex")
          if abilRegex.group(8): # If the autoscript has a fourth group, then it means it has subconditions. Such as "per Holding" or "by Rival"
             subconditions = abilRegex.group(8).split('$$') # These subconditions are always separated by dashes "-", so we use them to split the string
             for idx2 in range(len(subconditions)):
                if idx2 > 0: abilConcat += ' and'
                subadditions = subconditions[idx2].split('-')
                for idx3 in range(len(subadditions)):
+                  if debugVerbosity >= 4: notify("### Checking subaddition {}:{}".format(idx2,idx3))
                   if re.search(r'warn[A-Z][A-Za-z0-9 ]+', subadditions[idx3]): continue # Don't mention warnings.
                   abilConcat += ' {}'.format(subadditions[idx3]) #  Then we iterate through each distinct subcondition and display it without the dashes between them. (In the future I may also add whitespaces between the distinct words)
          abilConcat += '\n' # Finally add a newline at the concatenated string for the next ability to be listed.
@@ -2159,7 +2168,7 @@ def GainX(Autoscript, announceText, card, targetCards = None, notification = Non
    else: 
       whisper("Gain what?! (Bad autoscript)")
       return 'ABORT'
-   if notification != 'Automatic':
+   if notification != 'Automatic': # Since the verb is in the middle of the sentence, we want it lowercase.
       if action.group(1) == 'Gain': verb = 'gain'
       elif action.group(1) == 'Lose': 
          if re.search(r'isCost', Autoscript): verb = 'pay'
@@ -2168,8 +2177,10 @@ def GainX(Autoscript, announceText, card, targetCards = None, notification = Non
       if notification == 'Quick':
          if verb == 'gain' or verb == 'lose' or verb == 'pay': verb += 's'
          else: verb = 'sets to'
+   else: verb = action.group(1) # Automatic notifications start with the verb, so it needs to be capitaliszed. 
    if abs(gain) == abs(999): total = 'all' # If we have +/-999 as the count, then this mean "all" of the particular counter.
    else: total = abs(gain * multiplier) # Else it's just the absolute value which we announce they "gain" or "lose"
+   if debugVerbosity >= 3: notify("### Gainx() about to announce")
    if notification == 'Quick': announceString = "{}{} {} {} {}".format(announceText, otherTXT, verb, total, action.group(3))
    else: announceString = "{}{} {} {} {}".format(announceText, otherTXT, verb, total, action.group(3))
    if notification and multiplier > 0: notify('--> {}.'.format(announceString))
@@ -2788,6 +2799,7 @@ def per(Autoscript, card = None, count = 0, targetCards = None, notification = N
    if debugVerbosity >= 1: notify(">>> per(){}".format(extraASDebug(Autoscript))) #Debug
    if targetCards is None: targetCards = []
    div = 1
+   ignore = 0
    per = re.search(r'\b(per|upto)(Target|Parent|Every)?([A-Z][^-]*)-?', Autoscript) # We're searching for the word per, and grabbing all after that, until the first dash "-" as the variable.   
    if per: # If the  search was successful...
       if debugVerbosity >= 2: notify("Groups: {}. Count: {}".format(per.groups(),count)) #Debug
@@ -3127,11 +3139,11 @@ def TrialError(group, x=0, y=0): # Debugging
       whisper("This function is only for development purposes")
       return
    testcards = ["429dc83b-8c45-439b-b31a-b08afcb61314", # Project Zurich
-                "021db7be-99df-43a3-9f71-833ca5df8313", # Security Purge
+                "f2ddb0b1-af2b-4d8d-bac1-ea0cd8a2a43d", # Death from Above
                 "c7ac08e2-2190-47de-a345-6b1e9e5e770b", # Raymond Ellison
                 "31cb5ed8-ca36-4637-b78f-ec10c1c28526", # Rent-to-Own Contract # This will need one of those markers that have their own abilities
-                "40c7c36e-e055-41d1-abe4-37895d43fc4c", # Fubar
-                "076ffe36-74ac-4ff9-b6c6-c080aab0cbf0", # Hijack
+                "b10c3681-9bb3-481b-af86-64649b6e78db", # Morphing Tool
+                "a159245f-3527-4a0b-895a-0db43515231d", # Liberated Savings Account
                 "d0d575f8-fbd4-4da1-8c0e-bca28a7310ea", # Please Don't Choke Anyone
                 "b5712c36-5e00-4e5d-836a-43d9047b5a4a"] # Arasaka Owns You
    if not ds: ds = "corp"
