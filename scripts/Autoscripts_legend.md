@@ -196,6 +196,10 @@ example: `onPlay:RequestInt$$Lose2Bits-perX-isCost$$CreateDummy-with1Actions-per
 
 Request a number (X) from the player, the player then need to be able to pay 2 times as many bits. Then we will create a dummy card with as many counters as X.
 
+### -excludeDummy / -onlyforDummy
+
+Another modulator for the CreateDummy core command. Any core command with -excludeDumm will not be an option if the card is a dummy and the opposite if the mod is -onlyforDummy
+
 ### -isOptional
 
 Specifies a script as optional. Will prompt the player to proceed, and if the player refuses, the rest of the script will abort as well. (e.g. see card Caryatid)

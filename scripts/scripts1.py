@@ -189,9 +189,10 @@ def chooseWell(limit, choiceText, default = None):
 def findMarker(card, markerDesc): # Goes through the markers on the card and looks if one exist with a specific description
    if debugVerbosity >= 1: notify(">>> findMarker(){}".format(extraASDebug())) #Debug
    foundKey = None
+   if markerDesc in mdict: markerDesc = mdict[markerDesc][0] # If the marker description is the code of a known marker, then we need to grab the actual name of that.
    for key in card.markers:
-      if debugVerbosity >= 4: notify("### Key: {}\n\nmarkerDesc: {}".format(key[0],markerDesc)) # Debug
-      if re.search(markerDesc,key[0]):
+      if debugVerbosity >= 4: notify("### Key: {}\nmarkerDesc: {}".format(key[0],markerDesc)) # Debug
+      if re.search(r'{}'.format(markerDesc),key[0]) or markerDesc == key[0]:
          foundKey = key
          if debugVerbosity >= 3: notify("### Found {} on {}".format(key[0],card))
          break
@@ -664,16 +665,17 @@ def inputTraceValue (card, x=0,y=0, limit = 0, silent = False):
    if not card.isFaceUp and not confirm("You're already placed a bet. Replace it with a new one?"): return
    else: betReplaced = True
    limit = num(limit) # Just in case
+   if debugVerbosity >= 3: notify("### Trace Limit: {}".format(limit))
    if limit > 0: limitText = '\n\n(Max Trace Power: {})'.format(limit)
    TraceValue = askInteger("Bet How Many?{}".format(limitText), 0)
    if TraceValue == None: 
       whisper(":::Warning::: Trace bid aborted by player.")
-      return
+      return 'ABORT'
    while limit > 0 and TraceValue > limit:
       TraceValue = askInteger("Please bet equal or less than the max trace power!\nBet How Many?{}".format(limitText), 0)
       if TraceValue == None: 
          whisper(":::Warning::: Trace bid aborted by player.")
-         return
+         return 'ABORT'
    card.markers[Bits] = 0
    card.isFaceUp = False
    if not silent: 
@@ -737,7 +739,7 @@ def reduceCost(card, type = 'Rez', fullCost = 0):
    reduction = 0
    for c in table:
       #notify("Checking {} with AS: {}".format(c, c.AutoScript)) #Debug
-      reductionSearch = re.search(r'Reduce([0-9#]+)Cost{}-for([A-Z][A-Za-z ]+)(-not[A-Za-z_& ]+)?'.format(type), c.AutoScript) 
+      reductionSearch = re.search(r'Reduce([0-9#]+)Cost({}|All)-for([A-Z][A-Za-z ]+)(-not[A-Za-z_& ]+)?'.format(type), c.AutoScript) 
       if c.controller == me and reductionSearch and c.markers[Not_rezzed] == 0 and c.isFaceUp: # If the above search matches (i.e. we have a card with reduction for Rez and a condition we continue to check if our card matches the condition)
          #confirm("Possible Match found in {}".format(c)) # Debug         
          if reductionSearch.group(3): 
@@ -1662,6 +1664,7 @@ def executePlayScripts(card, action):
    for autoS in AutoScriptsSnapshot: # Checking and removing any "AtTurnStart" actions.
       if re.search(r'atTurn(Start|End)', autoS) or re.search(r'-isTrigger', autoS): Autoscripts.remove(autoS)
       if re.search(r'excludeDummy', autoS) and card.highlight == DummyColor: Autoscripts.remove(autoS)
+      if re.search(r'onlyforDummy', autoS) and card.highlight != DummyColor: Autoscripts.remove(autoS)
       if re.search(r'CustomScript', autoS): 
          customScript(card,action)
          Autoscripts.remove(autoS)
@@ -1759,12 +1762,15 @@ def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
       elif card.isFaceUp and card.markers[Bits]: payTraceValue(card)
       elif not card.isFaceUp: revealTraceValue(card)
       return
-   if not Stored_AutoActions[card]:
-      card.isFaceUp = True
+   if not card in Stored_AutoActions:
+      if not card.isFaceUp:
+         card.isFaceUp = True
+         cFaceD = True
+      else: cFaceD = False
       random = rnd(10,300)
       if debugVerbosity >= 3: notify(">>> Storing Autoactions for {}".format(card)) #Debug
       Stored_AutoActions[card] = card.AutoAction
-      card.isFaceUp = False
+      if cFaceD: card.isFaceUp = False
    if not card.isFaceUp or card.markers[Not_rezzed]:
       if re.search(r'onAccess',Stored_AutoActions[card]) and confirm("This card has an ability that can be activated even when unrezzed. Would you like to activate that now?"): pass
       elif Stored_Type[card] == 'Agenda': 
@@ -1787,8 +1793,10 @@ def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
       if (re.search(r'while(Rezzed|Scored)', autoS) 
          or re.search(r'on(Play|Score|Install)', autoS) 
          or re.search(r'AtTurn(Start|End)', autoS)
+         or (re.search(r'onlyforDummy', autoS) and card.highlight != DummyColor)
          or (re.search(r'(CreateDummy|excludeDummy)', autoS) and card.highlight == DummyColor)): # Dummies in general don't create new dummies
          Autoscripts.remove(autoS)
+   if debugVerbosity >= 3: notify("### Removed bad options")
    if len(Autoscripts) == 0:
       useCard(card) # If the card had only "WhileInstalled"  or AtTurnStart effect, just announce that it is being used.
       return      
@@ -1797,7 +1805,7 @@ def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
       for idx in range(len(Autoscripts)): # If a card has multiple abilities, we go through each of them to create a nicely written option for the player.
          #notify("Autoscripts {}".format(Autoscripts)) # Debug
          abilRegex = re.search(r"A([0-9]+)B([0-9]+)G([0-9]+)T([0-9]+):([A-Z][A-Za-z ]+)([0-9]*)([A-Za-z ]*)-?(.*)", Autoscripts[idx]) # This regexp returns 3-4 groups, which we then reformat and put in the confirm dialogue in a better readable format.
-         #confirm("abilRegex is {}".format(abilRegex.groups())) # Debug
+         if debugVerbosity >= 2: notify("abilRegex is {}".format(abilRegex.groups())) # Debug
          if abilRegex.group(1) != '0': abilCost = 'Use {} Actions'.format(abilRegex.group(1))
          else: abilCost = '' 
          if abilRegex.group(2) != '0': 
@@ -1838,7 +1846,7 @@ def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
    else: selectedAutoscripts = Autoscripts[0].split('$$')
    timesNothingDone = 0 # A variable that keeps track if we've done any of the autoscripts defined. If none have been coded, we just engage the card.
    X = 0 # Variable for special costs.
-   if card.highlight == DummyColor: lingering = ' lingering effect of' # A text that we append to point out when a player is using a lingering effect in the form of a dummy card.
+   if card.highlight == DummyColor: lingering = ' the lingering effect of' # A text that we append to point out when a player is using a lingering effect in the form of a dummy card.
    else: lingering = ''
    for activeAutoscript in selectedAutoscripts:
       #confirm("Active Autoscript: {}".format(activeAutoscript)) #Debug
@@ -2437,19 +2445,24 @@ def RollX(Autoscript, announceText, card, targetCards = None, notification = Non
 def RequestInt(Autoscript, announceText, card, targetCards = None, notification = None, n = 0): # Core Command for drawing X Cards from the house deck to your hand.
    if debugVerbosity >= 1: notify(">>> RequestInt(){}".format(extraASDebug())) #Debug
    if targetCards is None: targetCards = []
-   action = re.search(r'\bRequestInt(-Min)?([0-9]*)(-div)?([0-9]*)', Autoscript)
+   action = re.search(r'\bRequestInt(-Min)?([0-9]*)(-div)?([0-9]*)(-Max)?([0-9]*)', Autoscript)
    if action.group(2): 
       min = num(action.group(2))
       minTXT = ' (minimum {})'.format(min)
    else: 
       min = 0
       minTXT = ''
+   if action.group(6): 
+      max = num(action.group(6))
+      minTXT += ' (maximum {})'.format(max)
+   else: 
+      max = None
    if action.group(4): 
       div = num(action.group(4))
       minTXT += ' (must be a multiple of {})'.format(div)
    else: div = 1
    number = min - 1
-   while number < min or number % div:
+   while number < min or number % div or (max and number > max):
       number = askInteger("This effect requires that you provide an 'X'. What should that number be?{}".format(minTXT),min)
       if number == None: 
          whisper("Aborting Function")
@@ -2490,10 +2503,18 @@ def CreateDummy(Autoscript, announceText, card, targetCards = None, notification
    for c in table:
       if c.model == card.model and c.controller == targetPL and c.highlight == DummyColor: dummyCard = c # We check if already have a dummy of the same type on the table.
    if not dummyCard:
-      if Dummywarn and not confirm("This card's effect requires that you trash it, but its lingering effects will only work automatically while a copy is in play.\
-                                  \nFor this reason we've created a dummy card on the table and marked it with a special highlight so that you know that it's just a token.\
-                                \n\nSome cards provide you with an ability that you can activate after they're been trashed. If this card has one, you can activate it by double clicking on the dummy. Very often, this will often remove the dummy since its effect will disappear.\
-                                \n\nDo you want to see this warning again?"): Dummywarn = False
+      if Dummywarn and re.search('onOpponent',Autoscript):
+         if not confirm("This action creates an effect for your opponent and a way for them to remove it.\
+                       \nFor this reason we've created a dummy card on the table and marked it with a special highlight so that you know that it's just a token.\
+                     \n\nYou opponent can activate any abilities meant for them on the Dummy card. If this card has one, they can activate it by double clicking on the dummy. Very often, this will often remove the dummy since its effect will disappear.\
+                     \n\nOnce the dummy card is on the table, please right-click on it and select 'Pass control to {}'\
+                     \n\nDo you want to see this warning again?".format(targetPL)): Dummywarn = False      
+      elif Dummywarn:
+         if not confirm("This card's effect requires that you trash it, but its lingering effects will only work automatically while a copy is in play.\
+                       \nFor this reason we've created a dummy card on the table and marked it with a special highlight so that you know that it's just a token.\
+                     \n\nSome cards provide you with an ability that you can activate after they're been trashed. If this card has one, you can activate it by double clicking on the dummy. Very often, this will often remove the dummy since its effect will disappear.\
+                     \n\nDo you want to see this warning again?"): Dummywarn = False
+      elif re.search(r'onOpponent', Autoscript): confirm('The dummy card just created is meant for your opponent. Please right-click on it and select "Pass control to {}"'.format(targetPL))
       dummyCard = table.create(card.model, 500, 50 * playerside, 1) # This will create a fake card like the one we just created.
       dummyCard.highlight = DummyColor
    #confirm("Dummy ID: {}\n\nList Dummy ID: {}".format(dummyCard._id,passedlist[0]._id)) #Debug
@@ -2549,8 +2570,10 @@ def TraceX(Autoscript, announceText, card, targetCards = None, notification = No
    if debugVerbosity >= 1: notify(">>> TraceX(){}".format(extraASDebug())) #Debug
    if targetCards is None: targetCards = []
    action = re.search(r'\bTrace([0-9]+)', Autoscript)
-   inputTraceValue(card, limit = num(action.group(1)))
-   if action.group(1) != '0': limitText = ' (max power: {})'.format(action.group(1))
+   multiplier = per(Autoscript, card, n, targetCards)
+   Tracelimit = num(action.group(1)) * multiplier
+   inputTraceValue(card, limit = Tracelimit)
+   if action.group(1) != '0': limitText = ' (max power: {})'.format(Tracelimit)
    else: limitText = ''
    if notification == 'Quick': announceString = "{} starts a trace{}".format(announceText, limitText)
    else: announceString = "{} start a trace{}".format(announceText, limitText)
@@ -3032,6 +3055,7 @@ def atTurnStartEndEffects(Time = 'Start'): # Function which triggers card effect
          effect = re.search(r'atTurn(Start|End):([A-Z][A-Za-z]+)([0-9]+)([A-Za-z0-9 ]+)(.*)', AutoScript)
          if card.owner != me or not effect: continue
          if re.search(r'excludeDummy', AutoScript) and card.highlight == DummyColor: return
+         if re.search(r'onlyforDummy', AutoScript) and card.highlight != DummyColor: return
          if effect.group(1) != Time: continue # If it's a start-of-turn effect and we're at the end, or vice-versa, do nothing.
          if effect.group(5) and re.search(r'isOptional', effect.group(5)) and not confirm("{} can have the following optional ability activated at the start of your turn:\n\n[ {} {} {} ]\n\nDo you want to activate it?".format(card.name, effect.group(2), effect.group(3),effect.group(4))): continue
          if not TitleDone: notify(":::{}'s {}-of-Turn Effects:::".format(me,effect.group(1)))
@@ -3080,7 +3104,7 @@ def TrialError(group, x=0, y=0): # Debugging
                 "8b1d2a26-6a13-430f-8dc6-a0c8174d779d", # Food Fight
                 "b38002e9-f6a5-40a2-a458-cbeab6902d4d", # Government Contract
                 "a18d1b13-452d-4b33-85ad-f04dceccdfa0", # Executive Boot Camp
-                "901547b2-eae1-43ae-b764-c70623a6c54f", # T.K.0 2.0
+                "67dc3672-3eee-4f7f-ab56-cf6f4a7beb5c", # Homing Missile
                 "8934fae5-bb11-4434-8e50-7bd8f23372a1", # Armadillo
                 "b5712c36-5e00-4e5d-836a-43d9047b5a4a"] # Arasaka Owns You
    if not ds: ds = "corp"
