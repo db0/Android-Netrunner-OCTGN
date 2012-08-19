@@ -66,6 +66,7 @@ Changelog
  * Fixed a bug when trying to use abilities on Dummy cards
  * Fixed a bug when trying to find a marker by its mdict keyname
  * CreateDummy will now inform to pass control if the Dummy card is for the opponent
+ * InflictX now works though atTurnStart/End (e.g. Cerberus)
  
 ### 2.1.6 
 

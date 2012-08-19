@@ -96,6 +96,7 @@ mdict = dict(Advance = ("Advance", "73b8d1f2-cd54-41a9-b689-3726b7b86f4f"),
              protectionNetDMG = ("Net Damage protection","84527bb1-6b34-4ace-9b11-7e19a6e353c7"),
              protectionBrainDMG = ("Brain damage protection","8a0612d7-202b-44ec-acdc-84ff93e7968d"),
              protectionNetBrainDMG = ("Net & Brain Damage protection","42072423-2599-4e70-80b6-56127b7177d9"),
+             protectionAllDMG = ("Complete Damage protection","04d72620-17d1-4189-9abb-a2c48ddf7d42"),
              protectionVirus = ("Virus protection","6242317f-b706-4e39-b60a-32958d00a8f8"),
              BrainDMG = ("Brain Damage","05250943-0c9f-4486-bb96-481c025ce0e0"))
 
@@ -2701,6 +2702,13 @@ def findDMGProtection(DMGdone, DMGtype, targetPL): # Find out if the player has 
             DMGdone -= 1 # We reduce how much damage we still need to prevent by 1
             card.markers[mdict[altprotectionType]] -= 1 # We reduce the card's damage protection counters by 1
          if DMGdone == 0: break # If we've found enough protection to alleviate all damage, stop the search.
+   for card in table: # Finally we check for complete damage protection (i.e. protection from all types)
+      if card.controller == targetPL and card.markers[mdict['protectionAllDMG']]:
+         while DMGdone > 0 and card.markers[mdict['protectionAllDMG']] > 0: 
+            protectionFound += 1 
+            DMGdone -= 1
+            card.markers[mdict['protectionAllDMG']] -= 1 
+         if DMGdone == 0: break
    if debugVerbosity >= 4: notify("<<< findDMGProtection() by returning: {}".format(protectionFound))
    return protectionFound
 
@@ -3120,7 +3128,7 @@ def TrialError(group, x=0, y=0): # Debugging
                 "b38002e9-f6a5-40a2-a458-cbeab6902d4d", # Government Contract
                 "12c24446-1d49-4c37-a14d-3bb3c7360317", # Mobile Barricade
                 "a7a021a5-7321-42d8-b3b0-7a627b71ca9c", # Mastermind
-                "cf31bca5-829e-47ef-ac80-5d881dd72f27", # Pattel Antibody
+                "d0d575f8-fbd4-4da1-8c0e-bca28a7310ea", # Please Don't Choke Anyone
                 "b5712c36-5e00-4e5d-836a-43d9047b5a4a"] # Arasaka Owns You
    if not ds: ds = "corp"
    me.setGlobalVariable('ds', ds) 
