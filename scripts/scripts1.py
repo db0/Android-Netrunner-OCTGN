@@ -71,36 +71,59 @@ debugVerbosity = -1
 # Constants
 #---------------------------------------------------------------------------
 
-mdict = dict(Advance = ("Advance", "73b8d1f2-cd54-41a9-b689-3726b7b86f4f"),
-             Generic = ("Generic", "b384957d-22c5-4e7d-a508-3990c82f4df6"),
-             Bits = ("Bits", "19be5742-d233-4ea1-a88a-702cfec930b1"),
-             Scored = ("Scored", "10254d1f-6335-4b90-b124-b01ec131dd07"),
-             Not_rezzed = ("Not rezzed", "8105e4c7-cb54-4421-9ae2-4e276bedee90"),
-             Derezzed = ("Derezzed", "ae34ee21-5309-46b3-98de-9d428f59e243"),
-             Trace_value = ("Trace value", "01feb523-ac36-4dcd-970a-515aa8d73e37"),
-             Link_value = ("Link value", "3c429e4c-3c7a-49fb-96cc-7f84a63cc672"),
-             PlusOnePerm = ("Permanent +1", "f6230db2-d222-445f-85dd-406ea12d92f6"),
-             PlusOne= ("Temporary+1", "aa261722-e12a-41d4-a475-3cc1043166a7"),
-             MinusOne= ("Temporary-1", "48ceb18b-5521-4d3f-b5fb-c8212e8bcbae"),
-             DaemonMU = ("Daemon MU", "6e46d937-786c-4618-b02c-d7d5ffd3b1a5"),
-             BaseLink = ("Base Link", "226b0f44-bbdc-4960-86cd-21f404265562"),
-             virusButcherBoy = ("Butcher Boy virus","5831fb18-7cdf-44d2-8685-bdd392bb9f1c"),
-             virusCascade = ("Cascade virus","723a0cca-7a05-46a8-a681-6e06666042ee"),
-             virusCockroach = ("Cockroach virus","cda4cfcb-6f2d-4a7f-acaf-d796b8d1edee"),
-             virusGremlin = ("Gremlin virus","032d2efa-e722-4218-ba2b-699dc80f0b94"),
-             virusThought = ("Thought virus","811b9153-93cb-4898-ad9f-68864452b9f4"),
-             virusFait = ("Fait virus","72c89567-72aa-446d-a9ea-e158c22c113a"),
-             virusBoardwalk = ("Boardwalk virus","8c48db01-4f12-4653-a31a-3d22e9f5b6e9"),
-             virusIncubate = ("Incubate virus","eccc2ee3-2bca-4563-8196-54de4909d313"),
-             virusPattel = ("Pattel virus","93a124c4-d2fe-4f58-9531-1396675c64dd"),
-             protectionMeatDMG = ("Meat Damage protection","f50fbac7-a147-4941-8d77-56cf9ea672ea"),
-             protectionNetDMG = ("Net Damage protection","84527bb1-6b34-4ace-9b11-7e19a6e353c7"),
-             protectionBrainDMG = ("Brain damage protection","8a0612d7-202b-44ec-acdc-84ff93e7968d"),
-             protectionNetBrainDMG = ("Net & Brain Damage protection","42072423-2599-4e70-80b6-56127b7177d9"),
-             protectionAllDMG = ("Complete Damage protection","04d72620-17d1-4189-9abb-a2c48ddf7d42"),
-             protectionVirus = ("Virus protection","6242317f-b706-4e39-b60a-32958d00a8f8"),
-             BrainDMG = ("Brain Damage","05250943-0c9f-4486-bb96-481c025ce0e0"))
+mdict = dict( # A dictionary which holds all the hard coded markers (in the markers file)
+             Advance =                 ("Advance", "73b8d1f2-cd54-41a9-b689-3726b7b86f4f"),
+             Generic =                 ("Generic", "b384957d-22c5-4e7d-a508-3990c82f4df6"),
+             Bits =                    ("Bits", "19be5742-d233-4ea1-a88a-702cfec930b1"),
+             Scored =                  ("Scored", "10254d1f-6335-4b90-b124-b01ec131dd07"),
+             Not_rezzed =              ("Not rezzed", "8105e4c7-cb54-4421-9ae2-4e276bedee90"),
+             Derezzed =                ("Derezzed", "ae34ee21-5309-46b3-98de-9d428f59e243"),
+             Trace_value =             ("Trace value", "01feb523-ac36-4dcd-970a-515aa8d73e37"),
+             Link_value =              ("Link value", "3c429e4c-3c7a-49fb-96cc-7f84a63cc672"),
+             PlusOnePerm =             ("Permanent +1", "f6230db2-d222-445f-85dd-406ea12d92f6"),
+             PlusOne=                  ("Temporary+1", "aa261722-e12a-41d4-a475-3cc1043166a7"),
+             MinusOne=                 ("Temporary-1", "48ceb18b-5521-4d3f-b5fb-c8212e8bcbae"),
+             DaemonMU =                ("Daemon MU", "6e46d937-786c-4618-b02c-d7d5ffd3b1a5"),
+             BaseLink =                ("Base Link", "226b0f44-bbdc-4960-86cd-21f404265562"),
+             virusButcherBoy =         ("Butcher Boy virus","5831fb18-7cdf-44d2-8685-bdd392bb9f1c"),
+             virusCascade =            ("Cascade virus","723a0cca-7a05-46a8-a681-6e06666042ee"),
+             virusCockroach =          ("Cockroach virus","cda4cfcb-6f2d-4a7f-acaf-d796b8d1edee"),
+             virusGremlin =            ("Gremlin virus","032d2efa-e722-4218-ba2b-699dc80f0b94"),
+             virusThought =            ("Thought virus","811b9153-93cb-4898-ad9f-68864452b9f4"),
+             virusFait =               ("Fait virus","72c89567-72aa-446d-a9ea-e158c22c113a"),
+             virusBoardwalk =          ("Boardwalk virus","8c48db01-4f12-4653-a31a-3d22e9f5b6e9"),
+             virusIncubate =           ("Incubate virus","eccc2ee3-2bca-4563-8196-54de4909d313"),
+             virusPattel =             ("Pattel virus","93a124c4-d2fe-4f58-9531-1396675c64dd"),
+             protectionMeatDMG =       ("Meat Damage protection","f50fbac7-a147-4941-8d77-56cf9ea672ea"),
+             protectionNetDMG =        ("Net Damage protection","84527bb1-6b34-4ace-9b11-7e19a6e353c7"),
+             protectionBrainDMG =      ("Brain damage protection","8a0612d7-202b-44ec-acdc-84ff93e7968d"),
+             protectionNetBrainDMG =   ("Net & Brain Damage protection","42072423-2599-4e70-80b6-56127b7177d9"),
+             protectionAllDMG =        ("Complete Damage protection","04d72620-17d1-4189-9abb-a2c48ddf7d42"),
+             protectionVirus =         ("Virus protection","6242317f-b706-4e39-b60a-32958d00a8f8"),
+             BrainDMG =                ("Brain Damage","05250943-0c9f-4486-bb96-481c025ce0e0"))
 
+             
+regexHooks = dict( # A dictionary which holds the regex that then trigger each core command. 
+                   # This is so that I can modify these "hooks" only in one place as I add core commands and modulators.
+                  GainX =              re.compile(r'\b(Gain|Lose|SetTo)([0-9]+)'),
+                  CreateDummy =        re.compile(r'\bCreateDummy'),
+                  ReshuffleX =         re.compile(r'\bReshuffle([A-Za-z& ]+)'),
+                  RollX =              re.compile(r'\bRoll([0-9]+)'),
+                  RequestInt =         re.compile(r'\bRequestInt'),
+                  DiscardX =           re.compile(r'\bDiscard[0-9]+'),
+                  TokensX =            re.compile(r'\b(Put|Remove|Refill|Use|Infect)([0-9]+)'),
+                  TransferX =          re.compile(r'\bTransfer([0-9]+)'),
+                  DrawX =              re.compile(r'\bDraw([0-9]+)'),
+                  ShuffleX =           re.compile(r'\bShuffle([A-Za-z& ]+)'),
+                  RunX =               re.compile(r'\bRun([A-Za-z& ]+)'),
+                  TraceX =             re.compile(r'\bTrace([0-9]+)'),
+                  InflictX =           re.compile(r'\bInflict([0-9]+)'),
+                  ModifyStatus =       re.compile(r'(Rez|Derez|Expose|Trash|Uninstall|Possess|Exile)'),
+                  SimplyAnnounce =     re.compile(r'\bSimplyAnnounce'),
+                  ChooseKeyword =      re.compile(r'\bChooseKeyword'),
+                  CustomScript =       re.compile(r'\bCustomScript'),
+                  UseCustomAbility =   re.compile(r'\bUseCustomAbility'))
+                  
 turns = [
    'Start of Game',
    "It is now Corporation's Turn",
@@ -150,6 +173,10 @@ def chooseSide(): # Called from many functions to check if the player has chosen
         playeraxis = Yaxis
         playerside = 1
 
+def displaymatch(match):
+   if match is None:
+      return None
+   return '<Match: {}, groups={}>'.format(match.group(), match.groups())
 #---------------------------------------------------------------------------
 # Generic Netrunner functions
 #---------------------------------------------------------------------------
@@ -1702,7 +1729,7 @@ def executePlayScripts(card, action):
       elif re.search(r'excludeDummy', autoS) and card.highlight == DummyColor: Autoscripts.remove(autoS)
       elif re.search(r'onlyforDummy', autoS) and card.highlight != DummyColor: Autoscripts.remove(autoS)
       elif re.search(r'CustomScript', autoS): 
-         customScript(card,action)
+         CustomScript(card,action)
          Autoscripts.remove(autoS)
    if len(Autoscripts) == 0: return
    announceText = "{}".format(me)
@@ -1749,41 +1776,41 @@ def executePlayScripts(card, action):
             if debugVerbosity >= 2: notify("### passedscript: {}".format(passedScript)) # Debug
             if GainX(passedScript, announceText, card, targetC, notification = 'Quick', n = X) == 'ABORT': return
          else: 
-            passedScript = "{}".format(effect.group(0))
+            passedScript = effect.group(0)
             if debugVerbosity >= 2: notify("### passedscript: {}".format(passedScript)) # Debug
-            if effect.group(1) == 'Draw': 
+            if regexHooks['CreateDummy'].search(passedScript): 
+               if CreateDummy(passedScript, announceText, card, targetC, notification = 'Quick', n = X) == 'ABORT': return
+            elif regexHooks['DrawX'].search(passedScript): 
                if DrawX(passedScript, announceText, card, targetC, notification = 'Quick', n = X) == 'ABORT': return
-            if re.search(r'(Put|Remove|Refill|Use|Infect)', effect.group(1)): 
+            elif regexHooks['TokensX'].search(passedScript): 
                if TokensX(passedScript, announceText, card, targetC, notification = 'Quick', n = X) == 'ABORT': return
-            if effect.group(1) == 'Roll': 
+            elif regexHooks['RollX'].search(passedScript): 
                rollTuple = RollX(passedScript, announceText, card, targetC, notification = 'Quick', n = X)
                if rollTuple == 'ABORT': return
                X = rollTuple[1] 
-            if effect.group(1) == 'RequestInt': 
+            elif regexHooks['RequestInt'].search(passedScript): 
                numberTuple = RequestInt(passedScript, announceText, card, targetC, notification = 'Quick', n = X)
                if numberTuple == 'ABORT': return
                X = numberTuple[1] 
-            if effect.group(1) == 'Discard': 
+            elif regexHooks['DiscardX'].search(passedScript): 
                discardTuple = DiscardX(passedScript, announceText, card, targetC, notification = 'Quick', n = X)
                if discardTuple == 'ABORT': return
                X = discardTuple[1] 
-            if re.search(r'Run', effect.group(1)): 
+            elif regexHooks['RunX'].search(passedScript): 
                if RunX(passedScript, announceText, card, targetC, notification = 'Quick', n = X) == 'ABORT': return
-            if effect.group(1) == 'Trace': 
+            elif regexHooks['TraceX'].search(passedScript): 
                if TraceX(passedScript, announceText, card, targetC, notification = 'Quick', n = X) == 'ABORT': return
-            if re.search(r'Reshuffle', effect.group(1)): 
+            elif regexHooks['ReshuffleX'].search(passedScript): 
                reshuffleTuple = ReshuffleX(passedScript, announceText, card, targetC, notification = 'Quick', n = X)
                if reshuffleTuple == 'ABORT': return
                X = reshuffleTuple[1]
-            if re.search(r'Shuffle', effect.group(1)): 
+            elif regexHooks['ShuffleX'].search(passedScript): 
                if ShuffleX(passedScript, announceText, card, targetC, notification = 'Quick', n = X) == 'ABORT': return
-            if effect.group(1) == 'CreateDummy': 
-               if CreateDummy(passedScript, announceText, card, targetC, notification = 'Quick', n = X) == 'ABORT': return
-            if effect.group(1) == 'ChooseKeyword': 
+            elif regexHooks['ChooseKeyword'].search(passedScript): 
                if ChooseKeyword(passedScript, announceText, card, targetC, notification = 'Quick', n = X) == 'ABORT': return
-            if effect.group(1) == 'Inflict': 
+            elif regexHooks['InflictX'].search(passedScript): 
                if InflictX(passedScript, announceText, card, targetC, notification = 'Quick', n = X) == 'ABORT': return
-            if re.search(r'(Rez|Derez|Expose|Trash|Uninstall|Possess|Exile)', effect.group(1)): 
+            elif regexHooks['ModifyStatus'].search(passedScript): 
                if ModifyStatus(passedScript, announceText, card, targetC, notification = 'Quick', n = X) == 'ABORT': return
          if failedRequirement: break # If one of the Autoscripts was a cost that couldn't be paid, stop everything else.
          if debugVerbosity >= 3: notify ("Loop for scipt {} finished".format(passedScript))
@@ -1824,7 +1851,7 @@ def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
       return
    elif re.search(r'CustomScript', Stored_AutoActions[card]): 
       if chkTargeting(card) == 'ABORT': return
-      customScript(card,'use') # Some cards just have a fairly unique effect and there's no use in trying to make them work in the generic framework.
+      CustomScript(card,'use') # Some cards just have a fairly unique effect and there's no use in trying to make them work in the generic framework.
       return
    ### Checking if card has multiple autoscript options and providing choice to player.
    Autoscripts = Stored_AutoActions[card].split('||')
@@ -1953,35 +1980,35 @@ def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
       elif not announceText.endswith(' in order to') and not announceText.endswith(' and'): announceText += ' and'
       if debugVerbosity >= 3: notify("### Entering useAbility() Choice with Autoscript: {}".format(activeAutoscript)) # Debug
       ### Calling the relevant function depending on if we're increasing our own counters, the hoard's or putting card markers.
-      if re.search(r'\b(Gain|Lose|SetTo)([0-9]+)', activeAutoscript): announceText = GainX(activeAutoscript, announceText, card, targetC, n = X)
-      elif re.search(r'\bCreateDummy', activeAutoscript): announceText = CreateDummy(activeAutoscript, announceText, card, targetC, n = X)
-      elif re.search(r'\bReshuffle([A-Za-z& ]+)', activeAutoscript): 
+      if regexHooks['GainX'].search(activeAutoscript): announceText = GainX(activeAutoscript, announceText, card, targetC, n = X)
+      elif regexHooks['CreateDummy'].search(activeAutoscript): announceText = CreateDummy(activeAutoscript, announceText, card, targetC, n = X)
+      elif regexHooks['ReshuffleX'].search(activeAutoscript): 
          reshuffleTuple = ReshuffleX(activeAutoscript, announceText, card) # The reshuffleX() function is special because it returns a tuple.
          announceText = reshuffleTuple[0] # The first element of the tuple contains the announceText string
          X = reshuffleTuple[1] # The second element of the tuple contains the number of cards that were reshuffled from the hand in the deck.
-      elif re.search(r'\bRoll([0-9]+)', activeAutoscript): 
+      elif regexHooks['RollX'].search(activeAutoscript): 
          rollTuple = RollX(activeAutoscript, announceText, card) # Returns like reshuffleX()
          announceText = rollTuple[0] 
          X = rollTuple[1] 
-      elif re.search(r'\bRequestInt', activeAutoscript): 
+      elif regexHooks['RequestInt'].search(activeAutoscript): 
          numberTuple = RequestInt(activeAutoscript, announceText, card) # Returns like reshuffleX()
          announceText = numberTuple[0] 
          X = numberTuple[1] 
-      elif re.search(r'\bDiscard[0-9]+', activeAutoscript): 
+      elif regexHooks['DiscardX'].search(activeAutoscript): 
          discardTuple = DiscardX(activeAutoscript, announceText, card, targetC, n = X) # Returns like reshuffleX()
          announceText = discardTuple[0] 
          X = discardTuple[1] 
-      elif re.search(r'\b(Put|Remove|Refill|Use|Infect)([0-9]+)', activeAutoscript): announceText = TokensX(activeAutoscript, announceText, card, targetC, n = X)
-      elif re.search(r'\bTransfer([0-9]+)', activeAutoscript): announceText = TransferX(activeAutoscript, announceText, card, targetC, n = X)
-      elif re.search(r'\bDraw([0-9]+)', activeAutoscript): announceText = DrawX(activeAutoscript, announceText, card, targetC, n = X)
-      elif re.search(r'\bShuffle([A-Za-z& ]+)', activeAutoscript): announceText = ShuffleX(activeAutoscript, announceText, card, targetC, n = X)
-      elif re.search(r'\bRun([A-Za-z& ]+)', activeAutoscript): announceText = RunX(activeAutoscript, announceText, card, targetC, n = X)
-      elif re.search(r'\bTrace([0-9]+)', activeAutoscript): announceText = TraceX(activeAutoscript, announceText, card, targetC, n = X)
-      elif re.search(r'\bInflict([0-9]+)', activeAutoscript): announceText = InflictX(activeAutoscript, announceText, card, targetC, n = X)
-      elif re.search(r'(Rez|Derez|Expose|Trash|Uninstall|Possess|Exile)', activeAutoscript): announceText = ModifyStatus(activeAutoscript, announceText, card, targetC, n = X)
-      elif re.search(r'\bSimplyAnnounce', activeAutoscript): announceText = SimplyAnnounce(activeAutoscript, announceText, card, targetC, n = X)
-      elif re.search(r'\bChooseKeyword', activeAutoscript): announceText = ChooseKeyword(activeAutoscript, announceText, card, targetC, n = X)
-      elif re.search(r'\bUseCustomAbility', activeAutoscript): announceText = UseCustomAbility(activeAutoscript, announceText, card, targetC, n = X)
+      elif regexHooks['TokensX'].search(activeAutoscript):           announceText = TokensX(activeAutoscript, announceText, card, targetC, n = X)
+      elif regexHooks['TransferX'].search(activeAutoscript):         announceText = TransferX(activeAutoscript, announceText, card, targetC, n = X)
+      elif regexHooks['DrawX'].search(activeAutoscript):             announceText = DrawX(activeAutoscript, announceText, card, targetC, n = X)
+      elif regexHooks['ShuffleX'].search(activeAutoscript):          announceText = ShuffleX(activeAutoscript, announceText, card, targetC, n = X)
+      elif regexHooks['RunX'].search(activeAutoscript):              announceText = RunX(activeAutoscript, announceText, card, targetC, n = X)
+      elif regexHooks['TraceX'].search(activeAutoscript):            announceText = TraceX(activeAutoscript, announceText, card, targetC, n = X)
+      elif regexHooks['InflictX'].search(activeAutoscript):          announceText = InflictX(activeAutoscript, announceText, card, targetC, n = X)
+      elif regexHooks['ModifyStatus'].search(activeAutoscript):      announceText = ModifyStatus(activeAutoscript, announceText, card, targetC, n = X)
+      elif regexHooks['SimplyAnnounce'].search(activeAutoscript):    announceText = SimplyAnnounce(activeAutoscript, announceText, card, targetC, n = X)
+      elif regexHooks['ChooseKeyword'].search(activeAutoscript):     announceText = ChooseKeyword(activeAutoscript, announceText, card, targetC, n = X)
+      elif regexHooks['UseCustomAbility'].search(activeAutoscript): announceText = UseCustomAbility(activeAutoscript, announceText, card, targetC, n = X)
       else: timesNothingDone += 1
       if debugVerbosity >= 4: notify("<<< useAbility() choice") # Debug
       if announceText == 'ABORT': 
@@ -2994,8 +3021,8 @@ def autoscriptOtherPlayers(lookup, count = 1): # Function that triggers effects 
                TokensX(passedScript, costText, card, notification = 'Automatic', n = count)
    if debugVerbosity >= 4: notify("<<< autoscriptOtherPlayers()") # Debug
    
-def customScript(card, action = 'play'): # Scripts that are complex and fairly unique to specific cards, not worth making a whole generic function for them.
-   if debugVerbosity >= 1: notify(">>> customScript(){}".format(extraASDebug())) #Debug
+def CustomScript(card, action = 'play'): # Scripts that are complex and fairly unique to specific cards, not worth making a whole generic function for them.
+   if debugVerbosity >= 1: notify(">>> CustomScript(){}".format(extraASDebug())) #Debug
    global ModifyDraw
    #confirm("Customscript") # Debug
    if card.name == 'Microtech AI Interface' and action == 'use':
@@ -3140,20 +3167,20 @@ def atTurnStartEndEffects(Time = 'Start'): # Function which triggers card effect
          if debugVerbosity >= 3: notify("### passedScript: {}".format(passedScript))
          if card.highlight == DummyColor: announceText = "{}'s lingering effects:".format(card)
          else: announceText = "{}:".format(card)
-         if re.search(r'\b(Gain|Lose|SetTo)([0-9]+)', passedScript):
+         if regexHooks['GainX'].search(passedScript):
             GainX(passedScript, announceText, card, notification = 'Automatic')
-         if re.search(r'\bTransfer([0-9]+)', passedScript):
+         if regexHooks['TransferX'].search(passedScript):
             TransferX(passedScript, announceText, card, notification = 'Automatic')
-         if re.search(r'\bDraw([0-9]+)', passedScript):
+         if regexHooks['DrawX'].search(passedScript):
             DrawX(passedScript, announceText, card, notification = 'Automatic')
-         if re.search(r'\b(Put|Remove|Refill|Use|Infect)([0-9]+)', passedScript):
+         if regexHooks['TokensX'].search(passedScript):
             TokensX(passedScript, announceText, card, notification = 'Automatic')
-         if re.search(r'\bInflict([0-9]+)', passedScript):
+         if regexHooks['InflictX'].search(passedScript):
             InflictX(passedScript, announceText, card, notification = 'Automatic')
-         if re.search(r'\b(Rez|Derez|Expose|Trash|Uninstall|Possess|Exile)(Target|Parent|Multi|Myself)',passedScript):
+         if regexHooks['ModifyStatus'].search(passedScript):
             ModifyStatus(passedScript, announceText, card, notification = 'Automatic')
-         if passedScript == 'CustomScript':
-            customScript(passedScript, announceText, card, notification = 'Automatic')
+         if regexHooks['CustomScript'].search(passedScript):
+            CustomScript(passedScript, announceText, card, notification = 'Automatic')
    if me.counters['Bit Pool'].value < 0: 
       notify(":::Warning::: {}'s {}-of-turn effects cost more Bits than {} had in their Bit Pool!".format(me,Time,me))
    if ds == 'corp' and Time =='Start': draw(me.piles['R&D/Stack'])
@@ -3183,20 +3210,20 @@ def atRunStartEffects(): # Function which triggers card effects at the start eac
          if debugVerbosity >= 3: notify("### passedScript: {}".format(passedScript))
          if card.highlight == DummyColor: announceText = "{}'s lingering effects:".format(card)
          else: announceText = "{}:".format(card)
-         if re.search(r'\b(Gain|Lose|SetTo)([0-9]+)', passedScript):
+         if regexHooks['GainX'].search(passedScript):
             GainX(passedScript, announceText, card, notification = 'Automatic')
-         if re.search(r'\bTransfer([0-9]+)', passedScript):
+         if regexHooks['TransferX'].search(passedScript):
             TransferX(passedScript, announceText, card, notification = 'Automatic')
-         if re.search(r'\bDraw([0-9]+)', passedScript):
+         if regexHooks['DrawX'].search(passedScript):
             DrawX(passedScript, announceText, card, notification = 'Automatic')
-         if re.search(r'\b(Put|Remove|Refill|Use|Infect)([0-9]+)', passedScript):
+         if regexHooks['TokensX'].search(passedScript):
             TokensX(passedScript, announceText, card, notification = 'Automatic')
-         if re.search(r'\bInflict([0-9]+)', passedScript):
+         if regexHooks['InflictX'].search(passedScript):
             InflictX(passedScript, announceText, card, notification = 'Automatic')
-         if re.search(r'(Rez|Derez|Expose|Trash|Uninstall|Possess|Exile)(Target|Parent|Multi|Myself)',passedScript):
+         if regexHooks['ModifyStatus'].search(passedScript):
             ModifyStatus(passedScript, announceText, card, notification = 'Automatic')
-         if effect.group(2) == 'CustomScript':
-            customScript(passedScript, announceText, card, notification = 'Automatic')
+         if regexHooks['CustomScript'].search(passedScript):
+            CustomScript(passedScript, announceText, card, notification = 'Automatic')
    if me.counters['Bit Pool'].value < 0: 
       notify(":::Warning::: {}'s {}-of-run effects cost more Bits than {} had in their Bit Pool!".format(me,Time,me))
    if TitleDone: notify(":::--------------------------:::".format(me))   
@@ -3209,6 +3236,11 @@ def atRunStartEffects(): # Function which triggers card effects at the start eac
 def TrialError(group, x=0, y=0): # Debugging
    global Stored_Type, Stored_Cost, ds, Stored_Keywords, debugVerbosity
    mute()
+   ### Testing Corner ###
+   #for hook in regexHooks: notify("regex for {} is {}".format(hook, regexHooks[hook]))
+   if regexHooks['GainX'].search('TrashMyself'): confirm("Found!")
+   else: confirm("Not Found :(")
+   ### End Testing Corner ###
    if debugVerbosity >=0:
       if debugVerbosity == 0: debugVerbosity = 1
       elif debugVerbosity == 1: debugVerbosity = 2
