@@ -95,6 +95,7 @@
 	<player summary="Actions {#Actions} / Bits {#Bit Pool} / Hand {#HQ/Hand} / APs {#Agenda Points} / Tags {#Tags}">
       <globalvariable name="ds" value="" /> 
       <globalvariable name="specialCards" value="{}" /> 
+      <globalvariable name="wasNoisy" value="0" /> 
 		<hand name="HQ/Hand" visibility="me" ordered="false" width="63" height="88" icon="r11">
 			<cardaction menu="&#9166; Pay and Install Card" default="true" shortcut="enter" execute="intPlay" />
 			<cardaction menu="Install Card at no cost" default="false" execute="playForFree" />
