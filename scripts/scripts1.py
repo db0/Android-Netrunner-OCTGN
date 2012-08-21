@@ -60,11 +60,13 @@ playeraxis = None # Variable to keep track on which axis the player is
 DMGwarn = True # A boolean varialbe to track whether we've warned the player about doing automatic damage.
 Dummywarn = True # Much like above, but it serves to remind the player not to trash some cards.
 DummyTrashWarn = True
+PriorityInform = True # Explains what the "prioritize card" action does.
 ExposeTargetsWarn = True # A boolean variable that reminds the player to select multiple targets to expose for used by specific cards like Encryption Breakthrough
 RevealandShuffleWarn = True # Similar to above.
 newturn = True #We use this variable to track whether a player has yet to do anything this turn.
 endofturn = False #We use this variable to know if the player is in the end-of-turn phase.
 failedRequirement = True #A Global boolean that we set in case an Autoscript cost cannot be paid, so that we know to abort the rest of the script.
+lastKnownNrActions = 0 # A Variable keeping track of what the engine thinks our action counter should be, in case we change it manually.
 
 debugVerbosity = -1
 #---------------------------------------------------------------------------
@@ -146,6 +148,7 @@ SelectColor = "#009900"
 EmergencyColor = "#ff0000"
 DummyColor = "#000000" # Marks cards which are supposed to be out of play, so that players can tell them apart.
 RevealedColor = "#ffffff"
+Priority = "#ffd700"
 
 Xaxis = 'x'
 Yaxis = 'y'
@@ -274,7 +277,29 @@ def pileName(group):
       else: name = 'Hand'
    if debugVerbosity >= 4: notify("<<< pileName() by returning: {}".format(name))
    return name
-   
+
+def sortPriority(cardList):
+   if debugVerbosity >= 1: notify(">>> sortPriority()") #Debug
+   priority1 = []
+   priority2 = []
+   priority3 = []
+   sortedList = []
+   for card in cardList:
+      if card.highlight == Priority: # If a card is clearly highlighted for priority, we use its counters first.
+         priority1.append(card)
+      elif card.targetedBy and card.targetedBy == me: # If a card it targeted, we give it secondary priority in losing its counters.
+         priority2.append(card)   
+      else: # If a card is neither of the above, then the order is defined on how they were put on the table.
+         priority3.append(card) 
+   sortedList.extend(priority1)
+   sortedList.extend(priority2)
+   sortedList.extend(priority3)
+   if debugVerbosity >= 4: 
+      tlist = []
+      for sortTarget in sortedList: tlist.append(sortTarget.name) # Debug   
+      notify("<<< sortPriority() returning {}".format(tlist)) #Debug
+   return sortedList
+
 #---------------------------------------------------------------------------
 # Card Placement functions
 #---------------------------------------------------------------------------
@@ -314,7 +339,7 @@ def yaxisMove(card):
 
 def useAction(group = table, x=0, y=0, count = 1):
    if debugVerbosity >= 1: notify(">>> useAction(){}".format(extraASDebug())) #Debug
-   global currAction
+   global currAction, lastKnownNrActions
    mute()
    extraText = ''
    actionsReduce = findCounterPrevention(me.Actions, 'Actions', me)
@@ -323,8 +348,9 @@ def useAction(group = table, x=0, y=0, count = 1):
    if me.Actions < count: 
       if not confirm("You have no more actions left for this turn. Are you sure you want to continue?"): return 'ABORT'
       else: extraText = ' (Exceeding Max!)'
+   currAction += count + actionsReduce + lastKnownNrActions - me.Actions# If the player modified their action counter manually, the last two will increase/decreate our current action accordingly.
    me.Actions -= count
-   currAction += count + actionsReduce
+   lastKnownNrActions = me.Actions
    if count == 2: return "{} {} {} takes Double Action #{} and #{}{}".format(uniAction(),uniAction(),me,currAction - 1, currAction,extraText)
    elif count == 3: return "{} {} {} {} takes Triple Action #{}, #{} and #{}{}".format(uniAction(),uniAction(),uniAction(),me,currAction - 2, currAction - 1, currAction,extraText)
    else: return "{} {} takes Action #{}{}".format(uniAction(),me,currAction,extraText) # We give act +1 because otherwise the first action would be action #0.
@@ -357,15 +383,15 @@ def goToEndTurn(group, x = 0, y = 0):
    endofturn = False
    newturn = False
    currAction = 0
-   atTurnStartEndEffects('End')
-   clearNoise()
+   atTimedEffects('End')
    if ds == "corp": notify ("=> The Corporation of {} has reached CoB (Close of Business hours).".format(me))
    else: notify ("=> Runner {} has gone to sleep for the day.".format(me))
 
 def goToSot (group, x=0,y=0):
    if debugVerbosity >= 1: notify(">>> goToSot(){}".format(extraASDebug())) #Debug
-   global newturn, endofturn
+   global newturn, endofturn, lastKnownNrActions
    mute()
+   clearNoise()
    if endofturn or currAction or newturn:
       if not debugVerbosity and not confirm("You have not yet properly ended you previous turn. You need to use F12 after you've finished all your actions.\n\nAre you sure you want to continue?"): return
       else: 
@@ -376,6 +402,7 @@ def goToSot (group, x=0,y=0):
    if ds == "":
       whisper ("Please perform the game setup first (Ctrl+Shift+S)")
       return
+   currAction = 0 # We wipe it again just in case they ended their last turn badly but insist on going through the next one.
    actionsReduce = findCounterPrevention(maxActions, 'Actions', me) # Checking if the player has any effects which force them to forfeit actions.
    if actionsReduce: extraTXT = " ({} forfeited)".format(actionsReduce)
    else: extraTXT = ''
@@ -386,11 +413,12 @@ def goToSot (group, x=0,y=0):
          me.Actions += maxActions - actionsReduce # If it was a penalty, then it remains with them for this round, which means they have less actions to use.
          notify("{} is starting with {} less actions this turn, due to a penalty from a previous turn.")
    else: me.Actions = maxActions - actionsReduce
+   lastKnownNrActions = me.Actions
    myCards = (card for card in table if card.controller == me and card.owner == me)
    for card in myCards: 
       if card in Stored_Type and Stored_Type[card] != 'Ice': card.orientation &= ~Rot90 # Refresh all cards which can be used once a turn.
    newturn = True
-   atTurnStartEndEffects('Start') # Check all our cards to see if there's any Start of Turn effects active.
+   atTimedEffects('Start') # Check all our cards to see if there's any Start of Turn effects active.
    if ds == "corp": notify("=> The offices of {}'s Corporation are now open for business. They have {} actions for this turn{}.".format(me,me.Actions,extraTXT))
    else: notify ("=> Runner {} has woken up. They have {} actions for this turn{}.".format(me,me.Actions,extraTXT))
 
@@ -442,14 +470,15 @@ def switchUniBits(group,x=0,y=0,command = 'Off'):
       whisper("Bits and Actions will now be displayed as Unicode.".format(me))
       UniBits = True
 
-def ImAProAtThis(group, x=0, y=0):
+def ImAProAtThis(group = table, x=0, y=0):
    if debugVerbosity >= 1: notify(">>> ImAProAtThis(){}".format(extraASDebug())) #Debug
-   global DMGwarn, Dummywarn, DummyTrashWarn, ExposeTargetsWarn, RevealandShuffleWarn
+   global DMGwarn, Dummywarn, DummyTrashWarn, ExposeTargetsWarn, RevealandShuffleWarn, PriorityInform
    DMGwarn = False 
    Dummywarn = False 
    ExposeTargetsWarn = False
    RevealandShuffleWarn = False
    DummyTrashWarn = False
+   PriorityInform = False
    whisper("-- All Newbie warnings have been disabled. Play safe.")
         
 def createStartingCards():
@@ -547,31 +576,35 @@ def createSDF(group,x=0,y=0):
 #------------------------------------------------------------------------------
 def intRun(ActionCost, Name):
    if debugVerbosity >= 1: notify(">>> intRun(){}".format(extraASDebug())) #Debug
+   if ds != 'runner':  
+      whisper(":::ERROR:::Corporations can't run!")
+      return 'ABORT'
    notify ("{} to start a run on {}.".format(ActionCost,Name))
+   atTimedEffects('Run')
 
 def runHQ(group, x=0,Y=0):
    if debugVerbosity >= 1: notify(">>> runHQ(){}".format(extraASDebug())) #Debug
    ActionCost = useAction()
    if ActionCost == 'ABORT': return
-   if ds == "runner": intRun(ActionCost, "HQ")
+   intRun(ActionCost, "HQ")
 
 def runRD(group, x=0,Y=0):
    if debugVerbosity >= 1: notify(">>> runRD(){}".format(extraASDebug())) #Debug
    ActionCost = useAction()
    if ActionCost == 'ABORT': return
-   if ds == "runner": intRun(ActionCost, "R&D")
+   intRun(ActionCost, "R&D")
 
 def runArchives(group, x=0,Y=0):
    if debugVerbosity >= 1: notify(">>> runArchives(){}".format(extraASDebug())) #Debug
    ActionCost = useAction()
    if ActionCost == 'ABORT': return
-   if ds == "runner": intRun (ActionCost, "the Archives")
+   intRun(ActionCost, "the Archives")
 
 def runSDF(group, x=0,Y=0):
    if debugVerbosity >= 1: notify(">>> runSDF(){}".format(extraASDebug())) #Debug
    ActionCost = useAction()
    if ActionCost == 'ABORT': return
-   if ds == "runner": intRun(ActionCost, "a subsidiary data fort")
+   intRun(ActionCost, "a subsidiary data fort")
 
 #------------------------------------------------------------------------------
 # Tags...
@@ -1076,7 +1109,7 @@ def intTrashCard(card, stat, cost = "not free",  ActionCost = '', silent = False
          MUtext = ", freeing up {} MUs".format(card.properties["MU Required"])
       if rc == "free" and not silent: notify("{} trashed {} at no cost{}.".format(me, card, MUtext))
       elif not silent: notify("{} trash{} {}{}{}.".format(ActionCost, goodGrammar, card, extraText, MUtext))
-      executeAutomations(card,'trash')
+      if card.highlight != RevealedColor: executeAutomations(card,'trash') # We don't want to run automations on simply revealed cards.
       card.moveTo(cardowner.piles['Trash/Archives(Face-up)'])
    elif (ds == "runner" and cardowner == me) or (ds == "corp" and cardowner != me ): #I'm the runner and I trash my card or I 'm the corp and I trash a runner card
       card.moveTo(cardowner.piles['Trash/Archives(Face-up)'])
@@ -1171,6 +1204,31 @@ def useCard(card,x=0,y=0):
       card.highlight = None
       card.target(False)
 
+def prioritize(card,x=0,y=0):
+   if debugVerbosity >= 1: notify(">>> prioritize(){}".format(extraASDebug())) #Debug
+   global PriorityInform
+   if card.highlight == None:
+      card.highlight = Priority
+      notify ("{} prioritizes {} for using counters automatically.".format(me,card))
+      if PriorityInform: 
+         confirm("This action prioritizes a card for when selecting which card will use its counters from automated effects\
+                                \nSuch automated effects include losing counters from stealth cards for using noisy icebreakers, or preventing damage\
+                              \n\nSelecting a card for priority gives it first order in the pick. So it will use its counters before any other card will\
+                              \n\nThe second order of priority is targeting a card. A card that is targeted at the time of the effect, will lose its counters after all cards highlighted with priority have\
+                              \n\nFinally, if any part of the effect is left requiring the use of counters, any card without priority or targeted will be used.\
+                              \n\nKeep this in mind if you wish to fine tune which cards use their counter automatically first\
+                                \n(This message will not appear again)")
+         PriorityInform = False
+   else:
+      if card.highlight == DummyColor:
+         confirm(":::ERROR::: This highlight signifies that this card is a lingering effect left behind from the original\
+                \nYou cannot prioritize such cards as they would lose their highlight and thus create problems with automation.\
+                \nIf you want one such card to use counter before others, simply target (shift+click) it for the duration of the effect.")
+         return
+      notify("{} clears {}'s priority.".format(me, card))
+      card.highlight = None
+      card.target(False)
+      
 def rulings(card, x = 0, y = 0):
    if debugVerbosity >= 1: notify(">>> rulings(){}".format(extraASDebug())) #Debug
    mute()
@@ -1423,6 +1481,7 @@ def showatrandom(group):
    card = group.random()
    if card == None: return
    card.moveToTable(0, 0 - yaxisMove(card), False)
+   card.highlight = RevealedColor
    notify("{} show {} at random.".format(me,card))
 
 def handtoStack (group, silent = False):
@@ -1514,7 +1573,7 @@ def moveXtopCardtoBottomStack(group):
 
 def checkDeckNoLimit (group):
    if debugVerbosity >= 1: notify(">>> checkDeckNoLimit(){}".format(extraASDebug())) #Debug
-   if ( ds == ""):
+   if (ds == ""):
       whisper ("Choose a side first.")
       return 
    notify (" -> Checking deck of {} ...".format(me) )
@@ -1524,15 +1583,15 @@ def checkDeckNoLimit (group):
       ok = -1
       notify ( ":::ERROR::: Only {} cards in {}'s Deck.".format(loDeckCount,me) )
    mute()
-   if ( ds == "corp"):
+   if (ds == "corp"):
       loAP = 0.0
       loRunner = 0
       for card in group:
          card.moveTo(me.piles['Trash/Archives(Face-up)'])
-         if len(players) > 1: random = rnd(1,100) # Fix for multiplayer only. Makes Singleplayer setup very slow otherwise.
          if card.Type == 'Agenda': loAP += num(card.Stat)
          if card.Player == "runner": loRunner = 1
-         card.moveToBottom(group)
+      if len(players) > 1: random = rnd(1,100) # Fix for multiplayer only. Makes Singleplayer setup very slow otherwise.         
+      for card in me.piles['Trash/Archives(Face-up)']: card.moveToBottom(group) # We use a second loop because we do not want to pause after each check
       if loAP/loDeckCount < 2.0/5.0:
          notify(":::ERROR::: Only {} Agenda Points in {}'s R&D.".format(loAP/1,me))
          ok = -1
@@ -1545,8 +1604,8 @@ def checkDeckNoLimit (group):
          card.moveTo(me.piles['Trash/Archives(Face-up)'])
          if len(players) > 1: random = rnd(1,100) # Fix for multiplayer only. Makes Singleplayer setup very slow otherwise.
          if card.Player == "corp": loCorp = 1
-         card.moveToBottom(group)
-
+      if len(players) > 1: random = rnd(1,100) # Fix for multiplayer only. Makes Singleplayer setup very slow otherwise.         
+      for card in me.piles['Trash/Archives(Face-up)']: card.moveToBottom(group) # We use a second loop because we do not want to pause after each check
       if loCorp == 1:
          notify(":::ERROR::: Corp Cards found in {}'s Stack.".format(me))
          ok = -1
@@ -1726,6 +1785,7 @@ def executePlayScripts(card, action):
    for autoS in AutoScriptsSnapshot: # Checking and removing any "AtTurnStart" actions.
       if re.search(r'atTurn(Start|End)', autoS) or re.search(r'-isTrigger', autoS): Autoscripts.remove(autoS)
       elif re.search(r'onPay', autoS): Autoscripts.remove(autoS) # onPay effects are only useful before we go to the autoscripts, for the cost reduction.
+      elif re.search(r'triggerNoisy', autoS): Autoscripts.remove(autoS) # Trigger Noisy are used automatically during action use.
       elif re.search(r'excludeDummy', autoS) and card.highlight == DummyColor: Autoscripts.remove(autoS)
       elif re.search(r'onlyforDummy', autoS) and card.highlight != DummyColor: Autoscripts.remove(autoS)
       elif re.search(r'CustomScript', autoS): 
@@ -1871,7 +1931,7 @@ def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
    if len(Autoscripts) > 1: 
       abilConcat = "This card has multiple abilities.\nWhich one would you like to use?\n\n" # We start a concat which we use in our confirm window.
       for idx in range(len(Autoscripts)): # If a card has multiple abilities, we go through each of them to create a nicely written option for the player.
-         notify("Autoscripts {}".format(Autoscripts)) # Debug
+         if debugVerbosity >= 3: notify("Autoscripts {}".format(Autoscripts)) # Debug
          abilRegex = re.search(r"A([0-9]+)B([0-9]+)G([0-9]+)T([0-9]+):([A-Z][A-Za-z ]+)([0-9]*)([A-Za-z ]*)-?(.*)", Autoscripts[idx]) # This regexp returns 3-4 groups, which we then reformat and put in the confirm dialogue in a better readable format.
          if debugVerbosity >= 2: notify("### Choice Regex is {}".format(abilRegex.groups())) # Debug
          if abilRegex.group(1) != '0': abilCost = 'Use {} Actions'.format(abilRegex.group(1))
@@ -2032,8 +2092,30 @@ def chkNoisy(card): # Check if the player successfully used a noisy icebreaker, 
    if re.search(r'Noisy', Stored_Keywords[card]) and re.search(r'Icebreaker', Stored_Keywords[card]): 
       me.setGlobalVariable('wasNoisy', '1') # First of all, let all players know of this fact.
       if debugVerbosity >= 3: notify("### Noisy bit Set!") #Debug
+      NoisyCost = re.search(r'triggerNoisy([0-9]+)',card.AutoScript)
+      if debugVerbosity >= 3: 
+         if NoisyCost: notify("### Noisy Trigger Found: {}".format(NoisyCost.group(1))) #Debug      
+         else: notify("### Noisy Trigger not found. AS was: {}".format(card.AutoScript)) #Debug      
+      if NoisyCost: 
+         total = 0
+         cost = num(NoisyCost.group(1))
+         stealthCards = [c for c in table 
+                        if c.controller == me
+                        and c.isFaceUp
+                        and re.search(r'Stealth',getKeywords(c))
+                        and c.markers[mdict['Bits']]]
+         if debugVerbosity >= 3: notify("{} cards found".format(len(stealthCards)))
+         for Scard in sortPriority(stealthCards):
+            if debugVerbosity >= 4: notify("Removing from {}".format(Scard))
+            while cost > 0 and Scard.markers[mdict['Bits']] > 0:
+               Scard.markers[mdict['Bits']] -= 1
+               cost -= 1
+               total += 1
+      notify("--> {}'s {} has destroyed a total of {} bits on stealth cards".format(me,card,total))
    if debugVerbosity >= 4: notify("<<< chkNoisy()") #Debug
 
+   
+   
 def autoscriptCostUndo(card, Autoscript): # Function for undoing the cost of an autoscript.
    if debugVerbosity >= 1: notify(">>> autoscriptCostUndo(){}".format(extraASDebug())) #Debug
    whisper("--> Undoing action...")
@@ -2155,12 +2237,13 @@ def chkWarn(card, Autoscript): # Function for checking that an autoscript announ
          if not confirm("This card performs a lot of complex actions that will very difficult to undo. Are you sure you want to proceed?"):
             whisper("--> Aborting action.")
             return 'ABORT'
+   if debugVerbosity >= 4: notify("<<< chkWarn() gracefully") 
    return 'OK'
 
 def GainX(Autoscript, announceText, card, targetCards = None, notification = None, n = 0): # Core Command for modifying counters or global variables
    if debugVerbosity >= 1: notify(">>> GainX(){}".format(extraASDebug(Autoscript))) #Debug
    if targetCards is None: targetCards = []
-   global maxActions
+   global maxActions, lastKnownNrActions
    gain = 0
    action = re.search(r'\b(Gain|Lose|SetTo)([0-9]+)([A-Z][A-Za-z &]+)-?', Autoscript)
    if debugVerbosity >= 2: notify("### action groups: {}. Autoscript: {}".format(action.groups(0),Autoscript)) # Debug
@@ -2196,9 +2279,15 @@ def GainX(Autoscript, announceText, card, targetCards = None, notification = Non
          elif re.search(r'isPenalty', Autoscript): pass #If an action is marked as penalty, it means that the value can go negative and the player will have to recover that amount.
          else: targetPL.counters['Agenda Points'].value = 0
    elif re.match(r'Actions', action.group(3)): 
-      if action.group(1) == 'SetTo': targetPL.Actions = 0 # If we're setting to a specific value, we wipe what it's currently.
-      if gain == -999: targetPL.Actions = 0
-      else: targetPL.Actions += (gain * multiplier) - gainReduce
+      if action.group(1) == 'SetTo': 
+         targetPL.Actions = 0 # If we're setting to a specific value, we wipe what it's currently.
+         lastKnownNrActions = 0
+      if gain == -999: 
+         targetPL.Actions = 0
+         lastKnownNrActions = 0
+      else: 
+         targetPL.Actions += (gain * multiplier) - gainReduce
+         lastKnownNrActions += (gain * multiplier) - gainReduce # We also increase the offset, to make sure we announce the correct current action.
    elif re.match(r'MU', action.group(3)): 
       if action.group(1) == 'SetTo': targetPL.Memory = 0 # If we're setting to a specific value, we wipe what it's currently.
       else: targetPL.Memory += (gain * multiplier) - gainReduce
@@ -2562,6 +2651,7 @@ def RunX(Autoscript, announceText, card, targetCards = None, notification = None
    else: announceString = "{} start a run{}".format(announceText, runTarget)
    if notification: notify('--> {}.'.format(announceString))
    if debugVerbosity >= 4: notify("<<< RunX()")
+   atTimedEffects('Run')
    return announceString
 
 def SimplyAnnounce(Autoscript, announceText, card, targetCards = None, notification = None, n = 0): # Core Command for drawing X Cards from the house deck to your hand.
@@ -2762,15 +2852,18 @@ def findDMGProtection(DMGdone, DMGtype, targetPL): # Find out if the player has 
    if not Automations['Damage Prevention']: return 0
    protectionFound = 0
    protectionType = 'protection{}DMG'.format(DMGtype) # This is the string key that we use in the mdict{} dictionary
-   for card in table: # First we check for complete damage protection (i.e. protection from all types), which is always temporary.
-      if card.controller == targetPL and card.markers[mdict['protectionAllDMG']]:
+   carsList = sortPriority([c for c in table
+               if c.controller == targetPL
+               and c.markers])
+   for card in carsList: # First we check for complete damage protection (i.e. protection from all types), which is always temporary.
+      if card.markers[mdict['protectionAllDMG']]:
          while DMGdone > 0 and card.markers[mdict['protectionAllDMG']] > 0: 
             protectionFound += 1 
             DMGdone -= 1
             card.markers[mdict['protectionAllDMG']] -= 1 
          if DMGdone == 0: break
-   for card in table:
-      if card.controller == targetPL and card.markers[mdict[protectionType]]:
+   for card in carsList:
+      if card.markers[mdict[protectionType]]:
          while DMGdone > 0 and card.markers[mdict[protectionType]] > 0: # For each point of damage we do.
             protectionFound += 1 # We increase the protection found by 1
             DMGdone -= 1 # We reduce how much damage we still need to prevent by 1
@@ -2778,8 +2871,8 @@ def findDMGProtection(DMGdone, DMGtype, targetPL): # Find out if the player has 
          if DMGdone == 0: break # If we've found enough protection to alleviate all damage, stop the search.
    if DMGtype == 'Net' or DMGtype == 'Brain': altprotectionType = 'protectionNetBrainDMG' # To check for the combined Net & Brain protection counter as well.
    else: altprotectionType = None
-   for card in table: # We check for the combined protections after we use the single protectors.
-      if card.controller == targetPL and altprotectionType and card.markers[mdict[altprotectionType]]:
+   for card in carsList: # We check for the combined protections after we use the single protectors.
+      if altprotectionType and card.markers[mdict[altprotectionType]]:
          while DMGdone > 0 and card.markers[mdict[altprotectionType]] > 0: 
             protectionFound += 1 #
             DMGdone -= 1 
@@ -2820,22 +2913,16 @@ def findVirusProtection(card, targetPL, VirusInfected): # Find out if the player
 
 def findCounterPrevention(count, counter, targetPL): # Find out if the player has any markers preventing them form gaining specific counters (Bits, Agenda Points etc)
    if debugVerbosity >= 1: notify(">>> findCounterPrevention(){}".format(extraASDebug())) #Debug
-   #confirm("Looking for Counter Prevention") # Debug
    preventionFound = 0
    forfeit = None
    preventionType = 'preventCounter:{}'.format(counter)
    forfeitType = 'forfeitCounter:{}'.format(counter)
-   #confirm("Wut") # Debug
-   for card in table:
-      foundMarker = None # We clear the found markers before checking each card.
-      if card.controller == targetPL and card.markers:
-         for key in card.markers:
-            #confirm("Key: {}\n\nChoice: {}".format(key[0],keywords[choice])) # Debug
-            if key[0] == preventionType or key[0] == forfeitType:
-               foundMarker = key
-               #confirm("Added:{}".format(existingKeyword))
-      else: continue # If the card doesn't have any markers, it doesn't offer any prevention.
-      #confirm("Wutwut") # Debug
+   cardList = [c for c in table
+               if c.controller == targetPL
+               and c.markers]
+   for card in sortPriority(cardList):
+      foundMarker = findMarker(card, preventionType)
+      if not foundMarker: foundMarker = findMarker(card, forfeitType)
       if foundMarker: # If we found a counter prevention marker of the specific type we're looking for...
          while count > 0 and card.markers[foundMarker] > 0: # For each point of damage we do.
             preventionFound += 1 # We increase the prevention found by 1
@@ -2845,6 +2932,8 @@ def findCounterPrevention(count, counter, targetPL): # Find out if the player ha
    if debugVerbosity >= 4: notify("<<< findCounterPrevention() by returning: {}".format(preventionFound))
    return preventionFound
 
+   
+   
 def ofwhom(Autoscript): 
    if debugVerbosity >= 1: notify(">>> ofwhom(){}".format(extraASDebug())) #Debug
    if re.search(r'o[fn]Opponent', Autoscript):
@@ -3142,8 +3231,8 @@ def CustomScript(card, action = 'play'): # Scripts that are complex and fairly u
       else: notify("{} initiates a Security Purge but it finds nothing to purge.".format(me))
    elif action == 'use': useCard(card)
 
-def atTurnStartEndEffects(Time = 'Start'): # Function which triggers card effects at the start or end of the turn.
-   if debugVerbosity >= 1: notify(">>> atTurnStartEndEffects() at time: {}".format(Time)) #Debug
+def atTimedEffects(Time = 'Start'): # Function which triggers card effects at the start or end of the turn.
+   if debugVerbosity >= 1: notify(">>> atTimedEffects() at time: {}".format(Time)) #Debug
    if not Automations['Start/End-of-Turn']: return
    TitleDone = False
    for card in table:
@@ -3152,14 +3241,17 @@ def atTurnStartEndEffects(Time = 'Start'): # Function which triggers card effect
       Autoscripts = card.AutoScript.split('||')
       for AutoScript in Autoscripts:
          if debugVerbosity >= 4: notify("### split Autoscript: {}".format(AutoScript))
-         effect = re.search(r'atTurn(Start|End):(.*)', AutoScript)
+         if Time == 'Run': effect = re.search(r'at(Run)Start:(.*)', AutoScript) # Putting Run in a group, only to retain the search results groupings later
+         else: effect = re.search(r'atTurn(Start|End):(.*)', AutoScript)
          if debugVerbosity >= 2 and effect: notify("!!! effects: {}".format(effect.groups()))
          if not effect: continue
          if re.search(r'excludeDummy', AutoScript) and card.highlight == DummyColor: continue
          if re.search(r'onlyforDummy', AutoScript) and card.highlight != DummyColor: continue
          if effect.group(1) != Time: continue # If it's a start-of-turn effect and we're at the end, or vice-versa, do nothing.
          if re.search(r'isOptional', effect.group(2)) and not confirm("{} can have the following optional ability activated at the start of your turn:\n\n[ {} {} {} ]\n\nDo you want to activate it?".format(card.name, effect.group(2), effect.group(3),effect.group(4))): continue
-         if not TitleDone: notify(":::{}'s {}-of-Turn Effects:::".format(me,effect.group(1)))
+         if not TitleDone: 
+            if Time == 'Run': notify("==={}'s Start-of-Run Effects===")
+            else: notify(":::{}'s {}-of-Turn Effects:::".format(me,effect.group(1)))
          TitleDone = True
          if debugVerbosity >= 2: notify("### effects: {}".format(effect.groups())) # Debug
          #effectNR = num(effect.group(3))
@@ -3182,52 +3274,10 @@ def atTurnStartEndEffects(Time = 'Start'): # Function which triggers card effect
          if regexHooks['CustomScript'].search(passedScript):
             CustomScript(passedScript, announceText, card, notification = 'Automatic')
    if me.counters['Bit Pool'].value < 0: 
-      notify(":::Warning::: {}'s {}-of-turn effects cost more Bits than {} had in their Bit Pool!".format(me,Time,me))
+      if Time == 'Run': notify(":::Warning::: {}'s Start-of-run effects cost more Bits than {} had in their Bit Pool!".format(me,me))
+      else: notify(":::Warning::: {}'s {}-of-turn effects cost more Bits than {} had in their Bit Pool!".format(me,Time,me))
    if ds == 'corp' and Time =='Start': draw(me.piles['R&D/Stack'])
-   if TitleDone: notify(":::--------------------------:::".format(me))
-
-def atRunStartEffects(): # Function which triggers card effects at the start each run.
-   if debugVerbosity >= 1: notify(">>> atRunStartEffects()") #Debug
-   if not Automations['Play, Score and Rez'] or ds == 'corp': return # Corps don't start runs.
-   TitleDone = False
-   for card in table:
-      if card.controller != me: continue
-      if debugVerbosity >= 4: notify("### {} Autoscript: {}".format(card, card.AutoScript))
-      Autoscripts = card.AutoScript.split('||')
-      for AutoScript in Autoscripts:
-         if debugVerbosity >= 4: notify("### split Autoscript: {}".format(AutoScript))
-         effect = re.search(r'atRunStart:(.*)', AutoScript)
-         if debugVerbosity >= 2 and effect: notify("!!! effects: {}".format(effect.groups()))
-         if not effect: continue
-         if re.search(r'excludeDummy', AutoScript) and card.highlight == DummyColor: continue
-         if re.search(r'onlyforDummy', AutoScript) and card.highlight != DummyColor: continue
-         if re.search(r'isOptional', effect.group(1)) and not confirm("{} can have the following optional ability activated at the start of your run:\n\n[ {} {} {} ]\n\nDo you want to activate it?".format(card.name, effect.group(2), effect.group(3),effect.group(4))): continue
-         if not TitleDone: notify("==={}'s {}-of-Run Effects===")
-         TitleDone = True
-         if debugVerbosity >= 2: notify("### effects: {}".format(effect.groups())) # Debug
-         #effectNR = num(effect.group(3))
-         passedScript = '{}'.format(effect.group(1))
-         if debugVerbosity >= 3: notify("### passedScript: {}".format(passedScript))
-         if card.highlight == DummyColor: announceText = "{}'s lingering effects:".format(card)
-         else: announceText = "{}:".format(card)
-         if regexHooks['GainX'].search(passedScript):
-            GainX(passedScript, announceText, card, notification = 'Automatic')
-         if regexHooks['TransferX'].search(passedScript):
-            TransferX(passedScript, announceText, card, notification = 'Automatic')
-         if regexHooks['DrawX'].search(passedScript):
-            DrawX(passedScript, announceText, card, notification = 'Automatic')
-         if regexHooks['TokensX'].search(passedScript):
-            TokensX(passedScript, announceText, card, notification = 'Automatic')
-         if regexHooks['InflictX'].search(passedScript):
-            InflictX(passedScript, announceText, card, notification = 'Automatic')
-         if regexHooks['ModifyStatus'].search(passedScript):
-            ModifyStatus(passedScript, announceText, card, notification = 'Automatic')
-         if regexHooks['CustomScript'].search(passedScript):
-            CustomScript(passedScript, announceText, card, notification = 'Automatic')
-   if me.counters['Bit Pool'].value < 0: 
-      notify(":::Warning::: {}'s {}-of-run effects cost more Bits than {} had in their Bit Pool!".format(me,Time,me))
    if TitleDone: notify(":::--------------------------:::".format(me))   
-   
 
 #------------------------------------------------------------------------------
 # Debugging
@@ -3236,13 +3286,15 @@ def atRunStartEffects(): # Function which triggers card effects at the start eac
 def TrialError(group, x=0, y=0): # Debugging
    global Stored_Type, Stored_Cost, ds, Stored_Keywords, debugVerbosity
    mute()
-   ### Testing Corner ###
+   ######## Testing Corner ########
    #for hook in regexHooks: notify("regex for {} is {}".format(hook, regexHooks[hook]))
-   if regexHooks['GainX'].search('TrashMyself'): confirm("Found!")
-   else: confirm("Not Found :(")
-   ### End Testing Corner ###
+   #if regexHooks['GainX'].search('TrashMyself'): confirm("Found!")
+   #else: confirm("Not Found :(")
+   ###### End Testing Corner ######
    if debugVerbosity >=0:
-      if debugVerbosity == 0: debugVerbosity = 1
+      if debugVerbosity == 0: 
+         debugVerbosity = 1
+         ImAProAtThis() # At debug level 1, we also disable all warnings
       elif debugVerbosity == 1: debugVerbosity = 2
       elif debugVerbosity == 2: debugVerbosity = 3
       elif debugVerbosity == 3: debugVerbosity = 4
@@ -3254,14 +3306,15 @@ def TrialError(group, x=0, y=0): # Debugging
    if not (len(players) == 1 or debugVerbosity >= 0): 
       whisper("This function is only for development purposes")
       return
-   testcards = ["1c023752-448e-4c3a-8842-556a0956081d", # Badtimes
+   testcards = ["b5712c36-5e00-4e5d-836a-43d9047b5a4a", # Arasaka bla bla
                 "426f2c05-9db5-4350-b28c-cdb43e9d0b93", # Baskerville
-                "40c7c36e-e055-41d1-abe4-37895d43fc4c", # Fubar
+                "e5a60274-edf8-42f5-827b-b6f4893c364e", # Shield
                 "31cb5ed8-ca36-4637-b78f-ec10c1c28526", # Rent-to-Own Contract # This will need one of those markers that have their own abilities
-                "63818d50-46e4-4ca9-b009-6290cefd53da", # Prearranged Drop
-                "bf9ede81-feac-489b-b9ec-f690f6b68d63", # Precision Bribery
-                "b5712c36-5e00-4e5d-836a-43d9047b5a4a", # Arasaka Owns
-                "8d326b53-11f3-4e29-bd2b-35b3eb5472ec"] # Viral Pipeline
+                "f23e3180-e3d5-4a8d-a6d6-d7aa67acfdf5", # Evil Twin
+                "2645b5bb-43ef-4cd5-82c7-c82f7d6b0fcb", # Force Shield
+                "e75e20d8-2f25-4dea-9ac1-eb078877bc6a", # Raven Microcyb Owl
+                "5e9e46c9-b13c-47b0-ae34-5cdd093214e3", # Cloak
+                "82d81992-8305-4ff4-9502-8943dd951de1"] # Vewy Vewy Quiet
    if not ds: ds = "corp"
    me.setGlobalVariable('ds', ds) 
    me.counters['Bit Pool'].value = 50
@@ -3313,7 +3366,7 @@ def inspectCard(card, x = 0, y = 0): # This function shows the player the card t
                                           \nIf you're playing a runner, brain damage markers and any tokens the corp gives you will be put here.\
                                         \n\nTo remove any token manually, simply drag & drop it out of this card.")
    else:
-      if debugVerbosity: finalTXT = 'AutoScript: {}\n\n AutoAction: {}'.format(card.AutoScript,card.AutoAction)
+      if debugVerbosity > 0: finalTXT = 'AutoScript: {}\n\n AutoAction: {}'.format(card.AutoScript,card.AutoAction)
       else: finalTXT = "Card Text: {}\n\n{}\n\nWould you like to see the card rulings?".format(card.Rules,ASText)
       if confirm("{}".format(finalTXT)):
          rulings(card)

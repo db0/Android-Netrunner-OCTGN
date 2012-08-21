@@ -49,6 +49,18 @@ How the custom fonts look like
 Changelog
 ---------
 
+### 2.1.9
+
+ * **Fixed significant bug** with Core set programs & hardware, where they wouldn't activate their "onInstall" autoscrips. Please download patch -v5 to fix
+ * Cards revealed randomly from hand now get a special highlight and don't trigger trash effects.
+ * Made some tweaks to deck checking which should make it faster
+ * Playing a noisy card will now waste money out of your stealth cards according to its rules
+ * Added a "Prioritize card" function, which marks a card for using its counters for an automatic effect it applies to, before the others
+ * Targeted cards get secondary priority after the priority cards.
+ * Added trigger for starting automatic effect at the start of runs (e.g. see Cerberus)
+ * Now action # will aut-adjust in case the player modifies their counter or uses an effect to gain or lose some.
+
+
 ### 2.1.8
 
 Proteus now Fully Automated!

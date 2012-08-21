@@ -85,6 +85,7 @@
       <groupaction menu="Modify your max actions per turn" default="false" execute="modActions" />
 		<cardaction menu="Inspect" default="false" shortcut="Ctrl+I" execute="inspectCard" />
 		<cardaction menu="Expose card" default="false" execute="expose" />
+		<cardaction menu="Prioritize card" default="false" shortcut="Shift+P" execute="prioritize" />
 		<cardaction menu="Score Agenda" default="false" execute="scrAgenda" />      
 		<groupaction menu="Create new Subsidiary Data Fort" default="false" execute="createSDF" />
 		<groupaction menu="Roll d6" default="false" shortcut="Ctrl+6" execute="rolld6" />
