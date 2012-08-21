@@ -389,7 +389,7 @@ def goToEndTurn(group, x = 0, y = 0):
 
 def goToSot (group, x=0,y=0):
    if debugVerbosity >= 1: notify(">>> goToSot(){}".format(extraASDebug())) #Debug
-   global newturn, endofturn, lastKnownNrActions
+   global newturn, endofturn, lastKnownNrActions, currAction
    mute()
    clearNoise()
    if endofturn or currAction or newturn:
@@ -2092,6 +2092,11 @@ def chkNoisy(card): # Check if the player successfully used a noisy icebreaker, 
    if re.search(r'Noisy', Stored_Keywords[card]) and re.search(r'Icebreaker', Stored_Keywords[card]): 
       me.setGlobalVariable('wasNoisy', '1') # First of all, let all players know of this fact.
       if debugVerbosity >= 3: notify("### Noisy bit Set!") #Debug
+   if debugVerbosity >= 4: notify("<<< chkNoisy()") #Debug
+
+def penaltyNoisy(card):
+   if debugVerbosity >= 1: notify(">>> penaltyNoisy()") #Debug
+   if re.search(r'Noisy', Stored_Keywords[card]) and re.search(r'Icebreaker', Stored_Keywords[card]): 
       NoisyCost = re.search(r'triggerNoisy([0-9]+)',card.AutoScript)
       if debugVerbosity >= 3: 
          if NoisyCost: notify("### Noisy Trigger Found: {}".format(NoisyCost.group(1))) #Debug      
@@ -2112,9 +2117,7 @@ def chkNoisy(card): # Check if the player successfully used a noisy icebreaker, 
                cost -= 1
                total += 1
       notify("--> {}'s {} has destroyed a total of {} bits on stealth cards".format(me,card,total))
-   if debugVerbosity >= 4: notify("<<< chkNoisy()") #Debug
-
-   
+   if debugVerbosity >= 4: notify("<<< penaltyNoisy()") #Debug
    
 def autoscriptCostUndo(card, Autoscript): # Function for undoing the cost of an autoscript.
    if debugVerbosity >= 1: notify(">>> autoscriptCostUndo(){}".format(extraASDebug())) #Debug
@@ -2657,7 +2660,11 @@ def RunX(Autoscript, announceText, card, targetCards = None, notification = None
 def SimplyAnnounce(Autoscript, announceText, card, targetCards = None, notification = None, n = 0): # Core Command for drawing X Cards from the house deck to your hand.
    if debugVerbosity >= 1: notify(">>> SimplyAnnounce(){}".format(extraASDebug())) #Debug
    if targetCards is None: targetCards = []
-   action = re.search(r'\bSimplyAnnounce{([A-Za-z&,\. ]+)}', Autoscript)
+   action = re.search(r'\bSimplyAnnounce{([A-Za-z0-9&,\. ]+)}', Autoscript)
+   if debugVerbosity >= 2: #Debug
+      if action: notify("!!! regex: {}".format(action.groups())) 
+      else: notify("!!! regex failed :(") 
+   if re.search(r'break',Autoscript) and re.search(r'subroutine',Autoscript): penaltyNoisy(card)
    if notification == 'Quick': announceString = "{} {}".format(announceText, action.group(1))
    else: announceString = "{} {}".format(announceText, action.group(1))
    if notification: notify('--> {}.'.format(announceString))
