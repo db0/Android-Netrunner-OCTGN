@@ -424,16 +424,16 @@ def goToEndTurn(group, x = 0, y = 0):
       whisper ("Please perform the game setup first (Ctrl+Shift+S)")
       return
    if me.Actions > 0: # If the player has not used all their actions for this turn, remind them, just in case.
-      if not debugVerbosity and not confirm("You have not taken all your actions for this turn, are you sure you want to declare end of turn"): return
+      if debugVerbosity <= 0 and not confirm("You have not taken all your actions for this turn, are you sure you want to declare end of turn"): return
    if len(me.hand) > currentHandSize(): #If the player is holding more cards than their hand max. remind them that they need to discard some 
                                         # and put them in the end of turn to allow them to do so.
       if endofturn: #If the player has gone through the end of turn phase and still has more hands, allow them to continue but let everyone know.
-         if not debugVerbosity and not confirm("You still hold more cards than your hand size maximum. Are you sure you want to proceed?"): return
+         if debugVerbosity <= 0 and not confirm("You still hold more cards than your hand size maximum. Are you sure you want to proceed?"): return
          else: notify(":::Warning::: {} has ended their turn holding more cards ({}) than their hand size maximum of {}".format(me,len(me.hand),currentHandSize()))
       else: # If the player just ended their turn, give them a chance to discard down to their hand maximum.
          if ds == "corp": notify ("The Corporation of {} is performing an Internal Audit before CoB.".format(me))
          else: notify ("Runner {} is rebooting all systems for the day.".format(me))
-         if not debugVerbosity: andconfirm(':::Warning:::\n\n You have more card in your hand than your current hand size maximum of {}. Please discard enough and then use the "Declare End of Turn" action again.'.format(currentHandSize()))
+         if debugVerbosity <= 0: confirm(':::Warning:::\n\n You have more card in your hand than your current hand size maximum of {}. Please discard enough and then use the "Declare End of Turn" action again.'.format(currentHandSize()))
          endofturn = True
          return
    endofturn = False
@@ -449,7 +449,7 @@ def goToSot (group, x=0,y=0):
    mute()
    clearNoise()
    if endofturn or currAction or newturn:
-      if not debugVerbosity and not confirm("You have not yet properly ended you previous turn. You need to use F12 after you've finished all your actions.\n\nAre you sure you want to continue?"): return
+      if debugVerbosity <= 0 and not confirm("You have not yet properly ended you previous turn. You need to use F12 after you've finished all your actions.\n\nAre you sure you want to continue?"): return
       else: 
          if len(me.hand) > currentHandSize(): # Just made sure to notify of any shenanigans
             notify(":::Warning::: {} has skipped their End-of-Turn phase and they are holding more cards ({}) than their hand size maximum of {}".format(me,len(me.hand),currentHandSize()))
@@ -463,7 +463,7 @@ def goToSot (group, x=0,y=0):
    if actionsReduce: extraTXT = " ({} forfeited)".format(actionsReduce)
    else: extraTXT = ''
    if me.Actions < 0: 
-      if not debugVerbosity and not confirm("Your actions were negative from last turn. Was this a result of a penalty you suffered from a card?"): 
+      if debugVerbosity <= 0 and not confirm("Your actions were negative from last turn. Was this a result of a penalty you suffered from a card?"): 
          me.Actions = maxActions - actionsReduce # If the player did not have a penalty, then we assume those were extra actions granted by some card effect, so we make sure they have their full maximum
       else: 
          me.Actions += maxActions - actionsReduce # If it was a penalty, then it remains with them for this round, which means they have less actions to use.
@@ -1555,6 +1555,10 @@ def handDiscard(card):
             notify("{} has now discarded down to their max handsize of {}".format(me, currentHandSize()))
       else: notify("{} discards {}.".format(me,card))
    else:
+      CounterHold = getSpecial('Counter Hold')
+      if CounterHold.markers[mdict['virusCockroach']] and CounterHold.markers[mdict['virusCockroach']] >= 2: # Cockroach viruses force you
+            card = me.hand.random()
+            notify(":::Info:::{}'s card was selected at random due to their cockroach virus infestation".format(me))
       card.moveTo(me.piles['Archives(Hidden)'])
       if endofturn: 
          random = rnd(1, 5)
@@ -2759,12 +2763,12 @@ def InflictX(Autoscript, announceText, card, targetCards = None, notification = 
    else: enhanceTXT = ''
    DMG = (num(action.group(2)) * multiplier) + enhancer #Calculate our damage
    preventTXT = ''
-   if Automations['Damage']: #The actual effects happen only if the Damage automation switch is ON. It should be ON by default.
+   if DMG and Automations['Damage']: #The actual effects happen only if the Damage automation switch is ON. It should be ON by default.
       if DMGwarn and localDMGwarn:
          localDMGwarn = False # We don't want to warn the player for every point of damage.
-         if not confirm("You are about to inflict damage on another player.\
-                       \nBefore you do that, please make sure that your opponent is not currently manipulating their hand or this might cause the game to crash.\
-                     \n\nImportant: Before proceeding, ask your opponent to activate any cards they want that add protection against this type of damage\
+         if not confirm(":::Warning::: You are about to inflict automatic damage!\
+                       \nBefore you do that, please make sure that your target is not currently manipulating their hand or this might cause the game to crash.\
+                     \n\nImportant: Before proceeding, ask your target to activate any cards they want that add protection against this type of damage. If this is yourself, please make sure you do this before you activate damage effects.\
                      \n\nDo you want this warning message will to appear again next time you do damage? (Recommended)"): DMGwarn = False
       if re.search(r'nonPreventable', Autoscript): 
          DMGprevented = 0
@@ -3250,6 +3254,10 @@ def markerEffects(Time = 'Start'):
             if rollTuple[1] >= 5: total += 1
          me.counters['Bad Publicity'].value += total
          if total: notify("--> {} receives {} Bad Publicity due to their Scaldan virus infestation".format(me,total))
+   OpponentCounterHold = getSpecial('Counter Hold', ofwhom('-ofOpponent')) # Some viruses also trigger on our opponent's turns
+   for marker in OpponentCounterHold.markers:
+      if marker == mdict['virusButcherBoy'] and Time == 'Start':
+         GainX('Gain1Bits-onOpponent-perMarker{virusButcherBoy}-div2', "Opponent's Butcher Boy virus:", OpponentCounterHold, notification = 'Automatic')
 
 #------------------------------------------------------------------------------
 # Debugging
@@ -3278,9 +3286,9 @@ def TrialError(group, x=0, y=0): # Debugging
    if not (len(players) == 1 or debugVerbosity >= 0): 
       whisper("This function is only for development purposes")
       return
-   testcards = ["35830bc7-f693-4490-af7a-d05153540e88", # Corruption
+   testcards = ["dd067e2d-788b-4b59-bfff-52dae7e882eb", # Butcher Boy
                 "2c411091-bbd3-443e-a859-981efa6323b0", # Omnitech &quot;Spinal Tap&quot; Cybermodem
-                "d19babc7-6f36-492f-9d1b-7215a1561826", # Sterdroid
+                "0612bf98-4990-451b-89c1-f2f2516e4edb", # Cockroach
                 "31cb5ed8-ca36-4637-b78f-ec10c1c28526", # Rent-to-Own Contract # This will need one of those markers that have their own abilities
                 "f7dae0ad-08c7-4192-92b1-80993eb083b7", # Shock Treatment
                 "7190dac8-aad9-497a-8c0c-58888acb33e6", # Self-Destruct
