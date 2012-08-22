@@ -125,7 +125,19 @@ regexHooks = dict( # A dictionary which holds the regex that then trigger each c
                   ChooseKeyword =      re.compile(r'\bChooseKeyword'),
                   CustomScript =       re.compile(r'\bCustomScript'),
                   UseCustomAbility =   re.compile(r'\bUseCustomAbility'))
-                  
+
+automatedMarkers = [
+         'Rent-to-Own Contract',
+         'Data Raven'
+         'The Shell Traders'
+         'Butcher Boy',
+         'Boardwalk',
+         'Incubator',
+         'Viral Pipeline',
+         'Taxman',
+         'Skivviss',
+         'Scaldan']
+                   
 turns = [
    'Start of Game',
    "It is now Corporation's Turn",
@@ -149,6 +161,7 @@ EmergencyColor = "#ff0000"
 DummyColor = "#000000" # Marks cards which are supposed to be out of play, so that players can tell them apart.
 RevealedColor = "#ffffff"
 Priority = "#ffd700"
+Inactive = "#888888" # Cards which are in play but not active yer (e.g. see the shell traders)
 
 Xaxis = 'x'
 Yaxis = 'y'
@@ -409,7 +422,7 @@ def useAction(group = table, x=0, y=0, count = 1):
    if me.Actions < count: 
       if not confirm("You have no more actions left for this turn. Are you sure you want to continue?"): return 'ABORT'
       else: extraText = ' (Exceeding Max!)'
-   currAction += count + actionsReduce + lastKnownNrActions - me.Actions# If the player modified their action counter manually, the last two will increase/decreate our current action accordingly.
+   currAction += count + lastKnownNrActions - me.Actions# If the player modified their action counter manually, the last two will increase/decreate our current action accordingly.
    me.Actions -= count
    lastKnownNrActions = me.Actions
    if count == 2: return "{} {} {} takes Double Action #{} and #{}{}".format(uniAction(),uniAction(),me,currAction - 1, currAction,extraText)
@@ -1471,6 +1484,17 @@ def intPlay(card, cost = 'not_free'):
          card.moveToTable(0, 0 * playerside - yaxisMove(card), False)
          notify("{}{} to play {}{}.".format(ActionCost, rc, card, extraText))           
    executePlayScripts(card,action.lower())
+   # Checking for Doom viruses
+   if action == 'Install':
+      CounterHold = getSpecial('Counter Hold')
+      for marker in CounterHold.markers:
+         if re.search(r'virusDoom',marker[0]):
+            rollTuple = RollX('Roll1Dice', 'Armageddon virus:', CounterHold, notification = 'Automatic')
+            if rollTuple[1] >= 5:
+               intTrashCard(card, card.Stat, "free", silent = True)
+               CounterHold.markers[marker] -= 1
+               notify("--> {}'s new installation was Doomed from the start. {} is trashed".format(me,card))
+
 
 def chkTargeting(card):
    if debugVerbosity >= 1: notify(">>> chkTargeting(){}".format(extraASDebug())) #Debug
@@ -1594,14 +1618,17 @@ def handRandomDiscard(group, count = None, player = None, destination = None, si
    if debugVerbosity >= 2: notify("<<< handRandomDiscard() with return {}".format(iter + 1)) #Debug
    return iter + 1 #We need to increase the iter by 1 because it starts iterating from 0
     		
-def showatrandom(group):
+def showatrandom(group, count = 1, silent = False):
    if debugVerbosity >= 1: notify(">>> showatrandom(){}".format(extraASDebug())) #Debug
    mute()
-   card = group.random()
-   if card == None: return
-   card.moveToTable(0, 0 - yaxisMove(card), False)
-   card.highlight = RevealedColor
-   notify("{} show {} at random.".format(me,card))
+   for iter in range(count):
+      card = group.random()
+      if card == None: 
+         notify(":::Info:::{} has no more cards in their hand to reveal".format(me))
+         break
+      card.moveToTable(playerside * iter * cwidth(card) - (count * cwidth(card) / 2), 0 - yaxisMove(card), False)
+      card.highlight = RevealedColor
+   if not silent: notify("{} reveals {} at random from their hand.".format(me,card))
 
 def groupToDeck (group = me.hand, player = me, silent = False):
    if debugVerbosity >= 1: notify(">>> groupToDeck(){}".format(extraASDebug())) #Debug
@@ -1699,6 +1726,7 @@ def executePlayScripts(card, action):
    if not Automations['Play, Score and Rez']: return
    if not card.isFaceUp: return
    if Stored_AutoScripts[card] == "": return
+   if card.highlight == Inactive: return
    failedRequirement = False
    X = 0
    Autoscripts = card.AutoScript.split('||') # When playing cards, the || is used as an "and" separator, rather than "or". i.e. we don't do choices (yet)
@@ -1811,6 +1839,9 @@ def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
       if card.isFaceUp and not card.markers[Bits]: inputTraceValue(card, limit = 0)
       elif card.isFaceUp and card.markers[Bits]: payTraceValue(card)
       elif not card.isFaceUp: revealTraceValue(card)
+      return
+   if card.highlight == Inactive:
+      whisper("You cannot use inactive cards. Please use the relevant card abilities to clear them first. Aborting")
       return
    if not card in Stored_AutoActions:
       if not card.isFaceUp:
@@ -2552,7 +2583,8 @@ def RollX(Autoscript, announceText, card, targetCards = None, notification = Non
       d6list.append(d6)
       if action.group(3): # If we have a chk modulator, it means we only increase our total if we hit a specific number.
          if num(action.group(3)) == d6: result += 1
-      else: result += rolld6(silent = True) # Otherwise we add all totals together.
+      else: result += d6 # Otherwise we add all totals together.
+      if debugVerbosity >= 3: notify("### iter:{} with roll {} and total result: {}".format(d,d6,result))
    if notification == 'Quick': announceString = "{} rolls {} on {} dice".format(announceText, d6list, count)
    else: announceString = "{} roll {} dice with the following results: {}".format(announceText,count, d6list)
    if notification: notify('--> {}.'.format(announceString))
@@ -2763,7 +2795,8 @@ def InflictX(Autoscript, announceText, card, targetCards = None, notification = 
    targetPL = ofwhom(Autoscript, card.controller) #Find out who the target is
    if enhancer > 0: enhanceTXT = ' (Enhanced: +{})'.format(enhancer) #Also notify that this is the case
    else: enhanceTXT = ''
-   DMG = (num(action.group(2)) * multiplier) + enhancer #Calculate our damage
+   if multiplier == 0 or num(action.group(2)): DMG = 0 # if we don't do any damage, we don't enhance it
+   else: DMG = (num(action.group(2)) * multiplier) + enhancer #Calculate our damage
    preventTXT = ''
    if DMG and Automations['Damage']: #The actual effects happen only if the Damage automation switch is ON. It should be ON by default.
       if DMGwarn and localDMGwarn:
@@ -3066,7 +3099,7 @@ def autoscriptOtherPlayers(lookup, count = 1): # Function that triggers effects 
    if debugVerbosity >= 4: notify("<<< autoscriptOtherPlayers()") # Debug
    
 def CustomScript(card, action = 'play'): # Scripts that are complex and fairly unique to specific cards, not worth making a whole generic function for them.
-   if debugVerbosity >= 1: notify(">>> CustomScript(){}".format(extraASDebug())) #Debug
+   if debugVerbosity >= 1: notify(">>> CustomScript() with action: {}".format(action)) #Debug
    global ModifyDraw
    #confirm("Customscript") # Debug
    if card.name == 'Microtech AI Interface' and action == 'use':
@@ -3184,8 +3217,120 @@ def CustomScript(card, action = 'play'): # Scripts that are complex and fairly u
       if iter: # If we found any ice in the top 3
          notify("{} initiates a Security Purge and reveals {} Ice from the top of their R&D. These ice are automatically installed and rezzed".format(me, iter))
       else: notify("{} initiates a Security Purge but it finds nothing to purge.".format(me))
+   elif card.name == 'Lucidrine (TM) Drip Feed' and action == 'TurnStart':
+      DripMarker = findMarker(card, 'Drip')
+      if not DripMarker:
+         TokensX('Put1Drip', "Lucidrine (TM) Drip Feed:", card)
+         me.Actions += 1         
+         notify("--> Lucidrine™ Drip Feed: Gain 1 actions.")
+      elif card.markers[DripMarker] < 2: 
+         card.markers[DripMarker] += 1
+         me.Actions += 1
+         notify("--> Lucidrine™ Drip Feed: Gain 1 actions.")
+      else: 
+         card.markers[DripMarker] = 0
+         intdamageDiscard(me.hand)
+         applyBrainDmg()
+         notify("--> Lucidrine™ Drip Feed: Causes 1 brain damage.")
+   elif card.name == 'On the Fast Track' and action == 'play':
+      if confirm("Did you trash an advertisement this turn?\n\n(Selecting 'No' will assume you trashed a transaction"):
+         me.counters['Bit Pool'].value += 8
+         notify("{} gains {} for trashing an advertisement this turn".format(me,uniBit(8)))
+      else:
+         me.counters['Bit Pool'].value += 6
+         notify("{} gains {} for trashing a transaction this turn".format(me,uniBit(6)))
+   elif card.name == 'The Shell Traders':
+      if action == 'use':
+         targetList = [c for c in me.hand  # First we see if they've targeted a card from their hand
+                        if c.targetedBy 
+                        and c.targetedBy == me 
+                        and (c.Type == 'Program' or c.Type == 'Hardware')]
+         if len(targetList) > 0:
+            selectedCard = targetList[0]
+            actionCost = useAction(count = 1)
+            if actionCost == 'ABORT': return         
+            selectedCard.moveToTable(550, 65 * playerside - yaxisMove(card), False) # We always choose the first card, in case they've selected more than one
+            announceText = TokensX('Put1Shell-perProperty{Cost}', "{} to activate {} in order to ".format(actionCost,card), selectedCard)
+            selectedCard.highlight = Inactive
+            notify(announceText)
+         else:
+            targetList = [c for c in table  # If the player has selected no card from the hand, then we check to see if they've targeted a card on the table
+                           if c.targetedBy 
+                           and c.targetedBy == me
+                           and c.markers
+                           and (c.Type == 'Program' or c.Type == 'Hardware')]
+            if len(targetList) > 0:
+               selectedCard = targetList[0]
+               actionCost = useAction(count = 1)
+               if actionCost == 'ABORT': return
+               announceText = TokensX('Remove1Shell', "{} with {} in order to ".format(actionCost,card), selectedCard)
+               notify(announceText)
+               ShellMarker = findMarker(selectedCard, 'Shell')
+               if not ShellMarker: # THis means the card cab be automatically installed
+                  selectedCard.moveToTable(150, 65 * playerside - yaxisMove(card), False)
+                  selectedCard.highlight = None
+                  executePlayScripts(selectedCard,'install')
+                  notify("--> {} is Installed".format(selectedCard))
+            else: 
+               whisper("You need to select a valid target from your hand or the table to use this action")  
+               return
+      elif action == 'TurnEnd':
+         targetList = [c for c in table  # We find all possible targets
+                       if c.markers
+                       and (c.Type == 'Program' or c.Type == 'Hardware')]
+         validCards = []
+         for chkCard in targetList:
+            ShellMarker = findMarker(chkCard, 'Shell')
+            if not ShellMarker: continue
+            else: validCards.append(chkCard)
+         if len(validCards) == 0: return # No cards with shell markers found, so we're doing nothing
+         elif len(validCards) == 1: selectedCard = validCards[0] # If only one card with shell markers exist, we remove of those.
+         else: # Else we have to ask which one to remove.
+            selectTXT = 'The Shell Traders: Please select a target to remove a shell marker\n\n'
+            iter = 0
+            for choice in validCards:
+               selectTXT += '{}: {}\n'.format(iter,choice.name)
+               iter += 1
+            sel = askInteger(selectTXT,0)
+            selectedCard = validCards[sel]
+         TokensX('Remove1Shell', "The Shell Traders: ",selectedCard)
+         notify("--> The Shell Traders removes 1 Shell marker from {}".format(selectedCard))
+         ShellMarker = findMarker(selectedCard, 'Shell')
+         if not ShellMarker: # Empty of shell markers means the card can be automatically installed
+            selectedCard.moveToTable(150, 65 * playerside - yaxisMove(card), False)
+            selectedCard.highlight = None
+            executePlayScripts(selectedCard,'install')
+            notify("--> {} is Installed".format(selectedCard))
+   elif card.name == 'Playful AI' and action == 'play':
+      rollTuple = RollX('Roll1Dice', 'Playful AI:', card, notification = 'Automatic')
+      if rollTuple[1] > 3: 
+         notify("Tough Luck. ಠ╭╮ಠ")
+         return
+      else: count = rollTuple[1]
+      newRoll = askInteger("You rolled for {}. How many of these bits would you like to reroll as dice?".format(uniBit(count)), 0)
+      totalGain = count - newRoll
+      if debugVerbosity >= 3: notify("count:{}\nnewRoll:{}\nTotal: {}".format(count,newRoll,totalGain))
+      iter = 0
+      gamble = 0
+      while iter < newRoll:
+         iter += 1
+         rollTuple = RollX('Roll1Dice', 'Playful AI:', card, notification = 'Automatic')
+         if rollTuple[1] > 3: pass
+         else: gamble += rollTuple[1]
+         if debugVerbosity >= 3: notify("### iter: {}.\nnewroll: {}.\nCurrent Roll:{}.\ngamble:{} ".format(iter,newRoll,rollTuple[1],gamble))
+         if iter == newRoll and gamble > 0: 
+            if debugVerbosity >= 3: notify("### last loop")
+            notify("--< {} gathered {} from this round of rolls.".format(me, uniBit(gamble)))
+            newRoll = askInteger("You rolled for {}. How many of these bits would you like to reroll as dice?".format(uniBit(gamble)), 0)
+            totalGain += gamble - newRoll
+            iter = 0
+            gamble = 0
+      if totalGain > 0:
+         me.counters['Bit Pool'].value += totalGain
+         notify("{} has gained {} from the playful AI. (•‿•)   ".format(me, uniBit(totalGain)))
+      else: notify("Tough Luck. ಠ╭╮ಠ")
    elif action == 'use': useCard(card)
-
+   
 def atTimedEffects(Time = 'Start'): # Function which triggers card effects at the start or end of the turn.
    if debugVerbosity >= 1: notify(">>> atTimedEffects() at time: {}".format(Time)) #Debug
    if not Automations['Start/End-of-Turn']: return
@@ -3193,6 +3338,7 @@ def atTimedEffects(Time = 'Start'): # Function which triggers card effects at th
    X = 0
    for card in table:
       if card.controller != me: continue
+      if card.highlight == Inactive: continue
       if debugVerbosity >= 4: notify("### {} Autoscript: {}".format(card, card.AutoScript))
       Autoscripts = card.AutoScript.split('||')
       for autoS in Autoscripts:
@@ -3247,22 +3393,54 @@ def atTimedEffects(Time = 'Start'): # Function which triggers card effects at th
 def markerEffects(Time = 'Start'):
    if debugVerbosity >= 1: notify(">>> markerEffects() at time: {}".format(Time)) #Debug
    CounterHold = getSpecial('Counter Hold')
+   # Checking triggers from markers in our own Counter Hold.
    for marker in CounterHold.markers:
+      count = CounterHold.markers[marker]
       if debugVerbosity >= 4: notify("### marker: {}".format(marker[0])) # Debug
       if re.search(r'virusScaldan',marker[0]) and Time == 'Start':
          total = 0
-         for iter in range(CounterHold.markers[marker]):
+         for iter in range(count):
             rollTuple = RollX('Roll1Dice', 'Scaldan virus:', CounterHold, notification = 'Automatic')
             if rollTuple[1] >= 5: total += 1
          me.counters['Bad Publicity'].value += total
          if total: notify("--> {} receives {} Bad Publicity due to their Scaldan virus infestation".format(me,total))
-   OpponentCounterHold = getSpecial('Counter Hold', ofwhom('-ofOpponent')) # Some viruses also trigger on our opponent's turns
-   for marker in OpponentCounterHold.markers:
+      if re.search(r'virusSkivviss',marker[0]) and Time == 'Start':
+         passedScript = 'Draw{}Cards'.format(count)
+         DrawX(passedScript, "Skivviss virus:", CounterHold, notification = 'Automatic')
+      if re.search(r'virusTax',marker[0]) and Time == 'Start':
+         GainX('Lose1Bits-perMarker{virusTax}-div2', "Tax virus:", CounterHold, notification = 'Automatic')
+      if re.search(r'virusPipe',marker[0]) and Time == 'Start':
+         passedScript = 'Infect{}forfeitCounter:Actions'.format(count)
+         TokensX(passedScript, "Pipe virus:", CounterHold, notification = 'Automatic')
+      if re.search(r'Data Raven',marker[0]) and Time == 'Start':
+         GainX('Gain1Tags-perMarker{Data Raven}', "Data Raven:", CounterHold, notification = 'Automatic')
+   targetPL = ofwhom('-ofOpponent')          
+   # Checking triggers from markers in opponent's Counter Hold.
+   CounterHold = getSpecial('Counter Hold', targetPL) # Some viruses also trigger on our opponent's turns
+   for marker in CounterHold.markers:
+      count = CounterHold.markers[marker]
       if marker == mdict['virusButcherBoy'] and Time == 'Start':
          GainX('Gain1Bits-onOpponent-perMarker{virusButcherBoy}-div2', "Opponent's Butcher Boy virus:", OpponentCounterHold, notification = 'Automatic')
       if marker == mdict['virusIncubate'] and Time == 'Start':
-         passedScript = 'Roll{}Dice'.format(OpponentCounterHold.markers[mdict['virusIncubate']])
-         RollX(passedScript, "Opponent's Incubate virus:", OpponentCounterHold, notification = 'Automatic')
+         passedScript = 'Roll{}Dice'.format(count)
+         RollX(passedScript, "Opponent's Incubate virus:", CounterHold, notification = 'Automatic')
+      if marker == mdict['virusBoardwalk'] and Time == 'Start':
+         confirm("You are about to move cards out of another player's hand. Please ask them not to manipulate their hand, until all cards are on the table")
+         showatrandom(targetPL.hand, count, silent = True)
+         notify("--> {} forces {} to show him {} cards at random from their hand".format(me,targetPL,count))
+   # Checking triggers from markers the rest of our cards.
+   cardList = [c for c in table if c.markers]
+   for card in cardList:
+      for marker in card.markers:
+         if re.search(r'Term',marker[0]) and Time == 'Start' and card.controller == me:
+            if me.counters['Bit Pool'].value >= 2: 
+               passedScript = 'Remove1Term'
+               me.counters['Bit Pool'].value -= 2
+               notify("--> {} pays {} for their Rent-to-Own Contract on {}".format(me, uniBit(2),card))
+            else:
+               passedScript = 'Put1Term'
+               notify("--> {} couldn't pay their Rent-to-Own Contract on {} so it is extended for one turn".format(me, card))
+            TokensX(passedScript, "Rent-to-Own Contract:", card)
 
 #------------------------------------------------------------------------------
 # Debugging
@@ -3291,14 +3469,14 @@ def TrialError(group, x=0, y=0): # Debugging
    if not (len(players) == 1 or debugVerbosity >= 0): 
       whisper("This function is only for development purposes")
       return
-   testcards = ["dd067e2d-788b-4b59-bfff-52dae7e882eb", # Butcher Boy
-                "2c411091-bbd3-443e-a859-981efa6323b0", # Omnitech &quot;Spinal Tap&quot; Cybermodem
-                "0612bf98-4990-451b-89c1-f2f2516e4edb", # Cockroach
-                "31cb5ed8-ca36-4637-b78f-ec10c1c28526", # Rent-to-Own Contract # This will need one of those markers that have their own abilities
-                "33edf37f-aa77-4072-a946-70a68cb8815d", # Incubator
-                "7190dac8-aad9-497a-8c0c-58888acb33e6", # Self-Destruct
-                "89abe50e-6c37-4fd2-ab8f-f80c5bd5e6e3", # Puzzle
-                "19ea719d-a121-4ed1-b354-8c2d64e875ee", # Glacier
+   testcards = ["639948ff-14b4-47df-9c23-d7164b97f012", # Lucidrine (TM) Drip Feed
+                "bc02cdad-d027-4ac6-b609-13bcbd491bb4", # Playful AI
+                "401763a0-4d29-48d1-a90f-04d9694d986c", # The Shell Traders
+                "c8ac69cb-0762-4918-9115-243dba9aa1c2", # The Shell Traders Promo
+                "05dc8c06-e801-4bee-9b01-1b5c47d5a8f6", # Mastiff
+                "f3a8b3bf-3b67-49c7-b828-b41070740214", # Data Raven
+                "8d326b53-11f3-4e29-bd2b-35b3eb5472ec", # Viral Pipeline
+                "defc2d4e-31e4-42f6-b1cf-c137ce810fc0", # Armageddon
                 "8b0a0ca5-d6d6-440f-8f81-4486d252a545"] # Indiscriminate Response Team
    if not ds: ds = "corp"
    me.setGlobalVariable('ds', ds) 
@@ -3324,7 +3502,7 @@ def extraASDebug(Autoscript = None):
 
 def inspectCard(card, x = 0, y = 0): # This function shows the player the card text, to allow for easy reading until High Quality scans are procured.
    if debugVerbosity >= 1: notify(">>> inspectCard(){}".format(extraASDebug())) #Debug
-   ASText = "This card has the following automations:\n"
+   ASText = "This card has the following automations:"
    if re.search(r'onPlay', card.Autoscript): ASText += '\n * It will have an effect when coming into play from your hand.'
    if re.search(r'onScore', card.Autoscript): ASText += '\n * It will have an effect when being scored.'
    if re.search(r'onRez', card.Autoscript): ASText += '\n * It will have an effect when its being rezzed.'
@@ -3333,9 +3511,11 @@ def inspectCard(card, x = 0, y = 0): # This function shows the player the card t
    if re.search(r'atTurnStart', card.Autoscript): ASText += '\n * It will perform an automation at the start of your turn.'
    if re.search(r'atTurnEnd', card.Autoscript): ASText += '\n * It will perform an automation at the end of your turn.'
    if card.AutoAction != '': 
-      if ASText == 'This card has the following automations:\n': ASText == '\nThis card will perform one or more automated actions when you double click on it.'
+      if ASText == 'This card has the following automations:': ASText == '\nThis card will perform one or more automated actions when you double click on it.'
       else: ASText += '\n\nThis card will also perform one or more automated actions when you double click on it.'
-   if ASText == 'This card has the following automations:\n': ASText = '\nThis card has no automations.'
+   if ASText == 'This card has the following automations:': ASText = '\nThis card has no automations.'
+   if card.name in automatedMarkers:
+      ASText += '\n\nThis card can create markers, which also have automated effects.'
    if card.type == 'Tracing': confirm("This is your tracing card. Double click on it to start a tracing bid. It will ask you for your bid and then hide the amount.\
                                    \n\nOnce both players have made their bid, double-click on it again to reveal your hidden total.\
                                    \n\nAfter deciding who won the trace attempt, double click on the card one last time to pay the cost. This will automatically use bits from cards that pay for tracing if you have any.")
@@ -3348,5 +3528,4 @@ def inspectCard(card, x = 0, y = 0): # This function shows the player the card t
    else:
       if debugVerbosity > 0: finalTXT = 'AutoScript: {}\n\n AutoAction: {}'.format(card.AutoScript,card.AutoAction)
       else: finalTXT = "Card Text: {}\n\n{}\n\nWould you like to see the card rulings?".format(card.Rules,ASText)
-      if confirm("{}".format(finalTXT)):
-         rulings(card)
+      if confirm("{}".format(finalTXT)): rulings(card)

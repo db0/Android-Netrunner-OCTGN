@@ -111,7 +111,7 @@
 			<cardaction menu="Trash/Archive" default="false" shortcut="del" execute="handDiscard" />           
 			<groupaction menu="Trash/Archive a Card at Random" default="false" execute="handRandomDiscard" />
 			<groupaction menu="Show a Card at Random" default="false" execute="showatrandom"/>
-			<groupaction menu="Move to R&amp;D/Stack" default="false" execute="handtoStack"/>
+			<groupaction menu="Move to R&amp;D/Stack" default="false" execute="grouptoStack"/>
 		</hand>
 
 		<group name="R&amp;D/Stack" visibility="none" ordered="false" width="63" height="88" icon="r12" collapsed="false">
