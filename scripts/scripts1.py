@@ -321,6 +321,7 @@ def clearNoise(): # Clears all player's noisy bits. I.e. nobody is considered to
 def storeSpecial(card): 
 # Function stores into a shared variable some special cards that other players might look up.
    if debugVerbosity >= 1: notify(">>> storeSpecial(){}".format(extraASDebug())) #Debug
+   storeProperties(card)
    specialCards = eval(me.getGlobalVariable('specialCards'))
    specialCards[card.Type] = card._id
    me.setGlobalVariable('specialCards', str(specialCards))
@@ -567,7 +568,7 @@ def createStartingCards():
       storeSpecial(AV)
    else:
       TC = table.create("f58c40eb-bb11-4bad-9562-030d906ea352", 0, 250 * playerside, 1, True) # The Technical Difficulties card.
-      storeSpecial(TC)      
+      storeSpecial(TC)   
 
 def intJackin(group, x = 0, y = 0):
    if debugVerbosity >= 1: notify(">>> intJackin(){}".format(extraASDebug())) #Debug
@@ -2795,7 +2796,7 @@ def InflictX(Autoscript, announceText, card, targetCards = None, notification = 
    targetPL = ofwhom(Autoscript, card.controller) #Find out who the target is
    if enhancer > 0: enhanceTXT = ' (Enhanced: +{})'.format(enhancer) #Also notify that this is the case
    else: enhanceTXT = ''
-   if multiplier == 0 or num(action.group(2)): DMG = 0 # if we don't do any damage, we don't enhance it
+   if multiplier == 0 or num(action.group(2)) == 0: DMG = 0 # if we don't do any damage, we don't enhance it
    else: DMG = (num(action.group(2)) * multiplier) + enhancer #Calculate our damage
    preventTXT = ''
    if DMG and Automations['Damage']: #The actual effects happen only if the Damage automation switch is ON. It should be ON by default.
@@ -3329,6 +3330,37 @@ def CustomScript(card, action = 'play'): # Scripts that are complex and fairly u
          me.counters['Bit Pool'].value += totalGain
          notify("{} has gained {} from the playful AI. (•‿•)   ".format(me, uniBit(totalGain)))
       else: notify("Tough Luck. ಠ╭╮ಠ")
+   elif card.model == 'f58c40eb-bb11-4bad-9562-030d906ea352' and action == 'use':
+      knownMarkers = []
+      for marker in card.markers:
+         if marker[0] == 'Mastiff' or marker[0] == 'Data Raven':
+            knownMarkers.append(marker)
+      if len(knownMarkers) == 0: 
+         whisper("No known markers with ability to remove")
+         return
+      elif len(knownMarkers) == 1: selectedMarker = knownMarkers[0]
+      else: 
+         selectTXT = 'Please select a marker to remove\n\n'
+         iter = 0
+         for choice in knownMarkers:
+            selectTXT += '{}: {}\n'.format(iter,knownMarkers[iter][0])
+            iter += 1
+         sel = askInteger(selectTXT,0)
+         selectedMarker = knownMarkers[sel]
+      if selectedMarker[0] == 'Data Raven':
+         aCost = 1
+         cost = 1
+      elif selectedMarker[0] == 'Mastiff':
+         aCost = 1
+         cost = 4
+      actionCost = useAction(aCost)
+      if actionCost == 'ABORT': return
+      bitCost = payCost(cost)
+      if bitCost == 'ABORT':
+         me.Actions += aCost # If the player can't pay the cost after all and aborts, we give him his actions back as well.
+         return         
+      card.markers[selectedMarker] -= 1
+      notify("{} to remove {} for {}.".format(actionCost,selectedMarker[0],bitCost))
    elif action == 'use': useCard(card)
    
 def atTimedEffects(Time = 'Start'): # Function which triggers card effects at the start or end of the turn.
@@ -3414,6 +3446,8 @@ def markerEffects(Time = 'Start'):
          TokensX(passedScript, "Pipe virus:", CounterHold, notification = 'Automatic')
       if re.search(r'Data Raven',marker[0]) and Time == 'Start':
          GainX('Gain1Tags-perMarker{Data Raven}', "Data Raven:", CounterHold, notification = 'Automatic')
+      if re.search(r'Mastiff',marker[0]) and Time == 'Run':
+         InflictX('Inflict1BrainDamage-perMarker{Mastiff}', "Mastiff:", CounterHold, notification = 'Automatic')
    targetPL = ofwhom('-ofOpponent')          
    # Checking triggers from markers in opponent's Counter Hold.
    CounterHold = getSpecial('Counter Hold', targetPL) # Some viruses also trigger on our opponent's turns
