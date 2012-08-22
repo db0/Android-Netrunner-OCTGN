@@ -54,6 +54,10 @@ Changelog
  * Added Butcher Boy and Cockroach implementation
  * Also fixed some bug with the debugverbosity
  * InflictX will not warn you if you're doing 0 damage now.
+ * Fixed bug with checking for Noisy cards
+ * Added AutoScript for the runner's Counter Hold. Now it is able to select and remove special markers given to him by the Corp.
+ * Added custom code for Mastiff and Data Raven markers
+
 
 ### 2.1.11
 
