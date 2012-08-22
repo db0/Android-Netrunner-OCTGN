@@ -53,6 +53,7 @@ Changelog
 
  * Made deck checking faster.
  * Added functions which allow the players to trash other player's cards and also take care of their effects
+ * Added function which allows markers on your counter hold to initiate effects of their own at turn start/end.
 
 ### 2.1.10
 

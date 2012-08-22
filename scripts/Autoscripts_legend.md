@@ -244,3 +244,7 @@ Used by the InflictX core command. Any damage modded like this will not trigger 
 ### -warn
 
 The warn modulator merely provides some information to the player, and occasionally allows them to abort the operation, if they're not ready.
+
+### -chk
+
+Used by the RollX core command to see if the dice results needs to match a specific number

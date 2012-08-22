@@ -724,7 +724,7 @@ def intAddBits ( card, count):
    if debugVerbosity >= 1: notify(">>> intAddBits(){}".format(extraASDebug())) #Debug
    mute()
    if ( count > 0):
-      card.markers[Bits] += count
+      card.markers[mdict['Bits']] += count
       if ( card.isFaceUp == True): notify("{} adds {} from the bank on {}.".format(me,uniBit(count),card))
       else: notify("{} adds {} on a card.".format(me,uniBit(count)))
 
@@ -740,8 +740,8 @@ def remBits(card, x = 0, y = 0):
    mute()
    count = askInteger("Remove how many Bits?", 1)
    if count == None: return
-   if count > card.markers[Bits]: count = card.markers[Bits]
-   card.markers[Bits] -= count
+   if count > card.markers[mdict['Bits']]: count = card.markers[mdict['Bits']]
+   card.markers[mdict['Bits']] -= count
    if card.isFaceUp == True: notify("{} removes {} from {}.".format(me,uniBit(count),card))
    else: notify("{} removes {} from a card.".format(me,uniBit(count)))
 
@@ -760,18 +760,18 @@ def addPlusOne(card, x = 0, y = 0):
    if debugVerbosity >= 1: notify(">>> addPlusOne(){}".format(extraASDebug())) #Debug
    mute()
    if MinusOne in card.markers:
-      card.markers[MinusOne] -= 1
+      card.markers[mdict['MinusOne']] -= 1
    else: 
-      card.markers[PlusOne] += 1
+      card.markers[mdict['PlusOne']] += 1
    notify("{} adds one +1 marker on {}.".format(me,card))
 
 def addMinusOne(card, x = 0, y = 0):
    if debugVerbosity >= 1: notify(">>> addMinusOne(){}".format(extraASDebug())) #Debug
    mute()
    if PlusOne in card.markers:
-      card.markers[PlusOne] -= 1
+      card.markers[mdict['PlusOne']] -= 1
    else:
-      card.markers[MinusOne] += 1
+      card.markers[mdict['MinusOne']] += 1
    notify("{} adds one -1 marker on {}.".format(me,card))
 
 def addMarker(cards, x = 0, y = 0): # A simple function to manually add any of the available markers.
@@ -1795,7 +1795,7 @@ def executePlayScripts(card, action):
          if debugVerbosity >= 3: notify("Loop for scipt {} finished".format(passedScript))
 
 #------------------------------------------------------------------------------
-# Autoactions
+# AutoActions
 #------------------------------------------------------------------------------
 
 def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
@@ -2536,15 +2536,22 @@ def RollX(Autoscript, announceText, card, targetCards = None, notification = Non
    if debugVerbosity >= 1: notify(">>> RollX(){}".format(extraASDebug())) #Debug
    if targetCards is None: targetCards = []
    d6 = 0
-   action = re.search(r'\bRoll([0-9]+)Dice', Autoscript)
+   d6list = []
+   result = 0
+   action = re.search(r'\bRoll([0-9]+)Dice(-chk)?([1-6])?', Autoscript)
    count = num(action.group(1))
    multiplier = per(Autoscript, card, n, targetCards, notification)
-   for d in range(count): d6 += rolld6(silent = True)
-   if notification == 'Quick': announceString = "{} rolls {} on a die".format(announceText, d6)
-   else: announceString = "{} roll {} on a die".format(announceText, d6)
+   for d in range(count):
+      d6 = rolld6(silent = True)
+      d6list.append(d6)
+      if action.group(3): # If we have a chk modulator, it means we only increase our total if we hit a specific number.
+         if num(action.group(3)) == d6: result += 1
+      else: result += rolld6(silent = True) # Otherwise we add all totals together.
+   if notification == 'Quick': announceString = "{} rolls {} on {} dice".format(announceText, d6list, count)
+   else: announceString = "{} roll {} dice with the following results: {}".format(announceText,count, d6list)
    if notification: notify('--> {}.'.format(announceString))
-   if debugVerbosity >= 4: notify("<<< RollX() with result: {}".format(d6))
-   return (announceString, d6)
+   if debugVerbosity >= 4: notify("<<< RollX() with result: {}".format(result))
+   return (announceString, result)
 
 def RequestInt(Autoscript, announceText, card, targetCards = None, notification = None, n = 0): # Core Command for drawing X Cards from the house deck to your hand.
    if debugVerbosity >= 1: notify(">>> RequestInt(){}".format(extraASDebug())) #Debug
@@ -2729,8 +2736,8 @@ def ModifyStatus(Autoscript, announceText, card, targetCards = None, notificatio
       elif action.group(1) == 'Expose' and expose(targetCard, silent = True) != 'ABORT': pass
       elif action.group(1) == 'Uninstall' and uninstall(targetCard, destination = dest, silent = True) != 'ABORT': pass
       elif action.group(1) == 'Possess' and possess(card, targetCard, silent = True) != 'ABORT': pass
-      elif action.group(1) == 'Trash' and intTrashCard(targetCard, fetchProperty(targetCard,'Stat'), "free", silent = True) == 'ABORT': return 'ABORT'
-      elif action.group(1) == 'Exile' and exileCard(targetCard, silent = True) == 'ABORT': return 'ABORT'
+      elif action.group(1) == 'Trash' and intTrashCard(targetCard, fetchProperty(targetCard,'Stat'), "free", silent = True) != 'ABORT': pass
+      elif action.group(1) == 'Exile' and exileCard(targetCard, silent = True) != 'ABORT': pass
       else: return 'ABORT'
       if action.group(2) != 'Multi': break # If we're not doing a multi-targeting, abort after the first run.
    if notification == 'Quick': announceString = "{} {}es {}".format(announceText, action.group(1), targetCardlist)
@@ -2869,8 +2876,6 @@ def findCounterPrevention(count, counter, targetPL): # Find out if the player ha
          if count == 0: break # If we've found enough protection to alleviate all counters, stop the search.
    if debugVerbosity >= 4: notify("<<< findCounterPrevention() by returning: {}".format(preventionFound))
    return preventionFound
-
-   
    
 def ofwhom(Autoscript, controller = me): 
    if debugVerbosity >= 1: notify(">>> ofwhom(){}".format(extraASDebug())) #Debug
@@ -3226,11 +3231,25 @@ def atTimedEffects(Time = 'Start'): # Function which triggers card effects at th
             elif regexHooks['CustomScript'].search(passedScript):
                if CustomScript(card, action = 'Turn{}'.format(Time)) == 'ABORT': return
             if failedRequirement: break # If one of the Autoscripts was a cost that couldn't be paid, stop everything else.
+   markerEffects(Time)
    if me.counters['Bit Pool'].value < 0: 
       if Time == 'Run': notify(":::Warning::: {}'s Start-of-run effects cost more Bits than {} had in their Bit Pool!".format(me,me))
       else: notify(":::Warning::: {}'s {}-of-turn effects cost more Bits than {} had in their Bit Pool!".format(me,Time,me))
    if ds == 'corp' and Time =='Start': draw(me.piles['R&D/Stack'])
    if TitleDone: notify(":::--------------------------:::".format(me))   
+
+def markerEffects(Time = 'Start'):
+   if debugVerbosity >= 1: notify(">>> markerEffects() at time: {}".format(Time)) #Debug
+   CounterHold = getSpecial('Counter Hold')
+   for marker in CounterHold.markers:
+      if debugVerbosity >= 4: notify("### marker: {}".format(marker[0])) # Debug
+      if re.search(r'virusScaldan',marker[0]) and Time == 'Start':
+         total = 0
+         for iter in range(CounterHold.markers[marker]):
+            rollTuple = RollX('Roll1Dice', 'Scaldan virus:', CounterHold, notification = 'Automatic')
+            if rollTuple[1] >= 5: total += 1
+         me.counters['Bad Publicity'].value += total
+         if total: notify("--> {} receives {} Bad Publicity due to their Scaldan virus infestation".format(me,total))
 
 #------------------------------------------------------------------------------
 # Debugging
