@@ -49,6 +49,12 @@ How the custom fonts look like
 Changelog
 ---------
 
+### 2.1.12
+
+ * Added Butcher Boy and Cockroach implementation
+ * Also fixed some bug with the debugverbosity
+ * InflictX will not warn you if you're doing 0 damage now.
+
 ### 2.1.11
 
  * Made deck checking faster.

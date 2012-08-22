@@ -2543,9 +2543,11 @@ def RollX(Autoscript, announceText, card, targetCards = None, notification = Non
    d6list = []
    result = 0
    action = re.search(r'\bRoll([0-9]+)Dice(-chk)?([1-6])?', Autoscript)
-   count = num(action.group(1))
    multiplier = per(Autoscript, card, n, targetCards, notification)
+   count = num(action.group(1)) * multiplier 
    for d in range(count):
+      if d == 2: whisper("-- Please wait. Rolling {} dice...".format(count))
+      if d == 8: whisper("-- A little while longer...")
       d6 = rolld6(silent = True)
       d6list.append(d6)
       if action.group(3): # If we have a chk modulator, it means we only increase our total if we hit a specific number.
@@ -3258,6 +3260,9 @@ def markerEffects(Time = 'Start'):
    for marker in OpponentCounterHold.markers:
       if marker == mdict['virusButcherBoy'] and Time == 'Start':
          GainX('Gain1Bits-onOpponent-perMarker{virusButcherBoy}-div2', "Opponent's Butcher Boy virus:", OpponentCounterHold, notification = 'Automatic')
+      if marker == mdict['virusIncubate'] and Time == 'Start':
+         passedScript = 'Roll{}Dice'.format(OpponentCounterHold.markers[mdict['virusIncubate']])
+         RollX(passedScript, "Opponent's Incubate virus:", OpponentCounterHold, notification = 'Automatic')
 
 #------------------------------------------------------------------------------
 # Debugging
@@ -3290,7 +3295,7 @@ def TrialError(group, x=0, y=0): # Debugging
                 "2c411091-bbd3-443e-a859-981efa6323b0", # Omnitech &quot;Spinal Tap&quot; Cybermodem
                 "0612bf98-4990-451b-89c1-f2f2516e4edb", # Cockroach
                 "31cb5ed8-ca36-4637-b78f-ec10c1c28526", # Rent-to-Own Contract # This will need one of those markers that have their own abilities
-                "f7dae0ad-08c7-4192-92b1-80993eb083b7", # Shock Treatment
+                "33edf37f-aa77-4072-a946-70a68cb8815d", # Incubator
                 "7190dac8-aad9-497a-8c0c-58888acb33e6", # Self-Destruct
                 "89abe50e-6c37-4fd2-ab8f-f80c5bd5e6e3", # Puzzle
                 "19ea719d-a121-4ed1-b354-8c2d64e875ee", # Glacier
