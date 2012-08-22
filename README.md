@@ -49,6 +49,20 @@ How the custom fonts look like
 Changelog
 ---------
 
+### 2.1.11
+
+ * Made deck checking faster.
+ * Added functions which allow the players to trash other player's cards and also take care of their effects
+
+### 2.1.10
+
+ * At turn start/end effects now trigger more robustly.
+ * RequestInt can now be passed a special announcement to use
+ * Checking for tags can now be used on other core commands than InflictX
+ * Stopped using the old scripts completely
+ * Cards which modify your draw
+
+
 ### 2.1.9
 
  * **Fixed significant bug** with Core set programs & hardware, where they wouldn't activate their "onInstall" autoscrips. Please download patch -v5 to fix
