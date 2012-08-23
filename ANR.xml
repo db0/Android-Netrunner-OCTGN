@@ -26,7 +26,7 @@
 		<cardaction menu="Clear Card" default="false" execute="clear" />
 		<groupactions menu="Game...">
 			<groupaction menu="Set up" default="false" shortcut="Ctrl+Shift+S" execute="intJackin" />
-			<groupaction menu="Switch Unicode bits ON/OFF" default="false" execute="switchUniBits" />
+			<groupaction menu="Switch Unicode credits ON/OFF" default="false" execute="switchUniCredits" />
 			<groupaction menu="Switch Play, Score and Rez Automation ON/OFF" default="false" execute="switchPlayAutomation" />  
 			<groupaction menu="Switch Start/End-of-Turn Automation ON/OFF" default="false" execute="switchStartEndAutomation" />  
 			<groupaction menu="Switch Damage Automation ON/OFF" default="false" execute="switchDMGAutomation" />  
@@ -47,16 +47,16 @@
 			<groupaction menu="&#9166; Run on HQ" default="false" shortcut="Ctrl+Alt+H" execute="runHQ" />
 			<groupaction menu="&#9166; Run on R&amp;D" default="false" shortcut="Ctrl+Alt+R" execute="runRD" />
 			<groupaction menu="&#9166; Run on Archives" default="false" shortcut="Ctrl+Alt+A" execute="runArchives" />
-			<groupaction menu="&#9166; Run on a SDF" default="false" shortcut="Ctrl+Alt+S" execute="runSDF" />
+			<groupaction menu="&#9166; Run on a Remote Server" default="false" shortcut="Ctrl+Alt+S" execute="runServer" />
 		</groupactions>
 		<cardactions menu="Add/Remove Markers...">
 			<cardaction menu="&#9166; Pay &#10122; and advance card" default="false" shortcut="Alt+A" execute="advanceCardP" />
 			<cardaction menu="Add X advancement counter" default="false" execute="addXadvancementCounter" />
 			<cardaction menu="Remove 1 advancement counter" default="false" shortcut="Alt+Shift+A" execute="advanceCardM" />
 			<cardaction menu="Remove X advancement counters" default="false" execute="delXadvancementCounter" />
-			<cardaction menu="Put X Bits from the Bank" default="false" shortcut="Alt+B" execute="addBits" />
-			<cardaction menu="Remove X Bits" default="false" execute="remBits" />
-			<cardaction menu="Take X Bits to Bit Pool" default="false" shortcut="Alt+Shift+B" execute="remBits2BP" />
+			<cardaction menu="Put X Credits from the Bank" default="false" shortcut="Alt+B" execute="addCredits" />
+			<cardaction menu="Remove X Credits" default="false" execute="remCredits" />
+			<cardaction menu="Take X Credits to you Pool" default="false" shortcut="Alt+Shift+B" execute="remXCredits" />
 			<cardaction menu="Mark with +1" default="false" shortcut="Alt+1" execute="addPlusOne" />
 			<cardaction menu="Mark with -1" default="false" shortcut="Alt+Shift+1" execute="addMinusOne" />
 			<cardaction menu="Add Markers" default="false" shortcut="Alt+M" batchExecute="addMarker" />
@@ -72,7 +72,7 @@
 		</cardactions>
 		<cardactions menu="Trace...">
 			<cardaction menu="Input Trace Value" default="false" execute="inputTraceValue" />
-			<cardaction menu="Reveal" default="false" execute="revealTraceValue" />
+<!--			<cardaction menu="Reveal" default="false" execute="revealTraceValue" /> -->
 			<cardaction menu="Pay Trace Value" default="false" execute="payTraceValue" />
 			<cardaction menu="Cancel Trace" default="false" execute="cancelTrace" />
 		</cardactions>
@@ -82,19 +82,19 @@
 		<cardaction menu="Prioritize" default="false" shortcut="Ctrl+P" execute="prioritize" />
 		<cardaction menu="Uninstall" default="false" shortcut="Ctrl+U" execute="uninstall" />
 		<cardaction menu="Score Agenda" default="false" execute="scrAgenda" />      
-		<groupaction menu="Pay &amp; Trash Target (Resource, Node or Upgrade)" default="false" hortcut="Ctrl+Shift+T" execute="trashTargetPaid" />
+		<groupaction menu="Pay &amp; Trash Target (Resource, Asset or Upgrade)" default="false" hortcut="Ctrl+Shift+T" execute="trashTargetPaid" />
 		<groupaction menu="Trash Target without cost" default="false" hortcut="Ctrl+T" execute="trashTargetFree" />
-		<groupaction menu="Create new Subsidiary Data Fort" default="false" execute="createSDF" />
+		<groupaction menu="Create new Remote Server" default="false" execute="createSDF" />
 		<groupaction menu="Roll d6" default="false" shortcut="Ctrl+6" execute="rolld6" />
-		<groupaction menu="&#9166; Receive &#10122;" default="false" shortcut="Ctrl+B" execute="getBit" />
+		<groupaction menu="&#9166; Receive &#10122;" default="false" shortcut="Ctrl+B" execute="getCredit" />
         
 		
 	</table>
-	<player summary="Actions {#Actions} / Bits {#Bit Pool} / Hand {#HQ/Hand} / APs {#Agenda Points} / Tags {#Tags}">
+	<player summary="Clicks {#Clicks} / Credits {#Credits} / Hand {#HQ/Grip} / APs {#Agenda Points} / Tags {#Tags}">
       <globalvariable name="ds" value="" /> 
       <globalvariable name="specialCards" value="{}" /> 
       <globalvariable name="wasNoisy" value="0" /> 
-		<hand name="HQ/Hand" visibility="me" ordered="false" width="63" height="88" icon="r11">
+		<hand name="HQ/Grip" visibility="me" ordered="false" width="63" height="88" icon="r11">
 			<cardaction menu="&#9166; Pay and Install Card" default="true" shortcut="enter" execute="intPlay" />
 			<cardaction menu="Install Card at no cost" default="false" execute="playForFree" />
 			<cardactions menu="Move ...">
@@ -120,7 +120,7 @@
 			</groupactions>
 		</group>
 
-		<group name="Trash/Archives(Face-up)" visibility="all" ordered="false" width="63" height="88" icon="r14" collapsed="false">
+		<group name="Heap/Archives(Face-up)" visibility="all" ordered="false" width="63" height="88" icon="r14" collapsed="false">
 			<groupaction menu="Move all to R&amp;D/Stack" default="false" execute="archivestoStack" />
 		</group>
 
@@ -128,9 +128,9 @@
 			<groupaction menu="Move all to Archives" default="false" execute="toarchives" />
 			<groupaction menu="Move all to R&amp;D/Stack" default="false" execute="archivestoStack" />
 		</group>
-		<counter name="Actions" default="0" reset="true" icon="r10" />
-		<counter name="Bit Pool" default="0" reset="true" icon="r9" />
-		<counter name="Memory" default="0" reset="true" icon="r8" />
+		<counter name="Clicks" default="0" reset="true" icon="r10" />
+		<counter name="Credits" default="0" reset="true" icon="r9" />
+		<counter name="MU" default="0" reset="true" icon="r8" />
 		<counter name="Agenda Points" default="0" reset="true" icon="r7" />
 		<counter name="Bad Publicity" default="0" reset="true" icon="r2" />
 		<counter name="Max Hand Size" default="0" reset="true" icon="r13" />
@@ -140,6 +140,7 @@
 		<group name="Exile" visibility="all" ordered="false" width="63" height="88" icon="r14" collapsed="false" />
 	</shared>
 	<deck>
+		<section name="Identity" group="Hand" />
 		<section name="R&amp;D / Stack" group="R&amp;D/Stack" />
 	</deck>
 	<scripts>

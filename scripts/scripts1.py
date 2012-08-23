@@ -403,13 +403,13 @@ def chkRAM(card, action = 'install', silent = False):
    MUreq = num(fetchProperty(card,'MU Required'))
    if MUreq > 0 and not card.markers[mdict['DaemonMU']] and card.highlight != InactiveColor and card.highlight != RevealedColor:
       if action == 'install':
-         card.controller.Memory -= MUreq
+         card.controller.MU -= MUreq
          MUtext = ", using up {} MUs".format(MUreq)
       elif action == 'uninstall':
-         card.controller.Memory += MUreq
+         card.controller.MU += MUreq
          MUtext = ", freeing up {} MUs".format(MUreq)
    else: MUtext = ''
-   if card.controller.Memory < 0 and not silent: notify(":::Warning:::{}'s programs require more memory than he has available. They must trash enough programs to bring their available Memory to at least 0".format(card.controller))
+   if card.controller.MU < 0 and not silent: notify(":::Warning:::{}'s programs require more memory than he has available. They must trash enough programs to bring their available Memory to at least 0".format(card.controller))
    if debugVerbosity >= 4: notify("<<< chkRAM() by returning: {}".format(MUtext))
    return MUtext
 
@@ -455,15 +455,15 @@ def useAction(group = table, x=0, y=0, count = 1):
    mute()
    extraText = ''
    if count == 0: return '{} takes a free action'.format(me)
-   actionsReduce = findCounterPrevention(me.Actions, 'Actions', me)
+   actionsReduce = findCounterPrevention(me.Clicks, 'Actions', me)
    if actionsReduce: notify(":::WARNING::: {} had to forfeit their next {} actions".format(me, actionsReduce))
-   me.Actions -= actionsReduce
-   if me.Actions < count: 
+   me.Clicks -= actionsReduce
+   if me.Clicks < count: 
       if not confirm("You have no more actions left for this turn. Are you sure you want to continue?"): return 'ABORT'
       else: extraText = ' (Exceeding Max!)'
-   currAction += count + lastKnownNrActions - me.Actions# If the player modified their action counter manually, the last two will increase/decreate our current action accordingly.
-   me.Actions -= count
-   lastKnownNrActions = me.Actions
+   currAction += count + lastKnownNrActions - me.Clicks# If the player modified their action counter manually, the last two will increase/decreate our current action accordingly.
+   me.Clicks -= count
+   lastKnownNrActions = me.Clicks
    if count == 2: return "{} {} {} takes Double Action #{} and #{}{}".format(uniAction(),uniAction(),me,currAction - 1, currAction,extraText)
    elif count == 3: return "{} {} {} {} takes Triple Action #{}, #{} and #{}{}".format(uniAction(),uniAction(),uniAction(),me,currAction - 2, currAction - 1, currAction,extraText)
    else: return "{} {} takes Action #{}{}".format(uniAction(),me,currAction,extraText) # We give act +1 because otherwise the first action would be action #0.
@@ -475,7 +475,7 @@ def goToEndTurn(group, x = 0, y = 0):
    if ds == "":
       whisper ("Please perform the game setup first (Ctrl+Shift+S)")
       return
-   if me.Actions > 0: # If the player has not used all their actions for this turn, remind them, just in case.
+   if me.Clicks > 0: # If the player has not used all their actions for this turn, remind them, just in case.
       if debugVerbosity <= 0 and not confirm("You have not taken all your actions for this turn, are you sure you want to declare end of turn"): return
    if len(me.hand) > currentHandSize(): #If the player is holding more cards than their hand max. remind them that they need to discard some 
                                         # and put them in the end of turn to allow them to do so.
@@ -514,21 +514,21 @@ def goToSot (group, x=0,y=0):
    actionsReduce = findCounterPrevention(maxActions, 'Actions', me) # Checking if the player has any effects which force them to forfeit actions.
    if actionsReduce: extraTXT = " ({} forfeited)".format(actionsReduce)
    else: extraTXT = ''
-   if me.Actions < 0: 
+   if me.Clicks < 0: 
       if debugVerbosity <= 0 and not confirm("Your actions were negative from last turn. Was this a result of a penalty you suffered from a card?"): 
-         me.Actions = maxActions - actionsReduce # If the player did not have a penalty, then we assume those were extra actions granted by some card effect, so we make sure they have their full maximum
+         me.Clicks = maxActions - actionsReduce # If the player did not have a penalty, then we assume those were extra actions granted by some card effect, so we make sure they have their full maximum
       else: 
-         me.Actions += maxActions - actionsReduce # If it was a penalty, then it remains with them for this round, which means they have less actions to use.
+         me.Clicks += maxActions - actionsReduce # If it was a penalty, then it remains with them for this round, which means they have less actions to use.
          notify("{} is starting with {} less actions this turn, due to a penalty from a previous turn.")
-   else: me.Actions = maxActions - actionsReduce
-   lastKnownNrActions = me.Actions
+   else: me.Clicks = maxActions - actionsReduce
+   lastKnownNrActions = me.Clicks
    myCards = (card for card in table if card.controller == me and card.owner == me)
    for card in myCards: 
       if card in Stored_Type and Stored_Type[card] != 'Ice': card.orientation &= ~Rot90 # Refresh all cards which can be used once a turn.
    newturn = True
    atTimedEffects('Start') # Check all our cards to see if there's any Start of Turn effects active.
-   if ds == "corp": notify("=> The offices of {}'s Corporation are now open for business. They have {} actions for this turn{}.".format(me,me.Actions,extraTXT))
-   else: notify ("=> Runner {} has woken up. They have {} actions for this turn{}.".format(me,me.Actions,extraTXT))
+   if ds == "corp": notify("=> The offices of {}'s Corporation are now open for business. They have {} actions for this turn{}.".format(me,me.Clicks,extraTXT))
+   else: notify ("=> Runner {} has woken up. They have {} actions for this turn{}.".format(me,me.Clicks,extraTXT))
 
 def modActions(group,x=0,y=0):
    if debugVerbosity >= 1: notify(">>> modActions(){}".format(extraASDebug())) #Debug
@@ -569,7 +569,7 @@ def switchPreventDMGAutomation(group,x=0,y=0):
    if debugVerbosity >= 1: notify(">>> switchDMGAutomation(){}".format(extraASDebug())) #Debug
    switchAutomation('Damage Prevention')
         
-def switchUniBits(group,x=0,y=0,command = 'Off'):
+def switchUniCredits(group,x=0,y=0,command = 'Off'):
    if debugVerbosity >= 1: notify(">>> switchUniBits(){}".format(extraASDebug())) #Debug
    global UniBits
    if UniBits and command != 'On':
@@ -629,7 +629,7 @@ def intJackin(group, x = 0, y = 0):
    me.setGlobalVariable('ds', ds)
    TopCard.moveTo(me.piles['R&D/Stack'])
    if checkDeckNoLimit(stack) != 0: notify ("SHOULD RETURN")
-   me.counters['Bit Pool'].value = 5
+   me.counters['Credits'].value = 5
    me.counters['Max Hand Size'].value = 5
    me.counters['Tags'].value = 0
    me.counters['Agenda Points'].value = 0
@@ -644,14 +644,14 @@ def intJackin(group, x = 0, y = 0):
    currAction = 0
    if ds == "corp":
       maxActions = 3
-      #me.Actions = maxActions # We now do that during SoT
-      me.Memory = 0
+      #me.Clicks = maxActions # We now do that during SoT
+      me.MU = 0
       NameDeck = "R&D"
       notify("{} is playing as Corporation".format(me))      
    else:
       maxActions = 4
-      #me.Actions = maxActions # We now do that during SoT
-      me.Memory = 4
+      #me.Clicks = maxActions # We now do that during SoT
+      me.MU = 4
       NameDeck = "Stack"
       notify("{} is playing as Runner".format(me))
    createStartingCards()
@@ -739,9 +739,9 @@ def runArchives(group, x=0,Y=0):
    if debugVerbosity >= 1: notify(">>> runArchives(){}".format(extraASDebug())) #Debug
    intRun(1, "the Archives")
 
-def runSDF(group, x=0,Y=0):
+def runServer(group, x=0,Y=0):
    if debugVerbosity >= 1: notify(">>> runSDF(){}".format(extraASDebug())) #Debug
-   intRun(1, "a subsidiary data fort")
+   intRun(1, "a remote server")
 
 #------------------------------------------------------------------------------
 # Tags...
@@ -762,7 +762,7 @@ def pay2andDelTag(group, x = 0, y = 0):
    reduction = reduceCost(dummyCard, 'DelTag', 2)
    if reduction: extraText = " (reduced by {})".format(uniBit(reduction))
    if payCost(2 - reduction) == "ABORT": 
-      me.Actions += 1 # If the player didn't notice they didn't have enough bits, we give them back their action
+      me.Clicks += 1 # If the player didn't notice they didn't have enough bits, we give them back their action
       return # If the player didn't have enough money to pay and aborted the function, then do nothing.
    me.counters['Tags'].value -= 1
    notify ("{} and pays {}{} to lose a tag.".format(ActionCost,uniBit(2 - reduction),extraText))
@@ -778,14 +778,14 @@ def intAddBits ( card, count):
       if ( card.isFaceUp == True): notify("{} adds {} from the bank on {}.".format(me,uniBit(count),card))
       else: notify("{} adds {} on a card.".format(me,uniBit(count)))
 
-def addBits(card, x = 0, y = 0):
+def addCredits(card, x = 0, y = 0):
    if debugVerbosity >= 1: notify(">>> addBits(){}".format(extraASDebug())) #Debug
    mute()
    count = askInteger("Add how many Bits?", 1)
    if count == None: return
    intAddBits(card, count)
 	
-def remBits(card, x = 0, y = 0):
+def remCredits(card, x = 0, y = 0):
    if debugVerbosity >= 1: notify(">>> remBits(){}".format(extraASDebug())) #Debug
    mute()
    count = askInteger("Remove how many Bits?", 1)
@@ -795,14 +795,14 @@ def remBits(card, x = 0, y = 0):
    if card.isFaceUp == True: notify("{} removes {} from {}.".format(me,uniBit(count),card))
    else: notify("{} removes {} from a card.".format(me,uniBit(count)))
 
-def remBits2BP (card, x = 0, y = 0):
+def remXCredits (card, x = 0, y = 0):
    if debugVerbosity >= 1: notify(">>> remBits2BP(){}".format(extraASDebug())) #Debug
    mute()
    count = askInteger("Remove how many Bits?", 1)
    if count == None: return
    if count > card.markers[Bits]: count = card.markers[Bits]
    card.markers[Bits] -= count
-   me.counters['Bit Pool'].value += count 
+   me.counters['Credits'].value += count 
    if card.isFaceUp == True: notify("{} removes {} from {} to their Bit Pool.".format(me,uniBit(count),card))
    else: notify("{} takes {} from a card to their Bit Pool.".format(me,uniBit(count)))
 
@@ -845,7 +845,7 @@ def advanceCardP(card, x = 0, y = 0):
    reduction = reduceCost(card, 'Advance', 1)
    if reduction: extraText = " (reduced by {})".format(uniBit(reduction))
    if payCost(1 - reduction) == "ABORT": 
-      me.Actions += 1 # If the player didn't notice they didn't have enough bits, we give them back their action
+      me.Clicks += 1 # If the player didn't notice they didn't have enough bits, we give them back their action
       return # If the player didn't have enough money to pay and aborted the function, then do nothing.
    card.markers[Advance] += 1
    if card.isFaceUp: notify("{} and paid {}{} to advance {}.".format(ActionCost,uniBit(1 - reduction),extraText,card))
@@ -950,9 +950,9 @@ def payCost(count = 1, cost = 'not_free', counter = 'BP'): # A function that rem
    count = num(count)
    if count <= 0 : return 0# If the card has 0 cost, there's nothing to do.
    if counter == 'BP':
-      if me.counters['Bit Pool'].value < count and not confirm("You do not seem to have enough Bits in your pool to take this action. Are you sure you want to proceed? \
+      if me.counters['Credits'].value < count and not confirm("You do not seem to have enough Bits in your pool to take this action. Are you sure you want to proceed? \
          \n(If you do, your Bit Pool will go to the negative. You will need to increase it manually as required.)"): return 'ABORT' # If we don't have enough Bits in the pool, we assume card effects or mistake and notify the player that they need to do things manually.
-      me.counters['Bit Pool'].value -= count
+      me.counters['Credits'].value -= count
    elif counter == 'AP': # We can also take costs from other counters with this action.
       if me.counters['Agenda Points'].value < count and not confirm("You do not seem to have enough Agenda Points to take this action. Are you sure you want to proceed? \
          \n(If you do, your Agenda Points will go to the negative. You will need to increase them manually as required.)"): return 'ABORT'
@@ -1049,15 +1049,15 @@ def addNetDmg(group, x = 0, y = 0):
       notify ("{} suffers 1 Net Damage.".format(me))
       intdamageDiscard(me.hand)
       
-def getBit(group, x = 0, y = 0):
-   if debugVerbosity >= 1: notify(">>> getBit(){}".format(extraASDebug())) #Debug
+def getCredit(group, x = 0, y = 0):
+   if debugVerbosity >= 1: notify(">>> getCredit(){}".format(extraASDebug())) #Debug
    ActionCost = useAction()
    if ActionCost == 'ABORT': return
    bitsReduce = findCounterPrevention(1, 'Bits', me)
    if bitsReduce: extraTXT = " ({} forfeited)".format(uniBit(bitsReduce))
    else: extraTXT = ''
    notify ("{} and receives {}{}.".format(ActionCost,uniBit(1 - bitsReduce),extraTXT))
-   me.counters['Bit Pool'].value += 1 - bitsReduce
+   me.counters['Credits'].value += 1 - bitsReduce
     
 #------------------------------------------------------------------------------
 # Card Actions
@@ -1356,7 +1356,7 @@ def possess(daemonCard, programCard, silent = False):
    else: 
       daemonCard.markers[mdict['DaemonMU']] -= count
       programCard.markers[mdict['DaemonMU']] += count
-      programCard.owner.Memory += count # We return the MUs the card would be otherwise using.
+      programCard.owner.MU += count # We return the MUs the card would be otherwise using.
       if not silent: notify("{} installs {} into {}".format(me,programCard,daemonCard))
 
       
@@ -1475,7 +1475,7 @@ def intPlay(card, cost = 'not_free'):
       if reduction: extraText = " (reduced by {})".format(uniBit(reduction)) #If it is, make sure to inform.
       rc = payCost(num(card.Cost) - reduction, cost)
       if rc == "ABORT": 
-         me.Actions += NbReq # If the player didn't notice they didn't have enough bits, we give them back their action
+         me.Clicks += NbReq # If the player didn't notice they didn't have enough bits, we give them back their action
          return # If the player didn't have enough money to pay and aborted the function, then do nothing.
       elif rc == "free": extraText = " at no cost"
       elif rc != 0: rc = " and pays {}".format(rc)
@@ -1504,7 +1504,7 @@ def intPlay(card, cost = 'not_free'):
       if reduction: extraText = " (reduced by {})".format(uniBit(reduction)) #If it is, make sure to inform.
       rc = payCost(num(card.Cost) - reduction, cost)
       if rc == "ABORT": 
-         me.Actions += NbReq # If the player didn't notice they didn't have enough bits, we give them back their action
+         me.Clicks += NbReq # If the player didn't notice they didn't have enough bits, we give them back their action
          return # If the player didn't have enough money to pay and aborted the function, then do nothing.
       elif rc == "free": extraText = " at no cost"
       elif rc != 0: rc = " and pays {}".format(rc)
@@ -2004,7 +2004,7 @@ def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
             else: extraText = ''
             Bcost = payCost(num(actionCost.group(2)) - reduction)
             if Bcost == 'ABORT': # if they can't pay the cost afterall, we return them their actions and abort.
-               me.Actions += num(actionCost.group(1))
+               me.Clicks += num(actionCost.group(1))
                return
             if actionCost.group(1) != '0':
                if actionCost.group(3) != '0' or actionCost.group(4) != '0': announceText += ', '
@@ -2014,8 +2014,8 @@ def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
          if actionCost.group(3) != '0': # If we need to pay agenda points...
             Gcost = payCost(actionCost.group(3), counter = 'AP')
             if Gcost == 'ABORT': 
-               me.Actions += num(actionCost.group(1))
-               me.counters['Bit Pool'].value += num(actionCost.group(2))
+               me.Clicks += num(actionCost.group(1))
+               me.counters['Credits'].value += num(actionCost.group(2))
                return
             if actionCost.group(1) != '0' or actionCost.group(2)  != '0':
                if actionCost.group(4) != '0': announceText += ', '
@@ -2025,8 +2025,8 @@ def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
          if actionCost.group(4) != '0': # If the card needs to be trashed...
             if (actionCost.group(4) == '2' and oncePerTurn(card, silent = True) == 'ABORT') or (actionCost.group(4) == '1' and not confirm("This action will trash the card as a cost. Are you sure you want to continue?")):
                # On trash cost, we confirm first to avoid double-click accidents
-               me.Actions += num(actionCost.group(1))
-               me.counters['Bit Pool'].value += num(actionCost.group(2))
+               me.Clicks += num(actionCost.group(1))
+               me.counters['Credits'].value += num(actionCost.group(2))
                me.counters['Agenda Points'].value += num(actionCost.group(3))
                return
             if actionCost.group(1) != '0' or actionCost.group(2) != '0' or actionCost.group(3) != '0': announceText += ' and '
@@ -2124,8 +2124,8 @@ def autoscriptCostUndo(card, Autoscript): # Function for undoing the cost of an 
    if debugVerbosity >= 1: notify(">>> autoscriptCostUndo(){}".format(extraASDebug())) #Debug
    whisper("--> Undoing action...")
    actionCost = re.match(r"A([0-9]+)B([0-9]+)G([0-9]+)T([0-9]+):", Autoscript)
-   me.Actions += num(actionCost.group(1))
-   me.counters['Bit Pool'].value += num(actionCost.group(2))
+   me.Clicks += num(actionCost.group(1))
+   me.counters['Credits'].value += num(actionCost.group(2))
    me.counters['Agenda Points'].value += num(actionCost.group(3))
    if re.search(r"T2:", Autoscript):
       random = rnd(10,5000) # A little wait...
@@ -2271,13 +2271,13 @@ def GainX(Autoscript, announceText, card, targetCards = None, notification = Non
    else: gainReduce = findCounterPrevention(gain * multiplier, action.group(3), targetPL) # If we're going to gain counter, then we check to see if we have any markers which might reduce the cost.
    #confirm("multiplier: {}, gain: {}, reduction: {}".format(multiplier, gain, gainReduce)) # Debug
    if re.match(r'Bits', action.group(3)): # Note to self: I can probably comprress the following, by using variables and by putting the counter object into a variable as well.
-      if action.group(1) == 'SetTo': targetPL.counters['Bit Pool'].value = 0 # If we're setting to a specific value, we wipe what it's currently.
-      if gain == -999: targetPL.counters['Bit Pool'].value = 0
-      else: targetPL.counters['Bit Pool'].value += (gain * multiplier) - gainReduce
-      if targetPL.counters['Bit Pool'].value < 0: 
+      if action.group(1) == 'SetTo': targetPL.counters['Credits'].value = 0 # If we're setting to a specific value, we wipe what it's currently.
+      if gain == -999: targetPL.counters['Credits'].value = 0
+      else: targetPL.counters['Credits'].value += (gain * multiplier) - gainReduce
+      if targetPL.counters['Credits'].value < 0: 
          if re.search(r'isCost', Autoscript): notify(":::Warning:::{} did not have enough {} to pay the cost of this action".format(targetPL,action.group(3)))
          elif re.search(r'isPenalty', Autoscript): pass #If an action is marked as penalty, it means that the value can go negative and the player will have to recover that amount.
-         else: targetPL.counters['Bit Pool'].value = 0
+         else: targetPL.counters['Credits'].value = 0
    elif re.match(r'Agenda Points', action.group(3)): 
       if action.group(1) == 'SetTo': targetPL.counters['Agenda Points'].value = 0 # If we're setting to a specific value, we wipe what it's currently.
       if gain == -999: targetPL.counters['Agenda Points'].value = 0
@@ -2288,21 +2288,21 @@ def GainX(Autoscript, announceText, card, targetCards = None, notification = Non
          else: targetPL.counters['Agenda Points'].value = 0
    elif re.match(r'Actions', action.group(3)): 
       if action.group(1) == 'SetTo': 
-         targetPL.Actions = 0 # If we're setting to a specific value, we wipe what it's currently.
+         targetPL.Clicks = 0 # If we're setting to a specific value, we wipe what it's currently.
          lastKnownNrActions = 0
       if gain == -999: 
-         targetPL.Actions = 0
+         targetPL.Clicks = 0
          lastKnownNrActions = 0
       else: 
-         targetPL.Actions += (gain * multiplier) - gainReduce
+         targetPL.Clicks += (gain * multiplier) - gainReduce
          lastKnownNrActions += (gain * multiplier) - gainReduce # We also increase the offset, to make sure we announce the correct current action.
    elif re.match(r'MU', action.group(3)): 
-      if action.group(1) == 'SetTo': targetPL.Memory = 0 # If we're setting to a specific value, we wipe what it's currently.
-      else: targetPL.Memory += (gain * multiplier) - gainReduce
-      if targetPL.Memory < 0: 
+      if action.group(1) == 'SetTo': targetPL.MU = 0 # If we're setting to a specific value, we wipe what it's currently.
+      else: targetPL.MU += (gain * multiplier) - gainReduce
+      if targetPL.MU < 0: 
          if re.search(r'isCost', Autoscript): notify(":::Warning:::{} did not have enough {} to pay the cost of this action".format(targetPL,action.group(3)))
          elif re.search(r'isPenalty', Autoscript): pass #If an action is marked as penalty, it means that the value can go negative and the player will have to recover that amount.
-         else: targetPL.Memory = 0
+         else: targetPL.MU = 0
    elif re.match(r'Bad Publicity', action.group(3)): 
       if action.group(1) == 'SetTo': targetPL.counters['Bad Publicity'].value = 0 # If we're setting to a specific value, we wipe what it's currently.
       if gain == -999: targetPL.counters['Bad Publicity'].value = 0
@@ -2362,8 +2362,8 @@ def TransferX(Autoscript, announceText, card, targetCards = None, notification =
    if len(targetCards) == 0: targetCards.append(card) # If there's been to target card given, assume the target is the card itself.
    for targetCard in targetCards: targetCardlist += '{},'.format(targetCard)
    action = re.search(r'\bTransfer([0-9]+)([A-Za-z ]+)-?', Autoscript)
-   if action.group(2) == 'Bits': destGroup = me.counters['Bit Pool']
-   elif action.group(2) == 'Actions': destGroup = me.counters['Actions']
+   if action.group(2) == 'Bits': destGroup = me.counters['Credits']
+   elif action.group(2) == 'Actions': destGroup = me.counters['Clicks']
    else:
       whisper(":::WARNING::: Not a valid transfer. Aborting!")
       return 'ABORT'
@@ -3196,30 +3196,30 @@ def CustomScript(card, action = 'play'): # Scripts that are complex and fairly u
             notify("{} activates {} in order to emergency rez {} for {} for this run".format(me,card,c,uniBit(num(c.Cost) / 2)))
             return # We don't want to play more than one Ice if the player has for some reason targeted more than 1.
    elif card.name == 'Social Engineering' and action == 'play':
-      hiddenCount = askInteger("How many bits do you want to hide?\n\nMin: 2\nMax: {}".format(me.counters['Bit Pool'].value),2)
-      while me.counters['Bit Pool'].value < hiddenCount or hiddenCount < 2:
+      hiddenCount = askInteger("How many bits do you want to hide?\n\nMin: 2\nMax: {}".format(me.counters['Credits'].value),2)
+      while me.counters['Credits'].value < hiddenCount or hiddenCount < 2:
          hiddenCount = askInteger(":::ERROR::: You cannot hide more bits than you have in your Bit Pool, or less than 2. Close this window to abort!\
-                               \n\nHow many bits do you want to hide?\n\nMin: 2\nMax: {}".format(me.counters['Bit Pool'].value),2)
+                               \n\nHow many bits do you want to hide?\n\nMin: 2\nMax: {}".format(me.counters['Credits'].value),2)
          if hiddenCount == None: 
             notify("{} has aborted their Social Engineering attempt".format(me))
             card.moveTo(me.hand)
-            me.counters['Bit Pool'].value += 1
-            me.counters['Actions'].value += 1
+            me.counters['Credits'].value += 1
+            me.counters['Clicks'].value += 1
             return
       targetPL = ofwhom('ofOpponent')
-      notify(":::Warning::: {} is making a social engineering attempt! {} must now try to guess how many bits they are hiding (min 2, max {})".format(me, targetPL, me.counters['Bit Pool'].value))
+      notify(":::Warning::: {} is making a social engineering attempt! {} must now try to guess how many bits they are hiding (min 2, max {})".format(me, targetPL, me.counters['Credits'].value))
       confirm("You have now hidden this amount of bits. Once your opponent makes a guess, press any button to reveal the true amount.")
       notify("{} was hiding {} bits".format(me,hiddenCount))
    elif card.name == 'Corporate War' and action == 'score':
-      if me.counters['Bit Pool'].value >= 12:
+      if me.counters['Credits'].value >= 12:
          bitsReduce = findCounterPrevention(12, 'Bits', me)
          if bitsReduce: extraTXT = " ({} forfeited)".format(uniBit(bitsReduce))
          else: extraTXT = ''               
          notify("{} has won the corporate war and their spoils are {} Bits{}".format(me,12 - bitsReduce,extraTXT))
-         me.counters['Bit Pool'].value += 12 - bitsReduce
+         me.counters['Credits'].value += 12 - bitsReduce
       else:
          notify("{} has lost the corporate war and their Bit Pool is reduced to 0".format(me))
-         me.counters['Bit Pool'].value = 0
+         me.counters['Credits'].value = 0
    elif card.name == 'Mystery Box' and action == 'use':
       group = me.piles['R&D/Stack']
       haveTarget = False
@@ -3263,11 +3263,11 @@ def CustomScript(card, action = 'play'): # Scripts that are complex and fairly u
       DripMarker = findMarker(card, 'Drip')
       if not DripMarker:
          TokensX('Put1Drip', "Lucidrine (TM) Drip Feed:", card)
-         me.Actions += 1         
+         me.Clicks += 1         
          notify("--> Lucidrine™ Drip Feed: Gain 1 actions.")
       elif card.markers[DripMarker] < 2: 
          card.markers[DripMarker] += 1
-         me.Actions += 1
+         me.Clicks += 1
          notify("--> Lucidrine™ Drip Feed: Gain 1 actions.")
       else: 
          card.markers[DripMarker] = 0
@@ -3276,10 +3276,10 @@ def CustomScript(card, action = 'play'): # Scripts that are complex and fairly u
          notify("--> Lucidrine™ Drip Feed: Causes 1 brain damage.")
    elif card.name == 'On the Fast Track' and action == 'play':
       if confirm("Did you trash an advertisement this turn?\n\n(Selecting 'No' will assume you trashed a transaction"):
-         me.counters['Bit Pool'].value += 8
+         me.counters['Credits'].value += 8
          notify("{} gains {} for trashing an advertisement this turn".format(me,uniBit(8)))
       else:
-         me.counters['Bit Pool'].value += 6
+         me.counters['Credits'].value += 6
          notify("{} gains {} for trashing a transaction this turn".format(me,uniBit(6)))
    elif card.name == 'The Shell Traders':
       if action == 'use':
@@ -3370,7 +3370,7 @@ def CustomScript(card, action = 'play'): # Scripts that are complex and fairly u
             iter = 0
             gamble = 0
       if totalGain > 0:
-         me.counters['Bit Pool'].value += totalGain
+         me.counters['Credits'].value += totalGain
          notify("{} has gained {} from the playful AI. (•‿•)   ".format(me, uniBit(totalGain)))
       else: notify("Tough Luck. ಠ╭╮ಠ")
    elif card.model == 'f58c40eb-bb11-4bad-9562-030d906ea352' and action == 'use':
@@ -3396,7 +3396,7 @@ def CustomScript(card, action = 'play'): # Scripts that are complex and fairly u
       if actionCost == 'ABORT': return
       bitCost = payCost(cost)
       if bitCost == 'ABORT':
-         me.Actions += aCost # If the player can't pay the cost after all and aborts, we give him his actions back as well.
+         me.Clicks += aCost # If the player can't pay the cost after all and aborts, we give him his actions back as well.
          return         
       card.markers[selectedMarker] -= 1
       notify("{} to remove {} for {}.".format(actionCost,selectedMarker[0],bitCost))
@@ -3455,7 +3455,7 @@ def atTimedEffects(Time = 'Start'): # Function which triggers card effects at th
                if CustomScript(card, action = 'Turn{}'.format(Time)) == 'ABORT': return
             if failedRequirement: break # If one of the Autoscripts was a cost that couldn't be paid, stop everything else.
    markerEffects(Time)
-   if me.counters['Bit Pool'].value < 0: 
+   if me.counters['Credits'].value < 0: 
       if Time == 'Run': notify(":::Warning::: {}'s Start-of-run effects cost more Bits than {} had in their Bit Pool!".format(me,me))
       else: notify(":::Warning::: {}'s {}-of-turn effects cost more Bits than {} had in their Bit Pool!".format(me,Time,me))
    if ds == 'corp' and Time =='Start': draw(me.piles['R&D/Stack'])
@@ -3512,9 +3512,9 @@ def markerEffects(Time = 'Start'):
    for card in cardList:
       for marker in card.markers:
          if re.search(r'Term',marker[0]) and Time == 'Start' and card.controller == me:
-            if me.counters['Bit Pool'].value >= 2: 
+            if me.counters['Credits'].value >= 2: 
                passedScript = 'Remove1Term'
-               me.counters['Bit Pool'].value -= 2
+               me.counters['Credits'].value -= 2
                notify("--> {} pays {} for their Rent-to-Own Contract on {}".format(me, uniBit(2),card))
             else:
                passedScript = 'Put1Term'
@@ -3559,12 +3559,12 @@ def TrialError(group, x=0, y=0): # Debugging
 #                "8b0a0ca5-d6d6-440f-8f81-4486d252a545"] # Indiscriminate Response Team
    if not ds: ds = "corp"
    me.setGlobalVariable('ds', ds) 
-   me.counters['Bit Pool'].value = 50
+   me.counters['Credits'].value = 50
    me.counters['Max Hand Size'].value = 5
    me.counters['Tags'].value = 1
    me.counters['Agenda Points'].value = 0
    me.counters['Bad Publicity'].value = 10
-   me.Actions = 15
+   me.Clicks = 15
    if not playerside:  # If we've already run this command once, don't recreate the cards.
       chooseSide()
       createStartingCards()
