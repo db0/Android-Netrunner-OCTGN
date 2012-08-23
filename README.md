@@ -36,15 +36,15 @@ Screenshots
 ---------
 (Click for larger size)
 
-A game in progress at v2.0.4
+An Epic Run is starting.
 
-[![](http://i.imgur.com/yDKgGl.jpg)](http://fav.me/d4y88aq)
+[![](http://i.imgur.com/gTiVfl.jpg)](http://fav.me/d5c7r4j)
 
 How the custom fonts look like
 
 [![](http://i.imgur.com/1Zcjy.png)](http://i.imgur.com/1Zcjy.png)
 
-
+S[ee more screenshots here](https://docs.google.com/folder/d/0B-gMiPlH3rBAeHM1dFVLc3QydW8/edit)
 
 Changelog
 ---------
