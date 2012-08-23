@@ -1,29 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<game xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="Netrunner" id="13568561-7a2e-4572-8f31-3d99580ab245" octgnVersion="3.0.1.14" version="3.0.0" markersize="16">
+<game xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="Android:Netrunner" id="0f38e453-26df-4c04-9d67-6d43de939c77" octgnVersion="3.0.1.14" version="1.0.0" markersize="16">
    <globalvariables> 
      <globalvariable name="fontsize" value="11"/>
-     <globalvariable name="chatsize" value="11"/>
+<!--     <globalvariable name="chatsize" value="11"/> -->
    </globalvariables>
 	<card back="r4" front="r5" width="63" height="88" cornerRadius="2">
-		<property name="Player" type="String" hidden="false" ignoreText="False" />
-		<property name="Cost" type="Integer" hidden="false" />
-		<property name="MU Required" type="Integer" hidden="false" />
-		<property name="Type" type="String" hidden="false" ignoreText="False" textKind="Free" />
+		<property name="Subtitle" type="String" hidden="false" ignoreText="False"/>
+		<property name="Type" type="String" hidden="false" ignoreText="False" textKind="Enum" />
 		<property name="Keywords" type="String" hidden="false" ignoreText="False" />
+		<property name="Cost" type="Integer" hidden="false" />
+		<property name="Requirement" type="Integer" hidden="false" />
 		<property name="Stat" type="Integer" hidden="false" ignoreText="False" />
 		<property name="Rules" type="String" hidden="false" ignoreText="False" />
-		<property name="Errata" type="String" hidden="false" ignoreText="False" />
 		<property name="Flavor" type="String" hidden="false" ignoreText="True" />
-		<property name="Artist" type="String" hidden="false" ignoreText="True" />
-		<property name="Number" type="String" hhidden="True" ignoreText="True" />
-		<property name="Rarity" type="String" hidden="false" ignoreText="False" textKind="Enum" />
-		<property name="Tags" type="String" hidden="false" ignoreText="False" />
-
+		<property name="Instructions" type="String" hidden="false" ignoreText="False" />
+		<property name="Faction" type="String" hidden="false" ignoreText="False" />
+		<property name="Influence" type="String" hidden="false" ignoreText="False" />
+      
 		<property name="AutoScript" type="String" hidden="True" ignoreText="True" />
-		<property name="ParamAS1" type="Integer" hidden="True" ignoreText="True" />
-		<property name="ParamAS2" type="Integer" hidden="True" ignoreText="True" />
 		<property name="AutoAction" type="String" hidden="True" ignoreText="True" />
-		<property name="RaritySealed" type="String" hidden="True" ignoretText ="True" textKind="Enum" />
 
 	</card>
 	<table name="Table" visibility="undefined" ordered="false" width="1080" height="671" board="r35" boardPosition="-540,-335,1080,671" background="r1" backgroundStyle="uniformToFill">

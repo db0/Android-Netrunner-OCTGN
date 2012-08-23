@@ -1,4 +1,4 @@
-    # Python Scripts for the Netrunner CCG definition for OCTGN
+    # Python Scripts for the Android:Netrunner CCG definition for OCTGN
     # Copyright (C) 2012  Konstantine Thoukydides
 
     # This python script is free software: you can redistribute it and/or modify
