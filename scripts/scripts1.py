@@ -147,7 +147,7 @@ automatedMarkers = [ #Used in the Inspect() command to let the player know if th
          'Scaldan']
 
 markerRemovals = { # A dictionary which holds the costs to remove various special markers.
-                       # The costs are in a tuple. First is actions cost and then is credit cost.
+                       # The costs are in a tuple. First is clicks cost and then is credit cost.
                      'Fang' :                        (1,2),
                      'Data Raven' :                  (1,1),
                      'Fragmentation Storm' :         (1,1),
@@ -455,11 +455,11 @@ def useAction(group = table, x=0, y=0, count = 1):
    mute()
    extraText = ''
    if count == 0: return '{} takes a free action'.format(me)
-   actionsReduce = findCounterPrevention(me.Clicks, 'Actions', me)
-   if actionsReduce: notify(":::WARNING::: {} had to forfeit their next {} actions".format(me, actionsReduce))
-   me.Clicks -= actionsReduce
+   clicksReduce = findCounterPrevention(me.Clicks, 'Actions', me)
+   if clicksReduce: notify(":::WARNING::: {} had to forfeit their next {} clicks".format(me, clicksReduce))
+   me.Clicks -= clicksReduce
    if me.Clicks < count: 
-      if not confirm("You have no more actions left for this turn. Are you sure you want to continue?"): return 'ABORT'
+      if not confirm("You have no more clicks left for this turn. Are you sure you want to continue?"): return 'ABORT'
       else: extraText = ' (Exceeding Max!)'
    currAction += count + lastKnownNrActions - me.Clicks# If the player modified their action counter manually, the last two will increase/decreate our current action accordingly.
    me.Clicks -= count
@@ -475,8 +475,8 @@ def goToEndTurn(group, x = 0, y = 0):
    if ds == "":
       whisper ("Please perform the game setup first (Ctrl+Shift+S)")
       return
-   if me.Clicks > 0: # If the player has not used all their actions for this turn, remind them, just in case.
-      if debugVerbosity <= 0 and not confirm("You have not taken all your actions for this turn, are you sure you want to declare end of turn"): return
+   if me.Clicks > 0: # If the player has not used all their clicks for this turn, remind them, just in case.
+      if debugVerbosity <= 0 and not confirm("You have not taken all your clicks for this turn, are you sure you want to declare end of turn"): return
    if len(me.hand) > currentHandSize(): #If the player is holding more cards than their hand max. remind them that they need to discard some 
                                         # and put them in the end of turn to allow them to do so.
       if endofturn: #If the player has gone through the end of turn phase and still has more hands, allow them to continue but let everyone know.
@@ -501,7 +501,7 @@ def goToSot (group, x=0,y=0):
    mute()
    clearNoise()
    if endofturn or currAction or newturn:
-      if debugVerbosity <= 0 and not confirm("You have not yet properly ended you previous turn. You need to use F12 after you've finished all your actions.\n\nAre you sure you want to continue?"): return
+      if debugVerbosity <= 0 and not confirm("You have not yet properly ended you previous turn. You need to use F12 after you've finished all your clicks.\n\nAre you sure you want to continue?"): return
       else: 
          if len(me.hand) > currentHandSize(): # Just made sure to notify of any shenanigans
             notify(":::Warning::: {} has skipped their End-of-Turn phase and they are holding more cards ({}) than their hand size maximum of {}".format(me,len(me.hand),currentHandSize()))
@@ -511,24 +511,24 @@ def goToSot (group, x=0,y=0):
       whisper ("Please perform the game setup first (Ctrl+Shift+S)")
       return
    currAction = 0 # We wipe it again just in case they ended their last turn badly but insist on going through the next one.
-   actionsReduce = findCounterPrevention(maxActions, 'Actions', me) # Checking if the player has any effects which force them to forfeit actions.
-   if actionsReduce: extraTXT = " ({} forfeited)".format(actionsReduce)
+   clicksReduce = findCounterPrevention(maxActions, 'Actions', me) # Checking if the player has any effects which force them to forfeit clicks.
+   if clicksReduce: extraTXT = " ({} forfeited)".format(clicksReduce)
    else: extraTXT = ''
    if me.Clicks < 0: 
-      if debugVerbosity <= 0 and not confirm("Your actions were negative from last turn. Was this a result of a penalty you suffered from a card?"): 
-         me.Clicks = maxActions - actionsReduce # If the player did not have a penalty, then we assume those were extra actions granted by some card effect, so we make sure they have their full maximum
+      if debugVerbosity <= 0 and not confirm("Your clicks were negative from last turn. Was this a result of a penalty you suffered from a card?"): 
+         me.Clicks = maxActions - clicksReduce # If the player did not have a penalty, then we assume those were extra clicks granted by some card effect, so we make sure they have their full maximum
       else: 
-         me.Clicks += maxActions - actionsReduce # If it was a penalty, then it remains with them for this round, which means they have less actions to use.
-         notify("{} is starting with {} less actions this turn, due to a penalty from a previous turn.")
-   else: me.Clicks = maxActions - actionsReduce
+         me.Clicks += maxActions - clicksReduce # If it was a penalty, then it remains with them for this round, which means they have less clicks to use.
+         notify("{} is starting with {} less clicks this turn, due to a penalty from a previous turn.")
+   else: me.Clicks = maxActions - clicksReduce
    lastKnownNrActions = me.Clicks
    myCards = (card for card in table if card.controller == me and card.owner == me)
    for card in myCards: 
       if card in Stored_Type and Stored_Type[card] != 'Ice': card.orientation &= ~Rot90 # Refresh all cards which can be used once a turn.
    newturn = True
    atTimedEffects('Start') # Check all our cards to see if there's any Start of Turn effects active.
-   if ds == "corp": notify("=> The offices of {}'s Corporation are now open for business. They have {} actions for this turn{}.".format(me,me.Clicks,extraTXT))
-   else: notify ("=> Runner {} has woken up. They have {} actions for this turn{}.".format(me,me.Clicks,extraTXT))
+   if ds == "corp": notify("=> The offices of {}'s Corporation are now open for business. They have {} clicks for this turn{}.".format(me,me.Clicks,extraTXT))
+   else: notify ("=> Runner {} has woken up. They have {} clicks for this turn{}.".format(me,me.Clicks,extraTXT))
 
 def modActions(group,x=0,y=0):
    if debugVerbosity >= 1: notify(">>> modActions(){}".format(extraASDebug())) #Debug
@@ -591,7 +591,7 @@ def ImAProAtThis(group = table, x=0, y=0):
    whisper("-- All Newbie warnings have been disabled. Play safe.")
         
 #------------------------------------------------------------------------------
-# Table group actions
+# Table group clicks
 #------------------------------------------------------------------------------
 
 def createStartingCards():
@@ -1210,7 +1210,7 @@ def intTrashCard(card, stat, cost = "not free",  ActionCost = '', silent = False
    extraText = ''
    storeProperties(card)
    if ActionCost == '': 
-      ActionCost = '{} '.format(me) # If not actions were used, then just announce our name.
+      ActionCost = '{} '.format(me) # If not clicks were used, then just announce our name.
       goodGrammar = 'es' # LOL Grammar Nazi
    else: 
       ActionCost += ' and '
@@ -1445,10 +1445,10 @@ def intPlay(card, cost = 'not_free'):
    chooseSide() # Just in case...
    storeProperties(card)
    if (card.Type == 'Operation' or card.Type == 'Prep') and chkTargeting(card) == 'ABORT': return # If it's an Operation or Prep and has targeting requirements, check with the user first.
-   if re.search(r'Double', getKeywords(card)): NbReq = 2 # Some cards require two actions to play. This variable is passed to the useAction() function.
+   if re.search(r'Double', getKeywords(card)): NbReq = 2 # Some cards require two clicks to play. This variable is passed to the useAction() function.
    else: NbReq = 1 #In case it's not a "Double" card. Then it only uses one action to play.
    ActionCost = useAction(count = NbReq)
-   if ActionCost == 'ABORT': return  #If the player didn't have enough actions and opted not to proceed, do nothing.
+   if ActionCost == 'ABORT': return  #If the player didn't have enough clicks and opted not to proceed, do nothing.
    if checkUnique(card) == False: return #If the player has the unique card and opted not to trash it, do nothing.
    if not checkNotHardwareDeck(card): return	#If player already has a deck in play and doesnt want to play that card, do nothing.
    if card.Type == 'Prep' or card.Type == 'Operation': action = 'Play'
@@ -1770,7 +1770,7 @@ def executePlayScripts(card, action):
    X = 0
    Autoscripts = card.AutoScript.split('||') # When playing cards, the || is used as an "and" separator, rather than "or". i.e. we don't do choices (yet)
    AutoScriptsSnapshot = list(Autoscripts) # Need to work on a snapshot, because we'll be modifying the list.
-   for autoS in AutoScriptsSnapshot: # Checking and removing any "AtTurnStart" actions.
+   for autoS in AutoScriptsSnapshot: # Checking and removing any "AtTurnStart" clicks.
       if re.search(r'atTurn(Start|End)', autoS) or re.search(r'-isTrigger', autoS): Autoscripts.remove(autoS)
       elif re.search(r'onPay', autoS): Autoscripts.remove(autoS) # onPay effects are only useful before we go to the autoscripts, for the cost reduction.
       elif re.search(r'triggerNoisy', autoS): Autoscripts.remove(autoS) # Trigger Noisy are used automatically during action use.
@@ -1910,7 +1910,7 @@ def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
    ### Checking if card has multiple autoscript options and providing choice to player.
    Autoscripts = Stored_AutoActions[card].split('||')
    AutoScriptSnapshot = list(Autoscripts)
-   for autoS in AutoScriptSnapshot: # Checking and removing any actionscripts which were put here in error.
+   for autoS in AutoScriptSnapshot: # Checking and removing any clickscripts which were put here in error.
       if (re.search(r'while(Rezzed|Scored)', autoS) 
          or re.search(r'on(Play|Score|Install)', autoS) 
          or re.search(r'AtTurn(Start|End)', autoS)
@@ -1993,7 +1993,7 @@ def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
       # After A follows B for Credit cost, then for aGenda cost.
       # T takes a binary value. A value of 1 means the card needs to be trashed.
       if actionCost: # If there's no match, it means we've already been through the cost part once and now we're going through the '$$' part.
-         if actionCost.group(1) != '0': # If we need to use actions
+         if actionCost.group(1) != '0': # If we need to use clicks
             Acost = useAction(count = num(actionCost.group(1)))
             if Acost == 'ABORT': return
             else: announceText = Acost
@@ -2003,7 +2003,7 @@ def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
             if reduction: extraText = " (reduced by {})".format(uniCredit(reduction))  
             else: extraText = ''
             Bcost = payCost(num(actionCost.group(2)) - reduction)
-            if Bcost == 'ABORT': # if they can't pay the cost afterall, we return them their actions and abort.
+            if Bcost == 'ABORT': # if they can't pay the cost afterall, we return them their clicks and abort.
                me.Clicks += num(actionCost.group(1))
                return
             if actionCost.group(1) != '0':
@@ -2231,7 +2231,7 @@ def chkWarn(card, Autoscript): # Function for checking that an autoscript announ
             whisper("--> Aborting action. Please discard the necessary amount of cards and run this action again")
             return 'ABORT'
       if warning.group(1) == 'ReshuffleOpponent': 
-         if not confirm("This action will reshuffle your opponent's pile(s). Are you sure?\n\n[Important: Please ask your opponent not to take any actions with their piles until this actions is complete or the game might crash]"):
+         if not confirm("This action will reshuffle your opponent's pile(s). Are you sure?\n\n[Important: Please ask your opponent not to take any clicks with their piles until this clicks is complete or the game might crash]"):
             whisper("--> Aborting action.")
             return 'ABORT'
       if warning.group(1) == 'GiveToOpponent': confirm('This card has an effect which if meant for your opponent. Please use the menu option "pass control to" to give them control.')
@@ -2242,7 +2242,7 @@ def chkWarn(card, Autoscript): # Function for checking that an autoscript announ
       if warning.group(1) == 'Workaround':
          notify(":::Note:::{} is using a workaround autoscript".format(me))
       if warning.group(1) == 'LotsofStuff': 
-         if not confirm("This card performs a lot of complex actions that will very difficult to undo. Are you sure you want to proceed?"):
+         if not confirm("This card performs a lot of complex clicks that will very difficult to undo. Are you sure you want to proceed?"):
             whisper("--> Aborting action.")
             return 'ABORT'
    if debugVerbosity >= 4: notify("<<< chkWarn() gracefully") 
@@ -2706,7 +2706,7 @@ def CreateDummy(Autoscript, announceText, card, targetCards = None, notification
    global Stored_Type, Stored_Cost, Stored_Keywords, Stored_AutoActions, Stored_AutoScripts
    dummyCard = None
    action = re.search(r'\bCreateDummy[A-Za-z0-9_ -]*(-with)(?!onOpponent|-doNotTrash|-nonUnique)([A-Za-z0-9_ -]*)', Autoscript)
-   if debugVerbosity >= 3 and action: notify('actions regex: {}'.format(action.groups())) # debug
+   if debugVerbosity >= 3 and action: notify('clicks regex: {}'.format(action.groups())) # debug
    targetPL = ofwhom(Autoscript, card.controller)
    for c in table:
       if c.model == card.model and c.controller == targetPL and c.highlight == DummyColor: dummyCard = c # We check if already have a dummy of the same type on the table.
@@ -2866,7 +2866,7 @@ def InflictX(Autoscript, announceText, card, targetCards = None, notification = 
                #targetPL.counters['Max Hand Size'].value -= 1 # If it's brain damage, also reduce the player's maximum handsize.               
                applyBrainDmg(targetPL)
    if targetPL == me: targetPL = 'theirself' # Just changing the announcement to fit better.
-   if re.search(r'isRequirement', Autoscript) and DMG < 1: failedRequirement = True # Requirement means that the cost is still paid but other actions are not going to follow.
+   if re.search(r'isRequirement', Autoscript) and DMG < 1: failedRequirement = True # Requirement means that the cost is still paid but other clicks are not going to follow.
    if notification == 'Quick': announceString = "{} suffers {} {} damage{}".format(announceText,DMG,action.group(3),preventTXT)
    else: announceString = "{} inflict {} {} damage{} to {}{}".format(announceText,DMG,action.group(3),enhanceTXT,targetPL,preventTXT)
    if notification and multiplier > 0: notify('--> {}.'.format(announceString))
@@ -3107,7 +3107,7 @@ def chkPlayer(Autoscript, controller, manual): # Function for figuring out if an
    byOpponent = re.search(r'byOpponent', Autoscript)
    byMe = re.search(r'byMe', Autoscript)
    if debugVerbosity >= 3: notify("### byMe: {}. byOpponent: {}".format(byMe,byOpponent))
-   if manual: return 1 #manual means that the actions was called by a player double clicking on the card. In which case we always do it.
+   if manual: return 1 #manual means that the clicks was called by a player double clicking on the card. In which case we always do it.
    elif not byOpponent and not byMe: return 1 # If the card has no restrictions on being us or a rival.
    elif byOpponent and controller != me: return 1 # If the card needs to be played by a rival.
    elif byMe and controller == me: return 1 # If the card needs to be played by us.
@@ -3264,11 +3264,11 @@ def CustomScript(card, action = 'play'): # Scripts that are complex and fairly u
       if not DripMarker:
          TokensX('Put1Drip', "Lucidrine (TM) Drip Feed:", card)
          me.Clicks += 1         
-         notify("--> Lucidrine™ Drip Feed: Gain 1 actions.")
+         notify("--> Lucidrine™ Drip Feed: Gain 1 clicks.")
       elif card.markers[DripMarker] < 2: 
          card.markers[DripMarker] += 1
          me.Clicks += 1
-         notify("--> Lucidrine™ Drip Feed: Gain 1 actions.")
+         notify("--> Lucidrine™ Drip Feed: Gain 1 clicks.")
       else: 
          card.markers[DripMarker] = 0
          intdamageDiscard(me.hand)
@@ -3396,7 +3396,7 @@ def CustomScript(card, action = 'play'): # Scripts that are complex and fairly u
       if actionCost == 'ABORT': return
       creditCost = payCost(cost)
       if creditCost == 'ABORT':
-         me.Clicks += aCost # If the player can't pay the cost after all and aborts, we give him his actions back as well.
+         me.Clicks += aCost # If the player can't pay the cost after all and aborts, we give him his clicks back as well.
          return         
       card.markers[selectedMarker] -= 1
       notify("{} to remove {} for {}.".format(actionCost,selectedMarker[0],creditCost))
@@ -3590,8 +3590,8 @@ def inspectCard(card, x = 0, y = 0): # This function shows the player the card t
    if re.search(r'atTurnStart', card.Autoscript): ASText += '\n * It will perform an automation at the start of your turn.'
    if re.search(r'atTurnEnd', card.Autoscript): ASText += '\n * It will perform an automation at the end of your turn.'
    if card.AutoAction != '': 
-      if ASText == 'This card has the following automations:': ASText == '\nThis card will perform one or more automated actions when you double click on it.'
-      else: ASText += '\n\nThis card will also perform one or more automated actions when you double click on it.'
+      if ASText == 'This card has the following automations:': ASText == '\nThis card will perform one or more automated clicks when you double click on it.'
+      else: ASText += '\n\nThis card will also perform one or more automated clicks when you double click on it.'
    if ASText == 'This card has the following automations:': ASText = '\nThis card has no automations.'
    if card.name in automatedMarkers:
       ASText += '\n\nThis card can create markers, which also have automated effects.'
@@ -3601,7 +3601,7 @@ def inspectCard(card, x = 0, y = 0): # This function shows the player the card t
    elif card.type == 'Data Fort': confirm("These are your data forts. Start stacking your Ice above them and your Agendas, Upgrades and Nodes below them.\
                                      \nThey have no automated abilities")
    elif card.type == 'Counter Hold': confirm("This is your Counter Hold. This card stores all the beneficial and harmful counters you might accumulate over the course of the game.\
-                                          \n\nIf you're playing a corp, viruses and other such tokens will be put here. By double clicking this card, you'll forfeit your next three actions to clean all viruses from your cards.\
+                                          \n\nIf you're playing a corp, viruses and other such tokens will be put here. By double clicking this card, you'll forfeit your next three clicks to clean all viruses from your cards.\
                                           \nIf you're playing a runner, brain damage markers and any tokens the corp gives you will be put here.\
                                         \n\nTo remove any token manually, simply drag & drop it out of this card.")
    else:
