@@ -446,7 +446,7 @@ def yaxisMove(card):
    return cardmove
 
 #---------------------------------------------------------------------------
-# Actions indication
+# Clicks indication
 #---------------------------------------------------------------------------
 
 def useAction(group = table, x=0, y=0, count = 1):
@@ -455,7 +455,7 @@ def useAction(group = table, x=0, y=0, count = 1):
    mute()
    extraText = ''
    if count == 0: return '{} takes a free action'.format(me)
-   clicksReduce = findCounterPrevention(me.Clicks, 'Actions', me)
+   clicksReduce = findCounterPrevention(me.Clicks, 'Clicks', me)
    if clicksReduce: notify(":::WARNING::: {} had to forfeit their next {} clicks".format(me, clicksReduce))
    me.Clicks -= clicksReduce
    if me.Clicks < count: 
@@ -511,7 +511,7 @@ def goToSot (group, x=0,y=0):
       whisper ("Please perform the game setup first (Ctrl+Shift+S)")
       return
    currAction = 0 # We wipe it again just in case they ended their last turn badly but insist on going through the next one.
-   clicksReduce = findCounterPrevention(maxActions, 'Actions', me) # Checking if the player has any effects which force them to forfeit clicks.
+   clicksReduce = findCounterPrevention(maxActions, 'Clicks', me) # Checking if the player has any effects which force them to forfeit clicks.
    if clicksReduce: extraTXT = " ({} forfeited)".format(clicksReduce)
    else: extraTXT = ''
    if me.Clicks < 0: 
@@ -535,9 +535,9 @@ def modActions(group,x=0,y=0):
    global maxActions
    mute()
    bkup = maxActions
-   maxActions = askInteger("What is your current maximum Actions per turn?", maxActions)
+   maxActions = askInteger("What is your current maximum Clicks per turn?", maxActions)
    if maxActions == None: maxActions = bkup # In case the player closes the window, we restore their previous max.
-   else: notify("{} has set their Max Actions to {} per turn".format(me,maxActions))
+   else: notify("{} has set their Max Clicks to {} per turn".format(me,maxActions))
 
 #------------------------------------------------------------------------------
 # Switches
@@ -573,10 +573,10 @@ def switchUniCredits(group,x=0,y=0,command = 'Off'):
    if debugVerbosity >= 1: notify(">>> switchUniCredits(){}".format(extraASDebug())) #Debug
    global UniCredits
    if UniCredits and command != 'On':
-      whisper("Credits and Actions will now be displayed as normal ASCII.".format(me))
+      whisper("Credits and Clicks will now be displayed as normal ASCII.".format(me))
       UniCredits = False
    else:
-      whisper("Credits and Actions will now be displayed as Unicode.".format(me))
+      whisper("Credits and Clicks will now be displayed as Unicode.".format(me))
       UniCredits = True
 
 def ImAProAtThis(group = table, x=0, y=0):
@@ -1060,7 +1060,7 @@ def getCredit(group, x = 0, y = 0):
    me.counters['Credits'].value += 1 - creditsReduce
     
 #------------------------------------------------------------------------------
-# Card Actions
+# Card Clicks
 #------------------------------------------------------------------------------
    
 def scrAgenda(card, x = 0, y = 0):
@@ -1428,7 +1428,7 @@ def oncePerTurn(card, x = 0, y = 0, silent = False):
       if not silent: notify('{} activates the once-per-turn ability of {}'.format(me, card))
    card.orientation = Rot90
 #------------------------------------------------------------------------------
-# Hand Actions
+# Hand Clicks
 #------------------------------------------------------------------------------
 
 def currentHandSize(player = me):
@@ -1676,7 +1676,7 @@ def groupToDeck (group = me.hand, player = me, silent = False):
    else: return(pileName(group),pileName(deck),count) # Return a tuple with the names of the groups.
 
 #------------------------------------------------------------------------------
-# Pile Actions
+# Pile Clicks
 #------------------------------------------------------------------------------
 def shuffle(group):
    if debugVerbosity >= 1: notify(">>> shuffle(){}".format(extraASDebug())) #Debug
@@ -1928,7 +1928,7 @@ def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
          if debugVerbosity >= 3: notify("Autoscripts {}".format(Autoscripts)) # Debug
          abilRegex = re.search(r"A([0-9]+)B([0-9]+)G([0-9]+)T([0-9]+):([A-Z][A-Za-z ]+)([0-9]*)([A-Za-z ]*)-?(.*)", Autoscripts[idx]) # This regexp returns 3-4 groups, which we then reformat and put in the confirm dialogue in a better readable format.
          if debugVerbosity >= 2: notify("### Choice Regex is {}".format(abilRegex.groups())) # Debug
-         if abilRegex.group(1) != '0': abilCost = 'Use {} Actions'.format(abilRegex.group(1))
+         if abilRegex.group(1) != '0': abilCost = 'Use {} Clicks'.format(abilRegex.group(1))
          else: abilCost = '' 
          if abilRegex.group(2) != '0': 
             if abilCost != '': 
@@ -1989,7 +1989,7 @@ def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
          return 'ABORT'
       ### Checking the activation cost and preparing a relevant string for the announcement
       actionCost = re.match(r"A([0-9]+)B([0-9]+)G([0-9]+)T([0-9]+):", activeAutoscript) 
-      # This is the cost of the card.  It starts with A which is the amount of Actions needed to activate
+      # This is the cost of the card.  It starts with A which is the amount of Clicks needed to activate
       # After A follows B for Credit cost, then for aGenda cost.
       # T takes a binary value. A value of 1 means the card needs to be trashed.
       if actionCost: # If there's no match, it means we've already been through the cost part once and now we're going through the '$$' part.
@@ -2286,7 +2286,7 @@ def GainX(Autoscript, announceText, card, targetCards = None, notification = Non
          if re.search(r'isCost', Autoscript): notify(":::Warning:::{} did not have enough {} to pay the cost of this action".format(targetPL,action.group(3)))
          elif re.search(r'isPenalty', Autoscript): pass #If an action is marked as penalty, it means that the value can go negative and the player will have to recover that amount.
          else: targetPL.counters['Agenda Points'].value = 0
-   elif re.match(r'Actions', action.group(3)): 
+   elif re.match(r'Clicks', action.group(3)): 
       if action.group(1) == 'SetTo': 
          targetPL.Clicks = 0 # If we're setting to a specific value, we wipe what it's currently.
          lastKnownNrActions = 0
@@ -2363,7 +2363,7 @@ def TransferX(Autoscript, announceText, card, targetCards = None, notification =
    for targetCard in targetCards: targetCardlist += '{},'.format(targetCard)
    action = re.search(r'\bTransfer([0-9]+)([A-Za-z ]+)-?', Autoscript)
    if action.group(2) == 'Credits': destGroup = me.counters['Credits']
-   elif action.group(2) == 'Actions': destGroup = me.counters['Clicks']
+   elif action.group(2) == 'Clicks': destGroup = me.counters['Clicks']
    else:
       whisper(":::WARNING::: Not a valid transfer. Aborting!")
       return 'ABORT'
@@ -3483,7 +3483,7 @@ def markerEffects(Time = 'Start'):
       if re.search(r'Doppelganger',marker[0]) and Time == 'Start':
          GainX('Lose1Credits-perMarker{Doppelganger}', "{}:".format(marker[0]), CounterHold, notification = 'Automatic')
       if re.search(r'virusPipe',marker[0]) and Time == 'Start':
-         passedScript = 'Infect{}forfeitCounter:Actions'.format(count)
+         passedScript = 'Infect{}forfeitCounter:Clicks'.format(count)
          TokensX(passedScript, "Pipe virus:", CounterHold, notification = 'Automatic')
       if re.search(r'Data Raven',marker[0]) and Time == 'Start':
          GainX('Gain1Tags-perMarker{Data Raven}', "{}:".format(marker[0]), CounterHold, notification = 'Automatic')
