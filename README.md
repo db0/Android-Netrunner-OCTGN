@@ -15,7 +15,7 @@ Some basic instructions on how to use the new system will be forthcoming, but th
 * At the end of your turn, declare it with F12. Make sure the game announces that your turn has ended and is not expecting you to discard down to your max hand size ;)
 * Play/Install cards from your hand by double-clicking them. Use cards on the table in the same way. 
 * Always try to Trash or Uninstall cards by using the relevant function in the menu (e.g. 'del' key)
-** If you want to trash the card of an opponent, _first let them know_ then target the card (shift+click) and use the "Trash Target" options in the **table menu** (i.e. right-click on an empty spot on the table)
+  * If you want to trash the card of an opponent, _first let them know_ then target the card (shift+click) and use the "Trash Target" options in the **table menu** (i.e. right-click on an empty spot on the table)
 * Only ever drag & drop cards from your hand to the table, or from the table/hand to your trash, if there's no other way.
 
 And some more advanced stuff:
