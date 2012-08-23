@@ -596,16 +596,16 @@ def ImAProAtThis(group = table, x=0, y=0):
 
 def createStartingCards():
    if debugVerbosity >= 1: notify(">>> createStartingCards(){}".format(extraASDebug())) #Debug
-   traceCard = table.create("c0f18b5a-adcd-4efe-b3f8-7d72d1bd1db8", 0, 155 * playerside, 1, True) #The Trace card
+   traceCard = table.create("eb7e719e-007b-4fab-973c-3fe228c6ce20", 0, 155 * playerside, 1, True) #The Trace card
    storeSpecial(traceCard)
    if ds == "corp":
-      table.create("2a0b57ca-1714-4a70-88d7-25fdf795486f", 150, 160 * playerside, 1, True)
-      table.create("181de100-c255-464f-a4ed-4ac8cd728c61", 300, 160 * playerside, 1, True)
-      table.create("59665835-0b0c-4710-99f7-8b90377c35b7", 450, 160 * playerside, 1, True)
-      AV = table.create("feaadfe5-63fc-443e-b829-b9f63c346d11", 0, 250 * playerside, 1, True) # The Virus Scan card.
+      table.create("81cba950-9703-424f-9a6f-af02e0203762", 150, 160 * playerside, 1, True)
+      table.create("fbb865c9-fccc-4372-9618-ae83a47101a2", 300, 160 * playerside, 1, True)
+      table.create("47597fa5-cc0c-4451-943b-9a14417c2007", 450, 160 * playerside, 1, True)
+      AV = table.create("23473bd3-f7a5-40be-8c66-7d35796b6031", 0, 250 * playerside, 1, True) # The Virus Scan card.
       storeSpecial(AV)
    else:
-      TC = table.create("f58c40eb-bb11-4bad-9562-030d906ea352", 0, 250 * playerside, 1, True) # The Technical Difficulties card.
+      TC = table.create("71a89203-94cd-42cd-b9a8-15377caf4437", 0, 250 * playerside, 1, True) # The Technical Difficulties card.
       storeSpecial(TC)   
 
 def intJackin(group, x = 0, y = 0):
@@ -3548,15 +3548,15 @@ def TrialError(group, x=0, y=0): # Debugging
    if not (len(players) == 1 or debugVerbosity >= 0): 
       whisper("This function is only for development purposes")
       return
-   testcards = ["0f290a3c-8f20-4e8f-b3df-39b1b097e439", # Fang 2.0
-                "bc02cdad-d027-4ac6-b609-13bcbd491bb4", # Playful AI
-                "c8543203-5475-426b-816c-39b30588f714", # Custodial Position
-                "c8ac69cb-0762-4918-9115-243dba9aa1c2", # The Shell Traders Promo
-                "05dc8c06-e801-4bee-9b01-1b5c47d5a8f6", # Mastiff
-                "f3a8b3bf-3b67-49c7-b828-b41070740214", # Data Raven
-                "426f2c05-9db5-4350-b28c-cdb43e9d0b93", # Baskerville
-                "55701d77-7a54-4bcc-ab3a-6e21192a8cff", # Cerberus
-                "8b0a0ca5-d6d6-440f-8f81-4486d252a545"] # Indiscriminate Response Team
+#   testcards = ["f0a1f5db-7400-44d1-a6e5-dda8bdde8836", # Fang 2.0
+#                "bc02cdad-d027-4ac6-b609-13bcbd491bb4", # Playful AI
+#                "c8543203-5475-426b-816c-39b30588f714", # Custodial Position
+#                "c8ac69cb-0762-4918-9115-243dba9aa1c2", # The Shell Traders Promo
+#                "05dc8c06-e801-4bee-9b01-1b5c47d5a8f6", # Mastiff
+#                "f3a8b3bf-3b67-49c7-b828-b41070740214", # Data Raven
+#                "426f2c05-9db5-4350-b28c-cdb43e9d0b93", # Baskerville
+#                "55701d77-7a54-4bcc-ab3a-6e21192a8cff", # Cerberus
+#                "8b0a0ca5-d6d6-440f-8f81-4486d252a545"] # Indiscriminate Response Team
    if not ds: ds = "corp"
    me.setGlobalVariable('ds', ds) 
    me.counters['Bit Pool'].value = 50
@@ -3568,12 +3568,12 @@ def TrialError(group, x=0, y=0): # Debugging
    if not playerside:  # If we've already run this command once, don't recreate the cards.
       chooseSide()
       createStartingCards()
-   for idx in range(len(testcards)):
-      test = table.create(testcards[idx], (70 * idx) - 150, 0, 1, True)
-      storeProperties(test)
-      if test.Type == 'Ice' or test.Type == 'Agenda' or test.Type == 'Node':
-         test.isFaceUp = False
-         test.markers[Not_rezzed] += 1
+#   for idx in range(len(testcards)):
+#      test = table.create(testcards[idx], (70 * idx) - 150, 0, 1, True)
+#      storeProperties(test)
+#      if test.Type == 'Ice' or test.Type == 'Agenda' or test.Type == 'Node':
+#         test.isFaceUp = False
+#         test.markers[Not_rezzed] += 1
          
 def extraASDebug(Autoscript = None):
    if Autoscript and debugVerbosity >= 3: return ". Autoscript:{}".format(Autoscript)

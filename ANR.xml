@@ -8,9 +8,9 @@
 		<property name="Subtitle" type="String" hidden="false" ignoreText="False"/>
 		<property name="Type" type="String" hidden="false" ignoreText="False" textKind="Enum" />
 		<property name="Keywords" type="String" hidden="false" ignoreText="False" />
-		<property name="Cost" type="Integer" hidden="false" />
-		<property name="Requirement" type="Integer" hidden="false" />
-		<property name="Stat" type="Integer" hidden="false" ignoreText="False" />
+		<property name="Cost" type="String" hidden="false" />
+		<property name="Requirement" type="String" hidden="false" />
+		<property name="Stat" type="String" hidden="false" ignoreText="False" />
 		<property name="Rules" type="String" hidden="false" ignoreText="False" />
 		<property name="Flavor" type="String" hidden="false" ignoreText="True" />
 		<property name="Instructions" type="String" hidden="false" ignoreText="False" />
