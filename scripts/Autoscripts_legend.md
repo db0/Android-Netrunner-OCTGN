@@ -50,11 +50,13 @@ All scripts separated by $$ are exetuted serially, one after the other.
 The first words after the card.AutoAction costs, the card.AutoScript trigger, or the || and $$ separators are always the core commands to be called. 
 These core commands are what tell the engine the general idea of what it's going to be doing for this script part.
 
-To put this all together: lets take a script like: `A1B1G0T0:Draw2Cards$$Gain3Bits||Gain1Agenda Points`
+To put this all together: lets take a script like: `A1B1G0T0:Draw2Cards$$Gain3Bits||A1B2G0T0:Gain1Agenda Points`
 
 It will be parsed as follows:
 
-*Use 1 Action, and pay 1 Bit to: Draw 2 cards and Gain 3 Bits, OR Gain 1 Agenda point.*
+*Use 1 Action, and pay 1 Bit to: Draw 2 cards and Gain 3 Bits, OR Use 1 Action, and pay 2 Bits to: Gain 1 Agenda point.*
+
+Note that core commands after an "OR" bit, need a cost, while core commands after an "AND" bit, do not.
 
 The core commands are usually written in a form like Gain3Bits, Put1virusPattel, or TrashTarget  
 Any number is always attempted to put in the middle of the core command as part of the standard I'm using.
