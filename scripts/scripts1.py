@@ -511,16 +511,16 @@ def goToSot (group, x=0,y=0):
       whisper ("Please perform the game setup first (Ctrl+Shift+S)")
       return
    currAction = 0 # We wipe it again just in case they ended their last turn badly but insist on going through the next one.
-   clicksReduce = findCounterPrevention(maxActions, 'Clicks', me) # Checking if the player has any effects which force them to forfeit clicks.
+   clicksReduce = findCounterPrevention(maxClicks, 'Clicks', me) # Checking if the player has any effects which force them to forfeit clicks.
    if clicksReduce: extraTXT = " ({} forfeited)".format(clicksReduce)
    else: extraTXT = ''
    if me.Clicks < 0: 
       if debugVerbosity <= 0 and not confirm("Your clicks were negative from last turn. Was this a result of a penalty you suffered from a card?"): 
-         me.Clicks = maxActions - clicksReduce # If the player did not have a penalty, then we assume those were extra clicks granted by some card effect, so we make sure they have their full maximum
+         me.Clicks = maxClicks - clicksReduce # If the player did not have a penalty, then we assume those were extra clicks granted by some card effect, so we make sure they have their full maximum
       else: 
-         me.Clicks += maxActions - clicksReduce # If it was a penalty, then it remains with them for this round, which means they have less clicks to use.
+         me.Clicks += maxClicks - clicksReduce # If it was a penalty, then it remains with them for this round, which means they have less clicks to use.
          notify("{} is starting with {} less clicks this turn, due to a penalty from a previous turn.")
-   else: me.Clicks = maxActions - clicksReduce
+   else: me.Clicks = maxClicks - clicksReduce
    lastKnownNrActions = me.Clicks
    myCards = (card for card in table if card.controller == me and card.owner == me)
    for card in myCards: 
@@ -530,14 +530,14 @@ def goToSot (group, x=0,y=0):
    if ds == "corp": notify("=> The offices of {}'s Corporation are now open for business. They have {} clicks for this turn{}.".format(me,me.Clicks,extraTXT))
    else: notify ("=> Runner {} has woken up. They have {} clicks for this turn{}.".format(me,me.Clicks,extraTXT))
 
-def modActions(group,x=0,y=0):
-   if debugVerbosity >= 1: notify(">>> modActions(){}".format(extraASDebug())) #Debug
-   global maxActions
+def modClicks(group,x=0,y=0):
+   if debugVerbosity >= 1: notify(">>> modClicks(){}".format(extraASDebug())) #Debug
+   global maxClicks
    mute()
-   bkup = maxActions
-   maxActions = askInteger("What is your current maximum Clicks per turn?", maxActions)
-   if maxActions == None: maxActions = bkup # In case the player closes the window, we restore their previous max.
-   else: notify("{} has set their Max Clicks to {} per turn".format(me,maxActions))
+   bkup = maxClicks
+   maxClicks = askInteger("What is your current maximum Clicks per turn?", maxClicks)
+   if maxClicks == None: maxClicks = bkup # In case the player closes the window, we restore their previous max.
+   else: notify("{} has set their Max Clicks to {} per turn".format(me,maxClicks))
 
 #------------------------------------------------------------------------------
 # Switches
@@ -610,7 +610,7 @@ def createStartingCards():
 
 def intJackin(group, x = 0, y = 0):
    if debugVerbosity >= 1: notify(">>> intJackin(){}".format(extraASDebug())) #Debug
-   global ds, maxActions,newturn,endofturn, currAction, debugVerbosity
+   global ds, maxClicks,newturn,endofturn, currAction, debugVerbosity
    global Stored_Type, Stored_Cost, Stored_Keywords, Stored_AutoActions, Stored_AutoScripts
    mute()
    debugVerbosity = -1 # Jackin means normal game.
@@ -643,14 +643,14 @@ def intJackin(group, x = 0, y = 0):
    endofturn = False
    currAction = 0
    if ds == "corp":
-      maxActions = 3
-      #me.Clicks = maxActions # We now do that during SoT
+      maxClicks = 3
+      #me.Clicks = maxClicks # We now do that during SoT
       me.MU = 0
       NameDeck = "R&D"
       notify("{} is playing as Corporation".format(me))      
    else:
-      maxActions = 4
-      #me.Clicks = maxActions # We now do that during SoT
+      maxClicks = 4
+      #me.Clicks = maxClicks # We now do that during SoT
       me.MU = 4
       NameDeck = "Stack"
       notify("{} is playing as Runner".format(me))
@@ -2251,7 +2251,7 @@ def chkWarn(card, Autoscript): # Function for checking that an autoscript announ
 def GainX(Autoscript, announceText, card, targetCards = None, notification = None, n = 0): # Core Command for modifying counters or global variables
    if debugVerbosity >= 1: notify(">>> GainX(){}".format(extraASDebug(Autoscript))) #Debug
    if targetCards is None: targetCards = []
-   global maxActions, lastKnownNrActions
+   global maxClicks, lastKnownNrActions
    gain = 0
    action = re.search(r'\b(Gain|Lose|SetTo)([0-9]+)([A-Z][A-Za-z &]+)-?', Autoscript)
    if debugVerbosity >= 2: notify("### action groups: {}. Autoscript: {}".format(action.groups(0),Autoscript)) # Debug
@@ -2321,8 +2321,8 @@ def GainX(Autoscript, announceText, card, targetCards = None, notification = Non
          else: targetPL.Tags = 0
    elif re.match(r'Max Action', action.group(3)): 
       if targetPL == me: 
-         if action.group(1) == 'SetTo': maxActions = 0 # If we're setting to a specific value, we wipe what it's currently.
-         maxActions += gain * multiplier
+         if action.group(1) == 'SetTo': maxClicks = 0 # If we're setting to a specific value, we wipe what it's currently.
+         maxClicks += gain * multiplier
       else: notify("--> {} loses {} max action. They must make this modification manually".format(targetPL,gain * multiplier))
    elif re.match(r'Hand Size', action.group(3)): 
       if action.group(1) == 'SetTo': targetPL.counters['Max Hand Size'].value = 0 # If we're setting to a specific value, we wipe what it's currently.
