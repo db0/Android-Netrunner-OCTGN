@@ -45,9 +45,9 @@ The player will be prompted to select one of the abilities and then the engine w
 
 When a script is separated by two dollar signs "$$", this serves as an "and" for the engine.
 All the effects of that particular script will be used. card.Autoscript uses "||" like this as well for now.
-All scripts separated by $$ are exetuted serially, one after the other.
+All scripts separated by $$ are exetuted serially, one after the other. If one of them aborts for some reason, the rest won't be done. This is useful for special costs (e.g. "If you inflicted any damage...")
 
-The first words after the card.AutoAction costs, the card.AutoScript trigger, or the || and $$ separators are always the core commands to be called. 
+The first words after the card.AutoAction costs, the card.AutoScript trigger, or the || and $$ separators are always what is called the __Core Commands__. 
 These core commands are what tell the engine the general idea of what it's going to be doing for this script part.
 
 To put this all together: lets take a script like: `A1B1G0T0:Draw2Cards$$Gain3Bits||A1B2G0T0:Gain1Agenda Points`
@@ -67,7 +67,7 @@ This is because all these three do similar things (modify counters) which allows
 
 To see a look of what core commands exist, look at the code after the useAbility() starting point.   
 Each core command function is marked clearly in the comment next to its definition.   
-Inside the useAbility() function you'll be able to see what kind of keywords will flow to the same core command
+Look at the regexHooks dictionary at the start of the script and you'll be able to see what kind of keywords will flow to each Core Command
 
 Resident Effects
 ----------------
