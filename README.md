@@ -8,14 +8,17 @@ Note: This is just the game engine, you'll also need to download [the sets](http
 Gameplay
 --------
 
-Some basic instructions on how to use the new system will be forthcoming, but things should be fairly intuitive anyway. Four basic things to remember
+Some basic instructions on how to use the new system will be forthcoming, but things should be fairly intuitive anyway. Some basic things to remember
 
 * First thing you do after you load a deck is Setup (Ctrl+Shift+S)
 * At the start of your turn, declare it with F1
 * At the end of your turn, declare it with F12. Make sure the game announces that your turn has ended and is not expecting you to discard down to your max hand size ;)
-* Play cards from Hand with the Pay and Install or pay at no cost
+* Play/Install cards from your hand by double-clicking them. Use cards on the table in the same way. 
+* Always try to Trash or Uninstall cards by using the relevant function in the menu (e.g. 'del' key)
+* * If you want to trash the card of an opponent, _first let them know_ then target the card (shift+click) and use the "Trash Target" options in the **table menu** (i.e. right-click on an empty spot on the table)
+* Only ever drag & drop cards from your hand to the table, or from the table/hand to your trash, if there's no other way.
 
-And some more advanced stuff starting from version 2.1.x
+And some more advanced stuff:
 
 * Most card will automatically trigger their abilities when played/scored/rezzed so you don't need to do anything else. Pay attention to the notification area for messages from them.
 * Cards with abilities which increase your MU, Hand Size, etc will automatically increase it when they come into play and reduce it when they go away, as long as you don't drag&drop them in or out of the table manually. Use the built-in commands for that. Rez, Derez, Trash etc
@@ -25,10 +28,20 @@ And some more advanced stuff starting from version 2.1.x
 * Yes, cards which reduce damage taken have been automated and work automatically depending on the kind of damage you take. As before, they too get triggered by the order they've been put on the table, so if you didn't want to lose the counters from one particular card, just drag them in from the card you did want to use.
 * Some cards require that you select a target from the table or your hand. Do this before you play or activate the card. If you don't the action will abort and the game will inform you to select your targets first.  As always, keep your eye on the chatbox for such warnings.
 * Cards which have effects which trigger at start/end of turn (i.e. refilling bit markers on them) will automatically work.
+* Cards which put markers on a player, which __themselves__ have an automated ability (i.e. Fang, Baskerville, Armageddon etc) will _also_ automatically work.
 * If you don't like some or all the automations, you can disable some or all of them. Go to the game menu, and you can disable damage automations (i.e. your opponent will have to use the damage options manually but those won't automatically use the damage prevention cards), Turn Start/End automations and Play/Score/Rez Automations (i.e. mostly everything). If you find that you'd rather do everything manually, just disable all of them and you'll have an experience as with most generic card game engines.
+* Cards with multiple effects will request you to select one of them when you activate them. Select an ability by putting their number in the window that pop's up. You should be able to get the idea of which ability is each from the parsed script.
 
+Phew, that should be the most basic things about the new automations. If you're not sure if a card is automated, simply use the 'Inspect' function and the game will inform you of the details.
 
-Phew, that should be the most basic things about the new automations. In general if you're not sure if a card is automated, simply play it and see what happens. You will be surprised at how many cards just work.
+Honorary mentions of complex cards that I've managed to automate:
+* Arasaka Owns You
+* Mystery Box
+* Playful AI
+* The Shell Traders
+* Emergency Self Construct
+
+and many many more
 
 Enjoy!
 
@@ -49,8 +62,18 @@ S[ee more screenshots here](https://docs.google.com/folder/d/0B-gMiPlH3rBAeHM1dF
 Changelog
 ---------
 
-### 2.1.12
+### 3.0.0
 
+We are DONE ladies, gentlepeeps and people in between. Finished! Fertig! Finito! Τέλος!
+Version 3.0.0 marks the end of active development for this plugin by me. There may still be bugfixes and perhaps minor tweaks here and there, but the main functionality is all there.
+
+I'll now be concentrating my efforts into porting this plugin to run Android: Netrunner. Expect the same level of goodness there ;)
+
+So, final changes for this version
+
+ * Memory check now made a function. Will also work for cards installed via shell traders
+ * Made findTarget() and per() targeting exclude cards highlighted as Dummies, Revealed, or Inactive
+ * Polished and restructued the code a bit. Unfortunately no extensive commenting yet. My future self will probably hate me.
  * Added Butcher Boy and Cockroach implementation
  * Also fixed some bug with the debugverbosity
  * InflictX will not warn you if you're doing 0 damage now.
@@ -58,6 +81,7 @@ Changelog
  * Added AutoScript for the runner's Counter Hold. Now it is able to select and remove special markers given to him by the Corp.
  * Added custom code for Mastiff and Data Raven markers
 
+Enjoy!
 
 ### 2.1.11
 
