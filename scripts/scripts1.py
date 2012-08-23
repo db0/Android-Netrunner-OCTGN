@@ -31,10 +31,10 @@ MinusOne= ("-1", "48ceb18b-5521-4d3f-b5fb-c8212e8bcbae")
 # Global variables
 #---------------------------------------------------------------------------
 ds = ""
-Automations = {'Play, Score and Rez': True, # If True, game will automatically trigger card effects when playing or double-clicking on cards. Requires specific preparation in the sets.
+Automations = {'Play, Score and Rez'    : True, # If True, game will automatically trigger card effects when playing or double-clicking on cards. Requires specific preparation in the sets.
                'Start/End-of-Turn'      : True, # If True, game will automatically trigger effects happening at the start of the player's turn, from cards they control.                
                'Damage Prevention'      : True, # If True, game will automatically trigger effects happening at the start of the player's turn, from cards they control.                
-               'Damage'             : True}
+               'Damage'                 : True}
 
 UniBits = True # If True, game will display bits as unicode characters ❶, ❷, ❿ etc
 
@@ -83,8 +83,8 @@ mdict = dict( # A dictionary which holds all the hard coded markers (in the mark
              Trace_value =             ("Trace value", "01feb523-ac36-4dcd-970a-515aa8d73e37"),
              Link_value =              ("Link value", "3c429e4c-3c7a-49fb-96cc-7f84a63cc672"),
              PlusOnePerm =             ("Permanent +1", "f6230db2-d222-445f-85dd-406ea12d92f6"),
-             PlusOne=                  ("Temporary+1", "aa261722-e12a-41d4-a475-3cc1043166a7"),
-             MinusOne=                 ("Temporary-1", "48ceb18b-5521-4d3f-b5fb-c8212e8bcbae"),
+             PlusOne=                  ("Temporary +1", "aa261722-e12a-41d4-a475-3cc1043166a7"),
+             MinusOne=                 ("Temporary -1", "48ceb18b-5521-4d3f-b5fb-c8212e8bcbae"),
              DaemonMU =                ("Daemon MU", "6e46d937-786c-4618-b02c-d7d5ffd3b1a5"),
              BaseLink =                ("Base Link", "226b0f44-bbdc-4960-86cd-21f404265562"),
              virusButcherBoy =         ("Butcher Boy virus","5831fb18-7cdf-44d2-8685-bdd392bb9f1c"),
@@ -126,9 +126,17 @@ regexHooks = dict( # A dictionary which holds the regex that then trigger each c
                   CustomScript =       re.compile(r'\bCustomScript'),
                   UseCustomAbility =   re.compile(r'\bUseCustomAbility'))
 
-automatedMarkers = [
+automatedMarkers = [ #Used in the Inspect() command to let the player know if the card has automations based on the markers it puts out.
          'Rent-to-Own Contract',
          'Data Raven'
+         'Fang'
+         'Fang 2.0'
+         'Fragmentation Storm'
+         'Rex'
+         'Cerberus'
+         'Doppelganger Antibody'
+         'Armageddon'
+         'Baskerville'
          'The Shell Traders'
          'Butcher Boy',
          'Boardwalk',
@@ -137,7 +145,18 @@ automatedMarkers = [
          'Taxman',
          'Skivviss',
          'Scaldan']
-                   
+
+markerRemovals = { # A dictionary which holds the costs to remove various special markers.
+                       # The costs are in a tuple. First is actions cost and then is bit cost.
+                     'Fang' :                        (1,2),
+                     'Data Raven' :                  (1,1),
+                     'Fragmentation Storm' :         (1,1),
+                     'Rex' :                         (1,2),
+                     'Crying' :                      (1,2),
+                     'Cerberus' :                    (1,4),
+                     'Baskerville' :                 (1,3),
+                     'Doppelganger' :                (1,4),
+                     'Mastiff' :                     (1,4)}
 turns = [
    'Start of Game',
    "It is now Corporation's Turn",
@@ -160,8 +179,8 @@ SelectColor = "#009900"
 EmergencyColor = "#ff0000"
 DummyColor = "#000000" # Marks cards which are supposed to be out of play, so that players can tell them apart.
 RevealedColor = "#ffffff"
-Priority = "#ffd700"
-Inactive = "#888888" # Cards which are in play but not active yer (e.g. see the shell traders)
+PriorityColor = "#ffd700"
+InactiveColor = "#888888" # Cards which are in play but not active yer (e.g. see the shell traders)
 
 Xaxis = 'x'
 Yaxis = 'y'
@@ -193,6 +212,74 @@ def displaymatch(match):
    if match is None:
       return None
    return '<Match: {}, groups={}>'.format(match.group(), match.groups())
+   
+def storeProperties(card): # Function that grabs a cards important properties and puts them in a dictionary
+   mute()
+   if debugVerbosity >= 1: notify(">>> storeProperties(){}".format(extraASDebug())) #Debug
+   global Stored_Cost, Stored_Type, Stored_Keywords, Stored_AutoActions, Stored_AutoScripts
+   cFaceD = False
+   if card.name == 'Card' and not Stored_Cost.get(card,None):
+      if not card.isFaceUp: 
+         card.isFaceUp = True
+         cFaceD = True
+      loopcount = 0
+      while card.name == 'Card':
+         rnd(1,10)
+         loopcount += 1
+         if loopcount == 5:
+            whisper(":::Error::: Card properties can't be grabbed. Aborting!")
+            break
+   if not Stored_Cost.get(card,None):
+      if debugVerbosity >= 4: notify("### {} not stored. Storing...".format(card))
+      Stored_Cost[card] = card.Cost
+      Stored_Type[card] = card.Type
+      Stored_Keywords[card] = getKeywords(card)
+      Stored_AutoActions[card] = card.AutoAction
+      Stored_AutoScripts[card] = card.AutoScript
+   if cFaceD: card.isFaceUp = False
+   if debugVerbosity >= 4: notify("<<< storeProperties()")
+
+def fetchProperty(card, property): 
+   mute()
+   if debugVerbosity >= 1: notify(">>> fetchProperty(){}".format(extraASDebug())) #Debug
+   cFaceD = False
+   if card.properties[property] == '?':
+      if not card.isFaceUp: 
+         card.isFaceUp = True
+         cFaceD = True
+      loopcount = 0
+      while card.properties[property] == '?':
+         rnd(1,10)
+         loopcount += 1
+         if loopcount == 5:
+            whisper(":::Error::: Card property can't be grabbed. Aborting!")
+            break
+   if cFaceD: card.isFaceUp = False
+   if debugVerbosity >= 4: notify("<<< fetchProperty() by returning: {}".format(card.properties[property]))
+   return card.properties[property]
+
+def sortPriority(cardList):
+   if debugVerbosity >= 1: notify(">>> sortPriority()") #Debug
+   priority1 = []
+   priority2 = []
+   priority3 = []
+   sortedList = []
+   for card in cardList:
+      if card.highlight == PriorityColor: # If a card is clearly highlighted for priority, we use its counters first.
+         priority1.append(card)
+      elif card.targetedBy and card.targetedBy == me: # If a card it targeted, we give it secondary priority in losing its counters.
+         priority2.append(card)   
+      else: # If a card is neither of the above, then the order is defined on how they were put on the table.
+         priority3.append(card) 
+   sortedList.extend(priority1)
+   sortedList.extend(priority2)
+   sortedList.extend(priority3)
+   if debugVerbosity >= 4: 
+      tlist = []
+      for sortTarget in sortedList: tlist.append(sortTarget.name) # Debug   
+      notify("<<< sortPriority() returning {}".format(tlist)) #Debug
+   return sortedList
+
 #---------------------------------------------------------------------------
 # Generic Netrunner functions
 #---------------------------------------------------------------------------
@@ -291,28 +378,6 @@ def pileName(group):
    if debugVerbosity >= 4: notify("<<< pileName() by returning: {}".format(name))
    return name
 
-def sortPriority(cardList):
-   if debugVerbosity >= 1: notify(">>> sortPriority()") #Debug
-   priority1 = []
-   priority2 = []
-   priority3 = []
-   sortedList = []
-   for card in cardList:
-      if card.highlight == Priority: # If a card is clearly highlighted for priority, we use its counters first.
-         priority1.append(card)
-      elif card.targetedBy and card.targetedBy == me: # If a card it targeted, we give it secondary priority in losing its counters.
-         priority2.append(card)   
-      else: # If a card is neither of the above, then the order is defined on how they were put on the table.
-         priority3.append(card) 
-   sortedList.extend(priority1)
-   sortedList.extend(priority2)
-   sortedList.extend(priority3)
-   if debugVerbosity >= 4: 
-      tlist = []
-      for sortTarget in sortedList: tlist.append(sortTarget.name) # Debug   
-      notify("<<< sortPriority() returning {}".format(tlist)) #Debug
-   return sortedList
-
 def clearNoise(): # Clears all player's noisy bits. I.e. nobody is considered to have been noisy this turn.
    if debugVerbosity >= 1: notify(">>> clearNoise()") #Debug
    for player in players: player.setGlobalVariable('wasNoisy', '0') 
@@ -333,49 +398,21 @@ def getSpecial(cardType,player = me):
    if debugVerbosity >= 4: notify("<<< getSpecial() by returning: {}".format(Card(specialCards[cardType])))
    return Card(specialCards[cardType])
 
-def storeProperties(card): # Function that grabs a cards important properties and puts them in a dictionary
-   mute()
-   if debugVerbosity >= 1: notify(">>> storeProperties(){}".format(extraASDebug())) #Debug
-   global Stored_Cost, Stored_Type, Stored_Keywords, Stored_AutoActions, Stored_AutoScripts
-   cFaceD = False
-   if card.name == 'Card' and not Stored_Cost.get(card,None):
-      if not card.isFaceUp: 
-         card.isFaceUp = True
-         cFaceD = True
-      loopcount = 0
-      while card.name == 'Card':
-         rnd(1,10)
-         loopcount += 1
-         if loopcount == 5:
-            whisper(":::Error::: Card properties can't be grabbed. Aborting!")
-            break
-   if not Stored_Cost.get(card,None):
-      Stored_Cost[card] = card.Cost
-      Stored_Type[card] = card.Type
-      Stored_Keywords[card] = getKeywords(card)
-      Stored_AutoActions[card] = card.AutoAction
-      Stored_AutoScripts[card] = card.AutoScript
-   if cFaceD: card.isFaceUp = False
-   if debugVerbosity >= 4: notify("<<< storeProperties()")
+def chkRAM(card, action = 'install', silent = False):
+   if debugVerbosity >= 1: notify(">>> chkRAM(){}".format(extraASDebug())) #Debug
+   MUreq = num(fetchProperty(card,'MU Required'))
+   if MUreq > 0 and not card.markers[mdict['DaemonMU']] and card.highlight != InactiveColor and card.highlight != RevealedColor:
+      if action == 'install':
+         card.controller.Memory -= MUreq
+         MUtext = ", using up {} MUs".format(MUreq)
+      elif action == 'uninstall':
+         card.controller.Memory += MUreq
+         MUtext = ", freeing up {} MUs".format(MUreq)
+   else: MUtext = ''
+   if card.controller.Memory < 0 and not silent: notify(":::Warning:::{}'s programs require more memory than he has available. They must trash enough programs to bring their available Memory to at least 0".format(card.controller))
+   if debugVerbosity >= 4: notify("<<< chkRAM() by returning: {}".format(MUtext))
+   return MUtext
 
-def fetchProperty(card, property): 
-   mute()
-   if debugVerbosity >= 1: notify(">>> fetchProperty(){}".format(extraASDebug())) #Debug
-   cFaceD = False
-   if card.properties[property] == '?':
-      if not card.isFaceUp: 
-         card.isFaceUp = True
-         cFaceD = True
-      loopcount = 0
-      while card.properties[property] == '?':
-         rnd(1,10)
-         loopcount += 1
-         if loopcount == 5:
-            whisper(":::Error::: Card property can't be grabbed. Aborting!")
-            break
-   if cFaceD: card.isFaceUp = False
-   if debugVerbosity >= 4: notify("<<< fetchProperty() by returning: {}".format(card.properties[property]))
-   return card.properties[property]
    
 #---------------------------------------------------------------------------
 # Card Placement functions
@@ -417,6 +454,7 @@ def useAction(group = table, x=0, y=0, count = 1):
    global currAction, lastKnownNrActions
    mute()
    extraText = ''
+   if count == 0: return '{} takes a free action'.format(me)
    actionsReduce = findCounterPrevention(me.Actions, 'Actions', me)
    if actionsReduce: notify(":::WARNING::: {} had to forfeit their next {} actions".format(me, actionsReduce))
    me.Actions -= actionsReduce
@@ -675,37 +713,35 @@ def createSDF(group,x=0,y=0):
 #------------------------------------------------------------------------------
 # Run...
 #------------------------------------------------------------------------------
-def intRun(ActionCost, Name):
+def intRun(aCost = 1, Name = 'R&D', silent = False):
    if debugVerbosity >= 1: notify(">>> intRun(){}".format(extraASDebug())) #Debug
    if ds != 'runner':  
       whisper(":::ERROR:::Corporations can't run!")
       return 'ABORT'
-   notify ("{} to start a run on {}.".format(ActionCost,Name))
+   CounterHold = getSpecial('Counter Hold')
+   if findMarker(CounterHold,'Fang') or findMarker(CounterHold,'Rex') or findMarker(CounterHold,'Fragmentation Storm'): # These are counters which prevent the runner from running.
+      notify(":::Warning:::{} attempted to run but was prevented by a resident Sentry effect in their Rig. They will have to remove all such effects before attempting a run".format(me))
+      return 'ABORT'
+   ActionCost = useAction(aCost)
+   if ActionCost == 'ABORT': return 'ABORT'
+   if not silent: notify ("{} to start a run on {}.".format(ActionCost,Name))
    atTimedEffects('Run')
 
 def runHQ(group, x=0,Y=0):
    if debugVerbosity >= 1: notify(">>> runHQ(){}".format(extraASDebug())) #Debug
-   ActionCost = useAction()
-   if ActionCost == 'ABORT': return
-   intRun(ActionCost, "HQ")
+   intRun(1, "HQ")
 
 def runRD(group, x=0,Y=0):
    if debugVerbosity >= 1: notify(">>> runRD(){}".format(extraASDebug())) #Debug
-   ActionCost = useAction()
-   if ActionCost == 'ABORT': return
-   intRun(ActionCost, "R&D")
+   intRun(1, "R&D")
 
 def runArchives(group, x=0,Y=0):
    if debugVerbosity >= 1: notify(">>> runArchives(){}".format(extraASDebug())) #Debug
-   ActionCost = useAction()
-   if ActionCost == 'ABORT': return
-   intRun(ActionCost, "the Archives")
+   intRun(1, "the Archives")
 
 def runSDF(group, x=0,Y=0):
    if debugVerbosity >= 1: notify(">>> runSDF(){}".format(extraASDebug())) #Debug
-   ActionCost = useAction()
-   if ActionCost == 'ABORT': return
-   intRun(ActionCost, "a subsidiary data fort")
+   intRun(1, "a subsidiary data fort")
 
 #------------------------------------------------------------------------------
 # Tags...
@@ -1029,6 +1065,7 @@ def getBit(group, x = 0, y = 0):
    
 def scrAgenda(card, x = 0, y = 0):
    if debugVerbosity >= 1: notify(">>> scrAgenda(){}".format(extraASDebug())) #Debug
+   global scoredAgendas
    mute()
    cheapAgenda = False
    storeProperties(card)
@@ -1056,12 +1093,13 @@ def scrAgenda(card, x = 0, y = 0):
          card.isFaceUp = False
          notify("{} cancels their action".format(me))
          return
-      ap = num(card.Stat)
+      ap = num(fetchProperty(card,'Stat'))
       card.markers[mdict['Not_rezzed']] = 0
       card.markers[mdict['Scored']] += 1
       apReduce = findCounterPrevention(ap, 'Agenda Points', me)
       if apReduce: extraTXT = " ({} forfeited)".format(apReduce)
-      else: extraTXT = ''      
+      else: extraTXT = ''
+      if debugVerbosity >= 3: notify("### About to Score")
       me.counters['Agenda Points'].value += ap - apReduce
       card.moveToTable(-600 - scoredAgendas * cwidth(card) / 6, 60 - yaxisMove(card) + scoredAgendas * cheight(card) / 2 * playerside, False)
       scoredAgendas += 1
@@ -1202,9 +1240,7 @@ def intTrashCard(card, stat, cost = "not free",  ActionCost = '', silent = False
       goodGrammar = ''
    if Stored_Type[card] == 'Prep' or Stored_Type[card] == 'Operation': silent = True # These cards are already announced when played. No need to mention them a second time.
    if card.isFaceUp:
-      if num(card.properties["MU Required"]) > 0 and not card.markers[mdict['DaemonMU']]:
-         card.controller.Memory += num(card.properties["MU Required"])
-         MUtext = ", freeing up {} MUs".format(card.properties["MU Required"])
+      MUtext = chkRAM(card, 'uninstall')    
       if rc == "free" and not silent: notify("{} trashed {} at no cost{}.".format(me, card, MUtext))
       elif not silent: notify("{} trash{} {}{}{}.".format(ActionCost, goodGrammar, card, extraText, MUtext))
       if card.highlight != RevealedColor: executePlayScripts(card,'trash') # We don't want to run automations on simply revealed cards.
@@ -1282,11 +1318,11 @@ def exileCard(card, silent = False):
       whisper("This kind of card cannot be exiled!")
       return 'ABORT'
    else:
-      if card.isFaceUp and num(card.properties["MU Required"]) > 0 and not card.markers[mdict['DaemonMU']]:
-         card.controller.Memory += num(card.properties["MU Required"])      
+      if card.isFaceUp: MUtext = chkRAM(card, 'uninstall')
+      else: MUtext = ''
       executePlayScripts(card,'trash')
       card.moveTo(shared.exile)
-   if not silent: notify("{} exiled {}.".format(me,card))
+   if not silent: notify("{} exiled {}{}.".format(me,card,MUtext))
    
    
 def uninstall(card, x=0, y=0, destination = 'hand', silent = False):
@@ -1301,11 +1337,11 @@ def uninstall(card, x=0, y=0, destination = 'hand', silent = False):
       whisper("This kind of card cannot be uninstalled!")
       return 'ABORT'
    else: 
-      if card.isFaceUp and num(card.properties["MU Required"]) > 0 and not card.markers[mdict['DaemonMU']]:
-         card.controller.Memory += num(card.properties["MU Required"])      
+      if card.isFaceUp: MUtext = chkRAM(card, 'uninstall')
+      else: MUtext = ''
       executePlayScripts(card,'uninstall')
       card.moveTo(group)
-   if not silent: notify("{} uninstalled {}.".format(me,card))
+   if not silent: notify("{} uninstalled {}{}.".format(me,card,MUtext))
 
 def possess(daemonCard, programCard, silent = False):
    if debugVerbosity >= 1: notify(">>> possess(){}".format(extraASDebug())) #Debug
@@ -1342,7 +1378,7 @@ def prioritize(card,x=0,y=0):
    if debugVerbosity >= 1: notify(">>> prioritize(){}".format(extraASDebug())) #Debug
    global PriorityInform
    if card.highlight == None:
-      card.highlight = Priority
+      card.highlight = PriorityColor
       notify ("{} prioritizes {} for using counters automatically.".format(me,card))
       if PriorityInform: 
          confirm("This action prioritizes a card for when selecting which card will use its counters from automated effects\
@@ -1429,9 +1465,7 @@ def intPlay(card, cost = 'not_free'):
       card.markers[Not_rezzed] += 1
       notify("{} to install a card.".format(ActionCost))
    elif card.Type == 'Program' or card.Type == 'Prep' or card.Type == 'Resource' or card.Type == 'Hardware':
-      if num(card.properties["MU Required"]) > 0:
-         me.Memory -= num(card.properties["MU Required"])
-         MUtext = ", using up {} MUs".format(card.properties["MU Required"])
+      MUtext = chkRAM(card)
       if card.Type == 'Resource' and hiddenresource == 'yes':
          card.moveToTable(-180, 230 * playerside - yaxisMove(card), True)
          notify("{} to install a hidden resource.".format(ActionCost))
@@ -1653,15 +1687,17 @@ def draw(group):
    global newturn
    mute()
    if len(group) == 0: return
+   card = group.top()
    if ds == 'corp' and newturn: 
-      group[0].moveTo(me.hand)
+      card.moveTo(me.hand)
       notify("--> {} perform's the turn's mandatory draw.".format(me))
       newturn = False
    else:
       ActionCost = useAction()
       if ActionCost == 'ABORT': return
-      group[0].moveTo(me.hand)
+      card.moveTo(me.hand)
       notify("{} to draw a card.".format(ActionCost))
+   storeProperties(card)
 
 def drawMany(group, count = None, destination = None, silent = False):
    if debugVerbosity >= 1: notify(">>> drawMany(){}".format(extraASDebug())) #Debug
@@ -1675,7 +1711,9 @@ def drawMany(group, count = None, destination = None, silent = False):
    if count > SSize : 
       count = SSize
       whisper("You do not have enough cards in your deck to complete this action. Will draw as many as possible")
-   for c in group.top(count): c.moveTo(destination)
+   for c in group.top(count): 
+      c.moveTo(destination)
+      storeProperties(c)
    if not silent: notify("{} draws {} cards.".format(me, count))
    if debugVerbosity >= 4: notify("<<< drawMany() woth return: {}".format(count))
    return count
@@ -1727,7 +1765,7 @@ def executePlayScripts(card, action):
    if not Automations['Play, Score and Rez']: return
    if not card.isFaceUp: return
    if Stored_AutoScripts[card] == "": return
-   if card.highlight == Inactive: return
+   if card.highlight == InactiveColor: return
    failedRequirement = False
    X = 0
    Autoscripts = card.AutoScript.split('||') # When playing cards, the || is used as an "and" separator, rather than "or". i.e. we don't do choices (yet)
@@ -1841,7 +1879,7 @@ def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
       elif card.isFaceUp and card.markers[Bits]: payTraceValue(card)
       elif not card.isFaceUp: revealTraceValue(card)
       return
-   if card.highlight == Inactive:
+   if card.highlight == InactiveColor:
       whisper("You cannot use inactive cards. Please use the relevant card abilities to clear them first. Aborting")
       return
    if not card in Stored_AutoActions:
@@ -2134,8 +2172,11 @@ def findTarget(Autoscript): # Function for finding the target of an autoscript
                validNamedTargets.append(regexCondition.group(1))
                validTargets.remove(chkTarget)
       for targetLookup in table: # Now that we have our list of restrictions, we go through each targeted card on the table to check if it matches.
-         if ((targetLookup.targetedBy and targetLookup.targetedBy == me) or re.search(r'AutoTargeted', Autoscript)) and chkPlayer(Autoscript, targetLookup.controller, False): # The card needs to be targeted by the player. If the card needs to belong to a specific player (me or rival) this also is taken into account.
-            #whisper('checking {}'.format(targetLookup)) # Debug
+         if ((targetLookup.targetedBy and targetLookup.targetedBy == me) or (re.search(r'AutoTargeted', Autoscript) and targetLookup.highlight != DummyColor and targetLookup.highlight != RevealedColor and targetLookup.highlight != InactiveColor)) and chkPlayer(Autoscript, targetLookup.controller, False): # The card needs to be targeted by the player. If the card needs to belong to a specific player (me or rival) this also is taken into account.
+         # OK the above target check might need some decoding:
+         # Look through all the cards on the table and start checking only IF...
+         # * Card is targeted and targeted by the player OR target search has the -AutoTargeted modulator and it is NOT highlighted as a Dummy, Revealed or Inactive.
+         # * The player who controls this card is supposed to be me or the enemy.
             if not targetLookup.isFaceUp: # If we've targeted a subdued card, we turn it temporarily face-up to grab its properties.
                targetLookup.isFaceUp = True
                cFaceD = True
@@ -2635,13 +2676,13 @@ def RunX(Autoscript, announceText, card, targetCards = None, notification = None
    if debugVerbosity >= 1: notify(">>> RunX(){}".format(extraASDebug())) #Debug
    if targetCards is None: targetCards = []
    action = re.search(r'\bRun([A-Z][A-Za-z& ]+)', Autoscript)
+   intRun(0,action.group(1),True)
    if action.group(1) == 'Generic': runTarget = ''
    else: runTarget = ' on {}'.format(action.group(1))
    if notification == 'Quick': announceString = "{} starts a run{}".format(announceText, runTarget)
    else: announceString = "{} start a run{}".format(announceText, runTarget)
    if notification: notify('--> {}.'.format(announceString))
    if debugVerbosity >= 4: notify("<<< RunX()")
-   atTimedEffects('Run')
    return announceString
 
 def SimplyAnnounce(Autoscript, announceText, card, targetCards = None, notification = None, n = 0): # Core Command for drawing X Cards from the house deck to your hand.
@@ -2973,7 +3014,7 @@ def per(Autoscript, card = None, count = 0, targetCards = None, notification = N
                      perItemMatch.append(regexCondition.group(1))
          if debugVerbosity >= 2: notify('+++ Matches: {}\nExclusions: {}'.format(perItemMatch, perItemExclusion)) # Debug
          if re.search(r'fromHand', Autoscript): cardgroup = [c for c in me.hand]
-         else: cardgroup = [c for c in table]
+         else: cardgroup = [c for c in table if c.highlight != DummyColor and c.highlight != RevealedColor and c.highlight != InactiveColor]
          for c in cardgroup: # Go through each card on the table and gather its properties, then see if they match.
             del cardProperties[:] # Cleaning the previous entries
             cFaceD = False # Variable to note down if a card was face-down when we were checking it, or not.
@@ -3252,7 +3293,7 @@ def CustomScript(card, action = 'play'): # Scripts that are complex and fairly u
             if actionCost == 'ABORT': return         
             selectedCard.moveToTable(550, 65 * playerside - yaxisMove(card), False) # We always choose the first card, in case they've selected more than one
             announceText = TokensX('Put1Shell-perProperty{Cost}', "{} to activate {} in order to ".format(actionCost,card), selectedCard)
-            selectedCard.highlight = Inactive
+            selectedCard.highlight = InactiveColor
             notify(announceText)
          else:
             targetList = [c for c in table  # If the player has selected no card from the hand, then we check to see if they've targeted a card on the table
@@ -3271,7 +3312,8 @@ def CustomScript(card, action = 'play'): # Scripts that are complex and fairly u
                   selectedCard.moveToTable(150, 65 * playerside - yaxisMove(card), False)
                   selectedCard.highlight = None
                   executePlayScripts(selectedCard,'install')
-                  notify("--> {} is Installed".format(selectedCard))
+                  MUtext = chkRAM(selectedCard)
+                  notify("--> {} is Installed{}".format(selectedCard,MUtext))
             else: 
                whisper("You need to select a valid target from your hand or the table to use this action")  
                return
@@ -3301,7 +3343,8 @@ def CustomScript(card, action = 'play'): # Scripts that are complex and fairly u
             selectedCard.moveToTable(150, 65 * playerside - yaxisMove(card), False)
             selectedCard.highlight = None
             executePlayScripts(selectedCard,'install')
-            notify("--> {} is Installed".format(selectedCard))
+            MUtext = chkRAM(selectedCard)
+            notify("--> {} is Installed{}".format(selectedCard,MUtext))
    elif card.name == 'Playful AI' and action == 'play':
       rollTuple = RollX('Roll1Dice', 'Playful AI:', card, notification = 'Automatic')
       if rollTuple[1] > 3: 
@@ -3333,7 +3376,7 @@ def CustomScript(card, action = 'play'): # Scripts that are complex and fairly u
    elif card.model == 'f58c40eb-bb11-4bad-9562-030d906ea352' and action == 'use':
       knownMarkers = []
       for marker in card.markers:
-         if marker[0] == 'Mastiff' or marker[0] == 'Data Raven':
+         if marker[0] in markerRemovals: # If the name of the marker exists in the markerRemovals dictionary it means it can be removed and has a specific cost.
             knownMarkers.append(marker)
       if len(knownMarkers) == 0: 
          whisper("No known markers with ability to remove")
@@ -3343,16 +3386,12 @@ def CustomScript(card, action = 'play'): # Scripts that are complex and fairly u
          selectTXT = 'Please select a marker to remove\n\n'
          iter = 0
          for choice in knownMarkers:
-            selectTXT += '{}: {}\n'.format(iter,knownMarkers[iter][0])
+            selectTXT += '{}: {} ({} {} and {})\n'.format(iter,knownMarkers[iter][0],markerRemovals[choice[0]][0],uniAction(),markerRemovals[choice[0]][1])
             iter += 1
          sel = askInteger(selectTXT,0)
          selectedMarker = knownMarkers[sel]
-      if selectedMarker[0] == 'Data Raven':
-         aCost = 1
-         cost = 1
-      elif selectedMarker[0] == 'Mastiff':
-         aCost = 1
-         cost = 4
+      aCost = markerRemovals[selectedMarker[0]][0] # The first field in the tuple for the entry with the same name as the selected marker, in the markerRemovals dictionary. All clear? Good.
+      cost = markerRemovals[selectedMarker[0]][1]
       actionCost = useAction(aCost)
       if actionCost == 'ABORT': return
       bitCost = payCost(cost)
@@ -3370,7 +3409,7 @@ def atTimedEffects(Time = 'Start'): # Function which triggers card effects at th
    X = 0
    for card in table:
       if card.controller != me: continue
-      if card.highlight == Inactive: continue
+      if card.highlight == InactiveColor: continue
       if debugVerbosity >= 4: notify("### {} Autoscript: {}".format(card, card.AutoScript))
       Autoscripts = card.AutoScript.split('||')
       for autoS in Autoscripts:
@@ -3441,13 +3480,19 @@ def markerEffects(Time = 'Start'):
          DrawX(passedScript, "Skivviss virus:", CounterHold, notification = 'Automatic')
       if re.search(r'virusTax',marker[0]) and Time == 'Start':
          GainX('Lose1Bits-perMarker{virusTax}-div2', "Tax virus:", CounterHold, notification = 'Automatic')
+      if re.search(r'Doppelganger',marker[0]) and Time == 'Start':
+         GainX('Lose1Bits-perMarker{Doppelganger}', "{}:".format(marker[0]), CounterHold, notification = 'Automatic')
       if re.search(r'virusPipe',marker[0]) and Time == 'Start':
          passedScript = 'Infect{}forfeitCounter:Actions'.format(count)
          TokensX(passedScript, "Pipe virus:", CounterHold, notification = 'Automatic')
       if re.search(r'Data Raven',marker[0]) and Time == 'Start':
-         GainX('Gain1Tags-perMarker{Data Raven}', "Data Raven:", CounterHold, notification = 'Automatic')
+         GainX('Gain1Tags-perMarker{Data Raven}', "{}:".format(marker[0]), CounterHold, notification = 'Automatic')
       if re.search(r'Mastiff',marker[0]) and Time == 'Run':
-         InflictX('Inflict1BrainDamage-perMarker{Mastiff}', "Mastiff:", CounterHold, notification = 'Automatic')
+         InflictX('Inflict1BrainDamage-perMarker{Mastiff}', "{}:".format(marker[0]), CounterHold, notification = 'Automatic')
+      if re.search(r'Cerberus',marker[0]) and Time == 'Run':
+         InflictX('Inflict2NetDamage-perMarker{Cerberus}', "{}:".format(marker[0]), CounterHold, notification = 'Automatic')
+      if re.search(r'Baskerville',marker[0]) and Time == 'Run':
+         InflictX('Inflict2NetDamage-perMarker{Baskerville}', "{}:".format(marker[0]), CounterHold, notification = 'Automatic')
    targetPL = ofwhom('-ofOpponent')          
    # Checking triggers from markers in opponent's Counter Hold.
    CounterHold = getSpecial('Counter Hold', targetPL) # Some viruses also trigger on our opponent's turns
@@ -3503,14 +3548,14 @@ def TrialError(group, x=0, y=0): # Debugging
    if not (len(players) == 1 or debugVerbosity >= 0): 
       whisper("This function is only for development purposes")
       return
-   testcards = ["639948ff-14b4-47df-9c23-d7164b97f012", # Lucidrine (TM) Drip Feed
+   testcards = ["0f290a3c-8f20-4e8f-b3df-39b1b097e439", # Fang 2.0
                 "bc02cdad-d027-4ac6-b609-13bcbd491bb4", # Playful AI
-                "401763a0-4d29-48d1-a90f-04d9694d986c", # The Shell Traders
+                "c8543203-5475-426b-816c-39b30588f714", # Custodial Position
                 "c8ac69cb-0762-4918-9115-243dba9aa1c2", # The Shell Traders Promo
                 "05dc8c06-e801-4bee-9b01-1b5c47d5a8f6", # Mastiff
                 "f3a8b3bf-3b67-49c7-b828-b41070740214", # Data Raven
-                "8d326b53-11f3-4e29-bd2b-35b3eb5472ec", # Viral Pipeline
-                "defc2d4e-31e4-42f6-b1cf-c137ce810fc0", # Armageddon
+                "426f2c05-9db5-4350-b28c-cdb43e9d0b93", # Baskerville
+                "55701d77-7a54-4bcc-ab3a-6e21192a8cff", # Cerberus
                 "8b0a0ca5-d6d6-440f-8f81-4486d252a545"] # Indiscriminate Response Team
    if not ds: ds = "corp"
    me.setGlobalVariable('ds', ds) 
