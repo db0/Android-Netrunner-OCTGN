@@ -160,7 +160,7 @@ A multiplier means that when we have a action that adds a something based on a n
 * -perTargetMarker{[Exact Marker Name]}: This will multiply the effect by the targeted card's specified number of [markers]
 * -perTarget[Requirement]: This will multiply the effect by the number of targeted cards of the [specified requirements]. 
 * -perTargetAny: This will mutliply the effect by the number of targeted cards. Without any requirements.
-* -per[Keyword]: This will multiply the effects by the number of cards with card.name, card.Type, or card.Keywords which match the [Keyword] on the table. 
+* -perEvery[Keyword]: This will multiply the effects by the number of cards with card.name, card.Type, or card.Keywords which match the [Keyword] on the table. 
 * -perX: This will multiply the effects by a number provided by another core command, such as the effects of RollX which rolls a 6-sided die.
 * -perProperty{[Exact Property Name]}: Will multiply the effects by the activated card's [property] value
 * -perMarker{[Exact Marker Name]}: Will multiply the effects by the activated card's specified number of [markers].
