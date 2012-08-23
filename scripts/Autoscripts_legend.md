@@ -128,7 +128,7 @@ This modulator basically informs that -Targeted modulator on what is a valid tar
 so `-atIce` would look for Targets that are of the card.Type "Ice". 
 
 There can be more of these, split by relevant `_and_` and `_or_`.  
-So a target given at -atIcebreaker_and_Killer would look for a card which has both the Icebreaker and Killer keywordsw, while -atIcebreaker_and_Killer would look for a card which has either of those keywords.  
+So a target given at -atIcebreaker_and_Killer would look for a card which has both the Icebreaker and Killer keywords, while -atIcebreaker_or_Killer would look for a card which has either of those keywords.  
 adding "non" or "not" in front of a requirement makes it an exclusion. So -atIce_and_nonSentry means a valid target is a non-Sentry Ice.  
 Requirement and exclusions check the card.name, the card.Type and the card.Keywords at the same time
 
