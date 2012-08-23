@@ -45,16 +45,18 @@ The player will be prompted to select one of the abilities and then the engine w
 
 When a script is separated by two dollar signs "$$", this serves as an "and" for the engine.
 All the effects of that particular script will be used. card.Autoscript uses "||" like this as well for now.
-All scripts separated by $$ are exetuted serially, one after the other.
+All scripts separated by $$ are exetuted serially, one after the other. If one of them aborts for some reason, the rest won't be done. This is useful for special costs (e.g. "If you inflicted any damage...")
 
-The first words after the card.AutoAction costs, the card.AutoScript trigger, or the || and $$ separators are always the core commands to be called. 
+The first words after the card.AutoAction costs, the card.AutoScript trigger, or the || and $$ separators are always what is called the __Core Commands__. 
 These core commands are what tell the engine the general idea of what it's going to be doing for this script part.
 
-To put this all together: lets take a script like: `A1B1G0T0:Draw2Cards$$Gain3Bits||Gain1Agenda Points`
+To put this all together: lets take a script like: `A1B1G0T0:Draw2Cards$$Gain3Bits||A1B2G0T0:Gain1Agenda Points`
 
 It will be parsed as follows:
 
-*Use 1 Action, and pay 1 Bit to: Draw 2 cards and Gain 3 Bits, OR Gain 1 Agenda point.*
+*Use 1 Action, and pay 1 Bit to: Draw 2 cards and Gain 3 Bits, OR Use 1 Action, and pay 2 Bits to: Gain 1 Agenda point.*
+
+Note that core commands after an "OR" bit, need a cost, while core commands after an "AND" bit, do not.
 
 The core commands are usually written in a form like Gain3Bits, Put1virusPattel, or TrashTarget  
 Any number is always attempted to put in the middle of the core command as part of the standard I'm using.
@@ -65,7 +67,7 @@ This is because all these three do similar things (modify counters) which allows
 
 To see a look of what core commands exist, look at the code after the useAbility() starting point.   
 Each core command function is marked clearly in the comment next to its definition.   
-Inside the useAbility() function you'll be able to see what kind of keywords will flow to the same core command
+Look at the regexHooks dictionary at the start of the script and you'll be able to see what kind of keywords will flow to each Core Command
 
 Resident Effects
 ----------------
@@ -126,7 +128,7 @@ This modulator basically informs that -Targeted modulator on what is a valid tar
 so `-atIce` would look for Targets that are of the card.Type "Ice". 
 
 There can be more of these, split by relevant `_and_` and `_or_`.  
-So a target given at -atIcebreaker_and_Killer would look for a card which has both the Icebreaker and Killer keywordsw, while -atIcebreaker_and_Killer would look for a card which has either of those keywords.  
+So a target given at -atIcebreaker_and_Killer would look for a card which has both the Icebreaker and Killer keywords, while -atIcebreaker_or_Killer would look for a card which has either of those keywords.  
 adding "non" or "not" in front of a requirement makes it an exclusion. So -atIce_and_nonSentry means a valid target is a non-Sentry Ice.  
 Requirement and exclusions check the card.name, the card.Type and the card.Keywords at the same time
 
@@ -158,7 +160,7 @@ A multiplier means that when we have a action that adds a something based on a n
 * -perTargetMarker{[Exact Marker Name]}: This will multiply the effect by the targeted card's specified number of [markers]
 * -perTarget[Requirement]: This will multiply the effect by the number of targeted cards of the [specified requirements]. 
 * -perTargetAny: This will mutliply the effect by the number of targeted cards. Without any requirements.
-* -per[Keyword]: This will multiply the effects by the number of cards with card.name, card.Type, or card.Keywords which match the [Keyword] on the table. 
+* -perEvery[Keyword]: This will multiply the effects by the number of cards with card.name, card.Type, or card.Keywords which match the [Keyword] on the table. 
 * -perX: This will multiply the effects by a number provided by another core command, such as the effects of RollX which rolls a 6-sided die.
 * -perProperty{[Exact Property Name]}: Will multiply the effects by the activated card's [property] value
 * -perMarker{[Exact Marker Name]}: Will multiply the effects by the activated card's specified number of [markers].
