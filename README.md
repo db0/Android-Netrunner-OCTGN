@@ -75,14 +75,11 @@ So, final changes for this version
  * Memory check now made a function. Will also work for cards installed via shell traders
  * Made findTarget() and per() targeting exclude cards highlighted as Dummies, Revealed, or Inactive
  * Polished and restructued the code a bit. Unfortunately no extensive commenting yet. My future self will probably hate me.
- * Added Butcher Boy and Cockroach implementation
  * Also fixed some bug with the debugverbosity
  * InflictX will not warn you if you're doing 0 damage now.
  * Fixed bug with checking for Noisy cards
  * Added AutoScript for the runner's Counter Hold. Now it is able to select and remove special markers given to him by the Corp.
- * Added custom code for Mastiff and Data Raven markers
-
-Enjoy!
+ * Added custom code for all markers which have effects I can code (eg. Mastiff, Data Raven, Fang, Doppelgänger, Boardwalk etc)
 
 ### 2.1.11
 
