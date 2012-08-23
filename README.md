@@ -20,6 +20,7 @@ Some basic instructions on how to use the new system will be forthcoming, but th
 
 And some more advanced stuff:
 
+* If you're the corp, remove all viruses by double-clicking your "Virus Scan" card. If you're the runner, remove Sentry markers by double-clicking on your "Technical Difficulties" card.
 * Most card will automatically trigger their abilities when played/scored/rezzed so you don't need to do anything else. Pay attention to the notification area for messages from them.
 * Cards with abilities which increase your MU, Hand Size, etc will automatically increase it when they come into play and reduce it when they go away, as long as you don't drag&drop them in or out of the table manually. Use the built-in commands for that. Rez, Derez, Trash etc
 * Cards with abilities you activate while they're in play (like programs, agendas, upgrades etc) will trigger them when you double-click on them. If they have more than one ability (such as most icebreakers), the game will prompt you to select one and pay the appropriate cost.
