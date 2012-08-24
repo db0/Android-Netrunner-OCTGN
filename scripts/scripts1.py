@@ -24,7 +24,7 @@ Automations = {'Play, Score and Rez'    : True, # If True, game will automatical
                'Damage Prevention'      : True, # If True, game will automatically trigger effects happening at the start of the player's turn, from cards they control.                
                'Damage'                 : True}
 
-UniCredits = True # If True, game will display credits as unicode characters ❶, ❷, ❿ etc
+UniCode = True # If True, game will display credits, clicks, trash, memory as unicode characters
 
 ModifyDraw = 0 #if True the audraw should warn the player to look at r&D instead 
 
@@ -38,9 +38,9 @@ Stored_AutoScripts = {}
 
 MemoryRequirements = {}
 InstallationCosts = {}
-maxActions = 3
+maxClicks = 3
 scoredAgendas = 0
-currAction = 0
+currClicks = 0
 playerside = None # Variable to keep track on which side each player is
 playeraxis = None # Variable to keep track on which axis the player is
 
@@ -53,7 +53,7 @@ RevealandShuffleWarn = True # Similar to above.
 newturn = True #We use this variable to track whether a player has yet to do anything this turn.
 endofturn = False #We use this variable to know if the player is in the end-of-turn phase.
 failedRequirement = True #A Global boolean that we set in case an Autoscript cost cannot be paid, so that we know to abort the rest of the script.
-lastKnownNrActions = 0 # A Variable keeping track of what the engine thinks our action counter should be, in case we change it manually.
+lastKnownNrClicks = 0 # A Variable keeping track of what the engine thinks our action counter should be, in case we change it manually.
 
 debugVerbosity = -1
 #---------------------------------------------------------------------------
@@ -249,25 +249,35 @@ def sortPriority(cardList):
 def uniCredit(count):
    if debugVerbosity >= 1: notify(">>> uniCredit(){}".format(extraASDebug())) #Debug
    count = num(count)
-   if UniCredits:
-      if count == 1: return '❶'
-      elif count == 2: return '❷'
-      elif count == 3: return '❸'
-      elif count == 4: return '❹'
-      elif count == 5: return '❺'
-      elif count == 6: return '❻'
-      elif count == 7: return '❼'
-      elif count == 8: return '❽'
-      elif count == 9: return '❾'
-      #elif count == 10: return '❿' Doesn't display that well. Need to fix the font.
-      else: return "({})".format(count)
-   else: return "({})".format(count)
+   if UniCode: return "{} ¥".format(count)
+   else: 
+      if count == 1: grammar = 's'
+      else: grammar =''
+      return "{} Credit{}".format(count,grammar)
  
-def uniAction():
-   if debugVerbosity >= 1: notify(">>> uniAction(){}".format(extraASDebug())) #Debug
-   if UniCredits: return '⏎'
-   else: return '|>'
+def uniClick():
+   if debugVerbosity >= 1: notify(">>> uniClick(){}".format(extraASDebug())) #Debug
+   if UniCode: return '⌚'
+   else: return '(/)'
 
+def uniTrash():
+   if debugVerbosity >= 1: notify(">>> uniTrash(){}".format(extraASDebug())) #Debug
+   if UniCode: return '⏏'
+   else: return 'Trash'
+
+def uniMU(count = 1):
+   if debugVerbosity >= 1: notify(">>> uniMU(){}".format(extraASDebug())) #Debug
+   if UniCode: 
+      if num(count) == 1: return '⎗'
+      elif num(count) ==2:  return '⎘'
+      else: return '3 MU'
+   else: return '{} MU'.format(count)
+   
+def uniLink():
+   if debugVerbosity >= 1: notify(">>> uniLink(){}".format(extraASDebug())) #Debug
+   if UniCode: return '⎙'
+   else: return 'Base Link'
+   
 def chooseWell(limit, choiceText, default = None):
    if debugVerbosity >= 1: notify(">>> chooseWell(){}".format(extraASDebug())) #Debug
    if default == None: default = 0# If the player has not provided a default value for askInteger, just assume it's the max.
@@ -327,16 +337,16 @@ def getKeywords(card): # A function which combines the existing card keywords, w
 def pileName(group):
    if debugVerbosity >= 1: notify(">>> pileName(){}".format(extraASDebug())) #Debug   
    if debugVerbosity >= 3: notify(">>> pile player: {}".format(group.player)) #Debug   
-   if group.name == 'Trash/Archives(Face-up)':
+   if group.name == 'Heap/Archives(Face-up)':
       if group.player.getGlobalVariable('ds') == 'corp': name = 'Face-up Archives'
-      else: name = 'Trash'
+      else: name = 'Heap'
    elif group.name == 'R&D/Stack':
       if group.player.getGlobalVariable('ds') == 'corp': name = 'R&D'
       else: name = 'Stack'
    elif group.name == 'Archives(Hidden)': name = 'Hidden Archives'
    else:
       if group.player.getGlobalVariable('ds') == 'corp': name = 'HQ'
-      else: name = 'Hand'
+      else: name = 'Grip'
    if debugVerbosity >= 4: notify("<<< pileName() by returning: {}".format(name))
    return name
 
@@ -366,10 +376,10 @@ def chkRAM(card, action = 'install', silent = False):
    if MUreq > 0 and not card.markers[mdict['DaemonMU']] and card.highlight != InactiveColor and card.highlight != RevealedColor:
       if action == 'install':
          card.controller.MU -= MUreq
-         MUtext = ", using up {} MUs".format(MUreq)
+         MUtext = ", using up {}".format(uniMU(MUreq))
       elif action == 'uninstall':
          card.controller.MU += MUreq
-         MUtext = ", freeing up {} MUs".format(MUreq)
+         MUtext = ", freeing up {}".format(uniMU(MUreq))
    else: MUtext = ''
    if card.controller.MU < 0 and not silent: notify(":::Warning:::{}'s programs require more memory than he has available. They must trash enough programs to bring their available Memory to at least 0".format(card.controller))
    if debugVerbosity >= 4: notify("<<< chkRAM() by returning: {}".format(MUtext))
@@ -411,9 +421,9 @@ def yaxisMove(card):
 # Clicks indication
 #---------------------------------------------------------------------------
 
-def useAction(group = table, x=0, y=0, count = 1):
-   if debugVerbosity >= 1: notify(">>> useAction(){}".format(extraASDebug())) #Debug
-   global currAction, lastKnownNrActions
+def useClick(group = table, x=0, y=0, count = 1):
+   if debugVerbosity >= 1: notify(">>> useClick(){}".format(extraASDebug())) #Debug
+   global currClicks, lastKnownNrClicks
    mute()
    extraText = ''
    if count == 0: return '{} takes a free action'.format(me)
@@ -423,17 +433,17 @@ def useAction(group = table, x=0, y=0, count = 1):
    if me.Clicks < count: 
       if not confirm("You have no more clicks left for this turn. Are you sure you want to continue?"): return 'ABORT'
       else: extraText = ' (Exceeding Max!)'
-   currAction += count + lastKnownNrActions - me.Clicks# If the player modified their action counter manually, the last two will increase/decreate our current action accordingly.
+   currClicks += count + lastKnownNrClicks - me.Clicks# If the player modified their click counter manually, the last two will increase/decreate our current click accordingly.
    me.Clicks -= count
-   lastKnownNrActions = me.Clicks
-   if count == 2: return "{} {} {} takes Double Action #{} and #{}{}".format(uniAction(),uniAction(),me,currAction - 1, currAction,extraText)
-   elif count == 3: return "{} {} {} {} takes Triple Action #{}, #{} and #{}{}".format(uniAction(),uniAction(),uniAction(),me,currAction - 2, currAction - 1, currAction,extraText)
-   else: return "{} {} takes Action #{}{}".format(uniAction(),me,currAction,extraText) # We give act +1 because otherwise the first action would be action #0.
+   lastKnownNrClicks = me.Clicks
+   if count == 2: return "{} {} {} uses Double Click #{} and #{}{}".format(uniClick(),uniClick(),me,currClicks - 1, currClicks,extraText)
+   elif count == 3: return "{} {} {} {} uses Triple Click #{}, #{} and #{}{}".format(uniClick(),uniClick(),uniClick(),me,currClicks - 2, currClicks - 1, currClicks,extraText)
+   else: return "{} {} uses Click #{}{}".format(uniClick(),me,currClicks,extraText)
    
 def goToEndTurn(group, x = 0, y = 0):
    if debugVerbosity >= 1: notify(">>> goToEndTurn(){}".format(extraASDebug())) #Debug
    mute()
-   global endofturn, currAction, newturn
+   global endofturn, currClicks, newturn
    if ds == "":
       whisper ("Please perform the game setup first (Ctrl+Shift+S)")
       return
@@ -452,17 +462,17 @@ def goToEndTurn(group, x = 0, y = 0):
          return
    endofturn = False
    newturn = False
-   currAction = 0
+   currClicks = 0
    atTimedEffects('End')
    if ds == "corp": notify ("=> The Corporation of {} has reached CoB (Close of Business hours).".format(me))
    else: notify ("=> Runner {} has gone to sleep for the day.".format(me))
 
 def goToSot (group, x=0,y=0):
    if debugVerbosity >= 1: notify(">>> goToSot(){}".format(extraASDebug())) #Debug
-   global newturn, endofturn, lastKnownNrActions, currAction
+   global newturn, endofturn, lastKnownNrClicks, currClicks
    mute()
    clearNoise()
-   if endofturn or currAction or newturn:
+   if endofturn or currClicks or newturn:
       if debugVerbosity <= 0 and not confirm("You have not yet properly ended you previous turn. You need to use F12 after you've finished all your clicks.\n\nAre you sure you want to continue?"): return
       else: 
          if len(me.hand) > currentHandSize(): # Just made sure to notify of any shenanigans
@@ -472,7 +482,7 @@ def goToSot (group, x=0,y=0):
    if ds == "":
       whisper ("Please perform the game setup first (Ctrl+Shift+S)")
       return
-   currAction = 0 # We wipe it again just in case they ended their last turn badly but insist on going through the next one.
+   currClicks = 0 # We wipe it again just in case they ended their last turn badly but insist on going through the next one.
    clicksReduce = findCounterPrevention(maxClicks, 'Clicks', me) # Checking if the player has any effects which force them to forfeit clicks.
    if clicksReduce: extraTXT = " ({} forfeited)".format(clicksReduce)
    else: extraTXT = ''
@@ -483,10 +493,10 @@ def goToSot (group, x=0,y=0):
          me.Clicks += maxClicks - clicksReduce # If it was a penalty, then it remains with them for this round, which means they have less clicks to use.
          notify("{} is starting with {} less clicks this turn, due to a penalty from a previous turn.")
    else: me.Clicks = maxClicks - clicksReduce
-   lastKnownNrActions = me.Clicks
+   lastKnownNrClicks = me.Clicks
    myCards = (card for card in table if card.controller == me and card.owner == me)
    for card in myCards: 
-      if card in Stored_Type and Stored_Type[card] != 'Ice': card.orientation &= ~Rot90 # Refresh all cards which can be used once a turn.
+      if card in Stored_Type and Stored_Type[card] != 'ICE': card.orientation &= ~Rot90 # Refresh all cards which can be used once a turn.
    newturn = True
    atTimedEffects('Start') # Check all our cards to see if there's any Start of Turn effects active.
    if ds == "corp": notify("=> The offices of {}'s Corporation are now open for business. They have {} clicks for this turn{}.".format(me,me.Clicks,extraTXT))
@@ -531,15 +541,15 @@ def switchPreventDMGAutomation(group,x=0,y=0):
    if debugVerbosity >= 1: notify(">>> switchDMGAutomation(){}".format(extraASDebug())) #Debug
    switchAutomation('Damage Prevention')
         
-def switchUniCredits(group,x=0,y=0,command = 'Off'):
-   if debugVerbosity >= 1: notify(">>> switchUniCredits(){}".format(extraASDebug())) #Debug
-   global UniCredits
-   if UniCredits and command != 'On':
+def switchUniCode(group,x=0,y=0,command = 'Off'):
+   if debugVerbosity >= 1: notify(">>> switchUniCode(){}".format(extraASDebug())) #Debug
+   global UniCode
+   if UniCode and command != 'On':
       whisper("Credits and Clicks will now be displayed as normal ASCII.".format(me))
-      UniCredits = False
+      UniCode = False
    else:
       whisper("Credits and Clicks will now be displayed as Unicode.".format(me))
-      UniCredits = True
+      UniCode = True
 
 def ImAProAtThis(group = table, x=0, y=0):
    if debugVerbosity >= 1: notify(">>> ImAProAtThis(){}".format(extraASDebug())) #Debug
@@ -572,7 +582,7 @@ def createStartingCards():
 
 def intJackin(group, x = 0, y = 0):
    if debugVerbosity >= 1: notify(">>> intJackin(){}".format(extraASDebug())) #Debug
-   global ds, maxClicks,newturn,endofturn, currAction, debugVerbosity
+   global ds, maxClicks,newturn,endofturn, currClicks, debugVerbosity
    global Stored_Type, Stored_Cost, Stored_Keywords, Stored_AutoActions, Stored_AutoScripts
    mute()
    debugVerbosity = -1 # Jackin means normal game.
@@ -585,7 +595,7 @@ def intJackin(group, x = 0, y = 0):
       whisper ("Please load a deck first!")
       return
    TopCard = stack[0]
-   TopCard.moveTo(me.piles['Trash/Archives(Face-up)'])
+   TopCard.moveTo(me.piles['Heap/Archives(Face-up)'])
    if len(players) > 1: random = rnd(1,100) # Fix for multiplayer only. Makes Singleplayer setup very slow otherwise.
    ds = TopCard.Player
    me.setGlobalVariable('ds', ds)
@@ -603,7 +613,7 @@ def intJackin(group, x = 0, y = 0):
    Stored_AutoScripts.clear()
    newturn = False 
    endofturn = False
-   currAction = 0
+   currClicks = 0
    if ds == "corp":
       maxClicks = 3
       #me.Clicks = maxClicks # We now do that during SoT
@@ -637,12 +647,12 @@ def checkDeckNoLimit (group):
    if (ds == "corp"):
       loAP = 0.0
       loRunner = 0
-      for card in group: card.moveTo(me.piles['Trash/Archives(Face-up)'])
+      for card in group: card.moveTo(me.piles['Heap/Archives(Face-up)'])
       if len(players) > 1: random = rnd(1,100) # Fix for multiplayer only. Makes Singleplayer setup very slow otherwise.               
-      for card in me.piles['Trash/Archives(Face-up)']: 
+      for card in me.piles['Heap/Archives(Face-up)']: 
          if card.Type == 'Agenda': loAP += num(card.Stat)
          if card.Player == "runner": loRunner = 1
-      for card in me.piles['Trash/Archives(Face-up)']: card.moveToBottom(group) # We use a second loop because we do not want to pause after each check
+      for card in me.piles['Heap/Archives(Face-up)']: card.moveToBottom(group) # We use a second loop because we do not want to pause after each check
       if loAP/loDeckCount < 2.0/5.0:
          notify(":::ERROR::: Only {} Agenda Points in {}'s R&D.".format(loAP/1,me))
          ok = -1
@@ -651,11 +661,11 @@ def checkDeckNoLimit (group):
          ok = -1
    else:
       loCorp = 0
-      for card in group: card.moveTo(me.piles['Trash/Archives(Face-up)'])
+      for card in group: card.moveTo(me.piles['Heap/Archives(Face-up)'])
       if len(players) > 1: random = rnd(1,100) # Fix for multiplayer only. Makes Singleplayer setup very slow otherwise.
-      for card in me.piles['Trash/Archives(Face-up)']: 
+      for card in me.piles['Heap/Archives(Face-up)']: 
          if card.Player == "corp": loCorp = 1 # We use a second loop because we do not want to pause after each check
-      for card in me.piles['Trash/Archives(Face-up)']: card.moveToBottom(group) # We use a second loop because we do not want to pause after each check
+      for card in me.piles['Heap/Archives(Face-up)']: card.moveToBottom(group) # We use a second loop because we do not want to pause after each check
       if loCorp == 1:
          notify(":::ERROR::: Corp Cards found in {}'s Stack.".format(me))
          ok = -1
@@ -684,9 +694,9 @@ def intRun(aCost = 1, Name = 'R&D', silent = False):
    if findMarker(CounterHold,'Fang') or findMarker(CounterHold,'Rex') or findMarker(CounterHold,'Fragmentation Storm'): # These are counters which prevent the runner from running.
       notify(":::Warning:::{} attempted to run but was prevented by a resident Sentry effect in their Rig. They will have to remove all such effects before attempting a run".format(me))
       return 'ABORT'
-   ActionCost = useAction(aCost)
-   if ActionCost == 'ABORT': return 'ABORT'
-   if not silent: notify ("{} to start a run on {}.".format(ActionCost,Name))
+   ClickCost = useClick(aCost)
+   if ClickCost == 'ABORT': return 'ABORT'
+   if not silent: notify ("{} to start a run on {}.".format(ClickCost,Name))
    atTimedEffects('Run')
 
 def runHQ(group, x=0,Y=0):
@@ -718,16 +728,16 @@ def pay2andDelTag(group, x = 0, y = 0):
    if me.Tags < 1: 
       whisper("You don't have any tags")
       return
-   ActionCost = useAction()
-   if ActionCost == 'ABORT': return
+   ClickCost = useClick()
+   if ClickCost == 'ABORT': return
    dummyCard = getSpecial('Tracing') # Just a random card to pass to the next function. Can't be bothered to modify the function to not need this.
    reduction = reduceCost(dummyCard, 'DelTag', 2)
    if reduction: extraText = " (reduced by {})".format(uniCredit(reduction))
    if payCost(2 - reduction) == "ABORT": 
-      me.Clicks += 1 # If the player didn't notice they didn't have enough credits, we give them back their action
+      me.Clicks += 1 # If the player didn't notice they didn't have enough credits, we give them back their click
       return # If the player didn't have enough money to pay and aborted the function, then do nothing.
    me.counters['Tags'].value -= 1
-   notify ("{} and pays {}{} to lose a tag.".format(ActionCost,uniCredit(2 - reduction),extraText))
+   notify ("{} and pays {}{} to lose a tag.".format(ClickCost,uniCredit(2 - reduction),extraText))
 
 #------------------------------------------------------------------------------
 # Markers
@@ -802,16 +812,16 @@ def advanceCardP(card, x = 0, y = 0):
    if debugVerbosity >= 1: notify(">>> advanceCardP(){}".format(extraASDebug())) #Debug
    mute()
    extraText = ''
-   ActionCost = useAction()
-   if ActionCost == 'ABORT': return
+   ClickCost = useClick()
+   if ClickCost == 'ABORT': return
    reduction = reduceCost(card, 'Advancement', 1)
    if reduction: extraText = " (reduced by {})".format(uniCredit(reduction))
    if payCost(1 - reduction) == "ABORT": 
-      me.Clicks += 1 # If the player didn't notice they didn't have enough credits, we give them back their action
+      me.Clicks += 1 # If the player didn't notice they didn't have enough credits, we give them back their click
       return # If the player didn't have enough money to pay and aborted the function, then do nothing.
    card.markers[mdict['Advancement']] += 1
-   if card.isFaceUp: notify("{} and paid {}{} to advance {}.".format(ActionCost,uniCredit(1 - reduction),extraText,card))
-   else: notify("{} and paid {}{} to advance a card.".format(ActionCost,uniCredit(1 - reduction),extraText))
+   if card.isFaceUp: notify("{} and paid {}{} to advance {}.".format(ClickCost,uniCredit(1 - reduction),extraText,card))
+   else: notify("{} and paid {}{} to advance a card.".format(ClickCost,uniCredit(1 - reduction),extraText))
 
 def addXadvancementCounter(card, x=0, y=0):
    if debugVerbosity >= 1: notify(">>> addXadvancementCounter(){}".format(extraASDebug())) #Debug
@@ -863,7 +873,7 @@ def inputTraceValue (card, x=0,y=0, limit = 0, silent = False):
    card.markers[mdict['Credits']] = TraceValue
    if not silent: 
       if ds == 'corp': notify("{} strengthens their Trace by {}.".format(me,TraceValue))
-      else: notify("{} reinforces their Base Link by {}.".format(me,TraceValue))
+      else: notify("{} reinforces their {} by {}.".format(me,uniLink(),TraceValue))
 	
 #def revealTraceValue (card, x=0,y=0): # Obsolete in ANR
 #   if debugVerbosity >= 1: notify(">>> revealTraceValue(){}".format(extraASDebug())) #Debug
@@ -968,7 +978,7 @@ def intdamageDiscard(group,x=0,y=0):
    else:
       card = group.random()
       if ds == 'corp': card.moveTo(me.piles['Archives(Hidden)'])
-      else: card.moveTo(me.piles['Trash/Archives(Face-up)'])
+      else: card.moveTo(me.piles['Heap/Archives(Face-up)'])
       notify("{} discards {} at random.".format(me,card))
 
 def addBrainDmg(group, x = 0, y = 0):
@@ -1006,12 +1016,12 @@ def addNetDmg(group, x = 0, y = 0):
       
 def getCredit(group, x = 0, y = 0):
    if debugVerbosity >= 1: notify(">>> getCredit(){}".format(extraASDebug())) #Debug
-   ActionCost = useAction()
-   if ActionCost == 'ABORT': return
+   ClickCost = useClick()
+   if ClickCost == 'ABORT': return
    creditsReduce = findCounterPrevention(1, 'Credits', me)
    if creditsReduce: extraTXT = " ({} forfeited)".format(uniCredit(creditsReduce))
    else: extraTXT = ''
-   notify ("{} and receives {}{}.".format(ActionCost,uniCredit(1 - creditsReduce),extraTXT))
+   notify ("{} and receives {}{}.".format(ClickCost,uniCredit(1 - creditsReduce),extraTXT))
    me.counters['Credits'].value += 1 - creditsReduce
     
 #------------------------------------------------------------------------------
@@ -1096,7 +1106,7 @@ def intRez (card, cost = 'not free', x=0, y=0, silent = False):
    else: rc = ''
    card.isFaceUp = True
    if not silent:
-      if card.Type == 'Ice': notify("{} has rezzed {} {}{}.".format(me, card, rc, extraText))
+      if card.Type == 'ICE': notify("{} has rezzed {} {}{}.".format(me, card, rc, extraText))
       if card.Type == 'Node': notify("{} has acquired {} {}{}.".format(me, card, rc, extraText))
       if card.Type == 'Upgrade': notify("{} has installed {} {}{}.".format(me, card, rc, extraText))
    random = rnd(10,100) # Bug workaround.
@@ -1154,7 +1164,7 @@ def clear(card, x = 0, y = 0):
    card.markers[mdict['MinusOne']] = 0
    card.target(False)
 
-def intTrashCard(card, stat, cost = "not free",  ActionCost = '', silent = False):
+def intTrashCard(card, stat, cost = "not free",  ClickCost = '', silent = False):
    if debugVerbosity >= 1: notify(">>> intTrashCard(){}".format(extraASDebug())) #Debug
    global trashEasterEggIDX, DummyTrashWarn
    mute()
@@ -1162,12 +1172,13 @@ def intTrashCard(card, stat, cost = "not free",  ActionCost = '', silent = False
    rc = ''
    extraText = ''
    storeProperties(card)
-   if ActionCost == '': 
-      ActionCost = '{} '.format(me) # If not clicks were used, then just announce our name.
+   if ClickCost == '': 
+      ClickCost = '{} '.format(me) # If not clicks were used, then just announce our name.
       goodGrammar = 'es' # LOL Grammar Nazi
    else: 
-      ActionCost += ' and '
+      ClickCost += ' and '
       goodGrammar = ''
+   if UniCode: goodGrammar = ''
    cardowner = card.owner
    if Stored_Type[card] == "Tracing" or Stored_Type[card] == "Counter Hold" or Stored_Type[card] == "Data Fort": 
       whisper("{}".format(trashEasterEgg[trashEasterEggIDX]))
@@ -1175,7 +1186,7 @@ def intTrashCard(card, stat, cost = "not free",  ActionCost = '', silent = False
          trashEasterEggIDX += 1
          return 'ABORT'
       elif trashEasterEggIDX == 7: 
-         card.moveToBottom(cardowner.piles['Trash/Archives(Face-up)'])
+         card.moveToBottom(cardowner.piles['Heap/Archives(Face-up)'])
          trashEasterEggIDX = 0
          return
    if card.highlight == DummyColor and DummyTrashWarn and not silent and not confirm(":::Warning!:::\n\nYou are about to trash a dummy card. You will not be able to restore it without using the effect that created it originally.\n\nAre you sure you want to proceed? (This message will not appear again)"): 
@@ -1187,26 +1198,26 @@ def intTrashCard(card, stat, cost = "not free",  ActionCost = '', silent = False
    rc = payCost(num(stat) - reduction, cost)
    if rc == "ABORT": return 'ABORT' # If the player didn't have enough money to pay and aborted the function, then do nothing.
    elif rc == 0: 
-      if ActionCost.endswith(' and'): ActionCost[:-len(' and')] # if we have no action cost, we don't need the connection.
+      if ClickCost.endswith(' and'): ClickCost[:-len(' and')] # if we have no click cost, we don't need the connection.
    else: 
-      ActionCost += "pays {} to".format(rc) # If we have Credit cost, append it to the Action cost to be announced.
+      ClickCost += "pays {} to".format(rc) # If we have Credit cost, append it to the Click cost to be announced.
       goodGrammar = ''
    if Stored_Type[card] == 'Prep' or Stored_Type[card] == 'Operation': silent = True # These cards are already announced when played. No need to mention them a second time.
    if card.isFaceUp:
       MUtext = chkRAM(card, 'uninstall')    
-      if rc == "free" and not silent: notify("{} trashed {} at no cost{}.".format(me, card, MUtext))
-      elif not silent: notify("{} trash{} {}{}{}.".format(ActionCost, goodGrammar, card, extraText, MUtext))
+      if rc == "free" and not silent: notify("{} {} {} at no cost{}.".format(me, uniTrash(), card, MUtext))
+      elif not silent: notify("{} {}{} {}{}{}.".format(ClickCost, uniTrash(), goodGrammar, card, extraText, MUtext))
       if card.highlight != RevealedColor: executePlayScripts(card,'trash') # We don't want to run automations on simply revealed cards.
-      card.moveTo(cardowner.piles['Trash/Archives(Face-up)'])
+      card.moveTo(cardowner.piles['Heap/Archives(Face-up)'])
    elif (ds == "runner" and card.controller == me) or (ds == "runner" and card.controller != me and cost == "not free") or (ds == "corp" and card.controller != me ): 
    #I'm the runner and I trash my cards, or an accessed card from the corp, or I 'm the corp and I trash a runner's card.
-      card.moveTo(cardowner.piles['Trash/Archives(Face-up)'])
-      if rc == "free" and not silent: notify ("{} trashed {} at no cost.".format(me,card))
-      elif not silent: notify("{} trash{} {}{}.".format(ActionCost, goodGrammar, card, extraText))
+      card.moveTo(cardowner.piles['Heap/Archives(Face-up)'])
+      if rc == "free" and not silent: notify ("{} {} {} at no cost.".format(me, uniTrash(), card))
+      elif not silent: notify("{} {}{} {}{}.".format(ClickCost, uniTrash() , goodGrammar, card, extraText))
    else: #I'm the corp and I trash my own hidden cards or the runner and trash a hidden corp card without cost (e.g. randomly picking one from their hand)
       card.moveTo(cardowner.piles['Archives(Hidden)'])
-      if rc == "free" and not silent: notify("{} trashed a hidden card at no cost.".format(me))
-      elif not silent: notify("{} trash{} a hidden card.".format(ActionCost, goodGrammar))
+      if rc == "free" and not silent: notify("{} {} a hidden card at no cost.".format(me, uniTrash()))
+      elif not silent: notify("{} {}{} a hidden card.".format(ClickCost, uniTrash(), goodGrammar))
    if debugVerbosity >= 4: notify("<<< intTrashCard()")
 
 def trashCard (card, x = 0, y = 0):
@@ -1220,9 +1231,9 @@ def trashForFree (card, x = 0, y = 0):
 
 def pay2AndTrash(card, x=0, y=0):
    if debugVerbosity >= 1: notify(">>> pay2AndTrash(){}".format(extraASDebug())) #Debug
-   ActionCost = useAction()
-   if ActionCost == 'ABORT': return
-   intTrashCard(card, 2, ActionCost = ActionCost)
+   ClickCost = useClick()
+   if ClickCost == 'ABORT': return
+   intTrashCard(card, 2, ClickCost = ClickCost)
 
 def trashTargetFree(group, x=0, y=0):
    if debugVerbosity >= 1: notify(">>> trashTargetFree(){}".format(extraASDebug())) #Debug
@@ -1250,17 +1261,17 @@ def trashTargetPaid(group, x=0, y=0):
       storeProperties(card)
       if ds == 'corp':
          if Stored_Type[card] == 'Resource':
-            ActionCost = useAction()
+            ClickCost = useClick()
             if not card.controller.Tags:
-               whisper("You can only trash the runner's resources when they're tagged")
+               whisper("You can only {} the runner's resources when they're tagged".format(uniTrash()))
                continue
-            if ActionCost == 'ABORT': return
-            intTrashCard(card, 2, ActionCost = ActionCost)
+            if ClickCost == 'ABORT': return
+            intTrashCard(card, 2, ClickCost = ClickCost)
          else: whisper("Only resources can be trashed from the runner")
       else: 
          if Stored_Type[card] == 'Ugrade' or Stored_Type[card] == 'Node':
             intTrashCard(card, fetchProperty(card, 'Stat')) # If we're a runner, trash with the cost of the card's trash.
-         else: whisper("You can only pay to trash the Corp's Nodes and Upgrades")
+         else: whisper("You can only pay to trash the Corp's Nodes and Upgrades".format(uniTrash()))
       
 def exileCard(card, silent = False):
    if debugVerbosity >= 1: notify(">>> exileCard(){}".format(extraASDebug())) #Debug
@@ -1365,7 +1376,7 @@ def checkUnique (card):
    if not re.search(r'Unique', getKeywords(card)): return True #If the played card isn't unique do nothing.
    ExistingUniques = [ c for c in table
          if c.owner == me and c.isFaceUp and c.name == card.name and re.search(r'Unique', getKeywords(c)) ]
-   if len(ExistingUniques) != 0 and not confirm("This unique card is already in play. Are you sure you want to play {}?\n\n(If you do, your existing unique card will be trashed at no cost)".format(card.name)) : return False
+   if len(ExistingUniques) != 0 and not confirm("This unique card is already in play. Are you sure you want to play {}?\n\n(If you do, your existing unique card will be {} at no cost)".format(card.name,uniTrash())) : return False
    else:
       for uniqueC in ExistingUniques: trashForFree(uniqueC)
    return True   
@@ -1381,7 +1392,7 @@ def oncePerTurn(card, x = 0, y = 0, silent = False):
       if not silent: notify('{} activates the once-per-turn ability of {}'.format(me, card))
    card.orientation = Rot90
 #------------------------------------------------------------------------------
-# Hand Clicks
+# Hand Actions
 #------------------------------------------------------------------------------
 
 def currentHandSize(player = me):
@@ -1398,36 +1409,36 @@ def intPlay(card, cost = 'not_free'):
    chooseSide() # Just in case...
    storeProperties(card)
    if (card.Type == 'Operation' or card.Type == 'Prep') and chkTargeting(card) == 'ABORT': return # If it's an Operation or Prep and has targeting requirements, check with the user first.
-   if re.search(r'Double', getKeywords(card)): NbReq = 2 # Some cards require two clicks to play. This variable is passed to the useAction() function.
-   else: NbReq = 1 #In case it's not a "Double" card. Then it only uses one action to play.
-   ActionCost = useAction(count = NbReq)
-   if ActionCost == 'ABORT': return  #If the player didn't have enough clicks and opted not to proceed, do nothing.
+   if re.search(r'Double', getKeywords(card)): NbReq = 2 # Some cards require two clicks to play. This variable is passed to the useClick() function.
+   else: NbReq = 1 #In case it's not a "Double" card. Then it only uses one click to play.
+   ClickCost = useClick(count = NbReq)
+   if ClickCost == 'ABORT': return  #If the player didn't have enough clicks and opted not to proceed, do nothing.
    if checkUnique(card) == False: return #If the player has the unique card and opted not to trash it, do nothing.
-   if not checkNotHardwareDeck(card): return	#If player already has a deck in play and doesnt want to play that card, do nothing.
+   if not checkNotHardwareConsole(card): return	#If player already has a Console in play and doesnt want to play that card, do nothing.
    if card.Type == 'Prep' or card.Type == 'Operation': action = 'Play'
    else: action = 'Install'
    MUtext = ''
    rc = ''
    if card.Type == 'Resource' and re.search(r'Hidden', getKeywords(card)): hiddenresource = 'yes'
    else: hiddenresource = 'no'
-   if card.Type == 'Ice' or card.Type == 'Agenda' or card.Type == 'Node' or (card.Type == 'Upgrade' and not re.search(r'Region', getKeywords(card))):
+   if card.Type == 'ICE' or card.Type == 'Agenda' or card.Type == 'Node' or (card.Type == 'Upgrade' and not re.search(r'Region', getKeywords(card))):
       card.moveToTable(-180, 160 * playerside - yaxisMove(card), True) # Agendas, Nodes and non-region Upgrades all are played to the same spot now.
-      if Stored_Type[card] == 'Ice': 
+      if Stored_Type[card] == 'ICE': 
          card.orientation ^= Rot90
          card.moveToTable(-180, 65 * playerside - yaxisMove(card), True) # Ice are moved a credit more to the front and played sideways.
-      notify("{} to install a card.".format(ActionCost))
+      notify("{} to install a card.".format(ClickCost))
    elif card.Type == 'Program' or card.Type == 'Prep' or card.Type == 'Resource' or card.Type == 'Hardware':
       MUtext = chkRAM(card)
       if card.Type == 'Resource' and hiddenresource == 'yes':
          card.moveToTable(-180, 230 * playerside - yaxisMove(card), True)
-         notify("{} to install a hidden resource.".format(ActionCost))
+         notify("{} to install a hidden resource.".format(ClickCost))
          executePlayScripts(card,action.lower())
          return
       reduction = reduceCost(card, action, num(card.Cost)) #Checking to see if the cost is going to be reduced by cards we have in play.
       if reduction: extraText = " (reduced by {})".format(uniCredit(reduction)) #If it is, make sure to inform.
       rc = payCost(num(card.Cost) - reduction, cost)
       if rc == "ABORT": 
-         me.Clicks += NbReq # If the player didn't notice they didn't have enough credits, we give them back their action
+         me.Clicks += NbReq # If the player didn't notice they didn't have enough credits, we give them back their click
          return # If the player didn't have enough money to pay and aborted the function, then do nothing.
       elif rc == "free": extraText = " at no cost"
       elif rc != 0: rc = " and pays {}".format(rc)
@@ -1438,50 +1449,39 @@ def intPlay(card, cost = 'not_free'):
             if targetLookup.targetedBy and targetLookup.targetedBy == me and re.search(r'Daemon',getKeywords(targetLookup)) and possess(targetLookup, card, silent = True) != 'ABORT':
                MUtext = ", installing it into {}".format(targetLookup)
                break         
-         notify("{}{} to install {}{}{}.".format(ActionCost, rc, card, extraText,MUtext))
+         notify("{}{} to install {}{}{}.".format(ClickCost, rc, card, extraText,MUtext))
       elif card.Type == 'Prep':
          card.moveToTable(0, 0 - yaxisMove(card), False)
-         notify("{}{} to prep with {}{}.".format(ActionCost, rc, card, extraText))
+         notify("{}{} to prep with {}{}.".format(ClickCost, rc, card, extraText))
       elif card.Type == 'Hardware':
          card.moveToTable(-210, 160 * playerside - yaxisMove(card), False)
-         notify("{}{} to purchase {}{}{}.".format(ActionCost, rc, card, extraText,MUtext))
+         notify("{}{} to purchase {}{}{}.".format(ClickCost, rc, card, extraText,MUtext))
       elif card.Type == 'Resource' and hiddenresource == 'no':
          card.moveToTable(180, 240 * playerside - yaxisMove(card), False)
-         notify("{}{} to acquire {}{}{}.".format(ActionCost, rc, card, extraText,MUtext))
+         notify("{}{} to acquire {}{}{}.".format(ClickCost, rc, card, extraText,MUtext))
       else:
          card.moveToTable(0, 0 * playerside - yaxisMove(card), False)
-         notify("{}{} to play {}{}{}.".format(ActionCost, rc, card, extraText,MUtext))
+         notify("{}{} to play {}{}{}.".format(ClickCost, rc, card, extraText,MUtext))
    else:
       reduction = reduceCost(card, action, num(card.Cost)) #Checking to see if the cost is going to be reduced by cards we have in play.
       if reduction: extraText = " (reduced by {})".format(uniCredit(reduction)) #If it is, make sure to inform.
       rc = payCost(num(card.Cost) - reduction, cost)
       if rc == "ABORT": 
-         me.Clicks += NbReq # If the player didn't notice they didn't have enough credits, we give them back their action
+         me.Clicks += NbReq # If the player didn't notice they didn't have enough credits, we give them back their click
          return # If the player didn't have enough money to pay and aborted the function, then do nothing.
       elif rc == "free": extraText = " at no cost"
       elif rc != 0: rc = " and pays {}".format(rc)
       else: rc = '' # When the cast costs nothing, we don't include the cost.
       if card.Type == 'Operation':
          card.moveToTable(0, 0 * playerside - yaxisMove(card), False)
-         notify("{}{} to initiate {}{}.".format(ActionCost, rc, card, extraText))
+         notify("{}{} to initiate {}{}.".format(ClickCost, rc, card, extraText))
       elif card.Type == 'Upgrade' and re.search(r'Region', getKeywords(card)):
          card.moveToTable(-220, 240 * playerside - yaxisMove(card), False)
-         notify("{}{} to open a base of operations in {}{}.".format(ActionCost, rc, card, extraText))
+         notify("{}{} to open a base of operations in {}{}.".format(ClickCost, rc, card, extraText))
       else:
          card.moveToTable(0, 0 * playerside - yaxisMove(card), False)
-         notify("{}{} to play {}{}.".format(ActionCost, rc, card, extraText))           
+         notify("{}{} to play {}{}.".format(ClickCost, rc, card, extraText))           
    executePlayScripts(card,action.lower())
-   # Checking for Doom viruses
-   if action == 'Install':
-      CounterHold = getSpecial('Counter Hold')
-      for marker in CounterHold.markers:
-         if re.search(r'virusDoom',marker[0]):
-            rollTuple = RollX('Roll1Dice', 'Armageddon virus:', CounterHold, notification = 'Automatic')
-            if rollTuple[1] >= 5:
-               intTrashCard(card, card.Stat, "free", silent = True)
-               CounterHold.markers[marker] -= 1
-               notify("--> {}'s new installation was Doomed from the start. {} is trashed".format(me,card))
-
 
 def chkTargeting(card):
    if debugVerbosity >= 1: notify(">>> chkTargeting(){}".format(extraASDebug())) #Debug
@@ -1515,15 +1515,15 @@ def chkTargeting(card):
          whisper(":::Warning::: This card effect requires that you have one of more cards targeted from your hand. Aborting!")
          return 'ABORT'
 
-def checkNotHardwareDeck (card):
-   if debugVerbosity >= 1: notify(">>> checkNotHardwareDeck(){}".format(extraASDebug())) #Debug
+def checkNotHardwareConsole (card):
+   if debugVerbosity >= 1: notify(">>> checkNotHardwareConsole(){}".format(extraASDebug())) #Debug
    mute()
-   if card.Type != "Hardware" or not re.search(r'Deck', getKeywords(card)): return True
-   ExistingDecks = [ c for c in table
-         if c.owner == me and c.isFaceUp and re.search(r'Deck', getKeywords(c)) ]
-   if len(ExistingDecks) != 0 and not confirm("You already have at least one hardware deck in play. Are you sure you want to install {}?\n\n(If you do, your installed Decks will be automatically trashed at no cost)".format(card.name)): return False
+   if card.Type != "Hardware" or not re.search(r'Console', getKeywords(card)): return True
+   ExistingConsoles = [ c for c in table
+         if c.owner == me and c.isFaceUp and re.search(r'Console', getKeywords(c)) ]
+   if len(ExistingConsoles) != 0 and not confirm("You already have at least one console in play. Are you sure you want to install {}?\n\n(If you do, your installed Consoles will be automatically trashed at no cost)".format(card.name)): return False
    else: 
-      for HWDeck in ExistingDecks: trashForFree(HWDeck)
+      for HWDeck in ExistingConsoles: trashForFree(HWDeck)
    return True   
    
 def playForFree(card, x = 0, y = 0):
@@ -1548,14 +1548,14 @@ def handtoArchives(card):
    if debugVerbosity >= 1: notify(">>> handtoArchives(){}".format(extraASDebug())) #Debug
    if ds == "runner": return
    mute()
-   card.moveTo(me.piles['Trash/Archives(Face-up)'])
+   card.moveTo(me.piles['Heap/Archives(Face-up)'])
    notify ("{} moves a card to their face-up Archives.".format(me))
 
 def handDiscard(card):
    if debugVerbosity >= 1: notify(">>> handDiscard(){}".format(extraASDebug())) #Debug
    mute()
    if ds == "runner": 
-      card.moveTo(me.piles['Trash/Archives(Face-up)'])
+      card.moveTo(me.piles['Heap/Archives(Face-up)'])
       if endofturn: 
          if card.Type == 'Program': notify("{} has killed a hanging process.".format(me))
          elif card.Type == 'Prep': notify("{} has thrown away some notes.".format(me))
@@ -1587,7 +1587,7 @@ def handRandomDiscard(group, count = None, player = None, destination = None, si
    mute()
    if not player: player = me
    if not destination: 
-      if ds == "runner": destination = player.piles['Trash/Archives(Face-up)']
+      if ds == "runner": destination = player.piles['Heap/Archives(Face-up)']
       else: destination = player.piles['Archives(Hidden)']
    SSize = len(group)
    if SSize == 0: return 0
@@ -1645,10 +1645,10 @@ def draw(group):
       notify("--> {} perform's the turn's mandatory draw.".format(me))
       newturn = False
    else:
-      ActionCost = useAction()
-      if ActionCost == 'ABORT': return
+      ClickCost = useClick()
+      if ClickCost == 'ABORT': return
       card.moveTo(me.hand)
-      notify("{} to draw a card.".format(ActionCost))
+      notify("{} to draw a card.".format(ClickCost))
    storeProperties(card)
 
 def drawMany(group, count = None, destination = None, silent = False):
@@ -1673,7 +1673,7 @@ def drawMany(group, count = None, destination = None, silent = False):
 def toarchives(group = me.piles['Archives(Hidden)']):
    if debugVerbosity >= 1: notify(">>> toarchives(){}".format(extraASDebug())) #Debug
    mute()
-   Archives = me.piles['Trash/Archives(Face-up)']
+   Archives = me.piles['Heap/Archives(Face-up)']
    for c in group: c.moveTo(Archives)
    #Archives.shuffle()
    notify ("{} moves Hidden Archives to their Face-Up Archives.".format(me))
@@ -1693,7 +1693,7 @@ def mill(group):
    mute()
    count = askInteger("Mill how many cards?", 1)
    if count == None: return
-   if ds == "runner": destination = me.piles['Trash/Archives(Face-up)']
+   if ds == "runner": destination = me.piles['Heap/Archives(Face-up)']
    else: destination = me.piles['Archives(Hidden)']
    for c in group.top(count): c.moveTo(destination)
    notify("{} mills the top {} cards from their {} to {}.".format(me, count,pileName(group),pileName(destination)))
@@ -1859,7 +1859,7 @@ def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
          return
    if debugVerbosity >= 5: notify("+++ Card not unrezzed. Checking for automations switch...")
    if not Automations['Play, Score and Rez'] or Stored_AutoActions[card] == "": 
-      useCard(card) # If card is face up but has no autoscripts, or automation is disabled just notify that we're using an action.
+      useCard(card) # If card is face up but has no autoscripts, or automation is disabled just notify that we're using it.
       return
    if debugVerbosity >= 5: notify("+++ Automations active. Checking for CustomScript...")
    if re.search(r'CustomScript', Stored_AutoActions[card]): 
@@ -1954,7 +1954,7 @@ def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
       # T takes a binary value. A value of 1 means the card needs to be trashed.
       if actionCost: # If there's no match, it means we've already been through the cost part once and now we're going through the '$$' part.
          if actionCost.group(1) != '0': # If we need to use clicks
-            Acost = useAction(count = num(actionCost.group(1)))
+            Acost = useClick(count = num(actionCost.group(1)))
             if Acost == 'ABORT': return
             else: announceText = Acost
          else: announceText = '{}'.format(me) # A variable with the text to be announced at the end of the action.
@@ -1995,7 +1995,7 @@ def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
             else: announceText += 'activates the once-per-turn ability of{} {}'.format(lingering,card)
          else: announceText += ' to activate{} {}'.format(lingering,card) # If we don't have to trash the card, we need to still announce the name of the card we're using.
          if actionCost.group(1) == '0' and actionCost.group(2) == '0' and actionCost.group(3) == '0' and actionCost.group(4) == '0':
-            if card.Type == 'Ice': announceText = '{} activates the subroutine of {}'.format(me, card)
+            if card.Type == 'ICE': announceText = '{} activates the subroutine of {}'.format(me, card)
             else: announceText = '{} activates the free ability of{} {}'.format(me, lingering, card)
          announceText += ' in order to'
       elif not announceText.endswith(' in order to') and not announceText.endswith(' and'): announceText += ' and'
@@ -2044,7 +2044,7 @@ def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
    else: # If we did something and everything finished as expected, then take the costs.
       if re.search(r"T1:", selectedAutoscripts[0]): 
          executePlayScripts(card,'trash')
-         card.moveTo(card.owner.piles['Trash/Archives(Face-up)'])
+         card.moveTo(card.owner.piles['Heap/Archives(Face-up)'])
       notify("{}.".format(announceText)) # Finally announce what the player just did by using the concatenated string.
    chkNoisy(card)
 
@@ -2211,7 +2211,7 @@ def chkWarn(card, Autoscript): # Function for checking that an autoscript announ
 def GainX(Autoscript, announceText, card, targetCards = None, notification = None, n = 0): # Core Command for modifying counters or global variables
    if debugVerbosity >= 1: notify(">>> GainX(){}".format(extraASDebug(Autoscript))) #Debug
    if targetCards is None: targetCards = []
-   global maxClicks, lastKnownNrActions
+   global maxClicks, lastKnownNrClicks
    gain = 0
    action = re.search(r'\b(Gain|Lose|SetTo)([0-9]+)([A-Z][A-Za-z &]+)-?', Autoscript)
    if debugVerbosity >= 2: notify("### action groups: {}. Autoscript: {}".format(action.groups(0),Autoscript)) # Debug
@@ -2249,13 +2249,13 @@ def GainX(Autoscript, announceText, card, targetCards = None, notification = Non
    elif re.match(r'Clicks', action.group(3)): 
       if action.group(1) == 'SetTo': 
          targetPL.Clicks = 0 # If we're setting to a specific value, we wipe what it's currently.
-         lastKnownNrActions = 0
+         lastKnownNrClicks = 0
       if gain == -999: 
          targetPL.Clicks = 0
-         lastKnownNrActions = 0
+         lastKnownNrClicks = 0
       else: 
          targetPL.Clicks += (gain * multiplier) - gainReduce
-         lastKnownNrActions += (gain * multiplier) - gainReduce # We also increase the offset, to make sure we announce the correct current action.
+         lastKnownNrClicks += (gain * multiplier) - gainReduce # We also increase the offset, to make sure we announce the correct current action.
    elif re.match(r'MU', action.group(3)): 
       if action.group(1) == 'SetTo': targetPL.MU = 0 # If we're setting to a specific value, we wipe what it's currently.
       else: targetPL.MU += (gain * multiplier) - gainReduce
@@ -2279,11 +2279,11 @@ def GainX(Autoscript, announceText, card, targetCards = None, notification = Non
          if re.search(r'isCost', Autoscript): notify(":::Warning:::{} did not have enough {} to pay the cost of this action".format(targetPL,action.group(3)))
          elif re.search(r'isPenalty', Autoscript): pass #If an action is marked as penalty, it means that the value can go negative and the player will have to recover that amount.
          else: targetPL.Tags = 0
-   elif re.match(r'Max Action', action.group(3)): 
+   elif re.match(r'Max Click', action.group(3)): 
       if targetPL == me: 
          if action.group(1) == 'SetTo': maxClicks = 0 # If we're setting to a specific value, we wipe what it's currently.
          maxClicks += gain * multiplier
-      else: notify("--> {} loses {} max action. They must make this modification manually".format(targetPL,gain * multiplier))
+      else: notify("--> {} loses {} max click. They must make this modification manually".format(targetPL,gain * multiplier))
    elif re.match(r'Hand Size', action.group(3)): 
       if action.group(1) == 'SetTo': targetPL.counters['Max Hand Size'].value = 0 # If we're setting to a specific value, we wipe what it's currently.
       targetPL.counters['Max Hand Size'].value += gain * multiplier
@@ -2467,14 +2467,14 @@ def DrawX(Autoscript, announceText, card, targetCards = None, notification = Non
    action = re.search(r'\bDraw([0-9]+)Card', Autoscript)
    targetPL = ofwhom(Autoscript, card.controller)
    if targetPL != me: destiVerb = 'move'
-   if re.search(r'-fromTrash', Autoscript): source = targetPL.piles['Trash/Archives(Face-up)']
+   if re.search(r'-fromTrash', Autoscript): source = targetPL.piles['Heap/Archives(Face-up)']
    else: source = targetPL.piles['R&D/Stack']
    if re.search(r'-toStack', Autoscript): 
       destination = targetPL.piles['R&D/Stack']
       destiVerb = 'move'
    elif re.search(r'-toTrash', Autoscript):
       if targetPL.getGlobalVariable('ds') == 'corp': destination = targetPL.piles['Archives(Hidden)']
-      else: destination = targetPL.piles['Trash/Archives(Face-up)']
+      else: destination = targetPL.piles['Heap/Archives(Face-up)']
       destiVerb = 'trash'   
    else: destination = targetPL.hand
    if destiVerb == 'draw' and ModifyDraw > 0 and not confirm("You have a card effect in play that modifies the amount of cards you draw. Do you want to continue as normal anyway?\n\n(Answering 'No' will abort this action so that you can prepare for the special changes that happen to your draw."): return 'ABORT'
@@ -2540,7 +2540,7 @@ def ReshuffleX(Autoscript, announceText, card, targetCards = None, notification 
       X = namestuple[2] # The 3rd part of the tuple is how many cards were in our hand before it got shuffled.
    elif action.group(1) == 'Archives' or action.group(1) == 'Trash':
       if targetPL.getGlobalVariable('ds') == "corp": groupToDeck(targetPL.piles['Archives(Hidden)'], targetPL , True)
-      namestuple = groupToDeck(targetPL.piles['Trash/Archives(Face-up)'], targetPL, True)    
+      namestuple = groupToDeck(targetPL.piles['Heap/Archives(Face-up)'], targetPL, True)    
    else: 
       whisper("Wat Group? [Error in autoscript!]")
       return 'ABORT'
@@ -2557,7 +2557,7 @@ def ShuffleX(Autoscript, announceText, card, targetCards = None, notification = 
    mute()
    action = re.search(r'\bShuffle([A-Za-z& ]+)', Autoscript)
    targetPL = ofwhom(Autoscript, card.controller)
-   if action.group(1) == 'Trash' or action.group(1) == 'Archives': pile = targetPL.piles['Trash/Archives(Face-up)']
+   if action.group(1) == 'Trash' or action.group(1) == 'Archives': pile = targetPL.piles['Heap/Archives(Face-up)']
    elif action.group(1) == 'Stack' or action.group(1) == 'R&D': pile = targetPL.piles['R&D/Stack']
    elif action.group(1) == 'Hidden Archives': pile = targetPL.piles['Archives(Hidden)']
    random = rnd(10,100) # Small wait (bug workaround) to make sure all animations are done.
@@ -2691,7 +2691,7 @@ def CreateDummy(Autoscript, announceText, card, targetCards = None, notification
       Stored_Cost[dummyCard] = dummyCard.Cost
       Stored_AutoScripts[dummyCard] = dummyCard.AutoScript
    #confirm("Dummy ID: {}\n\nList Dummy ID: {}".format(dummyCard._id,passedlist[0]._id)) #Debug
-   if not re.search(r'doNotTrash',Autoscript): card.moveTo(card.owner.piles['Trash/Archives(Face-up)'])
+   if not re.search(r'doNotTrash',Autoscript): card.moveTo(card.owner.piles['Heap/Archives(Face-up)'])
    if action: announceString = TokensX('Put{}'.format(action.group(2)), announceText,dummyCard, n = n) # If we have a -with in our autoscript, this is meant to put some tokens on the dummy card.
    else: announceString = announceText + 'create a lingering effect for {}'.format(targetPL)
    if debugVerbosity >= 4: notify("<<< CreateDummy()")
@@ -2821,7 +2821,7 @@ def InflictX(Autoscript, announceText, card, targetCards = None, notification = 
          else: #Otherwise, warn the player doing it for the first time
             DMGcard = targetPL.hand.random() # Pick a random card from their hand
             if targetPL.getGlobalVariable('ds') == 'corp': DMGcard.moveTo(targetPL.piles['Archives(Hidden)']) # If they're a corp, move it to the hidden archive
-            else: DMGcard.moveTo(targetPL.piles['Trash/Archives(Face-up)']) #If they're a runner, move it to trash.
+            else: DMGcard.moveTo(targetPL.piles['Heap/Archives(Face-up)']) #If they're a runner, move it to trash.
             if action.group(3) == 'Brain':  
                #targetPL.counters['Max Hand Size'].value -= 1 # If it's brain damage, also reduce the player's maximum handsize.               
                applyBrainDmg(targetPL)
@@ -3029,7 +3029,7 @@ def per(Autoscript, card = None, count = 0, targetCards = None, notification = N
             for c in revealedCards: c.moveTo(me.piles['R&D/Stack'])
             random = rnd(10,500) # Bug workaround.
             shuffle(me.piles['R&D/Stack'])
-            notify("- {} Shuffles their revealed cards back into their deck".format(me))
+            notify("- {} Shuffles their revealed cards back into their {}".format(me,pileName(me.piles['R&D/Stack'])))
          if re.search(r'Reveal&Recover', Autoscript) and len(revealedCards) > 0: 
             confirm("The cards you've just revealed will be returned to your hand once your opponents have had a chance to look at them.\
                    \nOnce you are ready, press any button to return them to your hand.")
@@ -3117,13 +3117,13 @@ def CustomScript(card, action = 'play'): # Scripts that are complex and fairly u
          selectTXT = 'Please select a marker to remove\n\n'
          iter = 0
          for choice in knownMarkers:
-            selectTXT += '{}: {} ({} {} and {})\n'.format(iter,knownMarkers[iter][0],markerRemovals[choice[0]][0],uniAction(),markerRemovals[choice[0]][1])
+            selectTXT += '{}: {} ({} {} and {})\n'.format(iter,knownMarkers[iter][0],markerRemovals[choice[0]][0],uniClick(),markerRemovals[choice[0]][1])
             iter += 1
          sel = askInteger(selectTXT,0)
          selectedMarker = knownMarkers[sel]
       aCost = markerRemovals[selectedMarker[0]][0] # The first field in the tuple for the entry with the same name as the selected marker, in the markerRemovals dictionary. All clear? Good.
       cost = markerRemovals[selectedMarker[0]][1]
-      actionCost = useAction(aCost)
+      actionCost = useClick(aCost)
       if actionCost == 'ABORT': return
       creditCost = payCost(cost)
       if creditCost == 'ABORT':
@@ -3272,15 +3272,15 @@ def TrialError(group, x=0, y=0): # Debugging
    if not (len(players) == 1 or debugVerbosity >= 0): 
       whisper("This function is only for development purposes")
       return
-#   testcards = ["f0a1f5db-7400-44d1-a6e5-dda8bdde8836", # Fang 2.0
-#                "bc02cdad-d027-4ac6-b609-13bcbd491bb4", # Playful AI
-#                "c8543203-5475-426b-816c-39b30588f714", # Custodial Position
-#                "c8ac69cb-0762-4918-9115-243dba9aa1c2", # The Shell Traders Promo
-#                "05dc8c06-e801-4bee-9b01-1b5c47d5a8f6", # Mastiff
-#                "f3a8b3bf-3b67-49c7-b828-b41070740214", # Data Raven
-#                "426f2c05-9db5-4350-b28c-cdb43e9d0b93", # Baskerville
-#                "55701d77-7a54-4bcc-ab3a-6e21192a8cff", # Cerberus
-#                "8b0a0ca5-d6d6-440f-8f81-4486d252a545"] # Indiscriminate Response Team
+   testcards = ["bc0f047c-01b1-427f-a439-d451eda01055", 
+                "bc0f047c-01b1-427f-a439-d451eda01042", 
+                "bc0f047c-01b1-427f-a439-d451eda01098", 
+                "bc0f047c-01b1-427f-a439-d451eda01082", 
+                "bc0f047c-01b1-427f-a439-d451eda01074", 
+                "bc0f047c-01b1-427f-a439-d451eda01005", 
+                "bc0f047c-01b1-427f-a439-d451eda01031", 
+                "bc0f047c-01b1-427f-a439-d451eda01020", 
+                "bc0f047c-01b1-427f-a439-d451eda01093"] 
    if not ds: ds = "corp"
    me.setGlobalVariable('ds', ds) 
    me.counters['Credits'].value = 50
@@ -3292,12 +3292,12 @@ def TrialError(group, x=0, y=0): # Debugging
    if not playerside:  # If we've already run this command once, don't recreate the cards.
       chooseSide()
       createStartingCards()
-#   for idx in range(len(testcards)):
-#      test = table.create(testcards[idx], (70 * idx) - 150, 0, 1, True)
-#      storeProperties(test)
-#      if test.Type == 'Ice' or test.Type == 'Agenda' or test.Type == 'Node':
-#         test.isFaceUp = False
-#         test.markers[Not_rezzed] += 1
+   for idx in range(len(testcards)):
+      test = table.create(testcards[idx], (70 * idx) - 150, 0, 1, True)
+      storeProperties(test)
+      if test.Type == 'ICE' or test.Type == 'Agenda' or test.Type == 'Node':
+         test.isFaceUp = False
+         test.markers[Not_rezzed] += 1
          
 def extraASDebug(Autoscript = None):
    if Autoscript and debugVerbosity >= 3: return ". Autoscript:{}".format(Autoscript)

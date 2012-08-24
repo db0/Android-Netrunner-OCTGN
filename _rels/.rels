@@ -2,5 +2,5 @@
 <Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
   <Relationship Target="/ANR.xml" Id="def" Type="http://schemas.octgn.org/game/definition" />
   <Relationship Target="/CyberpunkIsNotDead_ANR.ttf" Id="fnt" Type="http://schemas.octgn.info/game/font" />
-  <Relationship Target="/ANR_symbols_only.ttf" Id="chat" Type="http://schemas.octgn.info/game/font" />
+  <Relationship Target="/ANR_symbols_only-enlarged.ttf" Id="chat" Type="http://schemas.octgn.info/game/font" />
 </Relationships>

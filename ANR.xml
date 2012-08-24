@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <game xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="Android:Netrunner" id="0f38e453-26df-4c04-9d67-6d43de939c77" octgnVersion="3.0.1.14" version="1.0.0" markersize="16">
    <globalvariables> 
-     <globalvariable name="fontsize" value="11"/>
-<!--     <globalvariable name="chatsize" value="11"/> -->
+     <globalvariable name="fontsize" value="11"/> 
+     <globalvariable name="chatsize" value="12"/> 
    </globalvariables>
 	<card back="r4" front="r5" width="63" height="88" cornerRadius="2">
 		<property name="Subtitle" type="String" hidden="false" ignoreText="False"/>
@@ -34,23 +34,23 @@
 			<groupaction menu="Disable all &quot;Newbie&quot; Warnings" default="false" shortcut="Ctrl+Shift+N" execute="ImAProAtThis" />  
 			<groupaction menu="Debug" default="false" shortcut="Ctrl+Shift+D" execute="TrialError" /> 
 		</groupactions>
-		<groupactions menu="Turns/Actions...">
+		<groupactions menu="Turns/Clicks...">
 			<groupaction menu="Declare Start of Turn" default="false" shortcut="F1" execute="goToSot" />
-			<groupaction menu="&#9166; Declare Action" default="false" shortcut="Enter" execute="useAction" />
+			<groupaction menu="&#8986; Declare Click" default="false" shortcut="Enter" execute="useClick" />
 			<groupaction menu="Declare End of Turn" default="false" shortcut="F12" execute="goToEndTurn" />
 		</groupactions>
 		<groupactions menu="Runner Actions...">
 			<groupaction menu="Suffer 1 Meat Damage" default="false" execute="addMeatDmg" />
 			<groupaction menu="Suffer 1 Net Damage" default="false" execute="addNetDmg" />
 			<groupaction menu="Suffer 1 Brain Damage" default="false" execute="addBrainDmg" />
-         <groupaction menu="&#9166; Pay 2 ¥ and lose a Tag" default="false" execute="pay2andDelTag" />
-			<groupaction menu="&#9166; Run on HQ" default="false" shortcut="Ctrl+Alt+H" execute="runHQ" />
-			<groupaction menu="&#9166; Run on R&amp;D" default="false" shortcut="Ctrl+Alt+R" execute="runRD" />
-			<groupaction menu="&#9166; Run on Archives" default="false" shortcut="Ctrl+Alt+A" execute="runArchives" />
-			<groupaction menu="&#9166; Run on a Remote Server" default="false" shortcut="Ctrl+Alt+S" execute="runServer" />
+         <groupaction menu="&#8986; Pay 2 ¥ and lose a Tag" default="false" execute="pay2andDelTag" />
+			<groupaction menu="&#8986; Run on HQ" default="false" shortcut="Ctrl+Alt+H" execute="runHQ" />
+			<groupaction menu="&#8986; Run on R&amp;D" default="false" shortcut="Ctrl+Alt+R" execute="runRD" />
+			<groupaction menu="&#8986; Run on Archives" default="false" shortcut="Ctrl+Alt+A" execute="runArchives" />
+			<groupaction menu="&#8986; Run on a Remote Server" default="false" shortcut="Ctrl+Alt+S" execute="runServer" />
 		</groupactions>
 		<cardactions menu="Add/Remove Markers...">
-			<cardaction menu="&#9166; Pay 1 ¥ and advance card" default="false" shortcut="Alt+A" execute="advanceCardP" />
+			<cardaction menu="&#8986; Pay 1 ¥ and advance card" default="false" shortcut="Alt+A" execute="advanceCardP" />
 			<cardaction menu="Add X advancement counter" default="false" execute="addXadvancementCounter" />
 			<cardaction menu="Remove 1 advancement counter" default="false" shortcut="Alt+Shift+A" execute="advanceCardM" />
 			<cardaction menu="Remove X advancement counters" default="false" execute="delXadvancementCounter" />
@@ -66,9 +66,9 @@
 			<cardaction menu="Rez at no Cost" default="false" execute="rezForFree" />
 			<cardaction menu="Derez" default="false" shortcut="Ctrl+Shift+R" execute="derez" />	
 		</cardactions>
-		<cardactions menu="Trash...">
-			<cardaction menu="Pay and Trash" default="false" shortcut="Ctrl+del" execute="trashCard" />
-			<cardaction menu="Trash at No Cost" default="false" shortcut="del" execute="trashForFree" />
+		<cardactions menu="&#9167; Trash...">
+			<cardaction menu="Pay and &#9167;" default="false" shortcut="Ctrl+del" execute="trashCard" />
+			<cardaction menu="&#9167; at No Cost" default="false" shortcut="del" execute="trashForFree" />
 		</cardactions>
 		<cardactions menu="Trace...">
 			<cardaction menu="Input Trace Value" default="false" execute="inputTraceValue" />
@@ -76,17 +76,17 @@
 			<cardaction menu="Pay Trace Value" default="false" execute="payTraceValue" />
 			<cardaction menu="Cancel Trace" default="false" execute="cancelTrace" />
 		</cardactions>
-      <groupaction menu="Modify your max actions per turn" default="false" execute="modActions" />
+      <groupaction menu="Modify your max actions per turn" default="false" execute="modClicks" />
 		<cardaction menu="Inspect" default="false" shortcut="Ctrl+I" execute="inspectCard" />
 		<cardaction menu="Expose" default="false" shortcut="Ctrl+E" execute="expose" />
 		<cardaction menu="Prioritize" default="false" shortcut="Ctrl+P" execute="prioritize" />
 		<cardaction menu="Uninstall" default="false" shortcut="Ctrl+U" execute="uninstall" />
 		<cardaction menu="Score Agenda" default="false" execute="scrAgenda" />      
-		<groupaction menu="Pay &amp; Trash Target (Resource, Asset or Upgrade)" default="false" hortcut="Ctrl+Shift+T" execute="trashTargetPaid" />
-		<groupaction menu="Trash Target without cost" default="false" hortcut="Ctrl+T" execute="trashTargetFree" />
+		<groupaction menu="Pay &amp; &#9167; Target (Resource, Asset or Upgrade)" default="false" hortcut="Ctrl+Shift+T" execute="trashTargetPaid" />
+		<groupaction menu="&#9167; Target without cost" default="false" hortcut="Ctrl+T" execute="trashTargetFree" />
 		<groupaction menu="Create new Remote Server" default="false" execute="createRemoteServer" />
-		<groupaction menu="Roll d6" default="false" shortcut="Ctrl+6" execute="rolld6" />
-		<groupaction menu="&#9166; Receive 1 ¥" default="false" shortcut="Ctrl+B" execute="getCredit" />
+<!--		<groupaction menu="Roll d6" default="false" shortcut="Ctrl+6" execute="rolld6" /> -->
+		<groupaction menu="&#8986; Receive 1 ¥" default="false" shortcut="Ctrl+B" execute="getCredit" />
         
 		
 	</table>
@@ -95,7 +95,7 @@
       <globalvariable name="specialCards" value="{}" /> 
       <globalvariable name="wasNoisy" value="0" /> 
 		<hand name="HQ/Grip" visibility="me" ordered="false" width="63" height="88" icon="r11">
-			<cardaction menu="&#9166; Pay and Install Card" default="true" shortcut="enter" execute="intPlay" />
+			<cardaction menu="&#8986; Pay and Install Card" default="true" shortcut="enter" execute="intPlay" />
 			<cardaction menu="Install Card at no cost" default="false" execute="playForFree" />
 			<cardactions menu="Move ...">
 				<cardaction menu ="To Top of R&amp;D/Stack" default="false" execute="movetoTopOfStack" />
@@ -111,7 +111,7 @@
 
 		<group name="R&amp;D/Stack" visibility="none" ordered="false" width="63" height="88" icon="r12" collapsed="false">
 			<groupaction menu="Shuffle" default="false" execute="shuffle" />
-			<groupaction menu="&#9166; Draw" default="true" execute="draw" />
+			<groupaction menu="&#8986; Draw" default="true" execute="draw" />
 			<groupaction menu="Draw X" default="false" execute="drawMany" />
 			<groupaction menu="Discard X" default="false" execute="mill" />
 			<groupaction menu="Move Top X card to Bottom" default="false" execute="moveXtopCardtoBottomStack" />
