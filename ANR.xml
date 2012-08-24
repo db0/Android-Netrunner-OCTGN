@@ -33,7 +33,6 @@
 			<groupaction menu="Switch Automatic Damage Prevention ON/OFF" default="false" execute="switchPreventDMGAutomation" />  
 			<groupaction menu="Disable all &quot;Newbie&quot; Warnings" default="false" shortcut="Ctrl+Shift+N" execute="ImAProAtThis" />  
 			<groupaction menu="Debug" default="false" shortcut="Ctrl+Shift+D" execute="TrialError" /> 
-			<groupaction menu="Show Position" default="false" shortcut="Ctrl+Shift+Z" execute="ShowPos" /> 
 		</groupactions>
 		<groupactions menu="Turns/Clicks...">
 			<groupaction menu="Declare Start of Turn" default="false" shortcut="F1" execute="goToSot" />
@@ -88,7 +87,7 @@
 		<groupaction menu="Create new Remote Server" default="false" execute="createRemoteServer" />
 <!--		<groupaction menu="Roll d6" default="false" shortcut="Ctrl+6" execute="rolld6" /> -->
 		<groupaction menu="&#8986; Receive 1 ¥" default="false" shortcut="Ctrl+B" execute="getCredit" />
-      <cardaction menu="Show Position" default="false" shortcut="Ctrl+Shift+X" execute="ShowPosC" /> 
+      <cardaction menu="Show Card Position" default="false" shortcut="Ctrl+Shift+X" execute="ShowPosC" />  
         
 		
 	</table>
@@ -108,7 +107,7 @@
 			<cardaction menu="Trash/Archive" default="false" shortcut="del" execute="handDiscard" />           
 			<groupaction menu="Trash/Archive a Card at Random" default="false" execute="handRandomDiscard" />
 			<groupaction menu="Show a Card at Random" default="false" execute="showatrandom"/>
-			<groupaction menu="Move to R&amp;D/Stack" default="false" execute="grouptoStack"/>
+			<groupaction menu="Move to R&amp;D/Stack" default="false" execute="groupToDeck"/>
 		</hand>
 
 		<group name="R&amp;D/Stack" visibility="none" ordered="false" width="63" height="88" icon="r12" collapsed="false">
@@ -117,8 +116,6 @@
 			<groupaction menu="Draw X" default="false" execute="drawMany" />
 			<groupaction menu="Discard X" default="false" execute="mill" />
 			<groupaction menu="Move Top X card to Bottom" default="false" execute="moveXtopCardtoBottomStack" />
-			<groupactions menu="Check Deck ...">
-				<groupaction menu="No-Limit" default="false" execute="checkDeckNoLimit" />
 			</groupactions>
 		</group>
 
@@ -142,7 +139,7 @@
 		<group name="Exile" visibility="all" ordered="false" width="63" height="88" icon="r14" collapsed="false" />
 	</shared>
 	<deck>
-		<section name="Identity" group="Hand" />
+		<section name="Identity" group="HQ/Grip" />
 		<section name="R&amp;D / Stack" group="R&amp;D/Stack" />
 	</deck>
 	<scripts>
