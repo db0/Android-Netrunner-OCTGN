@@ -21,12 +21,12 @@
 		<property name="AutoAction" type="String" hidden="True" ignoreText="True" />
 
 	</card>
-	<table name="Table" visibility="undefined" ordered="false" width="1080" height="671" board="r35" boardPosition="-540,-335,1080,671" background="r1" backgroundStyle="uniformToFill">
+	<table name="Table" visibility="undefined" ordered="false" width="1300" height="808" board="r35" boardPosition="-650,-370,1300,808" background="r1" backgroundStyle="uniformToFill">
 		<cardaction menu="Use Card Ability/Clear" default="true" execute="useAbility" />
 		<cardaction menu="Clear Card" default="false" execute="clear" />
 		<groupactions menu="Game...">
 			<groupaction menu="Set up" default="false" shortcut="Ctrl+Shift+S" execute="intJackin" />
-			<groupaction menu="Switch Unicode credits ON/OFF" default="false" execute="switchUniCredits" />
+			<groupaction menu="Switch Unicode ON/OFF" default="false" execute="switchUniCode" />
 			<groupaction menu="Switch Play, Score and Rez Automation ON/OFF" default="false" execute="switchPlayAutomation" />  
 			<groupaction menu="Switch Start/End-of-Turn Automation ON/OFF" default="false" execute="switchStartEndAutomation" />  
 			<groupaction menu="Switch Damage Automation ON/OFF" default="false" execute="switchDMGAutomation" />  
@@ -82,7 +82,7 @@
 		<cardaction menu="Prioritize" default="false" shortcut="Ctrl+P" execute="prioritize" />
 		<cardaction menu="Uninstall" default="false" shortcut="Ctrl+U" execute="uninstall" />
 		<cardaction menu="Score Agenda" default="false" execute="scrAgenda" />      
-		<groupaction menu="Pay &amp; &#9167; Target (Resource, Asset or Upgrade)" default="false" hortcut="Ctrl+Shift+T" execute="trashTargetPaid" />
+		<groupaction menu="Pay and &#9167; Target (Resource, Asset or Upgrade)" default="false" hortcut="Ctrl+Shift+T" execute="trashTargetPaid" />
 		<groupaction menu="&#9167; Target without cost" default="false" hortcut="Ctrl+T" execute="trashTargetFree" />
 		<groupaction menu="Create new Remote Server" default="false" execute="createRemoteServer" />
 <!--		<groupaction menu="Roll d6" default="false" shortcut="Ctrl+6" execute="rolld6" /> -->
