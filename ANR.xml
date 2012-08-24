@@ -84,7 +84,7 @@
 		<cardaction menu="Score Agenda" default="false" execute="scrAgenda" />      
 		<groupaction menu="Pay &amp; Trash Target (Resource, Asset or Upgrade)" default="false" hortcut="Ctrl+Shift+T" execute="trashTargetPaid" />
 		<groupaction menu="Trash Target without cost" default="false" hortcut="Ctrl+T" execute="trashTargetFree" />
-		<groupaction menu="Create new Remote Server" default="false" execute="createSDF" />
+		<groupaction menu="Create new Remote Server" default="false" execute="createRemoteServer" />
 		<groupaction menu="Roll d6" default="false" shortcut="Ctrl+6" execute="rolld6" />
 		<groupaction menu="&#9166; Receive &#10122;" default="false" shortcut="Ctrl+B" execute="getCredit" />
         

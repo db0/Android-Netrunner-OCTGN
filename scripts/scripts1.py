@@ -1,4 +1,4 @@
-    # Python Scripts for the Android:Netrunner CCG definition for OCTGN
+    # Python Scripts for the Android:Netrunner LCG definition for OCTGN
     # Copyright (C) 2012  Konstantine Thoukydides
 
     # This python script is free software: you can redistribute it and/or modify
@@ -14,19 +14,7 @@
     # You should have received a copy of the GNU General Public License
     # along with this script.  If not, see <http://www.gnu.org/licenses/>.
 
-import re
-
-Advance = ("Advance", "73b8d1f2-cd54-41a9-b689-3726b7b86f4f")
-Generic = ("Generic", "b384957d-22c5-4e7d-a508-3990c82f4df6")
-Credits = ("Credits", "19be5742-d233-4ea1-a88a-702cfec930b1")
-Scored = ("Scored", "10254d1f-6335-4b90-b124-b01ec131dd07")
-Not_rezzed = ("Not rezzed", "8105e4c7-cb54-4421-9ae2-4e276bedee90")
-#Derezzed = ("Derezzed", "ae34ee21-5309-46b3-98de-9d428f59e243")
-Trace_value = ("Trace value", "01feb523-ac36-4dcd-970a-515aa8d73e37")
-Link_value = ("Link value", "3c429e4c-3c7a-49fb-96cc-7f84a63cc672")
-PlusOne= ("+1", "aa261722-e12a-41d4-a475-3cc1043166a7")
-MinusOne= ("-1", "48ceb18b-5521-4d3f-b5fb-c8212e8bcbae")
-         
+import re         
 #---------------------------------------------------------------------------
 # Global variables
 #---------------------------------------------------------------------------
@@ -49,8 +37,8 @@ Stored_Cost = {}
 Stored_AutoActions = {}
 Stored_AutoScripts = {}
 
-MemoryRequirements = { }
-InstallationCosts = { }
+MemoryRequirements = {}
+InstallationCosts = {}
 maxActions = 3
 scoredAgendas = 0
 currAction = 0
@@ -74,35 +62,28 @@ debugVerbosity = -1
 #---------------------------------------------------------------------------
 
 mdict = dict( # A dictionary which holds all the hard coded markers (in the markers file)
-             Advance =                 ("Advance", "73b8d1f2-cd54-41a9-b689-3726b7b86f4f"),
-             Generic =                 ("Generic", "b384957d-22c5-4e7d-a508-3990c82f4df6"),
-             Credits =                    ("Credits", "19be5742-d233-4ea1-a88a-702cfec930b1"),
-             Scored =                  ("Scored", "10254d1f-6335-4b90-b124-b01ec131dd07"),
-             Not_rezzed =              ("Not rezzed", "8105e4c7-cb54-4421-9ae2-4e276bedee90"),
-             Derezzed =                ("Derezzed", "ae34ee21-5309-46b3-98de-9d428f59e243"),
-             Trace_value =             ("Trace value", "01feb523-ac36-4dcd-970a-515aa8d73e37"),
-             Link_value =              ("Link value", "3c429e4c-3c7a-49fb-96cc-7f84a63cc672"),
-             PlusOnePerm =             ("Permanent +1", "f6230db2-d222-445f-85dd-406ea12d92f6"),
-             PlusOne=                  ("Temporary +1", "aa261722-e12a-41d4-a475-3cc1043166a7"),
-             MinusOne=                 ("Temporary -1", "48ceb18b-5521-4d3f-b5fb-c8212e8bcbae"),
-             DaemonMU =                ("Daemon MU", "6e46d937-786c-4618-b02c-d7d5ffd3b1a5"),
-             BaseLink =                ("Base Link", "226b0f44-bbdc-4960-86cd-21f404265562"),
-             virusButcherBoy =         ("Butcher Boy virus","5831fb18-7cdf-44d2-8685-bdd392bb9f1c"),
-             virusCascade =            ("Cascade virus","723a0cca-7a05-46a8-a681-6e06666042ee"),
-             virusCockroach =          ("Cockroach virus","cda4cfcb-6f2d-4a7f-acaf-d796b8d1edee"),
-             virusGremlin =            ("Gremlin virus","032d2efa-e722-4218-ba2b-699dc80f0b94"),
-             virusThought =            ("Thought virus","811b9153-93cb-4898-ad9f-68864452b9f4"),
-             virusFait =               ("Fait virus","72c89567-72aa-446d-a9ea-e158c22c113a"),
-             virusBoardwalk =          ("Boardwalk virus","8c48db01-4f12-4653-a31a-3d22e9f5b6e9"),
-             virusIncubate =           ("Incubate virus","eccc2ee3-2bca-4563-8196-54de4909d313"),
-             virusPattel =             ("Pattel virus","93a124c4-d2fe-4f58-9531-1396675c64dd"),
-             protectionMeatDMG =       ("Meat Damage protection","f50fbac7-a147-4941-8d77-56cf9ea672ea"),
-             protectionNetDMG =        ("Net Damage protection","84527bb1-6b34-4ace-9b11-7e19a6e353c7"),
-             protectionBrainDMG =      ("Brain damage protection","8a0612d7-202b-44ec-acdc-84ff93e7968d"),
-             protectionNetBrainDMG =   ("Net & Brain Damage protection","42072423-2599-4e70-80b6-56127b7177d9"),
-             protectionAllDMG =        ("Complete Damage protection","04d72620-17d1-4189-9abb-a2c48ddf7d42"),
-             protectionVirus =         ("Virus protection","6242317f-b706-4e39-b60a-32958d00a8f8"),
-             BrainDMG =                ("Brain Damage","05250943-0c9f-4486-bb96-481c025ce0e0"))
+             BadPublicity =            ("Bad Publicity", "7ae6b4f2-afee-423a-bc18-70a236b41292"),
+             Blue =                    ("Blue Net", "38c5b2a0-caa2-40e4-b5b2-0f1cc7202782"),
+             Red =                     ("Red Net", "815b944d-d7db-4846-8be2-20852a1c9530"),
+             Virus =                   ("Virus", "e81053f9-8142-41f6-b40e-c7bb04301e25"),
+             Click =                   ("Click", "1c873bd4-007f-46f9-9b17-3d8780dabfc4"),
+             Credit5 =                 ("5 Credits","feb0e161-da94-4705-8d56-b48f17d74a99"),
+             Credits =                  ("Credit","bda3ae36-c312-4bf7-a288-7ee7760c26f7"),
+             Tag =                     ("Tag","1d1e7dd2-c60a-4770-82b7-d2d9232b3be8"),
+             Advancement =             ("Advancement", "f8372e2c-c5df-42d9-9d54-f5d9890e9821"),
+             Scored =                  ("Scored", "4911f1ad-abf9-4b75-b4c5-86df3f9098ee"),
+             PlusOnePerm =             ("Permanent +1", "1bd5cc9f-3528-45d2-a8fc-e7d7bd6865d5"),
+             PlusOne =                 ("Temporary +1", "e8d0b72e-0384-4762-b983-31137d4b4625"),
+             MinusOne =                ("Temporary -1", "d5466468-e05c-4ad8-8bc0-02fbfe4a2ec6"),
+             protectionMeatDMG =       ("Meat Damage protection","2bcb7e73-125d-4cea-8874-d67b7532cbd5"),
+             protectionNetDMG =        ("Net Damage protection","6ac8bd15-ac1d-4d0c-81e3-990124333a19"),
+             protectionBrainDMG =      ("Brain damage protection","99fa1d76-5361-4213-8300-e4c173bc0143"),
+             protectionNetBrainDMG =   ("Net & Brain Damage protection","de733be8-8aaf-4580-91ce-5fcaa1183865"),
+             protectionAllDMG =        ("Complete Damage protection","13890548-8f1e-4c02-a422-0d93332777b2"),
+             protectionVirus =         ("Virus protection","590322bd-83f0-43fa-9239-a2b723b08460"),
+             BrainDMG =                ("Brain Damage","59810a63-2a6b-4ae2-a71c-348c8965d612"),
+             DaemonMU =                ("Daemon MU", "17844835-3140-4555-b592-0f711048eabd"),
+             BaseLink =                ("Base Link", "2fb5b6bb-31c5-409c-8aa6-2c46e971a8a5"))
 
              
 regexHooks = dict( # A dictionary which holds the regex that then trigger each core command. 
@@ -126,25 +107,7 @@ regexHooks = dict( # A dictionary which holds the regex that then trigger each c
                   CustomScript =       re.compile(r'\bCustomScript'),
                   UseCustomAbility =   re.compile(r'\bUseCustomAbility'))
 
-automatedMarkers = [ #Used in the Inspect() command to let the player know if the card has automations based on the markers it puts out.
-         'Rent-to-Own Contract',
-         'Data Raven'
-         'Fang'
-         'Fang 2.0'
-         'Fragmentation Storm'
-         'Rex'
-         'Cerberus'
-         'Doppelganger Antibody'
-         'Armageddon'
-         'Baskerville'
-         'The Shell Traders'
-         'Butcher Boy',
-         'Boardwalk',
-         'Incubator',
-         'Viral Pipeline',
-         'Taxman',
-         'Skivviss',
-         'Scaldan']
+automatedMarkers = [] #Used in the Inspect() command to let the player know if the card has automations based on the markers it puts out.
 
 markerRemovals = { # A dictionary which holds the costs to remove various special markers.
                        # The costs are in a tuple. First is clicks cost and then is credit cost.
@@ -706,9 +669,9 @@ def start_token(group, x = 0, y = 0):
    if quantity == 0: return
    table.create(card, x, y, quantity)
 
-def createSDF(group,x=0,y=0):
+def createRemoteServer(group,x=0,y=0):
    if debugVerbosity >= 1: notify(">>> createSDF(){}".format(extraASDebug())) #Debug
-   table.create("98a40fb6-1fea-4283-a036-567c8adade8e", x, y - (40 * playerside), 1, True)
+   table.create("d59fc50c-c727-4b69-83eb-36c475d60dcb", x, y - (40 * playerside), 1, True)
    
 #------------------------------------------------------------------------------
 # Run...
@@ -800,8 +763,8 @@ def remXCredits (card, x = 0, y = 0):
    mute()
    count = askInteger("Remove how many Credits?", 1)
    if count == None: return
-   if count > card.markers[Credits]: count = card.markers[Credits]
-   card.markers[Credits] -= count
+   if count > card.markers[mdict['Credits']]: count = card.markers[mdict['Credits']]
+   card.markers[mdict['Credits']] -= count
    me.counters['Credits'].value += count 
    if card.isFaceUp == True: notify("{} removes {} from {} to their Credit Pool.".format(me,uniCredit(count),card))
    else: notify("{} takes {} from a card to their Credit Pool.".format(me,uniCredit(count)))
@@ -842,12 +805,12 @@ def advanceCardP(card, x = 0, y = 0):
    extraText = ''
    ActionCost = useAction()
    if ActionCost == 'ABORT': return
-   reduction = reduceCost(card, 'Advance', 1)
+   reduction = reduceCost(card, 'Advancement', 1)
    if reduction: extraText = " (reduced by {})".format(uniCredit(reduction))
    if payCost(1 - reduction) == "ABORT": 
       me.Clicks += 1 # If the player didn't notice they didn't have enough credits, we give them back their action
       return # If the player didn't have enough money to pay and aborted the function, then do nothing.
-   card.markers[Advance] += 1
+   card.markers[mdict['Advancement']] += 1
    if card.isFaceUp: notify("{} and paid {}{} to advance {}.".format(ActionCost,uniCredit(1 - reduction),extraText,card))
    else: notify("{} and paid {}{} to advance a card.".format(ActionCost,uniCredit(1 - reduction),extraText))
 
@@ -856,7 +819,7 @@ def addXadvancementCounter(card, x=0, y=0):
    mute()
    count = askInteger("Add how many counters?", 1)
    if count == None: return
-   card.markers[mdict['Advance']] += count
+   card.markers[mdict['Advancement']] += count
    if card.isFaceUp == True: notify("{} adds {} advancement counters on {}.".format(me,count,card))
    else: notify("{} adds {} advancement counters on a card.".format(me,count))
 
@@ -865,15 +828,15 @@ def delXadvancementCounter(card, x = 0, y = 0):
    mute()
    count = askInteger("Remove how many counters?", 1)
    if count == None: return
-   if count > card.markers[Advance]: count = card.markers[Advance]
-   card.markers[Advance] -= count
+   if count > card.markers[mdict['Advancement']]: count = card.markers[mdict['Advancement']]
+   card.markers[mdict['Advancement']] -= count
    if card.isFaceUp == True: notify("{} removes {} advancement counters on {}.".format(me,count,card))
    else: notify("{} adds {} advancement counters on a card.".format(me,count))
 
 def advanceCardM(card, x = 0, y = 0):
    if debugVerbosity >= 1: notify(">>> advanceCardM(){}".format(extraASDebug())) #Debug
    mute()
-   card.markers[mdict['Advance']] -= 1
+   card.markers[mdict['Advancement']] -= 1
    if (card.isFaceUp == True): notify("{} removes 1 advancement counter on {}.".format(me,card))
    else: notify("{} removes 1 advancement counter on a card.".format(me))
 
@@ -902,7 +865,7 @@ def inputTraceValue (card, x=0,y=0, limit = 0, silent = False):
       if TraceValue == None: 
          whisper(":::Warning::: Trace bid aborted by player.")
          return 'ABORT'
-   card.markers[Credits] = 0
+   card.markers[mdict['Credits']] = 0
    card.isFaceUp = False
    if not silent: 
       if not betReplaced: notify("{} chose a Trace Value.".format(me))
@@ -915,7 +878,7 @@ def revealTraceValue (card, x=0,y=0):
    global TraceValue
    card = getSpecial('Tracing')
    card.isFaceUp = True
-   card.markers[Credits] = TraceValue
+   card.markers[mdict['Credits']] = TraceValue
    notify ( "{} reveals a Trace Value of {}.".format(me,TraceValue))
    if TraceValue == 0: autoscriptOtherPlayers('TraceAttempt') # if the trace value is 0, then we consider the trace attempt as valid, so we call scripts triggering from that.
    TraceValue = 0
@@ -925,11 +888,11 @@ def payTraceValue (card, x=0,y=0):
    mute()
    extraText = ''
    card = getSpecial('Tracing')
-   reduction = reduceCost(card, 'Trace', card.markers[Credits])
+   reduction = reduceCost(card, 'Trace', card.markers[mdict['Credits']])
    if reduction: extraText = " (reduced by {})".format(uniCredit(reduction))
-   if payCost(card.markers[Credits] - reduction)  == 'ABORT': return
-   notify ("{} pays {} for the Trace Value{}.".format(me,uniCredit(card.markers[Credits]),extraText))
-   card.markers[Credits] = 0
+   if payCost(card.markers[mdict['Credits']] - reduction)  == 'ABORT': return
+   notify ("{} pays {} for the Trace Value{}.".format(me,uniCredit(card.markers[mdict['Credits']]),extraText))
+   card.markers[mdict['Credits']] = 0
    autoscriptOtherPlayers('TraceAttempt')
 
 def cancelTrace ( card, x=0,y=0):
@@ -937,7 +900,7 @@ def cancelTrace ( card, x=0,y=0):
    mute()
    card.isFaceUp = True
    TraceValue = 0
-   card.markers[Credits] = 0
+   card.markers[mdict['Credits']] = 0
    notify ("{} cancels the Trace Value.".format(me) )
 
 #------------------------------------------------------------------------------
@@ -988,7 +951,7 @@ def reduceCost(card, type = 'Rez', fullCost = 0):
          if debugVerbosity >= 2: #Debug
             if reductionSearch: notify("!!! Regex is {}".format(reductionSearch.groups()))
             else: notify("!!! No reduceCost regex Match!") 
-         if c.controller == me and reductionSearch and c.markers[Not_rezzed] == 0 and c.isFaceUp: # If the above search matches (i.e. we have a card with reduction for Rez and a condition we continue to check if our card matches the condition)
+         if c.controller == me and reductionSearch and c.isFaceUp: # If the above search matches (i.e. we have a card with reduction for Rez and a condition we continue to check if our card matches the condition)
             if debugVerbosity >= 4: notify("### Possible Match found in {}".format(c)) # Debug         
             if reductionSearch.group(4): 
                exclusion = re.search(r'-not([A-Za-z_& ]+)'.format(type), reductionSearch.group(4))
@@ -1082,10 +1045,10 @@ def scrAgenda(card, x = 0, y = 0):
    if ds == 'runner': agendaTxt = "liberate"
    else: agendaTxt = "score"
    if Stored_Type[card] == "Agenda":
-      if ds == 'corp' and card.markers[mdict['Advance']] < num(Stored_Cost[card]):
+      if ds == 'corp' and card.markers[mdict['Advancement']] < num(Stored_Cost[card]):
          if confirm("You have not advanced this agenda enough to score it. Bypass?"): 
             cheapAgenda = True
-            currentAdv = card.markers[mdict['Advance']]
+            currentAdv = card.markers[mdict['Advancement']]
          else: return
       elif not confirm("Do you want to {} this agenda?".format(agendaTxt)): return
       card.isFaceUp = True
@@ -1094,7 +1057,6 @@ def scrAgenda(card, x = 0, y = 0):
          notify("{} cancels their action".format(me))
          return
       ap = num(fetchProperty(card,'Stat'))
-      card.markers[mdict['Not_rezzed']] = 0
       card.markers[mdict['Scored']] += 1
       apReduce = findCounterPrevention(ap, 'Agenda Points', me)
       if apReduce: extraTXT = " ({} forfeited)".format(apReduce)
@@ -1107,7 +1069,7 @@ def scrAgenda(card, x = 0, y = 0):
       if cheapAgenda: notify(":::Warning:::{} did not have enough advance tokens ({} out of {})! ".format(card,currentAdv,card.Cost))
       executePlayScripts(card,agendaTxt)
       if me.counters['Agenda Points'].value >= 7 : notify("{} wins the game!".format(me))
-      card.markers[mdict['Advance']] = 0 # We only want to clear the advance counters after the automations, as they may still be used.
+      card.markers[mdict['Advancement']] = 0 # We only want to clear the advance counters after the automations, as they may still be used.
    else:
       whisper ("You can't score this card")
 
@@ -1124,7 +1086,7 @@ def intRez (card, cost = 'not free', x=0, y=0, silent = False):
    extraText = ''
    rc = ''
    storeProperties(card)
-   if card.markers[Not_rezzed] == 0: 
+   if card.isFaceUp: 
       whisper("you can't rez a rezzed card")
       return 'ABORT'
    if not isRezzable(card): 
@@ -1141,7 +1103,6 @@ def intRez (card, cost = 'not free', x=0, y=0, silent = False):
    elif rc != 0: rc = "for {}".format(rc)
    else: rc = ''
    card.isFaceUp = True
-   card.markers[Not_rezzed] -= 1
    if not silent:
       if card.Type == 'Ice': notify("{} has rezzed {} {}{}.".format(me, card, rc, extraText))
       if card.Type == 'Node': notify("{} has acquired {} {}{}.".format(me, card, rc, extraText))
@@ -1157,14 +1118,14 @@ def derez(card, x = 0, y = 0, silent = False):
    if debugVerbosity >= 1: notify(">>> derez(){}".format(extraASDebug())) #Debug
    mute()
    storeProperties(card)
-   if card.markers[Not_rezzed] == 0:
+   if card.isFaceUp:
       if not isRezzable(card): 
          whisper ("Not a rezzable card")
          return 'ABORT'
       else:
-         card.markers[Credits] = 0
-         card.markers[Not_rezzed] += 1
          if not silent: notify("{} derezzed {}".format(me, card))
+         card.markers[mdict['Credits']] = 0
+         card.isFaceUp = False
          executePlayScripts(card,'derez')
    else:
       notify ( "you can't derez a unrezzed card")
@@ -1462,7 +1423,6 @@ def intPlay(card, cost = 'not_free'):
       if Stored_Type[card] == 'Ice': 
          card.orientation ^= Rot90
          card.moveToTable(-180, 65 * playerside - yaxisMove(card), True) # Ice are moved a credit more to the front and played sideways.
-      card.markers[Not_rezzed] += 1
       notify("{} to install a card.".format(ActionCost))
    elif card.Type == 'Program' or card.Type == 'Prep' or card.Type == 'Resource' or card.Type == 'Hardware':
       MUtext = chkRAM(card)
@@ -1804,7 +1764,7 @@ def executePlayScripts(card, action):
          effect = re.search(r'\b([A-Z][A-Za-z]+)([0-9]*)([A-Za-z& ]*)\b([^:]?[A-Za-z0-9_&{}\|: -]*)', activeAutoscript)
          if debugVerbosity >= 3: notify('### effects: {}'.format(effect.groups())) #Debug
          if effectType.group(1) == 'whileRezzed' or effectType.group(1) == 'whileScored':
-            if action == 'derez' or ((action == 'trash' or action == 'uninstall') and card.markers[Not_rezzed] == 0): Removal = True
+            if action == 'derez' or ((action == 'trash' or action == 'uninstall') and card.isFaceUp): Removal = True
             else: Removal = False
          elif action == 'derez' or action == 'trash': return # If it's just a one-off event, and we're trashing it, then do nothing.
          else: Removal = False
@@ -1874,14 +1834,18 @@ def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
    mute()
    global failedRequirement
    failedRequirement = False # We set it to false when we start a new autoscript.
-   if (card in Stored_Type and Stored_Type[card] == 'Tracing') or card.model == 'c0f18b5a-adcd-4efe-b3f8-7d72d1bd1db8': # If the player double clicks on the Tracing card...
-      if card.isFaceUp and not card.markers[Credits]: inputTraceValue(card, limit = 0)
-      elif card.isFaceUp and card.markers[Credits]: payTraceValue(card)
+   if debugVerbosity >= 5: notify("+++ Checking if Tracing card...")
+   if (card in Stored_Type and Stored_Type[card] == 'Tracing') or card.model == 'eb7e719e-007b-4fab-973c-3fe228c6ce20': # If the player double clicks on the Tracing card...
+      if debugVerbosity >= 5: notify("+++ Confirmed tacting card. Checking Status...")
+      if card.isFaceUp and not card.markers[mdict['Credits']]: inputTraceValue(card, limit = 0)
+      elif card.isFaceUp and card.markers[mdict['Credits']]: payTraceValue(card)
       elif not card.isFaceUp: revealTraceValue(card)
       return
+   if debugVerbosity >= 5: notify("+++ Not a tracing card. Checking highlight...")
    if card.highlight == InactiveColor:
       whisper("You cannot use inactive cards. Please use the relevant card abilities to clear them first. Aborting")
       return
+   if debugVerbosity >= 5: notify("+++ Not an inactive card. Checking Stored_Autoactions{}...")
    if not card in Stored_AutoActions:
       if not card.isFaceUp:
          card.isFaceUp = True
@@ -1891,7 +1855,8 @@ def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
       if debugVerbosity >= 3: notify(">>> Storing Autoactions for {}".format(card)) #Debug
       Stored_AutoActions[card] = card.AutoAction
       if cFaceD: card.isFaceUp = False
-   if not card.isFaceUp or card.markers[Not_rezzed]:
+   if debugVerbosity >= 5: notify("+++ Finished storing card.AutoActions. Checking Rez status")
+   if not card.isFaceUp:
       if re.search(r'onAccess',Stored_AutoActions[card]) and confirm("This card has an ability that can be activated even when unrezzed. Would you like to activate that now?"): card.isFaceUp = True # Activating an on-access ability requires the card to be exposed, it it's no already.
       elif re.search(r'Hidden',Stored_Keywords[card]): card.isFaceUp # If the card is a hidden resource, just turn it face up for its imminent use.
       elif Stored_Type[card] == 'Agenda': 
@@ -1900,13 +1865,16 @@ def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
       else: 
          intRez(card) # If card is face down or not rezzed assume they wanted to rez       
          return
-   elif not Automations['Play, Score and Rez'] or Stored_AutoActions[card] == "": 
+   if debugVerbosity >= 5: notify("+++ Card not unrezzed. Checking for automations switch...")
+   if not Automations['Play, Score and Rez'] or Stored_AutoActions[card] == "": 
       useCard(card) # If card is face up but has no autoscripts, or automation is disabled just notify that we're using an action.
       return
-   elif re.search(r'CustomScript', Stored_AutoActions[card]): 
+   if debugVerbosity >= 5: notify("+++ Automations active. Checking for CustomScript...")
+   if re.search(r'CustomScript', Stored_AutoActions[card]): 
       if chkTargeting(card) == 'ABORT': return
       CustomScript(card,'use') # Some cards just have a fairly unique effect and there's no use in trying to make them work in the generic framework.
       return
+   if debugVerbosity >= 5: notify("+++ All checks done!. Starting Choice Parse...")
    ### Checking if card has multiple autoscript options and providing choice to player.
    Autoscripts = Stored_AutoActions[card].split('||')
    AutoScriptSnapshot = list(Autoscripts)
@@ -1914,7 +1882,7 @@ def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
       if (re.search(r'while(Rezzed|Scored)', autoS) 
          or re.search(r'on(Play|Score|Install)', autoS) 
          or re.search(r'AtTurn(Start|End)', autoS)
-         or card.markers[Not_rezzed] and not re.search(r'onAccess', autoS) # If the card is still unrezzed and the ability does not have "onAccess" on it, it can't be used.
+         or not card.isFaceUp and not re.search(r'onAccess', autoS) # If the card is still unrezzed and the ability does not have "onAccess" on it, it can't be used.
          or (re.search(r'onlyforDummy', autoS) and card.highlight != DummyColor)
          or (re.search(r'(CreateDummy|excludeDummy)', autoS) and card.highlight == DummyColor)): # Dummies in general don't create new dummies
          Autoscripts.remove(autoS)
@@ -2197,8 +2165,8 @@ def findTarget(Autoscript): # Function for finding the target of an autoscript
                for invalidtargetCHK in invalidNamedTargets:
                   if invalidtargetCHK == targetLookup.name:
                      targetC = None
-            if re.search(r'isRezzed', Autoscript) and targetLookup.markers[mdict['Not_rezzed']]: targetC = None
-            if re.search(r'isUnrezzed', Autoscript) and not targetLookup.markers[mdict['Not_rezzed']]: targetC = None
+            if re.search(r'isRezzed', Autoscript) and not targetLookup.isFaceUp: targetC = None
+            if re.search(r'isUnrezzed', Autoscript) and targetLookup.isFaceUp: targetC = None
             if cFaceD: targetLookup.isFaceUp = False
             #if targetC and not targetC in foundTargets: confirm("about to append target Card: {}".format(targetC.name)) # Debug
             if targetC and not targetC in foundTargets: foundTargets.append(targetC) # I don't know why but the first match is always processed twice by the for loop.
@@ -2917,8 +2885,8 @@ def findEnhancements(Autoscript): #Find out if the player has any cards increasi
       for card in table:
          if debugVerbosity >= 3: notify("### Checking {}".format(card)) #Debug
          cardENH = re.search(r'Enhance([0-9]+){}Damage'.format(DMGtype.group(1)), card.AutoScript)
-         if card.controller == me and not card.markers[Not_rezzed] and cardENH: enhancer += num(cardENH.group(1))
-         if card.controller == me and card.markers and not card.markers[Not_rezzed]:
+         if card.controller == me and card.isFaceUp and cardENH: enhancer += num(cardENH.group(1))
+         if card.controller == me and card.isFaceUp:
             foundMarker = findMarker(card, enhancerMarker)
             if foundMarker: 
                enhancer += card.markers[foundMarker]
@@ -3040,8 +3008,8 @@ def per(Autoscript, card = None, count = 0, targetCards = None, notification = N
             if perCHK: # If we still have not dismissed the card and we're supposed to reveal them to the other players...
                #notify("group2: {}. card is: {}. Targeting is: {}".format(per.group(2),c,c.targetedBy))
                if re.search(r'isExposeTarget', Autoscript) and c.isFaceUp: perCHK = False                             # We exclude the card if it's supposed to get exposed but can't (i.e. see encryption breakthrough)
-               if re.search(r'isRezzed', Autoscript) and (c.markers[Not_rezzed] or not c.isFaceUp): perCHK = False    # We exclude the card if it's supposed to be rezzed but isn't
-               if re.search(r'isUnrezzed', Autoscript) and (c.isFaceUp or not c.markers[Not_rezzed]): perCHK = False  # We exclude the card if it's supposed to be unrezzed but isn't
+               if re.search(r'isRezzed', Autoscript) and not c.isFaceUp: perCHK = False    # We exclude the card if it's supposed to be rezzed but isn't
+               if re.search(r'isUnrezzed', Autoscript) and c.isFaceUp: perCHK = False  # We exclude the card if it's supposed to be unrezzed but isn't
                if re.search(r'Target',per.group(2)) and (not c.targetedBy or not c.targetedBy == me): perCHK = False  # We exclude the card if we only gather targets but it's not one.
             if perCHK: # Here we find out how much multiplier we get from those cards.
                if debugVerbosity >= 3: notify("### Target Found: {}".format(c)) # Debug
@@ -3121,7 +3089,7 @@ def autoscriptOtherPlayers(lookup, count = 1): # Function that triggers effects 
    if not Automations['Play, Score and Rez']: return # If automations have been disabled, do nothing.
    for card in table:
       #notify('Checking {}'.format(card)) # Debug
-      if not card.isFaceUp or card.markers[mdict['Not_rezzed']]: continue # Don't take into accounts cards that are not rezzed.
+      if not card.isFaceUp: continue # Don't take into accounts cards that are not rezzed.
       costText = '{} activates {} to'.format(card.controller, card) 
       if re.search(r'{}'.format(lookup), card.AutoScript): # Search if in the script of the card, the string that was sent to us exists. The sent string is decided by the function calling us, so for example the ProdX() function knows it only needs to send the 'GeneratedSpice' string.
          Autoscripts = card.AutoScript.split('||')
@@ -3144,236 +3112,7 @@ def CustomScript(card, action = 'play'): # Scripts that are complex and fairly u
    if debugVerbosity >= 1: notify(">>> CustomScript() with action: {}".format(action)) #Debug
    global ModifyDraw
    #confirm("Customscript") # Debug
-   if card.name == 'Microtech AI Interface' and action == 'use':
-      targetPL = ofwhom('ofOpponent')
-      group = targetPL.piles['R&D/Stack']
-      cut = askInteger("How many cards from your opponent's deck do you wish to cut to the bottom?", 20)
-      for c in group.top(cut): c.moveToBottom(group)
-      notify("{} cuts the top {} cards from {}'s R&D to the bottom.".format(me, cut, targetPL))
-   elif card.name == 'Crash Everett, Inventive Fixer' or card.name == 'Strategic Planning Group':
-      if action == 'install' or action == 'rez': ModifyDraw += 1
-      elif action == 'trash' or action =='uninstall': ModifyDraw -= 1
-   elif card.name == 'New Blood' and action == 'play':
-      previousIce = None
-      firstIce = None
-      lastIce = None # Just being thorough...
-      for c in table:
-         if c.controller == me and c in Stored_Type and Stored_Type[c] == 'Ice' and c.markers[Not_rezzed]:
-            if not firstIce: firstIce = c
-            c.isFaceUp = False
-            if previousIce:
-               coinflip = rnd(1,2) # As I said, just being thoroughly random ^_^
-               if coinflip == 1: # We switch the current one with the previous one
-                  xp, yp = previousIce.position # We save the previous Ice's position we checked in order to move them later
-                  previousIce.moveToTable(c.position[0],c.position[1]) # We move the previous Ice we found to this position
-                  c.moveToTable(xp,yp) # And we move the Ice we're currently checking to the previous position.
-               else: #We move the first one to the current one's position, the previous one to the first one's position, and the current one to the previous one's position.
-                  if previousIce == firstIce: continue # However do nothing if it's on the first pair of Ice, as the first is going to be the same as the previous one.
-                  xp, yp = previousIce.position
-                  xf, yf = firstIce.position
-                  firstIce.moveToTable(c.position[0],c.position[1]) 
-                  previousIce.moveToTable(xf, yf) 
-                  c.moveToTable(xp,yp) 
-               previousIce = None
-            else: previousIce = c
-      if previousIce: # If we have a "previous Ice" it means this is the last card, and it was an odd number of Ice, so it hasn't been swapped at all.
-         coinflip = rnd(1,2)
-         if coinflip == 1: # We switch the current one with the first one
-            xp, yp = previousIce.position 
-            previousIce.moveToTable(firstIce.position[0],firstIce.position[1]) 
-            firstIce.moveToTable(xp,yp) 
-         else: pass # We leave the last ice were it was.
-      confirm("Your unrezzed Ice has been turn face down and slightly scrambled to throw off your opponent. You can close this window and continue exchanging pairs")
-   elif card.name == 'Dr. Dreff' and action == 'use':
-      for c in me.hand:
-         if c.targetedBy and c.targetedBy == me:
-            if c.type != 'Ice':
-               whisper(":::ERROR::: Invalid Card. Please Select an Ice")
-               return
-            if payCost(num(c.Cost) / 2) == 'ABORT': return
-            c.moveToTable(0,cheight(c) * playerside)
-            c.highlight = EmergencyColor
-            notify("{} activates {} in order to emergency rez {} for {} for this run".format(me,card,c,uniCredit(num(c.Cost) / 2)))
-            return # We don't want to play more than one Ice if the player has for some reason targeted more than 1.
-   elif card.name == 'Social Engineering' and action == 'play':
-      hiddenCount = askInteger("How many credits do you want to hide?\n\nMin: 2\nMax: {}".format(me.counters['Credits'].value),2)
-      while me.counters['Credits'].value < hiddenCount or hiddenCount < 2:
-         hiddenCount = askInteger(":::ERROR::: You cannot hide more credits than you have in your Credit Pool, or less than 2. Close this window to abort!\
-                               \n\nHow many credits do you want to hide?\n\nMin: 2\nMax: {}".format(me.counters['Credits'].value),2)
-         if hiddenCount == None: 
-            notify("{} has aborted their Social Engineering attempt".format(me))
-            card.moveTo(me.hand)
-            me.counters['Credits'].value += 1
-            me.counters['Clicks'].value += 1
-            return
-      targetPL = ofwhom('ofOpponent')
-      notify(":::Warning::: {} is making a social engineering attempt! {} must now try to guess how many credits they are hiding (min 2, max {})".format(me, targetPL, me.counters['Credits'].value))
-      confirm("You have now hidden this amount of credits. Once your opponent makes a guess, press any button to reveal the true amount.")
-      notify("{} was hiding {} credits".format(me,hiddenCount))
-   elif card.name == 'Corporate War' and action == 'score':
-      if me.counters['Credits'].value >= 12:
-         creditsReduce = findCounterPrevention(12, 'Credits', me)
-         if creditsReduce: extraTXT = " ({} forfeited)".format(uniCredit(creditsReduce))
-         else: extraTXT = ''               
-         notify("{} has won the corporate war and their spoils are {} Credits{}".format(me,12 - creditsReduce,extraTXT))
-         me.counters['Credits'].value += 12 - creditsReduce
-      else:
-         notify("{} has lost the corporate war and their Credit Pool is reduced to 0".format(me))
-         me.counters['Credits'].value = 0
-   elif card.name == 'Mystery Box' and action == 'use':
-      group = me.piles['R&D/Stack']
-      haveTarget = False
-      foundPrograms = [c for c in table if c.highlight == RevealedColor]
-      for targetCHK in foundPrograms: # We quickly check if the player has selected a target before using the Mystery Box again.
-         if targetCHK.targetedBy and targetCHK.targetedBy == me: haveTarget = True
-      if len(foundPrograms) == 1: # If we only found one program then it's necessarily selected by default.
-         selectedProgram = foundPrograms[0]
-         selectedProgram.highlight = None
-         selectedProgram.moveToTable(-150, 65 * playerside - yaxisMove(card), False) # Move it to the normal position we install programs
-         card.moveTo(me.piles['Trash/Archives(Face-up)'])
-         shuffle(group)
-         notify("{}'s Mystery Box has automatically installed {} free of cost".format(me,selectedProgram))
-      elif len(foundPrograms) > 1:
-         if not haveTarget: 
-            whisper(":::ERROR::: Please select a target before using the Mystery Box again. Aborting!")
-            return
-         selectedProgram = None
-         for targetSeek in foundPrograms:
-            if not selectedProgram and targetSeek.targetedBy and targetSeek.targetedBy == me: # We only want to select the first program we find. The rest we ignore.
-               selectedProgram = targetSeek
-               selectedProgram.highlight = None
-               selectedProgram.moveToTable(-150, 65 * playerside - yaxisMove(card), False) # Move it to the normal position we install programs
-            else: targetSeek.moveToBottom(group) # If the program is highlighted but not targeted, then send it back to the stack.
-         shuffle(group)                  
-         card.moveTo(me.piles['Trash/Archives(Face-up)'])
-         notify("{}'s Mystery Box has automatically installed {} free of cost".format(me,selectedProgram))
-   elif card.name == 'Security Purge' and action == 'score':
-      group = me.piles['R&D/Stack']
-      haveTarget = False
-      iter = 0
-      for c in group.top(3):
-         c.moveToTable((70 * iter) - 150, 0 - yaxisMove(card), False)
-         c.orientation ^= Rot90
-         if c.type != 'Ice': c.moveTo(me.piles['Trash/Archives(Face-up)'])
-         else: iter +=1
-      if iter: # If we found any ice in the top 3
-         notify("{} initiates a Security Purge and reveals {} Ice from the top of their R&D. These ice are automatically installed and rezzed".format(me, iter))
-      else: notify("{} initiates a Security Purge but it finds nothing to purge.".format(me))
-   elif card.name == 'Lucidrine (TM) Drip Feed' and action == 'TurnStart':
-      DripMarker = findMarker(card, 'Drip')
-      if not DripMarker:
-         TokensX('Put1Drip', "Lucidrine (TM) Drip Feed:", card)
-         me.Clicks += 1         
-         notify("--> Lucidrine™ Drip Feed: Gain 1 clicks.")
-      elif card.markers[DripMarker] < 2: 
-         card.markers[DripMarker] += 1
-         me.Clicks += 1
-         notify("--> Lucidrine™ Drip Feed: Gain 1 clicks.")
-      else: 
-         card.markers[DripMarker] = 0
-         intdamageDiscard(me.hand)
-         applyBrainDmg()
-         notify("--> Lucidrine™ Drip Feed: Causes 1 brain damage.")
-   elif card.name == 'On the Fast Track' and action == 'play':
-      if confirm("Did you trash an advertisement this turn?\n\n(Selecting 'No' will assume you trashed a transaction"):
-         me.counters['Credits'].value += 8
-         notify("{} gains {} for trashing an advertisement this turn".format(me,uniCredit(8)))
-      else:
-         me.counters['Credits'].value += 6
-         notify("{} gains {} for trashing a transaction this turn".format(me,uniCredit(6)))
-   elif card.name == 'The Shell Traders':
-      if action == 'use':
-         targetList = [c for c in me.hand  # First we see if they've targeted a card from their hand
-                        if c.targetedBy 
-                        and c.targetedBy == me 
-                        and (c.Type == 'Program' or c.Type == 'Hardware')]
-         if len(targetList) > 0:
-            selectedCard = targetList[0]
-            actionCost = useAction(count = 1)
-            if actionCost == 'ABORT': return         
-            selectedCard.moveToTable(550, 65 * playerside - yaxisMove(card), False) # We always choose the first card, in case they've selected more than one
-            announceText = TokensX('Put1Shell-perProperty{Cost}', "{} to activate {} in order to ".format(actionCost,card), selectedCard)
-            selectedCard.highlight = InactiveColor
-            notify(announceText)
-         else:
-            targetList = [c for c in table  # If the player has selected no card from the hand, then we check to see if they've targeted a card on the table
-                           if c.targetedBy 
-                           and c.targetedBy == me
-                           and c.markers
-                           and (c.Type == 'Program' or c.Type == 'Hardware')]
-            if len(targetList) > 0:
-               selectedCard = targetList[0]
-               actionCost = useAction(count = 1)
-               if actionCost == 'ABORT': return
-               announceText = TokensX('Remove1Shell', "{} with {} in order to ".format(actionCost,card), selectedCard)
-               notify(announceText)
-               ShellMarker = findMarker(selectedCard, 'Shell')
-               if not ShellMarker: # THis means the card cab be automatically installed
-                  selectedCard.moveToTable(150, 65 * playerside - yaxisMove(card), False)
-                  selectedCard.highlight = None
-                  executePlayScripts(selectedCard,'install')
-                  MUtext = chkRAM(selectedCard)
-                  notify("--> {} is Installed{}".format(selectedCard,MUtext))
-            else: 
-               whisper("You need to select a valid target from your hand or the table to use this action")  
-               return
-      elif action == 'TurnEnd':
-         targetList = [c for c in table  # We find all possible targets
-                       if c.markers
-                       and (c.Type == 'Program' or c.Type == 'Hardware')]
-         validCards = []
-         for chkCard in targetList:
-            ShellMarker = findMarker(chkCard, 'Shell')
-            if not ShellMarker: continue
-            else: validCards.append(chkCard)
-         if len(validCards) == 0: return # No cards with shell markers found, so we're doing nothing
-         elif len(validCards) == 1: selectedCard = validCards[0] # If only one card with shell markers exist, we remove of those.
-         else: # Else we have to ask which one to remove.
-            selectTXT = 'The Shell Traders: Please select a target to remove a shell marker\n\n'
-            iter = 0
-            for choice in validCards:
-               selectTXT += '{}: {}\n'.format(iter,choice.name)
-               iter += 1
-            sel = askInteger(selectTXT,0)
-            selectedCard = validCards[sel]
-         TokensX('Remove1Shell', "The Shell Traders: ",selectedCard)
-         notify("--> The Shell Traders removes 1 Shell marker from {}".format(selectedCard))
-         ShellMarker = findMarker(selectedCard, 'Shell')
-         if not ShellMarker: # Empty of shell markers means the card can be automatically installed
-            selectedCard.moveToTable(150, 65 * playerside - yaxisMove(card), False)
-            selectedCard.highlight = None
-            executePlayScripts(selectedCard,'install')
-            MUtext = chkRAM(selectedCard)
-            notify("--> {} is Installed{}".format(selectedCard,MUtext))
-   elif card.name == 'Playful AI' and action == 'play':
-      rollTuple = RollX('Roll1Dice', 'Playful AI:', card, notification = 'Automatic')
-      if rollTuple[1] > 3: 
-         notify("Tough Luck. ಠ╭╮ಠ")
-         return
-      else: count = rollTuple[1]
-      newRoll = askInteger("You rolled for {}. How many of these credits would you like to reroll as dice?".format(uniCredit(count)), 0)
-      totalGain = count - newRoll
-      if debugVerbosity >= 3: notify("count:{}\nnewRoll:{}\nTotal: {}".format(count,newRoll,totalGain))
-      iter = 0
-      gamble = 0
-      while iter < newRoll:
-         iter += 1
-         rollTuple = RollX('Roll1Dice', 'Playful AI:', card, notification = 'Automatic')
-         if rollTuple[1] > 3: pass
-         else: gamble += rollTuple[1]
-         if debugVerbosity >= 3: notify("### iter: {}.\nnewroll: {}.\nCurrent Roll:{}.\ngamble:{} ".format(iter,newRoll,rollTuple[1],gamble))
-         if iter == newRoll and gamble > 0: 
-            if debugVerbosity >= 3: notify("### last loop")
-            notify("--< {} gathered {} from this round of rolls.".format(me, uniCredit(gamble)))
-            newRoll = askInteger("You rolled for {}. How many of these credits would you like to reroll as dice?".format(uniCredit(gamble)), 0)
-            totalGain += gamble - newRoll
-            iter = 0
-            gamble = 0
-      if totalGain > 0:
-         me.counters['Credits'].value += totalGain
-         notify("{} has gained {} from the playful AI. (•‿•)   ".format(me, uniCredit(totalGain)))
-      else: notify("Tough Luck. ಠ╭╮ಠ")
-   elif card.model == 'f58c40eb-bb11-4bad-9562-030d906ea352' and action == 'use':
+   if card.model == '71a89203-94cd-42cd-b9a8-15377caf4437' and action == 'use':
       knownMarkers = []
       for marker in card.markers:
          if marker[0] in markerRemovals: # If the name of the marker exists in the markerRemovals dictionary it means it can be removed and has a specific cost.
@@ -3498,15 +3237,8 @@ def markerEffects(Time = 'Start'):
    CounterHold = getSpecial('Counter Hold', targetPL) # Some viruses also trigger on our opponent's turns
    for marker in CounterHold.markers:
       count = CounterHold.markers[marker]
-      if marker == mdict['virusButcherBoy'] and Time == 'Start':
-         GainX('Gain1Credits-onOpponent-perMarker{virusButcherBoy}-div2', "Opponent's Butcher Boy virus:", OpponentCounterHold, notification = 'Automatic')
-      if marker == mdict['virusIncubate'] and Time == 'Start':
-         passedScript = 'Roll{}Dice'.format(count)
-         RollX(passedScript, "Opponent's Incubate virus:", CounterHold, notification = 'Automatic')
-      if marker == mdict['virusBoardwalk'] and Time == 'Start':
-         confirm("You are about to move cards out of another player's hand. Please ask them not to manipulate their hand, until all cards are on the table")
-         showatrandom(targetPL.hand, count, silent = True)
-         notify("--> {} forces {} to show him {} cards at random from their hand".format(me,targetPL,count))
+#      if marker == mdict['virusButcherBoy'] and Time == 'Start':
+#         GainX('Gain1Credits-onOpponent-perMarker{virusButcherBoy}-div2', "Opponent's Butcher Boy virus:", OpponentCounterHold, notification = 'Automatic')
    # Checking triggers from markers the rest of our cards.
    cardList = [c for c in table if c.markers]
    for card in cardList:
@@ -3533,7 +3265,7 @@ def TrialError(group, x=0, y=0): # Debugging
    #if regexHooks['GainX'].search('TrashMyself'): confirm("Found!")
    #else: confirm("Not Found :(")
    ###### End Testing Corner ######
-   if debugVerbosity >=0:
+   if debugVerbosity >=10: # Switched off for start. Put it to 0 once done.
       if debugVerbosity == 0: 
          debugVerbosity = 1
          ImAProAtThis() # At debug level 1, we also disable all warnings
@@ -3544,7 +3276,7 @@ def TrialError(group, x=0, y=0): # Debugging
       notify("Debug verbosity is now: {}".format(debugVerbosity))
       return
    for player in players:
-      if player.name == 'db0' or player.name == 'dbzer0': debugVerbosity = 0
+      if player.name == 'db0' or player.name == 'dbzer0': debugVerbosity = 5
    if not (len(players) == 1 or debugVerbosity >= 0): 
       whisper("This function is only for development purposes")
       return
