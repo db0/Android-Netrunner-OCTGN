@@ -563,21 +563,29 @@ def ImAProAtThis(group = table, x=0, y=0):
    whisper("-- All Newbie warnings have been disabled. Play safe.")
         
 #------------------------------------------------------------------------------
-# Table group clicks
+# Table group Actions
 #------------------------------------------------------------------------------
 
 def createStartingCards():
    if debugVerbosity >= 1: notify(">>> createStartingCards(){}".format(extraASDebug())) #Debug
-   traceCard = table.create("eb7e719e-007b-4fab-973c-3fe228c6ce20", 480 * playerside, 160 * playerside, 1, True) #The Trace card
-   storeSpecial(traceCard)
    if ds == "corp":
-      table.create("81cba950-9703-424f-9a6f-af02e0203762", 0, 160 * playerside, 1, True)
-      table.create("fbb865c9-fccc-4372-9618-ae83a47101a2", cwidth(traceCard,0) * 5 / 2, 160 * playerside, 1, True)
-      table.create("47597fa5-cc0c-4451-943b-9a14417c2007", cwidth(traceCard,0) * 5, 160 * playerside, 1, True)
-      AV = table.create("23473bd3-f7a5-40be-8c66-7d35796b6031", 480 * playerside, 250 * playerside, 1, True) # The Virus Scan card.
+      traceCard = table.create("eb7e719e-007b-4fab-973c-3fe228c6ce20", 510, 200, 1, True) #The Trace card
+      storeSpecial(traceCard)
+      HQ = table.create("81cba950-9703-424f-9a6f-af02e0203762", 0, 0, 1, True)
+      traceCard.moveToTable(125, 185) # MoveToTable is accurate. Table.create isn't.
+      RD = table.create("fbb865c9-fccc-4372-9618-ae83a47101a2", 0, 0, 1, True)
+      traceCard.moveToTable(245, 185)
+      ARC = table.create("47597fa5-cc0c-4451-943b-9a14417c2007", 0, 0, 1, True)
+      traceCard.moveToTable(363, 185)
+      AV = table.create("23473bd3-f7a5-40be-8c66-7d35796b6031", 0, 0, 1, True) # The Virus Scan card.
+      traceCard.moveToTable(510, 127)
       storeSpecial(AV)
    else:
-      TC = table.create("71a89203-94cd-42cd-b9a8-15377caf4437", 480 * playerside, 250 * playerside, 1, True) # The Technical Difficulties card.
+      traceCard = table.create("eb7e719e-007b-4fab-973c-3fe228c6ce20", 566, -323, 1, True) #The Trace card
+      traceCard.moveToTable(566, -323) # Otherwise it's bugging out
+      storeSpecial(traceCard)
+      TC = table.create("71a89203-94cd-42cd-b9a8-15377caf4437", 471, -325, 1, True) # The Technical Difficulties card.
+      TC.moveToTable(471, -325) # It's never creating them in the right place. Move is accurate.
       storeSpecial(TC)   
 
 def intJackin(group, x = 0, y = 0):
@@ -1065,7 +1073,8 @@ def scrAgenda(card, x = 0, y = 0):
       else: extraTXT = ''
       if debugVerbosity >= 3: notify("### About to Score")
       me.counters['Agenda Points'].value += ap - apReduce
-      card.moveToTable(-600 - scoredAgendas * cwidth(card) / 6, 60 - yaxisMove(card) + scoredAgendas * cheight(card) / 2 * playerside, False)
+      if ds == 'corp': card.moveToTable(495 + (scoredAgendas * 15), 8, False) # Location of the Agenda Scoring point for the Corp.
+      else: card.moveToTable(336 + (scoredAgendas * 15), -206, False) # Location of the Agenda Scoring point for the Runner.
       scoredAgendas += 1
       notify("{} {}s {} and receives {} agenda point(s){}".format(me, agendaTxt, card, ap - apReduce,extraTXT))
       if cheapAgenda: notify(":::Warning:::{} did not have enough advance tokens ({} out of {})! ".format(card,currentAdv,card.Cost))
@@ -1180,7 +1189,7 @@ def intTrashCard(card, stat, cost = "not free",  ClickCost = '', silent = False)
       goodGrammar = ''
    if UniCode: goodGrammar = ''
    cardowner = card.owner
-   if Stored_Type[card] == "Tracing" or Stored_Type[card] == "Counter Hold" or Stored_Type[card] == "Data Fort": 
+   if Stored_Type[card] == "Tracing" or Stored_Type[card] == "Counter Hold" or Stored_Type[card] == "Server": 
       whisper("{}".format(trashEasterEgg[trashEasterEggIDX]))
       if trashEasterEggIDX < 7:
          trashEasterEggIDX += 1
@@ -1278,7 +1287,7 @@ def exileCard(card, silent = False):
    # Puts the removed card in the shared pile and outside of view.
    mute()
    storeProperties(card)
-   if Stored_Type[card] == "Tracing" or Stored_Type[card] == "Counter Hold" or Stored_Type[card] == "Data Fort": 
+   if Stored_Type[card] == "Tracing" or Stored_Type[card] == "Counter Hold" or Stored_Type[card] == "Server": 
       whisper("This kind of card cannot be exiled!")
       return 'ABORT'
    else:
@@ -1297,7 +1306,7 @@ def uninstall(card, x=0, y=0, destination = 'hand', silent = False):
    if destination == 'R&D' or destination == 'Stack': group = me.piles['R&D/Stack']
    else: group = card.owner.hand
    #confirm("destination: {}".format(destination)) # Debug
-   if Stored_Type[card] == "Tracing" or Stored_Type[card] == "Counter Hold" or Stored_Type[card] == "Data Fort": 
+   if Stored_Type[card] == "Tracing" or Stored_Type[card] == "Counter Hold" or Stored_Type[card] == "Server": 
       whisper("This kind of card cannot be uninstalled!")
       return 'ABORT'
    else: 
@@ -3281,7 +3290,9 @@ def TrialError(group, x=0, y=0): # Debugging
                 "bc0f047c-01b1-427f-a439-d451eda01031", 
                 "bc0f047c-01b1-427f-a439-d451eda01020", 
                 "bc0f047c-01b1-427f-a439-d451eda01093"] 
-   if not ds: ds = "corp"
+   if not ds: 
+      if confirm("corp?"): ds = "corp"
+      else: ds = "runner"
    me.setGlobalVariable('ds', ds) 
    me.counters['Credits'].value = 50
    me.counters['Max Hand Size'].value = 5
@@ -3322,7 +3333,7 @@ def inspectCard(card, x = 0, y = 0): # This function shows the player the card t
    if card.type == 'Tracing': confirm("This is your tracing card. Double click on it to start a trace. It will ask you for your power bid and then put the amount as bits token on it.\
                                    \n\nOnce both players have made their bid, double-click on it again to pay the amount. This will automatically use credits from cards that pay for tracing if you have any.\
                                    \n\nIf for some reason the trace is cancelled, use the cancel trace from the menu. This will not use any bits and will clear the card.")
-   elif card.type == 'Data Fort': confirm("These are your Servers. Start stacking your Ice above them and your Agendas, Upgrades and Nodes below them.\
+   elif card.type == 'Server': confirm("These are your Servers. Start stacking your Ice above them and your Agendas, Upgrades and Nodes below them.\
                                      \nThey have no automated abilities")
    elif card.type == 'Counter Hold': confirm("This is your Counter Hold. This card stores all the beneficial and harmful counters you might accumulate over the course of the game.\
                                           \n\nIf you're playing a corp, Bad Publicity, viruses and other such tokens may be put here as well. By double clicking this card, you'll use three clicks to clean all viruses from your cards.\
@@ -3332,3 +3343,12 @@ def inspectCard(card, x = 0, y = 0): # This function shows the player the card t
       if debugVerbosity > 0: finalTXT = 'AutoScript: {}\n\n AutoAction: {}'.format(card.AutoScript,card.AutoAction)
       else: finalTXT = "Card Text: {}\n\n{}".format(card.Rules,ASText)
       confirm("{}".format(finalTXT))
+
+def ShowPos(group, x=0,y=0):
+   if debugVerbosity >= 1: 
+      notify('x={}, y={}'.format(x,y))
+      
+def ShowPosC(card, x=0,y=0):
+   if debugVerbosity >= 1: 
+      x,y = card.position
+      notify('card x={}, y={}'.format(x,y))      

@@ -33,6 +33,7 @@
 			<groupaction menu="Switch Automatic Damage Prevention ON/OFF" default="false" execute="switchPreventDMGAutomation" />  
 			<groupaction menu="Disable all &quot;Newbie&quot; Warnings" default="false" shortcut="Ctrl+Shift+N" execute="ImAProAtThis" />  
 			<groupaction menu="Debug" default="false" shortcut="Ctrl+Shift+D" execute="TrialError" /> 
+			<groupaction menu="Show Position" default="false" shortcut="Ctrl+Shift+Z" execute="ShowPos" /> 
 		</groupactions>
 		<groupactions menu="Turns/Clicks...">
 			<groupaction menu="Declare Start of Turn" default="false" shortcut="F1" execute="goToSot" />
@@ -87,6 +88,7 @@
 		<groupaction menu="Create new Remote Server" default="false" execute="createRemoteServer" />
 <!--		<groupaction menu="Roll d6" default="false" shortcut="Ctrl+6" execute="rolld6" /> -->
 		<groupaction menu="&#8986; Receive 1 ¥" default="false" shortcut="Ctrl+B" execute="getCredit" />
+      <cardaction menu="Show Position" default="false" shortcut="Ctrl+Shift+X" execute="ShowPosC" /> 
         
 		
 	</table>
