@@ -27,7 +27,6 @@ Automations = {'Play, Score and Rez'    : True, # If True, game will automatical
 UniCredits = True # If True, game will display credits as unicode characters ❶, ❷, ❿ etc
 
 ModifyDraw = 0 #if True the audraw should warn the player to look at r&D instead 
-TraceValue = 0
 
 DifficultyLevels = { }
 
@@ -559,16 +558,16 @@ def ImAProAtThis(group = table, x=0, y=0):
 
 def createStartingCards():
    if debugVerbosity >= 1: notify(">>> createStartingCards(){}".format(extraASDebug())) #Debug
-   traceCard = table.create("eb7e719e-007b-4fab-973c-3fe228c6ce20", 0, 155 * playerside, 1, True) #The Trace card
+   traceCard = table.create("eb7e719e-007b-4fab-973c-3fe228c6ce20", 480 * playerside, 160 * playerside, 1, True) #The Trace card
    storeSpecial(traceCard)
    if ds == "corp":
-      table.create("81cba950-9703-424f-9a6f-af02e0203762", 150, 160 * playerside, 1, True)
-      table.create("fbb865c9-fccc-4372-9618-ae83a47101a2", 300, 160 * playerside, 1, True)
-      table.create("47597fa5-cc0c-4451-943b-9a14417c2007", 450, 160 * playerside, 1, True)
-      AV = table.create("23473bd3-f7a5-40be-8c66-7d35796b6031", 0, 250 * playerside, 1, True) # The Virus Scan card.
+      table.create("81cba950-9703-424f-9a6f-af02e0203762", 0, 160 * playerside, 1, True)
+      table.create("fbb865c9-fccc-4372-9618-ae83a47101a2", cwidth(traceCard,0) * 5 / 2, 160 * playerside, 1, True)
+      table.create("47597fa5-cc0c-4451-943b-9a14417c2007", cwidth(traceCard,0) * 5, 160 * playerside, 1, True)
+      AV = table.create("23473bd3-f7a5-40be-8c66-7d35796b6031", 480 * playerside, 250 * playerside, 1, True) # The Virus Scan card.
       storeSpecial(AV)
    else:
-      TC = table.create("71a89203-94cd-42cd-b9a8-15377caf4437", 0, 250 * playerside, 1, True) # The Technical Difficulties card.
+      TC = table.create("71a89203-94cd-42cd-b9a8-15377caf4437", 480 * playerside, 250 * playerside, 1, True) # The Technical Difficulties card.
       storeSpecial(TC)   
 
 def intJackin(group, x = 0, y = 0):
@@ -846,42 +845,36 @@ def advanceCardM(card, x = 0, y = 0):
 
 def inputTraceValue (card, x=0,y=0, limit = 0, silent = False):
    if debugVerbosity >= 1: notify(">>> inputTraceValue(){}".format(extraASDebug())) #Debug
-   global TraceValue
    mute()
    limitText = ''
-   betReplaced = False
-   card = getSpecial('Tracing')
-   if not card.isFaceUp and not confirm("You're already placed a bet. Replace it with a new one?"): return
-   else: betReplaced = True
+   card = getSpecial('Tracing')   
    limit = num(limit) # Just in case
    if debugVerbosity >= 3: notify("### Trace Limit: {}".format(limit))
    if limit > 0: limitText = '\n\n(Max Trace Power: {})'.format(limit)
-   TraceValue = askInteger("Bet How Many?{}".format(limitText), 0)
+   TraceValue = askInteger("Increase Trace power by how much?{}".format(limitText), 0)
    if TraceValue == None: 
       whisper(":::Warning::: Trace bid aborted by player.")
       return 'ABORT'
    while limit > 0 and TraceValue > limit:
-      TraceValue = askInteger("Please bet equal or less than the max trace power!\nBet How Many?{}".format(limitText), 0)
+      TraceValue = askInteger("Please increase by equal to or less than the max trace power!\nIncrease Trace power by how much?{}".format(limitText), 0)
       if TraceValue == None: 
          whisper(":::Warning::: Trace bid aborted by player.")
          return 'ABORT'
-   card.markers[mdict['Credits']] = 0
-   card.isFaceUp = False
-   if not silent: 
-      if not betReplaced: notify("{} chose a Trace Value.".format(me))
-      else: notify("{} changed their hidden Trace Value.".format(me))
-   Stored_Type[card] = "Tracing"
-	
-def revealTraceValue (card, x=0,y=0):
-   if debugVerbosity >= 1: notify(">>> revealTraceValue(){}".format(extraASDebug())) #Debug
-   mute()
-   global TraceValue
-   card = getSpecial('Tracing')
-   card.isFaceUp = True
    card.markers[mdict['Credits']] = TraceValue
-   notify ( "{} reveals a Trace Value of {}.".format(me,TraceValue))
-   if TraceValue == 0: autoscriptOtherPlayers('TraceAttempt') # if the trace value is 0, then we consider the trace attempt as valid, so we call scripts triggering from that.
-   TraceValue = 0
+   if not silent: 
+      if ds == 'corp': notify("{} strengthens their Trace by {}.".format(me,TraceValue))
+      else: notify("{} reinforces their Base Link by {}.".format(me,TraceValue))
+	
+#def revealTraceValue (card, x=0,y=0): # Obsolete in ANR
+#   if debugVerbosity >= 1: notify(">>> revealTraceValue(){}".format(extraASDebug())) #Debug
+#   mute()
+#   global TraceValue
+#   card = getSpecial('Tracing')
+#   card.isFaceUp = True
+#   card.markers[mdict['Credits']] = TraceValue
+#   notify ( "{} reveals a Trace Value of {}.".format(me,TraceValue))
+#   if TraceValue == 0: autoscriptOtherPlayers('TraceAttempt') # if the trace value is 0, then we consider the trace attempt as valid, so we call scripts triggering from that.
+#   TraceValue = 0
 
 def payTraceValue (card, x=0,y=0):
    if debugVerbosity >= 1: notify(">>> payTraceValue(){}".format(extraASDebug())) #Debug
@@ -891,17 +884,16 @@ def payTraceValue (card, x=0,y=0):
    reduction = reduceCost(card, 'Trace', card.markers[mdict['Credits']])
    if reduction: extraText = " (reduced by {})".format(uniCredit(reduction))
    if payCost(card.markers[mdict['Credits']] - reduction)  == 'ABORT': return
-   notify ("{} pays {} for the Trace Value{}.".format(me,uniCredit(card.markers[mdict['Credits']]),extraText))
+   notify ("{} increases their Trace Power by {}{}.".format(me,uniCredit(card.markers[mdict['Credits']]),extraText))
    card.markers[mdict['Credits']] = 0
    autoscriptOtherPlayers('TraceAttempt')
 
 def cancelTrace ( card, x=0,y=0):
    if debugVerbosity >= 1: notify(">>> cancelTrace(){}".format(extraASDebug())) #Debug
    mute()
-   card.isFaceUp = True
    TraceValue = 0
    card.markers[mdict['Credits']] = 0
-   notify ("{} cancels the Trace Value.".format(me) )
+   notify ("{} cancels the Trace.".format(me) )
 
 #------------------------------------------------------------------------------
 # Counter & Damage Functions
@@ -1839,7 +1831,7 @@ def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
       if debugVerbosity >= 5: notify("+++ Confirmed tacting card. Checking Status...")
       if card.isFaceUp and not card.markers[mdict['Credits']]: inputTraceValue(card, limit = 0)
       elif card.isFaceUp and card.markers[mdict['Credits']]: payTraceValue(card)
-      elif not card.isFaceUp: revealTraceValue(card)
+      elif not card.isFaceUp: card.isFaceUp = True
       return
    if debugVerbosity >= 5: notify("+++ Not a tracing card. Checking highlight...")
    if card.highlight == InactiveColor:
@@ -3327,16 +3319,16 @@ def inspectCard(card, x = 0, y = 0): # This function shows the player the card t
    if ASText == 'This card has the following automations:': ASText = '\nThis card has no automations.'
    if card.name in automatedMarkers:
       ASText += '\n\nThis card can create markers, which also have automated effects.'
-   if card.type == 'Tracing': confirm("This is your tracing card. Double click on it to start a tracing bid. It will ask you for your bid and then hide the amount.\
-                                   \n\nOnce both players have made their bid, double-click on it again to reveal your hidden total.\
-                                   \n\nAfter deciding who won the trace attempt, double click on the card one last time to pay the cost. This will automatically use credits from cards that pay for tracing if you have any.")
-   elif card.type == 'Data Fort': confirm("These are your data forts. Start stacking your Ice above them and your Agendas, Upgrades and Nodes below them.\
+   if card.type == 'Tracing': confirm("This is your tracing card. Double click on it to start a trace. It will ask you for your power bid and then put the amount as bits token on it.\
+                                   \n\nOnce both players have made their bid, double-click on it again to pay the amount. This will automatically use credits from cards that pay for tracing if you have any.\
+                                   \n\nIf for some reason the trace is cancelled, use the cancel trace from the menu. This will not use any bits and will clear the card.")
+   elif card.type == 'Data Fort': confirm("These are your Servers. Start stacking your Ice above them and your Agendas, Upgrades and Nodes below them.\
                                      \nThey have no automated abilities")
    elif card.type == 'Counter Hold': confirm("This is your Counter Hold. This card stores all the beneficial and harmful counters you might accumulate over the course of the game.\
-                                          \n\nIf you're playing a corp, viruses and other such tokens will be put here. By double clicking this card, you'll forfeit your next three clicks to clean all viruses from your cards.\
-                                          \nIf you're playing a runner, brain damage markers and any tokens the corp gives you will be put here.\
+                                          \n\nIf you're playing a corp, Bad Publicity, viruses and other such tokens may be put here as well. By double clicking this card, you'll use three clicks to clean all viruses from your cards.\
+                                          \nIf you're playing a runner, brain damage markers, tags and any other tokens the corp gives you will be put here. by double clicking this card, you'll be able to select one of the markers to remove by paying its cost.\
                                         \n\nTo remove any token manually, simply drag & drop it out of this card.")
    else:
       if debugVerbosity > 0: finalTXT = 'AutoScript: {}\n\n AutoAction: {}'.format(card.AutoScript,card.AutoAction)
-      else: finalTXT = "Card Text: {}\n\n{}\n\nWould you like to see the card rulings?".format(card.Rules,ASText)
-      if confirm("{}".format(finalTXT)): rulings(card)
+      else: finalTXT = "Card Text: {}\n\n{}".format(card.Rules,ASText)
+      confirm("{}".format(finalTXT))

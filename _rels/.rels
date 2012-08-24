@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
   <Relationship Target="/ANR.xml" Id="def" Type="http://schemas.octgn.org/game/definition" />
-  <Relationship Target="/CyberpunkIsNotDead.ttf" Id="fnt" Type="http://schemas.octgn.info/game/font" />
-<!--  <Relationship Target="/cmd64.ttf" Id="chat" Type="http://schemas.octgn.info/game/font" /> -->
+  <Relationship Target="/CyberpunkIsNotDead_ANR.ttf" Id="fnt" Type="http://schemas.octgn.info/game/font" />
+  <Relationship Target="/ANR_symbols_only.ttf" Id="chat" Type="http://schemas.octgn.info/game/font" />
 </Relationships>
