@@ -1,0 +1,10 @@
+In the included fonts, there are some special unicode characters which I've replaced with Android:Netrunner special symbols
+
+* #163 (Sterling): Recurrent Credits
+* #165 (Yen): Credit
+* #8986: Click
+* #9111: 1 MU
+* #9112: 2 MU
+* #9113: Base Link
+* #9166: Subroutine
+* #9167: Trash

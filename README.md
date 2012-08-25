@@ -7,7 +7,6 @@ Gameplay
 
 Some basic instructions on how to use the new system will be forthcoming, but things should be fairly intuitive anyway. Some basic things to remember
 
-* __The corp should be the one hosting the game!__ Otherwise your card placement will be on the other side. Don't forget!
 * First thing you do after you load a deck is Setup (Ctrl+Shift+S)
 * At the start of your turn, declare it with F1
 * At the end of your turn, declare it with F12. Make sure the game announces that your turn has ended and is not expecting you to discard down to your max hand size ;)
@@ -39,15 +38,11 @@ Screenshots
 ---------
 (Click for larger size)
 
-[![](http://i.imgur.com/GFD0Ll.jpg)](http://i.imgur.com/GFD0L)
+None yet :(
 
 Changelog
 ---------
 
 ### 1.0.0
 
-Cloned from Netrunner-OCTGN 3.0.0. Starting port. Basic functionality and automation there.
-Made the basic changes to make the game work
-Added special fonts which include the symbols of ANR as unicode
-Added new board provided by [squizm](http://boardgamegeek.com/user/squizm)
-Added autoplacement function to work with the new board
+Cloned from Netrunner-OCTGN 3.0.0. Starting port.

@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<game xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="Android:Netrunner" id="0f38e453-26df-4c04-9d67-6d43de939c77" octgnVersion="3.0.1.14" version="1.0.0" markersize="16">
+<game xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="Android:Netrunner" id="0f38e453-26df-4c04-9d67-6d43de939c77" octgnVersion="3.0.1.14" version="1.1.0" markersize="16">
    <globalvariables> 
      <globalvariable name="fontsize" value="11"/> 
      <globalvariable name="chatsize" value="12"/> 
    </globalvariables>
 	<card back="r4" front="r5" width="63" height="88" cornerRadius="2">
 		<property name="Subtitle" type="String" hidden="false" ignoreText="False"/>
+		<property name="Faction" type="String" hidden="false" ignoreText="False" />
 		<property name="Type" type="String" hidden="false" ignoreText="False" textKind="Enum" />
 		<property name="Keywords" type="String" hidden="false" ignoreText="False" />
 		<property name="Cost" type="String" hidden="false" />
@@ -14,8 +15,8 @@
 		<property name="Rules" type="String" hidden="false" ignoreText="False" />
 		<property name="Flavor" type="String" hidden="false" ignoreText="True" />
 		<property name="Instructions" type="String" hidden="false" ignoreText="False" />
-		<property name="Faction" type="String" hidden="false" ignoreText="False" />
 		<property name="Influence" type="String" hidden="false" ignoreText="False" />
+		<property name="Side" type="String" hidden="false" ignoreText="False" textKind="Enum" />
       
 		<property name="AutoScript" type="String" hidden="True" ignoreText="True" />
 		<property name="AutoAction" type="String" hidden="True" ignoreText="True" />
