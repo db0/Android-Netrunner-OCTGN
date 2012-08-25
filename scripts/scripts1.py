@@ -137,11 +137,6 @@ markerRemovals = { # A dictionary which holds the costs to remove various specia
                      'Baskerville' :                 (1,3),
                      'Doppelganger' :                (1,4),
                      'Mastiff' :                     (1,4)}
-turns = [
-   'Start of Game',
-   "It is now Corporation's Turn",
-   "It is now Runner's Turn",
-   "It is now End of Turn"]
 
 CorporateFactions = [
          'Haas-Bioroid',
@@ -1482,7 +1477,7 @@ def rulings(card, x = 0, y = 0):
    mute()
    if not card.isFaceUp: return
    #openUrl('http://www.netrunneronline.com/cards/{}/'.format(card.Errata))
-   openUrl('http://www.netrunneronline.com/search/?q={}'.format(card.name)) # Errata is not filled in most card so this works better until then
+   openUrl('http://http://www.cardgamedb.com/index.php/netrunner/android-netrunner-card-search?text={}'.format(card.name)) # Errata is not filled in most card so this works better until then
 
 def checkUnique (card):
    if debugVerbosity >= 1: notify(">>> checkUnique(){}".format(extraASDebug())) #Debug
@@ -3426,8 +3421,8 @@ def inspectCard(card, x = 0, y = 0): # This function shows the player the card t
                                         \n\nTo remove any token manually, simply drag & drop it out of this card.")
    else:
       if debugVerbosity > 0: finalTXT = 'AutoScript: {}\n\n AutoAction: {}'.format(card.AutoScript,card.AutoAction)
-      else: finalTXT = "Card Text: {}\n\n{}".format(card.Rules,ASText)
-      confirm("{}".format(finalTXT))
+      else: finalTXT = "Card Text: {}\n\n{}Would you like to see the card's details online?".format(card.Rules,ASText)
+      if confirm("{}".format(finalTXT)): rulings(card)
 
 def ShowPos(group, x=0,y=0):
    if debugVerbosity >= 1: 
