@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<deck game="0f38e453-26df-4c04-9d67-6d43de939c77">
+  <section name="Identity">
+    <card qty="1" id="bc0f047c-01b1-427f-a439-d451eda01067">Jinteki</card>
+  </section>
+  <section name="R&amp;D / Stack">
+    <card qty="3" id="bc0f047c-01b1-427f-a439-d451eda01106">Priority Requisition</card>
+    <card qty="3" id="bc0f047c-01b1-427f-a439-d451eda01107">Private Security Force</card>
+    <card qty="2" id="bc0f047c-01b1-427f-a439-d451eda01108">Melange Mining Corp</card>
+    <card qty="3" id="bc0f047c-01b1-427f-a439-d451eda01109">PAD Campaign</card>
+    <card qty="3" id="bc0f047c-01b1-427f-a439-d451eda01111">Enigma</card>
+    <card qty="2" id="bc0f047c-01b1-427f-a439-d451eda01112">Hunter</card>
+    <card qty="3" id="bc0f047c-01b1-427f-a439-d451eda01113">Wall of Static</card>
+    <card qty="3" id="bc0f047c-01b1-427f-a439-d451eda01110">Hedge Fund</card>
+    <card qty="1" id="bc0f047c-01b1-427f-a439-d451eda01079">Akitaro Watanabe</card>
+    <card qty="2" id="bc0f047c-01b1-427f-a439-d451eda01074">Cell Portal</card>
+    <card qty="2" id="bc0f047c-01b1-427f-a439-d451eda01075">Chum</card>
+    <card qty="2" id="bc0f047c-01b1-427f-a439-d451eda01076">Data Mine</card>
+    <card qty="2" id="bc0f047c-01b1-427f-a439-d451eda01072">Neural EMP</card>
+    <card qty="3" id="bc0f047c-01b1-427f-a439-d451eda01077">Neural Katana</card>
+    <card qty="3" id="bc0f047c-01b1-427f-a439-d451eda01068">Nisei MK II</card>
+    <card qty="2" id="bc0f047c-01b1-427f-a439-d451eda01073">Precognition</card>
+    <card qty="3" id="bc0f047c-01b1-427f-a439-d451eda01069">Project Junebug</card>
+    <card qty="3" id="bc0f047c-01b1-427f-a439-d451eda01070">Snare!</card>
+    <card qty="3" id="bc0f047c-01b1-427f-a439-d451eda01078">Wall of Thorns</card>
+    <card qty="1" id="bc0f047c-01b1-427f-a439-d451eda01071">Zaibatsu Loyalty</card>
+  </section>
+</deck>

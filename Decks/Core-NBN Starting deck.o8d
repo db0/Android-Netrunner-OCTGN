@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<deck game="0f38e453-26df-4c04-9d67-6d43de939c77">
+  <section name="Identity">
+    <card qty="1" id="bc0f047c-01b1-427f-a439-d451eda01080">NBN</card>
+  </section>
+  <section name="R&amp;D / Stack">
+    <card qty="3" id="bc0f047c-01b1-427f-a439-d451eda01106">Priority Requisition</card>
+    <card qty="3" id="bc0f047c-01b1-427f-a439-d451eda01107">Private Security Force</card>
+    <card qty="2" id="bc0f047c-01b1-427f-a439-d451eda01108">Melange Mining Corp</card>
+    <card qty="3" id="bc0f047c-01b1-427f-a439-d451eda01109">PAD Campaign</card>
+    <card qty="3" id="bc0f047c-01b1-427f-a439-d451eda01111">Enigma</card>
+    <card qty="2" id="bc0f047c-01b1-427f-a439-d451eda01112">Hunter</card>
+    <card qty="3" id="bc0f047c-01b1-427f-a439-d451eda01113">Wall of Static</card>
+    <card qty="3" id="bc0f047c-01b1-427f-a439-d451eda01110">Hedge Fund</card>
+    <card qty="2" id="bc0f047c-01b1-427f-a439-d451eda01083">Anonymous Tip</card>
+    <card qty="2" id="bc0f047c-01b1-427f-a439-d451eda01081">AstroScript Pilot Program</card>
+    <card qty="2" id="bc0f047c-01b1-427f-a439-d451eda01082">Breaking News</card>
+    <card qty="2" id="bc0f047c-01b1-427f-a439-d451eda01084">Closed Accounts</card>
+    <card qty="3" id="bc0f047c-01b1-427f-a439-d451eda01088">Data Raven</card>
+    <card qty="3" id="bc0f047c-01b1-427f-a439-d451eda01087">Ghost Branch</card>
+    <card qty="3" id="bc0f047c-01b1-427f-a439-d451eda01089">Matrix Analyzer</card>
+    <card qty="2" id="bc0f047c-01b1-427f-a439-d451eda01085">Psychographics</card>
+    <card qty="2" id="bc0f047c-01b1-427f-a439-d451eda01091">Red Herrings</card>
+    <card qty="1" id="bc0f047c-01b1-427f-a439-d451eda01092">SanSan City Grid</card>
+    <card qty="2" id="bc0f047c-01b1-427f-a439-d451eda01086">SEA Source</card>
+    <card qty="3" id="bc0f047c-01b1-427f-a439-d451eda01090">Tollbooth</card>
+  </section>
+</deck>

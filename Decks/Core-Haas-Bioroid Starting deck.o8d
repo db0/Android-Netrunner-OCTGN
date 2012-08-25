@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<deck game="0f38e453-26df-4c04-9d67-6d43de939c77">
+  <section name="Identity">
+    <card qty="1" id="bc0f047c-01b1-427f-a439-d451eda01054">Haas-Bioroid</card>
+  </section>
+  <section name="R&amp;D / Stack">
+    <card qty="3" id="bc0f047c-01b1-427f-a439-d451eda01106">Priority Requisition</card>
+    <card qty="3" id="bc0f047c-01b1-427f-a439-d451eda01107">Private Security Force</card>
+    <card qty="2" id="bc0f047c-01b1-427f-a439-d451eda01108">Melange Mining Corp</card>
+    <card qty="3" id="bc0f047c-01b1-427f-a439-d451eda01109">PAD Campaign</card>
+    <card qty="3" id="bc0f047c-01b1-427f-a439-d451eda01111">Enigma</card>
+    <card qty="2" id="bc0f047c-01b1-427f-a439-d451eda01112">Hunter</card>
+    <card qty="3" id="bc0f047c-01b1-427f-a439-d451eda01113">Wall of Static</card>
+    <card qty="3" id="bc0f047c-01b1-427f-a439-d451eda01110">Hedge Fund</card>
+    <card qty="3" id="bc0f047c-01b1-427f-a439-d451eda01055">Accelerated Beta Test</card>
+    <card qty="3" id="bc0f047c-01b1-427f-a439-d451eda01056">Adonis Campaign</card>
+    <card qty="2" id="bc0f047c-01b1-427f-a439-d451eda01057">Aggressive Secretary</card>
+    <card qty="2" id="bc0f047c-01b1-427f-a439-d451eda01058">Archived Memories</card>
+    <card qty="3" id="bc0f047c-01b1-427f-a439-d451eda01059">Biotic Labor</card>
+    <card qty="1" id="bc0f047c-01b1-427f-a439-d451eda01065">Corporate Troubleshooter</card>
+    <card qty="2" id="bc0f047c-01b1-427f-a439-d451eda01066">Experiential Data</card>
+    <card qty="2" id="bc0f047c-01b1-427f-a439-d451eda01061">Heimdall 1.0</card>
+    <card qty="3" id="bc0f047c-01b1-427f-a439-d451eda01062">Ichi 1.0</card>
+    <card qty="2" id="bc0f047c-01b1-427f-a439-d451eda01064">Rototurret</card>
+    <card qty="2" id="bc0f047c-01b1-427f-a439-d451eda01060">Shipment from Mirrormorph</card>
+    <card qty="2" id="bc0f047c-01b1-427f-a439-d451eda01063">Viktor 1.0</card>
+  </section>
+</deck>

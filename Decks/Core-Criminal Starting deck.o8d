@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<deck game="0f38e453-26df-4c04-9d67-6d43de939c77">
+  <section name="Identity">
+    <card qty="1" id="bc0f047c-01b1-427f-a439-d451eda01017">Gabriel Santiago</card>
+  </section>
+  <section name="R&amp;D / Stack">
+    <card qty="3" id="bc0f047c-01b1-427f-a439-d451eda01052">Access to Globalsec</card>
+    <card qty="3" id="bc0f047c-01b1-427f-a439-d451eda01053">Armitage Codebusting</card>
+    <card qty="3" id="bc0f047c-01b1-427f-a439-d451eda01051">Crypsis</card>
+    <card qty="3" id="bc0f047c-01b1-427f-a439-d451eda01049">Infiltration</card>
+    <card qty="3" id="bc0f047c-01b1-427f-a439-d451eda01050">Sure Gamble</card>
+    <card qty="2" id="bc0f047c-01b1-427f-a439-d451eda01018">Account Siphon</card>
+    <card qty="2" id="bc0f047c-01b1-427f-a439-d451eda01025">Aurora</card>
+    <card qty="2" id="bc0f047c-01b1-427f-a439-d451eda01029">Bank Job</card>
+    <card qty="2" id="bc0f047c-01b1-427f-a439-d451eda01030">Crash Space</card>
+    <card qty="1" id="bc0f047c-01b1-427f-a439-d451eda01031">Data Dealer</card>
+    <card qty="2" id="bc0f047c-01b1-427f-a439-d451eda01032">Decoy</card>
+    <card qty="1" id="bc0f047c-01b1-427f-a439-d451eda01024">Desperado</card>
+    <card qty="3" id="bc0f047c-01b1-427f-a439-d451eda01019">Easy Mark</card>
+    <card qty="2" id="bc0f047c-01b1-427f-a439-d451eda01026">Femme Fatale</card>
+    <card qty="3" id="bc0f047c-01b1-427f-a439-d451eda01020">Forged Activation Orders</card>
+    <card qty="3" id="bc0f047c-01b1-427f-a439-d451eda01021">Inside Job</card>
+    <card qty="2" id="bc0f047c-01b1-427f-a439-d451eda01023">Lemuria Codecracker</card>
+    <card qty="2" id="bc0f047c-01b1-427f-a439-d451eda01027">Ninja</card>
+    <card qty="2" id="bc0f047c-01b1-427f-a439-d451eda01028">Sneakdoor Beta</card>
+    <card qty="3" id="bc0f047c-01b1-427f-a439-d451eda01022">Special Order</card>
+  </section>
+</deck>

@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<deck game="0f38e453-26df-4c04-9d67-6d43de939c77">
+  <section name="Identity">
+    <card qty="1" id="bc0f047c-01b1-427f-a439-d451eda01033">Kate "Mac" McCaffrey</card>
+  </section>
+  <section name="R&amp;D / Stack">
+    <card qty="3" id="bc0f047c-01b1-427f-a439-d451eda01052">Access to Globalsec</card>
+    <card qty="3" id="bc0f047c-01b1-427f-a439-d451eda01053">Armitage Codebusting</card>
+    <card qty="3" id="bc0f047c-01b1-427f-a439-d451eda01051">Crypsis</card>
+    <card qty="3" id="bc0f047c-01b1-427f-a439-d451eda01049">Infiltration</card>
+    <card qty="3" id="bc0f047c-01b1-427f-a439-d451eda01050">Sure Gamble</card>
+    <card qty="1" id="bc0f047c-01b1-427f-a439-d451eda01047">Aesop's Pawnshop</card>
+    <card qty="2" id="bc0f047c-01b1-427f-a439-d451eda01038">Akamatsu Mem Chip</card>
+    <card qty="2" id="bc0f047c-01b1-427f-a439-d451eda01042">Battering Ram</card>
+    <card qty="3" id="bc0f047c-01b1-427f-a439-d451eda01034">Diesel</card>
+    <card qty="3" id="bc0f047c-01b1-427f-a439-d451eda01043">Gordian Blade</card>
+    <card qty="2" id="bc0f047c-01b1-427f-a439-d451eda01044">Magnum Opus</card>
+    <card qty="2" id="bc0f047c-01b1-427f-a439-d451eda01035">Modded</card>
+    <card qty="2" id="bc0f047c-01b1-427f-a439-d451eda01045">Net Shield</card>
+    <card qty="2" id="bc0f047c-01b1-427f-a439-d451eda01046">Pipeline</card>
+    <card qty="2" id="bc0f047c-01b1-427f-a439-d451eda01039">Rabbit Hole</card>
+    <card qty="2" id="bc0f047c-01b1-427f-a439-d451eda01048">Sacrificial Construct</card>
+    <card qty="3" id="bc0f047c-01b1-427f-a439-d451eda01036">The Maker's Eye</card>
+    <card qty="2" id="bc0f047c-01b1-427f-a439-d451eda01040">The Personal Touch</card>
+    <card qty="1" id="bc0f047c-01b1-427f-a439-d451eda01041">The Toolbox</card>
+    <card qty="3" id="bc0f047c-01b1-427f-a439-d451eda01037">Tinkering</card>
+  </section>
+</deck>

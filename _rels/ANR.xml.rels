@@ -22,7 +22,7 @@
   <Relationship Target="/counters/credit5.png" Id="r9" Type="http://schemas.octgn.org/picture" />
   <Relationship Target="/groups/trashcan.png" Id="r14" Type="http://schemas.octgn.org/picture" />
   <Relationship Target="/groups/archives_h.png" Id="r15" Type="http://schemas.octgn.org/picture" />
-  <Relationship Target="/card/back.jpg" Id="r4" Type="http://schemas.octgn.org/picture" />
+  <Relationship Target="/card/corp-back.jpg" Id="r4" Type="http://schemas.octgn.org/picture" />
   <Relationship Target="/card/front.jpg" Id="r5" Type="http://schemas.octgn.org/picture" />
   <Relationship Target="/table/Tabletop.jpg" Id="r35" Type="http://schemas.octgn.org/picture" />
 </Relationships>

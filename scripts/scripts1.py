@@ -115,11 +115,11 @@ place = dict( # A table holding tuples with the original location various card t
             Hardware =              (100, -208, 10, 3, 1),  # 1st value is X, second is Y third is Offset (i.e. how far from the other cards (in pixel size) each extra copy should be played. Negative values means it will fall on top of the previous ones slightly) 
             Program =               (-7, -220, 10, 10, -1), # 4th value is Loop Limit (i.e. at how many cards after the first do we loop back to the first position. Loop is always slightly offset, so as not to hide the previous ones completely)
             Resource =              (-6, -345, 10, 10, -1), # Last value is wether the cards will be placed towards the right or left. -1 means to the left.
-            Event =                 (513, -222, 0, 1, 1),
+            Event =                 (480, -190, 20, 2, 1),
             scoredAgenda =          (495, 8, -45, 6, 1),
             liberatedAgenda =       (336, -206, -45, 6, 1),
             Server =                (-10, 188, 80, 6, -1),
-            Operation =             (507, 106, 0, 1, 1),
+            Operation =             (480, 270, 20, 2, 1),
             ICE =                   (110, 110, 30, 7, -1), # Temporary. ICE, Upgrades, Assets and Agendas will be special
             Upgrade =               (-10, 248, 30, 13, -1), # Temporary.
             Asset =                 (-10, 248, 30, 13, -1), # Temporary.
@@ -1253,7 +1253,8 @@ def expose(card, x = 0, y = 0, silent = False):
       card.isFaceUp = True
       if not silent: notify("{} exposed {}".format(me, card))
    else:
-      notify("This card is already exposed")
+      card.isFaceUp = False
+      if not silent: notify("{} turns {} face down again".format(me, card))
       return 'ABORT'
 
 def rolld6(group = table, x = 0, y = 0, silent = False):

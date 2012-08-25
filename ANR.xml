@@ -87,7 +87,7 @@
 		<groupaction menu="Create new Remote Server" default="false" execute="createRemoteServer" />
 <!--		<groupaction menu="Roll d6" default="false" shortcut="Ctrl+6" execute="rolld6" /> -->
 		<groupaction menu="&#8986; Receive 1 ¥" default="false" shortcut="Ctrl+B" execute="getCredit" />
-      <cardaction menu="Show Card Position" default="false" shortcut="Ctrl+Shift+X" execute="ShowPosC" />  
+<!--      <cardaction menu="Show Card Position" default="false" shortcut="Ctrl+Shift+X" execute="ShowPosC" />  -->
         
 		
 	</table>
@@ -116,7 +116,6 @@
 			<groupaction menu="Draw X" default="false" execute="drawMany" />
 			<groupaction menu="Discard X" default="false" execute="mill" />
 			<groupaction menu="Move Top X card to Bottom" default="false" execute="moveXtopCardtoBottomStack" />
-			</groupactions>
 		</group>
 
 		<group name="Heap/Archives(Face-up)" visibility="all" ordered="false" width="63" height="88" icon="r14" collapsed="false">

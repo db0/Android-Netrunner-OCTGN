@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<deck game="0f38e453-26df-4c04-9d67-6d43de939c77">
+  <section name="Identity">
+    <card qty="1" id="bc0f047c-01b1-427f-a439-d451eda01001">Noise</card>
+    <card qty="1" id="bc0f047c-01b1-427f-a439-d451eda01012">Parasite</card>
+    <card qty="1" id="bc0f047c-01b1-427f-a439-d451eda01072">Neural EMP</card>
+  </section>
+  <section name="R&amp;D / Stack">
+    <card qty="1" id="bc0f047c-01b1-427f-a439-d451eda01007">Corroder</card>
+    <card qty="2" id="bc0f047c-01b1-427f-a439-d451eda01082">Breaking News</card>
+    <card qty="1" id="bc0f047c-01b1-427f-a439-d451eda01042">Battering Ram</card>
+    <card qty="1" id="bc0f047c-01b1-427f-a439-d451eda01098">Beanstalk Royalties</card>
+    <card qty="1" id="bc0f047c-01b1-427f-a439-d451eda01029">Bank Job</card>
+    <card qty="1" id="bc0f047c-01b1-427f-a439-d451eda01025">Aurora</card>
+    <card qty="1" id="bc0f047c-01b1-427f-a439-d451eda01081">AstroScript Pilot Program</card>
+    <card qty="1" id="bc0f047c-01b1-427f-a439-d451eda01053">Armitage Codebusting</card>
+    <card qty="1" id="bc0f047c-01b1-427f-a439-d451eda01088">Data Raven</card>
+    <card qty="1" id="bc0f047c-01b1-427f-a439-d451eda01005">Cyberfeeder</card>
+    <card qty="1" id="bc0f047c-01b1-427f-a439-d451eda01003">Demolition Run</card>
+    <card qty="1" id="bc0f047c-01b1-427f-a439-d451eda01002">Deja Vu</card>
+    <card qty="1" id="bc0f047c-01b1-427f-a439-d451eda01006">Grimoire</card>
+    <card qty="1" id="bc0f047c-01b1-427f-a439-d451eda01043">Gordian Blade</card>
+    <card qty="1" id="bc0f047c-01b1-427f-a439-d451eda01062">Ichi 1.0</card>
+    <card qty="1" id="bc0f047c-01b1-427f-a439-d451eda01021">Inside Job</card>
+    <card qty="2" id="bc0f047c-01b1-427f-a439-d451eda01033">Kate "Mac" McCaffrey</card>
+  </section>
+</deck>

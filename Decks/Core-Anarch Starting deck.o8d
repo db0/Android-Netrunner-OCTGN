@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<deck game="0f38e453-26df-4c04-9d67-6d43de939c77">
+  <section name="Identity">
+    <card qty="1" id="bc0f047c-01b1-427f-a439-d451eda01001">Noise</card>
+  </section>
+  <section name="R&amp;D / Stack">
+    <card qty="2" id="bc0f047c-01b1-427f-a439-d451eda01007">Corroder</card>
+    <card qty="3" id="bc0f047c-01b1-427f-a439-d451eda01005">Cyberfeeder</card>
+    <card qty="2" id="bc0f047c-01b1-427f-a439-d451eda01008">Datasucker</card>
+    <card qty="2" id="bc0f047c-01b1-427f-a439-d451eda01002">Deja Vu</card>
+    <card qty="3" id="bc0f047c-01b1-427f-a439-d451eda01003">Demolition Run</card>
+    <card qty="2" id="bc0f047c-01b1-427f-a439-d451eda01009">Djinn</card>
+    <card qty="1" id="bc0f047c-01b1-427f-a439-d451eda01006">Grimoire</card>
+    <card qty="1" id="bc0f047c-01b1-427f-a439-d451eda01015">Ice Carver</card>
+    <card qty="2" id="bc0f047c-01b1-427f-a439-d451eda01010">Medium</card>
+    <card qty="2" id="bc0f047c-01b1-427f-a439-d451eda01011">Mimic</card>
+    <card qty="3" id="bc0f047c-01b1-427f-a439-d451eda01012">Parasite</card>
+    <card qty="3" id="bc0f047c-01b1-427f-a439-d451eda01004">Stimhack</card>
+    <card qty="2" id="bc0f047c-01b1-427f-a439-d451eda01016">Wyldside</card>
+    <card qty="2" id="bc0f047c-01b1-427f-a439-d451eda01013">Wyrm</card>
+    <card qty="2" id="bc0f047c-01b1-427f-a439-d451eda01014">Yog.0</card>
+    <card qty="3" id="bc0f047c-01b1-427f-a439-d451eda01052">Access to Globalsec</card>
+    <card qty="3" id="bc0f047c-01b1-427f-a439-d451eda01053">Armitage Codebusting</card>
+    <card qty="3" id="bc0f047c-01b1-427f-a439-d451eda01051">Crypsis</card>
+    <card qty="3" id="bc0f047c-01b1-427f-a439-d451eda01049">Infiltration</card>
+    <card qty="3" id="bc0f047c-01b1-427f-a439-d451eda01050">Sure Gamble</card>
+  </section>
+</deck>
