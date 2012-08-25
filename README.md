@@ -46,4 +46,8 @@ Changelog
 
 ### 1.0.0
 
-Cloned from Netrunner-OCTGN 3.0.0. Starting port.
+Cloned from Netrunner-OCTGN 3.0.0. Starting port. Basic functionality and automation there.
+Made the basic changes to make the game work
+Added special fonts which include the symbols of ANR as unicode
+Added new board provided by [squizm](http://boardgamegeek.com/user/squizm)
+Added autoplacement function to work with the new board
