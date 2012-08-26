@@ -67,8 +67,8 @@ debugVerbosity = -1
 mdict = dict( # A dictionary which holds all the hard coded markers (in the markers file)
              BadPublicity =            ("Bad Publicity", "7ae6b4f2-afee-423a-bc18-70a236b41292"),
              Agenda =                  ("Agenda", "38c5b2a0-caa2-40e4-b5b2-0f1cc7202782"), # We use the blue counter as agendas
-             Red =                     ("Red Net", "815b944d-d7db-4846-8be2-20852a1c9530"),
-             Virus =                   ("Virus", "e81053f9-8142-41f6-b40e-c7bb04301e25"),
+             Power =                   ("Power", "815b944d-d7db-4846-8be2-20852a1c9530"),
+             Virus =                   ("Virus", "7cbe3738-5c50-4a32-97e7-8cb43bf51afa"),
              Click =                   ("Click", "1c873bd4-007f-46f9-9b17-3d8780dabfc4"),
              Credit5 =                 ("5 Credits","feb0e161-da94-4705-8d56-b48f17d74a99"),
              Credits =                 ("Credit","bda3ae36-c312-4bf7-a288-7ee7760c26f7"),
@@ -293,6 +293,15 @@ def uniCredit(count):
       if count == 1: grammar = 's'
       else: grammar =''
       return "{} Credit{}".format(count,grammar)
+ 
+def uniRecurring(count):
+   if debugVerbosity >= 1: notify(">>> uniRecurring(){}".format(extraASDebug())) #Debug
+   count = num(count)
+   if UniCode: return "{} £".format(count)
+   else: 
+      if count == 1: grammar = 's'
+      else: grammar =''
+      return "{} Recurring Credit{}".format(count,grammar)
  
 def uniClick():
    if debugVerbosity >= 1: notify(">>> uniClick(){}".format(extraASDebug())) #Debug
@@ -804,13 +813,20 @@ def intRun(aCost = 1, Name = 'R&D', silent = False):
    if ds != 'runner':  
       whisper(":::ERROR:::Corporations can't run!")
       return 'ABORT'
-   CounterHold = getSpecial('Counter Hold')
-   if findMarker(CounterHold,'Fang') or findMarker(CounterHold,'Rex') or findMarker(CounterHold,'Fragmentation Storm'): # These are counters which prevent the runner from running.
-      notify(":::Warning:::{} attempted to run but was prevented by a resident Sentry effect in their Rig. They will have to remove all such effects before attempting a run".format(me))
-      return 'ABORT'
+   CounterHold = getSpecial('Counter Hold') # Old code from Netrunner. Not sure if the new one will do stuff like that
+   #if findMarker(CounterHold,'Fang') or findMarker(CounterHold,'Rex') or findMarker(CounterHold,'Fragmentation Storm'): # These are counters which prevent the runner from running.
+   #   notify(":::Warning:::{} attempted to run but was prevented by a resident Sentry effect in their Rig. They will have to remove all such effects before attempting a run".format(me))
+   #   return 'ABORT'
    ClickCost = useClick(aCost)
    if ClickCost == 'ABORT': return 'ABORT'
    if not silent: notify ("{} to start a run on {}.".format(ClickCost,Name))
+   targetPL = ofwhom('-ofOpponent')
+   BadPub = targetPL.counters['Bad Publicity'].value
+   enemyIdent = getSpecial('Identity',targetPL)
+   myIdent = getSpecial('Identity',me)
+   if BadPub > 0:
+         me.Credits += BadPub
+         notify("--> The Bad Publicity of {} allows {} to secure {} for this run".format(enemyIdent,myIdent,uniCredit(BadPub)))
    atTimedEffects('Run')
 
 def runHQ(group, x=0,Y=0):
@@ -975,14 +991,16 @@ def inputTraceValue (card, x=0,y=0, limit = 0, silent = False):
    limit = num(limit) # Just in case
    if debugVerbosity >= 2: notify("### Trace Limit: {}".format(limit))
    if limit > 0: limitText = '\n\n(Max Trace Power: {})'.format(limit)
-   TraceValue = askInteger("Increase Trace power by how much?{}".format(limitText), 0)
+   if ds == 'corp': traceTXT = 'Trace'
+   else: traceTXT = 'Link'
+   TraceValue = askInteger("Increase {} Strentgh by how much?{}".format(traceTXT,limitText), 0)
    if TraceValue == None: 
-      whisper(":::Warning::: Trace bid aborted by player.")
+      whisper(":::Warning::: Trace attempt aborted by player.")
       return 'ABORT'
    while limit > 0 and TraceValue > limit:
       TraceValue = askInteger("Please increase by equal to or less than the max trace power!\nIncrease Trace power by how much?{}".format(limitText), 0)
       if TraceValue == None: 
-         whisper(":::Warning::: Trace bid aborted by player.")
+         whisper(":::Warning::: Trace attempt aborted by player.")
          return 'ABORT'
    card.markers[mdict['Credits']] = TraceValue
    if not silent: 
@@ -1058,11 +1076,12 @@ def reduceCost(card, type = 'Rez', fullCost = 0):
          reduction += num(reductionSearch.group(1))
          fullCost -= 1
    elif debugVerbosity >= 2: notify("### No autoscripts found!")
-   for c in table:
+   for c in table: # Then check if there's other cards in the table that reduce its costs.
       Autoscripts = c.AutoScript.split('||')
       if len(Autoscripts) == 0: continue
       for autoS in Autoscripts:
          if debugVerbosity >= 2: notify("### Checking {} with AS: {}".format(c, autoS)) #Debug
+         if re.search(r'onlyOnce',autoS) and oncePerTurn(c, silent = True, act = 'automatic') == 'ABORT': continue # if the card's effect has already been used, check the next one
          reductionSearch = re.search(r'Reduce([0-9#]+)Cost({}|All)-for([A-Z][A-Za-z ]+)(-not[A-Za-z_& ]+)?'.format(type), autoS) 
          if debugVerbosity >= 2: #Debug
             if reductionSearch: notify("!!! Regex is {}".format(reductionSearch.groups()))
@@ -1186,6 +1205,7 @@ def scrAgenda(card, x = 0, y = 0):
       notify("{} {}s {} and receives {} agenda point(s){}".format(me, agendaTxt, card, ap - apReduce,extraTXT))
       if cheapAgenda: notify(":::Warning:::{} did not have enough advance tokens ({} out of {})! ".format(card,currentAdv,card.Cost))
       executePlayScripts(card,agendaTxt)
+      autoscriptOtherPlayers('Agenda'+agendaTxt.capitalize()+'d') # The autoscripts triggered by this effect are using AgendaLiberated and AgendaScored as the hook
       if me.counters['Agenda Points'].value >= 7 : notify("{} wins the game!".format(me))
       card.markers[mdict['Advancement']] = 0 # We only want to clear the advance counters after the automations, as they may still be used.
    else:
@@ -1283,7 +1303,9 @@ def clear(card, x = 0, y = 0, silent = False):
 
 def clearAll(): # Just clears all the player's cards.
    for card in table:
-      if card.controller == me: clear(card,silent = True)
+      if card.controller == me: 
+         clear(card,silent = True)
+         if card.orientation == Rot90 and Stored_Type[card] != 'ICE': card.orientation == Rot0
       
 def intTrashCard(card, stat, cost = "not free",  ClickCost = '', silent = False):
    if debugVerbosity >= 1: notify(">>> intTrashCard(){}".format(extraASDebug())) #Debug
@@ -1502,11 +1524,12 @@ def checkUnique (card):
       for uniqueC in ExistingUniques: trashForFree(uniqueC)
    return True   
    
-def oncePerTurn(card, x = 0, y = 0, silent = False):
+def oncePerTurn(card, x = 0, y = 0, silent = False, act = 'manual'):
    if debugVerbosity >= 1: notify(">>> oncePerTurn(){}".format(extraASDebug())) #Debug
    mute()
    if card.orientation == Rot90:
-      if not confirm("The once-per-turn ability of {} has already been used this turn\nBypass restriction?.".format(card.name)): return 'ABORT'
+      if act != 'manual': return 'ABORT' # If the player is not activating an effect manually, we always fail silently. So as not to spam the confirm.
+      elif not confirm("The once-per-turn ability of {} has already been used this turn\nBypass restriction?.".format(card.name)): return 'ABORT'
       else: 
          if not silent: notify('{} activates the once-per-turn ability of {} another time'.format(me, card))
    else:
@@ -1587,8 +1610,9 @@ def intPlay(card, cost = 'not_free'):
       else: rc = '' # When the cast costs nothing, we don't include the cost.
       placeCard(card, action)
       if card.Type == 'Operation': notify("{}{} to initiate {}{}.".format(ClickCost, rc, card, extraText))
-      else: notify("{}{} to play {}{}.".format(ClickCost, rc, card, extraText))           
+      else: notify("{}{} to play {}{}.".format(ClickCost, rc, card, extraText))
    executePlayScripts(card,action.lower())
+   autoscriptOtherPlayers('Card'+action) # we tell the autoscriptotherplayers that we installed/played a card. (e.g. See Haas-Bioroid ability)
 
 def chkTargeting(card):
    if debugVerbosity >= 1: notify(">>> chkTargeting(){}".format(extraASDebug())) #Debug
@@ -2563,8 +2587,7 @@ def TokensX(Autoscript, announceText, card, targetCards = None, notification = N
          else: modtokens = -count * multiplier
       else: #Last option is for removing tokens.
          if count == 999: # 999 effectively means "all markers on card"
-            if action.group(3) == 'Virus': pass # We deal with removal of viruses later.
-            elif action.group(3) == 'BrainDMG': # We need to remove brain damage from the counter hold
+            if action.group(3) == 'BrainDMG': # We need to remove brain damage from the counter hold
                targetCardlist = ''
                victim = ofwhom(Autoscript, card.controller)
                if not targetCard or targetCard == card: targetCard = getSpecial('Counter Hold',victim)
@@ -2582,16 +2605,14 @@ def TokensX(Autoscript, announceText, card, targetCards = None, notification = N
             whisper("There was nothing to remove.")        
             count = 0 # If we don't have any markers, we have obviously nothing to remove.
          modtokens = -count * multiplier
-      if action.group(3) == 'Virus' and count == 999: # This combination means that the Corp is cleaning all viruses.
-         for c in table: 
-            if c.owner != me: continue # We only clear our own viruses.
-            for key in c.markers: # New style to grab every virus.
-               if re.search(r'virus',key[0]): c.markers[key] = 0
-      else: targetCard.markers[token] += modtokens
+      targetCard.markers[token] += modtokens # Finally we apply the marker modification
    if abs(num(action.group(2))) == abs(999): total = 'all'
    else: total = abs(modtokens)
-   if action.group(1) == 'Refill': announceString = "{} {} to {} {}".format(announceText, action.group(1), count, token[0]) # We need a special announcement for refill, since it always needs to point out the max.
-   elif re.search(r'\bRemove999Virus', Autoscript): announceString = "{} to clean all viruses from their corporate network".format(announceText)
+   if action.group(1) == 'Refill': 
+      if token[0] == 'Credit': 
+         announceString = "{} {} to {}".format(announceText, action.group(1), uniRecurring(count)) # We need a special announcement for refill, since it always needs to point out the max.
+      else: 
+         announceString = "{} {} to {} {}".format(announceText, action.group(1), count, token[0]) # We need a special announcement for refill, since it always needs to point out the max.
    elif re.search(r'forfeitCounter:',action.group(3)):
       counter = re.search(r'forfeitCounter:(\w+)',action.group(3))
       if not victim or victim == me: announceString = '{} forfeit their next {} {}'.format(announceText,total,counter.group(1)) # If we're putting on forfeit counters, we don't announce it as an infection.
@@ -2825,7 +2846,7 @@ def CreateDummy(Autoscript, announceText, card, targetCards = None, notification
                      \n\nSome cards provide you with an ability that you can activate after they're been trashed. If this card has one, you can activate it by double clicking on the dummy. Very often, this will often remove the dummy since its effect will disappear.\
                      \n\nDo you want to see this warning again?"): Dummywarn = False
       elif re.search(r'onOpponent', Autoscript): confirm('The dummy card just created is meant for your opponent. Please right-click on it and select "Pass control to {}"'.format(targetPL))
-      dummyCard = table.create(card.model, 500, 50 * playerside, 1) # This will create a fake card like the one we just created.
+      dummyCard = table.create(card.model, -600, 50 * playerside, 1) # This will create a fake card like the one we just created.
       dummyCard.highlight = DummyColor
       Stored_Type[dummyCard] = dummyCard.Type
       Stored_Keywords[dummyCard] = dummyCard.Keywords
@@ -2887,12 +2908,10 @@ def TraceX(Autoscript, announceText, card, targetCards = None, notification = No
    if targetCards is None: targetCards = []
    action = re.search(r'\bTrace([0-9]+)', Autoscript)
    multiplier = per(Autoscript, card, n, targetCards)
-   Tracelimit = num(action.group(1)) * multiplier
-   inputTraceValue(card, limit = Tracelimit)
-   if action.group(1) != '0': limitText = ' (max power: {})'.format(Tracelimit)
-   else: limitText = ''
-   if notification == 'Quick': announceString = "{} starts a trace{}".format(announceText, limitText)
-   else: announceString = "{} start a trace{}".format(announceText, limitText)
+   TraceStrength = num(action.group(1)) * multiplier
+   inputTraceValue(card)
+   if notification == 'Quick': announceString = "{} starts a Trace with a base strength of {}".format(announceText, TraceStrength)
+   else: announceString = "{} start a trace{}".format(announceText, TraceStrength)
    if notification: notify('--> {}.'.format(announceString))
    if debugVerbosity >= 3: notify("<<< TraceX()")
    return announceString
@@ -3232,21 +3251,32 @@ def autoscriptOtherPlayers(lookup, count = 1): # Function that triggers effects 
             if not re.search(r'while(Rezzed|Scored)', autoS): Autoscripts.remove(autoS)
          if len(Autoscripts) == 0: return
          for AutoS in Autoscripts:
-            #confirm('Autoscripts: {}'.format(AutoS)) # Debug
-            effect = re.search(r'\b([A-Z][A-Za-z]+)([0-9]*)([A-Za-z& ]*)\b([^:]?[A-Za-z0-9_&{} -]*)', AutoS)
-            passedScript = "{}".format(effect.group(0))
+            if re.search(r'onlyOnce',autoS) and oncePerTurn(card, silent = True, act = 'automatic') == 'ABORT': continue # If the card's ability is only once per turn, use it or silently abort if it's already been used
+            if debugVerbosity >= 2: notify("### Automatic Autoscripts: {}".format(AutoS)) # Debug
+            #effect = re.search(r'\b([A-Z][A-Za-z]+)([0-9]*)([A-Za-z& ]*)\b([^:]?[A-Za-z0-9_&{} -]*)', AutoS)
+            #passedScript = "{}".format(effect.group(0))
             #confirm('effects: {}'.format(passedScript)) #Debug
-            if effect.group(1) == 'Gain' or effect.group(1) == 'Lose':
-               GainX(passedScript, costText, card, notification = 'Automatic', n = count) # If it exists, then call the GainX() function, because cards that automatically do something when other players do something else, always give the player something directly.
-            if re.search(r'(Put|Remove|Refill|Use|Infect)', effect.group(1)): 
-               TokensX(passedScript, costText, card, notification = 'Automatic', n = count)
+            if regexHooks['GainX'].search(AutoS):
+               gainTuple = GainX(AutoS, costText, card, notification = 'Automatic', n = count)
+               if gainTuple == 'ABORT': continue
+            elif regexHooks['TokensX'].search(AutoS): 
+               if TokensX(AutoS, costText, card, notification = 'Automatic', n = count) == 'ABORT': continue
+            elif regexHooks['InflictX'].search(AutoS):
+               if InflictX(AutoS, costText, card, notification = 'Automatic', n = count) == 'ABORT': continue
    if debugVerbosity >= 3: notify("<<< autoscriptOtherPlayers()") # Debug
    
 def CustomScript(card, action = 'play'): # Scripts that are complex and fairly unique to specific cards, not worth making a whole generic function for them.
    if debugVerbosity >= 1: notify(">>> CustomScript() with action: {}".format(action)) #Debug
    global ModifyDraw
    #confirm("Customscript") # Debug
-   if card.model == '71a89203-94cd-42cd-b9a8-15377caf4437' and action == 'use':
+   if card.model == '23473bd3-f7a5-40be-8c66-7d35796b6031' and action == 'use': # Virus Scan Special Ability
+      clickCost = useClick(count = 3)
+      if clickCost == 'ABORT': return
+      for c in table: 
+         foundMarker = findMarker(c,'Virus')
+         if foundMarker: c.markers[foundMarker] = 0
+      notify("{} to clean all viruses from their corporate grid".format(clickCost))
+   elif card.model == '71a89203-94cd-42cd-b9a8-15377caf4437' and action == 'use': # Technical Difficulties Special Ability
       knownMarkers = []
       for marker in card.markers:
          if marker[0] in markerRemovals: # If the name of the marker exists in the markerRemovals dictionary it means it can be removed and has a specific cost.
@@ -3265,14 +3295,14 @@ def CustomScript(card, action = 'play'): # Scripts that are complex and fairly u
          selectedMarker = knownMarkers[sel]
       aCost = markerRemovals[selectedMarker[0]][0] # The first field in the tuple for the entry with the same name as the selected marker, in the markerRemovals dictionary. All clear? Good.
       cost = markerRemovals[selectedMarker[0]][1]
-      actionCost = useClick(aCost)
-      if actionCost == 'ABORT': return
+      clickCost = useClick(count = aCost)
+      if clickCost == 'ABORT': return
       creditCost = payCost(cost)
       if creditCost == 'ABORT':
          me.Clicks += aCost # If the player can't pay the cost after all and aborts, we give him his clicks back as well.
          return         
       card.markers[selectedMarker] -= 1
-      notify("{} to remove {} for {}.".format(actionCost,selectedMarker[0],creditCost))
+      notify("{} to remove {} for {}.".format(clickCost,selectedMarker[0],creditCost))
    elif card.name == 'Accelerated Beta Test' and action == 'score':
       group = me.piles['R&D/Stack']
       iter = 0
@@ -3285,7 +3315,15 @@ def CustomScript(card, action = 'play'): # Scripts that are complex and fairly u
       if iter: # If we found any ice in the top 3
          notify("{} initiates an Accelerated Beta Test and reveals {} Ice from the top of their R&D. These Ice are automatically installed and rezzed".format(me, iter))
       else: notify("{} initiates a Accelerated Beta Test but their beta team was incompetent.".format(me))
+   elif card.name == 'Infiltration' and action == 'play':
+      tCards = [c for c in table if c.targetedBy and c.targetedBy == me and c.isFaceUp == False]
+      if tCards > 0: expose(tCards[0]) # If the player has any face-down cards currently targeted, we assume he wanted to expose them.
+      elif confirm("Did you want to gain 2 Credits?\n\n(If you wish to expose a card press 'No' and then use the manual table function provided. Next time remember that you can simply have your target selected when you play this card and it will be exposed automatically. No questions asked.)"):
+         me.Credits += 2
+         notify("{} gains {}".format(me,uniCredit(2)))
    elif action == 'use': useCard(card)
+
+
    
 def atTimedEffects(Time = 'Start'): # Function which triggers card effects at the start or end of the turn.
    if debugVerbosity >= 1: notify(">>> atTimedEffects() at time: {}".format(Time)) #Debug
