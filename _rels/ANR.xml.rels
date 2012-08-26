@@ -1,28 +1,21 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
-  <Relationship Target="/counters/bad_publicity.png" Id="r2" Type="http://schemas.octgn.org/picture" />
-  <Relationship Target="/scripts/scripts1.py" Id="r3" Type="http://schemas.octgn.org/script" />
-  <Relationship Target="/groups/library.png" Id="r12" Type="http://schemas.octgn.org/picture" />
-  <Relationship Target="/counters/bug.png" Id="r22" Type="http://schemas.octgn.org/picture" />
-  <Relationship Target="/table/background.jpg" Id="r1" Type="http://schemas.octgn.org/picture" />
-  <Relationship Target="/groups/file_manager.png" Id="r27" Type="http://schemas.octgn.org/picture" />
-  <Relationship Target="/groups/cards.png" Id="r29" Type="http://schemas.octgn.org/picture" />
-  <Relationship Target="/groups/cards.png" Id="r30" Type="http://schemas.octgn.org/picture" />
-  <Relationship Target="/groups/intranet.png" Id="r32" Type="http://schemas.octgn.org/picture" />
-  <Relationship Target="/groups/intranet.png" Id="r31" Type="http://schemas.octgn.org/picture" />
-  <Relationship Target="/groups/intranet.png" Id="r33" Type="http://schemas.octgn.org/picture" />
-  <Relationship Target="/counters/click.png" Id="r10" Type="http://schemas.octgn.org/picture" />
-  <Relationship Target="/groups/trace.png" Id="r34" Type="http://schemas.octgn.org/picture" />
-  <Relationship Target="/groups/hand.png" Id="r11" Type="http://schemas.octgn.org/picture" />
-  <Relationship Target="/counters/tags.png" Id="r26" Type="http://schemas.octgn.org/picture" />
-  <Relationship Target="/counters/brain_dmg.png" Id="r13" Type="http://schemas.octgn.org/picture" />
-  <Relationship Target="/counters/max_hand_size.png" Id="r6" Type="http://schemas.octgn.org/picture" />
-  <Relationship Target="/counters/agenda_points.png" Id="r7" Type="http://schemas.octgn.org/picture" />
-  <Relationship Target="/counters/memory.png" Id="r8" Type="http://schemas.octgn.org/picture" />
-  <Relationship Target="/counters/credit5.png" Id="r9" Type="http://schemas.octgn.org/picture" />
-  <Relationship Target="/groups/trashcan.png" Id="r14" Type="http://schemas.octgn.org/picture" />
-  <Relationship Target="/groups/archives_h.png" Id="r15" Type="http://schemas.octgn.org/picture" />
-  <Relationship Target="/card/corp-back.jpg" Id="r4" Type="http://schemas.octgn.org/picture" />
-  <Relationship Target="/card/front.jpg" Id="r5" Type="http://schemas.octgn.org/picture" />
-  <Relationship Target="/table/Tabletop.jpg" Id="r35" Type="http://schemas.octgn.org/picture" />
+  <Relationship Target="/table/background.jpg"           Id="r1" Type="http://schemas.octgn.org/picture" />
+  <Relationship Target="/counters/bad_publicity.png"     Id="r2" Type="http://schemas.octgn.org/picture" />
+  <Relationship Target="/scripts/scripts1.py"            Id="r3" Type="http://schemas.octgn.org/script" />
+  <Relationship Target="/card/corp-back.jpg"             Id="r4" Type="http://schemas.octgn.org/picture" />
+  <Relationship Target="/card/front.jpg"                 Id="r5" Type="http://schemas.octgn.org/picture" />
+  <Relationship Target="/counters/max_hand_size.png"     Id="r6" Type="http://schemas.octgn.org/picture" />
+  <Relationship Target="/counters/agenda_points.png"     Id="r7" Type="http://schemas.octgn.org/picture" />
+  <Relationship Target="/counters/MU.png"                Id="r8" Type="http://schemas.octgn.org/picture" />
+  <Relationship Target="/counters/Credit.png"            Id="r9" Type="http://schemas.octgn.org/picture" />
+  <Relationship Target="/counters/Click.png"             Id="r10" Type="http://schemas.octgn.org/picture" />
+  <Relationship Target="/groups/hand.png"                Id="r11" Type="http://schemas.octgn.org/picture" />
+  <Relationship Target="/groups/library.png"             Id="r12" Type="http://schemas.octgn.org/picture" />
+  <Relationship Target="/counters/brain_dmg.png"         Id="r13" Type="http://schemas.octgn.org/picture" />
+  <Relationship Target="/groups/Trash.png"            Id="r14" Type="http://schemas.octgn.org/picture" />
+  <Relationship Target="/groups/archives_h.png"          Id="r15" Type="http://schemas.octgn.org/picture" />
+  <Relationship Target="/counters/Link.png"              Id="r16" Type="http://schemas.octgn.org/picture" />
+  <Relationship Target="/counters/tags.png"              Id="r26" Type="http://schemas.octgn.org/picture" />
+  <Relationship Target="/table/Tabletop.jpg"             Id="r35" Type="http://schemas.octgn.org/picture" />
 </Relationships>
