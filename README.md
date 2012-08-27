@@ -7,6 +7,7 @@ Gameplay
 
 Some basic instructions on how to use the new system will be forthcoming, but things should be fairly intuitive anyway. Some basic things to remember
 
+* __The corp should be "Player [A]"!__ Otherwise your card placement will be on the other side. Don't forget to set that in the pre-game lobby!
 * First thing you do after you load a deck is Setup (Ctrl+Shift+S)
 * At the start of your turn, declare it with F1
 * At the end of your turn, declare it with F12. Make sure the game announces that your turn has ended and is not expecting you to discard down to your max hand size ;)
@@ -38,7 +39,9 @@ Screenshots
 ---------
 (Click for larger size)
 
-None yet :(
+[![](http://i.imgur.com/GFD0Ll.jpg)](http://i.imgur.com/GFD0L.jpg)
+
+[![](http://i.imgur.com/WPjZpl.jpg)](http://i.imgur.com/WPjZp.jpg)
 
 Changelog
 ---------
