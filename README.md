@@ -43,6 +43,28 @@ None yet :(
 Changelog
 ---------
 
+### 1.1.2
+
+* Fixed some automated abilities triggered by other cards not activating (like "Shipment from Mirrormorph")
+* Accelerated Beta test didn't work. It trashed ICE.Added delay rnd loop to make sure it can see the card type it checks. Hopefully it works better now.
+* Fixed a run started from a card effect costing 2 clicks.
+* Accelerated Beta Test's ability was made optional
+* Made Wayland Consortium Idenity work
+* Posted Bounty is now optional on scoring
+* Fixed Security Subcontract being able to trash also unrezzed ice as long as you targeted it.
+* Noise's ability now works automatically. It didn't work before cause I'm an idiot.
+
+
+### 1.1.1
+
+Fixed the Jinteki home doing 2 damage per scored Agenda instead of 1
+
+### 1.1.0
+
+Added Automations for almost all the cards. 
+
+Also a truckload of other small bugfixes and improvements
+
 ### 1.0.0
 
 Cloned from Netrunner-OCTGN 3.0.0. Starting port.
