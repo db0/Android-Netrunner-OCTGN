@@ -1272,6 +1272,7 @@ def intRez (card, cost = 'not free', x=0, y=0, silent = False):
       notify("{} cancels their action".format(me))
       return
    if num(Stored_Cost[card]) >0: reduction = reduceCost(card, 'Rez', num(Stored_Cost[card]))
+   else: reduction = 0
    if reduction: extraText = " (reduced by {})".format(uniCredit(reduction))
    rc = payCost(num(Stored_Cost[card]) - reduction, cost)
    if rc == "ABORT": return # If the player didn't have enough money to pay and aborted the function, then do nothing.
@@ -1376,6 +1377,7 @@ def intTrashCard(card, stat, cost = "not free",  ClickCost = '', silent = False)
       return
    else: DummyTrashWarn = False
    if num(stat) > 0: reduction = reduceCost(card, 'Trash', stat) # So as not to waste time.
+   else: reduction = 0
    if reduction: extraText = " (reduced by {})".format(uniCredit(reduction))    
    rc = payCost(num(stat) - reduction, cost)
    if rc == "ABORT": return 'ABORT' # If the player didn't have enough money to pay and aborted the function, then do nothing.
@@ -1623,6 +1625,7 @@ def intPlay(card, cost = 'not_free'):
          notify("{} to install a hidden resource.".format(ClickCost))
          return
       if num(card.Cost) > 0: reduction = reduceCost(card, action, num(card.Cost)) #Checking to see if the cost is going to be reduced by cards we have in play.
+      else: reduction = 0
       if reduction: extraText = " (reduced by {})".format(uniCredit(reduction)) #If it is, make sure to inform.
       rc = payCost(num(card.Cost) - reduction, cost)
       if rc == "ABORT": 
@@ -1644,6 +1647,7 @@ def intPlay(card, cost = 'not_free'):
       else: notify("{}{} to play {}{}{}.".format(ClickCost, rc, card, extraText,MUtext))
    else:
       if num(card.Cost) > 0: reduction = reduceCost(card, action, num(card.Cost)) #Checking to see if the cost is going to be reduced by cards we have in play.
+      else: reduction = 0
       if reduction: extraText = " (reduced by {})".format(uniCredit(reduction)) #If it is, make sure to inform.
       rc = payCost(num(card.Cost) - reduction, cost)
       if rc == "ABORT": 
@@ -1704,6 +1708,7 @@ def checkNotHardwareConsole (card):
    if len(ExistingConsoles) != 0 and not confirm("You already have at least one console in play. Are you sure you want to install {}?\n\n(If you do, your installed Consoles will be automatically trashed at no cost)".format(card.name)): return False
    else: 
       for HWDeck in ExistingConsoles: trashForFree(HWDeck)
+   if debugVerbosity >= 1: notify(">>> checkNotHardwareConsole()") #Debug
    return True   
    
 def playForFree(card, x = 0, y = 0):
@@ -2151,6 +2156,7 @@ def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
          else: announceText = '{}'.format(me) # A variable with the text to be announced at the end of the action.
          if actionCost.group(2) != '0': # If we need to pay credits
             if num(actionCost.group(2)) > 0: reduction = reduceCost(card, 'Use', num(actionCost.group(2)))
+            else: reduction = 0
             if reduction: extraText = " (reduced by {})".format(uniCredit(reduction))  
             else: extraText = ''
             Bcost = payCost(num(actionCost.group(2)) - reduction)
@@ -3442,7 +3448,7 @@ def atTimedEffects(Time = 'Start'): # Function which triggers card effects at th
    TitleDone = False
    X = 0
    for card in table:
-      if card.controller: continue
+      if card.controller != me: continue
       if card.highlight == InactiveColor: continue
       if not card.isFaceUp: continue
       if debugVerbosity >= 3: notify("### {} Autoscript: {}".format(card, card.AutoScript))
@@ -3468,28 +3474,28 @@ def atTimedEffects(Time = 'Start'): # Function which triggers card effects at th
             else: announceText = "{}:".format(card)
             if regexHooks['GainX'].search(passedScript):
                gainTuple = GainX(passedScript, announceText, card, notification = 'Automatic', n = X)
-               if gainTuple == 'ABORT': return
+               if gainTuple == 'ABORT': break
                X = gainTuple[1] 
             elif regexHooks['TransferX'].search(passedScript):
-               if TransferX(passedScript, announceText, card, notification = 'Automatic', n = X) == 'ABORT': return
+               if TransferX(passedScript, announceText, card, notification = 'Automatic', n = X) == 'ABORT': break
             elif regexHooks['DrawX'].search(passedScript):
-               if DrawX(passedScript, announceText, card, notification = 'Automatic', n = X) == 'ABORT': return
+               if DrawX(passedScript, announceText, card, notification = 'Automatic', n = X) == 'ABORT': break
             elif regexHooks['RollX'].search(passedScript):
                rollTuple = RollX(passedScript, announceText, card, notification = 'Automatic', n = X)
-               if rollTuple == 'ABORT': return
+               if rollTuple == 'ABORT': break
                X = rollTuple[1] 
             elif regexHooks['TokensX'].search(passedScript):
-               if TokensX(passedScript, announceText, card, notification = 'Automatic', n = X) == 'ABORT': return
+               if TokensX(passedScript, announceText, card, notification = 'Automatic', n = X) == 'ABORT': break
             elif regexHooks['InflictX'].search(passedScript):
-               if InflictX(passedScript, announceText, card, notification = 'Automatic', n = X) == 'ABORT': return
+               if InflictX(passedScript, announceText, card, notification = 'Automatic', n = X) == 'ABORT': break
             elif regexHooks['ModifyStatus'].search(passedScript):
-               if ModifyStatus(passedScript, announceText, card, notification = 'Automatic', n = X) == 'ABORT': return
+               if ModifyStatus(passedScript, announceText, card, notification = 'Automatic', n = X) == 'ABORT': break
             elif regexHooks['DiscardX'].search(passedScript): 
                discardTuple = DiscardX(passedScript, announceText, card, notification = 'Automatic', n = X)
-               if discardTuple == 'ABORT': return
+               if discardTuple == 'ABORT': break
                X = discardTuple[1] 
             elif regexHooks['CustomScript'].search(passedScript):
-               if CustomScript(card, action = 'Turn{}'.format(Time)) == 'ABORT': return
+               if CustomScript(card, action = 'Turn{}'.format(Time)) == 'ABORT': break
             if failedRequirement: break # If one of the Autoscripts was a cost that couldn't be paid, stop everything else.
    markerEffects(Time)
    if me.counters['Credits'].value < 0: 

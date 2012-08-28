@@ -46,6 +46,11 @@ Screenshots
 Changelog
 ---------
 
+### 1.1.3.1
+
+* Fixed start of turns effects not working anymore
+* Fixed a nasty bug I introduced in 1.1.3
+
 ### 1.1.3
 
 * Added Mulligan function on the hand context menu
