@@ -1096,6 +1096,7 @@ def payCost(count = 1, cost = 'not_free', counter = 'BP'): # A function that rem
 
 def reduceCost(card, type = 'Rez', fullCost = 0):
    if debugVerbosity >= 1: notify(">>> reduceCost(). Action is: {}".format(type)) #Debug
+   if fullCost == 0: return 0 # If there's no cost, there's no use checking the table.
    reduction = 0
    Autoscripts = Stored_AutoScripts[card].split('||') # First we check if the card has an innate reduction.
    if len(Autoscripts): 
@@ -1271,8 +1272,7 @@ def intRez (card, cost = 'not free', x=0, y=0, silent = False):
    if chkTargeting(card) == 'ABORT': 
       notify("{} cancels their action".format(me))
       return
-   if num(Stored_Cost[card]) >0: reduction = reduceCost(card, 'Rez', num(Stored_Cost[card]))
-   else: reduction = 0
+   reduction = reduceCost(card, 'Rez', num(Stored_Cost[card]))
    if reduction: extraText = " (reduced by {})".format(uniCredit(reduction))
    rc = payCost(num(Stored_Cost[card]) - reduction, cost)
    if rc == "ABORT": return # If the player didn't have enough money to pay and aborted the function, then do nothing.
@@ -1376,8 +1376,7 @@ def intTrashCard(card, stat, cost = "not free",  ClickCost = '', silent = False)
       DummyTrashWarn = False
       return
    else: DummyTrashWarn = False
-   if num(stat) > 0: reduction = reduceCost(card, 'Trash', stat) # So as not to waste time.
-   else: reduction = 0
+   reduction = reduceCost(card, 'Trash', num(stat)) # So as not to waste time.
    if reduction: extraText = " (reduced by {})".format(uniCredit(reduction))    
    rc = payCost(num(stat) - reduction, cost)
    if rc == "ABORT": return 'ABORT' # If the player didn't have enough money to pay and aborted the function, then do nothing.
@@ -1624,8 +1623,7 @@ def intPlay(card, cost = 'not_free'):
          card.isFaceUp = False
          notify("{} to install a hidden resource.".format(ClickCost))
          return
-      if num(card.Cost) > 0: reduction = reduceCost(card, action, num(card.Cost)) #Checking to see if the cost is going to be reduced by cards we have in play.
-      else: reduction = 0
+      reduction = reduceCost(card, action, num(card.Cost)) #Checking to see if the cost is going to be reduced by cards we have in play.
       if reduction: extraText = " (reduced by {})".format(uniCredit(reduction)) #If it is, make sure to inform.
       rc = payCost(num(card.Cost) - reduction, cost)
       if rc == "ABORT": 
@@ -1646,8 +1644,7 @@ def intPlay(card, cost = 'not_free'):
       elif card.Type == 'Resource' and hiddenresource == 'no': notify("{}{} to acquire {}{}{}.".format(ClickCost, rc, card, extraText,MUtext))
       else: notify("{}{} to play {}{}{}.".format(ClickCost, rc, card, extraText,MUtext))
    else:
-      if num(card.Cost) > 0: reduction = reduceCost(card, action, num(card.Cost)) #Checking to see if the cost is going to be reduced by cards we have in play.
-      else: reduction = 0
+      reduction = reduceCost(card, action, num(card.Cost)) #Checking to see if the cost is going to be reduced by cards we have in play.
       if reduction: extraText = " (reduced by {})".format(uniCredit(reduction)) #If it is, make sure to inform.
       rc = payCost(num(card.Cost) - reduction, cost)
       if rc == "ABORT": 
@@ -2155,8 +2152,7 @@ def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
             else: announceText = Acost
          else: announceText = '{}'.format(me) # A variable with the text to be announced at the end of the action.
          if actionCost.group(2) != '0': # If we need to pay credits
-            if num(actionCost.group(2)) > 0: reduction = reduceCost(card, 'Use', num(actionCost.group(2)))
-            else: reduction = 0
+            reduction = reduceCost(card, 'Use', num(actionCost.group(2)))
             if reduction: extraText = " (reduced by {})".format(uniCredit(reduction))  
             else: extraText = ''
             Bcost = payCost(num(actionCost.group(2)) - reduction)
