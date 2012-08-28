@@ -46,6 +46,20 @@ Screenshots
 Changelog
 ---------
 
+### 1.1.3
+
+* Added Mulligan function on the hand context menu
+* Added Switch to turn the Triggered abilities ON/OFF. Might improve performance if playing each card takes too long.
+* Added new function to rescan the table. Might fix weird issues I've noticed sometimes, where card end up thinking they're of different types.
+* Fixed bug where Wayland Ident would tap on opponent playing cards (but not give any money)
+* Trashing Agendas will now take away their points and announce that.
+* Added a check so that reduceCost() is not called if the cost is 0 anyway. Should improve performance.
+* Added a whisper in the damage step, to let the current player know it's being applied.
+
+### 1.1.2.3 
+
+Fixed a bug where ICE would not be installed sideways in slow connections
+
 ### 1.1.2
 
 * Fixed some automated abilities triggered by other cards not activating (like "Shipment from Mirrormorph")

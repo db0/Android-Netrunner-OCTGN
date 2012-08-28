@@ -22,7 +22,8 @@ ds = None
 identName = None
 Automations = {'Play, Score and Rez'    : True, # If True, game will automatically trigger card effects when playing or double-clicking on cards. Requires specific preparation in the sets.
                'Start/End-of-Turn'      : True, # If True, game will automatically trigger effects happening at the start of the player's turn, from cards they control.                
-               'Damage Prevention'      : True, # If True, game will automatically trigger effects happening at the start of the player's turn, from cards they control.                
+               'Damage Prevention'      : True, # If True, game will automatically use damage prevention counters from card they control.                
+               'Triggers'      : True, # If True, game will search the table for triggers based on player's actions, such as installing a card, or trashing one.
                'Damage'                 : True}
 
 UniCode = True # If True, game will display credits, clicks, trash, memory as unicode characters
@@ -442,6 +443,26 @@ def chkRAM(card, action = 'install', silent = False):
    if debugVerbosity >= 3: notify("<<< chkRAM() by returning: {}".format(MUtext))
    return MUtext
 
+def scanTable(group = table, x=0,y=0):
+   if debugVerbosity >= 1: notify(">>> scanTable(){}".format(extraASDebug())) #Debug
+   global Stored_Type, Stored_Cost, Stored_Keywords, Stored_AutoActions, Stored_AutoScripts
+   if not confirm("This action will clear the internal variables and re-scan all cards in the table to fix them.\
+                 \nThis action should only be used as a last-ditch effort to fix some weird behaviour in the game (e.g. treating an Ice like Agenda, or something silly like that)\
+               \n\nHowever this may take some time, depending on your PC power.\
+                 \nAre you sure you want to proceed?"): return
+   Stored_Type.clear()
+   Stored_Cost.clear()
+   Stored_Keywords.clear()
+   Stored_AutoActions.clear()
+   Stored_AutoScripts.clear()
+   cardList = [card for card in table]
+   iter = 0
+   for c in cardList:
+      if iter % 10 == 0: whisper("Working({}/{} done)...".format(iter, len(cardList)))
+      storeProperties(c)
+      iter += 1
+   for c in me.hand: storeProperties(c)
+   notify("{} has re-scanned the table and refreshed their internal variables.".format(me))
    
 #---------------------------------------------------------------------------
 # Card Placement functions
@@ -628,7 +649,11 @@ def switchDMGAutomation(group,x=0,y=0):
 def switchPreventDMGAutomation(group,x=0,y=0):
    if debugVerbosity >= 1: notify(">>> switchDMGAutomation(){}".format(extraASDebug())) #Debug
    switchAutomation('Damage Prevention')
-        
+
+def switchTriggersAutomation(group,x=0,y=0):
+   if debugVerbosity >= 1: notify(">>> switchTriggersAutomation(){}".format(extraASDebug())) #Debug
+   switchAutomation('Triggers')
+   
 def switchUniCode(group,x=0,y=0,command = 'Off'):
    if debugVerbosity >= 1: notify(">>> switchUniCode(){}".format(extraASDebug())) #Debug
    global UniCode
@@ -1246,7 +1271,7 @@ def intRez (card, cost = 'not free', x=0, y=0, silent = False):
    if chkTargeting(card) == 'ABORT': 
       notify("{} cancels their action".format(me))
       return
-   reduction = reduceCost(card, 'Rez', num(Stored_Cost[card]))
+   if num(Stored_Cost[card]) >0: reduction = reduceCost(card, 'Rez', num(Stored_Cost[card]))
    if reduction: extraText = " (reduced by {})".format(uniCredit(reduction))
    rc = payCost(num(Stored_Cost[card]) - reduction, cost)
    if rc == "ABORT": return # If the player didn't have enough money to pay and aborted the function, then do nothing.
@@ -1350,7 +1375,7 @@ def intTrashCard(card, stat, cost = "not free",  ClickCost = '', silent = False)
       DummyTrashWarn = False
       return
    else: DummyTrashWarn = False
-   reduction = reduceCost(card, 'Trash', stat)
+   if num(stat) > 0: reduction = reduceCost(card, 'Trash', stat) # So as not to waste time.
    if reduction: extraText = " (reduced by {})".format(uniCredit(reduction))    
    rc = payCost(num(stat) - reduction, cost)
    if rc == "ABORT": return 'ABORT' # If the player didn't have enough money to pay and aborted the function, then do nothing.
@@ -1364,7 +1389,9 @@ def intTrashCard(card, stat, cost = "not free",  ClickCost = '', silent = False)
       MUtext = chkRAM(card, 'uninstall')    
       if rc == "free" and not silent: notify("{} {} {} at no cost{}.".format(me, uniTrash(), card, MUtext))
       elif not silent: notify("{} {}{} {}{}{}.".format(ClickCost, uniTrash(), goodGrammar, card, extraText, MUtext))
-      if card.Type == 'Agenda' and card.markers[mdict['Scored']]: me.counters['Agenda Points'].value -= card.Stat # Trashing Agendas for any reason, now takes they value away as well.
+      if card.Type == 'Agenda' and card.markers[mdict['Scored']]: 
+         me.counters['Agenda Points'].value -= num(card.Stat) # Trashing Agendas for any reason, now takes they value away as well.
+         notify("--> {} loses {} Agenda Points".format(me, card.Stat))
       if card.highlight != RevealedColor: executePlayScripts(card,'trash') # We don't want to run automations on simply revealed cards.
       card.moveTo(cardowner.piles['Heap/Archives(Face-up)'])
    elif (ds == "runner" and card.controller == me) or (ds == "runner" and card.controller != me and cost == "not free") or (ds == "corp" and card.controller != me ): 
@@ -1567,6 +1594,7 @@ def intPlay(card, cost = 'not_free'):
    mute() 
    chooseSide() # Just in case...
    storeProperties(card)
+   random = rnd(10,100)
    if (card.Type == 'Operation' or card.Type == 'Event') and chkTargeting(card) == 'ABORT': return # If it's an Operation or Event and has targeting requirements, check with the user first.
    if re.search(r'Double', getKeywords(card)): NbReq = 2 # Some cards require two clicks to play. This variable is passed to the useClick() function.
    else: NbReq = 1 #In case it's not a "Double" card. Then it only uses one click to play.
@@ -1582,9 +1610,10 @@ def intPlay(card, cost = 'not_free'):
    else: hiddenresource = 'no'
    if card.Type == 'ICE' or card.Type == 'Agenda' or card.Type == 'Asset' or card.Type == 'Upgrade':
       placeCard(card, action)
-      card.isFaceUp = False
       if Stored_Type[card] == 'ICE': card.orientation ^= Rot90 # Ice are played sideways.
+      #random = rnd(10,100) #Workaround
       notify("{} to install a card.".format(ClickCost))
+      card.isFaceUp = False
    elif card.Type == 'Program' or card.Type == 'Event' or card.Type == 'Resource' or card.Type == 'Hardware':
       MUtext = chkRAM(card)
       if card.Type == 'Resource' and hiddenresource == 'yes':
@@ -1593,7 +1622,7 @@ def intPlay(card, cost = 'not_free'):
          card.isFaceUp = False
          notify("{} to install a hidden resource.".format(ClickCost))
          return
-      reduction = reduceCost(card, action, num(card.Cost)) #Checking to see if the cost is going to be reduced by cards we have in play.
+      if num(card.Cost) > 0: reduction = reduceCost(card, action, num(card.Cost)) #Checking to see if the cost is going to be reduced by cards we have in play.
       if reduction: extraText = " (reduced by {})".format(uniCredit(reduction)) #If it is, make sure to inform.
       rc = payCost(num(card.Cost) - reduction, cost)
       if rc == "ABORT": 
@@ -1614,7 +1643,7 @@ def intPlay(card, cost = 'not_free'):
       elif card.Type == 'Resource' and hiddenresource == 'no': notify("{}{} to acquire {}{}{}.".format(ClickCost, rc, card, extraText,MUtext))
       else: notify("{}{} to play {}{}{}.".format(ClickCost, rc, card, extraText,MUtext))
    else:
-      reduction = reduceCost(card, action, num(card.Cost)) #Checking to see if the cost is going to be reduced by cards we have in play.
+      if num(card.Cost) > 0: reduction = reduceCost(card, action, num(card.Cost)) #Checking to see if the cost is going to be reduced by cards we have in play.
       if reduction: extraText = " (reduced by {})".format(uniCredit(reduction)) #If it is, make sure to inform.
       rc = payCost(num(card.Cost) - reduction, cost)
       if rc == "ABORT": 
@@ -1774,6 +1803,18 @@ def groupToDeck (group = me.hand, player = me, silent = False):
    if debugVerbosity >= 3: notify("<<< groupToDeck() with return:\n{}\n{}\n{}".format(pileName(group),pileName(deck),count)) #Debug
    else: return(pileName(group),pileName(deck),count) # Return a tuple with the names of the groups.
 
+def mulligan(group):
+   if debugVerbosity >= 1: notify(">>> mulligan(){}".format(extraASDebug())) #Debug
+   if not confirm("Are you sure you want to take a mulligan?"): return
+   notify("{} is taking a Mulligan...".format(me))
+   groupToDeck(group,silent = True)
+   for i in range(2): 
+      shuffle(me.piles['R&D/Stack']) # We do a good shuffle this time.   
+      rnd(1,10)
+      whisper("Shuffling...")
+   drawMany(me.piles['R&D/Stack'], 5)   
+   if debugVerbosity >= 3: notify("<<< mulligan()") #Debug
+   
 #------------------------------------------------------------------------------
 # Pile Clicks
 #------------------------------------------------------------------------------
@@ -1815,7 +1856,7 @@ def drawMany(group, count = None, destination = None, silent = False):
       c.moveTo(destination)
       storeProperties(c)
    if not silent: notify("{} draws {} cards.".format(me, count))
-   if debugVerbosity >= 3: notify("<<< drawMany() woth return: {}".format(count))
+   if debugVerbosity >= 3: notify("<<< drawMany() with return: {}".format(count))
    return count
 
 def toarchives(group = me.piles['Archives(Hidden)']):
@@ -2109,7 +2150,7 @@ def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
             else: announceText = Acost
          else: announceText = '{}'.format(me) # A variable with the text to be announced at the end of the action.
          if actionCost.group(2) != '0': # If we need to pay credits
-            reduction = reduceCost(card, 'Use', num(actionCost.group(2)))
+            if num(actionCost.group(2)) > 0: reduction = reduceCost(card, 'Use', num(actionCost.group(2)))
             if reduction: extraText = " (reduced by {})".format(uniCredit(reduction))  
             else: extraText = ''
             Bcost = payCost(num(actionCost.group(2)) - reduction)
@@ -3019,6 +3060,7 @@ def InflictX(Autoscript, announceText, card, targetCards = None, notification = 
             notify(":::Warning:::{} has flatlined!".format(targetPL)) #If the target does not have any more cards in their hand, inform they've flatlined.
             break
          else: #Otherwise, warn the player doing it for the first time
+            whisper("+++ Applying {}/{} damage...".format(DMGpt+1,DMG))
             DMGcard = targetPL.hand.random() # Pick a random card from their hand
             if targetPL.getGlobalVariable('ds') == 'corp': DMGcard.moveTo(targetPL.piles['Archives(Hidden)']) # If they're a corp, move it to the hidden archive
             else: DMGcard.moveTo(targetPL.piles['Heap/Archives(Face-up)']) #If they're a runner, move it to trash.
@@ -3284,6 +3326,7 @@ def chkPlayer(Autoscript, controller, manual): # Function for figuring out if an
 def autoscriptOtherPlayers(lookup, origin_card, count = 1): # Function that triggers effects based on the opponent's cards.
 # This function is called from other functions in order to go through the table and see if other players have any cards which would be activated by it.
 # For example a card that would produce credits whenever a trace was attempted. 
+   if not Automations['Triggers']: return
    if debugVerbosity >= 1: notify(">>> autoscriptOtherPlayers() with lookup: {}".format(lookup)) #Debug
    if not Automations['Play, Score and Rez']: return # If automations have been disabled, do nothing.
    for card in table:
@@ -3298,6 +3341,7 @@ def autoscriptOtherPlayers(lookup, origin_card, count = 1): # Function that trig
       for AutoS in Autoscripts:
          if debugVerbosity >= 2: notify('Checking AutoS: {}'.format(AutoS)) # Debug
          if not re.search(r'{}'.format(lookup), AutoS): continue # Search if in the script of the card, the string that was sent to us exists. The sent string is decided by the function calling us, so for example the ProdX() function knows it only needs to send the 'GeneratedSpice' string.
+         if chkPlayer(AutoS, origin_card.controller,False) == 0: continue # Check that the effect's origninator is valid.
          if re.search(r'onlyOnce',autoS) and oncePerTurn(card, silent = True, act = 'automatic') == 'ABORT': continue # If the card's ability is only once per turn, use it or silently abort if it's already been used
          chkType = re.search(r'-type([A-Za-z ]+)',autoS)
          if chkType: #If we have this modulator in the script, then need ot check what type of property it's looking for
@@ -3398,8 +3442,9 @@ def atTimedEffects(Time = 'Start'): # Function which triggers card effects at th
    TitleDone = False
    X = 0
    for card in table:
-      if card.controller != me: continue
+      if card.controller: continue
       if card.highlight == InactiveColor: continue
+      if not card.isFaceUp: continue
       if debugVerbosity >= 3: notify("### {} Autoscript: {}".format(card, card.AutoScript))
       Autoscripts = card.AutoScript.split('||')
       for autoS in Autoscripts:
