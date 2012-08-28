@@ -46,6 +46,20 @@ Screenshots
 Changelog
 ---------
 
+### 1.1.4
+
+* Fixed a typo which prevented the runner form trashing upgrades.
+* Private Security Force should now use an action for its ability
+* NBN should now properly put credits to use for tracing
+* Added an extra ability to Femme Fatale to pay X credits (1 per subroutine to announce breaking an ICE}
+* Crash Space will now automatically pay to delete tags
+* Hunter now has an ability to add tags as well.
+* Fixed Shadow's ability crashing on use
+* Added two new runner-only actions.
+   * Action to access top X cards from Corps's pile and score/trash any you want. Runner will be prompted for each.
+   * Action to score all Agendas in Archives. This will also send the Hidden archives into the Face-up ones.
+* Looking for valid targets will try to avoid turning cards face up if it can do so. This should avoid a slow game giving a small window for your opponent to see your cards.
+
 ### 1.1.3.1
 
 * Fixed start of turns effects not working anymore

@@ -925,7 +925,7 @@ def scrAgenda(card, x = 0, y = 0):
             cheapAgenda = True
             currentAdv = card.markers[mdict['Advancement']]
          else: return
-      elif not confirm("Do you want to {} this agenda?".format(agendaTxt)): return
+      elif not confirm("Do you want to {} agenda {}?".format(agendaTxt,card.name)): return
       card.isFaceUp = True
       if agendaTxt == 'score' and chkTargeting(card) == 'ABORT': 
          card.isFaceUp = False
@@ -946,10 +946,127 @@ def scrAgenda(card, x = 0, y = 0):
       executePlayScripts(card,agendaTxt)
       autoscriptOtherPlayers('Agenda'+agendaTxt.capitalize()+'d',card) # The autoscripts triggered by this effect are using AgendaLiberated and AgendaScored as the hook
       if me.counters['Agenda Points'].value >= 7 : notify("{} wins the game!".format(me))
+      card.highlight = None # In case the card was highlighted as revealed, we remove that now.
       card.markers[mdict['Advancement']] = 0 # We only want to clear the advance counters after the automations, as they may still be used.
    else:
       whisper ("You can't score this card")
 
+def scrTargetAgenda(group = table, x = 0, y = 0):
+   cardList = [c for c in table if c.targetedBy and c.targetedBy == me]
+   for card in cardList:
+      storeProperties(card)
+      if Stored_Type[card] == 'Agenda':
+         if card.markers[mdict['Scored']] and card.markers[mdict['Scored']] > 0: whisper(":::ERROR::: This agenda has already been scored")
+         else:
+            scrAgenda(card)
+            return
+   notify("You need to target an unscored agenda in order to use this action")
+         
+def RDaccessX(group = table, x = 0, y = 0): # A function which looks at the top X cards of the corp's deck and then asks the runner what to do with each one.
+   if debugVerbosity >= 1: notify(">>> RDaccessX(){}".format(extraASDebug())) #Debug
+   mute()
+   RDtop = []
+   removedCards = 0
+   if ds == 'corp': 
+      whisper("This action is only for the use of the runner. Use the 'Look at top X cards' function on your R&D's context manu to access your own deck")
+      return
+   count = askInteger("How many cards are you accessing from the corporation's R&D?",1)
+   targetPL = ofwhom('-ofOpponent')
+   if debugVerbosity >= 3: notify("### Found opponent. Storing the top {} as a list".format(count)) #Debug
+   RDtop = list(targetPL.piles['R&D/Stack'].top(count))
+   if len(RDtop) == 0: 
+      whisper("Corp's R&D is empty. You cannot take this action")
+      return
+   if debugVerbosity >= 4:
+      for card in RDtop: notify("#### Card: {}".format(card))
+   for iter in range(len(RDtop)):
+      if debugVerbosity >= 3: notify("### Moving card {}".format(iter)) #Debug
+      RDtop[iter].moveToBottom(targetPL.piles['Heap/Archives(Face-up)'])
+      if debugVerbosity >= 4: notify("#### Looping...")
+      loopChk(RDtop[iter],'Type')
+      if debugVerbosity >= 4: notify("#### Storing...")
+      cType = RDtop[iter].Type
+      cKeywords = RDtop[iter].Keywords
+      cStat = RDtop[iter].Stat
+      cCost = RDtop[iter].Cost
+      cName = RDtop[iter].name
+      cRules = RDtop[iter].Rules
+      if debugVerbosity >= 4: notify("#### Finished Storing. About to move back...")
+      RDtop[iter].moveTo(targetPL.piles['R&D/Stack'],iter - removedCards)
+      if debugVerbosity >= 3: notify("### Stored properties. Checking type...") #Debug
+      if cType == 'Agenda' or cType == 'Asset' or cType == 'Upgrade':
+         if cType == 'Agenda': action1TXT = 'Liberate for {} Agenda Points'.format(cStat)
+         else: action1TXT = 'Pay {} to Trash'.format(cStat)
+         choice = 0
+         while choice < 1 or choice > 3:
+            choice = askInteger("Card {}: {}\
+                               \nType: {}\
+                               \nKeywords: {}\
+                               \nCost: {}\
+                             \n\nCard Text: {}\
+                             \n\nWhat do you want to do with this card?\
+                               \n   1: Leave where it is.\
+                               \n   2: Force trash at no cost.\
+                               \n   3: {}\
+                             ".format(iter+1,cName,cType,cKeywords,cCost,cRules,action1TXT),3)
+            if choice == None: choice = 1
+      else:                    
+         choice = 0
+         while choice < 1 or choice > 2:
+            choice = askInteger("Card {}: {}\
+                               \nType: {}\
+                               \nKeywords: {}\
+                               \nCost: {}\
+                             \n\nCard Text: {}\
+                             \n\nWhat do you want to do with this card?\
+                               \n   1: Leave where it is.\
+                               \n   2: Force trash at no cost.\
+                             ".format(iter+1,cName,cType,cKeywords,cCost,cRules),1)
+            if choice == None: choice = 1
+      if choice == 2: 
+         RDtop[iter].moveTo(targetPL.piles['Heap/Archives(Face-up)'])
+         loopChk(RDtop[iter],'Type')
+         notify("{} {} {} at no cost".format(me,uniTrash(),RDtop[iter]))
+         removedCards += 1
+      elif choice == 3:
+         if cType == 'Agenda':
+            RDtop[iter].moveToTable(0,0)
+            RDtop[iter].highlight = RevealedColor
+            scrAgenda(RDtop[iter])
+            removedCards += 1
+         else: 
+            reduction = reduceCost(RDtop[iter], 'Trash', num(cStat))
+            rc = payCost(num(cStat) - reduction, "not free")
+            if rc == "ABORT": continue # If the player couldn't pay to trash the card, we leave it where it is.
+            RDtop[iter].moveTo(targetPL.piles['Heap/Archives(Face-up)'])
+            loopChk(RDtop[iter],'Type')
+            notify("{} paid {} to {} {}".format(me,uniCredit(cStat),uniTrash(),RDtop[iter]))            
+      else: continue
+
+def ARCscore(group, x=0,y=0):
+   mute()
+   if debugVerbosity >= 1: notify(">>> ARCscore(){}".format(extraASDebug())) #Debug
+   removedCards = 0
+   ARCHcards = []
+   if ds == 'corp': 
+      whisper("This action is only for the use of the runner.")
+      return
+   targetPL = ofwhom('-ofOpponent')
+   if debugVerbosity >= 3: notify("### Found opponent.") #Debug
+   ARC = targetPL.piles['Heap/Archives(Face-up)']
+   for card in targetPL.piles['Archives(Hidden)']: card.moveTo(ARC) # When the runner accesses the archives, all  cards of the face up archives.
+   if len(ARC) == 0: 
+      whisper("Corp's Archives are empty. You cannot take this action")
+      return
+   rnd(10,100) # A small pause
+   for card in ARC:
+      if debugVerbosity >= 3: notify("### Checking: {}.".format(card)) #Debug
+      if card.Type == 'Agenda':
+         card.moveToTable(0,0)
+         card.highlight = RevealedColor
+         scrAgenda(card)
+         if card.highlight == RevealedColor: card.moveTo(ARC) # If the runner opted not to score the agenda, put it back into the deck.
+      
 def isRezzable (card):
    if debugVerbosity >= 1: notify(">>> isRezzable(){}".format(extraASDebug())) #Debug
    mute()
@@ -1155,7 +1272,7 @@ def trashTargetPaid(group, x=0, y=0):
             intTrashCard(card, 2, ClickCost = ClickCost)
          else: whisper("Only resources can be trashed from the runner")
       else: 
-         if Stored_Type[card] == 'Ugrade' or Stored_Type[card] == 'Asset':
+         if Stored_Type[card] == 'Upgrade' or Stored_Type[card] == 'Asset':
             intTrashCard(card, fetchProperty(card, 'Stat')) # If we're a runner, trash with the cost of the card's trash.
          else: whisper("You can only pay to trash the Corp's Nodes and Upgrades".format(uniTrash()))
       

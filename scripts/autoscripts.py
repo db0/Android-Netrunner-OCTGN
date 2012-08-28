@@ -452,15 +452,12 @@ def findTarget(Autoscript): # Function for finding the target of an autoscript
          # * Card is targeted and targeted by the player OR target search has the -AutoTargeted modulator and it is NOT highlighted as a Dummy, Revealed or Inactive.
          # * The player who controls this card is supposed to be me or the enemy.
             if debugVerbosity >= 3: notify("### Checking {}".format(targetLookup)) #Debug
-            if not targetLookup.isFaceUp: # If we've targeted a subdued card, we turn it temporarily face-up to grab its properties.
-               targetLookup.isFaceUp = True
-               cFaceD = True
-            else: cFaceD = False
             if len(validTargets) == 0 and len(validNamedTargets) == 0: targetC = targetLookup # If we have no target restrictions, any targeted  card will do.
             else:
+               storeProperties(targetLookup)
                for validtargetCHK in validTargets: # look if the card we're going through matches our valid target checks
                   if debugVerbosity >= 4: notify("### Checking for valid match on {}".format(validtargetCHK)) #Debug
-                  if re.search(r'{}'.format(validtargetCHK), targetLookup.Type) or re.search(r'{}'.format(validtargetCHK), getKeywords(targetLookup)) or re.search(r'{}'.format(validtargetCHK), targetLookup.Side):
+                  if re.search(r'{}'.format(validtargetCHK), Stored_Type[targetLookup]) or re.search(r'{}'.format(validtargetCHK), Stored_Keywords[targetLookup]) or re.search(r'{}'.format(validtargetCHK), targetLookup.Side):
                      targetC = targetLookup
                for validtargetCHK in validNamedTargets: # look if the card we're going through matches our valid target checks
                   if validtargetCHK == targetLookup.name:
@@ -468,7 +465,7 @@ def findTarget(Autoscript): # Function for finding the target of an autoscript
             if len(invalidTargets) > 0: # If we have no target restrictions, any selected card will do as long as it's a valid target.
                for invalidtargetCHK in invalidTargets:
                   if debugVerbosity >= 4: notify("### Checking for invalid match on {}".format(invalidtargetCHK)) #Debug
-                  if re.search(r'{}'.format(invalidtargetCHK), targetLookup.Type) or re.search(r'{}'.format(invalidtargetCHK), getKeywords(targetLookup)) or re.search(r'{}'.format(invalidtargetCHK), targetLookup.Side):
+                  if re.search(r'{}'.format(invalidtargetCHK), Stored_Type[targetLookup]) or re.search(r'{}'.format(invalidtargetCHK), Stored_Keywords[targetLookup]) or re.search(r'{}'.format(invalidtargetCHK), targetLookup.Side):
                      targetC = None
             if len(invalidNamedTargets) > 0: # If we have no target restrictions, any selected card will do as long as it's a valid target.
                for invalidtargetCHK in invalidNamedTargets:
@@ -481,7 +478,6 @@ def findTarget(Autoscript): # Function for finding the target of an autoscript
             if re.search(r'isUnrezzed', Autoscript) and (targetLookup.isFaceUp and not cFaceD): 
                targetC = None
                if debugVerbosity >= 4: notify("### Target shouldn't be rezzed") #Debug
-            if cFaceD: targetLookup.isFaceUp = False
             if targetC and not targetC in foundTargets: 
                if debugVerbosity >= 3: notify("### About to append {}".format(targetC)) #Debug
                foundTargets.append(targetC) # I don't know why but the first match is always processed twice by the for loop.
@@ -1551,7 +1547,7 @@ def CustomScript(card, action = 'play'): # Scripts that are complex and fairly u
                 \n\nIf you want to expose a target, simply ask the corp to use the e'Expose' option on the table.\
                 \n\nHowever if you have a target selected when you play this card, the target will be selected and exposed automatically."):
          me.Credits += 2
-         notify("{} gains {}".format(me,uniCredit(2)))
+         notify("--> {} gains {}".format(me,uniCredit(2)))
    elif action == 'use': useCard(card)
 
    

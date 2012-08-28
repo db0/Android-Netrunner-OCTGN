@@ -85,6 +85,7 @@ def fetchProperty(card, property):
    return card.properties[property]
 
 def loopChk(card,property = 'Type'):
+   if debugVerbosity >= 1: notify(">>> loopChk(){}".format(extraASDebug())) #Debug
    loopcount = 0
    while card.properties[property] == '?':
       rnd(1,10)
@@ -92,6 +93,7 @@ def loopChk(card,property = 'Type'):
       if loopcount == 5:
          whisper(":::Error::: Card property can't be grabbed. Aborting!")
          return 'ABORT'
+   notify("<<< loopChk()") #Debug
    return 'OK'         
    
 def sortPriority(cardList):
