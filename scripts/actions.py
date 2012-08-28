@@ -1129,6 +1129,8 @@ def expose(card, x = 0, y = 0, silent = False):
    if debugVerbosity >= 1: notify(">>> expose(){}".format(extraASDebug())) #Debug
    if not card.isFaceUp:
       mute()
+      if card.controller != me and confirm(":::WARNING:::Confirm:::\nYou are about to expose an opponent's card.\
+                                            Do they have any reactions to this expose attempt?"): return 'ABORT'
       card.isFaceUp = True
       if not silent: notify("{} exposed {}".format(me, card))
    else:

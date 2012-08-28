@@ -85,7 +85,7 @@
       </cardactions>
       <cardactions menu="Trace...">
          <cardaction menu="Input Trace Value" default="false" execute="inputTraceValue" />
-   <!--			<cardaction menu="Reveal" default="false" execute="revealTraceValue" /> -->
+   <!-- <cardaction menu="Reveal" default="false" execute="revealTraceValue" /> -->
          <cardaction menu="Pay Trace Value" default="false" execute="payTraceValue" />
          <cardaction menu="Cancel Trace" default="false" execute="cancelTrace" />
       </cardactions>
@@ -98,9 +98,9 @@
       <groupaction menu="Pay and &#9167; Target (Resource, Asset or Upgrade)" default="false" hortcut="Ctrl+Shift+T" execute="trashTargetPaid" />
       <groupaction menu="&#9167; Target without cost" default="false" hortcut="Ctrl+T" execute="trashTargetFree" />
       <groupaction menu="Create new Remote Server" default="false" execute="createRemoteServer" />
-   <!--		<groupaction menu="Roll d6" default="false" shortcut="Ctrl+6" execute="rolld6" /> -->
+   <!-- <groupaction menu="Roll d6" default="false" shortcut="Ctrl+6" execute="rolld6" /> -->
       <groupaction menu="&#8986; Receive 1 ¥" default="false" shortcut="Ctrl+B" execute="getCredit" />
-   <!--      <cardaction menu="Show Card Position" default="false" shortcut="Ctrl+Shift+X" execute="ShowPosC" />  -->
+   <!-- <cardaction menu="Show Card Position" default="false" shortcut="Ctrl+Shift+X" execute="ShowPosC" />  -->
         
       
    </table>
