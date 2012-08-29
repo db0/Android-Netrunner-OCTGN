@@ -1,4 +1,4 @@
-    # Python Scripts for the Android:Netrunner LCG definition for OCTGN
+﻿    # Python Scripts for the Android:Netrunner LCG definition for OCTGN
     # Copyright (C) 2012  Konstantine Thoukydides
 
     # This python script is free software: you can redistribute it and/or modify
@@ -37,10 +37,10 @@ debugVerbosity = -1 # At -1, means no debugging messages display
 # Generic Netrunner functions
 #---------------------------------------------------------------------------
 
-def uniCredit(count): # Converts a simply number (or string of one) into the 
+def uniCredit(count):
    if debugVerbosity >= 1: notify(">>> uniCredit(){}".format(extraASDebug())) #Debug
    count = num(count)
-   if UniCode: return "{} �".format(count)
+   if UniCode: return "{} ¥".format(count)
    else: 
       if count == 1: grammar = 's'
       else: grammar =''
@@ -49,7 +49,7 @@ def uniCredit(count): # Converts a simply number (or string of one) into the
 def uniRecurring(count):
    if debugVerbosity >= 1: notify(">>> uniRecurring(){}".format(extraASDebug())) #Debug
    count = num(count)
-   if UniCode: return "{} �".format(count)
+   if UniCode: return "{} £".format(count)
    else: 
       if count == 1: grammar = 's'
       else: grammar =''
@@ -57,30 +57,30 @@ def uniRecurring(count):
  
 def uniClick():
    if debugVerbosity >= 1: notify(">>> uniClick(){}".format(extraASDebug())) #Debug
-   if UniCode: return ' ?'
+   if UniCode: return ' ⌚'
    else: return '(/)'
 
 def uniTrash():
    if debugVerbosity >= 1: notify(">>> uniTrash(){}".format(extraASDebug())) #Debug
-   if UniCode: return '?'
+   if UniCode: return '⏏'
    else: return 'Trash'
 
 def uniMU(count = 1):
    if debugVerbosity >= 1: notify(">>> uniMU(){}".format(extraASDebug())) #Debug
    if UniCode: 
-      if num(count) == 1: return '?'
-      elif num(count) == 2:  return '?'
+      if num(count) == 1: return '⎗'
+      elif num(count) == 2:  return '⎘'
       else: return '{} MU'.format(count)
    else: return '{} MU'.format(count)
    
 def uniLink():
    if debugVerbosity >= 1: notify(">>> uniLink(){}".format(extraASDebug())) #Debug
-   if UniCode: return '?'
+   if UniCode: return '⎙'
    else: return 'Base Link'
 
 def uniSubroutine():
    if debugVerbosity >= 1: notify(">>> uniLink(){}".format(extraASDebug())) #Debug
-   if UniCode: return '?'
+   if UniCode: return '⏎'
    else: return '[Subroutine]'
 
 def chooseWell(limit, choiceText, default = None):

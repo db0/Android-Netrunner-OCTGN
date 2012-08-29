@@ -274,7 +274,7 @@ def intJackin(group, x = 0, y = 0):
       me.MU = 4
       BL = num(identity.Cost)
       me.counters['Base Link'].value = BL
-      notify("{} is representing the Runner {}. They start with {} {} ".format(me,identity,BL,uniLink()))
+      notify("{} is representing the Runner {}. They start with {} {}".format(me,identity,BL,uniLink()))
    createStartingCards()
    shuffle(me.piles['R&D/Stack'])
    notify("{}'s {} is shuffled ".format(me,pileName(me.piles['R&D/Stack'])))
@@ -699,7 +699,91 @@ def getCredit(group, x = 0, y = 0):
    else: extraTXT = ''
    notify ("{} and receives {}{}.".format(ClickCost,uniCredit(1 - creditsReduce),extraTXT))
    me.counters['Credits'].value += 1 - creditsReduce
-    
+
+def findDMGProtection(DMGdone, DMGtype, targetPL): # Find out if the player has any card preventing damage
+   if debugVerbosity >= 1: notify(">>> findDMGProtection(){}".format(extraASDebug())) #Debug
+   if not Automations['Damage Prevention']: return 0
+   protectionFound = 0
+   protectionType = 'protection{}DMG'.format(DMGtype) # This is the string key that we use in the mdict{} dictionary
+   carsList = sortPriority([c for c in table
+               if c.controller == targetPL
+               and c.markers])
+   for card in carsList: # First we check for complete damage protection (i.e. protection from all types), which is always temporary.
+      if card.markers[mdict['protectionAllDMG']]:
+         while DMGdone > 0 and card.markers[mdict['protectionAllDMG']] > 0: 
+            protectionFound += 1 
+            DMGdone -= 1
+            card.markers[mdict['protectionAllDMG']] -= 1 
+         if DMGdone == 0: break
+   for card in carsList:
+      if card.markers[mdict[protectionType]]:
+         while DMGdone > 0 and card.markers[mdict[protectionType]] > 0: # For each point of damage we do.
+            protectionFound += 1 # We increase the protection found by 1
+            DMGdone -= 1 # We reduce how much damage we still need to prevent by 1
+            card.markers[mdict[protectionType]] -= 1 # We reduce the card's damage protection counters by 1
+         if DMGdone == 0: break # If we've found enough protection to alleviate all damage, stop the search.
+   if DMGtype == 'Net' or DMGtype == 'Brain': altprotectionType = 'protectionNetBrainDMG' # To check for the combined Net & Brain protection counter as well.
+   else: altprotectionType = None
+   for card in carsList: # We check for the combined protections after we use the single protectors.
+      if altprotectionType and card.markers[mdict[altprotectionType]]:
+         while DMGdone > 0 and card.markers[mdict[altprotectionType]] > 0: 
+            protectionFound += 1 #
+            DMGdone -= 1 
+            card.markers[mdict[altprotectionType]] -= 1 
+         if DMGdone == 0: break 
+   if debugVerbosity >= 3: notify("<<< findDMGProtection() by returning: {}".format(protectionFound))
+   return protectionFound
+
+def findEnhancements(Autoscript): #Find out if the player has any cards increasing damage dealt.
+   if debugVerbosity >= 1: notify(">>> findEnhancements(){}".format(extraASDebug())) #Debug
+   enhancer = 0
+   DMGtype = re.search(r'\bInflict[0-9]+(Meat|Net|Brain)Damage', Autoscript)
+   if DMGtype:
+      enhancerMarker = 'enhanceDamage:{}'.format(DMGtype.group(1))
+      if debugVerbosity >= 3: notify('#### encancerMarker: {}'.format(enhancerMarker))
+      for card in table:
+         if debugVerbosity >= 2: notify("### Checking {}".format(card)) #Debug
+         cardENH = re.search(r'Enhance([0-9]+){}Damage'.format(DMGtype.group(1)), card.AutoScript)
+         if card.controller == me and card.isFaceUp and cardENH: enhancer += num(cardENH.group(1))
+         if card.controller == me and card.isFaceUp:
+            foundMarker = findMarker(card, enhancerMarker)
+            if foundMarker: 
+               enhancer += card.markers[foundMarker]
+               card.markers[foundMarker] = 0
+   if debugVerbosity >= 3: notify("<<< findEnhancements() by returning: {}".format(enhancer))
+   return enhancer
+
+def findVirusProtection(card, targetPL, VirusInfected): # Find out if the player has any virus preventing counters.
+   if debugVerbosity >= 1: notify(">>> findVirusProtection(){}".format(extraASDebug())) #Debug
+   protectionFound = 0
+   if card.markers[mdict['protectionVirus']]:
+      while VirusInfected > 0 and card.markers[mdict['protectionVirus']] > 0: # For each virus infected...
+         protectionFound += 1 # We increase the protection found by 1
+         VirusInfected -= 1 # We reduce how much viruses we still need to prevent by 1
+         card.markers[mdict['protectionVirus']] -= 1 # We reduce the card's virus protection counters by 1
+   if debugVerbosity >= 3: notify("<<< findVirusProtection() by returning: {}".format(protectionFound))
+   return protectionFound
+
+def findCounterPrevention(count, counter, targetPL): # Find out if the player has any markers preventing them form gaining specific counters (Credits, Agenda Points etc)
+   if debugVerbosity >= 1: notify(">>> findCounterPrevention(){}".format(extraASDebug())) #Debug
+   preventionFound = 0
+   forfeit = None
+   preventionType = 'preventCounter:{}'.format(counter)
+   forfeitType = 'forfeitCounter:{}'.format(counter)
+   cardList = [c for c in table
+               if c.controller == targetPL
+               and c.markers]
+   for card in sortPriority(cardList):
+      foundMarker = findMarker(card, preventionType)
+      if not foundMarker: foundMarker = findMarker(card, forfeitType)
+      if foundMarker: # If we found a counter prevention marker of the specific type we're looking for...
+         while count > 0 and card.markers[foundMarker] > 0: # For each point of damage we do.
+            preventionFound += 1 # We increase the prevention found by 1
+            count -= 1 # We reduce how much counter we still need to add by 1
+            card.markers[foundMarker] -= 1 # We reduce the specific counter prevention counters by 1
+         if count == 0: break # If we've found enough protection to alleviate all counters, stop the search.
+   if debugVerbosity >= 3: notify("<<< findCounterPrevention() by returning: {}".format(preventionFound))
+   return preventionFound   
 #------------------------------------------------------------------------------
 # Card Actions
 #------------------------------------------------------------------------------
