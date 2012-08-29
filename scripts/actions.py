@@ -14,29 +14,21 @@
     # You should have received a copy of the GNU General Public License
     # along with this script.  If not, see <http://www.gnu.org/licenses/>.
 
+###==================================================File Contents==================================================###
+# This file contains the basic table actions in ANR. They are the ones the player calls when they use an action in the menu.
+# Many of them are also called from the autoscripts.
+###=================================================================================================================###
+    
 import re         
 #---------------------------------------------------------------------------
 # Global variables
 #---------------------------------------------------------------------------
 ds = None
 identName = None
-Automations = {'Play, Score and Rez'    : True, # If True, game will automatically trigger card effects when playing or double-clicking on cards. Requires specific preparation in the sets.
-               'Start/End-of-Turn'      : True, # If True, game will automatically trigger effects happening at the start of the player's turn, from cards they control.                
-               'Damage Prevention'      : True, # If True, game will automatically use damage prevention counters from card they control.                
-               'Triggers'      : True, # If True, game will search the table for triggers based on player's actions, such as installing a card, or trashing one.
-               'Damage'                 : True}
-
-UniCode = True # If True, game will display credits, clicks, trash, memory as unicode characters
 
 ModifyDraw = 0 #if True the audraw should warn the player to look at r&D instead 
 
 DifficultyLevels = { }
-
-Stored_Type = {}
-Stored_Keywords = {}
-Stored_Cost = {}
-Stored_AutoActions = {}
-Stored_AutoScripts = {}
 
 installedCount = {} # A dictionary which keeps track how many of each card type have been installed by the player.
 
@@ -45,8 +37,6 @@ InstallationCosts = {}
 maxClicks = 3
 scoredAgendas = 0
 currClicks = 0
-playerside = None # Variable to keep track on which side each player is
-playeraxis = None # Variable to keep track on which axis the player is
 
 DMGwarn = True # A boolean varialbe to track whether we've warned the player about doing automatic damage.
 Dummywarn = True # Much like above, but it serves to remind the player not to trash some cards.
@@ -61,196 +51,7 @@ AfterRunInf = True # A warning to remind players that some actions have effects 
 AfterTraceInf = True # Similar to above
 lastKnownNrClicks = 0 # A Variable keeping track of what the engine thinks our action counter should be, in case we change it manually.
 
-debugVerbosity = -1
 
-#---------------------------------------------------------------------------
-# Generic Netrunner functions
-#---------------------------------------------------------------------------
-
-def uniCredit(count):
-   if debugVerbosity >= 1: notify(">>> uniCredit(){}".format(extraASDebug())) #Debug
-   count = num(count)
-   if UniCode: return "{} ¥".format(count)
-   else: 
-      if count == 1: grammar = 's'
-      else: grammar =''
-      return "{} Credit{}".format(count,grammar)
- 
-def uniRecurring(count):
-   if debugVerbosity >= 1: notify(">>> uniRecurring(){}".format(extraASDebug())) #Debug
-   count = num(count)
-   if UniCode: return "{} £".format(count)
-   else: 
-      if count == 1: grammar = 's'
-      else: grammar =''
-      return "{} Recurring Credit{}".format(count,grammar)
- 
-def uniClick():
-   if debugVerbosity >= 1: notify(">>> uniClick(){}".format(extraASDebug())) #Debug
-   if UniCode: return ' ⌚'
-   else: return '(/)'
-
-def uniTrash():
-   if debugVerbosity >= 1: notify(">>> uniTrash(){}".format(extraASDebug())) #Debug
-   if UniCode: return '⏏'
-   else: return 'Trash'
-
-def uniMU(count = 1):
-   if debugVerbosity >= 1: notify(">>> uniMU(){}".format(extraASDebug())) #Debug
-   if UniCode: 
-      if num(count) == 1: return '⎗'
-      elif num(count) == 2:  return '⎘'
-      else: return '{} MU'.format(count)
-   else: return '{} MU'.format(count)
-   
-def uniLink():
-   if debugVerbosity >= 1: notify(">>> uniLink(){}".format(extraASDebug())) #Debug
-   if UniCode: return '⎙'
-   else: return 'Base Link'
-
-def uniSubroutine():
-   if debugVerbosity >= 1: notify(">>> uniLink(){}".format(extraASDebug())) #Debug
-   if UniCode: return '⏎'
-   else: return '[Subroutine]'
-
-def chooseWell(limit, choiceText, default = None):
-   if debugVerbosity >= 1: notify(">>> chooseWell(){}".format(extraASDebug())) #Debug
-   if default == None: default = 0# If the player has not provided a default value for askInteger, just assume it's the max.
-   choice = limit # limit is the number of choices we have
-   if limit > 1: # But since we use 0 as a valid choice, then we can't actually select the limit as a number
-      while choice >= limit:
-         choice = askInteger("{}".format(choiceText), default)
-         if not choice: return False
-         if choice > limit: whisper("You must choose between 0 and {}".format(limit - 1))
-   else: choice = 0 # If our limit is 1, it means there's only one choice, 0.
-   return choice
-
-def findMarker(card, markerDesc): # Goes through the markers on the card and looks if one exist with a specific description
-   if debugVerbosity >= 1: notify(">>> findMarker(){}".format(extraASDebug())) #Debug
-   foundKey = None
-   if markerDesc in mdict: markerDesc = mdict[markerDesc][0] # If the marker description is the code of a known marker, then we need to grab the actual name of that.
-   for key in card.markers:
-      if debugVerbosity >= 3: notify("### Key: {}\nmarkerDesc: {}".format(key[0],markerDesc)) # Debug
-      if re.search(r'{}'.format(markerDesc),key[0]) or markerDesc == key[0]:
-         foundKey = key
-         if debugVerbosity >= 2: notify("### Found {} on {}".format(key[0],card))
-         break
-   if debugVerbosity >= 3: notify("<<< findMarker() by returning: {}".format(foundKey))
-   return foundKey
-   
-def getKeywords(card): # A function which combines the existing card keywords, with markers which give it extra ones.
-   if debugVerbosity >= 1: notify(">>> getKeywords(){}".format(extraASDebug())) #Debug
-   global Stored_Keywords
-   #confirm("getKeywords") # Debug
-   keywordsList = []
-   strippedKeywordsList = card.Keywords.split('-')
-   for cardKW in strippedKeywordsList:
-      strippedKW = cardKW.strip() # Remove any leading/trailing spaces between traits. We need to use a new variable, because we can't modify the loop iterator.
-      if strippedKW: keywordsList.append(strippedKW) # If there's anything left after the stip (i.e. it's not an empty string anymrore) add it to the list.   
-   if card.markers:
-      for key in card.markers:
-         markerKeyword = re.search('Keyword:([\w ]+)',key[0])
-         if markerKeyword:
-            #confirm("marker found: {}\n key: {}".format(markerKeyword.groups(),key[0])) # Debug
-            #if markerKeyword.group(1) == 'Barrier' or markerKeyword.group(1) == 'Sentry' or markerKeyword.group(1) == 'Code Gate': #These keywords are mutually exclusive. An Ice can't be more than 1 of these
-               #if 'Barrier' in keywordsList: keywordsList.remove('Barrier') # It seems in ANR, they are not so mutually exclusive. See: Tinkering
-               #if 'Sentry' in keywordsList: keywordsList.remove('Sentry') 
-               #if 'Code Gate' in keywordsList: keywordsList.remove('Code Gate')
-            if re.search(r'Breaker',markerKeyword.group(1)):
-               if 'Barrier Breaker' in keywordsList: keywordsList.remove('Barrier Breaker')
-               if 'Sentry Breaker' in keywordsList: keywordsList.remove('Sentry Breaker')
-               if 'Code Gate Breaker' in keywordsList: keywordsList.remove('Code Gate Breaker')
-            keywordsList.append(markerKeyword.group(1))
-   keywords = ''
-   for KW in keywordsList:
-      keywords += '{}-'.format(KW)
-   Stored_Keywords[card] = keywords[:-1] # We also update the global variable for this card, which is used by many functions.
-   if debugVerbosity >= 3: notify("<<< getKeywords() by returning: {}.".format(keywords[:-1]))
-   return keywords[:-1] # We need to remove the trailing dash '-'
-   
-def pileName(group):
-   if debugVerbosity >= 1: notify(">>> pileName(){}".format(extraASDebug())) #Debug   
-   if debugVerbosity >= 2: notify(">>> pile player: {}".format(group.player)) #Debug   
-   if group.name == 'Heap/Archives(Face-up)':
-      if group.player.getGlobalVariable('ds') == 'corp': name = 'Face-up Archives'
-      else: name = 'Heap'
-   elif group.name == 'R&D/Stack':
-      if group.player.getGlobalVariable('ds') == 'corp': name = 'R&D'
-      else: name = 'Stack'
-   elif group.name == 'Archives(Hidden)': name = 'Hidden Archives'
-   else:
-      if group.player.getGlobalVariable('ds') == 'corp': name = 'HQ'
-      else: name = 'Grip'
-   if debugVerbosity >= 3: notify("<<< pileName() by returning: {}".format(name))
-   return name
-
-def clearNoise(): # Clears all player's noisy bits. I.e. nobody is considered to have been noisy this turn.
-   if debugVerbosity >= 1: notify(">>> clearNoise()") #Debug
-   for player in players: player.setGlobalVariable('wasNoisy', '0') 
-   if debugVerbosity >= 3: notify("<<< clearNoise()") #Debug
-
-def storeSpecial(card): 
-# Function stores into a shared variable some special cards that other players might look up.
-   if debugVerbosity >= 1: notify(">>> storeSpecial(){}".format(extraASDebug())) #Debug
-   storeProperties(card)
-   specialCards = eval(me.getGlobalVariable('specialCards'))
-   specialCards[card.Type] = card._id
-   me.setGlobalVariable('specialCards', str(specialCards))
-
-def getSpecial(cardType,player = me):
-# Functions takes as argument the name of a special card, and the player to whom it belongs, and returns the card object.
-   if debugVerbosity >= 1: notify(">>> getSpecial(){}".format(extraASDebug())) #Debug
-   specialCards = eval(player.getGlobalVariable('specialCards'))
-   if debugVerbosity >= 3: notify("<<< getSpecial() by returning: {}".format(Card(specialCards[cardType])))
-   return Card(specialCards[cardType])
-
-def chkRAM(card, action = 'install', silent = False):
-   if debugVerbosity >= 1: notify(">>> chkRAM(){}".format(extraASDebug())) #Debug
-   MUreq = num(fetchProperty(card,'Requirement'))
-   if MUreq > 0 and not card.markers[mdict['DaemonMU']] and card.highlight != InactiveColor and card.highlight != RevealedColor:
-      if action == 'install':
-         card.controller.MU -= MUreq
-         MUtext = ", using up  {}".format(uniMU(MUreq))
-      elif action == 'uninstall':
-         card.controller.MU += MUreq
-         MUtext = ", freeing up  {}".format(uniMU(MUreq))
-   else: MUtext = ''
-   if card.controller.MU < 0 and not silent: notify(":::Warning:::{}'s programs require more memory than he has available. They must trash enough programs to bring their available Memory to at least 0".format(card.controller))
-   if debugVerbosity >= 3: notify("<<< chkRAM() by returning: {}".format(MUtext))
-   return MUtext
-
-def scanTable(group = table, x=0,y=0):
-   if debugVerbosity >= 1: notify(">>> scanTable(){}".format(extraASDebug())) #Debug
-   global Stored_Type, Stored_Cost, Stored_Keywords, Stored_AutoActions, Stored_AutoScripts
-   if not confirm("This action will clear the internal variables and re-scan all cards in the table to fix them.\
-                 \nThis action should only be used as a last-ditch effort to fix some weird behaviour in the game (e.g. treating an Ice like Agenda, or something silly like that)\
-               \n\nHowever this may take some time, depending on your PC power.\
-                 \nAre you sure you want to proceed?"): return
-   Stored_Type.clear()
-   Stored_Cost.clear()
-   Stored_Keywords.clear()
-   Stored_AutoActions.clear()
-   Stored_AutoScripts.clear()
-   cardList = [card for card in table]
-   iter = 0
-   for c in cardList:
-      if iter % 10 == 0: whisper("Working({}/{} done)...".format(iter, len(cardList)))
-      storeProperties(c)
-      iter += 1
-   for c in me.hand: storeProperties(c)
-   notify("{} has re-scanned the table and refreshed their internal variables.".format(me))
- 
-def checkUnique (card):
-   if debugVerbosity >= 1: notify(">>> checkUnique(){}".format(extraASDebug())) #Debug
-   mute()
-   if not re.search(r'Unique', getKeywords(card)): return True #If the played card isn't unique do nothing.
-   ExistingUniques = [ c for c in table
-         if c.owner == me and c.isFaceUp and c.name == card.name and re.search(r'Unique', getKeywords(c)) ]
-   if len(ExistingUniques) != 0 and not confirm("This unique card is already in play. Are you sure you want to play {}?\n\n(If you do, your existing unique card will be {} at no cost)".format(card.name,uniTrash())) : return False
-   else:
-      for uniqueC in ExistingUniques: trashForFree(uniqueC)
-   return True   
- 
 #---------------------------------------------------------------------------
 # Card Placement
 #---------------------------------------------------------------------------
@@ -461,17 +262,19 @@ def intJackin(group, x = 0, y = 0):
       else: notify("{} has chosen to proceed with an illegal deck.".format(me))
    else: identity = deckStatus[1] # For code readability
    if ds == "corp":
+      identity.moveToTable(125, 240)
+      rnd(1,10) # Allow time for the ident to be recognised
       maxClicks = 3
       me.MU = 0
       notify("{} is the CEO of the {} Corporation".format(me,identity))
-      identity.moveToTable(125, 240)
    else:
+      identity.moveToTable(105, -345)
+      rnd(1,10)  # Allow time for the ident to be recognised
       maxClicks = 4
       me.MU = 4
       BL = num(identity.Cost)
       me.counters['Base Link'].value = BL
       notify("{} is representing the Runner {}. They start with {} {} ".format(me,identity,BL,uniLink()))
-      identity.moveToTable(105, -345)
    createStartingCards()
    shuffle(me.piles['R&D/Stack'])
    notify("{}'s {} is shuffled ".format(me,pileName(me.piles['R&D/Stack'])))
@@ -1248,6 +1051,7 @@ def trashTargetFree(group, x=0, y=0):
    if len(targetCards) == 0: return
    if not confirm("You are about to trash your opponent's cards. This may cause issue if your opponent is currently manipulating them\
              \nPlease ask your opponent to wait until the notification appears before doing anything else\
+           \n\n:::Warning:::Confirm:::Also confirm that your opponent does not have any reaction to you trashing one his cards\
            \n\nProceed?"): return
    for card in targetCards: 
       storeProperties(card)

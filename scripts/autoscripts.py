@@ -14,9 +14,21 @@
     # You should have received a copy of the GNU General Public License
     # along with this script.  If not, see <http://www.gnu.org/licenses/>.
 
+###==================================================File Contents==================================================###
+# This file contains the autoscripting of the game. These are the actions that trigger automatically
+#  when the player plays a card, double-clicks on one, or goes to Start/End ot Turn/Run
+# * [Play/Score/Rez/Trash trigger] is basically used when the a card enters or exist play in some way 
+# * [Card Use trigger] is used when a card is being used while on the table. I.e. being double-clicked.
+# * [Other Player trigger] is used when another player plays a card or uses an action. The other player basically do your card effect for you
+# * [Start/End of Turn/Run trigger] is called at the start/end of turns or runs actions.
+# * [Core Commands] is the primary place where all the autoscripting magic happens.
+# * [Helper Commands] are usually shared by many Core Commands, or maybe used many times in one of them.
+###=================================================================================================================###
+
 import re
+
 #------------------------------------------------------------------------------
-# AutoScripts
+# Play/Score/Rez/Trash trigger
 #------------------------------------------------------------------------------
 
 def executePlayScripts(card, action):
@@ -128,7 +140,7 @@ def executePlayScripts(card, action):
          if debugVerbosity >= 2: notify("Loop for scipt {} finished".format(passedScript))
 
 #------------------------------------------------------------------------------
-# AutoActions
+# Card Use trigger
 #------------------------------------------------------------------------------
 
 def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
@@ -191,7 +203,7 @@ def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
    if debugVerbosity >= 2: notify("### Removed bad options")
    if len(Autoscripts) == 0:
       useCard(card) # If the card had only "WhileInstalled"  or AtTurnStart effect, just announce that it is being used.
-      return      
+      return 
    if len(Autoscripts) > 1: 
       abilConcat = "This card has multiple abilities.\nWhich one would you like to use?\n\n" # We start a concat which we use in our confirm window.
       for idx in range(len(Autoscripts)): # If a card has multiple abilities, we go through each of them to create a nicely written option for the player.
@@ -361,184 +373,184 @@ def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
       notify("{}.".format(announceText)) # Finally announce what the player just did by using the concatenated string.
    chkNoisy(card)
 
-def chkNoisy(card): # Check if the player successfully used a noisy icebreaker, and if so, give them the consequences...
-   if debugVerbosity >= 1: notify(">>> chkNoisy()") #Debug
-   if re.search(r'Noisy', Stored_Keywords[card]) and re.search(r'Icebreaker', Stored_Keywords[card]): 
-      me.setGlobalVariable('wasNoisy', '1') # First of all, let all players know of this fact.
-      if debugVerbosity >= 2: notify("### Noisy credit Set!") #Debug
-   if debugVerbosity >= 3: notify("<<< chkNoisy()") #Debug
+#------------------------------------------------------------------------------
+# Other Player trigger
+#------------------------------------------------------------------------------
+   
+def autoscriptOtherPlayers(lookup, origin_card, count = 1): # Function that triggers effects based on the opponent's cards.
+# This function is called from other functions in order to go through the table and see if other players have any cards which would be activated by it.
+# For example a card that would produce credits whenever a trace was attempted. 
+   if not Automations['Triggers']: return
+   if debugVerbosity >= 1: notify(">>> autoscriptOtherPlayers() with lookup: {}".format(lookup)) #Debug
+   if not Automations['Play, Score and Rez']: return # If automations have been disabled, do nothing.
+   for card in table:
+      if debugVerbosity >= 2: notify('Checking {}'.format(card)) # Debug
+      if not card.isFaceUp: continue # Don't take into accounts cards that are not rezzed.
+      costText = '{} activates {} to'.format(card.controller, card) 
+      Autoscripts = card.AutoScript.split('||')
+      AutoScriptSnapshot = list(Autoscripts)
+      for autoS in AutoScriptSnapshot: # Checking and removing anything other than whileRezzed or whileScored.
+         if not re.search(r'while(Rezzed|Scored)', autoS): Autoscripts.remove(autoS)
+      if len(Autoscripts) == 0: continue
+      for AutoS in Autoscripts:
+         if debugVerbosity >= 2: notify('Checking AutoS: {}'.format(AutoS)) # Debug
+         if not re.search(r'{}'.format(lookup), AutoS): continue # Search if in the script of the card, the string that was sent to us exists. The sent string is decided by the function calling us, so for example the ProdX() function knows it only needs to send the 'GeneratedSpice' string.
+         if chkPlayer(AutoS, origin_card.controller,False) == 0: continue # Check that the effect's origninator is valid.
+         if re.search(r'onlyOnce',autoS) and oncePerTurn(card, silent = True, act = 'automatic') == 'ABORT': continue # If the card's ability is only once per turn, use it or silently abort if it's already been used
+         chkType = re.search(r'-type([A-Za-z ]+)',autoS)
+         if chkType: #If we have this modulator in the script, then need ot check what type of property it's looking for
+            if debugVerbosity >= 4: notify("### Looking for : {}".format(chkType.group(1)))
+            cardProperties = []
+            del cardProperties [:] # Just in case
+            cardProperties.append(origin_card.Type) # Its type
+            cardSubtypes = getKeywords(origin_card).split('-') # And each individual trait. Traits are separated by " - "
+            for cardSubtype in cardSubtypes:
+               strippedCS = cardSubtype.strip() # Remove any leading/trailing spaces between traits. We need to use a new variable, because we can't modify the loop iterator.
+               if strippedCS: cardProperties.append(strippedCS) # If there's anything left after the stip (i.e. it's not an empty string anymrore) add it to the list.
+            cardProperties.append(origin_card.Side) # We are also going to check if the card is for runner or corp.
+            if debugVerbosity >= 4: notify("### card Properies: {}".format(cardProperties))
+            if not chkType.group(1) in cardProperties: continue 
+         if debugVerbosity >= 2: notify("### Automatic Autoscripts: {}".format(AutoS)) # Debug
+         #effect = re.search(r'\b([A-Z][A-Za-z]+)([0-9]*)([A-Za-z& ]*)\b([^:]?[A-Za-z0-9_&{} -]*)', AutoS)
+         #passedScript = "{}".format(effect.group(0))
+         #confirm('effects: {}'.format(passedScript)) #Debug
+         if regexHooks['GainX'].search(AutoS):
+            gainTuple = GainX(AutoS, costText, card, notification = 'Automatic', n = count)
+            if gainTuple == 'ABORT': break
+         elif regexHooks['TokensX'].search(AutoS): 
+            if TokensX(AutoS, costText, card, notification = 'Automatic', n = count) == 'ABORT': break
+         elif regexHooks['TransferX'].search(AutoS): 
+            if TransferX(AutoS, costText, card, notification = 'Automatic', n = count) == 'ABORT': break
+         elif regexHooks['InflictX'].search(AutoS):
+            if InflictX(AutoS, costText, card, notification = 'Automatic', n = count) == 'ABORT': break
+         elif regexHooks['DrawX'].search(AutoS):
+            if DrawX(AutoS, costText, card, notification = 'Automatic', n = count) == 'ABORT': break
+   if debugVerbosity >= 3: notify("<<< autoscriptOtherPlayers()") # Debug
 
-def penaltyNoisy(card):
-   if debugVerbosity >= 1: notify(">>> penaltyNoisy()") #Debug
-   if re.search(r'Noisy', Stored_Keywords[card]) and re.search(r'Icebreaker', Stored_Keywords[card]): 
-      NoisyCost = re.search(r'triggerNoisy([0-9]+)',card.AutoScript)
-      if debugVerbosity >= 2: 
-         if NoisyCost: notify("### Noisy Trigger Found: {}".format(NoisyCost.group(1))) #Debug      
-         else: notify("### Noisy Trigger not found. AS was: {}".format(card.AutoScript)) #Debug      
-      if NoisyCost: 
+#------------------------------------------------------------------------------
+# Start/End of Turn/Run trigger
+#------------------------------------------------------------------------------
+   
+def atTimedEffects(Time = 'Start'): # Function which triggers card effects at the start or end of the turn.
+   if debugVerbosity >= 1: notify(">>> atTimedEffects() at time: {}".format(Time)) #Debug
+   if not Automations['Start/End-of-Turn']: return
+   TitleDone = False
+   X = 0
+   for card in table:
+      if card.controller != me: continue
+      if card.highlight == InactiveColor: continue
+      if not card.isFaceUp: continue
+      if debugVerbosity >= 3: notify("### {} Autoscript: {}".format(card, card.AutoScript))
+      Autoscripts = card.AutoScript.split('||')
+      for autoS in Autoscripts:
+         if Time == 'Run': effect = re.search(r'at(Run)Start:(.*)', autoS) # Putting Run in a group, only to retain the search results groupings later
+         else: effect = re.search(r'atTurn(Start|End):(.*)', autoS)
+         if not effect: continue
+         if effect.group(1) != Time: continue # If it's a start-of-turn effect and we're at the end, or vice-versa, do nothing.
+         if debugVerbosity >= 3: notify("### split Autoscript: {}".format(autoS))
+         if debugVerbosity >= 2 and effect: notify("!!! effects: {}".format(effect.groups()))
+         if re.search(r'excludeDummy', autoS) and card.highlight == DummyColor: continue
+         if re.search(r'onlyforDummy', autoS) and card.highlight != DummyColor: continue
+         if re.search(r'isOptional', effect.group(2)) and not confirm("{} can have the following optional ability activated at the start of your turn:\n\n[ {} {} {} ]\n\nDo you want to activate it?".format(card.name, effect.group(2), effect.group(3),effect.group(4))): continue
+         splitAutoscripts = effect.group(2).split('$$')
+         for passedScript in splitAutoscripts:
+            if not TitleDone: 
+               if Time == 'Run': notify("==={}'s Start-of-Run Effects===")
+               else: notify(":::{}'s {}-of-Turn Effects:::".format(me,effect.group(1)))
+            TitleDone = True
+            if debugVerbosity >= 2: notify("### passedScript: {}".format(passedScript))
+            if card.highlight == DummyColor: announceText = "{}'s lingering effects:".format(card)
+            else: announceText = "{}:".format(card)
+            if regexHooks['GainX'].search(passedScript):
+               gainTuple = GainX(passedScript, announceText, card, notification = 'Automatic', n = X)
+               if gainTuple == 'ABORT': break
+               X = gainTuple[1] 
+            elif regexHooks['TransferX'].search(passedScript):
+               if TransferX(passedScript, announceText, card, notification = 'Automatic', n = X) == 'ABORT': break
+            elif regexHooks['DrawX'].search(passedScript):
+               if DrawX(passedScript, announceText, card, notification = 'Automatic', n = X) == 'ABORT': break
+            elif regexHooks['RollX'].search(passedScript):
+               rollTuple = RollX(passedScript, announceText, card, notification = 'Automatic', n = X)
+               if rollTuple == 'ABORT': break
+               X = rollTuple[1] 
+            elif regexHooks['TokensX'].search(passedScript):
+               if TokensX(passedScript, announceText, card, notification = 'Automatic', n = X) == 'ABORT': break
+            elif regexHooks['InflictX'].search(passedScript):
+               if InflictX(passedScript, announceText, card, notification = 'Automatic', n = X) == 'ABORT': break
+            elif regexHooks['ModifyStatus'].search(passedScript):
+               if ModifyStatus(passedScript, announceText, card, notification = 'Automatic', n = X) == 'ABORT': break
+            elif regexHooks['DiscardX'].search(passedScript): 
+               discardTuple = DiscardX(passedScript, announceText, card, notification = 'Automatic', n = X)
+               if discardTuple == 'ABORT': break
+               X = discardTuple[1] 
+            elif regexHooks['CustomScript'].search(passedScript):
+               if CustomScript(card, action = 'Turn{}'.format(Time)) == 'ABORT': break
+            if failedRequirement: break # If one of the Autoscripts was a cost that couldn't be paid, stop everything else.
+   markerEffects(Time)
+   if me.counters['Credits'].value < 0: 
+      if Time == 'Run': notify(":::Warning::: {}'s Start-of-run effects cost more Credits than {} had in their Credit Pool!".format(me,me))
+      else: notify(":::Warning::: {}'s {}-of-turn effects cost more Credits than {} had in their Credit Pool!".format(me,Time,me))
+   if ds == 'corp' and Time =='Start': draw(me.piles['R&D/Stack'])
+   if TitleDone: notify(":::--------------------------:::".format(me))   
+
+def markerEffects(Time = 'Start'):
+   if debugVerbosity >= 1: notify(">>> markerEffects() at time: {}".format(Time)) #Debug
+   CounterHold = getSpecial('Counter Hold')
+   # Checking triggers from markers in our own Counter Hold.
+   for marker in CounterHold.markers:
+      count = CounterHold.markers[marker]
+      if debugVerbosity >= 3: notify("### marker: {}".format(marker[0])) # Debug
+      if re.search(r'virusScaldan',marker[0]) and Time == 'Start':
          total = 0
-         cost = num(NoisyCost.group(1))
-         stealthCards = [c for c in table 
-                        if c.controller == me
-                        and c.isFaceUp
-                        and re.search(r'Stealth',getKeywords(c))
-                        and c.markers[mdict['Credits']]]
-         if debugVerbosity >= 2: notify("{} cards found".format(len(stealthCards)))
-         for Scard in sortPriority(stealthCards):
-            if debugVerbosity >= 3: notify("Removing from {}".format(Scard))
-            while cost > 0 and Scard.markers[mdict['Credits']] > 0:
-               Scard.markers[mdict['Credits']] -= 1
-               cost -= 1
-               total += 1
-      notify("--> {}'s {} has destroyed a total of {} credits on stealth cards".format(me,card,total))
-   if debugVerbosity >= 3: notify("<<< penaltyNoisy()") #Debug
-   
-def autoscriptCostUndo(card, Autoscript): # Function for undoing the cost of an autoscript.
-   if debugVerbosity >= 1: notify(">>> autoscriptCostUndo(){}".format(extraASDebug(Autoscript))) #Debug
-   whisper("--> Undoing action...")
-   actionCost = re.match(r"A([0-9]+)B([0-9]+)G([0-9]+)T([0-9]+):", Autoscript)
-   me.Clicks += num(actionCost.group(1))
-   me.counters['Credits'].value += num(actionCost.group(2))
-   me.counters['Agenda Points'].value += num(actionCost.group(3))
-   if re.search(r"T2:", Autoscript):
-      random = rnd(10,5000) # A little wait...
-      card.orientation = Rot0
-
-      
-def findTarget(Autoscript): # Function for finding the target of an autoscript
-   if debugVerbosity >= 1: notify(">>> findTarget(){}".format(extraASDebug(Autoscript))) #Debug
-   targetC = None
-   #confirm("Looking for targets.\n\nAutoscript: {}".format(Autoscript)) #Debug
-   foundTargets = []
-   if re.search(r'Targeted', Autoscript):
-      validTargets = [] # a list that holds any type that a card must be, in order to be a valid target.
-      validNamedTargets = [] # a list that holds any name or allegiance that a card must have, in order to be a valid target.
-      invalidTargets = [] # a list that holds any type that a card must not be to be a valid target.
-      invalidNamedTargets = [] # a list that holds the name or allegiance that the card must not have to be a valid target.
-      requiredAllegiances = []
-      whatTarget = re.search(r'\bat([A-Za-z_{},& ]+)[-]?', Autoscript) # We signify target restrictions keywords by starting a string with "or"
-      if whatTarget: validTargets = whatTarget.group(1).split('_or_') # If we have a list of valid targets, split them into a list, separated by the string "_or_". Usually this results in a list of 1 item.
-      ValidTargetsSnapshot = list(validTargets) # We have to work on a snapshot, because we're going to be modifying the actual list as we iterate.
-      for chkTarget in ValidTargetsSnapshot: # Now we go through each list item and see if it has more than one condition (Eg, non-desert fief)
-         if re.search(r'_and_', chkTarget):  # If there's a string "_and_" between our restriction keywords, then this keyword has mutliple conditions
-            multiConditionTargets = chkTarget.split('_and_') # We put all the mutliple conditions in a new list, separating each element.
-            for chkCondition in multiConditionTargets:
-               regexCondition = re.search(r'(no[nt]){?([A-Za-z,& ]+)}?', chkCondition) # Do a search to see if in the multicondition targets there's one with "non" in front
-               if regexCondition and regexCondition.group(1) == 'non':
-                  if regexCondition.group(2) not in invalidTargets: invalidTargets.append(regexCondition.group(2)) # If there is, move it without the "non" into the invalidTargets list.
-               elif regexCondition and regexCondition.group(1) == 'not':
-                  if regexCondition.group(2) not in invalidNamedTargets: invalidNamedTargets.append(regexCondition.group(2)) #"not" means that it's a name.
-               else: validTargets.append(chkCondition) # Else just move the individual condition to the end if validTargets list
-            validTargets.remove(chkTarget) # Finally, remove the multicondition keyword from the valid list. Its individual elements should now be on this list or the invalid targets one.
-         else:
-            regexCondition = re.search(r'(no[nt]){?([A-Za-z,& ]+)}?', chkTarget)
-            if regexCondition and regexCondition.group(1) == 'non' and regexCondition.group(2) not in invalidTargets: # If the keyword has "non" in front, it means it's something we need to avoid, so we move it to a different list.
-               invalidTargets.append(regexCondition.group(2))
-               validTargets.remove(chkTarget)
-               continue
-            if regexCondition and regexCondition.group(1) == 'not' and regexCondition.group(2) not in invalidNamedTargets: # Same as above but keywords with "not" in front as specific card names.
-               invalidNamedTargets.append(regexCondition.group(2))
-               validTargets.remove(chkTarget)
-               continue
-            regexCondition = re.search(r'{([A-Za-z,& ]+)}', chkTarget)
-            if regexCondition and regexCondition.group(1) not in validNamedTargets: # Same as above but keywords in {curly brackets} are exact names in front as specific card names.
-               validNamedTargets.append(regexCondition.group(1))
-               validTargets.remove(chkTarget)
-      if debugVerbosity >= 2: notify("### About to start checking all targeted cards.\nValids:{}. Invalids:{}".format(validTargets,invalidTargets)) #Debug
-      for targetLookup in table: # Now that we have our list of restrictions, we go through each targeted card on the table to check if it matches.
-         if ((targetLookup.targetedBy and targetLookup.targetedBy == me) or (re.search(r'AutoTargeted', Autoscript) and targetLookup.highlight != DummyColor and targetLookup.highlight != RevealedColor and targetLookup.highlight != InactiveColor)) and chkPlayer(Autoscript, targetLookup.controller, False): # The card needs to be targeted by the player. If the card needs to belong to a specific player (me or rival) this also is taken into account.
-         # OK the above target check might need some decoding:
-         # Look through all the cards on the table and start checking only IF...
-         # * Card is targeted and targeted by the player OR target search has the -AutoTargeted modulator and it is NOT highlighted as a Dummy, Revealed or Inactive.
-         # * The player who controls this card is supposed to be me or the enemy.
-            if debugVerbosity >= 3: notify("### Checking {}".format(targetLookup)) #Debug
-            if len(validTargets) == 0 and len(validNamedTargets) == 0: targetC = targetLookup # If we have no target restrictions, any targeted  card will do.
+         for iter in range(count):
+            rollTuple = RollX('Roll1Dice', 'Scaldan virus:', CounterHold, notification = 'Automatic')
+            if rollTuple[1] >= 5: total += 1
+         me.counters['Bad Publicity'].value += total
+         if total: notify("--> {} receives {} Bad Publicity due to their Scaldan virus infestation".format(me,total))
+      if re.search(r'virusSkivviss',marker[0]) and Time == 'Start':
+         passedScript = 'Draw{}Cards'.format(count)
+         DrawX(passedScript, "Skivviss virus:", CounterHold, notification = 'Automatic')
+      if re.search(r'virusTax',marker[0]) and Time == 'Start':
+         GainX('Lose1Credits-perMarker{virusTax}-div2', "Tax virus:", CounterHold, notification = 'Automatic')
+      if re.search(r'Doppelganger',marker[0]) and Time == 'Start':
+         GainX('Lose1Credits-perMarker{Doppelganger}', "{}:".format(marker[0]), CounterHold, notification = 'Automatic')
+      if re.search(r'virusPipe',marker[0]) and Time == 'Start':
+         passedScript = 'Infect{}forfeitCounter:Clicks'.format(count)
+         TokensX(passedScript, "Pipe virus:", CounterHold, notification = 'Automatic')
+      if re.search(r'Data Raven',marker[0]) and Time == 'Start':
+         GainX('Gain1Tags-perMarker{Data Raven}', "{}:".format(marker[0]), CounterHold, notification = 'Automatic')
+      if re.search(r'Mastiff',marker[0]) and Time == 'Run':
+         InflictX('Inflict1BrainDamage-perMarker{Mastiff}', "{}:".format(marker[0]), CounterHold, notification = 'Automatic')
+      if re.search(r'Cerberus',marker[0]) and Time == 'Run':
+         InflictX('Inflict2NetDamage-perMarker{Cerberus}', "{}:".format(marker[0]), CounterHold, notification = 'Automatic')
+      if re.search(r'Baskerville',marker[0]) and Time == 'Run':
+         InflictX('Inflict2NetDamage-perMarker{Baskerville}', "{}:".format(marker[0]), CounterHold, notification = 'Automatic')
+   targetPL = ofwhom('-ofOpponent')          
+   # Checking triggers from markers in opponent's Counter Hold.
+   CounterHold = getSpecial('Counter Hold', targetPL) # Some viruses also trigger on our opponent's turns
+   for marker in CounterHold.markers:
+      count = CounterHold.markers[marker]
+#      if marker == mdict['virusButcherBoy'] and Time == 'Start':
+#         GainX('Gain1Credits-onOpponent-perMarker{virusButcherBoy}-div2', "Opponent's Butcher Boy virus:", OpponentCounterHold, notification = 'Automatic')
+   # Checking triggers from markers the rest of our cards.
+   cardList = [c for c in table if c.markers]
+   for card in cardList:
+      for marker in card.markers:
+         if re.search(r'Term',marker[0]) and Time == 'Start' and card.controller == me:
+            if me.counters['Credits'].value >= 2: 
+               passedScript = 'Remove1Term'
+               me.counters['Credits'].value -= 2
+               notify("--> {} pays {} for their Rent-to-Own Contract on {}".format(me, uniCredit(2),card))
             else:
-               storeProperties(targetLookup)
-               for validtargetCHK in validTargets: # look if the card we're going through matches our valid target checks
-                  if debugVerbosity >= 4: notify("### Checking for valid match on {}".format(validtargetCHK)) #Debug
-                  if re.search(r'{}'.format(validtargetCHK), Stored_Type[targetLookup]) or re.search(r'{}'.format(validtargetCHK), Stored_Keywords[targetLookup]) or re.search(r'{}'.format(validtargetCHK), targetLookup.Side):
-                     targetC = targetLookup
-               for validtargetCHK in validNamedTargets: # look if the card we're going through matches our valid target checks
-                  if validtargetCHK == targetLookup.name:
-                     targetC = targetLookup
-            if len(invalidTargets) > 0: # If we have no target restrictions, any selected card will do as long as it's a valid target.
-               for invalidtargetCHK in invalidTargets:
-                  if debugVerbosity >= 4: notify("### Checking for invalid match on {}".format(invalidtargetCHK)) #Debug
-                  if re.search(r'{}'.format(invalidtargetCHK), Stored_Type[targetLookup]) or re.search(r'{}'.format(invalidtargetCHK), Stored_Keywords[targetLookup]) or re.search(r'{}'.format(invalidtargetCHK), targetLookup.Side):
-                     targetC = None
-            if len(invalidNamedTargets) > 0: # If we have no target restrictions, any selected card will do as long as it's a valid target.
-               for invalidtargetCHK in invalidNamedTargets:
-                  if invalidtargetCHK == targetLookup.name:
-                     targetC = None
-            if debugVerbosity >= 4: notify("### Checking Rest...") #Debug
-            if re.search(r'isRezzed', Autoscript) and (not targetLookup.isFaceUp or cFaceD): 
-               targetC = None
-               if debugVerbosity >= 4: notify("### Target shouldn't be unrezzed") #Debug
-            if re.search(r'isUnrezzed', Autoscript) and (targetLookup.isFaceUp and not cFaceD): 
-               targetC = None
-               if debugVerbosity >= 4: notify("### Target shouldn't be rezzed") #Debug
-            if targetC and not targetC in foundTargets: 
-               if debugVerbosity >= 3: notify("### About to append {}".format(targetC)) #Debug
-               foundTargets.append(targetC) # I don't know why but the first match is always processed twice by the for loop.
-            elif debugVerbosity >= 3: notify("### findTarget() Rejected {}".format(targetLookup))
-      if targetC == None and not re.search(r'AutoTargeted', Autoscript): 
-         targetsText = ''
-         if len(validTargets) > 0: targetsText += "\nValid Target types: {}.".format(validTargets)
-         if len(validNamedTargets) > 0: targetsText += "\nSpecific Valid Targets: {}.".format(validNamedTargets)
-         if len(invalidTargets) > 0: targetsText += "\nInvalid Target types: {}.".format(invalidTargets)
-         if len(invalidNamedTargets) > 0: targetsText += "\nSpecific Invalid Targets: {}.".format(invalidNamedTargets)
-         if not chkPlayer(Autoscript, targetLookup.controller, False): 
-            allegiance = re.search(r'by(Opponent|Me)', Autoscript)
-            requiredAllegiances.append(allegiance.group(1))
-         if re.search(r'isRezzed', Autoscript): targetsText += "\nValid Status: Rezzed."
-         if re.search(r'isUnrezzed', Autoscript): targetsText += "\nValid Status: Unrezzed."
-         if len(requiredAllegiances) > 0: targetsText += "\nValid Target Allegiance: {}.".format(requiredAllegiances)
-         whisper("You need to target a valid card before using this action{}".format(targetsText))
-   #confirm("List is: {}".format(foundTargets)) # Debug
-   if debugVerbosity >= 3: 
-      tlist = []
-      for foundTarget in foundTargets: tlist.append(foundTarget.name) # Debug
-      notify("<<< findTarget() by returning: {}".format(tlist))
-   return foundTargets
+               passedScript = 'Put1Term'
+               notify("--> {} couldn't pay their Rent-to-Own Contract on {} so it is extended for one turn".format(me, card))
+            TokensX(passedScript, "Rent-to-Own Contract:", card)
    
-def chkWarn(card, Autoscript): # Function for checking that an autoscript announces a warning to the player
-   if debugVerbosity >= 1: notify(">>> chkWarn(){}".format(extraASDebug(Autoscript))) #Debug
-   global AfterRunInf, AfterTraceInf
-   warning = re.search(r'warn([A-Z][A-Za-z0-9 ]+)-?', Autoscript)
-   if warning:
-      if warning.group(1) == 'Discard': 
-         if not confirm("This action requires that you discard some cards. Have you done this already?"):
-            whisper("--> Aborting action. Please discard the necessary amount of cards and run this action again")
-            return 'ABORT'
-      if warning.group(1) == 'ReshuffleOpponent': 
-         if not confirm("This action will reshuffle your opponent's pile(s). Are you sure?\n\n[Important: Please ask your opponent not to take any clicks with their piles until this clicks is complete or the game might crash]"):
-            whisper("--> Aborting action.")
-            return 'ABORT'
-      if warning.group(1) == 'GiveToOpponent': confirm('This card has an effect which if meant for your opponent. Please use the menu option "pass control to" to give them control.')
-      if warning.group(1) == 'Reshuffle': 
-         if not confirm("This action will reshuffle your piles. Are you sure?"):
-            whisper("--> Aborting action.")
-            return 'ABORT'
-      if warning.group(1) == 'Workaround':
-         notify(":::Note:::{} is using a workaround autoscript".format(me))
-      if warning.group(1) == 'LotsofStuff': 
-         if not confirm("This card performs a lot of complex clicks that will very difficult to undo. Are you sure you want to proceed?"):
-            whisper("--> Aborting action.")
-            return 'ABORT'
-      if warning.group(1) == 'AfterRun': 
-         confirm("Some cards, like the one you just played, have a secondary effect that only works if your run is successful.\
-                       \nIn those cases, usually the secondary effect has been scripted as well, but you will need to manually activate it. To do so, just double click on the Event card you used to start the run.\
-                     \n\n(This message will not appear again.)")
-         AfterRunInf = False  
-      if warning.group(1) == 'AfterTrace': 
-         confirm("Some cards, like the one you just played, have a secondary effect that only works if your trace is successful.\
-                       \nIn those cases, usually the secondary effect has been scripted as well, but you will need to manually activate it. To do so, just double click on the Operation card you used to start the trace.\
-                     \n\n(This message will not appear again.)")
-         AfterTraceInf = False  
-   if debugVerbosity >= 3: notify("<<< chkWarn() gracefully") 
-   return 'OK'
-
+   
+#------------------------------------------------------------------------------
+# Core Commands
+#------------------------------------------------------------------------------
+   
 def GainX(Autoscript, announceText, card, targetCards = None, notification = None, n = 0): # Core Command for modifying counters or global variables
    if debugVerbosity >= 1: notify(">>> GainX(){}".format(extraASDebug(Autoscript))) #Debug
    if targetCards is None: targetCards = []
@@ -657,20 +669,6 @@ def GainX(Autoscript, announceText, card, targetCards = None, notification = Non
    if notification and multiplier > 0: notify('--> {}.'.format(announceString))
    if debugVerbosity >= 3: notify("<<< Gain() total: {}".format(total))
    return (announceString,total)
-
-def ASclosureTXT(string, count):
-   if debugVerbosity >= 1: notify(">>> ASclosureTXT(). String: {}. Count: {}".format(string, count)) #Debug
- # function that returns a special string with the ANR unicode characters, based on the string and count that we provide it. 
- # So if it's provided with 'Credits', 2, it will return 2 [credits] (where [credits] is either the word or its symbol, depending on the unicode switch.
-   if string == 'Base Link': closureTXT = '{} {}'.format(count,uniLink())
-   elif string == 'Clicks': closureTXT = '{} {}'.format(count,uniClick())
-   elif string == 'Credits': 
-      if count == 'all': closureTXT = 'all Credits'
-      else: closureTXT = uniCredit(count)
-   elif string == 'MU': closureTXT = uniMU(count)
-   else: closureTXT = "{} {}".format(count,string)
-   if debugVerbosity >= 3: notify("<<< ASclosureTXT() returning: {}".format(closureTXT))
-   return closureTXT
    
 def TransferX(Autoscript, announceText, card, targetCards = None, notification = None, n = 0): # Core Command for converting tokens to counter values
    if debugVerbosity >= 1: notify(">>> TransferX(){}".format(extraASDebug(Autoscript))) #Debug
@@ -1189,6 +1187,264 @@ def InflictX(Autoscript, announceText, card, targetCards = None, notification = 
    if notification and multiplier > 0: notify('--> {}.'.format(announceString))
    if debugVerbosity >= 3: notify("<<< InflictX()")
    return announceString
+   
+def CustomScript(card, action = 'play'): # Scripts that are complex and fairly unique to specific cards, not worth making a whole generic function for them.
+   if debugVerbosity >= 1: notify(">>> CustomScript() with action: {}".format(action)) #Debug
+   global ModifyDraw
+   #confirm("Customscript") # Debug
+   if card.model == '23473bd3-f7a5-40be-8c66-7d35796b6031' and action == 'use': # Virus Scan Special Ability
+      clickCost = useClick(count = 3)
+      if clickCost == 'ABORT': return
+      for c in table: 
+         foundMarker = findMarker(c,'Virus')
+         if foundMarker: c.markers[foundMarker] = 0
+      notify("{} to clean all viruses from their corporate grid".format(clickCost))
+   elif card.model == '71a89203-94cd-42cd-b9a8-15377caf4437' and action == 'use': # Technical Difficulties Special Ability
+      knownMarkers = []
+      for marker in card.markers:
+         if marker[0] in markerRemovals: # If the name of the marker exists in the markerRemovals dictionary it means it can be removed and has a specific cost.
+            knownMarkers.append(marker)
+      if len(knownMarkers) == 0: 
+         whisper("No known markers with ability to remove")
+         return
+      elif len(knownMarkers) == 1: selectedMarker = knownMarkers[0]
+      else: 
+         selectTXT = 'Please select a marker to remove\n\n'
+         iter = 0
+         for choice in knownMarkers:
+            selectTXT += '{}: {} ({} {} and {})\n'.format(iter,knownMarkers[iter][0],markerRemovals[choice[0]][0],uniClick(),markerRemovals[choice[0]][1])
+            iter += 1
+         sel = askInteger(selectTXT,0)
+         selectedMarker = knownMarkers[sel]
+      aCost = markerRemovals[selectedMarker[0]][0] # The first field in the tuple for the entry with the same name as the selected marker, in the markerRemovals dictionary. All clear? Good.
+      cost = markerRemovals[selectedMarker[0]][1]
+      clickCost = useClick(count = aCost)
+      if clickCost == 'ABORT': return
+      creditCost = payCost(cost)
+      if creditCost == 'ABORT':
+         me.Clicks += aCost # If the player can't pay the cost after all and aborts, we give him his clicks back as well.
+         return         
+      card.markers[selectedMarker] -= 1
+      notify("{} to remove {} for {}.".format(clickCost,selectedMarker[0],creditCost))
+   elif card.name == 'Accelerated Beta Test' and action == 'score':
+      if not confirm("Would you like to initiate an accelerated beta test?"): return
+      group = me.piles['R&D/Stack']
+      iter = 0
+      for c in group.top(3):
+         c.moveTo(me.piles['Archives(Hidden)'])
+         loopChk(c,'Type')
+         if c.type == 'ICE':
+            placeCard(c,'Install')
+            c.orientation ^= Rot90
+            iter +=1
+      if iter: # If we found any ice in the top 3
+         notify("{} initiates an Accelerated Beta Test and reveals {} Ice from the top of their R&D. These Ice are automatically installed and rezzed".format(me, iter))
+      else: notify("{} initiates a Accelerated Beta Test but their beta team was incompetent.".format(me))
+   elif card.name == 'Infiltration' and action == 'play':
+      tCards = [c for c in table if c.targetedBy and c.targetedBy == me and c.isFaceUp == False]
+      if tCards: expose(tCards[0]) # If the player has any face-down cards currently targeted, we assume he wanted to expose them.
+      elif confirm("Do you wish to gain 2 credits?\
+                \n\nIf you want to expose a target, simply ask the corp to use the e'Expose' option on the table.\
+                \n\nHowever if you have a target selected when you play this card, the target will be selected and exposed automatically."):
+         me.Credits += 2
+         notify("--> {} gains {}".format(me,uniCredit(2)))
+   elif action == 'use': useCard(card)
+
+#------------------------------------------------------------------------------
+# Helper Functions
+#------------------------------------------------------------------------------
+   
+def chkNoisy(card): # Check if the player successfully used a noisy icebreaker, and if so, give them the consequences...
+   if debugVerbosity >= 1: notify(">>> chkNoisy()") #Debug
+   if re.search(r'Noisy', Stored_Keywords[card]) and re.search(r'Icebreaker', Stored_Keywords[card]): 
+      me.setGlobalVariable('wasNoisy', '1') # First of all, let all players know of this fact.
+      if debugVerbosity >= 2: notify("### Noisy credit Set!") #Debug
+   if debugVerbosity >= 3: notify("<<< chkNoisy()") #Debug
+
+def penaltyNoisy(card):
+   if debugVerbosity >= 1: notify(">>> penaltyNoisy()") #Debug
+   if re.search(r'Noisy', Stored_Keywords[card]) and re.search(r'Icebreaker', Stored_Keywords[card]): 
+      NoisyCost = re.search(r'triggerNoisy([0-9]+)',card.AutoScript)
+      if debugVerbosity >= 2: 
+         if NoisyCost: notify("### Noisy Trigger Found: {}".format(NoisyCost.group(1))) #Debug      
+         else: notify("### Noisy Trigger not found. AS was: {}".format(card.AutoScript)) #Debug      
+      if NoisyCost: 
+         total = 0
+         cost = num(NoisyCost.group(1))
+         stealthCards = [c for c in table 
+                        if c.controller == me
+                        and c.isFaceUp
+                        and re.search(r'Stealth',getKeywords(c))
+                        and c.markers[mdict['Credits']]]
+         if debugVerbosity >= 2: notify("{} cards found".format(len(stealthCards)))
+         for Scard in sortPriority(stealthCards):
+            if debugVerbosity >= 3: notify("Removing from {}".format(Scard))
+            while cost > 0 and Scard.markers[mdict['Credits']] > 0:
+               Scard.markers[mdict['Credits']] -= 1
+               cost -= 1
+               total += 1
+      notify("--> {}'s {} has destroyed a total of {} credits on stealth cards".format(me,card,total))
+   if debugVerbosity >= 3: notify("<<< penaltyNoisy()") #Debug
+   
+def autoscriptCostUndo(card, Autoscript): # Function for undoing the cost of an autoscript.
+   if debugVerbosity >= 1: notify(">>> autoscriptCostUndo(){}".format(extraASDebug(Autoscript))) #Debug
+   whisper("--> Undoing action...")
+   actionCost = re.match(r"A([0-9]+)B([0-9]+)G([0-9]+)T([0-9]+):", Autoscript)
+   me.Clicks += num(actionCost.group(1))
+   me.counters['Credits'].value += num(actionCost.group(2))
+   me.counters['Agenda Points'].value += num(actionCost.group(3))
+   if re.search(r"T2:", Autoscript):
+      random = rnd(10,5000) # A little wait...
+      card.orientation = Rot0
+
+      
+def findTarget(Autoscript): # Function for finding the target of an autoscript
+   if debugVerbosity >= 1: notify(">>> findTarget(){}".format(extraASDebug(Autoscript))) #Debug
+   targetC = None
+   #confirm("Looking for targets.\n\nAutoscript: {}".format(Autoscript)) #Debug
+   foundTargets = []
+   if re.search(r'Targeted', Autoscript):
+      validTargets = [] # a list that holds any type that a card must be, in order to be a valid target.
+      validNamedTargets = [] # a list that holds any name or allegiance that a card must have, in order to be a valid target.
+      invalidTargets = [] # a list that holds any type that a card must not be to be a valid target.
+      invalidNamedTargets = [] # a list that holds the name or allegiance that the card must not have to be a valid target.
+      requiredAllegiances = []
+      whatTarget = re.search(r'\bat([A-Za-z_{},& ]+)[-]?', Autoscript) # We signify target restrictions keywords by starting a string with "or"
+      if whatTarget: validTargets = whatTarget.group(1).split('_or_') # If we have a list of valid targets, split them into a list, separated by the string "_or_". Usually this results in a list of 1 item.
+      ValidTargetsSnapshot = list(validTargets) # We have to work on a snapshot, because we're going to be modifying the actual list as we iterate.
+      for chkTarget in ValidTargetsSnapshot: # Now we go through each list item and see if it has more than one condition (Eg, non-desert fief)
+         if re.search(r'_and_', chkTarget):  # If there's a string "_and_" between our restriction keywords, then this keyword has mutliple conditions
+            multiConditionTargets = chkTarget.split('_and_') # We put all the mutliple conditions in a new list, separating each element.
+            for chkCondition in multiConditionTargets:
+               regexCondition = re.search(r'(no[nt]){?([A-Za-z,& ]+)}?', chkCondition) # Do a search to see if in the multicondition targets there's one with "non" in front
+               if regexCondition and regexCondition.group(1) == 'non':
+                  if regexCondition.group(2) not in invalidTargets: invalidTargets.append(regexCondition.group(2)) # If there is, move it without the "non" into the invalidTargets list.
+               elif regexCondition and regexCondition.group(1) == 'not':
+                  if regexCondition.group(2) not in invalidNamedTargets: invalidNamedTargets.append(regexCondition.group(2)) #"not" means that it's a name.
+               else: validTargets.append(chkCondition) # Else just move the individual condition to the end if validTargets list
+            validTargets.remove(chkTarget) # Finally, remove the multicondition keyword from the valid list. Its individual elements should now be on this list or the invalid targets one.
+         else:
+            regexCondition = re.search(r'(no[nt]){?([A-Za-z,& ]+)}?', chkTarget)
+            if regexCondition and regexCondition.group(1) == 'non' and regexCondition.group(2) not in invalidTargets: # If the keyword has "non" in front, it means it's something we need to avoid, so we move it to a different list.
+               invalidTargets.append(regexCondition.group(2))
+               validTargets.remove(chkTarget)
+               continue
+            if regexCondition and regexCondition.group(1) == 'not' and regexCondition.group(2) not in invalidNamedTargets: # Same as above but keywords with "not" in front as specific card names.
+               invalidNamedTargets.append(regexCondition.group(2))
+               validTargets.remove(chkTarget)
+               continue
+            regexCondition = re.search(r'{([A-Za-z,& ]+)}', chkTarget)
+            if regexCondition and regexCondition.group(1) not in validNamedTargets: # Same as above but keywords in {curly brackets} are exact names in front as specific card names.
+               validNamedTargets.append(regexCondition.group(1))
+               validTargets.remove(chkTarget)
+      if debugVerbosity >= 2: notify("### About to start checking all targeted cards.\nValids:{}. Invalids:{}".format(validTargets,invalidTargets)) #Debug
+      for targetLookup in table: # Now that we have our list of restrictions, we go through each targeted card on the table to check if it matches.
+         if ((targetLookup.targetedBy and targetLookup.targetedBy == me) or (re.search(r'AutoTargeted', Autoscript) and targetLookup.highlight != DummyColor and targetLookup.highlight != RevealedColor and targetLookup.highlight != InactiveColor)) and chkPlayer(Autoscript, targetLookup.controller, False): # The card needs to be targeted by the player. If the card needs to belong to a specific player (me or rival) this also is taken into account.
+         # OK the above target check might need some decoding:
+         # Look through all the cards on the table and start checking only IF...
+         # * Card is targeted and targeted by the player OR target search has the -AutoTargeted modulator and it is NOT highlighted as a Dummy, Revealed or Inactive.
+         # * The player who controls this card is supposed to be me or the enemy.
+            if debugVerbosity >= 3: notify("### Checking {}".format(targetLookup)) #Debug
+            if len(validTargets) == 0 and len(validNamedTargets) == 0: targetC = targetLookup # If we have no target restrictions, any targeted  card will do.
+            else:
+               storeProperties(targetLookup)
+               for validtargetCHK in validTargets: # look if the card we're going through matches our valid target checks
+                  if debugVerbosity >= 4: notify("### Checking for valid match on {}".format(validtargetCHK)) #Debug
+                  if re.search(r'{}'.format(validtargetCHK), Stored_Type[targetLookup]) or re.search(r'{}'.format(validtargetCHK), Stored_Keywords[targetLookup]) or re.search(r'{}'.format(validtargetCHK), targetLookup.Side):
+                     targetC = targetLookup
+               for validtargetCHK in validNamedTargets: # look if the card we're going through matches our valid target checks
+                  if validtargetCHK == targetLookup.name:
+                     targetC = targetLookup
+            if len(invalidTargets) > 0: # If we have no target restrictions, any selected card will do as long as it's a valid target.
+               for invalidtargetCHK in invalidTargets:
+                  if debugVerbosity >= 4: notify("### Checking for invalid match on {}".format(invalidtargetCHK)) #Debug
+                  if re.search(r'{}'.format(invalidtargetCHK), Stored_Type[targetLookup]) or re.search(r'{}'.format(invalidtargetCHK), Stored_Keywords[targetLookup]) or re.search(r'{}'.format(invalidtargetCHK), targetLookup.Side):
+                     targetC = None
+            if len(invalidNamedTargets) > 0: # If we have no target restrictions, any selected card will do as long as it's a valid target.
+               for invalidtargetCHK in invalidNamedTargets:
+                  if invalidtargetCHK == targetLookup.name:
+                     targetC = None
+            if debugVerbosity >= 4: notify("### Checking Rest...") #Debug
+            if re.search(r'isRezzed', Autoscript) and (not targetLookup.isFaceUp or cFaceD): 
+               targetC = None
+               if debugVerbosity >= 4: notify("### Target shouldn't be unrezzed") #Debug
+            if re.search(r'isUnrezzed', Autoscript) and (targetLookup.isFaceUp and not cFaceD): 
+               targetC = None
+               if debugVerbosity >= 4: notify("### Target shouldn't be rezzed") #Debug
+            if targetC and not targetC in foundTargets: 
+               if debugVerbosity >= 3: notify("### About to append {}".format(targetC)) #Debug
+               foundTargets.append(targetC) # I don't know why but the first match is always processed twice by the for loop.
+            elif debugVerbosity >= 3: notify("### findTarget() Rejected {}".format(targetLookup))
+      if targetC == None and not re.search(r'AutoTargeted', Autoscript): 
+         targetsText = ''
+         if len(validTargets) > 0: targetsText += "\nValid Target types: {}.".format(validTargets)
+         if len(validNamedTargets) > 0: targetsText += "\nSpecific Valid Targets: {}.".format(validNamedTargets)
+         if len(invalidTargets) > 0: targetsText += "\nInvalid Target types: {}.".format(invalidTargets)
+         if len(invalidNamedTargets) > 0: targetsText += "\nSpecific Invalid Targets: {}.".format(invalidNamedTargets)
+         if not chkPlayer(Autoscript, targetLookup.controller, False): 
+            allegiance = re.search(r'by(Opponent|Me)', Autoscript)
+            requiredAllegiances.append(allegiance.group(1))
+         if re.search(r'isRezzed', Autoscript): targetsText += "\nValid Status: Rezzed."
+         if re.search(r'isUnrezzed', Autoscript): targetsText += "\nValid Status: Unrezzed."
+         if len(requiredAllegiances) > 0: targetsText += "\nValid Target Allegiance: {}.".format(requiredAllegiances)
+         whisper("You need to target a valid card before using this action{}".format(targetsText))
+   #confirm("List is: {}".format(foundTargets)) # Debug
+   if debugVerbosity >= 3: 
+      tlist = []
+      for foundTarget in foundTargets: tlist.append(foundTarget.name) # Debug
+      notify("<<< findTarget() by returning: {}".format(tlist))
+   return foundTargets
+   
+def chkWarn(card, Autoscript): # Function for checking that an autoscript announces a warning to the player
+   if debugVerbosity >= 1: notify(">>> chkWarn(){}".format(extraASDebug(Autoscript))) #Debug
+   global AfterRunInf, AfterTraceInf
+   warning = re.search(r'warn([A-Z][A-Za-z0-9 ]+)-?', Autoscript)
+   if warning:
+      if warning.group(1) == 'Discard': 
+         if not confirm("This action requires that you discard some cards. Have you done this already?"):
+            whisper("--> Aborting action. Please discard the necessary amount of cards and run this action again")
+            return 'ABORT'
+      if warning.group(1) == 'ReshuffleOpponent': 
+         if not confirm("This action will reshuffle your opponent's pile(s). Are you sure?\n\n[Important: Please ask your opponent not to take any clicks with their piles until this clicks is complete or the game might crash]"):
+            whisper("--> Aborting action.")
+            return 'ABORT'
+      if warning.group(1) == 'GiveToOpponent': confirm('This card has an effect which if meant for your opponent. Please use the menu option "pass control to" to give them control.')
+      if warning.group(1) == 'Reshuffle': 
+         if not confirm("This action will reshuffle your piles. Are you sure?"):
+            whisper("--> Aborting action.")
+            return 'ABORT'
+      if warning.group(1) == 'Workaround':
+         notify(":::Note:::{} is using a workaround autoscript".format(me))
+      if warning.group(1) == 'LotsofStuff': 
+         if not confirm("This card performs a lot of complex clicks that will very difficult to undo. Are you sure you want to proceed?"):
+            whisper("--> Aborting action.")
+            return 'ABORT'
+      if warning.group(1) == 'AfterRun': 
+         confirm("Some cards, like the one you just played, have a secondary effect that only works if your run is successful.\
+                       \nIn those cases, usually the secondary effect has been scripted as well, but you will need to manually activate it. To do so, just double click on the Event card you used to start the run.\
+                     \n\n(This message will not appear again.)")
+         AfterRunInf = False  
+      if warning.group(1) == 'AfterTrace': 
+         confirm("Some cards, like the one you just played, have a secondary effect that only works if your trace is successful.\
+                       \nIn those cases, usually the secondary effect has been scripted as well, but you will need to manually activate it. To do so, just double click on the Operation card you used to start the trace.\
+                     \n\n(This message will not appear again.)")
+         AfterTraceInf = False  
+   if debugVerbosity >= 3: notify("<<< chkWarn() gracefully") 
+   return 'OK'
+
+def ASclosureTXT(string, count): # Used by Gain and Transfer, to return unicode credits, link etc when it's used in notifications
+   if debugVerbosity >= 1: notify(">>> ASclosureTXT(). String: {}. Count: {}".format(string, count)) #Debug
+ # function that returns a special string with the ANR unicode characters, based on the string and count that we provide it. 
+ # So if it's provided with 'Credits', 2, it will return 2 [credits] (where [credits] is either the word or its symbol, depending on the unicode switch.
+   if string == 'Base Link': closureTXT = '{} {}'.format(count,uniLink())
+   elif string == 'Clicks': closureTXT = '{} {}'.format(count,uniClick())
+   elif string == 'Credits': 
+      if count == 'all': closureTXT = 'all Credits'
+      else: closureTXT = uniCredit(count)
+   elif string == 'MU': closureTXT = uniMU(count)
+   else: closureTXT = "{} {}".format(count,string)
+   if debugVerbosity >= 3: notify("<<< ASclosureTXT() returning: {}".format(closureTXT))
+   return closureTXT
 
 def findDMGProtection(DMGdone, DMGtype, targetPL): # Find out if the player has any card preventing damage
    if debugVerbosity >= 1: notify(">>> findDMGProtection(){}".format(extraASDebug())) #Debug
@@ -1438,230 +1694,3 @@ def chkPlayer(Autoscript, controller, manual): # Function for figuring out if an
    if debugVerbosity >= 3: notify("<<< chkPlayer() with return 0") # Debug
    else: return 0 # If all the above fail, it means that we're not supposed to be triggering, so we'll return 0 which will make the multiplier 0.
    
-def autoscriptOtherPlayers(lookup, origin_card, count = 1): # Function that triggers effects based on the opponent's cards.
-# This function is called from other functions in order to go through the table and see if other players have any cards which would be activated by it.
-# For example a card that would produce credits whenever a trace was attempted. 
-   if not Automations['Triggers']: return
-   if debugVerbosity >= 1: notify(">>> autoscriptOtherPlayers() with lookup: {}".format(lookup)) #Debug
-   if not Automations['Play, Score and Rez']: return # If automations have been disabled, do nothing.
-   for card in table:
-      if debugVerbosity >= 2: notify('Checking {}'.format(card)) # Debug
-      if not card.isFaceUp: continue # Don't take into accounts cards that are not rezzed.
-      costText = '{} activates {} to'.format(card.controller, card) 
-      Autoscripts = card.AutoScript.split('||')
-      AutoScriptSnapshot = list(Autoscripts)
-      for autoS in AutoScriptSnapshot: # Checking and removing anything other than whileRezzed or whileScored.
-         if not re.search(r'while(Rezzed|Scored)', autoS): Autoscripts.remove(autoS)
-      if len(Autoscripts) == 0: continue
-      for AutoS in Autoscripts:
-         if debugVerbosity >= 2: notify('Checking AutoS: {}'.format(AutoS)) # Debug
-         if not re.search(r'{}'.format(lookup), AutoS): continue # Search if in the script of the card, the string that was sent to us exists. The sent string is decided by the function calling us, so for example the ProdX() function knows it only needs to send the 'GeneratedSpice' string.
-         if chkPlayer(AutoS, origin_card.controller,False) == 0: continue # Check that the effect's origninator is valid.
-         if re.search(r'onlyOnce',autoS) and oncePerTurn(card, silent = True, act = 'automatic') == 'ABORT': continue # If the card's ability is only once per turn, use it or silently abort if it's already been used
-         chkType = re.search(r'-type([A-Za-z ]+)',autoS)
-         if chkType: #If we have this modulator in the script, then need ot check what type of property it's looking for
-            if debugVerbosity >= 4: notify("### Looking for : {}".format(chkType.group(1)))
-            cardProperties = []
-            del cardProperties [:] # Just in case
-            cardProperties.append(origin_card.Type) # Its type
-            cardSubtypes = getKeywords(origin_card).split('-') # And each individual trait. Traits are separated by " - "
-            for cardSubtype in cardSubtypes:
-               strippedCS = cardSubtype.strip() # Remove any leading/trailing spaces between traits. We need to use a new variable, because we can't modify the loop iterator.
-               if strippedCS: cardProperties.append(strippedCS) # If there's anything left after the stip (i.e. it's not an empty string anymrore) add it to the list.
-            cardProperties.append(origin_card.Side) # We are also going to check if the card is for runner or corp.
-            if debugVerbosity >= 4: notify("### card Properies: {}".format(cardProperties))
-            if not chkType.group(1) in cardProperties: continue 
-         if debugVerbosity >= 2: notify("### Automatic Autoscripts: {}".format(AutoS)) # Debug
-         #effect = re.search(r'\b([A-Z][A-Za-z]+)([0-9]*)([A-Za-z& ]*)\b([^:]?[A-Za-z0-9_&{} -]*)', AutoS)
-         #passedScript = "{}".format(effect.group(0))
-         #confirm('effects: {}'.format(passedScript)) #Debug
-         if regexHooks['GainX'].search(AutoS):
-            gainTuple = GainX(AutoS, costText, card, notification = 'Automatic', n = count)
-            if gainTuple == 'ABORT': break
-         elif regexHooks['TokensX'].search(AutoS): 
-            if TokensX(AutoS, costText, card, notification = 'Automatic', n = count) == 'ABORT': break
-         elif regexHooks['TransferX'].search(AutoS): 
-            if TransferX(AutoS, costText, card, notification = 'Automatic', n = count) == 'ABORT': break
-         elif regexHooks['InflictX'].search(AutoS):
-            if InflictX(AutoS, costText, card, notification = 'Automatic', n = count) == 'ABORT': break
-         elif regexHooks['DrawX'].search(AutoS):
-            if DrawX(AutoS, costText, card, notification = 'Automatic', n = count) == 'ABORT': break
-   if debugVerbosity >= 3: notify("<<< autoscriptOtherPlayers()") # Debug
-   
-def CustomScript(card, action = 'play'): # Scripts that are complex and fairly unique to specific cards, not worth making a whole generic function for them.
-   if debugVerbosity >= 1: notify(">>> CustomScript() with action: {}".format(action)) #Debug
-   global ModifyDraw
-   #confirm("Customscript") # Debug
-   if card.model == '23473bd3-f7a5-40be-8c66-7d35796b6031' and action == 'use': # Virus Scan Special Ability
-      clickCost = useClick(count = 3)
-      if clickCost == 'ABORT': return
-      for c in table: 
-         foundMarker = findMarker(c,'Virus')
-         if foundMarker: c.markers[foundMarker] = 0
-      notify("{} to clean all viruses from their corporate grid".format(clickCost))
-   elif card.model == '71a89203-94cd-42cd-b9a8-15377caf4437' and action == 'use': # Technical Difficulties Special Ability
-      knownMarkers = []
-      for marker in card.markers:
-         if marker[0] in markerRemovals: # If the name of the marker exists in the markerRemovals dictionary it means it can be removed and has a specific cost.
-            knownMarkers.append(marker)
-      if len(knownMarkers) == 0: 
-         whisper("No known markers with ability to remove")
-         return
-      elif len(knownMarkers) == 1: selectedMarker = knownMarkers[0]
-      else: 
-         selectTXT = 'Please select a marker to remove\n\n'
-         iter = 0
-         for choice in knownMarkers:
-            selectTXT += '{}: {} ({} {} and {})\n'.format(iter,knownMarkers[iter][0],markerRemovals[choice[0]][0],uniClick(),markerRemovals[choice[0]][1])
-            iter += 1
-         sel = askInteger(selectTXT,0)
-         selectedMarker = knownMarkers[sel]
-      aCost = markerRemovals[selectedMarker[0]][0] # The first field in the tuple for the entry with the same name as the selected marker, in the markerRemovals dictionary. All clear? Good.
-      cost = markerRemovals[selectedMarker[0]][1]
-      clickCost = useClick(count = aCost)
-      if clickCost == 'ABORT': return
-      creditCost = payCost(cost)
-      if creditCost == 'ABORT':
-         me.Clicks += aCost # If the player can't pay the cost after all and aborts, we give him his clicks back as well.
-         return         
-      card.markers[selectedMarker] -= 1
-      notify("{} to remove {} for {}.".format(clickCost,selectedMarker[0],creditCost))
-   elif card.name == 'Accelerated Beta Test' and action == 'score':
-      if not confirm("Would you like to initiate an accelerated beta test?"): return
-      group = me.piles['R&D/Stack']
-      iter = 0
-      for c in group.top(3):
-         c.moveTo(me.piles['Archives(Hidden)'])
-         loopChk(c,'Type')
-         if c.type == 'ICE':
-            placeCard(c,'Install')
-            c.orientation ^= Rot90
-            iter +=1
-      if iter: # If we found any ice in the top 3
-         notify("{} initiates an Accelerated Beta Test and reveals {} Ice from the top of their R&D. These Ice are automatically installed and rezzed".format(me, iter))
-      else: notify("{} initiates a Accelerated Beta Test but their beta team was incompetent.".format(me))
-   elif card.name == 'Infiltration' and action == 'play':
-      tCards = [c for c in table if c.targetedBy and c.targetedBy == me and c.isFaceUp == False]
-      if tCards: expose(tCards[0]) # If the player has any face-down cards currently targeted, we assume he wanted to expose them.
-      elif confirm("Do you wish to gain 2 credits?\
-                \n\nIf you want to expose a target, simply ask the corp to use the e'Expose' option on the table.\
-                \n\nHowever if you have a target selected when you play this card, the target will be selected and exposed automatically."):
-         me.Credits += 2
-         notify("--> {} gains {}".format(me,uniCredit(2)))
-   elif action == 'use': useCard(card)
-
-   
-def atTimedEffects(Time = 'Start'): # Function which triggers card effects at the start or end of the turn.
-   if debugVerbosity >= 1: notify(">>> atTimedEffects() at time: {}".format(Time)) #Debug
-   if not Automations['Start/End-of-Turn']: return
-   TitleDone = False
-   X = 0
-   for card in table:
-      if card.controller != me: continue
-      if card.highlight == InactiveColor: continue
-      if not card.isFaceUp: continue
-      if debugVerbosity >= 3: notify("### {} Autoscript: {}".format(card, card.AutoScript))
-      Autoscripts = card.AutoScript.split('||')
-      for autoS in Autoscripts:
-         if Time == 'Run': effect = re.search(r'at(Run)Start:(.*)', autoS) # Putting Run in a group, only to retain the search results groupings later
-         else: effect = re.search(r'atTurn(Start|End):(.*)', autoS)
-         if not effect: continue
-         if effect.group(1) != Time: continue # If it's a start-of-turn effect and we're at the end, or vice-versa, do nothing.
-         if debugVerbosity >= 3: notify("### split Autoscript: {}".format(autoS))
-         if debugVerbosity >= 2 and effect: notify("!!! effects: {}".format(effect.groups()))
-         if re.search(r'excludeDummy', autoS) and card.highlight == DummyColor: continue
-         if re.search(r'onlyforDummy', autoS) and card.highlight != DummyColor: continue
-         if re.search(r'isOptional', effect.group(2)) and not confirm("{} can have the following optional ability activated at the start of your turn:\n\n[ {} {} {} ]\n\nDo you want to activate it?".format(card.name, effect.group(2), effect.group(3),effect.group(4))): continue
-         splitAutoscripts = effect.group(2).split('$$')
-         for passedScript in splitAutoscripts:
-            if not TitleDone: 
-               if Time == 'Run': notify("==={}'s Start-of-Run Effects===")
-               else: notify(":::{}'s {}-of-Turn Effects:::".format(me,effect.group(1)))
-            TitleDone = True
-            if debugVerbosity >= 2: notify("### passedScript: {}".format(passedScript))
-            if card.highlight == DummyColor: announceText = "{}'s lingering effects:".format(card)
-            else: announceText = "{}:".format(card)
-            if regexHooks['GainX'].search(passedScript):
-               gainTuple = GainX(passedScript, announceText, card, notification = 'Automatic', n = X)
-               if gainTuple == 'ABORT': break
-               X = gainTuple[1] 
-            elif regexHooks['TransferX'].search(passedScript):
-               if TransferX(passedScript, announceText, card, notification = 'Automatic', n = X) == 'ABORT': break
-            elif regexHooks['DrawX'].search(passedScript):
-               if DrawX(passedScript, announceText, card, notification = 'Automatic', n = X) == 'ABORT': break
-            elif regexHooks['RollX'].search(passedScript):
-               rollTuple = RollX(passedScript, announceText, card, notification = 'Automatic', n = X)
-               if rollTuple == 'ABORT': break
-               X = rollTuple[1] 
-            elif regexHooks['TokensX'].search(passedScript):
-               if TokensX(passedScript, announceText, card, notification = 'Automatic', n = X) == 'ABORT': break
-            elif regexHooks['InflictX'].search(passedScript):
-               if InflictX(passedScript, announceText, card, notification = 'Automatic', n = X) == 'ABORT': break
-            elif regexHooks['ModifyStatus'].search(passedScript):
-               if ModifyStatus(passedScript, announceText, card, notification = 'Automatic', n = X) == 'ABORT': break
-            elif regexHooks['DiscardX'].search(passedScript): 
-               discardTuple = DiscardX(passedScript, announceText, card, notification = 'Automatic', n = X)
-               if discardTuple == 'ABORT': break
-               X = discardTuple[1] 
-            elif regexHooks['CustomScript'].search(passedScript):
-               if CustomScript(card, action = 'Turn{}'.format(Time)) == 'ABORT': break
-            if failedRequirement: break # If one of the Autoscripts was a cost that couldn't be paid, stop everything else.
-   markerEffects(Time)
-   if me.counters['Credits'].value < 0: 
-      if Time == 'Run': notify(":::Warning::: {}'s Start-of-run effects cost more Credits than {} had in their Credit Pool!".format(me,me))
-      else: notify(":::Warning::: {}'s {}-of-turn effects cost more Credits than {} had in their Credit Pool!".format(me,Time,me))
-   if ds == 'corp' and Time =='Start': draw(me.piles['R&D/Stack'])
-   if TitleDone: notify(":::--------------------------:::".format(me))   
-
-def markerEffects(Time = 'Start'):
-   if debugVerbosity >= 1: notify(">>> markerEffects() at time: {}".format(Time)) #Debug
-   CounterHold = getSpecial('Counter Hold')
-   # Checking triggers from markers in our own Counter Hold.
-   for marker in CounterHold.markers:
-      count = CounterHold.markers[marker]
-      if debugVerbosity >= 3: notify("### marker: {}".format(marker[0])) # Debug
-      if re.search(r'virusScaldan',marker[0]) and Time == 'Start':
-         total = 0
-         for iter in range(count):
-            rollTuple = RollX('Roll1Dice', 'Scaldan virus:', CounterHold, notification = 'Automatic')
-            if rollTuple[1] >= 5: total += 1
-         me.counters['Bad Publicity'].value += total
-         if total: notify("--> {} receives {} Bad Publicity due to their Scaldan virus infestation".format(me,total))
-      if re.search(r'virusSkivviss',marker[0]) and Time == 'Start':
-         passedScript = 'Draw{}Cards'.format(count)
-         DrawX(passedScript, "Skivviss virus:", CounterHold, notification = 'Automatic')
-      if re.search(r'virusTax',marker[0]) and Time == 'Start':
-         GainX('Lose1Credits-perMarker{virusTax}-div2', "Tax virus:", CounterHold, notification = 'Automatic')
-      if re.search(r'Doppelganger',marker[0]) and Time == 'Start':
-         GainX('Lose1Credits-perMarker{Doppelganger}', "{}:".format(marker[0]), CounterHold, notification = 'Automatic')
-      if re.search(r'virusPipe',marker[0]) and Time == 'Start':
-         passedScript = 'Infect{}forfeitCounter:Clicks'.format(count)
-         TokensX(passedScript, "Pipe virus:", CounterHold, notification = 'Automatic')
-      if re.search(r'Data Raven',marker[0]) and Time == 'Start':
-         GainX('Gain1Tags-perMarker{Data Raven}', "{}:".format(marker[0]), CounterHold, notification = 'Automatic')
-      if re.search(r'Mastiff',marker[0]) and Time == 'Run':
-         InflictX('Inflict1BrainDamage-perMarker{Mastiff}', "{}:".format(marker[0]), CounterHold, notification = 'Automatic')
-      if re.search(r'Cerberus',marker[0]) and Time == 'Run':
-         InflictX('Inflict2NetDamage-perMarker{Cerberus}', "{}:".format(marker[0]), CounterHold, notification = 'Automatic')
-      if re.search(r'Baskerville',marker[0]) and Time == 'Run':
-         InflictX('Inflict2NetDamage-perMarker{Baskerville}', "{}:".format(marker[0]), CounterHold, notification = 'Automatic')
-   targetPL = ofwhom('-ofOpponent')          
-   # Checking triggers from markers in opponent's Counter Hold.
-   CounterHold = getSpecial('Counter Hold', targetPL) # Some viruses also trigger on our opponent's turns
-   for marker in CounterHold.markers:
-      count = CounterHold.markers[marker]
-#      if marker == mdict['virusButcherBoy'] and Time == 'Start':
-#         GainX('Gain1Credits-onOpponent-perMarker{virusButcherBoy}-div2', "Opponent's Butcher Boy virus:", OpponentCounterHold, notification = 'Automatic')
-   # Checking triggers from markers the rest of our cards.
-   cardList = [c for c in table if c.markers]
-   for card in cardList:
-      for marker in card.markers:
-         if re.search(r'Term',marker[0]) and Time == 'Start' and card.controller == me:
-            if me.counters['Credits'].value >= 2: 
-               passedScript = 'Remove1Term'
-               me.counters['Credits'].value -= 2
-               notify("--> {} pays {} for their Rent-to-Own Contract on {}".format(me, uniCredit(2),card))
-            else:
-               passedScript = 'Put1Term'
-               notify("--> {} couldn't pay their Rent-to-Own Contract on {} so it is extended for one turn".format(me, card))
-            TokensX(passedScript, "Rent-to-Own Contract:", card)

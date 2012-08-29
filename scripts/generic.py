@@ -14,9 +14,25 @@
     # You should have received a copy of the GNU General Public License
     # along with this script.  If not, see <http://www.gnu.org/licenses/>.
 
+###==================================================File Contents==================================================###
+# This file contains generic game-agnostic scripts. They can be ported as-is in any kind of game.
+# * [Generic] funcrion do basic stuff like convert a sting into a number or store your card's properties.
+###=================================================================================================================###
+
 import re
+
+playerside = None # Variable to keep track on which side each player is
+playeraxis = None # Variable to keep track on which axis the player is
+
+### Variables that hold the properties of a card.
+Stored_Type = {}
+Stored_Keywords = {}
+Stored_Cost = {}
+Stored_AutoActions = {}
+Stored_AutoScripts = {}
+
 #---------------------------------------------------------------------------
-# Generic functions (compatible with all games)
+# Generic
 #---------------------------------------------------------------------------
 
 def num (s):

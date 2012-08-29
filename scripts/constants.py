@@ -1,3 +1,7 @@
+###==================================================File Contents==================================================###
+# This file contains global variables in ANR. They should not be modified by the scripts at all.
+###=================================================================================================================###
+
 import re
 #---------------------------------------------------------------------------
 # These are constant global variables in ANR: They should not be modified by the scripts at all.

@@ -99,7 +99,14 @@
       <groupaction menu="&#9167; Target without cost" default="false" hortcut="Ctrl+T" execute="trashTargetFree" />
       <groupaction menu="Create new Remote Server" default="false" execute="createRemoteServer" />
    <!-- <groupaction menu="Roll d6" default="false" shortcut="Ctrl+6" execute="rolld6" /> -->
-      <groupaction menu="&#8986; Receive 1 ¥" default="false" shortcut="Ctrl+B" execute="getCredit" />
+      <groupaction menu="&#8986; Receive 1 ¥" default="false" shortcut="Ctrl+C" execute="getCredit" />
+      <groupactions menu="Help...">
+         <groupaction menu="The Timing Structure of a Turn" default="false" execute="HELP_TurnStructure" />
+         <groupaction menu="Corp Actions Reminder" default="false" execute="HELP_CorpActions" />
+         <groupaction menu="Runner Actions Reminder" default="false" execute="HELP_RunnerActions" />
+         <groupaction menu="The Anatomy of a Run" default="false" execute="HELP_RunAnatomy" />
+         <groupaction menu="The Timing Structure of a Run" default="false" execute="HELP_RunStructure" />
+      </groupactions>
    <!-- <cardaction menu="Show Card Position" default="false" shortcut="Ctrl+Shift+X" execute="ShowPosC" />  -->
         
       
