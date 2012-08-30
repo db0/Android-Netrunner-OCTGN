@@ -282,7 +282,16 @@ def ImAProAtThis(group = table, x=0, y=0):
 # Help functions
 #------------------------------------------------------------------------------
 
-   
+def HELP_TurnStructure(group,x=0,y=0):
+   table.create('8b4f0c4d-4e4a-4d7f-890d-936ef37c8600', x, y, 1)
+def HELP_CorpActions(group,x=0,y=0):
+   table.create('881ccfad-0da9-4ca8-82e6-29c524f15a7c', x, y, 1)
+def HELP_RunnerActions(group,x=0,y=0):
+   table.create('6b3c394a-411f-4a1c-b529-9a8772a96db9', x, y, 1)
+def HELP_RunAnatomy(group,x=0,y=0):
+   table.create('db60308d-0d0e-4891-9954-7c600a7389e1', x, y, 1)
+def HELP_RunStructure(group,x=0,y=0):
+   table.create('51c3a293-3923-49ee-8c6f-b8c41aaba5f3', x, y, 1)
 
    
 #------------------------------------------------------------------------------

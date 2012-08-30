@@ -100,7 +100,7 @@
       <groupaction menu="Create new Remote Server" default="false" execute="createRemoteServer" />
    <!-- <groupaction menu="Roll d6" default="false" shortcut="Ctrl+6" execute="rolld6" /> -->
       <groupaction menu="&#8986; Receive 1 ¥" default="false" shortcut="Ctrl+C" execute="getCredit" />
-      <groupactions menu="Help...">
+      <groupactions menu="Help &amp; References">
          <groupaction menu="The Timing Structure of a Turn" default="false" execute="HELP_TurnStructure" />
          <groupaction menu="Corp Actions Reminder" default="false" execute="HELP_CorpActions" />
          <groupaction menu="Runner Actions Reminder" default="false" execute="HELP_RunnerActions" />
