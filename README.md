@@ -46,6 +46,10 @@ Screenshots
 Changelog
 ---------
 
+### 1.1.5
+
+
+
 ### 1.1.4
 
 * Fixed a typo which prevented the runner form trashing upgrades.

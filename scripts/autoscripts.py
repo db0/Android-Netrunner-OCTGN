@@ -1365,10 +1365,10 @@ def findTarget(Autoscript): # Function for finding the target of an autoscript
                   if invalidtargetCHK == targetLookup.name:
                      targetC = None
             if debugVerbosity >= 4: notify("### Checking Rest...") #Debug
-            if re.search(r'isRezzed', Autoscript) and (not targetLookup.isFaceUp or cFaceD): 
+            if re.search(r'isRezzed', Autoscript) and not targetLookup.isFaceUp: 
                targetC = None
                if debugVerbosity >= 4: notify("### Target shouldn't be unrezzed") #Debug
-            if re.search(r'isUnrezzed', Autoscript) and (targetLookup.isFaceUp and not cFaceD): 
+            if re.search(r'isUnrezzed', Autoscript) and targetLookup.isFaceUp: 
                targetC = None
                if debugVerbosity >= 4: notify("### Target shouldn't be rezzed") #Debug
             if targetC and not targetC in foundTargets: 
