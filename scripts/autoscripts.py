@@ -227,21 +227,38 @@ def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
             if abilRegex.group(4) == '1': abilCost += 'Trash this card'
             else: abilCost += 'Use (Once per turn)'
          if abilRegex.group(1) == '0' and abilRegex.group(2) == '0' and abilRegex.group(3) == '0' and abilRegex.group(4) == '0':
-            abilCost = 'Activate'
+            if not re.search(r'-isCost', Autoscripts[idx]): 
+               abilCost = 'Activate' 
+               connectTXT = 'to '
+            else: 
+               abilCost = '' # If the ability claims to be a cost, then we need to put it as part of it, before the "to"
+               connectTXT = ''
+         else:
+            if not re.search(r'-isCost', Autoscripts[idx]): connectTXT = 'to ' # If there isn't an extra cost, then we connect with a "to" clause
+            else: connectTXT = 'and ' 
          if abilRegex.group(6):
             if abilRegex.group(6) == '999': abilX = 'all'
             else: abilX = abilRegex.group(6)
          else: abilX = abilRegex.group(6)
-         abilConcat += '{}: {} to {} {} {}'.format(idx, abilCost, abilRegex.group(5), abilX, abilRegex.group(7)) # We add the first three groups to the concat. Those groups are always Gain/Hoard/Prod ## Favo/Solaris/Spice
+         if re.search(r'-isSubroutine', Autoscripts[idx]): 
+            if abilCost == 'Activate':  # IF there's no extra costs to the subroutine, we just use the "enter" glyph
+               abilCost = uniSubroutine()
+               connectTXT = ''
+            else: abilCost = '{} '.format(uniSubroutine()) + abilCost # If there's extra costs to the subroutine, we prepend the "enter" glyph to the rest of the costs.
+         abilConcat += '{}: {}{}{} {} {}'.format(idx, abilCost, connectTXT, abilRegex.group(5), abilX, abilRegex.group(7)) # We add the first three groups to the concat. Those groups are always Gain/Hoard/Prod ## Favo/Solaris/Spice
+         if abilRegex.group(5) == 'Put' or abilRegex.group(5) == 'Remove' or abilRegex.group(5) == 'Refill': abilConcat += ' counter' # If it's putting a counter, we clarify that.
          if debugVerbosity >= 3: notify("### About to check rest of choice regex")
-         if abilRegex.group(8): # If the autoscript has a fourth group, then it means it has subconditions. Such as "per Holding" or "by Rival"
+         if abilRegex.group(8): # If the autoscript has an 8th group, then it means it has subconditions. Such as "per Marker" or "is Subroutine"
             subconditions = abilRegex.group(8).split('$$') # These subconditions are always separated by dashes "-", so we use them to split the string
             for idx2 in range(len(subconditions)):
-               if idx2 > 0: abilConcat += ' and'
+               if debugVerbosity >= 4: notify("#### Checking subcondition {}:{}".format(idx2,subconditions[idx2]))
+               if re.search(r'isCost', Autoscripts[idx]) and idx2 == 1: abilConcat += ' to' # The extra costs of an action are always at the first part (i.e. before the $$)
+               elif idx2 > 0: abilConcat += ' and'
                subadditions = subconditions[idx2].split('-')
                for idx3 in range(len(subadditions)):
-                  if debugVerbosity >= 3: notify("### Checking subaddition {}:{}".format(idx2,idx3))
+                  if debugVerbosity >= 4: notify("#### Checking subaddition {}-{}:{}".format(idx2,idx3,subadditions[idx3]))
                   if re.search(r'warn[A-Z][A-Za-z0-9 ]+', subadditions[idx3]): continue # Don't mention warnings.
+                  if subadditions[idx3] in IgnoredModulators: continue # We ignore modulators which are internal to the engine.
                   abilConcat += ' {}'.format(subadditions[idx3]) #  Then we iterate through each distinct subcondition and display it without the dashes between them. (In the future I may also add whitespaces between the distinct words)
          abilConcat += '\n' # Finally add a newline at the concatenated string for the next ability to be listed.
       abilChoice = len(Autoscripts) + 1 # Since we want a valid choice, we put the choice in a loop until the player exists or selects a valid one.
@@ -317,8 +334,9 @@ def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
             else: announceText += 'activates the once-per-turn ability of{} {}'.format(lingering,card)
          else: announceText += ' to activate{} {}'.format(lingering,card) # If we don't have to trash the card, we need to still announce the name of the card we're using.
          if actionCost.group(1) == '0' and actionCost.group(2) == '0' and actionCost.group(3) == '0' and actionCost.group(4) == '0':
-            if card.Type == 'ICE': announceText = '{} {} activates {}'.format(uniSubroutine(), me, card)
+            if card.Type == 'ICE': announceText = '{} activates {}'.format(me, card)
             else: announceText = '{} uses the ability of{} {}'.format(me, lingering, card)
+         if re.search(r'-isSubroutine', activeAutoscript): announceText = '{} '.format(uniSubroutine()) + announceText # if we are in a subroutine, we use the special icon to make it obvious.
          announceText += ' in order to'
       elif not announceText.endswith(' in order to') and not announceText.endswith(' and'): announceText += ' and'
       if debugVerbosity >= 2: notify("### Entering useAbility() Choice with Autoscript: {}".format(activeAutoscript)) # Debug

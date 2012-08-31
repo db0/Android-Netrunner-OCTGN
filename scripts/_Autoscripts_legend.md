@@ -250,3 +250,7 @@ The warn modulator merely provides some information to the player, and occasiona
 ### -chk
 
 Used by the RollX core command to see if the dice results needs to match a specific number
+
+### -isSubroutine
+
+Used only on ice. It tells the game which of their abilities are subroutines, so that we use the appropriate icon on the announcement.

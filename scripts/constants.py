@@ -105,7 +105,17 @@ RunnerCardTypes = [
          'Hardware',
          'Resource',
          'Event']
-         
+
+IgnoredModulators = [ # These are modulators to core commands that we do not want to be mentioning on the multiple choice, of cards that have one
+               'isSubroutine',
+               'onAccess',
+               'ignore',
+               'div',
+               'isOptional',
+               'excludeDummy',
+               'onlyforDummy',
+               'isCost']
+               
 trashEasterEgg = [
    "You really shouldn't try to trash this kind of card.",
    "No really, stop trying to trash this card. You need it.",

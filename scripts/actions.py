@@ -1019,11 +1019,12 @@ def expose(card, x = 0, y = 0, silent = False):
       if card.controller != me and confirm(":::WARNING:::Confirm:::\nYou are about to expose an opponent's card.\
                                             Do they have any reactions to this expose attempt?"): return 'ABORT'
       card.isFaceUp = True
+      if card.highlight == None: card.highlight = RevealedColor # we don't want to accidentally wipe dummy card highlight.
       if not silent: notify("{} exposed {}".format(me, card))
    else:
       card.isFaceUp = False
+      if card.highlight == RevealedColor: card.highlight = None
       if not silent: notify("{} hides {} once more again".format(me, card))
-      return 'ABORT'
 
 def rolld6(group = table, x = 0, y = 0, silent = False):
    if debugVerbosity >= 1: notify(">>> rolld6(){}".format(extraASDebug())) #Debug
