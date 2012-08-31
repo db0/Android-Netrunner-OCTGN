@@ -221,6 +221,26 @@ def checkUnique (card):
       for uniqueC in ExistingUniques: trashForFree(uniqueC)
    return True   
  
+def resetAll(): # Clears all the global variables in order to start a new game.
+   global Stored_Type, Stored_Cost, Stored_Keywords, Stored_AutoActions, Stored_AutoScripts
+   global installedCount, debugVerbosity,newturn,endofturn, currClicks
+   mute()
+   me.counters['Credits'].value = 5
+   me.counters['Max Hand Size'].value = 5
+   me.counters['Tags'].value = 0
+   me.counters['Agenda Points'].value = 0
+   me.counters['Bad Publicity'].value = 0
+   Stored_Type.clear()
+   Stored_Cost.clear()
+   Stored_Keywords.clear()
+   Stored_AutoActions.clear()
+   Stored_AutoScripts.clear()
+   installedCount.clear()
+   newturn = False 
+   endofturn = False
+   currClicks = 0
+   ShowDicts()
+   debugVerbosity = -1 # Reset means normal game.
 #------------------------------------------------------------------------------
 # Switches
 #------------------------------------------------------------------------------
@@ -343,11 +363,30 @@ def TrialError(group, x=0, y=0): # Debugging
    if not playerside:  # If we've already run this command once, don't recreate the cards.
       chooseSide()
       createStartingCards()
-   for idx in range(len(testcards)):
-      test = table.create(testcards[idx], (70 * idx) - 150, 0, 1, True)
-      storeProperties(test)
-      if test.Type == 'ICE' or test.Type == 'Agenda' or test.Type == 'Asset': test.isFaceUp = False
-         
+#   for idx in range(len(testcards)):
+#      test = table.create(testcards[idx], (70 * idx) - 150, 0, 1, True)
+#      storeProperties(test)
+#      if test.Type == 'ICE' or test.Type == 'Agenda' or test.Type == 'Asset': test.isFaceUp = False
+
+
+def ShowDicts():
+   if debugVerbosity < 0: return
+   notify("Stored_Types:\n {}".format(str(Stored_Type)))
+   notify("Stored_Costs:\n {}".format(str(Stored_Cost)))
+   notify("Stored_Keywords: {}".format(str(Stored_Keywords)))
+   notify("Stored_AA: {}".format(str(Stored_AutoActions)))
+   notify("Stored_AS: {}".format(str(Stored_AutoScripts)))
+   notify("installedCounts: {}".format(str(installedCount)))
+
+def DebugCard(card, x=0, y=0):
+   whisper("Stored Card Properties\
+          \n----------------------\
+          \nType: {}\
+          \nKeywords: {}\
+          \nCost: {}\
+          \n----------------------\
+          ".format(Stored_Type[card], Stored_Keywords[card], Stored_Cost[card]))
+   
 def extraASDebug(Autoscript = None):
    if Autoscript and debugVerbosity >= 3: return ". Autoscript:{}".format(Autoscript)
    else: return ''

@@ -1455,8 +1455,8 @@ def ASclosureTXT(string, count): # Used by Gain and Transfer, to return unicode 
  # function that returns a special string with the ANR unicode characters, based on the string and count that we provide it. 
  # So if it's provided with 'Credits', 2, it will return 2 [credits] (where [credits] is either the word or its symbol, depending on the unicode switch.
    if string == 'Base Link': closureTXT = '{} {}'.format(count,uniLink())
-   elif string == 'Clicks': closureTXT = '{} {}'.format(count,uniClick())
-   elif string == 'Credits': 
+   elif string == 'Clicks' or string == 'Click': closureTXT = '{} {}'.format(count,uniClick())
+   elif string == 'Credits' or string == 'Credit': 
       if count == 'all': closureTXT = 'all Credits'
       else: closureTXT = uniCredit(count)
    elif string == 'MU': closureTXT = uniMU(count)

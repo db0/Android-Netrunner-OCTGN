@@ -215,12 +215,10 @@ def createStartingCards():
  
 def intJackin(group, x = 0, y = 0):
    if debugVerbosity >= 1: notify(">>> intJackin(){}".format(extraASDebug())) #Debug
-   global ds, maxClicks,newturn,endofturn, currClicks, debugVerbosity, installedCount
-   global Stored_Type, Stored_Cost, Stored_Keywords, Stored_AutoActions, Stored_AutoScripts
+   global ds, maxClicks
    mute()
    if ds and not confirm("Are you sure you want to setup for a new game? (This action should only be done after a table reset)"): return
    ds = None
-   debugVerbosity = -1 # Jackin means normal game.
    if not table.isTwoSided() and not confirm(":::WARNING::: This game is designed to be played on a two-sided table. Things will be extremely uncomfortable otherwise!! Please start a new game and makde sure the  the appropriate button is checked. Are you sure you want to continue?"): return
    chooseSide()
    #for type in Automations: switchAutomation(type,'Announce') # Too much spam.
@@ -228,20 +226,7 @@ def intJackin(group, x = 0, y = 0):
    if len(deck) == 0:
       whisper ("Please load a deck first!")
       return
-   me.counters['Credits'].value = 5
-   me.counters['Max Hand Size'].value = 5
-   me.counters['Tags'].value = 0
-   me.counters['Agenda Points'].value = 0
-   me.counters['Bad Publicity'].value = 0
-   Stored_Type.clear()
-   Stored_Cost.clear()
-   Stored_Keywords.clear()
-   Stored_AutoActions.clear()
-   Stored_AutoScripts.clear()
-   installedCount.clear()
-   newturn = False 
-   endofturn = False
-   currClicks = 0
+   resetAll()
    for card in me.hand:
       if card.Type != 'Identity': 
          whisper(":::Warning::: You are not supposed to have any non-Identity cards in your hand when you start the game")
@@ -1375,6 +1360,14 @@ def intPlay(card, cost = 'not_free'):
    executePlayScripts(card,action.lower())
    autoscriptOtherPlayers('Card'+action,card) # we tell the autoscriptotherplayers that we installed/played a card. (e.g. See Haas-Bioroid ability)
    if debugVerbosity >= 3: notify("<<< intPlay().action: {}\nAutoscriptedothers: {}".format(action,'Card'+action)) #Debug
+   if debugVerbosity >= 1:
+      if Stored_Type.get(card,None): notify("++++ Stored Type: {}".format(Stored_Type[card]))
+      else: notify("++++ No Stored Type Found for {}".format(card))
+      if Stored_Keywords.get(card,None): notify("++++ Stored Keywords: {}".format(Stored_Keywords[card]))
+      else: notify("++++ No Stored Keywords Found for {}".format(card))
+      if Stored_Cost.get(card,None): notify("++++ Stored Cost: {}".format(Stored_Cost[card]))
+      else: notify("++++ No Stored Cost Found for {}".format(card))
+
 
 def chkTargeting(card):
    if debugVerbosity >= 1: notify(">>> chkTargeting(){}".format(extraASDebug())) #Debug
@@ -1526,6 +1519,7 @@ def mulligan(group):
    if not confirm("Are you sure you want to take a mulligan?"): return
    notify("{} is taking a Mulligan...".format(me))
    groupToDeck(group,silent = True)
+   resetAll()
    for i in range(2): 
       shuffle(me.piles['R&D/Stack']) # We do a good shuffle this time.   
       rnd(1,10)
@@ -1572,6 +1566,13 @@ def drawMany(group, count = None, destination = None, silent = False):
       whisper("You do not have enough cards in your deck to complete this action. Will draw as many as possible")
    for c in group.top(count): 
       c.moveTo(destination)
+      if debugVerbosity >= 1:
+         if Stored_Type.get(c,None): notify("++++ Stored Type: {}".format(Stored_Type[c]))
+         else: notify("++++ No Stored Type Found for {}".format(c))
+         if Stored_Keywords.get(c,None): notify("++++ Stored Keywords: {}".format(Stored_Keywords[c]))
+         else: notify("++++ No Stored Keywords Found for {}".format(c))
+         if Stored_Cost.get(c,None): notify("++++ Stored Cost: {}".format(Stored_Cost[c]))
+         else: notify("++++ No Stored Cost Found for {}".format(c))
       storeProperties(c)
    if not silent: notify("{} draws {} cards.".format(me, count))
    if debugVerbosity >= 3: notify("<<< drawMany() with return: {}".format(count))

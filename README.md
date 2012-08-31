@@ -46,9 +46,21 @@ Screenshots
 Changelog
 ---------
 
+### 1.1.6
+
+ * Exposing a card now puts a white highlight, so that you don't confuse it with a rezzed one
+ * Better multiple choice options
+ * Using the subroutine icons is more fine tuned to ICE abilities (requires new patch)
+ * Replaced the Agenda Points, Tags and Bad Publicity Counters with Vector based transparent icons in order to fit in with the rest.
+ * Mulligan now also clears you dictionaries. Lets see if we get funky cards again
+ * Added a "Card Debug" option when right clicking on cards. Use it when a card does not behave correctly (e.g. an ICE is not placed sideways) and [open a bug report](https://github.com/db0/Android-Netrunner-OCTGN/issues) with the text reported, what you were doing, and what had happened just before.
+ 
+
 ### 1.1.5
 
-
+* Fixed bug with targeted card crashing when checking if the target is rezzed or not.
+* Added help functions which puts some reference cards on the table.
+* Exposing opponent's card now puts out a confirm window to check that the opponent does not have reactions
 
 ### 1.1.4
 
