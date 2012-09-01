@@ -264,6 +264,7 @@ def intJackin(group, x = 0, y = 0):
    shuffle(me.piles['R&D/Stack'])
    notify("{}'s {} is shuffled ".format(me,pileName(me.piles['R&D/Stack'])))
    drawMany(me.piles['R&D/Stack'], 5)
+   shuffle(me.piles['R&D/Stack']) # And another one just to be sure
 
 def checkDeckNoLimit(group):
    if debugVerbosity >= 1: notify(">>> checkDeckNoLimit(){}".format(extraASDebug())) #Debug
@@ -1299,8 +1300,8 @@ def inspectCard(card, x = 0, y = 0): # This function shows the player the card t
 def currentHandSize(player = me):
    if debugVerbosity >= 1: notify(">>> currentHandSizel(){}".format(extraASDebug())) #Debug
    specialCard = getSpecial('Counter Hold', player)
-   if specialCard.markers[mdict['BrainDMG']]: currHandSize =  player.counters['Max Hand Size'].value - specialCard.markers[mdict['BrainDMG']]
-   else: currHandSize = player.counters['Max Hand Size'].value
+   if specialCard.markers[mdict['BrainDMG']]: currHandSize =  player.counters['Hand Size'].value - specialCard.markers[mdict['BrainDMG']]
+   else: currHandSize = player.counters['Hand Size'].value
    return currHandSize
 
 def intPlay(card, cost = 'not_free'):

@@ -226,7 +226,7 @@ def resetAll(): # Clears all the global variables in order to start a new game.
    global installedCount, debugVerbosity,newturn,endofturn, currClicks
    mute()
    me.counters['Credits'].value = 5
-   me.counters['Max Hand Size'].value = 5
+   me.counters['Hand Size'].value = 5
    me.counters['Tags'].value = 0
    me.counters['Agenda Points'].value = 0
    me.counters['Bad Publicity'].value = 0
@@ -355,7 +355,7 @@ def TrialError(group, x=0, y=0): # Debugging
       else: ds = "runner"
    me.setGlobalVariable('ds', ds) 
    me.counters['Credits'].value = 50
-   me.counters['Max Hand Size'].value = 5
+   me.counters['Hand Size'].value = 5
    me.counters['Tags'].value = 1
    me.counters['Agenda Points'].value = 0
    me.counters['Bad Publicity'].value = 10

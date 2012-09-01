@@ -661,11 +661,11 @@ def GainX(Autoscript, announceText, card, targetCards = None, notification = Non
          maxClicks += gain * multiplier
       else: notify("--> {} loses {} clicks maximum. They must make this modification manually".format(targetPL,gain * multiplier))
    elif re.match(r'Hand Size', action.group(3)): 
-      if action.group(1) == 'SetTo': targetPL.counters['Max Hand Size'].value = 0 # If we're setting to a specific value, we wipe what it's currently.
-      targetPL.counters['Max Hand Size'].value += gain * multiplier
-      if targetPL.counters['Max Hand Size'].value < 0: 
+      if action.group(1) == 'SetTo': targetPL.counters['Hand Size'].value = 0 # If we're setting to a specific value, we wipe what it's currently.
+      targetPL.counters['Hand Size'].value += gain * multiplier
+      if targetPL.counters['Hand Size'].value < 0: 
          if re.search(r'isCost', Autoscript): notify(":::Warning:::{} did not have enough {} to pay the cost of this action".format(action.group(3)))
-         else: targetPL.counters['Max Hand Size'].value = 0
+         else: targetPL.counters['Hand Size'].value = 0
    else: 
       whisper("Gain what?! (Bad autoscript)")
       return 'ABORT'
@@ -1198,7 +1198,7 @@ def InflictX(Autoscript, announceText, card, targetCards = None, notification = 
             if targetPL.getGlobalVariable('ds') == 'corp': DMGcard.moveTo(targetPL.piles['Archives(Hidden)']) # If they're a corp, move it to the hidden archive
             else: DMGcard.moveTo(targetPL.piles['Heap/Archives(Face-up)']) #If they're a runner, move it to trash.
             if action.group(3) == 'Brain':  
-               #targetPL.counters['Max Hand Size'].value -= 1 # If it's brain damage, also reduce the player's maximum handsize.               
+               #targetPL.counters['Hand Size'].value -= 1 # If it's brain damage, also reduce the player's maximum handsize.               
                applyBrainDmg(targetPL)
    if targetPL == me: targetPL = 'theirself' # Just changing the announcement to fit better.
    if re.search(r'isRequirement', Autoscript) and DMG < 1: failedRequirement = True # Requirement means that the cost is still paid but other clicks are not going to follow.

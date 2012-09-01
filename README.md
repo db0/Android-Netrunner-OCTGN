@@ -46,6 +46,10 @@ Screenshots
 Changelog
 ---------
 
+### 1.1.8
+
+* Ctrl+D = Shortcut for Card Draw
+
 ### 1.1.7
 
 * Runner looking at corp's deck now mentions the amount of cards.

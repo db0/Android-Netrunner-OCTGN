@@ -133,8 +133,8 @@
       </hand>
 
       <group name="R&amp;D/Stack" visibility="none" ordered="false" width="63" height="88" icon="r12" collapsed="false">
+         <groupaction menu="&#8986; Draw" default="true" shortcut="Ctrl+D" execute="draw" />
          <groupaction menu="Shuffle" default="false" execute="shuffle" />
-         <groupaction menu="&#8986; Draw" default="true" execute="draw" />
          <groupaction menu="Draw X" default="false" execute="drawMany" />
          <groupaction menu="Discard X" default="false" execute="mill" />
          <groupaction menu="Move Top X card to Bottom" default="false" execute="moveXtopCardtoBottomStack" />
@@ -154,7 +154,7 @@
       <counter name="Base Link" default="0" reset="true" icon="r16" />
       <counter name="Agenda Points" default="0" reset="true" icon="r7" />
       <counter name="Bad Publicity" default="0" reset="true" icon="r2" />
-      <counter name="Max Hand Size" default="0" reset="true" icon="r13" />
+      <counter name="Hand Size" default="0" reset="true" icon="r13" />
       <counter name="Tags" default="0" reset="true" icon="r26" />
    </player>
    <shared>
