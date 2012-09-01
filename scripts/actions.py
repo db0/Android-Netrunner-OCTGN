@@ -323,7 +323,7 @@ def checkDeckNoLimit(group):
 
 def createRemoteServer(group,x=0,y=0):
    if debugVerbosity >= 1: notify(">>> createSDF(){}".format(extraASDebug())) #Debug
-   Server = table.create("d59fc50c-c727-4b69-83eb-36c475d60dcb", x, y - (40 * playerside), 1, True)
+   Server = table.create("d59fc50c-c727-4b69-83eb-36c475d60dcb", x, y - (40 * playerside), 1, False)
    placeCard(Server,'install')
    
 #------------------------------------------------------------------------------
@@ -852,7 +852,9 @@ def RDaccessX(group = table, x = 0, y = 0): # A function which looks at the top 
       return
    if debugVerbosity >= 4:
       for card in RDtop: notify("#### Card: {}".format(card))
-   notify("{} is looking at the top {} cards of {}'s R&D".format(me,count,targetPL))
+   notify("{} is accessing the top {} cards of {}'s R&D".format(me,count,targetPL))
+   cover = table.create("ac3a3d5d-7e3a-4742-b9b2-7f72596d9c1b",0,0,1,True) # Creating a dummy card to cover that player's archives in case they're empty
+   cover.moveTo(targetPL.piles['Heap/Archives(Face-up)']) # Moving that dummy card on top of their archives
    for iter in range(len(RDtop)):
       if debugVerbosity >= 3: notify("### Moving card {}".format(iter)) #Debug
       RDtop[iter].moveToBottom(targetPL.piles['Heap/Archives(Face-up)'])
@@ -860,7 +862,7 @@ def RDaccessX(group = table, x = 0, y = 0): # A function which looks at the top 
       loopChk(RDtop[iter],'Type')
       if re.search(r'onAccess:Reveal',RDtop[iter].AutoScript):
          RDtop[iter].moveToTable(0, 0 + yaxisMove(RDtop[iter]), False)
-         RDtop[iter].highlight = RevealedColor
+         RDtop[iter].highlight = RevealedColor         
          confirm("Ambush! You have stumbled into a {}\
                 \n(This card activates even on access from R&D.)\
               \n\nYour blunder has already triggered the alarms. Please wait until corporate OpSec has decided whether to use its effects or not, before pressing any button\
@@ -923,6 +925,8 @@ def RDaccessX(group = table, x = 0, y = 0): # A function which looks at the top 
             loopChk(RDtop[iter],'Type')
             notify("{} paid {} to {} {}".format(me,uniCredit(cStat),uniTrash(),RDtop[iter]))            
       else: continue
+   cover.moveTo(shared.exile) # now putting the cover card to the exile deck that nobody looks at.
+   notify("{} has accessing {}'s R&D".format(me,targetPL))
 
 def ARCscore(group, x=0,y=0):
    mute()

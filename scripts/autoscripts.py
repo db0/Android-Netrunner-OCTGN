@@ -148,6 +148,7 @@ def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
    if debugVerbosity >= 1: notify(">>> useAbility(){}".format(extraASDebug())) #Debug
    mute()
    global failedRequirement
+   storeProperties(card) # Just in case
    failedRequirement = False # We set it to false when we start a new autoscript.
    if debugVerbosity >= 5: notify("+++ Checking if Tracing card...")
    if (card in Stored_Type and Stored_Type[card] == 'Tracing') or card.model == 'eb7e719e-007b-4fab-973c-3fe228c6ce20': # If the player double clicks on the Tracing card...
@@ -1471,7 +1472,7 @@ def ofwhom(Autoscript, controller = me):
       if len(players) > 1:
          if controller == me: # If we're the current controller of the card who's scripts are being checked, then we look for our opponent
             for player in players:
-               if player.getGlobalVariable('ds') = '': continue # This is a spectator 
+               if player.getGlobalVariable('ds') == '': continue # This is a spectator 
                elif player != me and player.getGlobalVariable('ds') != ds:
                   targetPL = player # Opponent needs to be not us, and of a different type. 
                                     # In the future I'll also be checking for teams by using a global player variable for it and having players select their team on startup.
