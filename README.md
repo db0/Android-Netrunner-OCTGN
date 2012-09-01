@@ -46,6 +46,12 @@ Screenshots
 Changelog
 ---------
 
+### 1.1.7
+
+* Runner looking at corp's deck now mentions the amount of cards.
+* Tried to make the card properties storing function more robust and less likely to break your card properties
+* The Card Debug will now also try to repair the card properties if possible. Try using the card again afterwards to see if it works
+
 ### 1.1.6
 
  * Exposing a card now puts a white highlight, so that you don't confuse it with a rezzed one

@@ -54,14 +54,15 @@ def executePlayScripts(card, action):
    if len(Autoscripts) == 0: return
    for AutoS in Autoscripts:
       if debugVerbosity >= 2: notify("### First Processing: {}".format(AutoS)) # Debug
-      effectType = re.search(r'(on[A-Za-z]+|while[A-Za-z]+):', AutoS)
-      if ((effectType.group(1) == 'onRez' and action != 'rez') or
+      effectType = re.search(r'(on[A-Za-z]+|while[A-Za-z]+):', AutoS) 
+      if ((effectType.group(1) == 'onRez' and action != 'rez') or # We don't want onPlay effects to activate onTrash for example.
           (effectType.group(1) == 'onPlay' and action != 'play') or
           (effectType.group(1) == 'onInstall' and action != 'install') or
           (effectType.group(1) == 'onScore' and action != 'score') or
           (effectType.group(1) == 'onLiberation' and action != 'liberate') or
           (effectType.group(1) == 'onTrash' and (action != 'trash' or action!= 'uninstall' or action != 'derez')) or
-          (effectType.group(1) == 'onDerez' and action != 'derez')): continue # We don't want onPlay effects to activate onTrash for example.
+          (effectType.group(1) == 'onDerez' and action != 'derez') or
+          effectType.group(1) == 'onAccess'): continue # OnAccess: Is only used by Ambush cards.
       if re.search(r'-isOptional', AutoS):
          if not confirm("This card has an optional ability you can activate at this point. Do you want to do so?"): 
             notify("{} opts not to activate {}'s optional ability".format(me,card))

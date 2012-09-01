@@ -843,6 +843,7 @@ def RDaccessX(group = table, x = 0, y = 0): # A function which looks at the top 
       whisper("This action is only for the use of the runner. Use the 'Look at top X cards' function on your R&D's context manu to access your own deck")
       return
    count = askInteger("How many cards are you accessing from the corporation's R&D?",1)
+   if count == None: return
    targetPL = ofwhom('-ofOpponent')
    if debugVerbosity >= 3: notify("### Found opponent. Storing the top {} as a list".format(count)) #Debug
    RDtop = list(targetPL.piles['R&D/Stack'].top(count))
@@ -851,11 +852,19 @@ def RDaccessX(group = table, x = 0, y = 0): # A function which looks at the top 
       return
    if debugVerbosity >= 4:
       for card in RDtop: notify("#### Card: {}".format(card))
+   notify("{} is looking at the top {} cards of {}'s R&D".format(me,count,targetPL))
    for iter in range(len(RDtop)):
       if debugVerbosity >= 3: notify("### Moving card {}".format(iter)) #Debug
       RDtop[iter].moveToBottom(targetPL.piles['Heap/Archives(Face-up)'])
       if debugVerbosity >= 4: notify("#### Looping...")
       loopChk(RDtop[iter],'Type')
+      if re.search(r'onAccess:Reveal',RDtop[iter].AutoScript):
+         RDtop[iter].moveToTable(0, 0 + yaxisMove(RDtop[iter]), False)
+         RDtop[iter].highlight = RevealedColor
+         confirm("Ambush! You have stumbled into a {}\
+                \n(This card activates even on access from R&D.)\
+              \n\nYour blunder has already triggered the alarms. Please wait until corporate OpSec has decided whether to use its effects or not, before pressing any button\
+                  ".format(RDtop[iter].name))
       if debugVerbosity >= 4: notify("#### Storing...")
       cType = RDtop[iter].Type
       cKeywords = RDtop[iter].Keywords

@@ -65,7 +65,7 @@ def storeProperties(card): # Function that grabs a cards important properties an
    if debugVerbosity >= 1: notify(">>> storeProperties(){}".format(extraASDebug())) #Debug
    global Stored_Cost, Stored_Type, Stored_Keywords, Stored_AutoActions, Stored_AutoScripts, identName
    cFaceD = False
-   if card.name == 'Card' and not Stored_Cost.get(card,None):
+   if card.name == 'Card' and Stored_Type.get(card,'?') == '?':
       if not card.isFaceUp: 
          card.isFaceUp = True
          cFaceD = True
@@ -76,7 +76,7 @@ def storeProperties(card): # Function that grabs a cards important properties an
          if loopcount == 5:
             whisper(":::Error::: Card properties can't be grabbed. Aborting!")
             break
-   if not Stored_Type.get(card,None) or Stored_Type.get(card,'?') == '?' or Stored_Type.get(card,'?') != card.Type:
+   if Stored_Type.get(card,'?') == '?' or (Stored_Type.get(card,'?') != card.Type and card.Type != '?'):
       if debugVerbosity >= 3: notify("### {} not stored. Storing...".format(card))
       Stored_Cost[card] = card.Cost
       Stored_Type[card] = card.Type
@@ -109,7 +109,7 @@ def loopChk(card,property = 'Type'):
       if loopcount == 5:
          whisper(":::Error::: Card property can't be grabbed. Aborting!")
          return 'ABORT'
-   notify("<<< loopChk()") #Debug
+   if debugVerbosity >= 4: notify("<<< loopChk()") #Debug
    return 'OK'         
    
 def sortPriority(cardList):
