@@ -384,8 +384,10 @@ def DebugCard(card, x=0, y=0):
           \nType: {}\
           \nKeywords: {}\
           \nCost: {}\
+          \nCard ID: {}\
           \n----------------------\
-          ".format(Stored_Type[card], Stored_Keywords[card], Stored_Cost[card]))
+          ".format(Stored_Type[card], Stored_Keywords[card], Stored_Cost[card],card._id))
+   storeProperties(card)
    
 def extraASDebug(Autoscript = None):
    if Autoscript and debugVerbosity >= 3: return ". Autoscript:{}".format(Autoscript)

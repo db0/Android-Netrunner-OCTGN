@@ -76,7 +76,7 @@ def storeProperties(card): # Function that grabs a cards important properties an
          if loopcount == 5:
             whisper(":::Error::: Card properties can't be grabbed. Aborting!")
             break
-   if not Stored_Type.get(card,None) or Stored_Type.get(card,'?') == '?':
+   if not Stored_Type.get(card,None) or Stored_Type.get(card,'?') == '?' or Stored_Type.get(card,'?') != card.Type:
       if debugVerbosity >= 3: notify("### {} not stored. Storing...".format(card))
       Stored_Cost[card] = card.Cost
       Stored_Type[card] = card.Type
