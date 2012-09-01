@@ -230,7 +230,7 @@ def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
          if abilRegex.group(1) == '0' and abilRegex.group(2) == '0' and abilRegex.group(3) == '0' and abilRegex.group(4) == '0':
             if not re.search(r'-isCost', Autoscripts[idx]): 
                abilCost = 'Activate' 
-               connectTXT = 'to '
+               connectTXT = ' to '
             else: 
                abilCost = '' # If the ability claims to be a cost, then we need to put it as part of it, before the "to"
                connectTXT = ''
@@ -1471,7 +1471,8 @@ def ofwhom(Autoscript, controller = me):
       if len(players) > 1:
          if controller == me: # If we're the current controller of the card who's scripts are being checked, then we look for our opponent
             for player in players:
-               if player != me and player.getGlobalVariable('ds') != ds:
+               if player.getGlobalVariable('ds') = '': continue # This is a spectator 
+               elif player != me and player.getGlobalVariable('ds') != ds:
                   targetPL = player # Opponent needs to be not us, and of a different type. 
                                     # In the future I'll also be checking for teams by using a global player variable for it and having players select their team on startup.
          else: targetPL = me # if we're not the controller of the card we're using, then we're the opponent of the player (i.e. we're trashing their card)
