@@ -222,6 +222,7 @@ def checkUnique (card):
    return True   
  
 def resetAll(): # Clears all the global variables in order to start a new game.
+   if debugVerbosity >= 1: notify(">>> resetAll(){}".format(extraASDebug())) #Debug
    global Stored_Type, Stored_Cost, Stored_Keywords, Stored_AutoActions, Stored_AutoScripts
    global installedCount, debugVerbosity,newturn,endofturn, currClicks
    mute()
@@ -241,6 +242,7 @@ def resetAll(): # Clears all the global variables in order to start a new game.
    currClicks = 0
    ShowDicts()
    debugVerbosity = -1 # Reset means normal game.
+   if debugVerbosity >= 1: notify("<<< resetAll()") #Debug
 #------------------------------------------------------------------------------
 # Switches
 #------------------------------------------------------------------------------

@@ -54,6 +54,7 @@ def chooseSide(): # Called from many functions to check if the player has chosen
      else:
         playeraxis = Yaxis
         playerside = 1
+   if debugVerbosity >= 4: notify("<<< chooseSide(){}".format(extraASDebug())) #Debug
 
 def displaymatch(match):
    if match is None:

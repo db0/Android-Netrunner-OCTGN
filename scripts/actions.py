@@ -869,6 +869,7 @@ def RDaccessX(group = table, x = 0, y = 0): # A function which looks at the top 
               \n\nYour blunder has already triggered the alarms. Please wait until corporate OpSec has decided whether to use its effects or not, before pressing any button\
                   ".format(RDtop[iter].name))
       if debugVerbosity >= 4: notify("#### Storing...")
+      storeProperties(RDtop[iter]) # Otherwise trying to trash the card will crash because of reduceCost()
       cType = RDtop[iter].Type
       cKeywords = RDtop[iter].Keywords
       cStat = RDtop[iter].Stat

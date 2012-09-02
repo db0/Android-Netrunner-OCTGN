@@ -49,6 +49,10 @@ Changelog
 ### 1.1.8
 
 * Ctrl+D = Shortcut for Card Draw
+* Fixed bug when trashing research station. "Max Hand Size" counter is now renamed to "Hand Size"
+* Fixed but where trying to pay and trash a card when Accessing the Top X Cards from Opponent's deck would crash the script
+* Psychographics should now take away the X cost as credits. (New patch)
+
 
 ### 1.1.7
 
