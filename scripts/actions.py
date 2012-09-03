@@ -340,7 +340,7 @@ def intRun(aCost = 1, Name = 'R&D', silent = False):
       whisper(":::ERROR:::Corporations can't run!")
       return 'ABORT'
    if re.search(r'running',getGlobalVariable('status')):
-      whisper(":::ERROR:::You are already jacked-in. Please end the previous run (press [Esc]) before starting a new one")
+      whisper(":::ERROR:::You are already jacked-in. Please end the previous run (press [Esc] or [F3]) before starting a new one")
       return
    CounterHold = getSpecial('Counter Hold') # Old code from Netrunner. Not sure if the new one will do stuff like that
    #if findMarker(CounterHold,'Fang') or findMarker(CounterHold,'Rex') or findMarker(CounterHold,'Fragmentation Storm'): # These are counters which prevent the runner from running.
@@ -375,7 +375,7 @@ def runServer(group, x=0,y=0):
    if debugVerbosity >= 1: notify(">>> runSDF(){}".format(extraASDebug())) #Debug
    intRun(1, "a remote server")
 
-def jackOut(group=table,x=0,y=0, silent = False):
+def jackOut(group=table,x=0,y=0, silent = False, result = 'failure'):
    if debugVerbosity >= 1: notify(">>> jackOut()") #Debug
    opponent = ofwhom('-ofOpponent') # First we check if our opponent is a runner or a corp.
    if ds == 'corp': targetPL = opponent
@@ -386,12 +386,16 @@ def jackOut(group=table,x=0,y=0, silent = False):
       if targetPL != me: whisper("{} is not running at the moment.".format(targetPL))
       else: whisper("You are not currently jacked-in.")
    else: # Else announce they are jacked in and resolve all post-run effects.
-      setGlobalVariable('status','idle')
       myIdent.markers[mdict['BadPublicity']] = 0
       if not silent:
          if targetPL != me: notify("{} has kicked {} out of their corporate grid".format(myIdent,enemyIdent))
          else: notify("{} has jacked out of the run".format(myIdent))
-      atTimedEffects('JackOut')
+      if result == 'failure': atTimedEffects('JackOut')
+      else: atTimedEffects('SuccessfulRun')
+      setGlobalVariable('status','idle')
+      
+def runSuccess(group=table,x=0,y=0, silent = False):
+   jackOut(silent = False, 'success')
 #------------------------------------------------------------------------------
 # Tags...
 #------------------------------------------------------------------------------

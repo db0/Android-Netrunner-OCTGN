@@ -469,9 +469,19 @@ def atTimedEffects(Time = 'Start'): # Function which triggers card effects at th
       Autoscripts = card.AutoScript.split('||')
       for autoS in Autoscripts:
          if Time == 'Run': effect = re.search(r'at(Run)Start:(.*)', autoS) # Putting Run in a group, only to retain the search results groupings later
-         elif Time == 'JackOut': effect = re.search(r'at(JackOut):(.*)', autoS) # Same as above
+         elif Time == 'JackOut' or Time == 'SuccessfulRun': effect = re.search(r'at(JackOut):(.*)', autoS) # Same as above
          else: effect = re.search(r'atTurn(Start|End):(.*)', autoS) #Putting "Start" or "End" in a group to compare with the Time variable later
          if not effect: continue
+         if re.search(r'onlyOnce',autoS) and oncePerTurn(card, silent = True, act = 'automatic') == 'ABORT': continue
+         if re.search(r'-ifSuccessfulRun', autoS) and Time == 'SuccessfulRun': #If we're looking only for successful runs, we need the Time to be a successful run.
+            requiredTarget = re.search(r'-ifSuccessfulRun([A-Za-z&]+)', autoS) # We check what the script requires to be the successful target
+            currentRunTarget = re.search(r'running([A-Za-z&]+)', getGlobalVariable('status')) # We check what the target of the current run was.
+            if debugVerbosity >= 2: 
+               if requiredTarget and currentRunTarget: notify("!!! Regex requiredTarget: {}\ncurrentRunTarget: {}".format(requiredTarget.groups(),currentRunTarget.groups()))
+               else: notify ("No requiredTarget or currentRunTarget regex match :(")
+            if requiredTarget.group(1) == 'Any': pass # -ifSuccessfulRunAny means we run the script on any successful run (e.g. Desperado)
+            elif requiredTarget.group(1) == currentRunTarget.group(1): pass # If the card requires a successful run on a server that the global variable points that we were running at, we can proceed.
+            else: continue # If none of the above, it means the card script is not triggering for this server.
          if chkPlayer(effect.group(2), card.controller,False) == 0: continue # Check that the effect's origninator is valid. 
          if effect.group(1) != Time: continue # If it's a start-of-turn effect and we're at the end, or vice-versa, do nothing.
          if debugVerbosity >= 3: notify("### split Autoscript: {}".format(autoS))
