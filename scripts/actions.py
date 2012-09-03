@@ -95,6 +95,9 @@ def useClick(group = table, x=0, y=0, count = 1):
    mute()
    extraText = ''
    if count == 0: return '{} takes a free action'.format(me)
+   if ds == 'runner' and getGlobalVariable('status') == 'running': 
+      if not confirm("You have not yet finished your previous run. Normally you're not allowed to use clicks during runs, are you sure you want to continue?\
+                 \n\n(Pressing 'No' will abort this action and you can then Jack-out of the run with [ESC]"): return 'ABORT'
    clicksReduce = findCounterPrevention(me.Clicks, 'Clicks', me)
    if clicksReduce: notify(":::WARNING::: {} had to forfeit their next {} clicks".format(me, clicksReduce))
    me.Clicks -= clicksReduce
