@@ -46,14 +46,6 @@ Screenshots
 Changelog
 ---------
 
-### 1.1.8
-
-* Ctrl+D = Shortcut for Card Draw
-* Fixed bug when trashing research station. "Max Hand Size" counter is now renamed to "Hand Size"
-* Fixed but where trying to pay and trash a card when Accessing the Top X Cards from Opponent's deck would crash the script
-* Psychographics should now take away the X cost as credits. (New patch)
-
-
 ### 1.1.7
 
 * Runner looking at corp's deck now mentions the amount of cards.
@@ -61,8 +53,6 @@ Changelog
 * The Card Debug will now also try to repair the card properties if possible. Try using the card again afterwards to see if it works
 * Runner hitting an ambush during accessing cards from Corp's will now send the ambush to the table for the Corp to use.
 * Having spectators should now (theoretically) not bork the system.
-* Remote Servers are now not persistent
-* When the runner accesses the top X cards from R&D, a cover is put on top of the archives (which is used to read the card properties) so that the corp can't read the card
 
 
 ### 1.1.6

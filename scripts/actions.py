@@ -335,6 +335,9 @@ def intRun(aCost = 1, Name = 'R&D', silent = False):
    if ds != 'runner':  
       whisper(":::ERROR:::Corporations can't run!")
       return 'ABORT'
+   if getGlobalVariable('status') == 'running':
+      whisper(":::ERROR:::You are already jacked-in. Please end the previous run (press [Esc]) before starting a new one")
+      return
    CounterHold = getSpecial('Counter Hold') # Old code from Netrunner. Not sure if the new one will do stuff like that
    #if findMarker(CounterHold,'Fang') or findMarker(CounterHold,'Rex') or findMarker(CounterHold,'Fragmentation Storm'): # These are counters which prevent the runner from running.
    #   notify(":::Warning:::{} attempted to run but was prevented by a resident Sentry effect in their Rig. They will have to remove all such effects before attempting a run".format(me))
@@ -347,26 +350,44 @@ def intRun(aCost = 1, Name = 'R&D', silent = False):
    enemyIdent = getSpecial('Identity',targetPL)
    myIdent = getSpecial('Identity',me)
    if BadPub > 0:
-         me.Credits += BadPub
+         myIdent.markers[mdict['BadPublicity']] += BadPub
          notify("--> The Bad Publicity of {} allows {} to secure {} for this run".format(enemyIdent,myIdent,uniCredit(BadPub)))
+   setGlobalVariable('status','running')
    atTimedEffects('Run')
 
-def runHQ(group, x=0,Y=0):
+def runHQ(group, x=0,y=0):
    if debugVerbosity >= 1: notify(">>> runHQ(){}".format(extraASDebug())) #Debug
    intRun(1, "HQ")
 
-def runRD(group, x=0,Y=0):
+def runRD(group, x=0,y=0):
    if debugVerbosity >= 1: notify(">>> runRD(){}".format(extraASDebug())) #Debug
    intRun(1, "R&D")
 
-def runArchives(group, x=0,Y=0):
+def runArchives(group, x=0,y=0):
    if debugVerbosity >= 1: notify(">>> runArchives(){}".format(extraASDebug())) #Debug
    intRun(1, "the Archives")
 
-def runServer(group, x=0,Y=0):
+def runServer(group, x=0,y=0):
    if debugVerbosity >= 1: notify(">>> runSDF(){}".format(extraASDebug())) #Debug
    intRun(1, "a remote server")
 
+def jackOut(group,x=0,y=0, silent = False):
+   if debugVerbosity >= 1: notify(">>> jackOut()") #Debug
+   opponent = ofwhom('-ofOpponent') # First we check if our opponent is a runner or a corp.
+   if ds == 'corp': targetPL = opponent
+   else: targetPL = me
+   enemyIdent = getSpecial('Identity',targetPL)
+   myIdent = getSpecial('Identity',me)
+   if getGlobalVariable('status') != 'running': # If the runner is not running at the moment, do nothing
+      if targetPL != me: whisper("{} is not running at the moment.".format(targetPL))
+      else: whisper("You are not currently jacked-in.")
+   else: # Else announce they are jacked in and resolve all post-run effects.
+      setGlobalVariable('status','idle')
+      myIdent.markers[mdict['BadPublicity']] = 0
+      if not silent:
+         if targetPL != me: notify("{} has kicked {} out of their corporate grid".format(myIdent,enemyIdent))
+         else: notify("{} has jacked out of the run".format(myIdent))
+      atTimedEffects('JackOut')
 #------------------------------------------------------------------------------
 # Tags...
 #------------------------------------------------------------------------------
@@ -587,7 +608,9 @@ def reduceCost(card, type = 'Rez', fullCost = 0):
    if debugVerbosity >= 1: notify(">>> reduceCost(). Action is: {}".format(type)) #Debug
    if fullCost == 0: return 0 # If there's no cost, there's no use checking the table.
    reduction = 0
-   Autoscripts = Stored_AutoScripts[card].split('||') # First we check if the card has an innate reduction.
+   status = getGlobalVariable('status')
+   ### First we check if the card has an innate reduction. 
+   Autoscripts = Stored_AutoScripts[card].split('||') 
    if len(Autoscripts): 
       for autoS in Autoscripts:
          if not re.search(r'onPay', autoS): 
@@ -603,11 +626,21 @@ def reduceCost(card, type = 'Rez', fullCost = 0):
             continue
          reduction += num(reductionSearch.group(1))
          fullCost -= 1
-   elif debugVerbosity >= 2: notify("### No autoscripts found!")
+   elif debugVerbosity >= 2: notify("### No self-reducing autoscripts found!")
+   ### Now we check if we're in a run and we have bad publicity credits to spend
+   if status == 'running':
+      myIdent = getSpecial('Identity',me)
+      while fullCost > 0 and myIdent.markers[mdict['BadPublicity']] and myIdent.markers[mdict['BadPublicity']] > 0: 
+         reduction += 1
+         fullCost -= 1
+         myIdent.markers[mdict['BadPublicity']] -= 1
+         if fullCost == 0: break      
+   ### Finally we go through the table and see if there's any cards providing cost reduction
    for c in table: # Then check if there's other cards in the table that reduce its costs.
       Autoscripts = c.AutoScript.split('||')
       if len(Autoscripts) == 0: continue
       for autoS in Autoscripts:
+         if re.search(r'whileRunning', autoS) and status != 'running': continue # if the reduction is only during runs, and we're not in a run, bypass this effect
          if debugVerbosity >= 2: notify("### Checking {} with AS: {}".format(c, autoS)) #Debug
          reductionSearch = re.search(r'Reduce([0-9#]+)Cost({}|All)-for([A-Z][A-Za-z ]+)(-not[A-Za-z_& ]+)?'.format(type), autoS) 
          if debugVerbosity >= 2: #Debug

@@ -10,6 +10,7 @@
    <globalvariables> 
      <globalvariable name="fontsize" value="11"/> 
      <globalvariable name="chatsize" value="12"/> 
+     <globalvariable name="status" value="" /> 
    </globalvariables>
    <card back="r4" front="r5" width="63" height="88" cornerRadius="2">
       <property name="Subtitle" type="String" hidden="false" ignoreText="False"/>
@@ -44,7 +45,7 @@
          <groupaction menu="Re-Scan table" default="false" execute="scanTable" />
          <groupaction menu="Debug" default="false" shortcut="Ctrl+Shift+D" execute="TrialError" /> 
       </groupactions>
-      <cardaction menu="Card Debug" default="false" execute="DebugCard" /> 
+      <cardaction menu="Debug Card" default="false" execute="DebugCard" /> 
       <groupactions menu="Turns/Clicks...">
          <groupaction menu="Declare Start of Turn" default="false" shortcut="F1" execute="goToSot" />
          <groupaction menu="&#8986; Declare Click" default="false" shortcut="Enter" execute="useClick" />
@@ -52,10 +53,11 @@
       </groupactions>
       <groupactions menu="Runner Actions...">
          <groupaction menu="&#8986; Pay 2 ¥ and remove a Tag" default="false" shortcut="Ctrl+R" execute="pay2andDelTag" />
-         <groupaction menu="&#8986; Run on HQ" default="false" shortcut="Ctrl+Alt+H" execute="runHQ" />
-         <groupaction menu="&#8986; Run on R&amp;D" default="false" shortcut="Ctrl+Alt+R" execute="runRD" />
-         <groupaction menu="&#8986; Run on Archives" default="false" shortcut="Ctrl+Alt+A" execute="runArchives" />
-         <groupaction menu="&#8986; Run on a Remote Server" default="false" shortcut="Ctrl+Alt+S" execute="runServer" />
+         <groupaction menu="&#8986; Run on a Remote Server" default="false" shortcut="F5" execute="runServer" />
+         <groupaction menu="&#8986; Run on HQ" default="false" shortcut="F6" execute="runHQ" />
+         <groupaction menu="&#8986; Run on R&amp;D" default="false" shortcut="F7" execute="runRD" />
+         <groupaction menu="&#8986; Run on Archives" default="false" shortcut="F8" execute="runArchives" />
+         <groupaction menu="Jack Out / End the Run" default="false" shortcut="Esc" execute="jackOut" />
          <groupaction menu="Score Target Agenda" default="false" execute="scrTargetAgenda" />
          <groupaction menu="Access top X cards form corp R&amp;D" default="false" execute="RDaccessX" />
          <groupaction menu="Score all Agendas in the Archives" default="false" execute="ARCscore" />

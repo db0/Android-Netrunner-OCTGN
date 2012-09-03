@@ -43,9 +43,14 @@ def executePlayScripts(card, action):
    Autoscripts = card.AutoScript.split('||') # When playing cards, the || is used as an "and" separator, rather than "or". i.e. we don't do choices (yet)
    AutoScriptsSnapshot = list(Autoscripts) # Need to work on a snapshot, because we'll be modifying the list.
    for autoS in AutoScriptsSnapshot: # Checking and removing any "AtTurnStart" clicks.
-      if re.search(r'atTurn(Start|End)', autoS) or re.search(r'-isTrigger', autoS): Autoscripts.remove(autoS)
-      elif re.search(r'onPay', autoS): Autoscripts.remove(autoS) # onPay effects are only useful before we go to the autoscripts, for the cost reduction.
-      elif re.search(r'triggerNoisy', autoS): Autoscripts.remove(autoS) # Trigger Noisy are used automatically during action use.
+      if (re.search(r'atTurn(Start|End)', autoS) or 
+          re.search(r'atRunStart', autoS) or 
+          re.search(r'whileRunning', autoS) or 
+          re.search(r'atJackOut', autoS) or 
+          re.search(r'onAccess', autoS) or 
+          re.search(r'onPay', autoS) or # onPay effects are only useful before we go to the autoscripts, for the cost reduction.
+          re.search(r'triggerNoisy', autoS) or # Trigger Noisy are used automatically during action use.
+          re.search(r'-isTrigger', autoS)): Autoscripts.remove(autoS)
       elif re.search(r'excludeDummy', autoS) and card.highlight == DummyColor: Autoscripts.remove(autoS)
       elif re.search(r'onlyforDummy', autoS) and card.highlight != DummyColor: Autoscripts.remove(autoS)
       elif re.search(r'CustomScript', autoS): 
@@ -61,8 +66,7 @@ def executePlayScripts(card, action):
           (effectType.group(1) == 'onScore' and action != 'score') or
           (effectType.group(1) == 'onLiberation' and action != 'liberate') or
           (effectType.group(1) == 'onTrash' and (action != 'trash' or action!= 'uninstall' or action != 'derez')) or
-          (effectType.group(1) == 'onDerez' and action != 'derez') or
-          effectType.group(1) == 'onAccess'): continue # OnAccess: Is only used by Ambush cards.
+          (effectType.group(1) == 'onDerez' and action != 'derez')): continue # OnAccess: Is only used by Ambush cards.
       if re.search(r'-isOptional', AutoS):
          if not confirm("This card has an optional ability you can activate at this point. Do you want to do so?"): 
             notify("{} opts not to activate {}'s optional ability".format(me,card))
@@ -452,20 +456,23 @@ def autoscriptOtherPlayers(lookup, origin_card, count = 1): # Function that trig
 #------------------------------------------------------------------------------
    
 def atTimedEffects(Time = 'Start'): # Function which triggers card effects at the start or end of the turn.
+   mute()
    if debugVerbosity >= 1: notify(">>> atTimedEffects() at time: {}".format(Time)) #Debug
    if not Automations['Start/End-of-Turn']: return
    TitleDone = False
    X = 0
    for card in table:
-      if card.controller != me: continue
+      #if card.controller != me: continue # Obsoleted. Using the chkPlayer() function below
       if card.highlight == InactiveColor: continue
       if not card.isFaceUp: continue
       if debugVerbosity >= 3: notify("### {} Autoscript: {}".format(card, card.AutoScript))
       Autoscripts = card.AutoScript.split('||')
       for autoS in Autoscripts:
          if Time == 'Run': effect = re.search(r'at(Run)Start:(.*)', autoS) # Putting Run in a group, only to retain the search results groupings later
-         else: effect = re.search(r'atTurn(Start|End):(.*)', autoS)
+         elif Time == 'JackOut': effect = re.search(r'at(JackOut):(.*)', autoS) # Same as above
+         else: effect = re.search(r'atTurn(Start|End):(.*)', autoS) #Putting "Start" or "End" in a group to compare with the Time variable later
          if not effect: continue
+         if chkPlayer(effect.group(2), card.controller,False) == 0: continue # Check that the effect's origninator is valid. 
          if effect.group(1) != Time: continue # If it's a start-of-turn effect and we're at the end, or vice-versa, do nothing.
          if debugVerbosity >= 3: notify("### split Autoscript: {}".format(autoS))
          if debugVerbosity >= 2 and effect: notify("!!! effects: {}".format(effect.groups()))
@@ -475,7 +482,8 @@ def atTimedEffects(Time = 'Start'): # Function which triggers card effects at th
          splitAutoscripts = effect.group(2).split('$$')
          for passedScript in splitAutoscripts:
             if not TitleDone: 
-               if Time == 'Run': notify("==={}'s Start-of-Run Effects===")
+               if Time == 'Run': notify("==={}'s Start-of-Run Effects===".format(me))
+               elif Time == 'JackOut': notify("==={}'s Jack-out Effects===".format(me))
                else: notify(":::{}'s {}-of-Turn Effects:::".format(me,effect.group(1)))
             TitleDone = True
             if debugVerbosity >= 2: notify("### passedScript: {}".format(passedScript))
