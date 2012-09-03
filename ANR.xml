@@ -57,7 +57,8 @@
          <groupaction menu="&#8986; Run on HQ" default="false" shortcut="F6" execute="runHQ" />
          <groupaction menu="&#8986; Run on R&amp;D" default="false" shortcut="F7" execute="runRD" />
          <groupaction menu="&#8986; Run on Archives" default="false" shortcut="F8" execute="runArchives" />
-         <groupaction menu="Jack Out / End the Run" default="false" shortcut="Esc" execute="jackOut" />
+         <groupaction menu="Jack Out" default="false" shortcut="Esc" execute="jackOut" />
+         <groupaction menu="Finish the Run succesfully" default="false" shortcut="F3" execute="runSuccess" />
          <groupaction menu="Score Target Agenda" default="false" execute="scrTargetAgenda" />
          <groupaction menu="Access top X cards form corp R&amp;D" default="false" execute="RDaccessX" />
          <groupaction menu="Score all Agendas in the Archives" default="false" execute="ARCscore" />

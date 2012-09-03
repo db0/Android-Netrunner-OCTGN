@@ -95,7 +95,7 @@ def useClick(group = table, x=0, y=0, count = 1):
    mute()
    extraText = ''
    if count == 0: return '{} takes a free action'.format(me)
-   if ds == 'runner' and getGlobalVariable('status') == 'running': 
+   if ds == 'runner' and re.search(r'running',getGlobalVariable('status')): 
       if not confirm("You have not yet finished your previous run. Normally you're not allowed to use clicks during runs, are you sure you want to continue?\
                  \n\n(Pressing 'No' will abort this action and you can then Jack-out of the run with [ESC]"): return 'ABORT'
    clicksReduce = findCounterPrevention(me.Clicks, 'Clicks', me)
@@ -131,7 +131,7 @@ def goToEndTurn(group, x = 0, y = 0):
    if ds == None:
       whisper ("Please perform the game setup first (Ctrl+Shift+S)")
       return
-   if getGlobalVariable('status') == 'running': jackOut() # If the player forgot to end the run, we do it for them now.
+   if re.search(r'running',getGlobalVariable('status')): jackOut() # If the player forgot to end the run, we do it for them now.
    if me.Clicks > 0: # If the player has not used all their clicks for this turn, remind them, just in case.
       if debugVerbosity <= 0 and not confirm("You have not taken all your clicks for this turn, are you sure you want to declare end of turn"): return
    if len(me.hand) > currentHandSize(): #If the player is holding more cards than their hand max. remind them that they need to discard some 
@@ -339,7 +339,7 @@ def intRun(aCost = 1, Name = 'R&D', silent = False):
    if ds != 'runner':  
       whisper(":::ERROR:::Corporations can't run!")
       return 'ABORT'
-   if getGlobalVariable('status') == 'running':
+   if re.search(r'running',getGlobalVariable('status')):
       whisper(":::ERROR:::You are already jacked-in. Please end the previous run (press [Esc]) before starting a new one")
       return
    CounterHold = getSpecial('Counter Hold') # Old code from Netrunner. Not sure if the new one will do stuff like that
@@ -356,7 +356,7 @@ def intRun(aCost = 1, Name = 'R&D', silent = False):
    if BadPub > 0:
          myIdent.markers[mdict['BadPublicity']] += BadPub
          notify("--> The Bad Publicity of {} allows {} to secure {} for this run".format(enemyIdent,myIdent,uniCredit(BadPub)))
-   setGlobalVariable('status','running')
+   setGlobalVariable('status','running{}'.format(Name))
    atTimedEffects('Run')
 
 def runHQ(group, x=0,y=0):
@@ -382,7 +382,7 @@ def jackOut(group=table,x=0,y=0, silent = False):
    else: targetPL = me
    enemyIdent = getSpecial('Identity',targetPL)
    myIdent = getSpecial('Identity',me)
-   if getGlobalVariable('status') != 'running': # If the runner is not running at the moment, do nothing
+   if re.search(r'running',getGlobalVariable('status')): # If the runner is not running at the moment, do nothing
       if targetPL != me: whisper("{} is not running at the moment.".format(targetPL))
       else: whisper("You are not currently jacked-in.")
    else: # Else announce they are jacked in and resolve all post-run effects.
@@ -540,7 +540,7 @@ def inputTraceValue (card, x=0,y=0, limit = 0, silent = False):
    if limit > 0: limitText = '\n\n(Max Trace Power: {})'.format(limit)
    if ds == 'corp': traceTXT = 'Trace'
    else: traceTXT = 'Link'
-   TraceValue = askInteger("Increase {} Strentgh by how much?{}".format(traceTXT,limitText), 0)
+   TraceValue = askInteger("Increase {} Strength by how much?{}".format(traceTXT,limitText), 0)
    if TraceValue == None: 
       whisper(":::Warning::: Trace attempt aborted by player.")
       return 'ABORT'

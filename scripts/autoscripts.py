@@ -1030,9 +1030,29 @@ def RunX(Autoscript, announceText, card, targetCards = None, notification = None
       if notification == 'Quick': announceString = "{} ends the run".format(announceText)
       else: announceString = "{} end the run".format(announceText)
    else:
-      intRun(0,action.group(1),True)
-      if action.group(1) == 'Generic': runTarget = ''
-      else: runTarget = ' on {}'.format(action.group(1))
+      if action.group(1) == 'Generic':
+         targets = findTarget('Targeted-atServer', True)
+         if targets == []: # If the player has not targeted a server, then we ask them what they're targeting.
+            choice = askInteger("Which server are you going to run at?\
+                             \n\n1:Remote Server\
+                               \n2:HQ\
+                               \n3:R&D\
+                               \n4:Archives\
+                             \n\n(In the future you can target a server before you start a run and we will automatically pick that as the target)\
+                                  ",1)
+            if choice: # Just in case the player didn't just close the askInteger window.
+               if choice == 1: targetServer = 'Remote'
+               elif choice == 2: targetServer = 'HQ'
+               elif choice == 3: targetServer = 'R&D'
+               elif choice == 4: targetServer = 'Archives'
+               else: return 'ABORT'
+            else: return 'ABORT'
+         else: # If the player has targeted a server before playing/using their card, then we just use that one
+            if targets[0].name == 'Remote Server': targetServer = 'Remote'
+            else: targetServer = targets[0].name
+      else: targetServer = action.group(1)
+      runTarget = ' on {}'.format(targetServer)
+      intRun(0,targetServer,True)
       if notification == 'Quick': announceString = "{} starts a run{}".format(announceText, runTarget)
       else: announceString = "{} start a run{}".format(announceText, runTarget)
    if notification: notify('--> {}.'.format(announceString))
