@@ -335,7 +335,7 @@ def createRemoteServer(group,x=0,y=0):
 # Run...
 #------------------------------------------------------------------------------
 def intRun(aCost = 1, Name = 'R&D', silent = False):
-   if debugVerbosity >= 1: notify(">>> intRun(){}".format(extraASDebug())) #Debug
+   if debugVerbosity >= 1: notify(">>> intRun(). Current status:{}".format(getGlobalVariable('status'))) #Debug
    if ds != 'runner':  
       whisper(":::ERROR:::Corporations can't run!")
       return 'ABORT'
@@ -348,7 +348,11 @@ def intRun(aCost = 1, Name = 'R&D', silent = False):
    #   return 'ABORT'
    ClickCost = useClick(count = aCost)
    if ClickCost == 'ABORT': return 'ABORT'
-   if not silent: notify ("{} to start a run on {}.".format(ClickCost,Name))
+   if not silent: 
+      if Name == 'Archives': announceTXT = 'the Archives'
+      elif Name == 'Remote': announceTXT = 'a remote server'
+      else: announceTXT = Name
+      notify ("{} to start a run on {}.".format(ClickCost,announceTXT))
    targetPL = ofwhom('-ofOpponent')
    BadPub = targetPL.counters['Bad Publicity'].value
    enemyIdent = getSpecial('Identity',targetPL)
@@ -369,33 +373,35 @@ def runRD(group, x=0,y=0):
 
 def runArchives(group, x=0,y=0):
    if debugVerbosity >= 1: notify(">>> runArchives(){}".format(extraASDebug())) #Debug
-   intRun(1, "the Archives")
+   intRun(1, "Archives")
 
 def runServer(group, x=0,y=0):
    if debugVerbosity >= 1: notify(">>> runSDF(){}".format(extraASDebug())) #Debug
-   intRun(1, "a remote server")
+   intRun(1, "Remote")
 
 def jackOut(group=table,x=0,y=0, silent = False, result = 'failure'):
-   if debugVerbosity >= 1: notify(">>> jackOut()") #Debug
+   if debugVerbosity >= 1: notify(">>> jackOut(). Current status:{}".format(getGlobalVariable('status'))) #Debug
    opponent = ofwhom('-ofOpponent') # First we check if our opponent is a runner or a corp.
    if ds == 'corp': targetPL = opponent
    else: targetPL = me
    enemyIdent = getSpecial('Identity',targetPL)
    myIdent = getSpecial('Identity',me)
-   if re.search(r'running',getGlobalVariable('status')): # If the runner is not running at the moment, do nothing
+   if not re.search(r'running',getGlobalVariable('status')): # If the runner is not running at the moment, do nothing
       if targetPL != me: whisper("{} is not running at the moment.".format(targetPL))
       else: whisper("You are not currently jacked-in.")
    else: # Else announce they are jacked in and resolve all post-run effects.
       myIdent.markers[mdict['BadPublicity']] = 0
       if not silent:
          if targetPL != me: notify("{} has kicked {} out of their corporate grid".format(myIdent,enemyIdent))
-         else: notify("{} has jacked out of the run".format(myIdent))
+         else: 
+            if result == 'failure': notify("{} has jacked out of the run".format(myIdent))
+            else: notify("{} has finished their run successfully".format(myIdent))
       if result == 'failure': atTimedEffects('JackOut')
       else: atTimedEffects('SuccessfulRun')
       setGlobalVariable('status','idle')
       
 def runSuccess(group=table,x=0,y=0, silent = False):
-   jackOut(silent = False, 'success')
+   jackOut(silent = False, result = 'success')
 #------------------------------------------------------------------------------
 # Tags...
 #------------------------------------------------------------------------------
