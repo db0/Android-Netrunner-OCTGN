@@ -1022,11 +1022,19 @@ def RunX(Autoscript, announceText, card, targetCards = None, notification = None
    if debugVerbosity >= 1: notify(">>> RunX(){}".format(extraASDebug(Autoscript))) #Debug
    if targetCards is None: targetCards = []
    action = re.search(r'\bRun([A-Z][A-Za-z& ]+)', Autoscript)
-   intRun(0,action.group(1),True)
-   if action.group(1) == 'Generic': runTarget = ''
-   else: runTarget = ' on {}'.format(action.group(1))
-   if notification == 'Quick': announceString = "{} starts a run{}".format(announceText, runTarget)
-   else: announceString = "{} start a run{}".format(announceText, runTarget)
+   if debugVerbosity >= 2: 
+      if action: notify("!!! Regex results: {}".format(action.groups()))
+      else: notify("!!! No Regex match :(")
+   if action.group(1) == 'End':
+      jackOut(silent = True)
+      if notification == 'Quick': announceString = "{} ends the run".format(announceText)
+      else: announceString = "{} end the run".format(announceText)
+   else:
+      intRun(0,action.group(1),True)
+      if action.group(1) == 'Generic': runTarget = ''
+      else: runTarget = ' on {}'.format(action.group(1))
+      if notification == 'Quick': announceString = "{} starts a run{}".format(announceText, runTarget)
+      else: announceString = "{} start a run{}".format(announceText, runTarget)
    if notification: notify('--> {}.'.format(announceString))
    if debugVerbosity >= 3: notify("<<< RunX()")
    return announceString

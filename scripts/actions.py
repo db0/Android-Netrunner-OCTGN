@@ -128,6 +128,7 @@ def goToEndTurn(group, x = 0, y = 0):
    if ds == None:
       whisper ("Please perform the game setup first (Ctrl+Shift+S)")
       return
+   if getGlobalVariable('status') == 'running': jackOut() # If the player forgot to end the run, we do it for them now.
    if me.Clicks > 0: # If the player has not used all their clicks for this turn, remind them, just in case.
       if debugVerbosity <= 0 and not confirm("You have not taken all your clicks for this turn, are you sure you want to declare end of turn"): return
    if len(me.hand) > currentHandSize(): #If the player is holding more cards than their hand max. remind them that they need to discard some 
@@ -371,7 +372,7 @@ def runServer(group, x=0,y=0):
    if debugVerbosity >= 1: notify(">>> runSDF(){}".format(extraASDebug())) #Debug
    intRun(1, "a remote server")
 
-def jackOut(group,x=0,y=0, silent = False):
+def jackOut(group=table,x=0,y=0, silent = False):
    if debugVerbosity >= 1: notify(">>> jackOut()") #Debug
    opponent = ofwhom('-ofOpponent') # First we check if our opponent is a runner or a corp.
    if ds == 'corp': targetPL = opponent
