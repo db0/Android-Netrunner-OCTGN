@@ -32,7 +32,7 @@ import re
 #------------------------------------------------------------------------------
 
 def executePlayScripts(card, action):
-   action = action.capitalize() # Just in case we passed the wrong case
+   action = action.upper() # Just in case we passed the wrong case
    if debugVerbosity >= 1: notify(">>> executePlayScripts() with action: {}".format(action)) #Debug
    global failedRequirement
    if not Automations['Play, Score and Rez']: return
@@ -473,18 +473,20 @@ def atTimedEffects(Time = 'Start'): # Function which triggers card effects at th
          elif Time == 'JackOut' or Time == 'SuccessfulRun': effect = re.search(r'at(JackOut):(.*)', autoS) # Same as above
          else: effect = re.search(r'atTurn(Start|End):(.*)', autoS) #Putting "Start" or "End" in a group to compare with the Time variable later
          if not effect: continue
-         if re.search(r'-ifSuccessfulRun', autoS) and Time == 'SuccessfulRun': #If we're looking only for successful runs, we need the Time to be a successful run.
-            requiredTarget = re.search(r'-ifSuccessfulRun([A-Za-z&]+)', autoS) # We check what the script requires to be the successful target
-            currentRunTarget = re.search(r'running([A-Za-z&]+)', getGlobalVariable('status')) # We check what the target of the current run was.
-            if debugVerbosity >= 2: 
-               if requiredTarget and currentRunTarget: notify("!!! Regex requiredTarget: {}\n!!! currentRunTarget: {}".format(requiredTarget.groups(),currentRunTarget.groups()))
-               else: notify ("No requiredTarget or currentRunTarget regex match :(")
-            if requiredTarget.group(1) == 'Any': pass # -ifSuccessfulRunAny means we run the script on any successful run (e.g. Desperado)
-            elif requiredTarget.group(1) == currentRunTarget.group(1): pass # If the card requires a successful run on a server that the global variable points that we were running at, we can proceed.
-            else: continue # If none of the above, it means the card script is not triggering for this server.
-            if debugVerbosity >= 3: notify("### All checked OK")
+         if re.search(r'-ifSuccessfulRun', autoS):
+            if Time == 'SuccessfulRun': #If we're looking only for successful runs, we need the Time to be a successful run.
+               requiredTarget = re.search(r'-ifSuccessfulRun([A-Za-z&]+)', autoS) # We check what the script requires to be the successful target
+               currentRunTarget = re.search(r'running([A-Za-z&]+)', getGlobalVariable('status')) # We check what the target of the current run was.
+               if debugVerbosity >= 2: 
+                  if requiredTarget and currentRunTarget: notify("!!! Regex requiredTarget: {}\n!!! currentRunTarget: {}".format(requiredTarget.groups(),currentRunTarget.groups()))
+                  else: notify ("No requiredTarget or currentRunTarget regex match :(")
+               if requiredTarget.group(1) == 'Any': pass # -ifSuccessfulRunAny means we run the script on any successful run (e.g. Desperado)
+               elif requiredTarget.group(1) == currentRunTarget.group(1): pass # If the card requires a successful run on a server that the global variable points that we were running at, we can proceed.
+               else: continue # If none of the above, it means the card script is not triggering for this server.
+               if debugVerbosity >= 3: notify("### All checked OK")
+            else: continue
          if chkPlayer(effect.group(2), card.controller,False) == 0: continue # Check that the effect's origninator is valid. 
-         if effect.group(1) != Time or (effect.group(1) == 'JackOut' and Time == 'SuccessfulRun'): continue # If it's a start-of-turn effect and we're at the end, or vice-versa, do nothing.
+         if (effect.group(1) != Time and Time != 'SuccessfulRun') or (Time == 'SuccessfulRun' and effect.group(1) != 'JackOut'): continue # If it's a start-of-turn effect and we're at the end, or vice-versa, do nothing.
          if debugVerbosity >= 3: notify("### split Autoscript: {}".format(autoS))
          if debugVerbosity >= 2 and effect: notify("!!! effects: {}".format(effect.groups()))
          if re.search(r'excludeDummy', autoS) and card.highlight == DummyColor: continue
@@ -494,9 +496,10 @@ def atTimedEffects(Time = 'Start'): # Function which triggers card effects at th
          splitAutoscripts = effect.group(2).split('$$')
          for passedScript in splitAutoscripts:
             if not TitleDone: 
-               if Time == 'Run': notify("==={}'s Start-of-Run Effects===".format(me))
-               elif Time == 'JackOut': notify("==={}'s Jack-out Effects===".format(me))
-               else: notify(":::{}'s {}-of-Turn Effects:::".format(me,effect.group(1)))
+               if Time == 'Run': title = "{}'s Start-of-Run Effects".format(me)
+               elif Time == 'JackOut' or Time == 'SuccessfulRun': title = "{}'s Jack-Out Effects".format(me)
+               else: title = "{}'s {}-of-Turn Effects".format(me,effect.group(1))
+               notify("{:=^36}".format(title))
             TitleDone = True
             if debugVerbosity >= 2: notify("### passedScript: {}".format(passedScript))
             if card.highlight == DummyColor: announceText = "{}'s lingering effects:".format(card)
@@ -531,7 +534,7 @@ def atTimedEffects(Time = 'Start'): # Function which triggers card effects at th
       if Time == 'Run': notify(":::Warning::: {}'s Start-of-run effects cost more Credits than {} had in their Credit Pool!".format(me,me))
       else: notify(":::Warning::: {}'s {}-of-turn effects cost more Credits than {} had in their Credit Pool!".format(me,Time,me))
    if ds == 'corp' and Time =='Start': draw(me.piles['R&D/Stack'])
-   if TitleDone: notify(":::--------------------------:::".format(me))   
+   if TitleDone: notify(":::{:=^30}:::".format('='))   
 
 def markerEffects(Time = 'Start'):
    if debugVerbosity >= 1: notify(">>> markerEffects() at time: {}".format(Time)) #Debug
@@ -1043,8 +1046,9 @@ def RunX(Autoscript, announceText, card, targetCards = None, notification = None
       else: announceString = "{} end the run".format(announceText)
    else:
       if action.group(1) == 'Generic':
-         targets = findTarget('Targeted-atServer', True)
+         targets = findTarget('Targeted-atServer')
          if targets == []: # If the player has not targeted a server, then we ask them what they're targeting.
+            if debugVerbosity >= 3: notify("### No targets found. Asking")
             choice = askInteger("Which server are you going to run at?\
                              \n\n1:Remote Server\
                                \n2:HQ\
@@ -1060,6 +1064,7 @@ def RunX(Autoscript, announceText, card, targetCards = None, notification = None
                else: return 'ABORT'
             else: return 'ABORT'
          else: # If the player has targeted a server before playing/using their card, then we just use that one
+            if debugVerbosity >= 3: notify("### Targeted Server found!")
             if targets[0].name == 'Remote Server': targetServer = 'Remote'
             else: targetServer = targets[0].name
       else: targetServer = action.group(1)

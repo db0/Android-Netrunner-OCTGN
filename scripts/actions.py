@@ -1360,6 +1360,7 @@ def intPlay(card, cost = 'not_free'):
    extraText = ''
    mute() 
    chooseSide() # Just in case...
+   whisper("+++ Processing. Please Hold...")
    storeProperties(card)
    random = rnd(10,100)
    if (card.Type == 'Operation' or card.Type == 'Event') and chkTargeting(card) == 'ABORT': return # If it's an Operation or Event and has targeting requirements, check with the user first.
