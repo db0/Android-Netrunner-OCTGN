@@ -193,7 +193,7 @@ def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
    if debugVerbosity >= 5: notify("+++ Automations active. Checking for CustomScript...")
    if re.search(r'CustomScript', Stored_AutoActions[card]): 
       if chkTargeting(card) == 'ABORT': return
-      CustomScript(card,'use') # Some cards just have a fairly unique effect and there's no use in trying to make them work in the generic framework.
+      CustomScript(card,'USE') # Some cards just have a fairly unique effect and there's no use in trying to make them work in the generic framework.
       return
    if debugVerbosity >= 5: notify("+++ All checks done!. Starting Choice Parse...")
    ### Checking if card has multiple autoscript options and providing choice to player.
@@ -305,7 +305,7 @@ def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
             else: announceText = Acost
          else: announceText = '{}'.format(me) # A variable with the text to be announced at the end of the action.
          if actionCost.group(2) != '0': # If we need to pay credits
-            reduction = reduceCost(card, 'Use', num(actionCost.group(2)))
+            reduction = reduceCost(card, 'USE', num(actionCost.group(2)))
             if reduction: extraText = " (reduced by {})".format(uniCredit(reduction))  
             else: extraText = ''
             Bcost = payCost(num(actionCost.group(2)) - reduction)
@@ -350,8 +350,10 @@ def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
       ### Calling the relevant function depending on if we're increasing our own counters, the hoard's or putting card markers.
       if regexHooks['GainX'].search(activeAutoscript): 
          gainTuple = GainX(activeAutoscript, announceText, card, targetC, n = X)
-         announceText = gainTuple[0] 
-         X = gainTuple[1] 
+         if gainTuple == 'ABORT': announceText == 'ABORT'
+         else:
+            announceText = gainTuple[0] 
+            X = gainTuple[1] 
       elif regexHooks['CreateDummy'].search(activeAutoscript): announceText = CreateDummy(activeAutoscript, announceText, card, targetC, n = X)
       elif regexHooks['ReshuffleX'].search(activeAutoscript): 
          reshuffleTuple = ReshuffleX(activeAutoscript, announceText, card) # The reshuffleX() function is special because it returns a tuple.
@@ -363,8 +365,10 @@ def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
          X = rollTuple[1] 
       elif regexHooks['RequestInt'].search(activeAutoscript): 
          numberTuple = RequestInt(activeAutoscript, announceText, card) # Returns like reshuffleX()
-         announceText = numberTuple[0] 
-         X = numberTuple[1] 
+         if numberTuple == 'ABORT': announceText == 'ABORT'
+         else:
+            announceText = numberTuple[0] 
+            X = numberTuple[1] 
       elif regexHooks['DiscardX'].search(activeAutoscript): 
          discardTuple = DiscardX(activeAutoscript, announceText, card, targetC, n = X) # Returns like reshuffleX()
          announceText = discardTuple[0] 
@@ -481,6 +485,8 @@ def atTimedEffects(Time = 'Start'): # Function which triggers card effects at th
                   if requiredTarget and currentRunTarget: notify("!!! Regex requiredTarget: {}\n!!! currentRunTarget: {}".format(requiredTarget.groups(),currentRunTarget.groups()))
                   else: notify ("No requiredTarget or currentRunTarget regex match :(")
                if requiredTarget.group(1) == 'Any': pass # -ifSuccessfulRunAny means we run the script on any successful run (e.g. Desperado)
+               elif feintTarget:
+                  if feintTarget == currentRunTarget.group(1): pass # If we're doing a feinted run (e.g. Sneakdoor beta) then check with the actual target.
                elif requiredTarget.group(1) == currentRunTarget.group(1): pass # If the card requires a successful run on a server that the global variable points that we were running at, we can proceed.
                else: continue # If none of the above, it means the card script is not triggering for this server.
                if debugVerbosity >= 3: notify("### All checked OK")
@@ -526,6 +532,10 @@ def atTimedEffects(Time = 'Start'): # Function which triggers card effects at th
                discardTuple = DiscardX(passedScript, announceText, card, notification = 'Automatic', n = X)
                if discardTuple == 'ABORT': break
                X = discardTuple[1] 
+            elif regexHooks['RequestInt'].search(passedScript): 
+               numberTuple = RequestInt(passedScript, announceText, card) # Returns like reshuffleX()
+               if numberTuple == 'ABORT': break
+               X = numberTuple[1] 
             elif regexHooks['CustomScript'].search(passedScript):
                if CustomScript(card, action = 'Turn{}'.format(Time)) == 'ABORT': break
             if failedRequirement: break # If one of the Autoscripts was a cost that couldn't be paid, stop everything else.
@@ -818,7 +828,7 @@ def TokensX(Autoscript, announceText, card, targetCards = None, notification = N
                modtokens -= Virusprevented
          infectTXT = ' {} with'.format(victim)
          #notify("Token is {}".format(token[0])) # Debug
-      elif action.group(1) == 'Use':
+      elif action.group(1) == 'USE':
          if not targetCard.markers[token] or count > targetCard.markers[token]: 
             whisper("There's not enough counters left on the card to use this ability!")
             return 'ABORT'
@@ -1022,7 +1032,7 @@ def RequestInt(Autoscript, announceText, card, targetCards = None, notification 
    if debugVerbosity >= 2: notify("### Checking for Msg")
    if action.group(8): 
       message = action.group(8)
-   else: message = "This effect requires that you provide an 'X'. What should that number be?{}".format(minTXT)
+   else: message = "{}:\nThis effect requires that you provide an 'X'. What should that number be?{}".format(card.name,minTXT)
    number = min - 1
    if debugVerbosity >= 2: notify("### About to ask")
    while number < min or number % div or (max and number > max):
@@ -1034,6 +1044,7 @@ def RequestInt(Autoscript, announceText, card, targetCards = None, notification 
    return (announceText, number) # We do not modify the announcement with this function.
    
 def RunX(Autoscript, announceText, card, targetCards = None, notification = None, n = 0): # Core Command for drawing X Cards from the house deck to your hand.
+   global feintTarget
    if debugVerbosity >= 1: notify(">>> RunX(){}".format(extraASDebug(Autoscript))) #Debug
    if targetCards is None: targetCards = []
    action = re.search(r'\bRun([A-Z][A-Za-z& ]+)', Autoscript)
@@ -1068,6 +1079,9 @@ def RunX(Autoscript, announceText, card, targetCards = None, notification = None
             if targets[0].name == 'Remote Server': targetServer = 'Remote'
             else: targetServer = targets[0].name
       else: targetServer = action.group(1)
+      feint = re.search(r'-feintTo([A-Za-z&]+)', Autoscript)
+      if feint:
+         feintTarget = feint.group(1)
       runTarget = ' on {}'.format(targetServer)
       intRun(0,targetServer,True)
       if notification == 'Quick': announceString = "{} starts a run{}".format(announceText, runTarget)
@@ -1261,18 +1275,18 @@ def InflictX(Autoscript, announceText, card, targetCards = None, notification = 
    if debugVerbosity >= 3: notify("<<< InflictX()")
    return announceString
    
-def CustomScript(card, action = 'play'): # Scripts that are complex and fairly unique to specific cards, not worth making a whole generic function for them.
+def CustomScript(card, action = 'PLAY'): # Scripts that are complex and fairly unique to specific cards, not worth making a whole generic function for them.
    if debugVerbosity >= 1: notify(">>> CustomScript() with action: {}".format(action)) #Debug
    global ModifyDraw
    #confirm("Customscript") # Debug
-   if card.model == '23473bd3-f7a5-40be-8c66-7d35796b6031' and action == 'use': # Virus Scan Special Ability
+   if card.model == '23473bd3-f7a5-40be-8c66-7d35796b6031' and action == 'USE': # Virus Scan Special Ability
       clickCost = useClick(count = 3)
       if clickCost == 'ABORT': return
       for c in table: 
          foundMarker = findMarker(c,'Virus')
          if foundMarker: c.markers[foundMarker] = 0
       notify("{} to clean all viruses from their corporate grid".format(clickCost))
-   elif card.model == '71a89203-94cd-42cd-b9a8-15377caf4437' and action == 'use': # Technical Difficulties Special Ability
+   elif card.model == '71a89203-94cd-42cd-b9a8-15377caf4437' and action == 'USE': # Technical Difficulties Special Ability
       knownMarkers = []
       for marker in card.markers:
          if marker[0] in markerRemovals: # If the name of the marker exists in the markerRemovals dictionary it means it can be removed and has a specific cost.
@@ -1299,7 +1313,7 @@ def CustomScript(card, action = 'play'): # Scripts that are complex and fairly u
          return         
       card.markers[selectedMarker] -= 1
       notify("{} to remove {} for {}.".format(clickCost,selectedMarker[0],creditCost))
-   elif card.name == 'Accelerated Beta Test' and action == 'score':
+   elif card.name == 'Accelerated Beta Test' and action == 'SCORE':
       if not confirm("Would you like to initiate an accelerated beta test?"): return
       group = me.piles['R&D/Stack']
       iter = 0
@@ -1313,15 +1327,15 @@ def CustomScript(card, action = 'play'): # Scripts that are complex and fairly u
       if iter: # If we found any ice in the top 3
          notify("{} initiates an Accelerated Beta Test and reveals {} Ice from the top of their R&D. These Ice are automatically installed and rezzed".format(me, iter))
       else: notify("{} initiates a Accelerated Beta Test but their beta team was incompetent.".format(me))
-   elif card.name == 'Infiltration' and action == 'play':
+   elif card.name == 'Infiltration' and action == 'PLAY':
       tCards = [c for c in table if c.targetedBy and c.targetedBy == me and c.isFaceUp == False]
       if tCards: expose(tCards[0]) # If the player has any face-down cards currently targeted, we assume he wanted to expose them.
       elif confirm("Do you wish to gain 2 credits?\
-                \n\nIf you want to expose a target, simply ask the corp to use the e'Expose' option on the table.\
+                \n\nIf you want to expose a target, simply ask the corp to use the 'Expose' option on the table.\
                 \n\nHowever if you have a target selected when you play this card, the target will be selected and exposed automatically."):
          me.Credits += 2
          notify("--> {} gains {}".format(me,uniCredit(2)))
-   elif action == 'use': useCard(card)
+   elif action == 'USE': useCard(card)
 
 #------------------------------------------------------------------------------
 # Helper Functions

@@ -23,9 +23,9 @@ import re
 #---------------------------------------------------------------------------
 # Global variables
 #---------------------------------------------------------------------------
-ds = None
-identName = None
-
+ds = None # The side of the player. 'runner' or 'corp'
+identName = None # The name of our current identity
+feintTarget = None # A Variable that holds a secondary target for a run (e.g. see SneakDoor Beta)
 ModifyDraw = 0 #if True the audraw should warn the player to look at r&D instead 
 
 DifficultyLevels = { }
@@ -179,7 +179,7 @@ def goToSot (group, x=0,y=0):
          me.Clicks = maxClicks - clicksReduce # If the player did not have a penalty, then we assume those were extra clicks granted by some card effect, so we make sure they have their full maximum
       else: 
          me.Clicks += maxClicks - clicksReduce # If it was a penalty, then it remains with them for this round, which means they have less clicks to use.
-         notify("{} is starting with {} less clicks this turn, due to a penalty from a previous turn.")
+         notify("{} is starting with {} less clicks this turn, due to a penalty from a previous turn.".format(me))
    else: me.Clicks = maxClicks - clicksReduce
    lastKnownNrClicks = me.Clicks
    myCards = (card for card in table if card.controller == me and card.owner == me)
@@ -400,12 +400,14 @@ def runServer(group, x=0,y=0):
 
 def jackOut(group=table,x=0,y=0, silent = False, result = 'failure'):
    if debugVerbosity >= 1: notify(">>> jackOut(). Current status:{}".format(getGlobalVariable('status'))) #Debug
+   global feintTarget
    opponent = ofwhom('-ofOpponent') # First we check if our opponent is a runner or a corp.
    if ds == 'corp': targetPL = opponent
    else: targetPL = me
    enemyIdent = getSpecial('Identity',targetPL)
    myIdent = getSpecial('Identity',me)
-   runTarget = re.search(r'running([A-Za-z&]+)',getGlobalVariable('status'))
+   if feintTarget: runTarget = feintTarget
+   else: runTarget = re.search(r'running([A-Za-z&]+)',getGlobalVariable('status'))
    if not runTarget: # If the runner is not running at the moment, do nothing
       if targetPL != me: whisper("{} is not running at the moment.".format(targetPL))
       else: whisper("You are not currently jacked-in.")
@@ -414,11 +416,12 @@ def jackOut(group=table,x=0,y=0, silent = False, result = 'failure'):
       if result == 'failure': atTimedEffects('JackOut')
       else: atTimedEffects('SuccessfulRun')
       setGlobalVariable('status','idle')
+      feintTarget = None
       if not silent:
          if targetPL != me: notify("{} has kicked {} out of their corporate grid".format(myIdent,enemyIdent))
          else: 
             if result == 'failure': notify("{} has jacked out of their run on {} server".format(myIdent,runTarget.group(1)))
-            else: notify("{} has finished their run successfully".format(myIdent))
+            else: notify("{} has finished their run on the {} server successfully".format(myIdent,runTarget.group(1)))
       
 def runSuccess(group=table,x=0,y=0, silent = False):
    jackOut(silent = False, result = 'success')

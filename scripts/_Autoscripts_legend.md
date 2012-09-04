@@ -263,3 +263,7 @@ Used only on ice. It tells the game which of their abilities are subroutines, so
 ### -ifSuccessfulRun(HQ|R&D|Archives|Generic)
 
 This modulator modifies the script's trigger so that it doesn't go off unless the run has been successfully completed at a specific Server. (e.g. See cards like "Medium")
+
+### -feintTo(HQ|R&D|Archives|Generic)
+
+This modulator makes it so that the trigger thinks the real target of a run was another server (e.g. see Sneakdoor Beta)
