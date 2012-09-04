@@ -19,6 +19,7 @@ The field before the colon, explains when the effect triggers
 * onDerez: Activates when the card is derezzed
 * atTurnStart: Activates when the turn starts
 * atTurnEnd: Activates when the turn ends
+* atJackOut: Activates when the runner ends a run with [Esc] or [F3] or when the corp ends the run for them via a Wall
 
 card.AutoAction
 ---------------
@@ -145,7 +146,11 @@ This is used by both -per and -Targeted as a requirement for valid targets.
 
 #### -byMe / -byOpponent
 
-Used as a requirement by -Targeted. It checks to see who the owner of the targeted card must be.
+Used as a requirement by many functions and modulators
+
+* with "-Targeted". It checks to see who the owner of the targeted card must be.
+* with atTurnStart, atJackOut, atRunStart etc, it check to see if the controller of the card on a table has to be the same or opposing as the player who's turn/run is ending. For example, it's used in a PAD campaign, so that the opponent does not gain credits at the start of their own turn. But it's not used with Stimhack, so that the opponent DOES take damage if you end their run for them
+* with the hidden triggers (function: autoscriptOtherPlayers()), this checks to see if the card which has just activated a trigger, must have the same or opposing controller as the card who is being triggered. (For example an effect like "Gain 1 credit when you install a card" needs to have the "-byMe modulator, so that the opponent's installation don't trigger the effect.
 
 #### -AutoTargeted
 
@@ -254,3 +259,7 @@ Used by the RollX core command to see if the dice results needs to match a speci
 ### -isSubroutine
 
 Used only on ice. It tells the game which of their abilities are subroutines, so that we use the appropriate icon on the announcement.
+
+### -ifSuccessfulRun(HQ|R&D|Archives|Generic)
+
+This modulator modifies the script's trigger so that it doesn't go off unless the run has been successfully completed at a specific Server. (e.g. See cards like "Medium")
