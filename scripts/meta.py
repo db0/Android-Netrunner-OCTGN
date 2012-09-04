@@ -336,9 +336,9 @@ def versionCheck():
       elif currentVers[0] != installedVers[0] or currentVers[1] != installedVers[1] or currentVers[2] != installedVers[2]:
          notify("{}'s game definition ({}) is out-of-date!".format(me, gameVersion))
          if confirm("There is a new game definition available!\nYour version: {}.\nCurrent version: {}.\
+                     {}\
                  \n\nDo you want to be redirected to download the latest version?.\
                    \n(You'll have to download the game definition, any patch for the current version and the markers if they're newer than what you have installed)\
-                   {}\
                      ".format(gameVersion, detailsplit[0],detailsplit[1])):
             openUrl('https://github.com/db0/Android-Netrunner-OCTGN/downloads')
       elif len(currentVers) == 4:
@@ -346,10 +346,10 @@ def versionCheck():
          elif currentVers[3] != installedVers[3]: emergencyV = True 
          else: emergencyV = False
          if emergencyV and confirm("There is an emergency fix available for your current version!\nYour version: {}.\nCurrent version: {}.\
-                 \n\nDo you want to be redirected to download the latest version?.\
-                   \n(An emergency update probably means there's a significant bug left in the engine. We strongly suggest you update before proceeding.)\
-                   {}\
-                     ".format(gameVersion, detailsplit[0],detailsplit[1])): 
+                                    {}\
+                                \n\nDo you want to be redirected to download the latest version?.\
+                                  \n(An emergency update probably means there's a significant bug left in the engine. We strongly suggest you update before proceeding.)\
+                                    ".format(gameVersion, detailsplit[0],detailsplit[1])): 
             openUrl('https://github.com/db0/Android-Netrunner-OCTGN/downloads')
       versioncheck = True
    
