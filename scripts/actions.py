@@ -57,13 +57,15 @@ lastKnownNrClicks = 0 # A Variable keeping track of what the engine thinks our a
 #---------------------------------------------------------------------------
 
 def placeCard(card, action = 'install'):
-   if debugVerbosity >= 1: notify(">>> placeCard(){}".format(extraASDebug())) #Debug
+   if debugVerbosity >= 1: notify(">>> placeCard() with action: {}".format(action)) #Debug
    global installedCount
    type = card.Type
-   if action != 'install' and type == 'Agenda':
+   if action != 'Install' and type == 'Agenda':
       if ds == 'corp': type == 'scoredAgenda'
       else: type == 'liberatedAgenda'
-   if debugVerbosity >= 3: notify("### Setting installedCount. Type is: {}".format(type)) #Debug
+   if action == 'Install' and type in CorporationCardTypes: CfaceDown = True
+   else: CfaceDown = False
+   if debugVerbosity >= 3: notify("### Setting installedCount. Type is: {}, CfaceDown: {}".format(type, str(CfaceDown))) #Debug
    if installedCount.get(type,None) == None: installedCount[type] = 0
    else: installedCount[type] += 1
    if debugVerbosity >= 2: notify("### installedCount is: {}. Setting loops...".format(installedCount[type])) #Debug
@@ -72,7 +74,7 @@ def placeCard(card, action = 'install'):
    if loopsNR and place[type][3] != 1: offset = 15 * (loopsNR % 3) # This means that in one loop the offset is going to be 0 and in another 15.
    else: offset = 0
    if debugVerbosity >= 3: notify("### installedCount[type] is: {}.\nLoopsNR is: {}.\nLoopback is: {}\nOffset is: {}".format(installedCount[type],offset, loopback, offset)) #Debug
-   card.moveToTable(place[type][0] + (((cwidth(card,0) + place[type][2]) * (installedCount[type] - loopback)) + offset) * place[type][4],place[type][1]) 
+   card.moveToTable(place[type][0] + (((cwidth(card,0) + place[type][2]) * (installedCount[type] - loopback)) + offset) * place[type][4],place[type][1],CfaceDown) 
    # To explain the above, we place the card at: Its original location
    #                                             + the width of the card
    #                                             + a predefined distance from each other times the number of other cards of the same type
@@ -213,9 +215,9 @@ def createStartingCards():
       traceCard = table.create("eb7e719e-007b-4fab-973c-3fe228c6ce20", 566, -323, 1, True) #The Trace card
       traceCard.moveToTable(566, -323) # Otherwise it's bugging out
       storeSpecial(traceCard)
-      TC = table.create("71a89203-94cd-42cd-b9a8-15377caf4437", 471, -325, 1, True) # The Technical Difficulties card.
-      TC.moveToTable(471, -325) # It's never creating them in the right place. Move is accurate.
-      storeSpecial(TC)   
+      #TC = table.create("71a89203-94cd-42cd-b9a8-15377caf4437", 471, -325, 1, True) # The Technical Difficulties card.
+      #TC.moveToTable(471, -325) # It's never creating them in the right place. Move is accurate.
+      #storeSpecial(TC)   
  
 def intJackin(group, x = 0, y = 0):
    if debugVerbosity >= 1: notify(">>> intJackin(){}".format(extraASDebug())) #Debug
@@ -342,7 +344,7 @@ def intRun(aCost = 1, Name = 'R&D', silent = False):
    if re.search(r'running',getGlobalVariable('status')):
       whisper(":::ERROR:::You are already jacked-in. Please end the previous run (press [Esc] or [F3]) before starting a new one")
       return
-   CounterHold = getSpecial('Counter Hold') # Old code from Netrunner. Not sure if the new one will do stuff like that
+   #CounterHold = getSpecial('Counter Hold') # Old code from Netrunner. Not sure if the new one will do stuff like that
    #if findMarker(CounterHold,'Fang') or findMarker(CounterHold,'Rex') or findMarker(CounterHold,'Fragmentation Storm'): # These are counters which prevent the runner from running.
    #   notify(":::Warning:::{} attempted to run but was prevented by a resident Sentry effect in their Rig. They will have to remove all such effects before attempting a run".format(me))
    #   return 'ABORT'
@@ -702,7 +704,7 @@ def addBrainDmg(group, x = 0, y = 0):
 
 def applyBrainDmg(player = me):
    if debugVerbosity >= 1: notify(">>> applyBrainDmg(){}".format(extraASDebug())) #Debug
-   specialCard = getSpecial('Counter Hold', player)
+   specialCard = getSpecial('Identity', player)
    specialCard.markers[mdict['BrainDMG']] += 1
    
 def addMeatDmg(group, x = 0, y = 0):
@@ -1347,7 +1349,7 @@ def inspectCard(card, x = 0, y = 0): # This function shows the player the card t
 
 def currentHandSize(player = me):
    if debugVerbosity >= 1: notify(">>> currentHandSizel(){}".format(extraASDebug())) #Debug
-   specialCard = getSpecial('Counter Hold', player)
+   specialCard = getSpecial('Identity', player)
    if specialCard.markers[mdict['BrainDMG']]: currHandSize =  player.counters['Hand Size'].value - specialCard.markers[mdict['BrainDMG']]
    else: currHandSize = player.counters['Hand Size'].value
    return currHandSize
@@ -1375,9 +1377,8 @@ def intPlay(card, cost = 'not_free'):
    if card.Type == 'ICE' or card.Type == 'Agenda' or card.Type == 'Asset' or card.Type == 'Upgrade':
       placeCard(card, action)
       if Stored_Type[card] == 'ICE': card.orientation ^= Rot90 # Ice are played sideways.
-      #random = rnd(10,100) #Workaround
       notify("{} to install a card.".format(ClickCost))
-      card.isFaceUp = False
+      #card.isFaceUp = False # Now Handled by placeCard()
    elif card.Type == 'Program' or card.Type == 'Event' or card.Type == 'Resource' or card.Type == 'Hardware':
       MUtext = chkRAM(card)
       if card.Type == 'Resource' and hiddenresource == 'yes':

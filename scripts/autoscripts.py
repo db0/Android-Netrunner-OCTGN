@@ -525,7 +525,7 @@ def atTimedEffects(Time = 'Start'): # Function which triggers card effects at th
             elif regexHooks['CustomScript'].search(passedScript):
                if CustomScript(card, action = 'Turn{}'.format(Time)) == 'ABORT': break
             if failedRequirement: break # If one of the Autoscripts was a cost that couldn't be paid, stop everything else.
-   markerEffects(Time)
+   #markerEffects(Time) # Not used in ANR (yet)
    if me.counters['Credits'].value < 0: 
       if Time == 'Run': notify(":::Warning::: {}'s Start-of-run effects cost more Credits than {} had in their Credit Pool!".format(me,me))
       else: notify(":::Warning::: {}'s {}-of-turn effects cost more Credits than {} had in their Credit Pool!".format(me,Time,me))
@@ -782,7 +782,7 @@ def TokensX(Autoscript, announceText, card, targetCards = None, notification = N
    else: # If the marker we're looking for it not defined, then either create a new one with a random color, or look for a token with the custom name we used above.
       if action.group(1) == 'Infect': 
          victim = ofwhom(Autoscript, card.controller)
-         if targetCards[0] == card: targetCards[0] = getSpecial('Counter Hold',victim)
+         if targetCards[0] == card: targetCards[0] = getSpecial('Identity',victim)
       if targetCards[0].markers:
          for key in targetCards[0].markers:
             #confirm("Key: {}\n\naction.group(3): {}".format(key[0],action.group(3))) # Debug
@@ -805,7 +805,7 @@ def TokensX(Autoscript, announceText, card, targetCards = None, notification = N
       elif action.group(1) == 'Infect':
          targetCardlist = '' #We don't want to mention the target card for infections. It's always the same.
          victim = ofwhom(Autoscript, card.controller)
-         if targetCard == card: targetCard = getSpecial('Counter Hold',victim) # For infecting targets, the target is never the card causing the effect.
+         if targetCard == card: targetCard = getSpecial('Identity',victim) # For infecting targets, the target is never the card causing the effect.
          modtokens = count * multiplier
          if re.search('virus',token[0]) and token != mdict['protectionVirus']: # We don't want us to prevent putting virus protection tokens, even though we put them with the "Infect" keyword.
             Virusprevented = findVirusProtection(targetCard, victim, modtokens)
@@ -821,10 +821,10 @@ def TokensX(Autoscript, announceText, card, targetCards = None, notification = N
          else: modtokens = -count * multiplier
       else: #Last option is for removing tokens.
          if count == 999: # 999 effectively means "all markers on card"
-            if action.group(3) == 'BrainDMG': # We need to remove brain damage from the counter hold
+            if action.group(3) == 'BrainDMG': # We need to remove brain damage from the Identity
                targetCardlist = ''
                victim = ofwhom(Autoscript, card.controller)
-               if not targetCard or targetCard == card: targetCard = getSpecial('Counter Hold',victim)
+               if not targetCard or targetCard == card: targetCard = getSpecial('Identity',victim)
                if targetCard.markers[token]: count = targetCard.markers[token]
                else: count = 0
                #confirm("count: {}".format(count)) # Debug
@@ -1301,7 +1301,7 @@ def CustomScript(card, action = 'play'): # Scripts that are complex and fairly u
          c.moveTo(me.piles['Archives(Hidden)'])
          loopChk(c,'Type')
          if c.type == 'ICE':
-            placeCard(c,'Install')
+            placeCard(c,'InstallRezzed')
             c.orientation ^= Rot90
             iter +=1
       if iter: # If we found any ice in the top 3
