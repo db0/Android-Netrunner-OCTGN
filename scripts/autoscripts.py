@@ -32,7 +32,8 @@ import re
 #------------------------------------------------------------------------------
 
 def executePlayScripts(card, action):
-   if debugVerbosity >= 1: notify(">>> executePlayScripts(){}".format(extraASDebug())) #Debug
+   action = action.capitalize() # Just in case we passed the wrong case
+   if debugVerbosity >= 1: notify(">>> executePlayScripts() with action: {}".format(action)) #Debug
    global failedRequirement
    if not Automations['Play, Score and Rez']: return
    if not card.isFaceUp: return
@@ -60,13 +61,13 @@ def executePlayScripts(card, action):
    for AutoS in Autoscripts:
       if debugVerbosity >= 2: notify("### First Processing: {}".format(AutoS)) # Debug
       effectType = re.search(r'(on[A-Za-z]+|while[A-Za-z]+):', AutoS) 
-      if ((effectType.group(1) == 'onRez' and action != 'rez') or # We don't want onPlay effects to activate onTrash for example.
-          (effectType.group(1) == 'onPlay' and action != 'play') or
-          (effectType.group(1) == 'onInstall' and action != 'install') or
-          (effectType.group(1) == 'onScore' and action != 'score') or
-          (effectType.group(1) == 'onLiberation' and action != 'liberate') or
-          (effectType.group(1) == 'onTrash' and (action != 'trash' or action!= 'uninstall' or action != 'derez')) or
-          (effectType.group(1) == 'onDerez' and action != 'derez')): continue # OnAccess: Is only used by Ambush cards.
+      if ((effectType.group(1) == 'onRez' and action != 'REZ') or # We don't want onPlay effects to activate onTrash for example.
+          (effectType.group(1) == 'onPlay' and action != 'PLAY') or
+          (effectType.group(1) == 'onInstall' and action != 'INSTALL') or
+          (effectType.group(1) == 'onScore' and action != 'SCORE') or
+          (effectType.group(1) == 'onLiberation' and action != 'LIBERATE') or
+          (effectType.group(1) == 'onTrash' and (action != 'TRASH' or action!= 'UNINSTALL' or action != 'DEREZ')) or
+          (effectType.group(1) == 'onDerez' and action != 'DEREZ')): continue 
       if re.search(r'-isOptional', AutoS):
          if not confirm("This card has an optional ability you can activate at this point. Do you want to do so?"): 
             notify("{} opts not to activate {}'s optional ability".format(me,card))
@@ -82,9 +83,9 @@ def executePlayScripts(card, action):
          if debugVerbosity >= 2: notify('### effects: {}'.format(effect.groups())) #Debug
          if effectType.group(1) == 'whileRezzed' or effectType.group(1) == 'whileScored':
             if effect.group(1) != 'Gain' and effect.group(1) != 'Lose': continue # The only things that whileRezzed and whileScored affect in execute Automations is GainX scripts (for now). All else is onTrash, onPlay etc
-            if action == 'derez' or ((action == 'trash' or action == 'uninstall') and card.isFaceUp): Removal = True
+            if action == 'DEREZ' or ((action == 'TRASH' or action == 'UNINSTALL') and card.isFaceUp): Removal = True
             else: Removal = False
-         elif action == 'derez' or action == 'trash': return # If it's just a one-off event, and we're trashing it, then do nothing.
+         elif action == 'DEREZ' or action == 'TRASH': return # If it's just a one-off event, and we're trashing it, then do nothing.
          else: Removal = False
          targetC = findTarget(activeAutoscript)
          targetPL = ofwhom(activeAutoscript,card.controller) # So that we know to announce the right person the effect, affects.

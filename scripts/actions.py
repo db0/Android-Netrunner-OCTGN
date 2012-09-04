@@ -56,14 +56,14 @@ lastKnownNrClicks = 0 # A Variable keeping track of what the engine thinks our a
 # Card Placement
 #---------------------------------------------------------------------------
 
-def placeCard(card, action = 'install'):
+def placeCard(card, action = 'INSTALL'):
    if debugVerbosity >= 1: notify(">>> placeCard() with action: {}".format(action)) #Debug
    global installedCount
    type = card.Type
-   if action != 'Install' and type == 'Agenda':
+   if action != 'INSTALL' and type == 'Agenda':
       if ds == 'corp': type == 'scoredAgenda'
       else: type == 'liberatedAgenda'
-   if action == 'Install' and type in CorporationCardTypes: CfaceDown = True
+   if action == 'INSTALL' and type in CorporationCardTypes: CfaceDown = True
    else: CfaceDown = False
    if debugVerbosity >= 3: notify("### Setting installedCount. Type is: {}, CfaceDown: {}".format(type, str(CfaceDown))) #Debug
    if installedCount.get(type,None) == None: installedCount[type] = 0
@@ -331,7 +331,7 @@ def checkDeckNoLimit(group):
 def createRemoteServer(group,x=0,y=0):
    if debugVerbosity >= 1: notify(">>> createSDF(){}".format(extraASDebug())) #Debug
    Server = table.create("d59fc50c-c727-4b69-83eb-36c475d60dcb", x, y - (40 * playerside), 1, False)
-   placeCard(Server,'install')
+   placeCard(Server,'INSTALL')
    
 #------------------------------------------------------------------------------
 # Run...
@@ -620,7 +620,8 @@ def payCost(count = 1, cost = 'not_free', counter = 'BP'): # A function that rem
       me.counters['Agenda Points'].value -= count
    return uniCredit(count)
 
-def reduceCost(card, type = 'Rez', fullCost = 0):
+def reduceCost(card, action = 'REZ', fullCost = 0):
+   type = action.capitalize()
    if debugVerbosity >= 1: notify(">>> reduceCost(). Action is: {}".format(type)) #Debug
    if fullCost == 0: return 0 # If there's no cost, there's no use checking the table.
    reduction = 0
@@ -839,17 +840,17 @@ def scrAgenda(card, x = 0, y = 0):
          whisper ("You can only score Agendas")
          card.isFaceUp = False
          return
-   if ds == 'runner': agendaTxt = "liberate"
-   else: agendaTxt = "score"
+   if ds == 'runner': agendaTxt = 'LIBERATE'
+   else: agendaTxt = 'SCORE'
    if Stored_Type[card] == "Agenda":
       if ds == 'corp' and card.markers[mdict['Advancement']] < num(Stored_Cost[card]):
          if confirm("You have not advanced this agenda enough to score it. Bypass?"): 
             cheapAgenda = True
             currentAdv = card.markers[mdict['Advancement']]
          else: return
-      elif not confirm("Do you want to {} agenda {}?".format(agendaTxt,card.name)): return
+      elif not confirm("Do you want to {} agenda {}?".format(agendaTxt.lower(),card.name)): return
       card.isFaceUp = True
-      if agendaTxt == 'score' and chkTargeting(card) == 'ABORT': 
+      if agendaTxt == 'SCORE' and chkTargeting(card) == 'ABORT': 
          card.isFaceUp = False
          notify("{} cancels their action".format(me))
          return
@@ -863,7 +864,7 @@ def scrAgenda(card, x = 0, y = 0):
       if ds == 'corp': card.moveToTable(495 + (scoredAgendas * 15), 8, False) # Location of the Agenda Scoring point for the Corp.
       else: card.moveToTable(336 + (scoredAgendas * 15), -206, False) # Location of the Agenda Scoring point for the Runner.
       scoredAgendas += 1
-      notify("{} {}s {} and receives {} agenda point(s){}".format(me, agendaTxt, card, ap - apReduce,extraTXT))
+      notify("{} {}s {} and receives {} agenda point(s){}".format(me, agendaTxt.lower(), card, ap - apReduce,extraTXT))
       if cheapAgenda: notify(":::Warning:::{} did not have enough advance tokens ({} out of {})! ".format(card,currentAdv,card.Cost))
       executePlayScripts(card,agendaTxt)
       autoscriptOtherPlayers('Agenda'+agendaTxt.capitalize()+'d',card) # The autoscripts triggered by this effect are using AgendaLiberated and AgendaScored as the hook
@@ -969,7 +970,7 @@ def RDaccessX(group = table, x = 0, y = 0): # A function which looks at the top 
             scrAgenda(RDtop[iter])
             removedCards += 1
          else: 
-            reduction = reduceCost(RDtop[iter], 'Trash', num(cStat))
+            reduction = reduceCost(RDtop[iter], 'TRASH', num(cStat))
             rc = payCost(num(cStat) - reduction, "not free")
             if rc == "ABORT": continue # If the player couldn't pay to trash the card, we leave it where it is.
             RDtop[iter].moveTo(targetPL.piles['Heap/Archives(Face-up)'])
@@ -1025,7 +1026,7 @@ def intRez (card, cost = 'not free', x=0, y=0, silent = False):
    if chkTargeting(card) == 'ABORT': 
       notify("{} cancels their action".format(me))
       return
-   reduction = reduceCost(card, 'Rez', num(Stored_Cost[card]))
+   reduction = reduceCost(card, 'REZ', num(Stored_Cost[card]))
    if reduction: extraText = " (reduced by {})".format(uniCredit(reduction))
    rc = payCost(num(Stored_Cost[card]) - reduction, cost)
    if rc == "ABORT": return # If the player didn't have enough money to pay and aborted the function, then do nothing.
@@ -1038,7 +1039,7 @@ def intRez (card, cost = 'not free', x=0, y=0, silent = False):
       if card.Type == 'Asset': notify("{} has acquired {} {}{}.".format(me, card, rc, extraText))
       if card.Type == 'Upgrade': notify("{} has installed {} {}{}.".format(me, card, rc, extraText))
    random = rnd(10,100) # Bug workaround.
-   executePlayScripts(card,'rez')
+   executePlayScripts(card,'REZ')
     
 def rezForFree (card, x = 0, y = 0):
    if debugVerbosity >= 1: notify(">>> rezForFree(){}".format(extraASDebug())) #Debug
@@ -1056,7 +1057,7 @@ def derez(card, x = 0, y = 0, silent = False):
          if not silent: notify("{} derezzed {}".format(me, card))
          card.markers[mdict['Credits']] = 0
          card.isFaceUp = False
-         executePlayScripts(card,'derez')
+         executePlayScripts(card,'DEREZ')
    else:
       notify ( "you can't derez a unrezzed card")
       return 'ABORT'
@@ -1132,7 +1133,7 @@ def intTrashCard(card, stat, cost = "not free",  ClickCost = '', silent = False)
       DummyTrashWarn = False
       return
    else: DummyTrashWarn = False
-   reduction = reduceCost(card, 'Trash', num(stat)) # So as not to waste time.
+   reduction = reduceCost(card, 'TRASH', num(stat)) # So as not to waste time.
    if reduction: extraText = " (reduced by {})".format(uniCredit(reduction))    
    rc = payCost(num(stat) - reduction, cost)
    if rc == "ABORT": return 'ABORT' # If the player didn't have enough money to pay and aborted the function, then do nothing.
@@ -1143,13 +1144,13 @@ def intTrashCard(card, stat, cost = "not free",  ClickCost = '', silent = False)
       goodGrammar = ''
    if Stored_Type[card] == 'Event' or Stored_Type[card] == 'Operation': silent = True # These cards are already announced when played. No need to mention them a second time.
    if card.isFaceUp:
-      MUtext = chkRAM(card, 'uninstall')    
+      MUtext = chkRAM(card, 'UNINSTALL')    
       if rc == "free" and not silent: notify("{} {} {} at no cost{}.".format(me, uniTrash(), card, MUtext))
       elif not silent: notify("{} {}{} {}{}{}.".format(ClickCost, uniTrash(), goodGrammar, card, extraText, MUtext))
       if card.Type == 'Agenda' and card.markers[mdict['Scored']]: 
          me.counters['Agenda Points'].value -= num(card.Stat) # Trashing Agendas for any reason, now takes they value away as well.
          notify("--> {} loses {} Agenda Points".format(me, card.Stat))
-      if card.highlight != RevealedColor: executePlayScripts(card,'trash') # We don't want to run automations on simply revealed cards.
+      if card.highlight != RevealedColor: executePlayScripts(card,'TRASH') # We don't want to run automations on simply revealed cards.
       card.moveTo(cardowner.piles['Heap/Archives(Face-up)'])
    elif (ds == "runner" and card.controller == me) or (ds == "runner" and card.controller != me and cost == "not free") or (ds == "corp" and card.controller != me ): 
    #I'm the runner and I trash my cards, or an accessed card from the corp, or I 'm the corp and I trash a runner's card.
@@ -1225,9 +1226,9 @@ def exileCard(card, silent = False):
       whisper("This kind of card cannot be exiled!")
       return 'ABORT'
    else:
-      if card.isFaceUp: MUtext = chkRAM(card, 'uninstall')
+      if card.isFaceUp: MUtext = chkRAM(card, 'UNINSTALL')
       else: MUtext = ''
-      executePlayScripts(card,'trash')
+      executePlayScripts(card,'TRASH')
       card.moveTo(shared.exile)
    if not silent: notify("{} exiled {}{}.".format(me,card,MUtext))
    
@@ -1244,9 +1245,9 @@ def uninstall(card, x=0, y=0, destination = 'hand', silent = False):
       whisper("This kind of card cannot be uninstalled!")
       return 'ABORT'
    else: 
-      if card.isFaceUp: MUtext = chkRAM(card, 'uninstall')
+      if card.isFaceUp: MUtext = chkRAM(card, 'UNINSTALL')
       else: MUtext = ''
-      executePlayScripts(card,'uninstall')
+      executePlayScripts(card,'UNINSTALL')
       card.moveTo(group)
    if not silent: notify("{} uninstalled {}{}.".format(me,card,MUtext))
 
@@ -1368,8 +1369,8 @@ def intPlay(card, cost = 'not_free'):
    if ClickCost == 'ABORT': return  #If the player didn't have enough clicks and opted not to proceed, do nothing.
    if checkUnique(card) == False: return #If the player has the unique card and opted not to trash it, do nothing.
    if not checkNotHardwareConsole(card): return	#If player already has a Console in play and doesnt want to play that card, do nothing.
-   if card.Type == 'Event' or card.Type == 'Operation': action = 'Play'
-   else: action = 'Install'
+   if card.Type == 'Event' or card.Type == 'Operation': action = 'PLAY'
+   else: action = 'INSTALL'
    MUtext = ''
    rc = ''
    if card.Type == 'Resource' and re.search(r'Hidden', getKeywords(card)): hiddenresource = 'yes'
@@ -1383,7 +1384,7 @@ def intPlay(card, cost = 'not_free'):
       MUtext = chkRAM(card)
       if card.Type == 'Resource' and hiddenresource == 'yes':
          placeCard(card, action)
-         executePlayScripts(card,action.lower())
+         executePlayScripts(card,action)
          card.isFaceUp = False
          notify("{} to install a hidden resource.".format(ClickCost))
          return
@@ -1420,9 +1421,9 @@ def intPlay(card, cost = 'not_free'):
       placeCard(card, action)
       if card.Type == 'Operation': notify("{}{} to initiate {}{}.".format(ClickCost, rc, card, extraText))
       else: notify("{}{} to play {}{}.".format(ClickCost, rc, card, extraText))
-   executePlayScripts(card,action.lower())
-   autoscriptOtherPlayers('Card'+action,card) # we tell the autoscriptotherplayers that we installed/played a card. (e.g. See Haas-Bioroid ability)
-   if debugVerbosity >= 3: notify("<<< intPlay().action: {}\nAutoscriptedothers: {}".format(action,'Card'+action)) #Debug
+   executePlayScripts(card,action)
+   autoscriptOtherPlayers('Card'+action.capitalize(),card) # we tell the autoscriptotherplayers that we installed/played a card. (e.g. See Haas-Bioroid ability)
+   if debugVerbosity >= 3: notify("<<< intPlay().action: {}\nAutoscriptedothers: {}".format(action,'Card'+action.capitalize())) #Debug
    if debugVerbosity >= 1:
       if Stored_Type.get(card,None): notify("++++ Stored Type: {}".format(Stored_Type[card]))
       else: notify("++++ No Stored Type Found for {}".format(card))

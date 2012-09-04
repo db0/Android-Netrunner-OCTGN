@@ -174,14 +174,14 @@ def getSpecial(cardType,player = me):
    if debugVerbosity >= 3: notify("<<< getSpecial() by returning: {}".format(Card(specialCards[cardType])))
    return Card(specialCards[cardType])
 
-def chkRAM(card, action = 'install', silent = False):
+def chkRAM(card, action = 'INSTALL', silent = False):
    if debugVerbosity >= 1: notify(">>> chkRAM(){}".format(extraASDebug())) #Debug
    MUreq = num(fetchProperty(card,'Requirement'))
    if MUreq > 0 and not card.markers[mdict['DaemonMU']] and card.highlight != InactiveColor and card.highlight != RevealedColor:
-      if action == 'install':
+      if action == 'INSTALL':
          card.controller.MU -= MUreq
          MUtext = ", using up  {}".format(uniMU(MUreq))
-      elif action == 'uninstall':
+      elif action == 'UNINSTALL':
          card.controller.MU += MUreq
          MUtext = ", freeing up  {}".format(uniMU(MUreq))
    else: MUtext = ''
