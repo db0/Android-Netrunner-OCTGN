@@ -197,21 +197,27 @@ def goToSot (group, x=0,y=0):
 def createStartingCards():
    if debugVerbosity >= 1: notify(">>> createStartingCards(){}".format(extraASDebug())) #Debug
    if ds == "corp":
+      if debugVerbosity >= 5: confirm("Creating Trace Card")
       traceCard = table.create("eb7e719e-007b-4fab-973c-3fe228c6ce20", 510, 200, 1, True) #The Trace card
       storeSpecial(traceCard)
+      if debugVerbosity >= 5: confirm("Creating HQ")
       HQ = table.create("81cba950-9703-424f-9a6f-af02e0203762", 0, 0, 1, True)
       HQ.moveToTable(125, 185) # MoveToTable is accurate. Table.create isn't.
       storeSpecial(HQ)
+      if debugVerbosity >= 5: confirm("Creating R&D")
       RD = table.create("fbb865c9-fccc-4372-9618-ae83a47101a2", 0, 0, 1, True)
       RD.moveToTable(245, 185)
       storeSpecial(RD)
+      if debugVerbosity >= 5: confirm("Creating Archives")
       ARC = table.create("47597fa5-cc0c-4451-943b-9a14417c2007", 0, 0, 1, True)
       ARC.moveToTable(363, 185)
       storeSpecial(ARC)
+      if debugVerbosity >= 5: confirm("Creating Virus Scan")
       AV = table.create("23473bd3-f7a5-40be-8c66-7d35796b6031", 0, 0, 1, True) # The Virus Scan card.
       AV.moveToTable(510, 127)
       storeSpecial(AV)
    else:
+      if debugVerbosity >= 5: confirm("Creating Trace Card")
       traceCard = table.create("eb7e719e-007b-4fab-973c-3fe228c6ce20", 566, -323, 1, True) #The Trace card
       traceCard.moveToTable(566, -323) # Otherwise it's bugging out
       storeSpecial(traceCard)
@@ -229,10 +235,13 @@ def intJackin(group, x = 0, y = 0):
    chooseSide()
    #for type in Automations: switchAutomation(type,'Announce') # Too much spam.
    deck = me.piles['R&D/Stack']
+   if debugVerbosity >= 5: confirm("Checking Deck")
    if len(deck) == 0:
       whisper ("Please load a deck first!")
       return
+   if debugVerbosity >= 5: confirm("Reseting Variables")
    resetAll()
+   if debugVerbosity >= 5: confirm("Placing Identity")
    for card in me.hand:
       if card.Type != 'Identity': 
          whisper(":::Warning::: You are not supposed to have any non-Identity cards in your hand when you start the game")
@@ -245,13 +254,16 @@ def intJackin(group, x = 0, y = 0):
    if not ds: 
       confirm("You need to have your identity card in your hand when you try to setup the game. If you have it in your deck, please look for it and put it in your hand before running this function again")
       return
+   if debugVerbosity >= 5: confirm("Giving Possible Warning")
    if (ds == 'corp' and me.hasInvertedTable()) or (ds == 'runner' and not me.hasInvertedTable()):
       if not confirm(":::ERROR::: Due to engine limitations, the corp player must always be player [A] in order to properly utilize the board. Please start a new game and make sure you've set the corp to be player [A] in the lobby. Are you sure you want to continue?"): return   
+   if debugVerbosity >= 5: confirm("Checking Illegality")
    deckStatus = checkDeckNoLimit(deck)
    if not deckStatus[0]:
       if not confirm("We have found illegal cards in your deck. Bypass?"): return
       else: notify("{} has chosen to proceed with an illegal deck.".format(me))
    else: identity = deckStatus[1] # For code readability
+   if debugVerbosity >= 5: confirm("Placing Identity")
    if ds == "corp":
       identity.moveToTable(125, 240)
       rnd(1,10) # Allow time for the ident to be recognised
@@ -266,10 +278,14 @@ def intJackin(group, x = 0, y = 0):
       BL = num(identity.Cost)
       me.counters['Base Link'].value = BL
       notify("{} is representing the Runner {}. They start with {} {}".format(me,identity,BL,uniLink()))
+   if debugVerbosity >= 5: confirm("Creating Starting Cards")
    createStartingCards()
+   if debugVerbosity >= 5: confirm("Shuffling Deck")
    shuffle(me.piles['R&D/Stack'])
+   if debugVerbosity >= 5: confirm("Drawing 5 Cards")
    notify("{}'s {} is shuffled ".format(me,pileName(me.piles['R&D/Stack'])))
    drawMany(me.piles['R&D/Stack'], 5)
+   if debugVerbosity >= 5: confirm("Reshuffling Deck")
    shuffle(me.piles['R&D/Stack']) # And another one just to be sure
 
 def checkDeckNoLimit(group):
