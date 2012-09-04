@@ -99,7 +99,7 @@ def useClick(group = table, x=0, y=0, count = 1):
    if count == 0: return '{} takes a free action'.format(me)
    if ds == 'runner' and re.search(r'running',getGlobalVariable('status')): 
       if not confirm("You have not yet finished your previous run. Normally you're not allowed to use clicks during runs, are you sure you want to continue?\
-                 \n\n(Pressing 'No' will abort this action and you can then Jack-out of the run with [ESC]"): return 'ABORT'
+                 \n\n(Pressing 'No' will abort this action and you can then Jack-out of the run with [ESC] or [F3]"): return 'ABORT'
    clicksReduce = findCounterPrevention(me.Clicks, 'Clicks', me)
    if clicksReduce: notify(":::WARNING::: {} had to forfeit their next {} clicks".format(me, clicksReduce))
    me.Clicks -= clicksReduce
@@ -404,19 +404,20 @@ def jackOut(group=table,x=0,y=0, silent = False, result = 'failure'):
    else: targetPL = me
    enemyIdent = getSpecial('Identity',targetPL)
    myIdent = getSpecial('Identity',me)
-   if not re.search(r'running',getGlobalVariable('status')): # If the runner is not running at the moment, do nothing
+   runTarget = re.search(r'running([A-Za-z&]+)',getGlobalVariable('status'))
+   if not runTarget: # If the runner is not running at the moment, do nothing
       if targetPL != me: whisper("{} is not running at the moment.".format(targetPL))
       else: whisper("You are not currently jacked-in.")
    else: # Else announce they are jacked in and resolve all post-run effects.
       myIdent.markers[mdict['BadPublicity']] = 0
-      if not silent:
-         if targetPL != me: notify("{} has kicked {} out of their corporate grid".format(myIdent,enemyIdent))
-         else: 
-            if result == 'failure': notify("{} has jacked out of the run".format(myIdent))
-            else: notify("{} has finished their run successfully".format(myIdent))
       if result == 'failure': atTimedEffects('JackOut')
       else: atTimedEffects('SuccessfulRun')
       setGlobalVariable('status','idle')
+      if not silent:
+         if targetPL != me: notify("{} has kicked {} out of their corporate grid".format(myIdent,enemyIdent))
+         else: 
+            if result == 'failure': notify("{} has jacked out of their run on {} server".format(myIdent,runTarget.group(1)))
+            else: notify("{} has finished their run successfully".format(myIdent))
       
 def runSuccess(group=table,x=0,y=0, silent = False):
    jackOut(silent = False, result = 'success')
@@ -486,7 +487,7 @@ def remXCredits (card, x = 0, y = 0):
 def addPlusOne(card, x = 0, y = 0):
    if debugVerbosity >= 1: notify(">>> addPlusOne(){}".format(extraASDebug())) #Debug
    mute()
-   if MinusOne in card.markers:
+   if mdict['MinusOne'] in card.markers:
       card.markers[mdict['MinusOne']] -= 1
    else: 
       card.markers[mdict['PlusOne']] += 1
@@ -495,11 +496,17 @@ def addPlusOne(card, x = 0, y = 0):
 def addMinusOne(card, x = 0, y = 0):
    if debugVerbosity >= 1: notify(">>> addMinusOne(){}".format(extraASDebug())) #Debug
    mute()
-   if PlusOne in card.markers:
+   if mdict['PlusOne'] in card.markers:
       card.markers[mdict['PlusOne']] -= 1
    else:
       card.markers[mdict['MinusOne']] += 1
    notify("{} adds one -1 marker on {}.".format(me,card))
+
+def addPlusOnePerm(card, x = 0, y = 0):
+   if debugVerbosity >= 1: notify(">>> addPlusOnePerm(){}".format(extraASDebug())) #Debug
+   mute()
+   card.markers[mdict['PlusOnePerm']] += 1
+   notify("{} adds one Permanent +1 marker on {}.".format(me,card))
 
 def addMarker(cards, x = 0, y = 0): # A simple function to manually add any of the available markers.
    if debugVerbosity >= 1: notify(">>> addMarker(){}".format(extraASDebug())) #Debug
@@ -510,6 +517,14 @@ def addMarker(cards, x = 0, y = 0): # A simple function to manually add any of t
       card.markers[marker] += quantity
       notify("{} adds {} {} counter to {}.".format(me, quantity, marker[0], card))	
 
+def addVirusCounter(card, x = 0, y = 0):
+   card.markers[mdict['Virus']] += 1
+   
+def addPowerCounter(card, x = 0, y = 0):
+   card.markers[mdict['Power']] += 1
+
+def addAgendaCounter(card, x = 0, y = 0):
+   card.markers[mdict['Agenda']] += 1
 #------------------------------------------------------------------------------
 # Advancing cards
 #------------------------------------------------------------------------------
@@ -642,6 +657,7 @@ def reduceCost(card, action = 'REZ', fullCost = 0):
    if fullCost == 0: return 0 # If there's no cost, there's no use checking the table.
    reduction = 0
    status = getGlobalVariable('status')
+   if debugVerbosity >= 3: notify("### Status: {}".format(status))
    ### First we check if the card has an innate reduction. 
    Autoscripts = Stored_AutoScripts[card].split('||') 
    if len(Autoscripts): 
@@ -661,7 +677,7 @@ def reduceCost(card, action = 'REZ', fullCost = 0):
          fullCost -= 1
    elif debugVerbosity >= 2: notify("### No self-reducing autoscripts found!")
    ### Now we check if we're in a run and we have bad publicity credits to spend
-   if status == 'running':
+   if re.search(r'running',status):
       myIdent = getSpecial('Identity',me)
       while fullCost > 0 and myIdent.markers[mdict['BadPublicity']] and myIdent.markers[mdict['BadPublicity']] > 0: 
          reduction += 1
@@ -673,7 +689,7 @@ def reduceCost(card, action = 'REZ', fullCost = 0):
       Autoscripts = c.AutoScript.split('||')
       if len(Autoscripts) == 0: continue
       for autoS in Autoscripts:
-         if re.search(r'whileRunning', autoS) and status != 'running': continue # if the reduction is only during runs, and we're not in a run, bypass this effect
+         if re.search(r'whileRunning', autoS) and not re.search(r'running',status): continue # if the reduction is only during runs, and we're not in a run, bypass this effect
          if debugVerbosity >= 2: notify("### Checking {} with AS: {}".format(c, autoS)) #Debug
          reductionSearch = re.search(r'Reduce([0-9#]+)Cost({}|All)-for([A-Z][A-Za-z ]+)(-not[A-Za-z_& ]+)?'.format(type), autoS) 
          if debugVerbosity >= 2: #Debug

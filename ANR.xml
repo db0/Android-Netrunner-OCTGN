@@ -69,13 +69,15 @@
       <cardactions menu="Add/Remove Markers...">
          <cardaction menu="&#8986; Pay 1 ¥ and advance card" default="false" shortcut="Alt+A" execute="advanceCardP" />
          <cardaction menu="Add X advancement counter" default="false" execute="addXadvancementCounter" />
-         <cardaction menu="Remove 1 advancement counter" default="false" shortcut="Alt+Shift+A" execute="advanceCardM" />
-         <cardaction menu="Remove X advancement counters" default="false" execute="delXadvancementCounter" />
+         <cardaction menu="Add Virus Counter" default="false" shortcut="Alt+V" execute="addVirusCounter" />
+         <cardaction menu="Add Power Counter" default="false" shortcut="Alt+P" execute="addPowerCounter" />
+         <cardaction menu="Add Agenda Counter" default="false" shortcut="Alt+G" execute="addAgendaCounter" />
+         <cardaction menu="Mark with +1" default="false" shortcut="Alt+1" execute="addPlusOne" />
+         <cardaction menu="Mark with -1" default="false" shortcut="Alt+Shift+1" execute="addMinusOne" />
+         <cardaction menu="Mark with Permanent +1" default="false" execute="addPlusOnePerm" />
          <cardaction menu="Put X Credits from the Bank" default="false" shortcut="Alt+B" execute="addCredits" />
          <cardaction menu="Remove X Credits" default="false" execute="remCredits" />
          <cardaction menu="Take X Credits to your Pool" default="false" shortcut="Alt+Shift+B" execute="remXCredits" />
-         <cardaction menu="Mark with +1" default="false" shortcut="Alt+1" execute="addPlusOne" />
-         <cardaction menu="Mark with -1" default="false" shortcut="Alt+Shift+1" execute="addMinusOne" />
          <cardaction menu="Add Markers" default="false" shortcut="Alt+M" batchExecute="addMarker" />
       </cardactions>
       <cardactions menu="Rez...">
@@ -157,11 +159,11 @@
       <counter name="Base Link" default="0" reset="true" icon="r16" />
       <counter name="Agenda Points" default="0" reset="true" icon="r7" />
       <counter name="Bad Publicity" default="0" reset="true" icon="r2" />
-      <counter name="Hand Size" default="0" reset="true" icon="r13" />
+      <counter name="Hand Size" default="0" reset="true" icon="r6" />
       <counter name="Tags" default="0" reset="true" icon="r26" />
    </player>
    <shared>
-      <group name="Exile" visibility="all" ordered="false" width="63" height="88" icon="r14" collapsed="false" />
+      <group name="Exile" visibility="all" ordered="false" width="63" height="88" icon="r13" collapsed="false" />
    </shared>
    <deck>
       <section name="Identity" group="HQ/Grip" />
