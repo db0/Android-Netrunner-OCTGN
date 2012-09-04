@@ -58,6 +58,7 @@ Changelog
 * Added a small whisper when you have started playing a card from your hand. This will let you know if the effect has started and you need to wait, or if it didn't start at all.
 * Finished migrating counter and group icons to vector based. Let me know if you find any improvement over them.
 * Added new actions to the markers menu to add Power, Virus and Agenda Markers. Removed some obsolete actions.
+* Added version checking. From now on, during the first setup, the game will inform the player if a new version is available to download.
 
 
 ### 1.1.7

@@ -229,6 +229,7 @@ def intJackin(group, x = 0, y = 0):
    if debugVerbosity >= 1: notify(">>> intJackin(){}".format(extraASDebug())) #Debug
    global ds, maxClicks
    mute()
+   versionCheck()
    if ds and not confirm("Are you sure you want to setup for a new game? (This action should only be done after a table reset)"): return
    ds = None
    if not table.isTwoSided() and not confirm(":::WARNING::: This game is designed to be played on a two-sided table. Things will be extremely uncomfortable otherwise!! Please start a new game and makde sure the  the appropriate button is checked. Are you sure you want to continue?"): return
@@ -1010,7 +1011,7 @@ def RDaccessX(group = table, x = 0, y = 0): # A function which looks at the top 
             notify("{} paid {} to {} {}".format(me,uniCredit(cStat),uniTrash(),RDtop[iter]))            
       else: continue
    cover.moveTo(shared.exile) # now putting the cover card to the exile deck that nobody looks at.
-   notify("{} has accessing {}'s R&D".format(me,targetPL))
+   notify("{} has finished accessing {}'s R&D".format(me,targetPL))
 
 def ARCscore(group, x=0,y=0):
    mute()
@@ -1134,6 +1135,8 @@ def clearAll(): # Just clears all the player's cards.
    if debugVerbosity >= 1: notify(">>> clearAll()") #Debug
    for card in table:
       if card.controller == me: clear(card,silent = True)
+      if card.isFaceUp and (card.Type == 'Operation' or card.Type == 'Event') and card.highlight != DummyColor:
+         intTrashCard(card,0,"free") # Clearing all Events and operations for players who keep forgeting to clear them.
    if debugVerbosity >= 3: notify("<<< clearAll()")
    
 def intTrashCard(card, stat, cost = "not free",  ClickCost = '', silent = False):
@@ -1599,6 +1602,7 @@ def showatrandom(group, count = 1, silent = False):
          break
       card.moveToTable(playerside * iter * cwidth(card) - (count * cwidth(card) / 2), 0 - yaxisMove(card), False)
       card.highlight = RevealedColor
+      loopChk(card) # A small delay to make sure we grab the card's name to announce
    if not silent: notify("{} reveals {} at random from their hand.".format(me,card))
 
 def groupToDeck (group = me.hand, player = me, silent = False):
