@@ -46,6 +46,20 @@ Screenshots
 Changelog
 ---------
 
+### 1.1.8
+
+* **Important: Big change in the way Runs work**. Now Runs Start with the special actions on the runner's menu ([F5] to [F9]) or with actions cards. 
+  Once the run has ended, the runner must press either [Esc] to signify a failed run, or [F3] to signify a successful one. When this is done, abilities on cards which trigger from that (e.g. Medium, Gabriel etc) will automatically fire.
+  If the corp ends the run with an ICE, they __should__ use the subroutine on the ICE to do it. This will automatically end the run and trigger card abilities as well (e.g. Stimhack)
+* If the runner uses an action which runs at any target, the game will automatically pick the first server they have targeted. If the runner has not targeted a server, the game will ask for input
+* Removed all manual effect from cards which triggered after successful runs, like Gabriel and Desperado. Use the Finish the "Run succesfully" action ([F3]).
+* Because of the above changes, Bad Publicity credits now work better. They get put on your runner identity as markers, and used whenever you pay costs. Once the run ends, they are removed.
+* Moved Brain DMG counters to the Identity card and disabled Runner's Counter Hold for now since it was not really used.
+* Added a small whisper when you have started playing a card from your hand. This will let you know if the effect has started and you need to wait, or if it didn't start at all.
+* Finished migrating counter and group icons to vector based. Let me know if you find any improvement over them.
+* Added new actions to the markers menu to add Power, Virus and Agenda Markers. Removed some obsolete actions.
+
+
 ### 1.1.7
 
 * Runner looking at corp's deck now mentions the amount of cards.
