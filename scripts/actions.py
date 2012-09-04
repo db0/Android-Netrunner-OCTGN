@@ -174,13 +174,7 @@ def goToSot (group, x=0,y=0):
    clicksReduce = findCounterPrevention(maxClicks, 'Clicks', me) # Checking if the player has any effects which force them to forfeit clicks.
    if clicksReduce: extraTXT = " ({} forfeited)".format(clicksReduce)
    else: extraTXT = ''
-   if me.Clicks < 0: 
-      if debugVerbosity <= 0 and not confirm("Your clicks were negative from last turn. Was this a result of a penalty you suffered from a card?"): 
-         me.Clicks = maxClicks - clicksReduce # If the player did not have a penalty, then we assume those were extra clicks granted by some card effect, so we make sure they have their full maximum
-      else: 
-         me.Clicks += maxClicks - clicksReduce # If it was a penalty, then it remains with them for this round, which means they have less clicks to use.
-         notify("{} is starting with {} less clicks this turn, due to a penalty from a previous turn.".format(me))
-   else: me.Clicks = maxClicks - clicksReduce
+   me.Clicks = maxClicks - clicksReduce
    lastKnownNrClicks = me.Clicks
    myCards = (card for card in table if card.controller == me and card.owner == me)
    for card in myCards: 
