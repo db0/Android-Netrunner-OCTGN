@@ -209,9 +209,10 @@ You can take a Mulligan.
 Did you get 5 Agendas in your starting hand? 
 Right click on it and select "Mulligan". Your cards will be reshufled back into your deck and you'll get 5 new ones.
 ||
-I won't bug you much
+I won't bug you much.
 
 Messages of the Day and their accompanying "Did you know", only come up the first time you setup in each new game.
+Unless there's a new version,in which case the information about that will come out instead.
 ||
 You can add more "Did you know"
 

@@ -1,4 +1,6 @@
-======Important 1.1.8+ Information======
+======Message of the Day======
+Important 1.1.8+ Information
+----------------------------
 Runs are now able to trigger scripts on your cards. Once the run has ended, the runner must press either [Esc] to signify a failed run, or [F3] to signify a successful one. When this is done, abilities on cards which trigger from that (e.g. Medium, Gabriel etc) will automatically fire.
 
 Starting custom runs are still in the runner's menu but their shortcuts have changed to [F5]-[F9]. Runs started by card effects still start runs normally.

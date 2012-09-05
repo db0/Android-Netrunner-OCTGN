@@ -46,6 +46,12 @@ Screenshots
 Changelog
 ---------
 
+### 1.1.9
+
+* Added MOTD and DidYouKnow functionality
+* Fixed Haas Bioroid tapping on opponent's installs
+* Fixed Heimdall doing damage to the corp.
+
 ### 1.1.8
 
 * **Important: Big change in the way Runs work**. Now Runs Start with the special actions on the runner's menu ([F5] to [F9]) or with actions cards. 

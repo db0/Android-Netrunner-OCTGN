@@ -322,11 +322,12 @@ def HELP_RunStructure(group,x=0,y=0):
 #------------------------------------------------------------------------------
 
 def versionCheck():
+   if debugVerbosity >= 1: notify(">>> versionCheck()") #Debug
    global startupMsg
    if not startupMsg:
       (url, code) = webRead('https://raw.github.com/db0/Android-Netrunner-OCTGN/master/current_version.txt')
       if code != 200:
-         whisper("Cannot check version number at the moment.")
+         whisper("Cannot check version page at the moment.")
          return
       detailsplit = url.split('||')
       currentVers = detailsplit[0].split('.')
@@ -354,12 +355,43 @@ def versionCheck():
                                     ".format(gameVersion, detailsplit[0],detailsplit[1])): 
             openUrl('https://github.com/db0/Android-Netrunner-OCTGN/downloads')
          startupMsg = True
-      MOTD()
+      if not startupMsg: MOTD() # If we didn't give out any other message , we give out the MOTD instead.
+      startupMsg = True
+   if debugVerbosity >= 3: notify("<<< versionCheck()") #Debug
+      
       
 def MOTD():
-   global startupMsg
-   if not startupMsg:
-      
+   if debugVerbosity >= 1: notify(">>> MOTD()") #Debug
+   (MOTDurl, MOTDcode) = webRead('https://raw.github.com/db0/Android-Netrunner-OCTGN/master/MOTD.txt')
+   (DYKurl, DYKcode) = webRead('https://raw.github.com/db0/Android-Netrunner-OCTGN/master/DidYouKnow.txt')
+   if MOTDcode != 200 or DYKcode !=200:
+      whisper("Cannot check MOTD or DYK page at the moment.")
+      return
+   DYKlist = DYKurl.split('||')
+   DYKrnd = rnd(0,len(DYKlist)-1)
+   while MOTDdisplay(MOTDurl,DYKlist[DYKrnd]) == 'MORE': 
+      MOTDurl = '' # We don't want to spam the MOTD for the further notifications
+      DYKrnd += 1
+      if DYKrnd == len(DYKlist): DYKrnd = 0
+   if debugVerbosity >= 3: notify("<<< MOTD()") #Debug
+   
+def MOTDdisplay(MOTD,DYK):
+   if debugVerbosity >= 1: notify(">>> MOTDdisplay()") #Debug
+   if re.search(r'http',DYK):
+      DYKweb = DYK.split('&&')
+      if confirm("{}\
+              \n\nDid You Know?:\
+                \n------------------\
+                \n{}".format(MOTD,DYKweb[0])):
+         openUrl(DYKweb[1])
+   elif confirm("{}\
+              \n\nDid You Know?:\
+                \n-------------------\
+                \n{}\
+                \n-------------------\
+              \n\nWould you like to see the next tip?".format(MOTD,DYK)): return 'MORE'
+   else: return 'STOP'
+   
 #------------------------------------------------------------------------------
 # Debugging
 #------------------------------------------------------------------------------
