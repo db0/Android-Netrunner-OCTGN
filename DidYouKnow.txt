@@ -31,14 +31,6 @@ Would you like to learn more?
 &&
 http://mumble.sourceforge.net/
 ||
-We have a dedicated bug tracker.
-
-Have you found a bug? Do you have a feature request? Please put it in our Issue Tracker in github. 
-
-This makes it easier for us to track and implement improvements, avoid duplicates, and you also get to see when your issue is fixed!
-&&
-https://github.com/db0/Android-Netrunner-OCTGN/issues
-||
 If you have a card that starts a run where you get to select the target, having a Server targeted before you play it will automatically select it as the destination for your run.
 ||
 If you have cards which reduce your costs when doing something, such as reducing cost for using Icebreakers, then as long as they're in play the costs will be reduced automatically.
@@ -99,6 +91,14 @@ It's very easy to trash your own cards. Simply move your mouse pointer over them
 
 The same is true for cards in your hand.
 ||
+We have a dedicated bug tracker.
+
+Have you found a bug? Do you have a feature request? Please put it in our Issue Tracker in github. 
+
+This makes it easier for us to track and implement improvements, avoid duplicates, and you also get to see when your issue is fixed!
+&&
+https://github.com/db0/Android-Netrunner-OCTGN/issues
+||
 If you're a Corp and you have an unrezzed "PAD Campaign", your best tactic is to rez it, just before you press [F1] to start your turn.
 ||
 Some actions will affect your opponent's cards, such as Trashing or Exposing them, or trying to inflict damage.
@@ -106,6 +106,14 @@ Some actions will affect your opponent's cards, such as Trashing or Exposing the
 In such cases, a message will pop-up to inform you what you need to do. Please read that carefully and press "Yes" or "No" accordingly.
 
 This message gives your opponent an opportunity to play reactions to your event. Let them know what you are about to do so that they can activate their cards, if they have any.
+||
+The Developer of this OCTGN plugin has made many others like it. 
+
+Games implemented include: Doomtown CCG, Dune CCG, Classic Netrunner and more
+
+Would you like to learn more?
+&&
+http://octgn.gamersjudgement.com/memberlist.php?mode=viewprofile&u=61
 ||
 Inflicting Damage on another player is automatic.
 
@@ -140,6 +148,12 @@ Making Credits is Easy. Just press Ctrl+C
 
 Putting Advancements is also Easy. Move your mouse cursor over the card to advance and press Alt+A
 ||
+If the OCTGN server ever goes down and you cannot login, you can still play games "offline" via direct IP connection.
+
+Would you like to learn more?
+&&
+http://octgn.gamersjudgement.com/viewtopic.php?f=52&t=513
+||
 Learning the shortcuts will make the game go faster for you.
 
 In general guidelines: 
@@ -165,7 +179,7 @@ Double-Click on the trace card to pay the cost once your opponent has placed the
 ||
 You can inspect your cards.
 
-Having trouble reading a card? Have only censored cards? Use the Inspect action on the card's context menu.
+Having trouble reading a card? Have only censored cards? Use the Inspect action on the card's context menu (right-click).
 
 This will show you the cards's text in a message box and also inform you if the card is scripted.
 ||
@@ -181,7 +195,7 @@ Almost everything you want to do, can be achieved by double-clicking on the card
 * Want to draw a card? Double-click your deck.
 * Want to Clear All Viruses from your system? Double-Click the Virus Scan card on your right.
 
-Attention: Double-Cliking only works for card you control. Generally the rest you should even be trying to use their abilities.
+Attention: Double-Cliking only works for card you control. Generally shouldn't even be trying to use the abilities of card's you don't conrtol.
 ||
 You can try to debug broken cards.
 
@@ -217,12 +231,6 @@ Observers are ignored by the game. However any player who wants can make their h
 
 If an observer needs to leave, ask them to simply minimize OCTGN until the game is finished
 ||
-If the OCTGN server ever goes down and you cannot login, you can still play games via direct IP connection
-
-Would you like to learn more?
-&&
-http://octgn.gamersjudgement.com/viewtopic.php?f=52&t=513
-||
 The developer of this plugin could use some help in specific areas peripheral to development.
 
 Would you like to learn more?
@@ -234,14 +242,6 @@ Spider Jerusalem is awesome and should be a Runner archetype.
 Would you like to learn more?
 &&
 http://www.empireonline.com/50greatestcomiccharacters/default.asp?c=12
-||
-The Developer of this OCTGN plugin has made many others like it. 
-
-Games implemented include: Doomtown CCG, Dune CCG, Classic Netrunner and more
-
-Would you like to learn more?
-&&
-http://octgn.gamersjudgement.com/memberlist.php?mode=viewprofile&u=61
 ||
 If you're the Corp, you can Expose and Unexpose your cards with the same action
 

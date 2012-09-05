@@ -497,7 +497,7 @@ def atTimedEffects(Time = 'Start'): # Function which triggers card effects at th
          if debugVerbosity >= 2 and effect: notify("!!! effects: {}".format(effect.groups()))
          if re.search(r'excludeDummy', autoS) and card.highlight == DummyColor: continue
          if re.search(r'onlyforDummy', autoS) and card.highlight != DummyColor: continue
-         if re.search(r'isOptional', effect.group(2)) and not confirm("{} can have the following optional ability activated at the start of your turn:\n\n[ {} {} {} ]\n\nDo you want to activate it?".format(card.name, effect.group(2), effect.group(3),effect.group(4))): continue
+         if re.search(r'isOptional', effect.group(2)) and not confirm("{} can have its optional ability take effect at this point Do you want to activate it?".format(card.name)): continue
          if re.search(r'onlyOnce',autoS) and oncePerTurn(card, silent = True, act = 'automatic') == 'ABORT': continue
          splitAutoscripts = effect.group(2).split('$$')
          for passedScript in splitAutoscripts:
@@ -1212,6 +1212,7 @@ def ModifyStatus(Autoscript, announceText, card, targetCards = None, notificatio
    #confirm("List: {}".format(targetCards)) #Debug
    #for targetCard in targetCards: notify("ModifyX TargetCard: {}".format(targetCard)) #Debug
    for targetCard in targetCards:
+      if re.search(r'-ifEmpty',Autoscript) and targetCard.markers[mdict['Credits']] and targetCard.markers[mdict['Credits']] > 0: continue #If the modification only happens when the card runs out of credits, then we abort if it still has any
       if action.group(1) == 'Rez' and intRez(targetCard, 'free', silent = True) != 'ABORT': pass
       elif action.group(1) == 'Derez'and derez(targetCard, silent = True) != 'ABORT': pass
       elif action.group(1) == 'Expose' and expose(targetCard, silent = True) != 'ABORT': pass

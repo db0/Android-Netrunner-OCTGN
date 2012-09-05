@@ -383,7 +383,7 @@ def MOTDdisplay(MOTD,DYK):
               \n\nDid You Know?:\
                 \n------------------\
                 \n{}".format(MOTD,DYKweb[0])):
-         openUrl(DYKweb[1],strip())
+         openUrl(DYKweb[1].strip())
    elif confirm("{}\
               \n\nDid You Know?:\
                 \n-------------------\
