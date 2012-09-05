@@ -104,7 +104,7 @@ def useClick(group = table, x=0, y=0, count = 1):
    if clicksReduce: notify(":::WARNING::: {} had to forfeit their next {} clicks".format(me, clicksReduce))
    me.Clicks -= clicksReduce
    if me.Clicks < count: 
-      if not confirm("You do not have enough clicks left to take this action. Are you sure you want to continue?"): return 'ABORT'
+      if not confirm("You do not have enough clicks left to take this action. Are you sure you want to continue?\n\n(Did you remember to start your turn with [F1]?)"): return 'ABORT'
       else: extraText = ' (Exceeding Max!)'
    currClicks += count + lastKnownNrClicks - me.Clicks# If the player modified their click counter manually, the last two will increase/decreate our current click accordingly.
    me.Clicks -= count
@@ -181,7 +181,7 @@ def goToSot (group, x=0,y=0):
       if card in Stored_Type and Stored_Type[card] != 'ICE': card.orientation &= ~Rot90 # Refresh all cards which can be used once a turn.
    newturn = True
    atTimedEffects('Start') # Check all our cards to see if there's any Start of Turn effects active.
-   if ds == "corp": notify("=> The offices of {} ({}) are now open for business. They have {} clicks for this turn{}.".format(identName,me,me.Clicks,extraTXT))
+   if ds == "corp": notify("=> The offices of {} ({}) are now open for business. They have {} {} for this turn{}.".format(identName,me,me.Clicks,uniClick(),extraTXT))
    else: notify ("=> {} ({}) has woken up. They have {} clicks for this turn{}.".format(identName,me,me.Clicks,extraTXT))
 
 #------------------------------------------------------------------------------

@@ -424,7 +424,7 @@ def autoscriptOtherPlayers(lookup, origin_card, count = 1): # Function that trig
       for AutoS in Autoscripts:
          if debugVerbosity >= 2: notify('Checking AutoS: {}'.format(AutoS)) # Debug
          if not re.search(r'{}'.format(lookup), AutoS): continue # Search if in the script of the card, the string that was sent to us exists. The sent string is decided by the function calling us, so for example the ProdX() function knows it only needs to send the 'GeneratedSpice' string.
-         if chkPlayer(AutoS, origin_card.controller,False) == 0: continue # Check that the effect's origninator is valid.
+         if chkPlayer(AutoS, card.controller,False) == 0: continue # Check that the effect's origninator is valid.
          if re.search(r'onlyOnce',autoS) and oncePerTurn(card, silent = True, act = 'automatic') == 'ABORT': continue # If the card's ability is only once per turn, use it or silently abort if it's already been used
          chkType = re.search(r'-type([A-Za-z ]+)',autoS)
          if chkType: #If we have this modulator in the script, then need ot check what type of property it's looking for
@@ -1324,6 +1324,7 @@ def CustomScript(card, action = 'PLAY'): # Scripts that are complex and fairly u
             placeCard(c,'InstallRezzed')
             c.orientation ^= Rot90
             iter +=1
+            autoscriptOtherPlayers('CardInstall',card)
       if iter: # If we found any ice in the top 3
          notify("{} initiates an Accelerated Beta Test and reveals {} Ice from the top of their R&D. These Ice are automatically installed and rezzed".format(me, iter))
       else: notify("{} initiates a Accelerated Beta Test but their beta team was incompetent.".format(me))
@@ -1679,20 +1680,20 @@ def chkPlayer(Autoscript, controller, manual): # Function for figuring out if an
 # Function returns 1 if the card is not only for rivals, or if it is for rivals and the card being activated it not ours.
 # This is then multiplied by the multiplier, which means that if the card activated only works for Rival's cards, our cards will have a 0 gain.
 # This will probably make no sense when I read it in 10 years...
-   if debugVerbosity >= 1: notify(">>> chkPlayer(){}".format(extraASDebug())) #Debug
+   if debugVerbosity >= 1: notify(">>> chkPlayer(). Controller is: {}".format(controller)) #Debug
    byOpponent = re.search(r'byOpponent', Autoscript)
    byMe = re.search(r'byMe', Autoscript)
    if manual: 
-      if debugVerbosity >= 3: notify("<<< chkPlayer() with return 1")
+      if debugVerbosity >= 3: notify("<<< chkPlayer() with return 1 (Manual)")
       return 1 #manual means that the clicks was called by a player double clicking on the card. In which case we always do it.
    elif not byOpponent and not byMe: 
-      if debugVerbosity >= 3: notify("<<< chkPlayer() with return 1")   
+      if debugVerbosity >= 3: notify("<<< chkPlayer() with return 1 (Neutral)")   
       return 1 # If the card has no restrictions on being us or a rival.
    elif byOpponent and controller != me: 
-      if debugVerbosity >= 3: notify("<<< chkPlayer() with return 1")   
+      if debugVerbosity >= 3: notify("<<< chkPlayer() with return 1 (byOpponent)")   
       return 1 # If the card needs to be played by a rival.
    elif byMe and controller == me: 
-      if debugVerbosity >= 3: notify("<<< chkPlayer() with return 1")   
+      if debugVerbosity >= 3: notify("<<< chkPlayer() with return 1 (byMe)")   
       return 1 # If the card needs to be played by us.
    if debugVerbosity >= 3: notify("<<< chkPlayer() with return 0") # Debug
    else: return 0 # If all the above fail, it means that we're not supposed to be triggering, so we'll return 0 which will make the multiplier 0.

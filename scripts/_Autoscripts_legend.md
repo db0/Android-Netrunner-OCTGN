@@ -150,7 +150,7 @@ Used as a requirement by many functions and modulators
 
 * with "-Targeted". It checks to see who the owner of the targeted card must be.
 * with atTurnStart, atJackOut, atRunStart etc, it check to see if the controller of the card on a table has to be the same or opposing as the player who's turn/run is ending. For example, it's used in a PAD campaign, so that the opponent does not gain credits at the start of their own turn. But it's not used with Stimhack, so that the opponent DOES take damage if you end their run for them
-* with the hidden triggers (function: autoscriptOtherPlayers()), this checks to see if the card which has just activated a trigger, must have the same or opposing controller as the card who is being triggered. (For example an effect like "Gain 1 credit when you install a card" needs to have the "-byMe modulator, so that the opponent's installation don't trigger the effect.
+* with the hidden triggers (function: autoscriptOtherPlayers()), this checks to see if the card can only be triggered by its controller or the by opposing player. (For example an effect like "Gain 1 credit when you install a card" needs to have the "-byMe modulator, so that the opponent's installations don't trigger the effect.)
 
 #### -AutoTargeted
 
