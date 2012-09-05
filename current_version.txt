@@ -1,5 +1,4 @@
-1.1.9
-||
+1.1.9||
 ======New Version Details======
 (This is likely the first time you see this message. It's a new feature implemented in v1.1.8 which informs you if there is a later version of the plugin available)
 
