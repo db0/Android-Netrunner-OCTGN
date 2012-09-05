@@ -1,0 +1,11 @@
+======Important 1.1.8+ Information======
+Runs are now able to trigger scripts on your cards. Once the run has ended, the runner must press either [Esc] to signify a failed run, or [F3] to signify a successful one. When this is done, abilities on cards which trigger from that (e.g. Medium, Gabriel etc) will automatically fire.
+
+Starting custom runs are still in the runner's menu but their shortcuts have changed to [F5]-[F9]. Runs started by card effects still start runs normally.
+
+If the corp wants to ends the run with an ICE, they __should__ use the subroutine on the ICE to do it. This will automatically end the run and trigger card abilities as well (e.g. Stimhack.)
+
+If the runner uses an action which runs at any target, the game will automatically pick the first server they have targeted. If the runner has not targeted a server, the game will ask for input.
+
+::::ATTENTION:::: from 1.1.8 onwards, I have removed all manual effects from cards which triggered after successful runs, like Gabriel, Bank Run and Desperado. This means you cannot double click those cards to activate them! Use the "Finish the Run succesfully" action ([F3]) to trigger those instead!.
+===============================

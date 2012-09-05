@@ -1152,7 +1152,7 @@ def intTrashCard(card, stat, cost = "not free",  ClickCost = '', silent = False)
       goodGrammar = ''
    if UniCode: goodGrammar = ''
    cardowner = card.owner
-   if Stored_Type[card] == "Tracing" or Stored_Type[card] == "Counter Hold" or Stored_Type[card] == "Server": 
+   if Stored_Type[card] == "Tracing" or Stored_Type[card] == "Counter Hold" or (Stored_Type[card] == "Server" and card.name != Remote Server): 
       whisper("{}".format(trashEasterEgg[trashEasterEggIDX]))
       if trashEasterEggIDX < 7:
          trashEasterEggIDX += 1
@@ -1273,7 +1273,7 @@ def uninstall(card, x=0, y=0, destination = 'hand', silent = False):
    if destination == 'R&D' or destination == 'Stack': group = me.piles['R&D/Stack']
    else: group = card.owner.hand
    #confirm("destination: {}".format(destination)) # Debug
-   if Stored_Type[card] == "Tracing" or Stored_Type[card] == "Counter Hold" or Stored_Type[card] == "Server": 
+   if Stored_Type[card] == "Tracing" or Stored_Type[card] == "Counter Hold" or (Stored_Type[card] == "Server" and card.name != Remote Server): 
       whisper("This kind of card cannot be uninstalled!")
       return 'ABORT'
    else: 

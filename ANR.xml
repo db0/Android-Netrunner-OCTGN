@@ -102,7 +102,7 @@
       <cardaction menu="Uninstall" default="false" shortcut="Ctrl+U" execute="uninstall" />
       <cardaction menu="Score Agenda" default="false" execute="scrAgenda" />
       <groupaction menu="Pay and &#9167; Target (Resource, Asset or Upgrade)" default="false" hortcut="Ctrl+Shift+T" execute="trashTargetPaid" />
-      <groupaction menu="&#9167; Target without cost" default="false" hortcut="Ctrl+T" execute="trashTargetFree" />
+      <groupaction menu="&#9167; Target for free" default="false" hortcut="Ctrl+T" execute="trashTargetFree" />
       <groupaction menu="Create new Remote Server" default="false" execute="createRemoteServer" />
    <!-- <groupaction menu="Roll d6" default="false" shortcut="Ctrl+6" execute="rolld6" /> -->
       <groupaction menu="&#8986; Receive 1 ¥" default="false" shortcut="Ctrl+C" execute="getCredit" />

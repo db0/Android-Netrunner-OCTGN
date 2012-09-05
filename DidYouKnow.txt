@@ -1,0 +1,239 @@
+You can create an arrow pointing from one card to another. Hold Shift and left-click on the source card, then drag your mouse to the destination.
+Clear the arrow by shift+left-clicking on the source card again. 
+Pro Tip: Use this to point out which run your runner is currently approaching
+||
+You can target a card by holding shift and left-clicking on it. You clear the target the same way. You can have multiple cards targeted.
+When a card effect requires that you have one or more cards as targets, first target them, and then use the card effect.
+||
+Your Ice can end a run and trigger all the effects from a Jack-Out, such as a Stimhack. 
+To do that, double-click on your Ice and select the "RunEnd" ability. If your ice has only this ability, it will be used automatically.
+||
+You can start a run via the shortcuts [F5], [F6], [F7], [F8]
+You end your run by other Jacking Out [Esc], or by Succeeding [F3]. When you use on of these actions, cards which have effects from them will automatically trigger (i.e. Desperado or Stimhack)
+||
+There is a mumble server available for you to join. 
+Voice communication makes the game faster to play and you can also see who's available for a game at any point.
+Finally you can hang out with the developer of this here fine plugin.
+
+The server address is: mumble.dbzer0.com
+The port is: 63836
+
+Join us in the Android:Netrunner Room!
+
+Would you like to learn more?
+&&
+http://mumble.sourceforge.net/
+||
+We have a dedicated bug tracker.
+
+Have you found a bug? Do you have a feature request? Please put it in our Issue Tracker in github. 
+This makes it easier for us to track and implement improvements, avoid duplicates, and you also get to see when your issue is fixed!
+&&
+https://github.com/db0/Android-Netrunner-OCTGN/issues
+||
+If you have a card that starts a run where you get to select the target, having a Server targeted before you play it will automatically select it as the destination for your run.
+||
+If you have cards which reduce your costs when doing something, such as reducing cost for using Icebreakers, then as long as they're in play the costs will be reduced automatically.
+You do not need to manually do anything. If those cards have recurring credits, those will refill automatically at the start of your turn.
+||
+We enhance your memory!
+If you forget to end your run, we'll clear it anyway at the start of your turn
+If you forget to discard your used Operations or Events, we'll clear those too.
+||
+If you're a corp, double-clicking on your virus scan will automatically remove all virus counters from all cards in the game.
+It will cost you 3 actions in that turn though, so make sure you absolutely need to do it.
+||
+Make sure you always update your sets if there is a new version. Not doing so might make your cards malfunction!
+We provide a patch to allow you to retain your uncensored version, so you don't need to recreate your core set again.
+||
+We have a Guild in Board Game Geek. Join us and discuss all things ANR/OCTGN
+
+Would you like to learn more?
+&&
+http://www.boardgamegeek.com/guild/1387
+||
+As a runner, if you make a successful run on the Corp's R&D, you can use a special action to access those card.
+Right click on the Table > Runner Actions > Access top X cards form corp R&amp;D
+This will show the cards only to you and will prompt you for an appropriate action.
+||
+As a runner, if you make a successful run on the Corp's Archives, you can use a special action to automatically score all Agendas within
+Right click on the Table > Runner Actions > Score all Agendas in the Archives
+This will move all Hidden cards in the Face-Up Archives and ask you if you want to score any Agendas you find.
+If you want to later look at the rest of the cards in the face-up archives, right click on the pile, and select "Look at all cards"
+||
+You do not have to take control of a card in order to score or trash it.
+Simply target it with Shift+Left-Click, then:
+* If you want to trash a card, right click on the table and select "Pay and Trash Target" or "Trash Target for Free"
+* If you want to score an opponent's agenda, select Runner Actions > "Score Target Agenda"
+||
+You can spawn some helpful cards on the table, to remind you of the timing structure of the turn or run, or what actions you can take per turn
+You can find these actions in the Table Menu > Help & References.
+The cards will spawn wherever your mouse pointer is, so move them where you want them afterwards.
+||
+Brain Damage goes on your identity card. This will automatically modify your hand size dynamically, so there's no need for you to reduce you hand size counter manually
+||
+You almost never need to drag & drop a card. In fact, we discourage you to do so unless there's really no other way.
+Most cards can be played on the table via a simple double-click, and removed with a simply "Trash without Cost" ([del] button)
+||
+It's very easy to trash your own cards. Simply move your mouse pointer over them, and press the [Delete] button on your keyboard.
+The same is true for cards in your hand.
+||
+If you're a Corp and you have an unrezzed "PAD Campaign", your best tactic is to rez it, just before you press [F1] to start your turn.
+||
+Some actions will affect your opponent's cards, such as Trashing or Exposing them, or trying to inflict damage.
+In such cases, a message will pop-up to inform you what you need to do. Please read that carefully and press "Yes" or "No" accordingly.
+This message gives your opponent an opportunity to play reactions to your event. Let them know what you are about to do so that they can activate their cards, if they have any.
+||
+Inflicting Damage on another player is automatic.
+When you're about to inflict damage, the other player will be notified and will have a chance to play reactions. 
+Do not proceed with your damage unless they've given you the OK. 
+
+Doing Damage will discard your opponent's cards at random and Brain Damage will reduce their handsize as well.
+||
+The game keeps track of your handsize and will complain if you're trying to end your turn [F12] with more cards than you're allowed to hold.
+If that happens, make sure you press [F12] once again after you've discarded down to your maximum hand size.
+
+Remember: Unless the game tells that the Corps has reached CoB, or the Runner has gone to sleep, your turn has not yet ended properly as far as OCTGN is concerned.
+||
+It's easy!
+Press [F1] to start your turn.
+Press [F12] to end your turn.
+(Optional) After you end your turn, press the little play button on your opponent's tab, to give them the GO signal to start their turn.
+||
+You can prioritize your cards.
+Do you have more than one card that triggers on the same effect, such as reducing costs for using Icebreakers?
+You can easily select which card should use its cost reduction ability before the others. 
+Simply Right-Click on the card and select "Prioritize". Now this card will use its counters for triggered effects, before other cards do
+And if you want an extra level of priority, you can target a card with shift+click. Those cards will be used after the Prioritized cards, but before anything else.
+||
+Making Credits is Easy. Just press Ctrl+C
+Putting Advancements is also Easy. Move your mouse cursor over the card to advance and press Alt+A
+||
+Learning the shortcuts will make the game go faster for you.
+In general guidelines: 
+* Shortcuts with Alt+ affect your card counters and markers (Advancement, Virus, Power etc)
+* Shortcuts with Ctrl+ Perform all your basic actions, such as making credits, or removing tags.
+* Shortcuts with Ctrl+Shift+ Perform actions that you don't take often and might disrupt your game, such as Game Setup.
+||
+If you don't like specific automations, such as Damage Infliction, you can disable it from the "Game" menu on the Table Context Menu. 
+However this only affect automations coming from you!
+You can switch them back on at any time by using the same action.
+||
+The little Green/Purple card on the side is your Trace Card. 
+Double click on it to boost your trace, and double click on it to pay the cost of this boost. Easy-peasy!
+||
+Cards which start a trace will ask you for a strength boost automatically. 
+If you put something more than 0, those money are not taken out automatically but are put on your trace card. 
+Double-Click on the trace card to pay the cost once your opponent has placed theirs.
+||
+You can inspect your cards.
+Having trouble reading a card? Have only censored cards? Use the Inspect action on the card's context menu.
+This will show you the cards's text in a message box and also inform you if the card is scripted.
+||
+Double-Click is your friend
+Almost everything you want to do, can be achieved by double-clicking on the card.
+
+* Want to play a card from your hand? Double-Click it.
+* Want to activate an Icebreaker's ability? Double-click it.
+* Want to Rez a card? Double-Click it.
+* Want to Score an Agenda? Double-Click it!
+* Want to Activate a subroutine? Double-click the Ice.
+* Want to draw a card? Double-click your deck.
+* Want to Clear All Viruses from your system? Double-Click the Virus Scan card on your right.
+
+Attention: Double-Cliking only works for card you control. Generally the rest you should even be trying to use their abilities.
+||
+You can try to debug broken cards.
+If one of your cards starts acting weird (an Agenda not scoring, an Ice not rezzzing etc), try to right-click the card and select "Debug Card". 
+See if that works. If it doesn't contact the developer on Github.
+||
+You can redo damage.
+Did a Damage Inflict effect for some reason not work properly? The runner can also activate damage on theirself from the Runner Actions
+||
+The runner's toolbox is all in the same submenu.
+Right-Click on the Table and go into "Runner Actions".
+
+All your stuff is in there. Remember their shortcuts.
+||
+Due to engine limitations, you cannot switch sides within the same game.
+If you want to swap sides, you'll have to exit and start a new game.
+Remember, Corp needs to be player [A]
+||
+People can observe games.
+Observers need to join the game's lobby before you start.
+Once the table has loaded, those players should not load a deck or use the "Set Up" function. 
+Observers are ignored by the game. However any player who wants can make their hand and deck visible to them and they can even peek at all cards in the table.
+
+::Important::: Observers need to stay in the game for the whole length. Leaving the game might break the scripts.
+If an observer needs to leave, ask them to simply minimize OCTGN until the game is finished
+||
+If the OCTGN server ever goes down and you cannot login, you can still play games via direct IP connection
+
+Would you like to learn more?
+&&
+http://octgn.gamersjudgement.com/viewtopic.php?f=52&t=513
+||
+The developer of this plugin could use some help in specific areas peripheral to development.
+
+Would you like to learn more?
+&&
+http://octgn.gamersjudgement.com/viewtopic.php?f=52&t=505
+||
+Spider Jerusalem is awesome and should be a Runner archetype.
+
+Would you like to learn more?
+&&
+http://www.empireonline.com/50greatestcomiccharacters/default.asp?c=12
+||
+The Developer of this OCTGN plugin has made many others like it. 
+Games implemented include: Doomtown CCG, Dune CCG, Classic Netrunner and more
+
+Would you like to learn more?
+&&
+http://octgn.gamersjudgement.com/memberlist.php?mode=viewprofile&u=61
+||
+If you're the Corp, you can Expose and Unexpose your cards with the same action
+Right Click on the Table > (Un)Expose
+
+Use this action when the runner exposes or accesses an unrezzed card.
+Once they're done looking, hide it again.
+
+Exposed cards have a white highlight.
+||
+Drawing cards is easy!
+
+Double click your deck, or press Ctrl+D.
+||
+You can take a Mulligan.
+
+Did you get 5 Agendas in your starting hand? 
+Right click on it and select "Mulligan". Your cards will be reshufled back into your deck and you'll get 5 new ones.
+||
+I won't bug you much
+
+Messages of the Day and their accompanying "Did you know", only come up the first time you setup in each new game.
+||
+You can add more "Did you know"
+
+Just contact the developer and give him your suggestions
+
+Would you like to learn more?
+&&
+https://github.com/db0/Android-Netrunner-OCTGN/issues
+||
+The chat area has important messages
+
+Almost anything important that happens in the game is announced there. 
+Keep an eye on it, in case your opponent does a mistake.
+||
+If you modify your clicks manually, the game will take that into account when announcing which action you're taking.
+||
+You can clear your cards of Temporary +1 and -1 counters
+
+These are usually placed there by Icebreakers. Use the Clear Card action on the table's context menu to remove them before approaching your next run
+If you forget them, they will be cleared at the end of your turn.
+||
+If you're about to take damage, activate your damage preventing cards when your opponent inform your that he's about to do it.
+
+Your cards will receive a little Shield icon which will protect you from the relevant damage. 
+Each marker of the appropriate type will reduce incoming damage by 1 and disappear.
