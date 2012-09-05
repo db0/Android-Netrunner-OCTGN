@@ -497,7 +497,7 @@ def atTimedEffects(Time = 'Start'): # Function which triggers card effects at th
          if debugVerbosity >= 2 and effect: notify("!!! effects: {}".format(effect.groups()))
          if re.search(r'excludeDummy', autoS) and card.highlight == DummyColor: continue
          if re.search(r'onlyforDummy', autoS) and card.highlight != DummyColor: continue
-         if re.search(r'isOptional', effect.group(2)) and not confirm("{} can have its optional ability take effect at this point Do you want to activate it?".format(card.name)): continue
+         if re.search(r'isOptional', effect.group(2)) and not confirm("{} can have its optional ability take effect at this point. Do you want to activate it?".format(card.name)): continue
          if re.search(r'onlyOnce',autoS) and oncePerTurn(card, silent = True, act = 'automatic') == 'ABORT': continue
          splitAutoscripts = effect.group(2).split('$$')
          for passedScript in splitAutoscripts:

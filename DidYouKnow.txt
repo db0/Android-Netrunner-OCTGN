@@ -96,6 +96,8 @@ We have a dedicated bug tracker.
 Have you found a bug? Do you have a feature request? Please put it in our Issue Tracker in github. 
 
 This makes it easier for us to track and implement improvements, avoid duplicates, and you also get to see when your issue is fixed!
+
+Would you like to learn more?
 &&
 https://github.com/db0/Android-Netrunner-OCTGN/issues
 ||
@@ -296,3 +298,13 @@ If you're about to take damage, activate your damage preventing cards when your 
 Your cards will receive a little Shield icon which will protect you from the relevant damage. 
 
 Each marker of the appropriate type will reduce incoming damage by 1 and disappear.
+||
+You can pan the table
+
+Simply hold [Space] and then click drag your mouse on the table.
+||
+The cardgamedb.com has an awesome deck editor that can export in OCTGN deck format?
+
+It's really, really good. Seriously.
+&&
+http://www.cardgamedb.com/index.php/netrunner/android-netrunner-deck-builder

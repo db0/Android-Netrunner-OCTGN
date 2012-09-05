@@ -337,11 +337,11 @@ def versionCheck():
          startupMsg = True
       elif currentVers[0] != installedVers[0] or currentVers[1] != installedVers[1] or currentVers[2] != installedVers[2]:
          notify("{}'s game definition ({}) is out-of-date!".format(me, gameVersion))
-         if confirm("There is a new game definition available!\nYour version: {}.\nCurrent version: {}.\
+         if confirm("There is a new game definition available!\nYour version: {}.\nCurrent version: {}.\nLatest Core Set: {}\
                      {}\
                  \n\nDo you want to be redirected to download the latest version?.\
                    \n(You'll have to download the game definition, any patch for the current version and the markers if they're newer than what you have installed)\
-                     ".format(gameVersion, detailsplit[0],detailsplit[1])):
+                     ".format(gameVersion, detailsplit[0],detailsplit[2],detailsplit[1])):
             openUrl('https://github.com/db0/Android-Netrunner-OCTGN/downloads')
          startupMsg = True
       elif len(currentVers) == 4:
@@ -377,7 +377,10 @@ def MOTD():
    
 def MOTDdisplay(MOTD,DYK):
    if debugVerbosity >= 1: notify(">>> MOTDdisplay()") #Debug
-   if re.search(r'http',DYK):
+   if re.search(r'http',MOTD): # If the MOTD has a link, then we do not sho DYKs, so that they have a chance to follow the URL
+      MOTDweb = MOTD.split('&&')      
+      if confirm("{}".format(MOTDweb[0])): openUrl(MOTDweb[1].strip())
+   elif re.search(r'http',DYK):
       DYKweb = DYK.split('&&')
       if confirm("{}\
               \n\nDid You Know?:\
@@ -390,7 +393,7 @@ def MOTDdisplay(MOTD,DYK):
                 \n{}\
                 \n-------------------\
               \n\nWould you like to see the next tip?".format(MOTD,DYK)): return 'MORE'
-   else: return 'STOP'
+   return 'STOP'
    
 #------------------------------------------------------------------------------
 # Debugging

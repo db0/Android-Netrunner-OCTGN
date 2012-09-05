@@ -1,13 +1,18 @@
-1.1.8||
-
+1.1.9
+||
 ======New Version Details======
-:::Important Information::: Runs are now able to trigger scripts on your cards. Once the run has ended, the runner must press either [Esc] to signify a failed run, or [F3] to signify a successful one. When this is done, abilities on cards which trigger from that (e.g. Medium, Gabriel etc) will automatically fire.
+(This is likely the first time you see this message. It's a new feature implemented in v1.1.8 which informs you if there is a later version of the plugin available)
 
-Starting custom runs are still in the runner's menu but their shortcuts have changed to [F5]-[F9]. Runs started by card effects still start runs normally.
 
-If the corp wants to ends the run with an ICE, they __should__ use the subroutine on the ICE to do it. This will automatically end the run and trigger card abilities as well (e.g. Stimhack.)
+We now include Messages of the Day!
 
-If the runner uses an action which runs at any target, the game will automatically pick the first server they have targeted. If the runner has not targeted a server, the game will ask for input.
+These will provide important information to you that can change independent of your installed version. 
 
-::::ATTENTION:::: I have removed all manual effects from cards which triggered after successful runs, like Gabriel, Bank Run and Desperado. This means you cannot double click those cards to activate them! Use the "Finish the Run succesfully" action ([F3]) to trigger those instead!.
+Except the MotD, these also include small snippets of information in the form of "Did You Know?" factoids.
+These are meant to help you learn tricks about the engine as well as the way the plugin works. Some of them might even ask permission to open your browser to a page with some interesting info
+
+You're very welcome to suggest more "Did You Know" ideas. Tricks on using the plugin better, smart ways to play ANR cards, and even useful websites are welcome additions.
 ===============================
+||
+Latest Core Set: 1.1.16
+Latest Markers Set: 1.1.5
