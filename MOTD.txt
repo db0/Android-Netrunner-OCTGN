@@ -1,11 +1,12 @@
 ======Message of the Day======
 
-Please remembe to ALWAYS download the patch for your current version, when there is one. If you do not, it WILL create unexpected bugs
+Please remember to ALWAYS download the patch for your current version, when there is one. If you do not, it WILL create unexpected bugs
 (You install a patch by going to Games > Click on Android:Netrunner > Patch All Sets)
 
 In v1.1.9 only 1 IN 2 has downloaded for patch for 1.1.9. If your core set is not at v1.1.6, please download the patch ASAP.
 
 Do you want to download the patch now?
+
 ===============================
 &&
 https://github.com/downloads/db0/Android-Netrunner-OCTGN/ANR-Patch-for-1.1.9.o8p
