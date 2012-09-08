@@ -419,7 +419,7 @@ def reportGame(result = 'AgendaVictory'): # This submits the game results online
    if GUID == 'None': return # If we don't have a GUID, we can't submit
    gameEnded = getGlobalVariable('gameEnded')
    if gameEnded == 'True':
-     if not confirm("Your game already seems to have finished once before. Do you want to change the results?"): return
+     if not confirm("Your game already seems to have finished once before. Do you want to change the results to '{}' for {}?".format(result,me.name)): return
    PLAYER = me.name # Seeting some variables for readability in the URL
    IDENTITY = identName
    RESULT = result
