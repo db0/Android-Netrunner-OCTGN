@@ -282,9 +282,11 @@ def intJackin(group, x = 0, y = 0):
    drawMany(me.piles['R&D/Stack'], 5)
    if debugVerbosity >= 5: confirm("Reshuffling Deck")
    shuffle(me.piles['R&D/Stack']) # And another one just to be sure
+   initGame()
 
 def checkDeckNoLimit(group):
    if debugVerbosity >= 1: notify(">>> checkDeckNoLimit(){}".format(extraASDebug())) #Debug
+   global totalInfluence
    if not ds:
       whisper ("Choose a side first.")
       return 
@@ -335,6 +337,8 @@ def checkDeckNoLimit(group):
    if loInf > num(identity.Stat):
       notify(":::ERROR::: Too much rival faction influence in {}'s R&D. {} found with a max of {}".format(me, loInf, num(identity.Stat)))
       ok = False
+   me.setGlobalVariable('Influence',str(loInf))
+   if debugVerbosity >= 2: notify("### Total Influence used: {} (Influence string stored is: {}".format(loInf, me.getGlobalVariable('Influence'))) #Debug
    if ok: notify("-> Deck of {} is OK!".format(me))
    if debugVerbosity >= 3: notify("<<< checkDeckNoLimit() with return: {},{}.".format(ok,identity)) #Debug
    return (ok,identity)
@@ -716,7 +720,8 @@ def intdamageDiscard(group,x=0,y=0):
    if debugVerbosity >= 1: notify(">>> intdamageDiscard(){}".format(extraASDebug())) #Debug
    mute()
    if len(group) == 0:
-      notify ("{} cannot discard at random. Have they flatlined?".format(me))
+      notify ("{} has flatlined.".format(me))
+      reportGame('Flatlined')
    else:
       card = group.random()
       if ds == 'corp': card.moveTo(me.piles['Archives(Hidden)'])
@@ -898,7 +903,9 @@ def scrAgenda(card, x = 0, y = 0):
       if cheapAgenda: notify(":::Warning:::{} did not have enough advance tokens ({} out of {})! ".format(card,currentAdv,card.Cost))
       executePlayScripts(card,agendaTxt)
       autoscriptOtherPlayers('Agenda'+agendaTxt.capitalize()+'d',card) # The autoscripts triggered by this effect are using AgendaLiberated and AgendaScored as the hook
-      if me.counters['Agenda Points'].value >= 7 : notify("{} wins the game!".format(me))
+      if me.counters['Agenda Points'].value >= 7 : 
+         notify("{} wins the game!".format(me))
+         reportGame()
       card.highlight = None # In case the card was highlighted as revealed, we remove that now.
       card.markers[mdict['Advancement']] = 0 # We only want to clear the advance counters after the automations, as they may still be used.
    else:

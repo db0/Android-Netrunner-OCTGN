@@ -20,6 +20,7 @@
 # * In the [Switches] section are the scripts which controls what automations are active.
 # * [Help] functions spawn tokens on the table with succint information on how to play the game.
 # * [Debug] if for helping the developers fix bugs
+# * [Online Functions] is everything which connects to online files for some purpose, such as checking the game version or displaying a message of the day
 ###=================================================================================================================###
 import re
 
@@ -34,6 +35,10 @@ UniCode = True # If True, game will display credits, clicks, trash, memory as un
 debugVerbosity = -1 # At -1, means no debugging messages display
 
 startupMsg = False # Used to check if the player has checked for the latest version of the game.
+
+gameGUID = None # A Unique Game ID that is fetched during game launch.
+#totalInfluence = 0 # Used when reporting online
+#gameEnded = False # A variable keeping track if the players have submitted the results of the current game already.
 
 #---------------------------------------------------------------------------
 # Generic Netrunner functions
@@ -243,7 +248,7 @@ def resetAll(): # Clears all the global variables in order to start a new game.
    endofturn = False
    currClicks = 0
    ShowDicts()
-   debugVerbosity = -1 # Reset means normal game.
+   #debugVerbosity = -1 # Reset means normal game.
    if debugVerbosity >= 1: notify("<<< resetAll()") #Debug
 #------------------------------------------------------------------------------
 # Switches
@@ -318,7 +323,7 @@ def HELP_RunStructure(group,x=0,y=0):
    table.create('51c3a293-3923-49ee-8c6f-b8c41aaba5f3', x, y, 1)
 
 #------------------------------------------------------------------------------
-# Version checking and MOTD
+#  Online Functions
 #------------------------------------------------------------------------------
 
 def versionCheck():
@@ -394,6 +399,49 @@ def MOTDdisplay(MOTD,DYK):
                 \n-------------------\
               \n\nWould you like to see the next tip?".format(MOTD,DYK)): return 'MORE'
    return 'STOP'
+
+def initGame(): # A function which prepares the game for online submition
+   if debugVerbosity >= 1: notify(">>> initGame()") #Debug
+   (gameInit, initCode) = webRead('http://84.205.248.92/slaghund/init.slag')
+   if initCode != 200:
+      #whisper("Cannot grab GameGUID at the moment!") # Maybe no need to inform players yet.
+      return
+   if debugVerbosity >= 2: notify("### {}".format(gameInit)) #Debug
+   GUIDregex = re.search(r'([0-9a-f-]{36}).*?',gameInit)
+   if GUIDregex: setGlobalVariable('gameGUID',GUIDregex.group(1))
+   else: setGlobalVariable('gameGUID','None') #If for some reason the page does not return a propert GUID, we won't record this game.
+   setGlobalVariable('gameEnded','False')
+   if debugVerbosity >= 3: notify("<<< initGame()") #Debug
+   
+def reportGame(result = 'AgendaVictory'): # This submits the game results online.
+   if debugVerbosity >= 1: notify(">>> reportGame()") #Debug
+   GUID = getGlobalVariable('gameGUID')
+   if GUID == 'None': return # If we don't have a GUID, we can't submit
+   gameEnded = getGlobalVariable('gameEnded')
+   if gameEnded == 'True':
+     if not confirm("Your game already seems to have finished once before. Do you want to change the results?"): return
+   PLAYER = me.name # Seeting some variables for readability in the URL
+   IDENTITY = identName
+   RESULT = result
+   SCORE = me.counters['Agenda Points'].value
+   INFLUENCE = me.getGlobalVariable('Influence')
+   if debugVerbosity >= 2: notify("### About to report player results online.") #Debug
+   (reportTXT, reportCode) = webRead('http://84.205.248.92/slaghund/game.slag?g={}&u={}&id={}&v={}&s={}&i={}'.format(GUID,PLAYER,IDENTITY,RESULT,SCORE,INFLUENCE))
+   # The victorious player also reports for their enemy
+   enemyPL = ofwhom('-ofOpponent')
+   ENEMY = enemyPL.name
+   enemyIdent = getSpecial('Identity',enemyPL)
+   E_IDENTITY = enemyIdent.name
+   if result == 'FlatlineVictory': E_RESULT = 'Flatlined'
+   elif result == 'Flatlined': E_RESULT = 'FlatlineVictory'
+   elif result == 'AgendaVictory': E_RESULT = 'AgendaDefeat'
+   else: E_RESULT = 'Unknown'
+   E_SCORE = enemyPL.counters['Agenda Points'].value
+   E_INFLUENCE = enemyPL.getGlobalVariable('Influence')
+   if debugVerbosity >= 2: notify("### About to report enemy results online.") #Debug
+   (EreportTXT, EreportCode) = webRead('http://84.205.248.92/slaghund/game.slag?g={}&u={}&id={}&v={}&s={}&i={}'.format(GUID,ENEMY,E_IDENTITY,E_RESULT,E_SCORE,E_INFLUENCE))
+   setGlobalVariable('gameEnded','True')
+   if debugVerbosity >= 3: notify("<<< reportGame()") #Debug
    
 #------------------------------------------------------------------------------
 # Debugging

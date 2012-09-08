@@ -1259,6 +1259,7 @@ def InflictX(Autoscript, announceText, card, targetCards = None, notification = 
       for DMGpt in range(DMG): #Start applying the damage
          if len(targetPL.hand) == 0 or currentHandSize(targetPL) == 0: 
             notify(":::Warning:::{} has flatlined!".format(targetPL)) #If the target does not have any more cards in their hand, inform they've flatlined.
+            reportGame('FlatlineVictory')
             break
          else: #Otherwise, warn the player doing it for the first time
             whisper("+++ Applying damage {} of {}...".format(DMGpt+1,DMG))

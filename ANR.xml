@@ -11,6 +11,8 @@
      <globalvariable name="fontsize" value="11"/> 
      <globalvariable name="chatsize" value="12"/> 
      <globalvariable name="status" value="" /> 
+     <globalvariable name="gameEnded" value="False" /> 
+     <globalvariable name="gamGUID" value="None" /> 
    </globalvariables>
    <card back="r4" front="r5" width="63" height="88" cornerRadius="2">
       <property name="Subtitle" type="String" hidden="false" ignoreText="False"/>
@@ -121,6 +123,7 @@
       <globalvariable name="ds" value="" /> 
       <globalvariable name="specialCards" value="{}" /> 
       <globalvariable name="wasNoisy" value="0" /> 
+      <globalvariable name="Influence" value="0" /> 
       <hand name="HQ/Grip" visibility="me" ordered="false" width="63" height="88" icon="r11">
          <cardaction menu="&#8986; Pay and Install Card" default="true" shortcut="enter" execute="intPlay" />
          <cardaction menu="Install Card at no cost" default="false" execute="playForFree" />
