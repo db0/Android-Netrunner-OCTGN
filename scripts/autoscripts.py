@@ -386,7 +386,7 @@ def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
       elif regexHooks['ChooseKeyword'].search(activeAutoscript):     announceText = ChooseKeyword(activeAutoscript, announceText, card, targetC, n = X)
       elif regexHooks['UseCustomAbility'].search(activeAutoscript):  announceText = UseCustomAbility(activeAutoscript, announceText, card, targetC, n = X)
       else: timesNothingDone += 1
-      if debugVerbosity >= 3: notify("<<< useAbility() choice") # Debug
+      if debugVerbosity >= 3: notify("<<< useAbility() choice. TXT = {}".format(announceText)) # Debug
       if announceText == 'ABORT': 
          autoscriptCostUndo(card, selectedAutoscripts[0]) # If nothing was done, try to undo. The first item in selectedAutoscripts[] contains the cost.
          return
@@ -400,7 +400,7 @@ def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
       if re.search(r"T1:", selectedAutoscripts[0]): 
          executePlayScripts(card,'trash')
          card.moveTo(card.owner.piles['Heap/Archives(Face-up)'])
-      notify("{}.".format(announceText)) # Finally announce what the player just did by using the concatenated string.
+   notify("{}.".format(announceText)) # Finally announce what the player just did by using the concatenated string.
    chkNoisy(card)
 
 #------------------------------------------------------------------------------
@@ -735,6 +735,7 @@ def TransferX(Autoscript, announceText, card, targetCards = None, notification =
    targetCardlist = '' # A text field holding which cards are going to get tokens.
    if len(targetCards) == 0: targetCards.append(card) # If there's been to target card given, assume the target is the card itself.
    for targetCard in targetCards: targetCardlist += '{},'.format(targetCard)
+   targetCardlist = targetCardlist.strip(',') # Re remove the trailing comma
    action = re.search(r'\bTransfer([0-9]+)([A-Za-z ]+)-?', Autoscript)
    if re.search(r'Credit',action.group(2)): destGroup = me.counters['Credits']
    elif re.search(r'Click',action.group(2)): destGroup = me.counters['Clicks']
@@ -772,9 +773,9 @@ def TransferX(Autoscript, announceText, card, targetCards = None, notification =
    if totalReduce: reduceTXT = " ({} forfeited)".format(totalReduce)
    else: reduceTXT = ''
    closureTXT = ASclosureTXT(action.group(2), total)
-   if notification == 'Quick': announceString = "{} takes {}{}.".format(announceText, closureTXT, reduceTXT)
-   elif notification == 'Automatic': announceString = "{} Transfers {} to {}{}.".format(announceText, closureTXT, me, reduceTXT)
-   else: announceString = "{} take {} from {}{}.".format(announceText, closureTXT, targetCardlist,reduceTXT)
+   if notification == 'Quick': announceString = "{} takes {}{}".format(announceText, closureTXT, reduceTXT)
+   elif notification == 'Automatic': announceString = "{} Transfers {} to {}{}".format(announceText, closureTXT, me, reduceTXT)
+   else: announceString = "{} take {} from {}{}".format(announceText, closureTXT, targetCardlist,reduceTXT)
    if notification: notify('--> {}.'.format(announceString))
    if debugVerbosity >= 3: notify("<<< TransferX()")
    return announceString   
@@ -1154,6 +1155,7 @@ def ChooseKeyword(Autoscript, announceText, card, targetCards = None, notificati
    if targetCards is None: targetCards = []
    if len(targetCards) == 0: targetCards.append(card) # If there's been to target card given, assume the target is the card itself.
    for targetCard in targetCards: targetCardlist += '{},'.format(targetCard)
+   targetCardlist = targetCardlist.strip(',') # Re remove the trailing comma
    action = re.search(r'\bChooseKeyword{([A-Za-z\| ]+)}', Autoscript)
    #confirm("search results: {}".format(action.groups())) # Debug
    keywords = action.group(1).split('|')
@@ -1212,6 +1214,7 @@ def ModifyStatus(Autoscript, announceText, card, targetCards = None, notificatio
    else: dest = 'hand'
    #confirm("dest: {}".format(dest)) # Debug
    for targetCard in targetCards: targetCardlist += '{},'.format(targetCard)
+   targetCardlist = targetCardlist.strip(',') # Re remove the trailing comma
    #confirm("List: {}".format(targetCards)) #Debug
    #for targetCard in targetCards: notify("ModifyX TargetCard: {}".format(targetCard)) #Debug
    for targetCard in targetCards:
