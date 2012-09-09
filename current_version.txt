@@ -1,16 +1,22 @@
-1.1.9||
-======New Version Details======
-(This is likely the first time you see this message. It's a new feature implemented in v1.1.8 which informs you if there is a later version of the plugin available)
+1.1.10||
+======New Version Information======
 
+1. You'll never have to patch again!
 
-We now include Messages of the Day!
+Well, almost...
 
-These will provide important information to you that can change independent of your installed version. 
+With the new version I've implemented code which fetches card scripts from the github repository (https://github.com/db0/Android-Netrunner-OCTGN)
 
-Except the MotD, these also include small snippets of information in the form of "Did You Know?" factoids.
-These are meant to help you learn tricks about the engine as well as the way the plugin works. Some of them might even ask permission to open your browser to a page with some interesting info
+This means that if I discover a broken card script, I do not need to create a patch and ask you to update. 
+Rather, I will merely upload the new version online and you'll automatically receive it in your next game!
 
-You're very welcome to suggest more "Did You Know" ideas. Tricks on using the plugin better, smart ways to play ANR cards, and even useful websites are welcome additions.
+2. Damage preventions cards like Crash Space and Net Shield now trigger automatically.
+
+Whenever you're inflicting damage (weather to yourself or to another player), the game will check if the victim has a damage prevention card.
+If they do, the game will prompt you to activate it if your want to, and will pay the appropriate costs. 
+
+This allows you to use you damage prevention cards when being hit by, say, a snare while accessing R&D.
+
 ===============================
 ||
 Latest Core Set: 1.1.16
