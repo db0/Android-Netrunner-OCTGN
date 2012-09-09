@@ -223,8 +223,8 @@ def intJackin(group, x = 0, y = 0):
    if debugVerbosity >= 1: notify(">>> intJackin(){}".format(extraASDebug())) #Debug
    global ds, maxClicks
    mute()
-   versionCheck()
    if not startupMsg: fetchCardScripts() # We only download the scripts at the very first setup of each play session.
+   versionCheck()
    if ds and not confirm("Are you sure you want to setup for a new game? (This action should only be done after a table reset)"): return
    ds = None
    if not table.isTwoSided() and not confirm(":::WARNING::: This game is designed to be played on a two-sided table. Things will be extremely uncomfortable otherwise!! Please start a new game and makde sure the  the appropriate button is checked. Are you sure you want to continue?"): return
@@ -443,7 +443,7 @@ def pay2andDelTag(group, x = 0, y = 0):
    ClickCost = useClick()
    if ClickCost == 'ABORT': return
    dummyCard = getSpecial('Tracing') # Just a random card to pass to the next function. Can't be bothered to modify the function to not need this.
-   reduction = reduceCost(dummyCard, 'DelTag', 2)
+   reduction = reduceCost(dummyCard, 'DELTAG', 2)
    if reduction: extraText = " (reduced by {})".format(uniCredit(reduction))
    if payCost(2 - reduction) == "ABORT": 
       me.Clicks += 1 # If the player didn't notice they didn't have enough credits, we give them back their click
@@ -1401,8 +1401,9 @@ def inspectCard(card, x = 0, y = 0): # This function shows the player the card t
    if re.search(r'atTurnEnd', CardsAS.get(card.model,'')): ASText += '\n * It will perform an automation at the end of your turn.'
    if re.search(r'atRunStart', CardsAS.get(card.model,'')): ASText += '\n * It will perform an automation at the start of your run.'
    if re.search(r'atJackOut', CardsAS.get(card.model,'')): ASText += '\n * It will perform an automation at the end of a run.'
-   if CardsAA.get(card.model,'') != '': 
-      if ASText == 'This card has the following automations:': ASText == '\nThis card will perform one or more automated clicks when you double click on it.'
+   if CardsAA.get(card.model,'') != '':
+      if debugVerbosity >= 2: notify("### We have AutoActions") #Debug
+      if ASText == 'This card has the following automations:': ASText = '\nThis card will perform one or more automated clicks when you double click on it.'
       else: ASText += '\n\nThis card will also perform one or more automated clicks when you double click on it.'
    if ASText == 'This card has the following automations:': ASText = '\nThis card has no automations.'
    if card.name in automatedMarkers:
@@ -1418,7 +1419,7 @@ def inspectCard(card, x = 0, y = 0): # This function shows the player the card t
                                         \n\nTo remove any token manually, simply drag & drop it out of this card.")
    else:
       if debugVerbosity > 0: finalTXT = 'AutoScript: {}\n\n AutoAction: {}'.format(CardsAS.get(card.model,''),CardsAA.get(card.model,''))
-      else: finalTXT = "Card Text: {}\n\n{}Would you like to see the card's details online?".format(card.Rules,ASText)
+      else: finalTXT = "Card Text: {}\n{}\n\nWould you like to see the card's details online?".format(card.Rules,ASText)
       if confirm("{}".format(finalTXT)): rulings(card)
    
 #------------------------------------------------------------------------------

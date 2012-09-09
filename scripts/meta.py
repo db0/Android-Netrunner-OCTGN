@@ -449,8 +449,9 @@ def reportGame(result = 'AgendaVictory'): # This submits the game results online
 def fetchCardScripts(group = table, x=0, y=0): # Creates 2 dictionaries with all scripts for all cards stored, based on a web URL or the local version if that doesn't exist.
    if debugVerbosity >= 1: notify(">>> fetchCardScripts()") #Debug
    global CardsAA, CardsAS # Global dictionaries holding Card AutoActions and Card AutoScripts for all cards.
-   (ScriptsDownload, code) = webRead('https://raw.github.com/db0/Android-Netrunner-OCTGN/master/CardScripts.py')
-   if debugVerbosity >= 2: notify("### url:{}, code: {}".format(url,code)) #Debug
+   whisper("+++ Fetching fresh scripts. Please Wait...")
+   (ScriptsDownload, code) = webRead('https://raw.github.com/db0/Android-Netrunner-OCTGN/master/scripts/CardScripts.py')
+   if debugVerbosity >= 2: confirm("### code:{}, text: {}".format(code, ScriptsDownload)) #Debug
    if code != 200 or not ScriptsDownload or (ScriptsDownload and not re.search(r'ANR CARD SCRIPTS', ScriptsDownload)): 
       whisper(":::WARNING::: Cannot download card scripts at the moment. Will use localy stored ones.")
       Split_Main = ScriptsLocal.split('=====') # Split_Main is separating the file description from the rest of the code

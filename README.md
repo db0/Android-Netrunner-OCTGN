@@ -46,6 +46,18 @@ Screenshots
 Changelog
 ---------
 
+### v1.1.10
+
+* Added Functionality for fetching all card scripts from the github repository
+* Now damage prevention effects have a chance to be activated by the one doing damage, during damage prevention. The game will ask if you want to activate them for yourself (or your opponent). Should solve issues of Net Shield not able to protect you from a Snare during R&D access due to the confirm window.
+* Fixed #29
+* Fixed #28
+* Couldn't replicate #26. Assuming old def.
+* Cards which trash themselves when empty should mention it all the time now
+* Inspect now reports RunStart And RunEnd automations
+* More Shortcuts
+* Statistic gathering
+
 ### 1.1.9
 
 * Added MOTD and DidYouKnow functionality
