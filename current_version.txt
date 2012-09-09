@@ -12,7 +12,7 @@ Rather, I will merely upload the new version online and you'll automatically rec
 
 2. Damage preventions cards like Crash Space and Net Shield now trigger automatically.
 
-Whenever you're inflicting damage (weather to yourself or to another player), the game will check if the victim has a damage prevention card.
+Whenever you're inflicting damage (whether to yourself or to another player), the game will check if the victim has a damage prevention card.
 If they do, the game will prompt you to activate it if your want to, and will pay the appropriate costs. 
 
 This allows you to use you damage prevention cards when being hit by, say, a snare while accessing R&D.
