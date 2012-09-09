@@ -40,10 +40,12 @@ gameGUID = None # A Unique Game ID that is fetched during game launch.
 #totalInfluence = 0 # Used when reporting online
 #gameEnded = False # A variable keeping track if the players have submitted the results of the current game already.
 
+CardsAA = {} # Dictionary holding all the AutoAction scripts for all cards
+CardsAS = {} # Dictionary holding all the AutoScript scripts for all cards
+
 #---------------------------------------------------------------------------
 # Generic Netrunner functions
 #---------------------------------------------------------------------------
-
 def uniCredit(count):
    if debugVerbosity >= 1: notify(">>> uniCredit(){}".format(extraASDebug())) #Debug
    count = num(count)
@@ -331,8 +333,9 @@ def versionCheck():
    global startupMsg
    if not startupMsg:
       (url, code) = webRead('https://raw.github.com/db0/Android-Netrunner-OCTGN/master/current_version.txt')
-      if code != 200:
-         whisper("Cannot check version page at the moment.")
+      if debugVerbosity >= 2: notify("### url:{}, code: {}".format(url,code)) #Debug
+      if code != 200 or not url:
+         whisper(":::WARNING::: Cannot check version at the moment.")
          return
       detailsplit = url.split('||')
       currentVers = detailsplit[0].split('.')
@@ -340,7 +343,7 @@ def versionCheck():
       if len(installedVers) < 3:
          whisper("Your game definition does not follow the correct version conventions. It is most likely outdated or modified from its official release.")
          startupMsg = True
-      elif currentVers[0] != installedVers[0] or currentVers[1] != installedVers[1] or currentVers[2] != installedVers[2]:
+      elif num(currentVers[0]) > num(installedVers[0]) or num(currentVers[1]) > num(installedVers[1]) or num(currentVers[2]) > num(installedVers[2]):
          notify("{}'s game definition ({}) is out-of-date!".format(me, gameVersion))
          if confirm("There is a new game definition available!\nYour version: {}.\nCurrent version: {}\
                      {}\
@@ -369,8 +372,8 @@ def MOTD():
    if debugVerbosity >= 1: notify(">>> MOTD()") #Debug
    (MOTDurl, MOTDcode) = webRead('https://raw.github.com/db0/Android-Netrunner-OCTGN/master/MOTD.txt')
    (DYKurl, DYKcode) = webRead('https://raw.github.com/db0/Android-Netrunner-OCTGN/master/DidYouKnow.txt')
-   if MOTDcode != 200 or DYKcode !=200:
-      whisper("Cannot check MOTD or DYK page at the moment.")
+   if (MOTDcode != 200 or not MOTDurl) or (DYKcode !=200 or not DYKurl):
+      whisper(":::WARNING::: Cannot fetch MOTD or DYK info at the moment.")
       return
    DYKlist = DYKurl.split('||')
    DYKrnd = rnd(0,len(DYKlist)-1)
@@ -442,7 +445,43 @@ def reportGame(result = 'AgendaVictory'): # This submits the game results online
    (EreportTXT, EreportCode) = webRead('http://84.205.248.92/slaghund/game.slag?g={}&u={}&id={}&v={}&s={}&i={}'.format(GUID,ENEMY,E_IDENTITY,E_RESULT,E_SCORE,E_INFLUENCE))
    setGlobalVariable('gameEnded','True')
    if debugVerbosity >= 3: notify("<<< reportGame()") #Debug
-   
+
+def fetchCardScripts(group = table, x=0, y=0): # Creates 2 dictionaries with all scripts for all cards stored, based on a web URL or the local version if that doesn't exist.
+   if debugVerbosity >= 1: notify(">>> fetchCardScripts()") #Debug
+   global CardsAA, CardsAS # Global dictionaries holding Card AutoActions and Card AutoScripts for all cards.
+   (ScriptsDownload, code) = webRead('https://raw.github.com/db0/Android-Netrunner-OCTGN/master/CardScripts.py')
+   if debugVerbosity >= 2: notify("### url:{}, code: {}".format(url,code)) #Debug
+   if code != 200 or not ScriptsDownload or (ScriptsDownload and not re.search(r'ANR CARD SCRIPTS', ScriptsDownload)): 
+      whisper(":::WARNING::: Cannot download card scripts at the moment. Will use localy stored ones.")
+      Split_Main = ScriptsLocal.split('=====') # Split_Main is separating the file description from the rest of the code
+   else: 
+      #WHAT THE FUUUUUCK? Why does it gives me a "value cannot be null" when it doesn't even come into this path with a broken connection?!
+      #WHY DOES IT WORK IF I COMMENT THE NEXT LINE. THIS MAKES NO SENSE AAAARGH!
+      #ScriptsLocal = ScriptsDownload #If we found the scripts online, then we use those for our scripts
+      Split_Main = ScriptsDownload.split('=====')
+   if debugVerbosity >= 5:  #Debug
+      notify(Split_Main[1])
+      notify('=====')
+   Split_Cards = Split_Main[1].split('.....') # Split Cards is making a list of a different cards
+   if debugVerbosity >= 5: #Debug
+      notify(Split_Cards[0]) 
+      notify('.....')
+   for Full_Card_String in Split_Cards:
+      if re.search(r'ENDSCRIPTS',Full_Card_String): break # If we have this string in the Card Details, it means we have no more scripts to load.
+      Split_Details = Full_Card_String.split('-----') # Split Details is splitting the card name from its scripts
+      if debugVerbosity >= 5:  #Debug
+         notify(Split_Details[0])
+         notify('-----')
+      # A split from the Full_Card_String always should result in a list with 2 entries.
+      if debugVerbosity >= 2: notify(Split_Details[0].strip()) # If it's the card name, notify us of it.
+      Split_Scripts = Split_Details[2].split('+++++') # List item [1] always holds the two scripts. AutoScripts and AutoActions.
+      CardsAS[Split_Details[1].strip()] = Split_Scripts[0].strip()
+      CardsAA[Split_Details[1].strip()] = Split_Scripts[1].strip()
+   if debugVerbosity >= 4: # Debug
+      notify("CardsAS Dict:\n{}".format(str(CardsAS)))
+      notify("CardsAA Dict:\n{}".format(str(CardsAA))) 
+   if debugVerbosity >= 3: notify("<<< fetchCardScripts()") #Debug
+
 #------------------------------------------------------------------------------
 # Debugging
 #------------------------------------------------------------------------------
@@ -516,6 +555,10 @@ def DebugCard(card, x=0, y=0):
           \nCard ID: {}\
           \n----------------------\
           ".format(Stored_Type[card], Stored_Keywords[card], Stored_Cost[card],card._id))
+   if debugVerbosity >= 4: 
+      #notify("Stored_AS: {}".format(str(Stored_AutoScripts)))
+      notify("Downloaded AA: {}".format(str(CardsAA)))
+      notify("Card's AA: {}".format(CardsAA.get(card.model,'???')))
    storeProperties(card)
    
 def extraASDebug(Autoscript = None):

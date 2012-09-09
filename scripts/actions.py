@@ -224,6 +224,7 @@ def intJackin(group, x = 0, y = 0):
    global ds, maxClicks
    mute()
    versionCheck()
+   if not startupMsg: fetchCardScripts() # We only download the scripts at the very first setup of each play session.
    if ds and not confirm("Are you sure you want to setup for a new game? (This action should only be done after a table reset)"): return
    ds = None
    if not table.isTwoSided() and not confirm(":::WARNING::: This game is designed to be played on a two-sided table. Things will be extremely uncomfortable otherwise!! Please start a new game and makde sure the  the appropriate button is checked. Are you sure you want to continue?"): return
@@ -404,23 +405,25 @@ def jackOut(group=table,x=0,y=0, silent = False, result = 'failure'):
    else: targetPL = me
    enemyIdent = getSpecial('Identity',targetPL)
    myIdent = getSpecial('Identity',me)
-   if feintTarget: runTarget = feintTarget
-   else: runTarget = re.search(r'running([A-Za-z&]+)',getGlobalVariable('status'))
-   if not runTarget: # If the runner is not running at the moment, do nothing
+   runTargetRegex = re.search(r'running([A-Za-z&]+)',getGlobalVariable('status'))
+   if not runTargetRegex: # If the runner is not running at the moment, do nothing
       if targetPL != me: whisper("{} is not running at the moment.".format(targetPL))
       else: whisper("You are not currently jacked-in.")
    else: # Else announce they are jacked in and resolve all post-run effects.
-      if ds == 'runner' : myIdent.markers[mdict['BadPublicity']] = 0
-      else: enemyIdent.markers[mdict['BadPublicity']] = 0
-      if result == 'failure': atTimedEffects('JackOut')
-      else: atTimedEffects('SuccessfulRun')
-      setGlobalVariable('status','idle')
-      feintTarget = None
-      if not silent:
+      if feintTarget: runTarget = feintTarget #If the runner is feinting, now change the target server to the right one
+      else: runTarget = runTargetRegex.group(1) # If the runner is not feinting, then extract the target from the shared variable
+      if ds == 'runner' : myIdent.markers[mdict['BadPublicity']] = 0 #If we're the runner, then remove out remaining bad publicity tokens
+      else: enemyIdent.markers[mdict['BadPublicity']] = 0 # If we're not the runner, then find the runners and remove any bad publicity tokens
+      if result == 'failure': atTimedEffects('JackOut') # If this was a simple jack-out, then make the end-of-run effects trigger only jack-out effects
+      else: atTimedEffects('SuccessfulRun') # If this was a successful run, then the end-of-run effects will also trigger success effects
+      setGlobalVariable('status','idle') # Clear the run variable
+      feintTarget = None # Clear any feinted targets
+      if debugVerbosity >= 2: notify("### About to announce end of Run") #Debug
+      if not silent: # Announce the end of run from the perspective of each player.
          if targetPL != me: notify("{} has kicked {} out of their corporate grid".format(myIdent,enemyIdent))
          else: 
-            if result == 'failure': notify("{} has jacked out of their run on {} server".format(myIdent,runTarget.group(1)))
-            else: notify("{} has finished their run on the {} server successfully".format(myIdent,runTarget.group(1)))
+            if result == 'failure': notify("{} has jacked out of their run on {} server".format(myIdent,runTarget))
+            else: notify("{} has finished their run on the {} server successfully".format(myIdent,runTarget))
       
 def runSuccess(group=table,x=0,y=0, silent = False):
    jackOut(silent = False, result = 'success')
@@ -689,7 +692,7 @@ def reduceCost(card, action = 'REZ', fullCost = 0):
          if fullCost == 0: break      
    ### Finally we go through the table and see if there's any cards providing cost reduction
    for c in table: # Then check if there's other cards in the table that reduce its costs.
-      Autoscripts = c.AutoScript.split('||')
+      Autoscripts = CardsAS.get(c.model,'').split('||')
       if len(Autoscripts) == 0: continue
       for autoS in Autoscripts:
          if re.search(r'whileRunning', autoS) and not re.search(r'running',status): continue # if the reduction is only during runs, and we're not in a run, bypass this effect
@@ -777,31 +780,60 @@ def findDMGProtection(DMGdone, DMGtype, targetPL): # Find out if the player has 
    if not Automations['Damage Prevention']: return 0
    protectionFound = 0
    protectionType = 'protection{}DMG'.format(DMGtype) # This is the string key that we use in the mdict{} dictionary
+   for card in table: # First we check if we have some emergency protection cards.
+      if card.controller == targetPL and re.search(r'onDamage', CardsAS.get(card.model,'')):
+         if re.search(r'{}DMG'.format(DMGtype), CardsAS.get(card.model,'')):
+            if re.search(r'onlyOnce',CardsAS.get(card.model,'')) and card.orientation == Rot90: continue # If the card has a once per-turn ability which has been used, ignore it
+            if targetPL == me:
+               if confirm("You control a {} which can prevent some of the damage you're about to suffer. Do you want to activate it now?".format(card.name)):
+                  executePlayScripts(card, 'DAMAGE')
+            else: 
+               if confirm("{} controls a {} which can prevent some of the damage you're about to inflict to them. Do they wish you to activate their card for them automatically?".format(targetPL.name,card.name)):
+                  executePlayScripts(card, 'DAMAGE')
+            if re.search(r'onlyOnce',CardsAS.get(card.model,'')): card.orientation = Rot90
    carsList = sortPriority([c for c in table
                if c.controller == targetPL
                and c.markers])
    for card in carsList: # First we check for complete damage protection (i.e. protection from all types), which is always temporary.
       if card.markers[mdict['protectionAllDMG']]:
-         while DMGdone > 0 and card.markers[mdict['protectionAllDMG']] > 0: 
-            protectionFound += 1 
-            DMGdone -= 1
-            card.markers[mdict['protectionAllDMG']] -= 1 
+         if card.markers[mdict['protectionAllDMG']] == 100: # If we have 100 markers of damage prevention, the card is trying to prevent all Damage.
+            protectionFound += DMGdone
+            DMGdone = 0
+            card.markers[mdict['protectionAllDMG']] = 0
+         else:
+            while DMGdone > 0 and card.markers[mdict['protectionAllDMG']] > 0: 
+               protectionFound += 1 
+               DMGdone -= 1
+               card.markers[mdict['protectionAllDMG']] -= 1 
+         if re.search(r'trashCost',CardsAS.get(card.model,'')): ModifyStatus('TrashMyself', targetPL.name, card, notification = 'Quick') # If the modulator -trashCost is there, the card trashes itself in order to use it's damage prevention ability
          if DMGdone == 0: break
    for card in carsList:
       if card.markers[mdict[protectionType]]:
-         while DMGdone > 0 and card.markers[mdict[protectionType]] > 0: # For each point of damage we do.
-            protectionFound += 1 # We increase the protection found by 1
-            DMGdone -= 1 # We reduce how much damage we still need to prevent by 1
-            card.markers[mdict[protectionType]] -= 1 # We reduce the card's damage protection counters by 1
+         if card.markers[mdict[protectionType]] == 100: # If we have 100 markers of damage prevention, the card is trying to prevent all Damage.
+            protectionFound += DMGdone
+            DMGdone = 0
+            card.markers[mdict[protectionType]] = 0
+         else:
+            while DMGdone > 0 and card.markers[mdict[protectionType]] > 0: # For each point of damage we do.
+               protectionFound += 1 # We increase the protection found by 1
+               DMGdone -= 1 # We reduce how much damage we still need to prevent by 1
+               card.markers[mdict[protectionType]] -= 1 # We reduce the card's damage protection counters by 1
+         if re.search(r'trashCost',CardsAS.get(card.model,'')): ModifyStatus('TrashMyself', targetPL.name, card, notification = 'Quick') # If the modulator -trashCost is there, the card trashes itself in order to use it's damage prevention ability
          if DMGdone == 0: break # If we've found enough protection to alleviate all damage, stop the search.
    if DMGtype == 'Net' or DMGtype == 'Brain': altprotectionType = 'protectionNetBrainDMG' # To check for the combined Net & Brain protection counter as well.
    else: altprotectionType = None
    for card in carsList: # We check for the combined protections after we use the single protectors.
       if altprotectionType and card.markers[mdict[altprotectionType]]:
-         while DMGdone > 0 and card.markers[mdict[altprotectionType]] > 0: 
-            protectionFound += 1 #
-            DMGdone -= 1 
-            card.markers[mdict[altprotectionType]] -= 1 
+         if card.markers[mdict[altprotectionType]] == 100: # If we have 100 markers of damage prevention, the card is trying to prevent all Damage.
+            protectionFound += DMGdone
+            DMGdone = 0
+            card.markers[mdict[altprotectionType]] = 0
+         else:
+            while DMGdone > 0 and card.markers[mdict[altprotectionType]] > 0: 
+               protectionFound += 1 #
+               DMGdone -= 1 
+               card.markers[mdict[altprotectionType]] -= 1 
+         if re.search(r'trashCost',CardsAS.get(card.model,'')): ModifyStatus('TrashMyself', targetPL.name, card, notification = 'Quick') # If the modulator -trashCost is there, the card trashes itself in order to use it's damage prevention ability
          if DMGdone == 0: break 
    if debugVerbosity >= 3: notify("<<< findDMGProtection() by returning: {}".format(protectionFound))
    return protectionFound
@@ -815,7 +847,7 @@ def findEnhancements(Autoscript): #Find out if the player has any cards increasi
       if debugVerbosity >= 3: notify('#### encancerMarker: {}'.format(enhancerMarker))
       for card in table:
          if debugVerbosity >= 2: notify("### Checking {}".format(card)) #Debug
-         cardENH = re.search(r'Enhance([0-9]+){}Damage'.format(DMGtype.group(1)), card.AutoScript)
+         cardENH = re.search(r'Enhance([0-9]+){}Damage'.format(DMGtype.group(1)), CardsAS.get(card.model,''))
          if card.controller == me and card.isFaceUp and cardENH: enhancer += num(cardENH.group(1))
          if card.controller == me and card.isFaceUp:
             foundMarker = findMarker(card, enhancerMarker)
@@ -1360,14 +1392,16 @@ def rulings(card, x = 0, y = 0):
 def inspectCard(card, x = 0, y = 0): # This function shows the player the card text, to allow for easy reading until High Quality scans are procured.
    if debugVerbosity >= 1: notify(">>> inspectCard(){}".format(extraASDebug())) #Debug
    ASText = "This card has the following automations:"
-   if re.search(r'onPlay', card.Autoscript): ASText += '\n * It will have an effect when coming into play from your hand.'
-   if re.search(r'onScore', card.Autoscript): ASText += '\n * It will have an effect when being scored.'
-   if re.search(r'onRez', card.Autoscript): ASText += '\n * It will have an effect when its being rezzed.'
-   if re.search(r'whileRezzed', card.Autoscript): ASText += '\n * It will has a continous effect while in play.'
-   if re.search(r'whileScored', card.Autoscript): ASText += '\n * It will has a continous effect while scored.'
-   if re.search(r'atTurnStart', card.Autoscript): ASText += '\n * It will perform an automation at the start of your turn.'
-   if re.search(r'atTurnEnd', card.Autoscript): ASText += '\n * It will perform an automation at the end of your turn.'
-   if card.AutoAction != '': 
+   if re.search(r'onPlay', CardsAS.get(card.model,'')): ASText += '\n * It will have an effect when coming into play from your hand.'
+   if re.search(r'onScore', CardsAS.get(card.model,'')): ASText += '\n * It will have an effect when being scored.'
+   if re.search(r'onRez', CardsAS.get(card.model,'')): ASText += '\n * It will have an effect when its being rezzed.'
+   if re.search(r'whileRezzed', CardsAS.get(card.model,'')): ASText += '\n * It will has a continous effect while in play.'
+   if re.search(r'whileScored', CardsAS.get(card.model,'')): ASText += '\n * It will has a continous effect while scored.'
+   if re.search(r'atTurnStart', CardsAS.get(card.model,'')): ASText += '\n * It will perform an automation at the start of your turn.'
+   if re.search(r'atTurnEnd', CardsAS.get(card.model,'')): ASText += '\n * It will perform an automation at the end of your turn.'
+   if re.search(r'atRunStart', CardsAS.get(card.model,'')): ASText += '\n * It will perform an automation at the start of your run.'
+   if re.search(r'atJackOut', CardsAS.get(card.model,'')): ASText += '\n * It will perform an automation at the end of a run.'
+   if CardsAA.get(card.model,'') != '': 
       if ASText == 'This card has the following automations:': ASText == '\nThis card will perform one or more automated clicks when you double click on it.'
       else: ASText += '\n\nThis card will also perform one or more automated clicks when you double click on it.'
    if ASText == 'This card has the following automations:': ASText = '\nThis card has no automations.'
@@ -1383,7 +1417,7 @@ def inspectCard(card, x = 0, y = 0): # This function shows the player the card t
                                           \nIf you're playing a runner, brain damage markers, tags and any other tokens the corp gives you will be put here. by double clicking this card, you'll be able to select one of the markers to remove by paying its cost.\
                                         \n\nTo remove any token manually, simply drag & drop it out of this card.")
    else:
-      if debugVerbosity > 0: finalTXT = 'AutoScript: {}\n\n AutoAction: {}'.format(card.AutoScript,card.AutoAction)
+      if debugVerbosity > 0: finalTXT = 'AutoScript: {}\n\n AutoAction: {}'.format(CardsAS.get(card.model,''),CardsAA.get(card.model,''))
       else: finalTXT = "Card Text: {}\n\n{}Would you like to see the card's details online?".format(card.Rules,ASText)
       if confirm("{}".format(finalTXT)): rulings(card)
    
@@ -1480,14 +1514,14 @@ def intPlay(card, cost = 'not_free'):
 def chkTargeting(card):
    if debugVerbosity >= 1: notify(">>> chkTargeting(){}".format(extraASDebug())) #Debug
    global ExposeTargetsWarn, RevealandShuffleWarn
-   if re.search(r'Targeted', card.AutoScript) and findTarget(card.AutoScript) == [] and not re.search(r'isOptional', card.AutoScript) and not confirm("This card requires a valid target for it to work correctly.\
+   if re.search(r'Targeted', CardsAS.get(card.model,'')) and findTarget(CardsAS.get(card.model,'')) == [] and not re.search(r'isOptional', CardsAS.get(card.model,'')) and not confirm("This card requires a valid target for it to work correctly.\
                                                                                                                                                       \nIf you proceed without a target, strange things might happen.\
                                                                                                                                                      \n\nProceed anyway?"): return 'ABORT'
-   targetPL = ofwhom(card.Autoscript)                                                                                                                                                      
-   if re.search(r'ifTagged', card.Autoscript) and targetPL.Tags == 0 and not re.search(r'isOptional', card.AutoScript): 
+   targetPL = ofwhom(CardsAS.get(card.model,''))                                                                                                                                                      
+   if re.search(r'ifTagged', CardsAS.get(card.model,'')) and targetPL.Tags == 0 and not re.search(r'isOptional', CardsAS.get(card.model,'')): 
       whisper("{} must be tagged in order to use this card".format(targetPL))
       return 'ABORT'
-   if re.search(r'isExposeTarget', card.AutoScript) and ExposeTargetsWarn:
+   if re.search(r'isExposeTarget', CardsAS.get(card.model,'')) and ExposeTargetsWarn:
       if confirm("This card will automatically provide a bonus depending on how many non-exposed derezzed cards you've selected.\
                 \nMake sure you've selected all the cards you wish to expose and have peeked at them before taking this action\
                 \nSince this is the first time you take this action, you have the opportunity now to abort and select your targets before traying it again.\
@@ -1496,7 +1530,7 @@ def chkTargeting(card):
          ExposeTargetsWarn = False
          return 'ABORT'
       else: ExposeTargetsWarn = False # Whatever happens, we don't show this message again. 
-   if re.search(r'Reveal&Shuffle', card.AutoScript) and RevealandShuffleWarn:
+   if re.search(r'Reveal&Shuffle', CardsAS.get(card.model,'')) and RevealandShuffleWarn:
       if confirm("This card will automatically provide a bonus depending on how many cards you selected to reveal (i.e. place on the table) from your hand.\
                 \nMake sure you've selected all the cards (of any specific type required) you wish to reveal to the other players\
                 \nSince this is the first time you take this action, you have the opportunity now to abort and select your targets before trying it again.\
@@ -1505,7 +1539,7 @@ def chkTargeting(card):
          RevealandShuffleWarn = False
          return 'ABORT'
       else: RevealandShuffleWarn = False # Whatever happens, we don't show this message again. 
-   if re.search(r'HandTarget', card.AutoScript) or re.search(r'HandTarget', card.AutoAction):
+   if re.search(r'HandTarget', CardsAS.get(card.model,'')) or re.search(r'HandTarget', CardsAA.get(card.model,'')):
       hasTarget = False
       for c in me.hand:
          if c.targetedBy and c.targetedBy == me: hasTarget = True

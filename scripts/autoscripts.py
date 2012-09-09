@@ -37,11 +37,11 @@ def executePlayScripts(card, action):
    global failedRequirement
    if not Automations['Play, Score and Rez']: return
    if not card.isFaceUp: return
-   if Stored_AutoScripts[card] == "": return
+   if CardsAS.get(card.model,'') == '': return
    if card.highlight == InactiveColor: return
    failedRequirement = False
    X = 0
-   Autoscripts = card.AutoScript.split('||') # When playing cards, the || is used as an "and" separator, rather than "or". i.e. we don't do choices (yet)
+   Autoscripts = CardsAS.get(card.model,'').split('||') # When playing cards, the || is used as an "and" separator, rather than "or". i.e. we don't do choices (yet)
    AutoScriptsSnapshot = list(Autoscripts) # Need to work on a snapshot, because we'll be modifying the list.
    for autoS in AutoScriptsSnapshot: # Checking and removing any "AtTurnStart" clicks.
       if (re.search(r'atTurn(Start|End)', autoS) or 
@@ -65,6 +65,7 @@ def executePlayScripts(card, action):
           (effectType.group(1) == 'onPlay' and action != 'PLAY') or
           (effectType.group(1) == 'onInstall' and action != 'INSTALL') or
           (effectType.group(1) == 'onScore' and action != 'SCORE') or
+          (effectType.group(1) == 'onDamage' and action != 'DAMAGE') or
           (effectType.group(1) == 'onLiberation' and action != 'LIBERATE') or
           (effectType.group(1) == 'onTrash' and (action != 'TRASH' or action!= 'UNINSTALL' or action != 'DEREZ')) or
           (effectType.group(1) == 'onDerez' and action != 'DEREZ')): continue 
@@ -174,9 +175,9 @@ def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
       else: cFaceD = False
       random = rnd(10,300)
       if debugVerbosity >= 2: notify(">>> Storing Autoactions for {}".format(card)) #Debug
-      Stored_AutoActions[card] = card.AutoAction
+      Stored_AutoActions[card] = CardsAA.get(card.model,'')
       if cFaceD: card.isFaceUp = False
-   if debugVerbosity >= 5: notify("+++ Finished storing card.AutoActions. Checking Rez status")
+   if debugVerbosity >= 5: notify("+++ Finished storing CardsAA.get(card.model,'')s. Checking Rez status")
    if not card.isFaceUp:
       if re.search(r'onAccess',Stored_AutoActions[card]) and confirm("This card has an ability that can be activated even when unrezzed. Would you like to activate that now?"): card.isFaceUp = True # Activating an on-access ability requires the card to be exposed, it it's no already.
       elif re.search(r'Hidden',Stored_Keywords[card]): card.isFaceUp # If the card is a hidden resource, just turn it face up for its imminent use.
@@ -416,7 +417,8 @@ def autoscriptOtherPlayers(lookup, origin_card, count = 1): # Function that trig
       if debugVerbosity >= 2: notify('Checking {}'.format(card)) # Debug
       if not card.isFaceUp: continue # Don't take into accounts cards that are not rezzed.
       costText = '{} activates {} to'.format(card.controller, card) 
-      Autoscripts = card.AutoScript.split('||')
+      Autoscripts = CardsAS.get(card.model,'').split('||')
+      if debugVerbosity >= 4: notify("### {}'s AS: {}".format(card,Autoscripts)) # Debug
       AutoScriptSnapshot = list(Autoscripts)
       for autoS in AutoScriptSnapshot: # Checking and removing anything other than whileRezzed or whileScored.
          if not re.search(r'while(Rezzed|Scored)', autoS): Autoscripts.remove(autoS)
@@ -470,8 +472,8 @@ def atTimedEffects(Time = 'Start'): # Function which triggers card effects at th
       #if card.controller != me: continue # Obsoleted. Using the chkPlayer() function below
       if card.highlight == InactiveColor: continue
       if not card.isFaceUp: continue
-      if debugVerbosity >= 3: notify("### {} Autoscript: {}".format(card, card.AutoScript))
-      Autoscripts = card.AutoScript.split('||')
+      if debugVerbosity >= 3: notify("### {} Autoscript: {}".format(card, CardsAS.get(card.model,'')))
+      Autoscripts = CardsAS.get(card.model,'').split('||')
       for autoS in Autoscripts:
          if Time == 'Run': effect = re.search(r'at(Run)Start:(.*)', autoS) # Putting Run in a group, only to retain the search results groupings later
          elif Time == 'JackOut' or Time == 'SuccessfulRun': effect = re.search(r'at(JackOut):(.*)', autoS) # Same as above
@@ -545,6 +547,7 @@ def atTimedEffects(Time = 'Start'): # Function which triggers card effects at th
       else: notify(":::Warning::: {}'s {}-of-turn effects cost more Credits than {} had in their Credit Pool!".format(me,Time,me))
    if ds == 'corp' and Time =='Start': draw(me.piles['R&D/Stack'])
    if TitleDone: notify(":::{:=^30}:::".format('='))   
+   if debugVerbosity >= 3: notify("<<< atTimedEffects()") # Debug
 
 def markerEffects(Time = 'Start'):
    if debugVerbosity >= 1: notify(">>> markerEffects() at time: {}".format(Time)) #Debug
@@ -1132,9 +1135,9 @@ def CreateDummy(Autoscript, announceText, card, targetCards = None, notification
       dummyCard.highlight = DummyColor
       Stored_Type[dummyCard] = dummyCard.Type
       Stored_Keywords[dummyCard] = dummyCard.Keywords
-      Stored_AutoActions[dummyCard] = dummyCard.AutoAction
+      Stored_AutoActions[dummyCard] = dummyCardsAA.get(card.model,'')
       Stored_Cost[dummyCard] = dummyCard.Cost
-      Stored_AutoScripts[dummyCard] = dummyCard.AutoScript
+      Stored_AutoScripts[dummyCard] = dummyCardsAS.get(card.model,'')
    #confirm("Dummy ID: {}\n\nList Dummy ID: {}".format(dummyCard._id,passedlist[0]._id)) #Debug
    if not re.search(r'doNotTrash',Autoscript): card.moveTo(card.owner.piles['Heap/Archives(Face-up)'])
    if action: announceString = TokensX('Put{}'.format(action.group(2)), announceText,dummyCard, n = n) # If we have a -with in our autoscript, this is meant to put some tokens on the dummy card.
@@ -1213,7 +1216,7 @@ def ModifyStatus(Autoscript, announceText, card, targetCards = None, notificatio
    #for targetCard in targetCards: notify("ModifyX TargetCard: {}".format(targetCard)) #Debug
    for targetCard in targetCards:
       if re.search(r'-ifEmpty',Autoscript) and targetCard.markers[mdict['Credits']] and targetCard.markers[mdict['Credits']] > 0: 
-         if len(targetCards) > 0: continue #If the modification only happens when the card runs out of credits, then we abort if it still has any
+         if len(targetCards) > 1: continue #If the modification only happens when the card runs out of credits, then we abort if it still has any
          else: return announceText # If there's only 1 card and it's not supposed to be trashed yet, do nothing.
       if action.group(1) == 'Rez' and intRez(targetCard, 'free', silent = True) != 'ABORT': pass
       elif action.group(1) == 'Derez'and derez(targetCard, silent = True) != 'ABORT': pass
@@ -1356,10 +1359,10 @@ def chkNoisy(card): # Check if the player successfully used a noisy icebreaker, 
 def penaltyNoisy(card):
    if debugVerbosity >= 1: notify(">>> penaltyNoisy()") #Debug
    if re.search(r'Noisy', Stored_Keywords[card]) and re.search(r'Icebreaker', Stored_Keywords[card]): 
-      NoisyCost = re.search(r'triggerNoisy([0-9]+)',card.AutoScript)
+      NoisyCost = re.search(r'triggerNoisy([0-9]+)',CardsAS.get(card.model,''))
       if debugVerbosity >= 2: 
          if NoisyCost: notify("### Noisy Trigger Found: {}".format(NoisyCost.group(1))) #Debug      
-         else: notify("### Noisy Trigger not found. AS was: {}".format(card.AutoScript)) #Debug      
+         else: notify("### Noisy Trigger not found. AS was: {}".format(CardsAS.get(card.model,''))) #Debug      
       if NoisyCost: 
          total = 0
          cost = num(NoisyCost.group(1))
@@ -1663,7 +1666,7 @@ def per(Autoscript, card = None, count = 0, targetCards = None, notification = N
                                                                                               # Usually there is a count sent to this function (eg, number of favour purchased) with which to multiply the end result with
                                                                                               # and some cards may only work when a rival owns or does something.
          elif re.search(r'Marker',per.group(3)):
-            markerName = re.search(r'Marker{([\w ]+)}',per.group(3)) # I don't understand why I had to make the curly brackets optional, but it seens atTurnStart/End completely eats them when it parses the card.autoscript
+            markerName = re.search(r'Marker{([\w ]+)}',per.group(3)) # I don't understand why I had to make the curly brackets optional, but it seens atTurnStart/End completely eats them when it parses the CardsAS.get(card.model,'')
             marker = findMarker(card, markerName.group(1))
             if marker: multiplier = card.markers[marker]
             else: multiplier = 0

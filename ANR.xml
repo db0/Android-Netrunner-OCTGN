@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<game xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="Android:Netrunner" id="0f38e453-26df-4c04-9d67-6d43de939c77" octgnVersion="3.0.1.14" version="1.1.9" markersize="20">
+<game xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="Android:Netrunner" id="0f38e453-26df-4c04-9d67-6d43de939c77" octgnVersion="3.0.1.14" version="1.1.10" markersize="20">
    <scripts>
       <script src="r3" />
       <script src="r17" />
       <script src="r18" />
       <script src="r19" />
       <script src="r20" />
+      <script src="r21" />
    </scripts>
    <globalvariables> 
      <globalvariable name="fontsize" value="11"/> 
@@ -45,6 +46,7 @@
          <groupaction menu="Switch Automatic Triggers ON/OFF" default="false" execute="switchTriggersAutomation" />  
          <groupaction menu="Disable all &quot;Newbie&quot; Warnings" default="false" shortcut="Ctrl+Shift+N" execute="ImAProAtThis" />  
          <groupaction menu="Re-Scan table" default="false" execute="scanTable" />
+         <groupaction menu="Re-Download all card automations" default="false" execute="fetchCardScripts" />
          <groupaction menu="Debug" default="false" shortcut="Ctrl+Shift+D" execute="TrialError" /> 
       </groupactions>
       <cardaction menu="Debug Card" default="false" execute="DebugCard" /> 

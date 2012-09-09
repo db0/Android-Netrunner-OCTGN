@@ -267,3 +267,7 @@ This modulator modifies the script's trigger so that it doesn't go off unless th
 ### -feintTo(HQ|R&D|Archives|Generic)
 
 This modulator makes it so that the trigger thinks the real target of a run was another server (e.g. see Sneakdoor Beta)
+
+### -trashCost
+
+Used during damage reduction to signify a card that needs to be trashed as part of the cost for reducing damage (e.g. Crash Space)

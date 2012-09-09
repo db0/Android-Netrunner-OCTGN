@@ -82,8 +82,8 @@ def storeProperties(card): # Function that grabs a cards important properties an
       Stored_Cost[card] = card.Cost
       Stored_Type[card] = card.Type
       Stored_Keywords[card] = getKeywords(card)
-      Stored_AutoActions[card] = card.AutoAction
-      Stored_AutoScripts[card] = card.AutoScript
+      Stored_AutoActions[card] = CardsAA.get(card.model,'')
+      Stored_AutoScripts[card] = CardsAS.get(card.model,'')
       if card.Type == 'Identity': identName = card.name
    if cFaceD: card.isFaceUp = False
    if debugVerbosity >= 3: notify("<<< storeProperties()")
