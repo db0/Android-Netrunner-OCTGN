@@ -410,7 +410,8 @@ def jackOut(group=table,x=0,y=0, silent = False, result = 'failure'):
       if targetPL != me: whisper("{} is not running at the moment.".format(targetPL))
       else: whisper("You are not currently jacked-in.")
    else: # Else announce they are jacked in and resolve all post-run effects.
-      myIdent.markers[mdict['BadPublicity']] = 0
+      if ds == 'runner' : myIdent.markers[mdict['BadPublicity']] = 0
+      else: enemyIdent.markers[mdict['BadPublicity']] = 0
       if result == 'failure': atTimedEffects('JackOut')
       else: atTimedEffects('SuccessfulRun')
       setGlobalVariable('status','idle')
@@ -1267,7 +1268,10 @@ def exileCard(card, silent = False):
    else:
       if card.isFaceUp: MUtext = chkRAM(card, 'UNINSTALL')
       else: MUtext = ''
-      executePlayScripts(card,'TRASH')
+      if card.Type == 'Agenda' and card.markers[mdict['Scored']]: 
+         me.counters['Agenda Points'].value -= num(card.Stat) # Trashing Agendas for any reason, now takes they value away as well.
+         notify("--> {} loses {} Agenda Points".format(me, card.Stat))
+      if card.highlight != RevealedColor: executePlayScripts(card,'TRASH') # We don't want to run automations on simply revealed cards.
       card.moveTo(shared.exile)
    if not silent: notify("{} exiled {}{}.".format(me,card,MUtext))
    
