@@ -306,5 +306,7 @@ Simply hold [Space] and then click drag your mouse on the table.
 The cardgamedb.com has an awesome deck editor that can export in OCTGN deck format?
 
 It's really, really good. Seriously.
+
+Would you like to learn more?
 &&
 http://www.cardgamedb.com/index.php/netrunner/android-netrunner-deck-builder
