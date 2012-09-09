@@ -540,7 +540,7 @@ def advanceCardP(card, x = 0, y = 0):
    extraText = ''
    ClickCost = useClick()
    if ClickCost == 'ABORT': return
-   reduction = reduceCost(card, 'Advancement', 1)
+   reduction = reduceCost(card, 'ADVANCEMENT', 1)
    if reduction: extraText = " (reduced by {})".format(uniCredit(reduction))
    if payCost(1 - reduction) == "ABORT": 
       me.Clicks += 1 # If the player didn't notice they didn't have enough credits, we give them back their click
@@ -624,7 +624,7 @@ def payTraceValue (card, x=0,y=0):
    mute()
    extraText = ''
    card = getSpecial('Tracing')
-   reduction = reduceCost(card, 'Trace', card.markers[mdict['Credits']])
+   reduction = reduceCost(card, 'TRACE', card.markers[mdict['Credits']])
    if reduction: extraText = " (reduced by {})".format(uniCredit(reduction))
    if payCost(card.markers[mdict['Credits']] - reduction)  == 'ABORT': return
    notify ("{} pays the {}{} they used during this trace attempt.".format(me,uniCredit(card.markers[mdict['Credits']]),extraText))
