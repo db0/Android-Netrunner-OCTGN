@@ -488,7 +488,8 @@ def atTimedEffects(Time = 'Start'): # Function which triggers card effects at th
                   else: notify ("No requiredTarget or currentRunTarget regex match :(")
                if requiredTarget.group(1) == 'Any': pass # -ifSuccessfulRunAny means we run the script on any successful run (e.g. Desperado)
                elif feintTarget:
-                  if feintTarget == currentRunTarget.group(1): pass # If we're doing a feinted run (e.g. Sneakdoor beta) then check with the actual target.
+                  if feintTarget == requiredTarget.group(1): pass # If we're doing a feinted run (e.g. Sneakdoor beta) then check with the actual target.
+                  else: continue
                elif requiredTarget.group(1) == currentRunTarget.group(1): pass # If the card requires a successful run on a server that the global variable points that we were running at, we can proceed.
                else: continue # If none of the above, it means the card script is not triggering for this server.
                if debugVerbosity >= 3: notify("### All checked OK")

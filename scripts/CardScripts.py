@@ -70,6 +70,14 @@ bc0f047c-01b1-427f-a439-d451eda01057
 +++++
 A0B2G0T0:Remove1Advancement-perTargetAny-isCost-onAccess$$TrashMulti-Targeted-atProgram
 .....
+Akamatsu Mem Chip
+-----
+bc0f047c-01b1-427f-a439-d451eda01038
+-----
+whileRezzed:Gain1MU
++++++
+
+.....
 Akitaro Watanabe
 -----
 bc0f047c-01b1-427f-a439-d451eda01079
@@ -478,7 +486,7 @@ whileRezzed:Inflict1NetDamage-onOpponent-perAgendaScored||whileRezzed:Inflict1Ne
 +++++
 	
 .....
-Kate &quot;Mac&quot; McCaffrey
+Kate "Mac" McCaffrey
 -----
 bc0f047c-01b1-427f-a439-d451eda01033
 -----
@@ -766,7 +774,7 @@ onPlay:Put3Click||whileRezzed:Transfer1Click-perCardInstall
 +++++
 	
 .....
-Snare&#33;
+Snare!
 -----
 bc0f047c-01b1-427f-a439-d451eda01070
 -----
