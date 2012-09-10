@@ -424,6 +424,7 @@ def jackOut(group=table,x=0,y=0, silent = False, result = 'failure'):
          else: 
             if result == 'failure': notify("{} has jacked out of their run on {} server".format(myIdent,runTarget))
             else: notify("{} has finished their run on the {} server successfully".format(myIdent,runTarget))
+      clearAll(True)
       
 def runSuccess(group=table,x=0,y=0, silent = False):
    jackOut(silent = False, result = 'success')
@@ -1168,12 +1169,13 @@ def clear(card, x = 0, y = 0, silent = False):
    card.target(False)
    if debugVerbosity >= 3: notify("<<< clear()")
    
-def clearAll(): # Just clears all the player's cards.
+def clearAll(markersOnly = False): # Just clears all the player's cards.
    if debugVerbosity >= 1: notify(">>> clearAll()") #Debug
    for card in table:
       if card.controller == me: clear(card,silent = True)
-      if card.isFaceUp and (card.Type == 'Operation' or card.Type == 'Event') and card.highlight != DummyColor:
-         intTrashCard(card,0,"free") # Clearing all Events and operations for players who keep forgeting to clear them.
+      if not markersOnly:
+         if card.isFaceUp and (card.Type == 'Operation' or card.Type == 'Event') and card.highlight != DummyColor:
+            intTrashCard(card,0,"free") # Clearing all Events and operations for players who keep forgeting to clear them.
    if debugVerbosity >= 3: notify("<<< clearAll()")
    
 def intTrashCard(card, stat, cost = "not free",  ClickCost = '', silent = False):

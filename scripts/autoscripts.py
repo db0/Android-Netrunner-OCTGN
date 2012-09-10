@@ -544,6 +544,7 @@ def atTimedEffects(Time = 'Start'): # Function which triggers card effects at th
    #markerEffects(Time) # Not used in ANR (yet)
    if me.counters['Credits'].value < 0: 
       if Time == 'Run': notify(":::Warning::: {}'s Start-of-run effects cost more Credits than {} had in their Credit Pool!".format(me,me))
+      elif Time == 'JackOut' or Time == 'SuccessfulRun': notify(":::Warning::: {}'s Jacking-Out effects cost more Credits than {} had in their Credit Pool!".format(me,me))
       else: notify(":::Warning::: {}'s {}-of-turn effects cost more Credits than {} had in their Credit Pool!".format(me,Time,me))
    if ds == 'corp' and Time =='Start': draw(me.piles['R&D/Stack'])
    if TitleDone: notify(":::{:=^30}:::".format('='))   
