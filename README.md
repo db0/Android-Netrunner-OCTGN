@@ -46,6 +46,12 @@ Screenshots
 Changelog
 ---------
 
+### v.1.1.11
+
+* Quick fix for cards which didn't announce their effect correctly (Eg. Armitage Codebusting)
+* Jacking-Out now clears temporary markers (e.g. Icebreaker strength bonuses)
+* Some other superficial fixes
+
 ### v1.1.10
 
 * Added Functionality for fetching all card scripts from the github repository
