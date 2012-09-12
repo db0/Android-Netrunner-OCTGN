@@ -1207,6 +1207,7 @@ def ModifyStatus(Autoscript, announceText, card, targetCards = None, notificatio
    if debugVerbosity >= 1: notify(">>> ModifyStatus(){}".format(extraASDebug(Autoscript))) #Debug
    if targetCards is None: targetCards = []
    targetCardlist = '' # A text field holding which cards are going to get tokens.
+   extraTXT = ''
    action = re.search(r'\b(Rez|Derez|Expose|Trash|Uninstall|Possess|Exile)(Target|Parent|Multi|Myself)[-to]*([A-Z][A-Za-z&_ ]+)?', Autoscript)
    if action.group(2) == 'Myself': 
       del targetCards[:] # Empty the list, just in case.
@@ -1225,15 +1226,21 @@ def ModifyStatus(Autoscript, announceText, card, targetCards = None, notificatio
          else: return announceText # If there's only 1 card and it's not supposed to be trashed yet, do nothing.
       if action.group(1) == 'Rez' and intRez(targetCard, 'free', silent = True) != 'ABORT': pass
       elif action.group(1) == 'Derez'and derez(targetCard, silent = True) != 'ABORT': pass
-      elif action.group(1) == 'Expose' and expose(targetCard, silent = True) != 'ABORT': pass
+      elif action.group(1) == 'Expose': 
+         exposeResult = expose(targetCard, silent = True)
+         if exposeResult == 'ABORT': return 'ABORT'
+         elif exposeResult == 'COUNTERED': extraTXT = " (Countered!)"
       elif action.group(1) == 'Uninstall' and uninstall(targetCard, destination = dest, silent = True) != 'ABORT': pass
       elif action.group(1) == 'Possess' and possess(card, targetCard, silent = True) != 'ABORT': pass
-      elif action.group(1) == 'Trash' and intTrashCard(targetCard, fetchProperty(targetCard,'Stat'), "free", silent = True) != 'ABORT': pass
+      elif action.group(1) == 'Trash':
+         trashResult = intTrashCard(targetCard, fetchProperty(targetCard,'Stat'), "free", silent = True)
+         if trashResult == 'ABORT': return 'ABORT'
+         elif trashResult == 'COUNTERED': extraTXT = " (Countered!)"
       elif action.group(1) == 'Exile' and exileCard(targetCard, silent = True) != 'ABORT': pass
       else: return 'ABORT'
       if action.group(2) != 'Multi': break # If we're not doing a multi-targeting, abort after the first run.
-   if notification == 'Quick': announceString = "{} {}es {}".format(announceText, action.group(1), targetCardlist)
-   else: announceString = "{} {} {}".format(announceText, action.group(1), targetCardlist)
+   if notification == 'Quick': announceString = "{} {}es {}{}".format(announceText, action.group(1), targetCardlist,extraTXT)
+   else: announceString = "{} {} {}{}".format(announceText, action.group(1), targetCardlist, extraTXT)
    if notification: notify('--> {}.'.format(announceString))
    if debugVerbosity >= 3: notify("<<< ModifyStatus()")
    return announceString
@@ -1269,7 +1276,8 @@ def InflictX(Autoscript, announceText, card, targetCards = None, notification = 
       for DMGpt in range(DMG): #Start applying the damage
          if len(targetPL.hand) == 0 or currentHandSize(targetPL) == 0: 
             notify(":::Warning:::{} has flatlined!".format(targetPL)) #If the target does not have any more cards in their hand, inform they've flatlined.
-            reportGame('FlatlineVictory')
+            if targetPL != me: reportGame('FlatlineVictory') # In case of an effect like the Jinteki's ability
+            else: reportGame('Flatlined')
             break
          else: #Otherwise, warn the player doing it for the first time
             whisper("+++ Applying damage {} of {}...".format(DMGpt+1,DMG))

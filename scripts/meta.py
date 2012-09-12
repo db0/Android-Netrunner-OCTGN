@@ -39,6 +39,7 @@ startupMsg = False # Used to check if the player has checked for the latest vers
 gameGUID = None # A Unique Game ID that is fetched during game launch.
 #totalInfluence = 0 # Used when reporting online
 #gameEnded = False # A variable keeping track if the players have submitted the results of the current game already.
+turn = 0 # used during game reporting to report how many turns the game lasted
 
 CardsAA = {} # Dictionary holding all the AutoAction scripts for all cards
 CardsAS = {} # Dictionary holding all the AutoScript scripts for all cards
@@ -233,7 +234,7 @@ def checkUnique (card):
 def resetAll(): # Clears all the global variables in order to start a new game.
    if debugVerbosity >= 1: notify(">>> resetAll(){}".format(extraASDebug())) #Debug
    global Stored_Type, Stored_Cost, Stored_Keywords, Stored_AutoActions, Stored_AutoScripts
-   global installedCount, debugVerbosity,newturn,endofturn, currClicks
+   global installedCount, debugVerbosity,newturn,endofturn, currClicks, turn
    mute()
    me.counters['Credits'].value = 5
    me.counters['Hand Size'].value = 5
@@ -249,6 +250,7 @@ def resetAll(): # Clears all the global variables in order to start a new game.
    newturn = False 
    endofturn = False
    currClicks = 0
+   turn = 0
    ShowDicts()
    #debugVerbosity = -1 # Reset means normal game.
    if debugVerbosity >= 1: notify("<<< resetAll()") #Debug
@@ -365,6 +367,7 @@ def versionCheck():
          startupMsg = True
       if not startupMsg: MOTD() # If we didn't give out any other message , we give out the MOTD instead.
       startupMsg = True
+   me.setGlobalVariable('gameVersion',gameVersion)
    if debugVerbosity >= 3: notify("<<< versionCheck()") #Debug
       
       
@@ -428,8 +431,10 @@ def reportGame(result = 'AgendaVictory'): # This submits the game results online
    RESULT = result
    SCORE = me.counters['Agenda Points'].value
    INFLUENCE = me.getGlobalVariable('Influence')
+   TURNS = turn
+   VERSION = gameVersion
    if debugVerbosity >= 2: notify("### About to report player results online.") #Debug
-   (reportTXT, reportCode) = webRead('http://84.205.248.92/slaghund/game.slag?g={}&u={}&id={}&v={}&s={}&i={}'.format(GUID,PLAYER,IDENTITY,RESULT,SCORE,INFLUENCE))
+   (reportTXT, reportCode) = webRead('http://84.205.248.92/slaghund/game.slag?g={}&u={}&id={}&r={}&s={}&i={}&t={}&v={}&w=1'.format(GUID,PLAYER,IDENTITY,RESULT,SCORE,INFLUENCE,TURNS,VERSION))
    # The victorious player also reports for their enemy
    enemyPL = ofwhom('-ofOpponent')
    ENEMY = enemyPL.name
@@ -441,8 +446,11 @@ def reportGame(result = 'AgendaVictory'): # This submits the game results online
    else: E_RESULT = 'Unknown'
    E_SCORE = enemyPL.counters['Agenda Points'].value
    E_INFLUENCE = enemyPL.getGlobalVariable('Influence')
+   if ds == 'corp': E_TURNS = turn - 1 # If we're a corp, the opponent has played one less turn than we have.
+   else: E_TURNS = turn + 1 # If we're the runner, the opponent has played one more turn than we have.
+   E_VERSION = enemyPL.getGlobalVariable('gameVersion')
    if debugVerbosity >= 2: notify("### About to report enemy results online.") #Debug
-   (EreportTXT, EreportCode) = webRead('http://84.205.248.92/slaghund/game.slag?g={}&u={}&id={}&v={}&s={}&i={}'.format(GUID,ENEMY,E_IDENTITY,E_RESULT,E_SCORE,E_INFLUENCE))
+   (EreportTXT, EreportCode) = webRead('http://84.205.248.92/slaghund/game.slag?g={}&u={}&id={}&r={}&s={}&i={}&t={}&v={}&w=0'.format(GUID,ENEMY,E_IDENTITY,E_RESULT,E_SCORE,E_INFLUENCE,E_TURNS,E_VERSION))
    setGlobalVariable('gameEnded','True')
    if debugVerbosity >= 3: notify("<<< reportGame()") #Debug
 

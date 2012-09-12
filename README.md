@@ -46,6 +46,12 @@ Screenshots
 Changelog
 ---------
 
+### v1.1.12
+
+* When the game tries to read the properties of an opponent's cards, the game will now cover them with a fake card to avoid the opponent reading them
+* Cards like Lemuria Codebreakers will now use their costs, even if their effects are countered by the opponent
+
+
 ### v.1.1.11
 
 * Quick fix for cards which didn't announce their effect correctly (Eg. Armitage Codebusting)

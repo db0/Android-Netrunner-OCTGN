@@ -63,20 +63,27 @@ def displaymatch(match):
    
 def storeProperties(card): # Function that grabs a cards important properties and puts them in a dictionary
    mute()
+   coverExists = False
    if debugVerbosity >= 1: notify(">>> storeProperties(){}".format(extraASDebug())) #Debug
    global Stored_Cost, Stored_Type, Stored_Keywords, Stored_AutoActions, Stored_AutoScripts, identName
    cFaceD = False
    if card.name == 'Card' and Stored_Type.get(card,'?') == '?':
-      if not card.isFaceUp: 
+      if not card.isFaceUp:
+         if card.controller != me: # If it's not our card, then we cover it up shortly while grabbing its properties
+            x,y = card.position
+            cover = table.create("ac3a3d5d-7e3a-4742-b9b2-7f72596d9c1b",x,y,1,False)
+            cover.moveToTable(x,y,False)
+            if card.orientation == Rot90: cover.orientation = Rot90
+            coverExists = True
          card.isFaceUp = True
          cFaceD = True
-      loopcount = 0
-      while card.name == 'Card':
-         rnd(1,10)
-         loopcount += 1
-         if loopcount == 5:
-            whisper(":::Error::: Card properties can't be grabbed. Aborting!")
-            break
+         loopcount = 0
+         while card.name == 'Card':
+            rnd(1,10)
+            loopcount += 1
+            if loopcount == 5:
+               whisper(":::Error::: Card properties can't be grabbed. Aborting!")
+               break
    if Stored_Type.get(card,'?') == '?' or (Stored_Type.get(card,'?') != card.Type and card.Type != '?'):
       if debugVerbosity >= 3: notify("### {} not stored. Storing...".format(card))
       Stored_Cost[card] = card.Cost
@@ -86,6 +93,9 @@ def storeProperties(card): # Function that grabs a cards important properties an
       Stored_AutoScripts[card] = CardsAS.get(card.model,'')
       if card.Type == 'Identity': identName = card.name
    if cFaceD: card.isFaceUp = False
+   if coverExists: 
+      rnd(1,10) # To give time to the card facedown automation to complete.
+      cover.moveTo(shared.exile) # now destorying cover card
    if debugVerbosity >= 3: notify("<<< storeProperties()")
 
 def fetchProperty(card, property): 

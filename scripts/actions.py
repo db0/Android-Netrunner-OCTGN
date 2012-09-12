@@ -157,7 +157,7 @@ def goToEndTurn(group, x = 0, y = 0):
 
 def goToSot (group, x=0,y=0):
    if debugVerbosity >= 1: notify(">>> goToSot(){}".format(extraASDebug())) #Debug
-   global newturn, endofturn, lastKnownNrClicks, currClicks
+   global newturn, endofturn, lastKnownNrClicks, currClicks, turn
    mute()
    clearNoise()
    if endofturn or currClicks or newturn:
@@ -180,6 +180,7 @@ def goToSot (group, x=0,y=0):
    for card in myCards: 
       if card in Stored_Type and Stored_Type[card] != 'ICE': card.orientation &= ~Rot90 # Refresh all cards which can be used once a turn.
    newturn = True
+   turn += 1
    atTimedEffects('Start') # Check all our cards to see if there's any Start of Turn effects active.
    if ds == "corp": notify("=> The offices of {} ({}) are now open for business. They have {} {} for this turn{}.".format(identName,me,me.Clicks,uniClick(),extraTXT))
    else: notify ("=> {} ({}) has woken up. They have {} clicks for this turn{}.".format(identName,me,me.Clicks,extraTXT))
@@ -982,7 +983,7 @@ def RDaccessX(group = table, x = 0, y = 0): # A function which looks at the top 
       RDtop[iter].moveToBottom(targetPL.piles['Heap/Archives(Face-up)'])
       if debugVerbosity >= 4: notify("#### Looping...")
       loopChk(RDtop[iter],'Type')
-      if re.search(r'onAccess:Reveal',RDtop[iter].AutoScript):
+      if re.search(r'onAccess:Reveal',CardsAS.get(RDtop[iter].model,'')):
          RDtop[iter].moveToTable(0, 0 + yaxisMove(RDtop[iter]), False)
          RDtop[iter].highlight = RevealedColor         
          confirm("Ambush! You have stumbled into a {}\
@@ -1137,8 +1138,9 @@ def expose(card, x = 0, y = 0, silent = False):
    if debugVerbosity >= 1: notify(">>> expose(){}".format(extraASDebug())) #Debug
    if not card.isFaceUp:
       mute()
-      if card.controller != me and confirm(":::WARNING:::Confirm:::\nYou are about to expose an opponent's card.\
-                                            Do they have any reactions to this expose attempt?"): return 'ABORT'
+      if card.controller != me and not confirm(":::WARNING:::Confirm:::\nYou are about to expose an opponent's card.\
+                                           Please first check with them, if they have reactions to this expose attempt?\
+                                       \n\n:::Confirm:::Proceed with exposing this card?"): return 'COUNTERED'
       card.isFaceUp = True
       if card.highlight == None: card.highlight = RevealedColor # we don't want to accidentally wipe dummy card highlight.
       if not silent: notify("{} exposed {}".format(me, card))
