@@ -1,29 +1,11 @@
-1.1.11||
+1.1.12||
 ======New Version Information======
 
-v1.1.11 - Minor
+Fixed some issues which often caused your opponent to shortly expose your cards when they had the wrong target.
 
-Sorry for the rapid release. This is just a small update to fix an annoying bug I noticed where some cards like Codebusters would not announce their effects.
+Generally there should hopefully be less mistakes with exposing opponent's card now.
 
-Also some other small fixes. 
-
-v1.1.10 - IMPORTANT!
-
-1. You'll never have to patch again!
-
-Well, almost...
-
-With the new version I've implemented code which fetches card scripts from the github repository (https://github.com/db0/Android-Netrunner-OCTGN)
-
-This means that if I discover a broken card script, I do not need to create a patch and ask you to update. 
-Rather, I will merely upload the new version online and you'll automatically receive it in your next game!
-
-2. Damage preventions cards like Crash Space and Net Shield now trigger automatically.
-
-Whenever you're inflicting damage (whether to yourself or to another player), the game will check if the victim has a damage prevention card.
-If they do, the game will prompt you to activate it if your want to, and will pay the appropriate costs. 
-
-This allows you to use you damage prevention cards when being hit by, say, a snare while accessing R&D.
+Finally it includes some other general bug fixes.
 
 ===============================
 ||

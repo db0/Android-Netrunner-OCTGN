@@ -50,7 +50,7 @@ Changelog
 
 * When the game tries to read the properties of an opponent's cards, the game will now cover them with a fake card to avoid the opponent reading them
 * Cards like Lemuria Codebreakers will now use their costs, even if their effects are countered by the opponent
-
+* Better stats recording
 
 ### v.1.1.11
 

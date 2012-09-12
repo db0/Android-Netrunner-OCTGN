@@ -1138,9 +1138,9 @@ def expose(card, x = 0, y = 0, silent = False):
    if debugVerbosity >= 1: notify(">>> expose(){}".format(extraASDebug())) #Debug
    if not card.isFaceUp:
       mute()
-      if card.controller != me and not confirm(":::WARNING:::Confirm:::\nYou are about to expose an opponent's card.\
-                                           Please first check with them, if they have reactions to this expose attempt?\
-                                       \n\n:::Confirm:::Proceed with exposing this card?"): return 'COUNTERED'
+      if card.controller != me and not confirm(":::WARNING:::\nYou are about to expose an opponent's card.\
+                                              \nPlease first check with them, if they have reactions to this expose attempt.\
+                                            \n\n:::Confirm::: Proceed with exposing this card?"): return 'COUNTERED'
       card.isFaceUp = True
       if card.highlight == None: card.highlight = RevealedColor # we don't want to accidentally wipe dummy card highlight.
       if not silent: notify("{} exposed {}".format(me, card))
