@@ -916,7 +916,7 @@ bc0f047c-01b1-427f-a439-d451eda01071
 -----
 
 +++++
-A0B1G0T1:SimplyAnnounce{prevent card from being exposed}	
+A0B1G0T0:SimplyAnnounce{prevent card from being exposed}||A0B0G0T1:SimplyAnnounce{prevent card from being exposed}
 ......
 
 
