@@ -693,8 +693,13 @@ def reduceCost(card, action = 'REZ', fullCost = 0):
          myIdent.markers[mdict['BadPublicity']] -= 1
          if fullCost == 0: break      
    ### Finally we go through the table and see if there's any cards providing cost reduction
-   for c in table: # Then check if there's other cards in the table that reduce its costs.
-      if fullCost == 0: break # If we don't have any more reduction to do, just break out.
+   cardList = sortPriority([c for c in table
+                           if c.controller == me
+                           and c.isFaceUp])
+   for c in cardList: # Then check if there's other cards in the table that reduce its costs.
+      if fullCost == 0: 
+         if debugVerbosity >= 2: notify("### No more cost. Aborting")
+         break # If we don't have any more reduction to do, just break out.
       Autoscripts = CardsAS.get(c.model,'').split('||')
       if len(Autoscripts) == 0: continue
       for autoS in Autoscripts:
@@ -705,7 +710,7 @@ def reduceCost(card, action = 'REZ', fullCost = 0):
             if reductionSearch: notify("!!! Regex is {}".format(reductionSearch.groups()))
             else: notify("!!! No reduceCost regex Match!") 
          if re.search(r'excludeDummy', autoS) and c.highlight == DummyColor: continue 
-         if c.controller == me and reductionSearch and c.isFaceUp: # If the above search matches (i.e. we have a card with reduction for Rez and a condition we continue to check if our card matches the condition)
+         if reductionSearch: # If the above search matches (i.e. we have a card with reduction for Rez and a condition we continue to check if our card matches the condition)
             if debugVerbosity >= 3: notify("### Possible Match found in {}".format(c)) # Debug         
             if reductionSearch.group(4): 
                exclusion = re.search(r'-not([A-Za-z_& ]+)'.format(type), reductionSearch.group(4))
@@ -793,10 +798,10 @@ def findDMGProtection(DMGdone, DMGtype, targetPL): # Find out if the player has 
                if confirm("{} controls a {} which can prevent some of the damage you're about to inflict to them. Do they wish you to activate their card for them automatically?".format(targetPL.name,card.name)):
                   executePlayScripts(card, 'DAMAGE')
             if re.search(r'onlyOnce',CardsAS.get(card.model,'')): card.orientation = Rot90
-   carsList = sortPriority([c for c in table
+   cardList = sortPriority([c for c in table
                if c.controller == targetPL
                and c.markers])
-   for card in carsList: # First we check for complete damage protection (i.e. protection from all types), which is always temporary.
+   for card in cardList: # First we check for complete damage protection (i.e. protection from all types), which is always temporary.
       if card.markers[mdict['protectionAllDMG']]:
          if card.markers[mdict['protectionAllDMG']] == 100: # If we have 100 markers of damage prevention, the card is trying to prevent all Damage.
             protectionFound += DMGdone
@@ -809,7 +814,7 @@ def findDMGProtection(DMGdone, DMGtype, targetPL): # Find out if the player has 
                card.markers[mdict['protectionAllDMG']] -= 1 
          if re.search(r'trashCost',CardsAS.get(card.model,'')): ModifyStatus('TrashMyself', targetPL.name, card, notification = 'Quick') # If the modulator -trashCost is there, the card trashes itself in order to use it's damage prevention ability
          if DMGdone == 0: break
-   for card in carsList:
+   for card in cardList:
       if card.markers[mdict[protectionType]]:
          if card.markers[mdict[protectionType]] == 100: # If we have 100 markers of damage prevention, the card is trying to prevent all Damage.
             protectionFound += DMGdone
@@ -824,7 +829,7 @@ def findDMGProtection(DMGdone, DMGtype, targetPL): # Find out if the player has 
          if DMGdone == 0: break # If we've found enough protection to alleviate all damage, stop the search.
    if DMGtype == 'Net' or DMGtype == 'Brain': altprotectionType = 'protectionNetBrainDMG' # To check for the combined Net & Brain protection counter as well.
    else: altprotectionType = None
-   for card in carsList: # We check for the combined protections after we use the single protectors.
+   for card in cardList: # We check for the combined protections after we use the single protectors.
       if altprotectionType and card.markers[mdict[altprotectionType]]:
          if card.markers[mdict[altprotectionType]] == 100: # If we have 100 markers of damage prevention, the card is trying to prevent all Damage.
             protectionFound += DMGdone
