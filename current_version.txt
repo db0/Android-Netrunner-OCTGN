@@ -1,11 +1,18 @@
-1.1.12||
+1.1.13||
 ======New Version Information======
 
-Fixed some issues which often caused your opponent to shortly expose your cards when they had the wrong target.
+This update includes some love for the Shapers.
 
-Generally there should hopefully be less mistakes with exposing opponent's card now.
+Rabbit Hole now automated
+Playing modded should now not try to use Kate as well. Modded will go first and Kate will be used only if there's not enough cost reduction.\
+Hopefully this update will generally make Kate less prone to tapping for no reason.
 
-Finally it includes some other general bug fixes.
+Also some other small fixes:
+
+Stopped random cover card (Runner card back) appearing on the table
+End Run functions should now clear temp markers for both players
+When finding an illegal card in one's deck, it shouldn't just mention "card" anymore
+Tinkering should be able to put two traits on an ICE now
 
 ===============================
 ||

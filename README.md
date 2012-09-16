@@ -51,9 +51,10 @@ Changelog
 
 * Cover card now should appear unless the target card is on the table
 * End Run functions should now clear markers for both players
-* When finding an illegal card in one's deck, it should just mention "card" anymore
+* When finding an illegal card in one's deck, it shouldn't just mention "card" anymore
 * Tinkering should be able to put two traits on an ICE now
 * Rabbit Hole now automated
+* Playing modded should now not try to use Kate as well. Modded will go first and Kate will be used only if there's not enough reduction.
 
 ### v1.1.12
 
