@@ -347,7 +347,7 @@ def versionCheck():
          startupMsg = True
       elif num(currentVers[0]) > num(installedVers[0]) or num(currentVers[1]) > num(installedVers[1]) or num(currentVers[2]) > num(installedVers[2]):
          notify("{}'s game definition ({}) is out-of-date!".format(me, gameVersion))
-         if confirm("There is a new game definition available!\nYour version: {}.\nCurrent version: {}\
+         if confirm("There is a new game definition available!\nYour version: {}.\nCurrent version: {}\n{}\
                      {}\
                  \n\nDo you want to be redirected to download the latest version?.\
                    \n(You'll have to download the game definition, any patch for the current version and the markers if they're newer than what you have installed)\

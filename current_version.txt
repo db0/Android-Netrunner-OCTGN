@@ -4,7 +4,7 @@
 This update includes some love for the Shapers.
 
 Rabbit Hole now automated
-Playing modded should now not try to use Kate as well. Modded will go first and Kate will be used only if there's not enough cost reduction.\
+Playing modded should now not try to use Kate as well. Modded will go first and Kate will be used only if there's not enough cost reduction.
 Hopefully this update will generally make Kate less prone to tapping for no reason.
 
 Also some other small fixes:
