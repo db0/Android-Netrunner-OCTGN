@@ -39,12 +39,21 @@ Screenshots
 ---------
 (Click for larger size)
 
-[![](http://i.imgur.com/GFD0Ll.jpg)](http://i.imgur.com/GFD0L.jpg)
+Shaper running on a heavily fortifield Haas-Bioroid server
+[![](http://i.imgur.com/fYDVrl.jpg)](http://i.imgur.com/fYDVr.jpg)
 
 [![](http://i.imgur.com/WPjZpl.jpg)](http://i.imgur.com/WPjZp.jpg)
 
 Changelog
 ---------
+
+### v1.1.13
+
+* Cover card now should appear unless the target card is on the table
+* End Run functions should now clear markers for both players
+* When finding an illegal card in one's deck, it should just mention "card" anymore
+* Tinkering should be able to put two traits on an ICE now
+* Rabbit Hole now automated
 
 ### v1.1.12
 

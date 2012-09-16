@@ -429,28 +429,38 @@ def reportGame(result = 'AgendaVictory'): # This submits the game results online
    PLAYER = me.name # Seeting some variables for readability in the URL
    IDENTITY = identName
    RESULT = result
+   if result == 'Flatlined': WIN = 0
+   else: WIN = 1
    SCORE = me.counters['Agenda Points'].value
    INFLUENCE = me.getGlobalVariable('Influence')
    TURNS = turn
    VERSION = gameVersion
    if debugVerbosity >= 2: notify("### About to report player results online.") #Debug
-   (reportTXT, reportCode) = webRead('http://84.205.248.92/slaghund/game.slag?g={}&u={}&id={}&r={}&s={}&i={}&t={}&v={}&w=1'.format(GUID,PLAYER,IDENTITY,RESULT,SCORE,INFLUENCE,TURNS,VERSION))
+   (reportTXT, reportCode) = webRead('http://84.205.248.92/slaghund/game.slag?g={}&u={}&id={}&r={}&s={}&i={}&t={}&v={}&w={}'.format(GUID,PLAYER,IDENTITY,RESULT,SCORE,INFLUENCE,TURNS,VERSION,WIN))
    # The victorious player also reports for their enemy
    enemyPL = ofwhom('-ofOpponent')
    ENEMY = enemyPL.name
    enemyIdent = getSpecial('Identity',enemyPL)
    E_IDENTITY = enemyIdent.name
-   if result == 'FlatlineVictory': E_RESULT = 'Flatlined'
-   elif result == 'Flatlined': E_RESULT = 'FlatlineVictory'
-   elif result == 'AgendaVictory': E_RESULT = 'AgendaDefeat'
-   else: E_RESULT = 'Unknown'
+   if result == 'FlatlineVictory': 
+      E_RESULT = 'Flatlined'
+      WIN = 0
+   elif result == 'Flatlined': 
+      E_RESULT = 'FlatlineVictory'
+      WIN = 1
+   elif result == 'AgendaVictory': 
+      E_RESULT = 'AgendaDefeat'
+      WIN = 0
+   else: 
+      E_RESULT = 'Unknown'
+      WIN = 0
    E_SCORE = enemyPL.counters['Agenda Points'].value
    E_INFLUENCE = enemyPL.getGlobalVariable('Influence')
    if ds == 'corp': E_TURNS = turn - 1 # If we're a corp, the opponent has played one less turn than we have.
-   else: E_TURNS = turn + 1 # If we're the runner, the opponent has played one more turn than we have.
+   else: E_TURNS = turn # If we're the runner, the opponent has played one more turn than we have.
    E_VERSION = enemyPL.getGlobalVariable('gameVersion')
    if debugVerbosity >= 2: notify("### About to report enemy results online.") #Debug
-   (EreportTXT, EreportCode) = webRead('http://84.205.248.92/slaghund/game.slag?g={}&u={}&id={}&r={}&s={}&i={}&t={}&v={}&w=0'.format(GUID,ENEMY,E_IDENTITY,E_RESULT,E_SCORE,E_INFLUENCE,E_TURNS,E_VERSION))
+   (EreportTXT, EreportCode) = webRead('http://84.205.248.92/slaghund/game.slag?g={}&u={}&id={}&r={}&s={}&i={}&t={}&v={}&w={}'.format(GUID,ENEMY,E_IDENTITY,E_RESULT,E_SCORE,E_INFLUENCE,E_TURNS,E_VERSION,WIN))
    setGlobalVariable('gameEnded','True')
    if debugVerbosity >= 3: notify("<<< reportGame()") #Debug
 

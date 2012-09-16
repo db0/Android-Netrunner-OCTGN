@@ -329,7 +329,7 @@ def checkDeckNoLimit(group):
             notify(":::ERROR::: Extra Identity Cards found in {}'s {}.".format(me, pileName(group)))
             ok = False
          elif card.Faction != identity.Faction:   
-            notify(":::ERROR::: Faction-restricted card ({}) found in {}'s {}.".format(card, me, pileName(group)))
+            notify(":::ERROR::: Faction-restricted card ({}) found in {}'s {}.".format(card.name, me, pileName(group)))
             ok = False
    if len(players) > 1: random = rnd(1,100) # Fix for multiplayer only. Makes Singleplayer setup very slow otherwise.               
    for card in trash: card.moveToBottom(group) # We use a second loop because we do not want to pause after each check
@@ -425,7 +425,7 @@ def jackOut(group=table,x=0,y=0, silent = False, result = 'failure'):
          else: 
             if result == 'failure': notify("{} has jacked out of their run on {} server".format(myIdent,runTarget))
             else: notify("{} has finished their run on the {} server successfully".format(myIdent,runTarget))
-      clearAll(True)
+      clearAll(True, True) # On jack out we clear all player's counters, but don't discard cards from the table.
       
 def runSuccess(group=table,x=0,y=0, silent = False):
    jackOut(silent = False, result = 'success')
@@ -1171,10 +1171,11 @@ def clear(card, x = 0, y = 0, silent = False):
    card.target(False)
    if debugVerbosity >= 3: notify("<<< clear()")
    
-def clearAll(markersOnly = False): # Just clears all the player's cards.
+def clearAll(markersOnly = False, allPlayers = False): # Just clears all the player's cards.
    if debugVerbosity >= 1: notify(">>> clearAll()") #Debug
    for card in table:
-      if card.controller == me: clear(card,silent = True)
+      if allPlayers: clear(card,silent = True)
+      elif card.controller == me: clear(card,silent = True)
       if not markersOnly:
          if card.isFaceUp and (card.Type == 'Operation' or card.Type == 'Event') and card.highlight != DummyColor:
             intTrashCard(card,0,"free") # Clearing all Events and operations for players who keep forgeting to clear them.

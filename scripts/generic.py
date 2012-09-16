@@ -68,7 +68,7 @@ def storeProperties(card): # Function that grabs a cards important properties an
    global Stored_Cost, Stored_Type, Stored_Keywords, Stored_AutoActions, Stored_AutoScripts, identName
    cFaceD = False
    if card.name == 'Card' and Stored_Type.get(card,'?') == '?':
-      if not card.isFaceUp:
+      if not card.isFaceUp and card.group == table:
          if card.controller != me: # If it's not our card, then we cover it up shortly while grabbing its properties
             x,y = card.position
             cover = table.create("ac3a3d5d-7e3a-4742-b9b2-7f72596d9c1b",x,y,1,False)

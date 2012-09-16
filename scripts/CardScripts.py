@@ -682,7 +682,7 @@ Rabbit Hole
 -----
 bc0f047c-01b1-427f-a439-d451eda01039
 -----
-whileRezzed:Gain1Base Link
+whileRezzed:Gain1Base Link||onInstall:CustomScript
 +++++
 	
 .....

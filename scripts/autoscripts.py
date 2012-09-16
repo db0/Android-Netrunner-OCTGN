@@ -1174,14 +1174,15 @@ def ChooseKeyword(Autoscript, announceText, card, targetCards = None, notificati
          for key in targetCard.markers:
             if re.search('Keyword:',key[0]):
                existingKeyword = key
-      if re.search(r'{}'.format(keywords[choice]),targetCard.Keywords):
-         if existingKeyword: targetCard.markers[existingKeyword] = 0
-         else: pass # If the keyword is anyway the same printed on the card, and it had no previous keyword, there is nothing to do
+      if re.search(r'{}'.format(keywords[choice]),targetCard.Keywords): # Commented because in ANR an ICE can have more than one keyword (i.e. see tinkering)
+         #if existingKeyword: targetCard.markers[existingKeyword] = 0
+         #else: pass # If the keyword is anyway the same printed on the card, and it had no previous keyword, there is nothing to do
+         pass # See comment on "if" clause
       elif existingKeyword:
          #confirm("Searching for {} in {}".format(keywords[choice],existingKeyword[0])) # Debug               
          if re.search(r'{}'.format(keywords[choice]),existingKeyword[0]): pass # If the keyword is the same as is already there, do nothing.
          else: 
-            targetCard.markers[existingKeyword] = 0
+            # targetCard.markers[existingKeyword] = 0 # Commented because in ANR an ICE can have more than one keyword (i.e. see tinkering)
             TokensX('Put1Keyword:{}'.format(keywords[choice]), '', targetCard)
       else: TokensX('Put1Keyword:{}'.format(keywords[choice]), '', targetCard)
    if notification == 'Quick': announceString = "{} marks {} as being {} now".format(announceText, targetCardlist, keywords[choice])
@@ -1298,6 +1299,9 @@ def InflictX(Autoscript, announceText, card, targetCards = None, notification = 
 def CustomScript(card, action = 'PLAY'): # Scripts that are complex and fairly unique to specific cards, not worth making a whole generic function for them.
    if debugVerbosity >= 1: notify(">>> CustomScript() with action: {}".format(action)) #Debug
    global ModifyDraw
+   trash = me.piles['Heap/Archives(Face-up)']
+   arcH = me.piles['Archives(Hidden)']
+   deck = me.piles['R&D/Stack']
    #confirm("Customscript") # Debug
    if card.model == '23473bd3-f7a5-40be-8c66-7d35796b6031' and action == 'USE': # Virus Scan Special Ability
       clickCost = useClick(count = 3)
@@ -1335,10 +1339,9 @@ def CustomScript(card, action = 'PLAY'): # Scripts that are complex and fairly u
       notify("{} to remove {} for {}.".format(clickCost,selectedMarker[0],creditCost))
    elif card.name == 'Accelerated Beta Test' and action == 'SCORE':
       if not confirm("Would you like to initiate an accelerated beta test?"): return
-      group = me.piles['R&D/Stack']
       iter = 0
-      for c in group.top(3):
-         c.moveTo(me.piles['Archives(Hidden)'])
+      for c in deck.top(3):
+         c.moveTo(arcH)
          loopChk(c,'Type')
          if c.type == 'ICE':
             placeCard(c,'InstallRezzed')
@@ -1356,6 +1359,28 @@ def CustomScript(card, action = 'PLAY'): # Scripts that are complex and fairly u
                 \n\nHowever if you have a target selected when you play this card, the target will be selected and exposed automatically."):
          me.Credits += 2
          notify("--> {} gains {}".format(me,uniCredit(2)))
+   elif card.name == "Rabbit Hole" and action == 'INSTALL':
+      if not confirm("Would you like to extend the rabbit hole?"): 
+         return
+      cardList = [c for c in deck]
+      reduction = 0
+      rabbits = 0
+      totalCost = 0
+      for c in cardList: c.moveTo(arcH)
+      for c in cardList: 
+         if c.model == "bc0f047c-01b1-427f-a439-d451eda01039":
+            storeProperties(c)
+            reduction += reduceCost(c, action, num(c.Cost)) #Checking to see if the cost is going to be reduced by cards we have in play.
+            rc = payCost(num(c.Cost) - reduction, "not_free")
+            if rc == "ABORT": break
+            else: totalCost += rc
+            placeCard(c, action)
+            rabbits += 1
+            if not confirm("Rabbit Hole extended! Would you like to dig deeper?"): break
+      if rabbits: # If the player managed to find and install some extra rabbit holes...
+         if reduction: extraText = " (reduced by {})".format(uniCredit(reduction)) #If it is, make sure to inform.         
+         notify("{} has extended the Rabbit Hole {} more time(s) by paying {}{}".format(me,rabbits,totalCost,extraText))
+      else: notify("{} does not find enough rabbits.".format(me))
    elif action == 'USE': useCard(card)
 
 #------------------------------------------------------------------------------
