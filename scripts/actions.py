@@ -694,6 +694,7 @@ def reduceCost(card, action = 'REZ', fullCost = 0):
          if fullCost == 0: break      
    ### Finally we go through the table and see if there's any cards providing cost reduction
    for c in table: # Then check if there's other cards in the table that reduce its costs.
+      if fullCost == 0: break # If we don't have any more reduction to do, just break out.
       Autoscripts = CardsAS.get(c.model,'').split('||')
       if len(Autoscripts) == 0: continue
       for autoS in Autoscripts:
@@ -719,7 +720,6 @@ def reduceCost(card, action = 'REZ', fullCost = 0):
                      reduction += 1
                      fullCost -= 1
                      c.markers[mdict['Credits']] -= 1
-                     if fullCost == 0: break
    return reduction
 
 def intdamageDiscard(group,x=0,y=0):
