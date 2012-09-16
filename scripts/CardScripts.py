@@ -546,7 +546,7 @@ Modded
 -----
 bc0f047c-01b1-427f-a439-d451eda01035
 -----
-onPlay:Put3Credits$$Put1Click||whileRezzed:Reduce#CostInstall-forHardware||whileRezzed:Reduce#CostInstall-forProgram||whileRezzed:Transfer1Click-perCardInstall
+onPlay:Put3Credits$$Put1Click-isPriority||whileRezzed:Reduce#CostInstall-forHardware||whileRezzed:Reduce#CostInstall-forProgram||whileRezzed:Transfer1Click-perCardInstall
 +++++
 	
 .....

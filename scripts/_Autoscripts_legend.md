@@ -271,3 +271,7 @@ This modulator makes it so that the trigger thinks the real target of a run was 
 ### -trashCost
 
 Used during damage reduction to signify a card that needs to be trashed as part of the cost for reducing damage (e.g. Crash Space)
+
+### -isPriority
+
+Used when putting tokens on cards to mark them to use those credits before all others

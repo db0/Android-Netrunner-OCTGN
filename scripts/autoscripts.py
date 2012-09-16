@@ -862,6 +862,7 @@ def TokensX(Autoscript, announceText, card, targetCards = None, notification = N
       targetCard.markers[token] += modtokens # Finally we apply the marker modification
    if abs(num(action.group(2))) == abs(999): total = 'all'
    else: total = abs(modtokens)
+   if re.search(r'isPriority', Autoscript): card.highlight = PriorityColor
    if action.group(1) == 'Refill': 
       if token[0] == 'Credit': 
          announceString = "{} {} to {}".format(announceText, action.group(1), uniRecurring(count)) # We need a special announcement for refill, since it always needs to point out the max.
@@ -1367,22 +1368,31 @@ def CustomScript(card, action = 'PLAY'): # Scripts that are complex and fairly u
       rabbits = 0
       totalCost = 0
       for c in cardList: c.moveTo(arcH)
+      rnd(1,100)
+      if debugVerbosity >= 2: notify("Entering rabbit search loop")
       for c in cardList: 
          if c.model == "bc0f047c-01b1-427f-a439-d451eda01039":
+            if debugVerbosity >= 2: notify("found rabbit!")
             storeProperties(c)
             reduction += reduceCost(c, action, num(c.Cost)) #Checking to see if the cost is going to be reduced by cards we have in play.
             rc = payCost(num(c.Cost) - reduction, "not_free")
             if rc == "ABORT": break
-            else: totalCost += rc
+            else: totalCost += (num(c.Cost) - reduction)
             placeCard(c, action)
             rabbits += 1
+            cardList.remove(c)
             if not confirm("Rabbit Hole extended! Would you like to dig deeper?"): break
+      for c in cardList: c.moveTo(deck)
+      rnd(1,10)
+      shuffle(deck)
       if rabbits: # If the player managed to find and install some extra rabbit holes...
-         if reduction: extraText = " (reduced by {})".format(uniCredit(reduction)) #If it is, make sure to inform.         
-         notify("{} has extended the Rabbit Hole {} more time(s) by paying {}{}".format(me,rabbits,totalCost,extraText))
+         if reduction: extraText = " (reduced by {})".format(uniCredit(reduction)) #If it is, make sure to inform.    
+         else: extraText = ''
+         me.counters['Base Link'].value += rabbits
+         notify("{} has extended the Rabbit Hole by {} {} by paying {}{}".format(me,rabbits,uniLink(),uniCredit(totalCost),extraText))
       else: notify("{} does not find enough rabbits.".format(me))
    elif action == 'USE': useCard(card)
-
+   if debugVerbosity >= 3: notify("<<< CustomScript()") #Debug
 #------------------------------------------------------------------------------
 # Helper Functions
 #------------------------------------------------------------------------------
