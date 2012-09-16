@@ -562,7 +562,7 @@ Net Shield
 -----
 bc0f047c-01b1-427f-a439-d451eda01045
 -----
-onDamage:Lose1Credits-isCost$$Put1protectionNetDMG-onlyOnce
+onDamage:Lose1Credits-isCost$$Put1protectionNetDMG-onlyOnce-isPriority
 +++++
 A0B1G0T2:Put1protectionNetDMG-onlyOnce
 .....
