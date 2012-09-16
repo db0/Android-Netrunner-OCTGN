@@ -542,7 +542,7 @@ def atTimedEffects(Time = 'Start'): # Function which triggers card effects at th
             elif regexHooks['CustomScript'].search(passedScript):
                if CustomScript(card, action = 'Turn{}'.format(Time)) == 'ABORT': break
             if failedRequirement: break # If one of the Autoscripts was a cost that couldn't be paid, stop everything else.
-   #markerEffects(Time) # Not used in ANR (yet)
+   markerEffects(Time) 
    if me.counters['Credits'].value < 0: 
       if Time == 'Run': notify(":::Warning::: {}'s Start-of-run effects cost more Credits than {} had in their Credit Pool!".format(me,me))
       elif Time == 'JackOut' or Time == 'SuccessfulRun': notify(":::Warning::: {}'s Jacking-Out effects cost more Credits than {} had in their Credit Pool!".format(me,me))
@@ -553,56 +553,54 @@ def atTimedEffects(Time = 'Start'): # Function which triggers card effects at th
 
 def markerEffects(Time = 'Start'):
    if debugVerbosity >= 1: notify(">>> markerEffects() at time: {}".format(Time)) #Debug
-   CounterHold = getSpecial('Counter Hold')
-   # Checking triggers from markers in our own Counter Hold.
-   for marker in CounterHold.markers:
-      count = CounterHold.markers[marker]
-      if debugVerbosity >= 3: notify("### marker: {}".format(marker[0])) # Debug
-      if re.search(r'virusScaldan',marker[0]) and Time == 'Start':
-         total = 0
-         for iter in range(count):
-            rollTuple = RollX('Roll1Dice', 'Scaldan virus:', CounterHold, notification = 'Automatic')
-            if rollTuple[1] >= 5: total += 1
-         me.counters['Bad Publicity'].value += total
-         if total: notify("--> {} receives {} Bad Publicity due to their Scaldan virus infestation".format(me,total))
-      if re.search(r'virusSkivviss',marker[0]) and Time == 'Start':
-         passedScript = 'Draw{}Cards'.format(count)
-         DrawX(passedScript, "Skivviss virus:", CounterHold, notification = 'Automatic')
-      if re.search(r'virusTax',marker[0]) and Time == 'Start':
-         GainX('Lose1Credits-perMarker{virusTax}-div2', "Tax virus:", CounterHold, notification = 'Automatic')
-      if re.search(r'Doppelganger',marker[0]) and Time == 'Start':
-         GainX('Lose1Credits-perMarker{Doppelganger}', "{}:".format(marker[0]), CounterHold, notification = 'Automatic')
-      if re.search(r'virusPipe',marker[0]) and Time == 'Start':
-         passedScript = 'Infect{}forfeitCounter:Clicks'.format(count)
-         TokensX(passedScript, "Pipe virus:", CounterHold, notification = 'Automatic')
-      if re.search(r'Data Raven',marker[0]) and Time == 'Start':
-         GainX('Gain1Tags-perMarker{Data Raven}', "{}:".format(marker[0]), CounterHold, notification = 'Automatic')
-      if re.search(r'Mastiff',marker[0]) and Time == 'Run':
-         InflictX('Inflict1BrainDamage-perMarker{Mastiff}', "{}:".format(marker[0]), CounterHold, notification = 'Automatic')
-      if re.search(r'Cerberus',marker[0]) and Time == 'Run':
-         InflictX('Inflict2NetDamage-perMarker{Cerberus}', "{}:".format(marker[0]), CounterHold, notification = 'Automatic')
-      if re.search(r'Baskerville',marker[0]) and Time == 'Run':
-         InflictX('Inflict2NetDamage-perMarker{Baskerville}', "{}:".format(marker[0]), CounterHold, notification = 'Automatic')
-   targetPL = ofwhom('-ofOpponent')          
-   # Checking triggers from markers in opponent's Counter Hold.
-   CounterHold = getSpecial('Counter Hold', targetPL) # Some viruses also trigger on our opponent's turns
-   for marker in CounterHold.markers:
-      count = CounterHold.markers[marker]
+### Following is not yet implemented. It's from Netrunner classic. Commented out just in case I need it.
+#   CounterHold = getSpecial('Identity')
+   ### Checking triggers from markers in our own Counter Hold.
+#   for marker in CounterHold.markers: # Not used in ANR (yet)
+#      count = CounterHold.markers[marker]
+#      if debugVerbosity >= 3: notify("### marker: {}".format(marker[0])) # Debug
+#      if re.search(r'virusScaldan',marker[0]) and Time == 'Start':
+#         total = 0
+#         for iter in range(count):
+#            rollTuple = RollX('Roll1Dice', 'Scaldan virus:', CounterHold, notification = 'Automatic')
+#            if rollTuple[1] >= 5: total += 1
+#         me.counters['Bad Publicity'].value += total
+#         if total: notify("--> {} receives {} Bad Publicity due to their Scaldan virus infestation".format(me,total))
+#      if re.search(r'virusSkivviss',marker[0]) and Time == 'Start':
+#         passedScript = 'Draw{}Cards'.format(count)
+#         DrawX(passedScript, "Skivviss virus:", CounterHold, notification = 'Automatic')
+#      if re.search(r'virusTax',marker[0]) and Time == 'Start':
+#         GainX('Lose1Credits-perMarker{virusTax}-div2', "Tax virus:", CounterHold, notification = 'Automatic')
+#      if re.search(r'Doppelganger',marker[0]) and Time == 'Start':
+#         GainX('Lose1Credits-perMarker{Doppelganger}', "{}:".format(marker[0]), CounterHold, notification = 'Automatic')
+#      if re.search(r'virusPipe',marker[0]) and Time == 'Start':
+#         passedScript = 'Infect{}forfeitCounter:Clicks'.format(count)
+#         TokensX(passedScript, "Pipe virus:", CounterHold, notification = 'Automatic')
+#      if re.search(r'Data Raven',marker[0]) and Time == 'Start':
+#         GainX('Gain1Tags-perMarker{Data Raven}', "{}:".format(marker[0]), CounterHold, notification = 'Automatic')
+#      if re.search(r'Mastiff',marker[0]) and Time == 'Run':
+#         InflictX('Inflict1BrainDamage-perMarker{Mastiff}', "{}:".format(marker[0]), CounterHold, notification = 'Automatic')
+#      if re.search(r'Cerberus',marker[0]) and Time == 'Run':
+#         InflictX('Inflict2NetDamage-perMarker{Cerberus}', "{}:".format(marker[0]), CounterHold, notification = 'Automatic')
+#      if re.search(r'Baskerville',marker[0]) and Time == 'Run':
+#         InflictX('Inflict2NetDamage-perMarker{Baskerville}', "{}:".format(marker[0]), CounterHold, notification = 'Automatic')
+#   targetPL = ofwhom('-ofOpponent')          
+   ### Checking triggers from markers in opponent's Counter Hold.
+#   CounterHold = getSpecial('Identity', targetPL) # Some viruses also trigger on our opponent's turns
+#   for marker in CounterHold.markers:
+#      count = CounterHold.markers[marker]
 #      if marker == mdict['virusButcherBoy'] and Time == 'Start':
 #         GainX('Gain1Credits-onOpponent-perMarker{virusButcherBoy}-div2', "Opponent's Butcher Boy virus:", OpponentCounterHold, notification = 'Automatic')
-   # Checking triggers from markers the rest of our cards.
+   ### Checking triggers from markers the rest of our cards.
    cardList = [c for c in table if c.markers]
    for card in cardList:
       for marker in card.markers:
-         if re.search(r'Term',marker[0]) and Time == 'Start' and card.controller == me:
-            if me.counters['Credits'].value >= 2: 
-               passedScript = 'Remove1Term'
-               me.counters['Credits'].value -= 2
-               notify("--> {} pays {} for their Rent-to-Own Contract on {}".format(me, uniCredit(2),card))
-            else:
-               passedScript = 'Put1Term'
-               notify("--> {} couldn't pay their Rent-to-Own Contract on {} so it is extended for one turn".format(me, card))
-            TokensX(passedScript, "Rent-to-Own Contract:", card)
+         if re.search(r'Tinkering',marker[0]) and Time == 'End':
+            TokensX('Remove1Keyword:Code Gate', "Tinkering:", card)
+            TokensX('Remove1Keyword:Sentry', "Tinkering:", card)
+            TokensX('Remove1Keyword:Barrier', "Tinkering:", card)
+            TokensX('Remove1Tinkering', "Tinkering:", card)
+            notify("--> {} removes tinkering effect from {}".format(me,card))
    
    
 #------------------------------------------------------------------------------
@@ -1175,15 +1173,14 @@ def ChooseKeyword(Autoscript, announceText, card, targetCards = None, notificati
          for key in targetCard.markers:
             if re.search('Keyword:',key[0]):
                existingKeyword = key
-      if re.search(r'{}'.format(keywords[choice]),targetCard.Keywords): # Commented because in ANR an ICE can have more than one keyword (i.e. see tinkering)
-         #if existingKeyword: targetCard.markers[existingKeyword] = 0
-         #else: pass # If the keyword is anyway the same printed on the card, and it had no previous keyword, there is nothing to do
-         pass # See comment on "if" clause
+      if re.search(r'{}'.format(keywords[choice]),targetCard.Keywords): 
+         if existingKeyword: targetCard.markers[existingKeyword] = 0
+         else: pass # If the keyword is anyway the same printed on the card, and it had no previous keyword, there is nothing to do
       elif existingKeyword:
-         #confirm("Searching for {} in {}".format(keywords[choice],existingKeyword[0])) # Debug               
+         if debugVerbosity >= 1: notify("### Searching for {} in {}".format(keywords[choice],existingKeyword[0])) # Debug               
          if re.search(r'{}'.format(keywords[choice]),existingKeyword[0]): pass # If the keyword is the same as is already there, do nothing.
          else: 
-            # targetCard.markers[existingKeyword] = 0 # Commented because in ANR an ICE can have more than one keyword (i.e. see tinkering)
+            targetCard.markers[existingKeyword] = 0 
             TokensX('Put1Keyword:{}'.format(keywords[choice]), '', targetCard)
       else: TokensX('Put1Keyword:{}'.format(keywords[choice]), '', targetCard)
    if notification == 'Quick': announceString = "{} marks {} as being {} now".format(announceText, targetCardlist, keywords[choice])
