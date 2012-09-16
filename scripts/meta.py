@@ -496,6 +496,7 @@ def fetchCardScripts(group = table, x=0, y=0): # Creates 2 dictionaries with all
       Split_Scripts = Split_Details[2].split('+++++') # List item [1] always holds the two scripts. AutoScripts and AutoActions.
       CardsAS[Split_Details[1].strip()] = Split_Scripts[0].strip()
       CardsAA[Split_Details[1].strip()] = Split_Scripts[1].strip()
+   if turn > 0: whisper("+++ All card scripts refreshed!")
    if debugVerbosity >= 4: # Debug
       notify("CardsAS Dict:\n{}".format(str(CardsAS)))
       notify("CardsAA Dict:\n{}".format(str(CardsAA))) 

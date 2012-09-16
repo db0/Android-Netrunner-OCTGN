@@ -47,6 +47,10 @@ Shaper running on a heavily fortifield Haas-Bioroid server
 Changelog
 ---------
 
+### v1.1.14
+
+Tinkering now should put all types on the ICE and then clear them at the end of the turn.
+
 ### v1.1.13
 
 * Cover card now should appear unless the target card is on the table
