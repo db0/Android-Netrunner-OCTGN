@@ -421,6 +421,7 @@ def initGame(): # A function which prepares the game for online submition
    
 def reportGame(result = 'AgendaVictory'): # This submits the game results online.
    if debugVerbosity >= 1: notify(">>> reportGame()") #Debug
+   if turn < 1: return # You can never win before the first turn is finished.
    GUID = getGlobalVariable('gameGUID')
    if GUID == 'None': return # If we don't have a GUID, we can't submit
    gameEnded = getGlobalVariable('gameEnded')
@@ -429,7 +430,7 @@ def reportGame(result = 'AgendaVictory'): # This submits the game results online
    PLAYER = me.name # Seeting some variables for readability in the URL
    IDENTITY = identName
    RESULT = result
-   if result == 'Flatlined': WIN = 0
+   if result == 'Flatlined' or result == 'Conceded': WIN = 0
    else: WIN = 1
    SCORE = me.counters['Agenda Points'].value
    INFLUENCE = me.getGlobalVariable('Influence')
@@ -444,23 +445,26 @@ def reportGame(result = 'AgendaVictory'): # This submits the game results online
    E_IDENTITY = enemyIdent.name
    if result == 'FlatlineVictory': 
       E_RESULT = 'Flatlined'
-      WIN = 0
+      E_WIN = 0
    elif result == 'Flatlined': 
       E_RESULT = 'FlatlineVictory'
-      WIN = 1
+      E_WIN = 1
+   elif result == 'Conceded': 
+      E_RESULT = 'ConcedeVictory'
+      E_WIN = 1  
    elif result == 'AgendaVictory': 
       E_RESULT = 'AgendaDefeat'
-      WIN = 0
+      E_WIN = 0
    else: 
       E_RESULT = 'Unknown'
-      WIN = 0
+      E_WIN = 0
    E_SCORE = enemyPL.counters['Agenda Points'].value
    E_INFLUENCE = enemyPL.getGlobalVariable('Influence')
    if ds == 'corp': E_TURNS = turn - 1 # If we're a corp, the opponent has played one less turn than we have.
    else: E_TURNS = turn # If we're the runner, the opponent has played one more turn than we have.
    E_VERSION = enemyPL.getGlobalVariable('gameVersion')
    if debugVerbosity >= 2: notify("### About to report enemy results online.") #Debug
-   (EreportTXT, EreportCode) = webRead('http://84.205.248.92/slaghund/game.slag?g={}&u={}&id={}&r={}&s={}&i={}&t={}&v={}&w={}'.format(GUID,ENEMY,E_IDENTITY,E_RESULT,E_SCORE,E_INFLUENCE,E_TURNS,E_VERSION,WIN))
+   (EreportTXT, EreportCode) = webRead('http://84.205.248.92/slaghund/game.slag?g={}&u={}&id={}&r={}&s={}&i={}&t={}&v={}&w={}'.format(GUID,ENEMY,E_IDENTITY,E_RESULT,E_SCORE,E_INFLUENCE,E_TURNS,E_VERSION,E_WIN))
    setGlobalVariable('gameEnded','True')
    if debugVerbosity >= 3: notify("<<< reportGame()") #Debug
 
@@ -502,6 +506,13 @@ def fetchCardScripts(group = table, x=0, y=0): # Creates 2 dictionaries with all
       notify("CardsAA Dict:\n{}".format(str(CardsAA))) 
    if debugVerbosity >= 3: notify("<<< fetchCardScripts()") #Debug
 
+def concede(group=table,x=0,y=0):
+   mute()
+   if confirm("Are you sure you want to concede this game?"): 
+      reportGame('Conceded')
+      notify("{} has conceded the game".format(me))
+   else: 
+      notify("{} was about to concede the game, but thought better of it...".format(me))
 #------------------------------------------------------------------------------
 # Debugging
 #------------------------------------------------------------------------------

@@ -51,6 +51,7 @@ Changelog
 
 * Tinkering now should put all types on the ICE and then clear them at the end of the turn.
 * On cards with multiple options, players can now put them all at the same time as a long number. So if the player wanted to boost crypsis 3 times and then break 2 subroutines, they would put 11100 in the field.
+* Added option to concede in the game menu. This is to allow players who are losing badly to end the game prematurely and still store their stats.
 
 
 ### v1.1.13
