@@ -214,7 +214,8 @@ def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
       useCard(card) # If the card had only "WhileInstalled"  or AtTurnStart effect, just announce that it is being used.
       return 
    if len(Autoscripts) > 1: 
-      abilConcat = "This card has multiple abilities.\nWhich one would you like to use?\n(Tip: You can put multiple abilities one after the the other (e.g. '110'))\n\n" # We start a concat which we use in our confirm window.
+      abilConcat = "This card has multiple abilities.\nWhich one would you like to use?\
+                \n\n(Tip: You can put multiple abilities one after the the other (e.g. '110'). Max 9 at once)\n\n" # We start a concat which we use in our confirm window.
       for idx in range(len(Autoscripts)): # If a card has multiple abilities, we go through each of them to create a nicely written option for the player.
          if debugVerbosity >= 2: notify("Autoscripts {}".format(Autoscripts)) # Debug
          abilRegex = re.search(r"A([0-9]+)B([0-9]+)G([0-9]+)T([0-9]+):([A-Z][A-Za-z ]+)([0-9]*)([A-Za-z ]*)-?(.*)", Autoscripts[idx]) # This regexp returns 3-4 groups, which we then reformat and put in the confirm dialogue in a better readable format.

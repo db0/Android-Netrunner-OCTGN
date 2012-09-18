@@ -49,7 +49,9 @@ Changelog
 
 ### v1.1.14
 
-Tinkering now should put all types on the ICE and then clear them at the end of the turn.
+* Tinkering now should put all types on the ICE and then clear them at the end of the turn.
+* On cards with multiple options, players can now put them all at the same time as a long number. So if the player wanted to boost crypsis 3 times and then break 2 subroutines, they would put 11100 in the field.
+
 
 ### v1.1.13
 
