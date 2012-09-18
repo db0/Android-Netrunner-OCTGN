@@ -4,6 +4,7 @@ We now have a page which explains how you can use OCTGN to play A:NR.
 
 If you're a fairly new player, we strongly suggest you take a look as this will help you play faster and with less mistakes
 
+Would you like to visit the How To Play page?
 ===============================
 &&
 https://github.com/db0/Android-Netrunner-OCTGN/wiki/How-to-Play
