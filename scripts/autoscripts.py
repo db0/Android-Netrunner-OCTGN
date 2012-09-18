@@ -154,6 +154,7 @@ def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
    if debugVerbosity >= 1: notify(">>> useAbility(){}".format(extraASDebug())) #Debug
    mute()
    global failedRequirement
+   AutoscriptsList = [] # An empty list which we'll put the AutoActions to execute.
    storeProperties(card) # Just in case
    failedRequirement = False # We set it to false when we start a new autoscript.
    if debugVerbosity >= 5: notify("+++ Checking if Tracing card...")
@@ -213,7 +214,7 @@ def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
       useCard(card) # If the card had only "WhileInstalled"  or AtTurnStart effect, just announce that it is being used.
       return 
    if len(Autoscripts) > 1: 
-      abilConcat = "This card has multiple abilities.\nWhich one would you like to use?\n\n" # We start a concat which we use in our confirm window.
+      abilConcat = "This card has multiple abilities.\nWhich one would you like to use?\n(Tip: You can put multiple abilities one after the the other (e.g. '110'))\n\n" # We start a concat which we use in our confirm window.
       for idx in range(len(Autoscripts)): # If a card has multiple abilities, we go through each of them to create a nicely written option for the player.
          if debugVerbosity >= 2: notify("Autoscripts {}".format(Autoscripts)) # Debug
          abilRegex = re.search(r"A([0-9]+)B([0-9]+)G([0-9]+)T([0-9]+):([A-Z][A-Za-z ]+)([0-9]*)([A-Za-z ]*)-?(.*)", Autoscripts[idx]) # This regexp returns 3-4 groups, which we then reformat and put in the confirm dialogue in a better readable format.
@@ -269,139 +270,142 @@ def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
                   if subadditions[idx3] in IgnoredModulators: continue # We ignore modulators which are internal to the engine.
                   abilConcat += ' {}'.format(subadditions[idx3]) #  Then we iterate through each distinct subcondition and display it without the dashes between them. (In the future I may also add whitespaces between the distinct words)
          abilConcat += '\n' # Finally add a newline at the concatenated string for the next ability to be listed.
-      abilChoice = len(Autoscripts) + 1 # Since we want a valid choice, we put the choice in a loop until the player exists or selects a valid one.
-      while abilChoice >= len(Autoscripts):
-         abilChoice = askInteger('{}'.format(abilConcat), 0) # We use the ability concatenation we crafted before to give the player a choice of the abilities on the card.
-         if abilChoice == None: return # If the player closed the window, abort.
-      selectedAutoscripts = Autoscripts[abilChoice].split('$$') # If a valid choice is given, choose the autoscript at the list index the player chose.
-   else: selectedAutoscripts = Autoscripts[0].split('$$')
-   timesNothingDone = 0 # A variable that keeps track if we've done any of the autoscripts defined. If none have been coded, we just engage the card.
-   X = 0 # Variable for special costs.
-   if card.highlight == DummyColor: lingering = ' the lingering effect of' # A text that we append to point out when a player is using a lingering effect in the form of a dummy card.
-   else: lingering = ''
-   for activeAutoscript in selectedAutoscripts:
-      #confirm("Active Autoscript: {}".format(activeAutoscript)) #Debug
-      ### Checking if any of the card's effects requires one or more targets first
-      if re.search(r'Targeted', activeAutoscript) and findTarget(activeAutoscript) == []: return
-   for activeAutoscript in selectedAutoscripts:
-      targetC = findTarget(activeAutoscript)
-      ### Warning the player in case we need to
-      if chkWarn(card, activeAutoscript) == 'ABORT': return
-      ### Check if the action needs the player or his opponent to be targeted
-      targetPL = ofwhom(activeAutoscript)
-      regexTag = re.search(r'ifTagged([0-9]+)', activeAutoscript)
-      if regexTag and targetPL.Tags < num(regexTag.group(1)): #See if the target needs to be tagged a specific number of times.
-         if regexTag.group(1) == '1': whisper("Your opponent needs to be tagged for you to use this action")
-         else: whisper("Your opponent needs to be tagged {} times for you to to use this action".format(regexTag.group(1)))
-         return 'ABORT'
-      ### Checking the activation cost and preparing a relevant string for the announcement
-      actionCost = re.match(r"A([0-9]+)B([0-9]+)G([0-9]+)T([0-9]+):", activeAutoscript) 
-      # This is the cost of the card.  It starts with A which is the amount of Clicks needed to activate
-      # After A follows B for Credit cost, then for aGenda cost.
-      # T takes a binary value. A value of 1 means the card needs to be trashed.
-      if actionCost: # If there's no match, it means we've already been through the cost part once and now we're going through the '$$' part.
-         if actionCost.group(1) != '0': # If we need to use clicks
-            Acost = useClick(count = num(actionCost.group(1)))
-            if Acost == 'ABORT': return
-            else: announceText = Acost
-         else: announceText = '{}'.format(me) # A variable with the text to be announced at the end of the action.
-         if actionCost.group(2) != '0': # If we need to pay credits
-            reduction = reduceCost(card, 'USE', num(actionCost.group(2)))
-            if reduction: extraText = " (reduced by {})".format(uniCredit(reduction))  
-            else: extraText = ''
-            Bcost = payCost(num(actionCost.group(2)) - reduction)
-            if Bcost == 'ABORT': # if they can't pay the cost afterall, we return them their clicks and abort.
-               me.Clicks += num(actionCost.group(1))
-               return
-            if actionCost.group(1) != '0':
-               if actionCost.group(3) != '0' or actionCost.group(4) != '0': announceText += ', '
-               else: announceText += ' and '
-            else: announceText += ' '
-            announceText += 'pays {}{}'.format(uniCredit(num(actionCost.group(2)) - reduction),extraText)
-         if actionCost.group(3) != '0': # If we need to pay agenda points...
-            Gcost = payCost(actionCost.group(3), counter = 'AP')
-            if Gcost == 'ABORT': 
-               me.Clicks += num(actionCost.group(1))
-               me.counters['Credits'].value += num(actionCost.group(2))
-               return
-            if actionCost.group(1) != '0' or actionCost.group(2)  != '0':
-               if actionCost.group(4) != '0': announceText += ', '
-               else: announceText += ' and '
-            else: announceText += ' '
-            announceText += 'liquidates {} Agenda Points'.format(actionCost.group(3))
-         if actionCost.group(4) != '0': # If the card needs to be trashed...
-            if (actionCost.group(4) == '2' and oncePerTurn(card, silent = True) == 'ABORT') or (actionCost.group(4) == '1' and not confirm("This action will trash the card as a cost. Are you sure you want to continue?")):
-               # On trash cost, we confirm first to avoid double-click accidents
-               me.Clicks += num(actionCost.group(1))
-               me.counters['Credits'].value += num(actionCost.group(2))
-               me.counters['Agenda Points'].value += num(actionCost.group(3))
-               return
-            if actionCost.group(1) != '0' or actionCost.group(2) != '0' or actionCost.group(3) != '0': announceText += ' and '
-            else: announceText += ' '
-            if actionCost.group(4) == '1': announceText += 'trashes {} to use its ability'.format(card)
-            else: announceText += 'activates the once-per-turn ability of{} {}'.format(lingering,card)
-         else: announceText += ' to activate{} {}'.format(lingering,card) # If we don't have to trash the card, we need to still announce the name of the card we're using.
-         if actionCost.group(1) == '0' and actionCost.group(2) == '0' and actionCost.group(3) == '0' and actionCost.group(4) == '0':
-            if card.Type == 'ICE': announceText = '{} activates {}'.format(me, card)
-            else: announceText = '{} uses the ability of{} {}'.format(me, lingering, card)
-         if re.search(r'-isSubroutine', activeAutoscript): announceText = '{} '.format(uniSubroutine()) + announceText # if we are in a subroutine, we use the special icon to make it obvious.
-         announceText += ' in order to'
-      elif not announceText.endswith(' in order to') and not announceText.endswith(' and'): announceText += ' and'
-      if debugVerbosity >= 2: notify("### Entering useAbility() Choice with Autoscript: {}".format(activeAutoscript)) # Debug
-      ### Calling the relevant function depending on if we're increasing our own counters, the hoard's or putting card markers.
-      if regexHooks['GainX'].search(activeAutoscript): 
-         gainTuple = GainX(activeAutoscript, announceText, card, targetC, n = X)
-         if gainTuple == 'ABORT': announceText == 'ABORT'
-         else:
-            announceText = gainTuple[0] 
-            X = gainTuple[1] 
-      elif regexHooks['CreateDummy'].search(activeAutoscript): announceText = CreateDummy(activeAutoscript, announceText, card, targetC, n = X)
-      elif regexHooks['ReshuffleX'].search(activeAutoscript): 
-         reshuffleTuple = ReshuffleX(activeAutoscript, announceText, card) # The reshuffleX() function is special because it returns a tuple.
-         announceText = reshuffleTuple[0] # The first element of the tuple contains the announceText string
-         X = reshuffleTuple[1] # The second element of the tuple contains the number of cards that were reshuffled from the hand in the deck.
-      elif regexHooks['RollX'].search(activeAutoscript): 
-         rollTuple = RollX(activeAutoscript, announceText, card) # Returns like reshuffleX()
-         announceText = rollTuple[0] 
-         X = rollTuple[1] 
-      elif regexHooks['RequestInt'].search(activeAutoscript): 
-         numberTuple = RequestInt(activeAutoscript, announceText, card) # Returns like reshuffleX()
-         if numberTuple == 'ABORT': announceText == 'ABORT'
-         else:
-            announceText = numberTuple[0] 
-            X = numberTuple[1] 
-      elif regexHooks['DiscardX'].search(activeAutoscript): 
-         discardTuple = DiscardX(activeAutoscript, announceText, card, targetC, n = X) # Returns like reshuffleX()
-         announceText = discardTuple[0] 
-         X = discardTuple[1] 
-      elif regexHooks['TokensX'].search(activeAutoscript):           announceText = TokensX(activeAutoscript, announceText, card, targetC, n = X)
-      elif regexHooks['TransferX'].search(activeAutoscript):         announceText = TransferX(activeAutoscript, announceText, card, targetC, n = X)
-      elif regexHooks['DrawX'].search(activeAutoscript):             announceText = DrawX(activeAutoscript, announceText, card, targetC, n = X)
-      elif regexHooks['ShuffleX'].search(activeAutoscript):          announceText = ShuffleX(activeAutoscript, announceText, card, targetC, n = X)
-      elif regexHooks['RunX'].search(activeAutoscript):              announceText = RunX(activeAutoscript, announceText, card, targetC, n = X)
-      elif regexHooks['TraceX'].search(activeAutoscript):            announceText = TraceX(activeAutoscript, announceText, card, targetC, n = X)
-      elif regexHooks['InflictX'].search(activeAutoscript):          announceText = InflictX(activeAutoscript, announceText, card, targetC, n = X)
-      elif regexHooks['ModifyStatus'].search(activeAutoscript):      announceText = ModifyStatus(activeAutoscript, announceText, card, targetC, n = X)
-      elif regexHooks['SimplyAnnounce'].search(activeAutoscript):    announceText = SimplyAnnounce(activeAutoscript, announceText, card, targetC, n = X)
-      elif regexHooks['ChooseKeyword'].search(activeAutoscript):     announceText = ChooseKeyword(activeAutoscript, announceText, card, targetC, n = X)
-      elif regexHooks['UseCustomAbility'].search(activeAutoscript):  announceText = UseCustomAbility(activeAutoscript, announceText, card, targetC, n = X)
-      else: timesNothingDone += 1
-      if debugVerbosity >= 3: notify("<<< useAbility() choice. TXT = {}".format(announceText)) # Debug
-      if announceText == 'ABORT': 
-         autoscriptCostUndo(card, selectedAutoscripts[0]) # If nothing was done, try to undo. The first item in selectedAutoscripts[] contains the cost.
-         return
-      if failedRequirement: break # If part of an AutoAction could not pay the cost, we stop the rest of it.
-   if announceText.endswith(' in order to'): # If our text annouce ends with " to", it means that nothing happened. Try to undo and inform player.
-      autoscriptCostUndo(card, selectedAutoscripts[0])
-      notify("{} but there was nothing to do.".format(announceText[:-len(' in order to')]))
-   elif announceText.endswith(' and'):
-      announceText = announceText[:-len(' and')] # If for some reason we end with " and" (say because the last action did nothing), we remove it.
-   else: # If we did something and everything finished as expected, then take the costs.
-      if re.search(r"T1:", selectedAutoscripts[0]): 
-         executePlayScripts(card,'trash')
-         card.moveTo(card.owner.piles['Heap/Archives(Face-up)'])
-   notify("{}.".format(announceText)) # Finally announce what the player just did by using the concatenated string.
-   chkNoisy(card)
+      abilChoice = askInteger('{}'.format(abilConcat), 0) # We use the ability concatenation we crafted before to give the player a choice of the abilities on the card.
+      if abilChoice == None: return # If the player closed the window, abort.
+      choiceStr = str(abilChoice) # We convert our number into a string
+      for s in choiceStr: 
+         if num(s) < len(Autoscripts): AutoscriptsList.append(Autoscripts[num(s)].split('$$'))
+         else: continue # if the player put a number that is not a valid option, we just ignore it
+      if debugVerbosity >= 2: notify("### AutoscriptsList: {}".format(AutoscriptsList)) # Debug
+   else: AutoscriptsList.append(Autoscripts[0].split('$$'))
+   for selectedAutoscripts in AutoscriptsList:
+      timesNothingDone = 0 # A variable that keeps track if we've done any of the autoscripts defined. If none have been coded, we just engage the card.
+      X = 0 # Variable for special costs.
+      if card.highlight == DummyColor: lingering = ' the lingering effect of' # A text that we append to point out when a player is using a lingering effect in the form of a dummy card.
+      else: lingering = ''
+      for activeAutoscript in selectedAutoscripts:
+         #confirm("Active Autoscript: {}".format(activeAutoscript)) #Debug
+         ### Checking if any of the card's effects requires one or more targets first
+         if re.search(r'Targeted', activeAutoscript) and findTarget(activeAutoscript) == []: return
+      for activeAutoscript in selectedAutoscripts:
+         targetC = findTarget(activeAutoscript)
+         ### Warning the player in case we need to
+         if chkWarn(card, activeAutoscript) == 'ABORT': return
+         ### Check if the action needs the player or his opponent to be targeted
+         targetPL = ofwhom(activeAutoscript)
+         regexTag = re.search(r'ifTagged([0-9]+)', activeAutoscript)
+         if regexTag and targetPL.Tags < num(regexTag.group(1)): #See if the target needs to be tagged a specific number of times.
+            if regexTag.group(1) == '1': whisper("Your opponent needs to be tagged for you to use this action")
+            else: whisper("Your opponent needs to be tagged {} times for you to to use this action".format(regexTag.group(1)))
+            return 'ABORT'
+         ### Checking the activation cost and preparing a relevant string for the announcement
+         actionCost = re.match(r"A([0-9]+)B([0-9]+)G([0-9]+)T([0-9]+):", activeAutoscript) 
+         # This is the cost of the card.  It starts with A which is the amount of Clicks needed to activate
+         # After A follows B for Credit cost, then for aGenda cost.
+         # T takes a binary value. A value of 1 means the card needs to be trashed.
+         if actionCost: # If there's no match, it means we've already been through the cost part once and now we're going through the '$$' part.
+            if actionCost.group(1) != '0': # If we need to use clicks
+               Acost = useClick(count = num(actionCost.group(1)))
+               if Acost == 'ABORT': return
+               else: announceText = Acost
+            else: announceText = '{}'.format(me) # A variable with the text to be announced at the end of the action.
+            if actionCost.group(2) != '0': # If we need to pay credits
+               reduction = reduceCost(card, 'USE', num(actionCost.group(2)))
+               if reduction: extraText = " (reduced by {})".format(uniCredit(reduction))  
+               else: extraText = ''
+               Bcost = payCost(num(actionCost.group(2)) - reduction)
+               if Bcost == 'ABORT': # if they can't pay the cost afterall, we return them their clicks and abort.
+                  me.Clicks += num(actionCost.group(1))
+                  return
+               if actionCost.group(1) != '0':
+                  if actionCost.group(3) != '0' or actionCost.group(4) != '0': announceText += ', '
+                  else: announceText += ' and '
+               else: announceText += ' '
+               announceText += 'pays {}{}'.format(uniCredit(num(actionCost.group(2)) - reduction),extraText)
+            if actionCost.group(3) != '0': # If we need to pay agenda points...
+               Gcost = payCost(actionCost.group(3), counter = 'AP')
+               if Gcost == 'ABORT': 
+                  me.Clicks += num(actionCost.group(1))
+                  me.counters['Credits'].value += num(actionCost.group(2))
+                  return
+               if actionCost.group(1) != '0' or actionCost.group(2)  != '0':
+                  if actionCost.group(4) != '0': announceText += ', '
+                  else: announceText += ' and '
+               else: announceText += ' '
+               announceText += 'liquidates {} Agenda Points'.format(actionCost.group(3))
+            if actionCost.group(4) != '0': # If the card needs to be trashed...
+               if (actionCost.group(4) == '2' and oncePerTurn(card, silent = True) == 'ABORT') or (actionCost.group(4) == '1' and not confirm("This action will trash the card as a cost. Are you sure you want to continue?")):
+                  # On trash cost, we confirm first to avoid double-click accidents
+                  me.Clicks += num(actionCost.group(1))
+                  me.counters['Credits'].value += num(actionCost.group(2))
+                  me.counters['Agenda Points'].value += num(actionCost.group(3))
+                  return
+               if actionCost.group(1) != '0' or actionCost.group(2) != '0' or actionCost.group(3) != '0': announceText += ' and '
+               else: announceText += ' '
+               if actionCost.group(4) == '1': announceText += 'trashes {} to use its ability'.format(card)
+               else: announceText += 'activates the once-per-turn ability of{} {}'.format(lingering,card)
+            else: announceText += ' to activate{} {}'.format(lingering,card) # If we don't have to trash the card, we need to still announce the name of the card we're using.
+            if actionCost.group(1) == '0' and actionCost.group(2) == '0' and actionCost.group(3) == '0' and actionCost.group(4) == '0':
+               if card.Type == 'ICE': announceText = '{} activates {}'.format(me, card)
+               else: announceText = '{} uses the ability of{} {}'.format(me, lingering, card)
+            if re.search(r'-isSubroutine', activeAutoscript): announceText = '{} '.format(uniSubroutine()) + announceText # if we are in a subroutine, we use the special icon to make it obvious.
+            announceText += ' in order to'
+         elif not announceText.endswith(' in order to') and not announceText.endswith(' and'): announceText += ' and'
+         if debugVerbosity >= 2: notify("### Entering useAbility() Choice with Autoscript: {}".format(activeAutoscript)) # Debug
+         ### Calling the relevant function depending on if we're increasing our own counters, the hoard's or putting card markers.
+         if regexHooks['GainX'].search(activeAutoscript): 
+            gainTuple = GainX(activeAutoscript, announceText, card, targetC, n = X)
+            if gainTuple == 'ABORT': announceText == 'ABORT'
+            else:
+               announceText = gainTuple[0] 
+               X = gainTuple[1] 
+         elif regexHooks['CreateDummy'].search(activeAutoscript): announceText = CreateDummy(activeAutoscript, announceText, card, targetC, n = X)
+         elif regexHooks['ReshuffleX'].search(activeAutoscript): 
+            reshuffleTuple = ReshuffleX(activeAutoscript, announceText, card) # The reshuffleX() function is special because it returns a tuple.
+            announceText = reshuffleTuple[0] # The first element of the tuple contains the announceText string
+            X = reshuffleTuple[1] # The second element of the tuple contains the number of cards that were reshuffled from the hand in the deck.
+         elif regexHooks['RollX'].search(activeAutoscript): 
+            rollTuple = RollX(activeAutoscript, announceText, card) # Returns like reshuffleX()
+            announceText = rollTuple[0] 
+            X = rollTuple[1] 
+         elif regexHooks['RequestInt'].search(activeAutoscript): 
+            numberTuple = RequestInt(activeAutoscript, announceText, card) # Returns like reshuffleX()
+            if numberTuple == 'ABORT': announceText == 'ABORT'
+            else:
+               announceText = numberTuple[0] 
+               X = numberTuple[1] 
+         elif regexHooks['DiscardX'].search(activeAutoscript): 
+            discardTuple = DiscardX(activeAutoscript, announceText, card, targetC, n = X) # Returns like reshuffleX()
+            announceText = discardTuple[0] 
+            X = discardTuple[1] 
+         elif regexHooks['TokensX'].search(activeAutoscript):           announceText = TokensX(activeAutoscript, announceText, card, targetC, n = X)
+         elif regexHooks['TransferX'].search(activeAutoscript):         announceText = TransferX(activeAutoscript, announceText, card, targetC, n = X)
+         elif regexHooks['DrawX'].search(activeAutoscript):             announceText = DrawX(activeAutoscript, announceText, card, targetC, n = X)
+         elif regexHooks['ShuffleX'].search(activeAutoscript):          announceText = ShuffleX(activeAutoscript, announceText, card, targetC, n = X)
+         elif regexHooks['RunX'].search(activeAutoscript):              announceText = RunX(activeAutoscript, announceText, card, targetC, n = X)
+         elif regexHooks['TraceX'].search(activeAutoscript):            announceText = TraceX(activeAutoscript, announceText, card, targetC, n = X)
+         elif regexHooks['InflictX'].search(activeAutoscript):          announceText = InflictX(activeAutoscript, announceText, card, targetC, n = X)
+         elif regexHooks['ModifyStatus'].search(activeAutoscript):      announceText = ModifyStatus(activeAutoscript, announceText, card, targetC, n = X)
+         elif regexHooks['SimplyAnnounce'].search(activeAutoscript):    announceText = SimplyAnnounce(activeAutoscript, announceText, card, targetC, n = X)
+         elif regexHooks['ChooseKeyword'].search(activeAutoscript):     announceText = ChooseKeyword(activeAutoscript, announceText, card, targetC, n = X)
+         elif regexHooks['UseCustomAbility'].search(activeAutoscript):  announceText = UseCustomAbility(activeAutoscript, announceText, card, targetC, n = X)
+         else: timesNothingDone += 1
+         if debugVerbosity >= 3: notify("<<< useAbility() choice. TXT = {}".format(announceText)) # Debug
+         if announceText == 'ABORT': 
+            autoscriptCostUndo(card, selectedAutoscripts[0]) # If nothing was done, try to undo. The first item in selectedAutoscripts[] contains the cost.
+            return
+         if failedRequirement: break # If part of an AutoAction could not pay the cost, we stop the rest of it.
+      if announceText.endswith(' in order to'): # If our text annouce ends with " to", it means that nothing happened. Try to undo and inform player.
+         autoscriptCostUndo(card, selectedAutoscripts[0])
+         notify("{} but there was nothing to do.".format(announceText[:-len(' in order to')]))
+      elif announceText.endswith(' and'):
+         announceText = announceText[:-len(' and')] # If for some reason we end with " and" (say because the last action did nothing), we remove it.
+      else: # If we did something and everything finished as expected, then take the costs.
+         if re.search(r"T1:", selectedAutoscripts[0]): 
+            executePlayScripts(card,'trash')
+            card.moveTo(card.owner.piles['Heap/Archives(Face-up)'])
+      notify("{}.".format(announceText)) # Finally announce what the player just did by using the concatenated string.
+      chkNoisy(card)
 
 #------------------------------------------------------------------------------
 # Other Player trigger
