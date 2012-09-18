@@ -1,20 +1,28 @@
-1.1.13||
+1.1.14||
 ======New Version Information======
 
-This update includes some love for the Shapers.
+In case you haven't noticed, we now record anonymous game stats as you play on OCTGN. 
 
-Rabbit Hole now automated
-Playing modded should now not try to use Kate as well. Modded will go first and Kate will be used only if there's not enough cost reduction.
-Hopefully this update will generally make Kate less prone to tapping for no reason.
+We then use these to do analysis on the balance between factions and generally some interesting number crunching.
 
-Also some other small fixes:
+So please, try to finish your games properly (i.e. gather 7 Agenda Points or Flatline). 
 
-Stopped random cover card (Runner card back) appearing on the table
-End Run functions should now clear temp markers for both players
-When finding an illegal card in one's deck, it shouldn't just mention "card" anymore
-Tinkering should be able to put two traits on an ICE now
+If one player considers the game lost, then we have also included a new "Concede" function under the "Game..." menu.
+
+---
+
+Secondly we also implemented a new way to speed up your game!: 
+
+On cards with multiple effects, in the choice menu you can put more than one choice and it will execute them in order.
+
+So if you want, for example, Crypsis to increase its strength by 3 and break two subroutines, you could simply put "11100" in the dialog, and it perform all of these at once.
+
+---
+
+Finally, we have also a new version of the markers file with some amazingly good artwork, as compiled by a user of the french fan forum  http://www.run4games.com
+Grab it while it's hot!
 
 ===============================
 ||
 Latest Core Set: 1.1.16
-Latest Markers Set: 1.1.5
+Latest Markers Set: 1.1.6

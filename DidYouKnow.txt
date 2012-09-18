@@ -319,6 +319,10 @@ Would you like to learn more?
 &&
 https://github.com/db0/Android-Netrunner-OCTGN/wiki/How-to-Play
 ||
+On cards with multiple effects, in the choice menu you can put more than one choice and it will execute them in order.
+
+So if you want, for example, Crypsis to increase its strength by 3 and break two subroutines, you could simply put "11100" in the dialog, and it perform all of these at once.
+||
 The OCTGN plugin for Netrunner records stats for played games. 
 You can find an analysis of the balance between factions based on the gathered data
 
