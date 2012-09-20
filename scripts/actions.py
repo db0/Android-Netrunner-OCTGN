@@ -661,8 +661,9 @@ def payCost(count = 1, cost = 'not_free', counter = 'BP'): # A function that rem
 
 def reduceCost(card, action = 'REZ', fullCost = 0):
    type = action.capitalize()
-   if debugVerbosity >= 1: notify(">>> reduceCost(). Action is: {}".format(type)) #Debug
+   if debugVerbosity >= 1: notify(">>> reduceCost(). Action is: {}. FullCost = {}".format(type,fullCost)) #Debug
    if fullCost == 0: return 0 # If there's no cost, there's no use checking the table.
+   fullCost = abs(fullCost)
    reduction = 0
    status = getGlobalVariable('status')
    if debugVerbosity >= 3: notify("### Status: {}".format(status))
@@ -716,12 +717,13 @@ def reduceCost(card, action = 'REZ', fullCost = 0):
                exclusion = re.search(r'-not([A-Za-z_& ]+)'.format(type), reductionSearch.group(4))
                if exclusion and (re.search(r'{}'.format(exclusion.group(1)), Stored_Type[card]) or re.search(r'{}'.format(exclusion.group(1)), Stored_Keywords[card])): continue
             if reductionSearch.group(3) == 'All' or re.search(r'{}'.format(reductionSearch.group(3)), Stored_Type[card]) or re.search(r'{}'.format(reductionSearch.group(3)), Stored_Keywords[card]): #Looking for the type of card being reduced into the properties of the card we're currently paying.
-               if debugVerbosity >= 2: notify(" ### Search match! Group is {}".format(reductionSearch.group(1))) # Debug
+               if debugVerbosity >= 3: notify(" ### Search match! Group is {}".format(reductionSearch.group(1))) # Debug
                if re.search(r'onlyOnce',autoS) and oncePerTurn(c, silent = True, act = 'automatic') == 'ABORT': continue # if the card's effect has already been used, check the next one
                if reductionSearch.group(1) != '#':
                   reduction += num(reductionSearch.group(1)) # if there is a match, the total reduction for this card's cost is increased.
                else: 
-                  while fullCost > 0 and c.markers[mdict['Credits']] > 0: 
+                  while fullCost > 0 and c.markers[mdict['Credits']] > 0:
+                     if debugVerbosity >= 2: notify("### Reducing Cost with and Markers from {}".format(c)) # Debug
                      reduction += 1
                      fullCost -= 1
                      c.markers[mdict['Credits']] -= 1

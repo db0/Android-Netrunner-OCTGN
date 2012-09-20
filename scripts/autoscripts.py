@@ -617,6 +617,7 @@ def GainX(Autoscript, announceText, card, targetCards = None, notification = Non
    if targetCards is None: targetCards = []
    global maxClicks, lastKnownNrClicks
    gain = 0
+   extraTXT = ''
    action = re.search(r'\b(Gain|Lose|SetTo)([0-9]+)([A-Z][A-Za-z &]+)-?', Autoscript)
    if debugVerbosity >= 2: notify("### action groups: {}. Autoscript: {}".format(action.groups(0),Autoscript)) # Debug
    gain += num(action.group(2))
@@ -643,7 +644,12 @@ def GainX(Autoscript, announceText, card, targetCards = None, notification = Non
    if re.match(r'Credits', action.group(3)): # Note to self: I can probably comprress the following, by using variables and by putting the counter object into a variable as well.
       if action.group(1) == 'SetTo': targetPL.counters['Credits'].value = 0 # If we're setting to a specific value, we wipe what it's currently.
       if gain == -999: targetPL.counters['Credits'].value = 0
-      else: targetPL.counters['Credits'].value += (gain * multiplier) - gainReduce
+      else: 
+         if re.search(r'isCost', Autoscript) and action.group(1) == 'Lose':
+            reduction = reduceCost(card, 'USE', gain * multiplier)
+            targetPL.counters['Credits'].value += (gain * multiplier) + reduction
+            if reduction: extraTXT = ' (Reduced by {})'.format(uniCredit(reduction))
+         else: targetPL.counters['Credits'].value += (gain * multiplier) - gainReduce
       if targetPL.counters['Credits'].value < 0: 
          if re.search(r'isCost', Autoscript): notify(":::Warning:::{} did not have enough {} to pay the cost of this action".format(targetPL,action.group(3)))
          elif re.search(r'isPenalty', Autoscript): pass #If an action is marked as penalty, it means that the value can go negative and the player will have to recover that amount.
@@ -722,11 +728,11 @@ def GainX(Autoscript, announceText, card, targetCards = None, notification = Non
    else: verb = action.group(1) # Automatic notifications start with the verb, so it needs to be capitaliszed. 
    if abs(gain) == abs(999): total = 'all' # If we have +/-999 as the count, then this mean "all" of the particular counter.
    elif action.group(1) == 'Lose' and not re.search(r'isPenalty', Autoscript): total = abs(gain * multiplier) - overcharge
-   else: total = abs(gain * multiplier) # Else it's just the absolute value which we announce they "gain" or "lose"
+   else: total = abs(gain * multiplier) - reduction# Else it's just the absolute value which we announce they "gain" or "lose"
    closureTXT = ASclosureTXT(action.group(3), total)
    if debugVerbosity >= 2: notify("### Gainx() about to announce")
-   if notification == 'Quick': announceString = "{}{} {} {}".format(announceText, otherTXT, verb, closureTXT)
-   else: announceString = "{}{} {} {}".format(announceText, otherTXT, verb, closureTXT)
+   if notification == 'Quick': announceString = "{}{} {} {}{}".format(announceText, otherTXT, verb, closureTXT,extraTXT)
+   else: announceString = "{}{} {} {}{}".format(announceText, otherTXT, verb, closureTXT,extraTXT)
    if notification and multiplier > 0: notify('--> {}.'.format(announceString))
    if debugVerbosity >= 3: notify("<<< Gain() total: {}".format(total))
    return (announceString,total)
