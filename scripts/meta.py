@@ -599,6 +599,7 @@ def DebugCard(card, x=0, y=0):
       notify("Downloaded AA: {}".format(str(CardsAA)))
       notify("Card's AA: {}".format(CardsAA.get(card.model,'???')))
    storeProperties(card)
+   card.orientation = Rot0
    
 def extraASDebug(Autoscript = None):
    if Autoscript and debugVerbosity >= 3: return ". Autoscript:{}".format(Autoscript)
@@ -613,8 +614,6 @@ def ShowPosC(card, x=0,y=0):
       notify(">>> ShowPosC(){}".format(extraASDebug())) #Debug
       x,y = card.position
       notify('card x={}, y={}'.format(x,y))      
-      
-      
       
 def formTest():
    notify("Form Test")
