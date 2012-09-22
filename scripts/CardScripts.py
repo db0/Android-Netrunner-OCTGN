@@ -218,7 +218,7 @@ Crash Space
 -----
 bc0f047c-01b1-427f-a439-d451eda01030
 -----
-onInstall:Put2Credits||whileRezzed:Reduce#CostDeltag-forAll-excludeDummy||atTurnStart:Refill2Credits-excludeDummy-byMe||onDamage:Put3protectionMeatDMG-trashCost
+onInstall:Put2Credits||whileRezzed:Reduce#CostDeltag-forAll-excludeDummy||atTurnStart:Refill2Credits-excludeDummy-byMe||onDamage:Put3protectionMeatDMG-trashCost-excludeDummy
 +++++
 A0B0G0T1:CreateDummy-with3protectionMeatDMG-trashCost
 .....

@@ -793,6 +793,7 @@ def findDMGProtection(DMGdone, DMGtype, targetPL): # Find out if the player has 
       if card.controller == targetPL and re.search(r'onDamage', CardsAS.get(card.model,'')):
          if re.search(r'{}DMG'.format(DMGtype), CardsAS.get(card.model,'')):
             if re.search(r'onlyOnce',CardsAS.get(card.model,'')) and card.orientation == Rot90: continue # If the card has a once per-turn ability which has been used, ignore it
+            if re.search(r'excludeDummy',CardsAS.get(card.model,'')) and card.highlight == DummyColor: continue
             if targetPL == me:
                if confirm("You control a {} which can prevent some of the damage you're about to suffer. Do you want to activate it now?".format(card.name)):
                   executePlayScripts(card, 'DAMAGE')
@@ -1239,7 +1240,9 @@ def intTrashCard(card, stat, cost = "not free",  ClickCost = '', silent = False)
    elif (ds == "runner" and card.controller == me) or (ds == "runner" and card.controller != me and cost == "not free") or (ds == "corp" and card.controller != me ): 
    #I'm the runner and I trash my cards, or an accessed card from the corp, or I 'm the corp and I trash a runner's card.
       card.moveTo(cardowner.piles['Heap/Archives(Face-up)'])
-      if rc == "free" and not silent: notify ("{} {} {} at no cost.".format(me, uniTrash(), card))
+      if rc == "free" and not silent: 
+         if card.highlight == DummyColor: notify ("{} clears {}'s lingering effects.".format(me, card)) # In case the card is a dummy card, we change the notification slightly.
+         else: notify ("{} {} {}{} at no cost.".format(me, uniTrash(), card))
       elif not silent: notify("{} {}{} {}{}.".format(ClickCost, uniTrash() , goodGrammar, card, extraText))
    else: #I'm the corp and I trash my own hidden cards or the runner and trash a hidden corp card without cost (e.g. randomly picking one from their hand)
       card.moveTo(cardowner.piles['Archives(Hidden)'])

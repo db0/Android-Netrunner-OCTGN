@@ -1147,11 +1147,7 @@ def CreateDummy(Autoscript, announceText, card, targetCards = None, notification
       elif re.search(r'onOpponent', Autoscript): information('The dummy card just created is meant for your opponent. Please right-click on it and select "Pass control to {}"'.format(targetPL))
       dummyCard = table.create(card.model, -680, 200 * playerside, 1) # This will create a fake card like the one we just created.
       dummyCard.highlight = DummyColor
-      Stored_Type[dummyCard] = dummyCard.Type
-      Stored_Keywords[dummyCard] = dummyCard.Keywords
-      Stored_AutoActions[dummyCard] = dummyCardsAA.get(card.model,'')
-      Stored_Cost[dummyCard] = dummyCard.Cost
-      Stored_AutoScripts[dummyCard] = dummyCardsAS.get(card.model,'')
+      storeProperties(dummyCard)
    #confirm("Dummy ID: {}\n\nList Dummy ID: {}".format(dummyCard._id,passedlist[0]._id)) #Debug
    if not re.search(r'doNotTrash',Autoscript): card.moveTo(card.owner.piles['Heap/Archives(Face-up)'])
    if action: announceString = TokensX('Put{}'.format(action.group(2)), announceText,dummyCard, n = n) # If we have a -with in our autoscript, this is meant to put some tokens on the dummy card.
