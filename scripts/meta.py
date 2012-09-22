@@ -522,7 +522,6 @@ def concede(group=table,x=0,y=0):
 def TrialError(group, x=0, y=0): # Debugging
    global ds, debugVerbosity
    mute()
-   information("You have a card effect in play that modifies the amount of cards you draw. Do you want to continue as normal anyway?\n\n(Answering 'No' will abort this action so that you can prepare for the special changes that happen to your draw.")
    ######## Testing Corner ########
    #for hook in regexHooks: notify("regex for {} is {}".format(hook, regexHooks[hook]))
    #if regexHooks['GainX'].search('TrashMyself'): confirm("Found!")

@@ -47,6 +47,10 @@ Shaper running on a heavily fortifield Haas-Bioroid server
 Changelog
 ---------
 
+### v1.1.15
+
+* Now Damage inflicting effects will put out a notification just before they're about to do it. This should give a heads-up to the victim, in case their opponent does not inform them.
+
 ### v1.1.14
 
 * Tinkering now should put all types on the ICE and then clear them at the end of the turn.

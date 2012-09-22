@@ -103,7 +103,7 @@ def executePlayScripts(card, action):
                else: passedScript = "Lose{}{}".format(effect.group(2),effect.group(3))
             if effect.group(4): passedScript += effect.group(4)
             if debugVerbosity >= 2: notify("### passedscript: {}".format(passedScript)) # Debug
-            gainTuple = GainX(passedScript, announceText, card, targetC, notification = 'Quick', n = X)
+            gainTuple = GainX(passedScript, announceText, card, targetC, notification = 'Quick', n = X, action = action)
             if gainTuple == 'ABORT': return
             X = gainTuple[1] 
          else: 
@@ -612,12 +612,13 @@ def markerEffects(Time = 'Start'):
 # Core Commands
 #------------------------------------------------------------------------------
    
-def GainX(Autoscript, announceText, card, targetCards = None, notification = None, n = 0): # Core Command for modifying counters or global variables
+def GainX(Autoscript, announceText, card, targetCards = None, notification = None, n = 0, action = 'USE'): # Core Command for modifying counters or global variables
    if debugVerbosity >= 1: notify(">>> GainX(){}".format(extraASDebug(Autoscript))) #Debug
    if targetCards is None: targetCards = []
    global maxClicks, lastKnownNrClicks
    gain = 0
    extraTXT = ''
+   reduction = 0
    action = re.search(r'\b(Gain|Lose|SetTo)([0-9]+)([A-Z][A-Za-z &]+)-?', Autoscript)
    if debugVerbosity >= 2: notify("### action groups: {}. Autoscript: {}".format(action.groups(0),Autoscript)) # Debug
    gain += num(action.group(2))
@@ -646,7 +647,7 @@ def GainX(Autoscript, announceText, card, targetCards = None, notification = Non
       if gain == -999: targetPL.counters['Credits'].value = 0
       else: 
          if re.search(r'isCost', Autoscript) and action.group(1) == 'Lose':
-            reduction = reduceCost(card, 'USE', gain * multiplier)
+            reduction = reduceCost(card, action, gain * multiplier)
             targetPL.counters['Credits'].value += (gain * multiplier) + reduction
             if reduction: extraTXT = ' (Reduced by {})'.format(uniCredit(reduction))
          else: targetPL.counters['Credits'].value += (gain * multiplier) - gainReduce
@@ -1143,7 +1144,7 @@ def CreateDummy(Autoscript, announceText, card, targetCards = None, notification
                        \nFor this reason we've created a dummy card on the table and marked it with a special highlight so that you know that it's just a token.\
                      \n\nSome cards provide you with an ability that you can activate after they're been trashed. If this card has one, you can activate it by double clicking on the dummy. Very often, this will often remove the dummy since its effect will disappear.\
                      \n\nDo you want to see this warning again?"): Dummywarn = False
-      elif re.search(r'onOpponent', Autoscript): confirm('The dummy card just created is meant for your opponent. Please right-click on it and select "Pass control to {}"'.format(targetPL))
+      elif re.search(r'onOpponent', Autoscript): information('The dummy card just created is meant for your opponent. Please right-click on it and select "Pass control to {}"'.format(targetPL))
       dummyCard = table.create(card.model, -680, 200 * playerside, 1) # This will create a fake card like the one we just created.
       dummyCard.highlight = DummyColor
       Stored_Type[dummyCard] = dummyCard.Type
@@ -1272,6 +1273,7 @@ def InflictX(Autoscript, announceText, card, targetCards = None, notification = 
    if DMG and Automations['Damage']: #The actual effects happen only if the Damage automation switch is ON. It should be ON by default.
       if DMGwarn and localDMGwarn:
          localDMGwarn = False # We don't want to warn the player for every point of damage.
+         if targetPL != me: notify(":::ATTENTION::: {} is about to inflict {} {} Damage to {}!".format(me,DMG,action.group(3),targetPL))
          if not confirm(":::Warning::: You are about to inflict automatic damage!\
                        \nBefore you do that, please make sure that your target is not currently manipulating their hand or this might cause the game to crash.\
                      \n\nImportant: Before proceeding, ask your target to activate any cards they want that add protection against this type of damage. If this is yourself, please make sure you do this before you activate damage effects.\
@@ -1571,12 +1573,12 @@ def chkWarn(card, Autoscript): # Function for checking that an autoscript announ
             whisper("--> Aborting action.")
             return 'ABORT'
       if warning.group(1) == 'AfterRun': 
-         confirm("Some cards, like the one you just played, have a secondary effect that only works if your run is successful.\
+         information("Some cards, like the one you just played, have a secondary effect that only works if your run is successful.\
                        \nIn those cases, usually the secondary effect has been scripted as well, but you will need to manually activate it. To do so, just double click on the Event card you used to start the run.\
                      \n\n(This message will not appear again.)")
          AfterRunInf = False  
       if warning.group(1) == 'AfterTrace': 
-         confirm("Some cards, like the one you just played, have a secondary effect that only works if your trace is successful.\
+         information("Some cards, like the one you just played, have a secondary effect that only works if your trace is successful.\
                        \nIn those cases, usually the secondary effect has been scripted as well, but you will need to manually activate it. To do so, just double click on the Operation card you used to start the trace.\
                      \n\n(This message will not appear again.)")
          AfterTraceInf = False  
@@ -1704,14 +1706,14 @@ def per(Autoscript, card = None, count = 0, targetCards = None, notification = N
          #confirm("Finished checking") # Debug
          revealedCards = [c for c in table if c.highlight == RevealedColor] # If we have any revealed cards that need to be reshuffled, we need to do so now.
          if re.search(r'Reveal&Shuffle', Autoscript) and len(revealedCards) > 0: 
-            confirm("The cards you've just revealed will be reshuffled into your deck once your opponents have had a chance to look at them.\
+            information("The cards you've just revealed will be reshuffled into your deck once your opponents have had a chance to look at them.\
                    \nOnce you are ready, press any button to reshuffle them back into your deck")
             for c in revealedCards: c.moveTo(me.piles['R&D/Stack'])
             random = rnd(10,500) # Bug workaround.
             shuffle(me.piles['R&D/Stack'])
             notify("- {} Shuffles their revealed cards back into their {}".format(me,pileName(me.piles['R&D/Stack'])))
          if re.search(r'Reveal&Recover', Autoscript) and len(revealedCards) > 0: 
-            confirm("The cards you've just revealed will be returned to your hand once your opponents have had a chance to look at them.\
+            information("The cards you've just revealed will be returned to your hand once your opponents have had a chance to look at them.\
                    \nOnce you are ready, press any button to return them to your hand.")
             for c in revealedCards: c.moveTo(me.hand)
             notify("- {} returns the revealed cards back into their hand".format(me))
