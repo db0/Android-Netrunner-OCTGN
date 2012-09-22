@@ -144,7 +144,7 @@ def goToEndTurn(group, x = 0, y = 0):
       else: # If the player just ended their turn, give them a chance to discard down to their hand maximum.
          if ds == "corp": notify ("The Corporation of {} is performing an Internal Audit before CoB.".format(me))
          else: notify ("Runner {} is rebooting all systems for the day.".format(me))
-         if debugVerbosity <= 0: confirm(':::Warning:::\n\n You have more card in your hand than your current hand size maximum of {}. Please discard enough and then use the "Declare End of Turn" action again.'.format(currentHandSize()))
+         if debugVerbosity <= 0: information(':::Warning:::\n\n You have more card in your hand than your current hand size maximum of {}. Please discard enough and then use the "Declare End of Turn" action again.'.format(currentHandSize()))
          endofturn = True
          return
    endofturn = False
@@ -192,27 +192,27 @@ def goToSot (group, x=0,y=0):
 def createStartingCards():
    if debugVerbosity >= 1: notify(">>> createStartingCards(){}".format(extraASDebug())) #Debug
    if ds == "corp":
-      if debugVerbosity >= 5: confirm("Creating Trace Card")
+      if debugVerbosity >= 5: information("Creating Trace Card")
       traceCard = table.create("eb7e719e-007b-4fab-973c-3fe228c6ce20", 510, 200, 1, True) #The Trace card
       storeSpecial(traceCard)
-      if debugVerbosity >= 5: confirm("Creating HQ")
+      if debugVerbosity >= 5: information("Creating HQ")
       HQ = table.create("81cba950-9703-424f-9a6f-af02e0203762", 0, 0, 1, True)
       HQ.moveToTable(125, 185) # MoveToTable is accurate. Table.create isn't.
       storeSpecial(HQ)
-      if debugVerbosity >= 5: confirm("Creating R&D")
+      if debugVerbosity >= 5: information("Creating R&D")
       RD = table.create("fbb865c9-fccc-4372-9618-ae83a47101a2", 0, 0, 1, True)
       RD.moveToTable(245, 185)
       storeSpecial(RD)
-      if debugVerbosity >= 5: confirm("Creating Archives")
+      if debugVerbosity >= 5: information("Creating Archives")
       ARC = table.create("47597fa5-cc0c-4451-943b-9a14417c2007", 0, 0, 1, True)
       ARC.moveToTable(363, 185)
       storeSpecial(ARC)
-      if debugVerbosity >= 5: confirm("Creating Virus Scan")
+      if debugVerbosity >= 5: information("Creating Virus Scan")
       AV = table.create("23473bd3-f7a5-40be-8c66-7d35796b6031", 0, 0, 1, True) # The Virus Scan card.
       AV.moveToTable(510, 127)
       storeSpecial(AV)
    else:
-      if debugVerbosity >= 5: confirm("Creating Trace Card")
+      if debugVerbosity >= 5: information("Creating Trace Card")
       traceCard = table.create("eb7e719e-007b-4fab-973c-3fe228c6ce20", 566, -323, 1, True) #The Trace card
       traceCard.moveToTable(566, -323) # Otherwise it's bugging out
       storeSpecial(traceCard)
@@ -993,7 +993,7 @@ def RDaccessX(group = table, x = 0, y = 0): # A function which looks at the top 
       if re.search(r'onAccess:Reveal',CardsAS.get(RDtop[iter].model,'')):
          RDtop[iter].moveToTable(0, 0 + yaxisMove(RDtop[iter]), False)
          RDtop[iter].highlight = RevealedColor         
-         confirm("Ambush! You have stumbled into a {}\
+         information("Ambush! You have stumbled into a {}\
                 \n(This card activates even on access from R&D.)\
               \n\nYour blunder has already triggered the alarms. Please wait until corporate OpSec has decided whether to use its effects or not, before pressing any button\
                   ".format(RDtop[iter].name))
@@ -1376,7 +1376,7 @@ def prioritize(card,x=0,y=0):
       card.highlight = PriorityColor
       notify ("{} prioritizes {} for using counters automatically.".format(me,card))
       if PriorityInform: 
-         confirm("This action prioritizes a card for when selecting which card will use its counters from automated effects\
+         information("This action prioritizes a card for when selecting which card will use its counters from automated effects\
                                 \nSuch automated effects include losing counters from stealth cards for using noisy icebreakers, or preventing damage\
                               \n\nSelecting a card for priority gives it first order in the pick. So it will use its counters before any other card will\
                               \n\nThe second order of priority is targeting a card. A card that is targeted at the time of the effect, will lose its counters after all cards highlighted with priority have\
@@ -1386,7 +1386,7 @@ def prioritize(card,x=0,y=0):
          PriorityInform = False
    else:
       if card.highlight == DummyColor:
-         confirm(":::ERROR::: This highlight signifies that this card is a lingering effect left behind from the original\
+         information(":::ERROR::: This highlight signifies that this card is a lingering effect left behind from the original\
                 \nYou cannot prioritize such cards as they would lose their highlight and thus create problems with automation.\
                 \nIf you want one such card to use counter before others, simply target (shift+click) it for the duration of the effect.")
          return
@@ -1420,12 +1420,12 @@ def inspectCard(card, x = 0, y = 0): # This function shows the player the card t
    if ASText == 'This card has the following automations:': ASText = '\nThis card has no automations.'
    if card.name in automatedMarkers:
       ASText += '\n\nThis card can create markers, which also have automated effects.'
-   if card.type == 'Tracing': confirm("This is your tracing card. Double click on it to start a trace. It will ask you for your power bid and then put the amount as bits token on it.\
+   if card.type == 'Tracing': information("This is your tracing card. Double click on it to start a trace. It will ask you for your power bid and then put the amount as bits token on it.\
                                    \n\nOnce both players have made their bid, double-click on it again to pay the amount. This will automatically use credits from cards that pay for tracing if you have any.\
                                    \n\nIf for some reason the trace is cancelled, use the cancel trace from the menu. This will not use any bits and will clear the card.")
-   elif card.type == 'Server': confirm("These are your Servers. Start stacking your Ice above them and your Agendas, Upgrades and Nodes below them.\
+   elif card.type == 'Server': information("These are your Servers. Start stacking your Ice above them and your Agendas, Upgrades and Nodes below them.\
                                      \nThey have no automated abilities")
-   elif card.type == 'Counter Hold': confirm("This is your Counter Hold. This card stores all the beneficial and harmful counters you might accumulate over the course of the game.\
+   elif card.type == 'Counter Hold': information("This is your Counter Hold. This card stores all the beneficial and harmful counters you might accumulate over the course of the game.\
                                           \n\nIf you're playing a corp, Bad Publicity, viruses and other such tokens may be put here as well. By double clicking this card, you'll use three clicks to clean all viruses from your cards.\
                                           \nIf you're playing a runner, brain damage markers, tags and any other tokens the corp gives you will be put here. by double clicking this card, you'll be able to select one of the markers to remove by paying its cost.\
                                         \n\nTo remove any token manually, simply drag & drop it out of this card.")

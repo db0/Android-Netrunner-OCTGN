@@ -32,6 +32,65 @@ Stored_AutoActions = {}
 Stored_AutoScripts = {}
 
 #---------------------------------------------------------------------------
+# Custom Windows Forms
+#---------------------------------------------------------------------------
+
+import clr
+clr.AddReference("System.Drawing")
+clr.AddReference("System.Windows.Forms")
+
+from System.Windows.Forms import Application, Form, Button, Label, DockStyle, AnchorStyles, FormStartPosition
+
+import clr
+clr.AddReference("System.Drawing")
+clr.AddReference("System.Windows.Forms")
+
+from System.Windows.Forms import Application, Form, Button, Label, DockStyle, AnchorStyles, FormStartPosition
+
+class OKWindow(Form):
+   def __init__(self,InfoTXT):
+      newlines = 0
+      self.StartPosition = FormStartPosition.CenterScreen
+      for char in InfoTXT:
+         if char == '\n': newlines += 1
+      STRwidth = 200 + (len(InfoTXT) / 4)
+      STRheight = 30 + (20 * newlines) + (30 * (STRwidth / 100))
+      FORMheight = 130 + STRheight
+      FORMwidth = 100 + STRwidth
+      self.Text = 'Information'
+      self.Height = FORMheight
+      self.Width = FORMwidth
+      self.AutoSize = True
+      
+      label = Label()
+      label.Text = InfoTXT
+      label.Top = 30
+      label.Left = 50
+      label.Height = STRheight
+      label.Width = STRwidth
+      #label.AutoSize = True #Well, that's shit.
+
+      button = Button()
+      button.Text = "OK"
+      button.Width = 100
+      button.Top = FORMheight - 80
+      button.Left = (FORMwidth / 2) - 50
+      button.Anchor = AnchorStyles.Bottom
+
+      button.Click += self.buttonPressed
+
+      self.Controls.Add(label)
+      self.Controls.Add(button)
+
+   def buttonPressed(self, sender, args):
+      self.Close()
+
+def information(Message):
+   if debugVerbosity >= 1: notify("Message: {}".format(Message))
+   Application.EnableVisualStyles()
+   form = OKWindow(Message)
+   form.ShowDialog()
+#---------------------------------------------------------------------------
 # Generic
 #---------------------------------------------------------------------------
 
@@ -187,4 +246,3 @@ def yaxisMove(card):
    if me.hasInvertedTable(): cardmove = cheight(card)
    else: cardmove = cardmove = 0
    return cardmove
-   

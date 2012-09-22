@@ -22,15 +22,10 @@
 # * [Debug] if for helping the developers fix bugs
 # * [Online Functions] is everything which connects to online files for some purpose, such as checking the game version or displaying a message of the day
 ###=================================================================================================================###
-import re,clr
-clr.AddReference("System.Windows.Forms")
-from System.Windows.Forms import Application, Form
+import re
 
-class HelloWorldForm(Form):
-    def __init__(self):
-        self.Text = 'Hello World'
-        self.Name = 'Hello World'
 
+        
 Automations = {'Play, Score and Rez'    : True, # If True, game will automatically trigger card effects when playing or double-clicking on cards. Requires specific preparation in the sets.
                'Start/End-of-Turn'      : True, # If True, game will automatically trigger effects happening at the start of the player's turn, from cards they control.                
                'Damage Prevention'      : True, # If True, game will automatically use damage prevention counters from card they control.                
@@ -527,7 +522,7 @@ def concede(group=table,x=0,y=0):
 def TrialError(group, x=0, y=0): # Debugging
    global ds, debugVerbosity
    mute()
-   #formTest()
+   information("You have a card effect in play that modifies the amount of cards you draw. Do you want to continue as normal anyway?\n\n(Answering 'No' will abort this action so that you can prepare for the special changes that happen to your draw.")
    ######## Testing Corner ########
    #for hook in regexHooks: notify("regex for {} is {}".format(hook, regexHooks[hook]))
    #if regexHooks['GainX'].search('TrashMyself'): confirm("Found!")
@@ -615,7 +610,3 @@ def ShowPosC(card, x=0,y=0):
       x,y = card.position
       notify('card x={}, y={}'.format(x,y))      
       
-def formTest():
-   notify("Form Test")
-   form = HelloWorldForm()
-   Application.Run(form)
