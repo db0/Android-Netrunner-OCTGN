@@ -1,10 +1,1 @@
-======Message of the Day======
-
-A fan has made a tutorial video on how to use OCTGN to play ANR
-
-If you're a fairly new player, this should give you an idea of how to use the plugin. It's only 30 mins long so it's easy to get through in lunchbreak.
-
-Would you like to check the video out?
-===============================
-&&
-http://vimeo.com/49977956
+ 
