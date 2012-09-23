@@ -1,28 +1,29 @@
-1.1.14||
+1.1.15||
 ======New Version Information======
 
-In case you haven't noticed, we now record anonymous game stats as you play on OCTGN. 
+We now have a much improved multi-choice menu for cards with more than one ability on use (i.e. most Icebreakers and Ice). 
+To use it simply do what you always did, and double click on a relevant card.
 
-We then use these to do analysis on the balance between factions and generally some interesting number crunching.
+Along with this, came better descriptions for those choices. But to make this work...
 
-So please, try to finish your games properly (i.e. gather 7 Agenda Points or Flatline). 
+===!MAKE SURE YOU UPDATE TO CORE SET 1.1.20!===
 
-If one player considers the game lost, then we have also included a new "Concede" function under the "Game..." menu.
+:::IMPORTANT::: There is a small bug that might hide the multiple-choice window behind the OCTGN window!
+(This happens usually if you switched to another program and back to OCTGN without minimizing it)
 
----
+If you use a card and OCTGN seems stuck and non-responsive, check on your taskbar for a new window in OCTGN's task group.
 
-Secondly we also implemented a new way to speed up your game!: 
 
-On cards with multiple effects, in the choice menu you can put more than one choice and it will execute them in order.
+Finally, a significant change in how Traces work: 
+Tracing is done in one action; as soon as you boost your Trace/Base Link strength, it uses your credits.  
+It also announces your total in the same line so it should be easier to compare. 
 
-So if you want, for example, Crypsis to increase its strength by 3 and break two subroutines, you could simply put "11100" in the dialog, and it perform all of these at once.
+__You do not need to use the trace card a second time per trace!__
+  
+PS: TollBooth's ability now works according to the rules, so feel free to use it whether your opponent has the money or not.
 
----
-
-Finally, we have also a new version of the markers file with some amazingly good artwork, as compiled by a user of the french fan forum  http://www.run4games.com
-Grab it while it's hot!
-
+Enjoy!  
 ===============================
 ||
-Latest Core Set: 1.1.16
+Latest Core Set: 1.1.20
 Latest Markers Set: 1.1.6

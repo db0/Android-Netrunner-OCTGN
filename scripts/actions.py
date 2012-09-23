@@ -1438,7 +1438,7 @@ def inspectCard(card, x = 0, y = 0): # This function shows the player the card t
                                         \n\nTo remove any token manually, simply drag & drop it out of this card.")
    else:
       if debugVerbosity > 0: finalTXT = 'AutoScript: {}\n\n AutoAction: {}'.format(CardsAS.get(card.model,''),CardsAA.get(card.model,''))
-      else: finalTXT = "Card Text: {}\n{}\n\nWould you like to see the card's details online?".format(card.Rules,ASText)
+      else: finalTXT = "Card Text: {}\n\n{}\n\nWould you like to see the card's details online?".format(card.Rules,ASText)
       if confirm("{}".format(finalTXT)): rulings(card)
    
 #------------------------------------------------------------------------------
