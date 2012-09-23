@@ -522,6 +522,7 @@ def concede(group=table,x=0,y=0):
 def TrialError(group, x=0, y=0): # Debugging
    global ds, debugVerbosity
    mute()
+   test()
    ######## Testing Corner ########
    #for hook in regexHooks: notify("regex for {} is {}".format(hook, regexHooks[hook]))
    #if regexHooks['GainX'].search('TrashMyself'): confirm("Found!")

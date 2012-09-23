@@ -39,28 +39,31 @@ import clr
 clr.AddReference("System.Drawing")
 clr.AddReference("System.Windows.Forms")
 
-from System.Windows.Forms import Application, Form, Button, Label, DockStyle, AnchorStyles, FormStartPosition
+from System.Windows.Forms import Application, Form, Button, Label, DockStyle, AnchorStyles, FormStartPosition, RadioButton, Panel
+from System.Drawing import Color
 
-import clr
-clr.AddReference("System.Drawing")
-clr.AddReference("System.Windows.Forms")
-
-from System.Windows.Forms import Application, Form, Button, Label, DockStyle, AnchorStyles, FormStartPosition
+def calcStringLabelSize(STRING):
+   newlines = 0
+   for char in STRING:
+      if char == '\n': newlines += 1
+   STRINGwidth = 200 + (len(STRING) / 4)
+   STRINGheight = 30 + (20 * newlines) + (30 * (STRINGwidth / 100))
+   return (STRINGwidth, STRINGheight)
+   
 
 class OKWindow(Form):
    def __init__(self,InfoTXT):
-      newlines = 0
       self.StartPosition = FormStartPosition.CenterScreen
-      for char in InfoTXT:
-         if char == '\n': newlines += 1
-      STRwidth = 200 + (len(InfoTXT) / 4)
-      STRheight = 30 + (20 * newlines) + (30 * (STRwidth / 100))
+      (STRwidth, STRheight) = calcStringLabelSize(InfoTXT)
       FORMheight = 130 + STRheight
       FORMwidth = 100 + STRwidth
       self.Text = 'Information'
       self.Height = FORMheight
       self.Width = FORMwidth
       self.AutoSize = True
+      self.MinimizeBox = False
+      self.MaximizeBox = False
+      self.BringToFront()
       
       label = Label()
       label.Text = InfoTXT
@@ -90,6 +93,87 @@ def information(Message):
    Application.EnableVisualStyles()
    form = OKWindow(Message)
    form.ShowDialog()
+   
+   
+class RadioWindow(Form):
+ 
+   def __init__(self, BoxTitle, BoxOptions):
+      self.Text = "Select an Option"
+      self.index = 0
+      self.confirmValue = None
+      self.MinimizeBox = False
+      self.MaximizeBox = False
+      self.StartPosition = FormStartPosition.CenterScreen
+      self.AutoSize = True
+      self.BringToFront()
+      
+      labelPanel = Panel()
+      labelPanel.Dock = DockStyle.Top
+      labelPanel.AutoSize = True
+      #labelPanel.BackColor = Color.LightSlateGray # Debug
+      
+      radioPanel = Panel()
+      radioPanel.Dock = DockStyle.Top
+      radioPanel.AutoSize = True
+      #radioPanel.BackColor = Color.LightSalmon # Debug
+
+      self.Controls.Add(radioPanel) # Don't know why, but the lower panel needs to be placed first.
+      self.Controls.Add(labelPanel)
+
+      (STRwidth, STRheight) = calcStringLabelSize(BoxTitle)
+      label = Label()
+      label.Text = BoxTitle
+      label.Top = 30
+      label.Left = 50
+      label.Height = STRheight
+      label.Width = STRwidth
+      labelPanel.Controls.Add(label)
+      
+      radioPush = Panel() # Just to put the radio buttons a bit more to the middle
+      radioPush.Left = 30
+      radioPanel.Controls.Add(radioPush)
+      
+      for option in BoxOptions:
+         btn = RadioButton()
+         btn.Name = str(self.index)
+         self.index = self.index + 1
+         btn.Text = option
+         btn.Dock = DockStyle.Top
+         btn.Checked = False
+         btn.CheckedChanged += self.checkedChanged
+         radioPush.Controls.Add(btn)
+         btn.BringToFront()
+
+      button = Button()
+      button.Text = "Confirm"
+      button.Width = 100
+      button.Dock = DockStyle.Bottom
+      button.Click += self.buttonPressed
+      self.Controls.Add(button)
+ 
+   def buttonPressed(self, sender, args):
+      self.Close()
+ 
+   def checkedChanged(self, sender, args):
+      self.confirmValue = int(sender.Name)
+ 
+   def getIndex(self):
+      return self.confirmValue
+ 
+def radioChoice(title, options):
+   Application.EnableVisualStyles()
+   form = RadioWindow(title, options)
+   form.ShowDialog()
+   return form.getIndex()
+ 
+def test(group = table, x = 0, y = 0):
+   abilitylist = ["Draw a card", "Discard a card", "Gain 1 life"]
+   num = radioChoice("Activate Which ability?", abilitylist)
+   if num == None:
+      whisper("You didn't select an ability")
+      return
+   ability = abilitylist[num]
+   notify("{} used the {} ability.".format(me, ability))   
 #---------------------------------------------------------------------------
 # Generic
 #---------------------------------------------------------------------------
