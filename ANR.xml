@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<game xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="Android:Netrunner" id="0f38e453-26df-4c04-9d67-6d43de939c77" octgnVersion="3.0.1.14" version="1.1.14" markersize="20">
+<game xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="Android:Netrunner" id="0f38e453-26df-4c04-9d67-6d43de939c77" octgnVersion="3.0.1.14" version="1.1.15" markersize="20">
    <scripts>
       <script src="r3" />
       <script src="r17" />
@@ -94,12 +94,8 @@
          <cardaction menu="Pay and &#9167;" default="false" shortcut="Ctrl+del" execute="trashCard" />
          <cardaction menu="&#9167; at No Cost" default="false" shortcut="del" execute="trashForFree" />
       </cardactions>
-      <cardactions menu="Trace...">
-         <cardaction menu="Input Trace Value" default="false" execute="inputTraceValue" />
+      <cardaction menu="Reinforce Trace/Base Link" default="false" execute="inputTraceValue" />
    <!-- <cardaction menu="Reveal" default="false" execute="revealTraceValue" /> -->
-         <cardaction menu="Pay Trace Value" default="false" execute="payTraceValue" />
-         <cardaction menu="Cancel Trace" default="false" execute="cancelTrace" />
-      </cardactions>
       <groupaction menu="Modify your max actions per turn" default="false" execute="modClicks" />
       <cardaction menu="Inspect" default="false" shortcut="Ctrl+I" execute="inspectCard" />
       <cardaction menu="(Un)Expose" default="false" shortcut="Ctrl+E" execute="expose" />

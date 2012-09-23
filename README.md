@@ -49,7 +49,17 @@ Changelog
 
 ### v1.1.15
 
+* **SIGNIFICANT:** We've got a new Multiple Choice Window, with nice buttons and everything. No more putting numbers in the field and limited to 9 chars. Just put as much as you want and go!
+  * Further to the above, each option is now labeled nicely in a way that should be easy to understand what it does.
+* Now information towards the player will be put in a special window with a single "OK" button. Should avoid confusions about yes/no which is not needed.
+* Generic runs also use a form for selection of the target, with radiobuttons.
+* **WARNING:** The above two windows, __rarely__  end up spawning behind your OCTGN window. In case you double click on a card and OCTGN seems to freeze, check if a new window has opened behind it before panicking!
 * Now Damage inflicting effects will put out a notification just before they're about to do it. This should give a heads-up to the victim, in case their opponent does not inform them.
+* Fixed the first Tollbooth effect which was confusing newbies.
+* **SIGNIFICANT:** The Trace functions now automatically take their costs and announce their total Trace/Link strength. You do not need to double click on the Trace card a second time to Pay the cost. 
+  * The Trace Card remains as a fake button though.
+
+
 
 ### v1.1.14
 

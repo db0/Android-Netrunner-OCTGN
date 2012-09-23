@@ -103,7 +103,7 @@ def executePlayScripts(card, action):
                else: passedScript = "Lose{}{}".format(effect.group(2),effect.group(3))
             if effect.group(4): passedScript += effect.group(4)
             if debugVerbosity >= 2: notify("### passedscript: {}".format(passedScript)) # Debug
-            gainTuple = GainX(passedScript, announceText, card, targetC, notification = 'Quick', n = X, action = action)
+            gainTuple = GainX(passedScript, announceText, card, targetC, notification = 'Quick', n = X, actionType = action)
             if gainTuple == 'ABORT': return
             X = gainTuple[1] 
          else: 
@@ -214,69 +214,75 @@ def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
       useCard(card) # If the card had only "WhileInstalled"  or AtTurnStart effect, just announce that it is being used.
       return 
    if len(Autoscripts) > 1: 
-      abilConcat = "This card has multiple abilities.\nWhich one would you like to use?\
-                \n\n(Tip: You can put multiple abilities one after the the other (e.g. '110'). Max 9 at once)\n\n" # We start a concat which we use in our confirm window.
-      for idx in range(len(Autoscripts)): # If a card has multiple abilities, we go through each of them to create a nicely written option for the player.
-         if debugVerbosity >= 2: notify("Autoscripts {}".format(Autoscripts)) # Debug
-         abilRegex = re.search(r"A([0-9]+)B([0-9]+)G([0-9]+)T([0-9]+):([A-Z][A-Za-z ]+)([0-9]*)([A-Za-z ]*)-?(.*)", Autoscripts[idx]) # This regexp returns 3-4 groups, which we then reformat and put in the confirm dialogue in a better readable format.
-         if debugVerbosity >= 2: notify("### Choice Regex is {}".format(abilRegex.groups())) # Debug
-         if abilRegex.group(1) != '0': abilCost = 'Use {} Clicks'.format(abilRegex.group(1))
-         else: abilCost = '' 
-         if abilRegex.group(2) != '0': 
-            if abilCost != '': 
-               if abilRegex.group(3) != '0' or abilRegex.group(4) != '0': abilCost += ', '
-               else: abilCost += ' and '
-            abilCost += 'Pay {} Credits'.format(abilRegex.group(2))
-         if abilRegex.group(3) != '0': 
-            if abilCost != '': 
-               if abilRegex.group(4) != '0': abilCost += ', '
-               else: abilCost += ' and '
-            abilCost += 'Lose {} Agenda Points'.format(abilRegex.group(3))
-         if abilRegex.group(4) != '0': 
-            if abilCost != '': abilCost += ' and '
-            if abilRegex.group(4) == '1': abilCost += 'Trash this card'
-            else: abilCost += 'Use (Once per turn)'
-         if abilRegex.group(1) == '0' and abilRegex.group(2) == '0' and abilRegex.group(3) == '0' and abilRegex.group(4) == '0':
-            if not re.search(r'-isCost', Autoscripts[idx]): 
-               abilCost = 'Activate' 
-               connectTXT = ' to '
-            else: 
-               abilCost = '' # If the ability claims to be a cost, then we need to put it as part of it, before the "to"
-               connectTXT = ''
-         else:
-            if not re.search(r'-isCost', Autoscripts[idx]): connectTXT = 'to ' # If there isn't an extra cost, then we connect with a "to" clause
-            else: connectTXT = 'and ' 
-         if abilRegex.group(6):
-            if abilRegex.group(6) == '999': abilX = 'all'
+      #abilConcat = "This card has multiple abilities.\nWhich one would you like to use?\
+                #\n\n(Tip: You can put multiple abilities one after the the other (e.g. '110'). Max 9 at once)\n\n" # We start a concat which we use in our confirm window.
+      ChoiceTXT = "This card has multiple abilities.\nSelect the ones you would like to use in order and press the [Finish Selection] button"
+      cardInstructions = card.Instructions.split('||')
+      if len(cardInstructions) > 1: choices = cardInstructions
+      else:
+         choices = []
+         for idx in range(len(Autoscripts)): # If a card has multiple abilities, we go through each of them to create a nicely written option for the player.
+            if debugVerbosity >= 2: notify("Autoscripts {}".format(Autoscripts)) # Debug
+            abilRegex = re.search(r"A([0-9]+)B([0-9]+)G([0-9]+)T([0-9]+):([A-Z][A-Za-z ]+)([0-9]*)([A-Za-z ]*)-?(.*)", Autoscripts[idx]) # This regexp returns 3-4 groups, which we then reformat and put in the confirm dialogue in a better readable format.
+            if debugVerbosity >= 2: notify("### Choice Regex is {}".format(abilRegex.groups())) # Debug
+            if abilRegex.group(1) != '0': abilCost = 'Use {} Clicks'.format(abilRegex.group(1))
+            else: abilCost = '' 
+            if abilRegex.group(2) != '0': 
+               if abilCost != '': 
+                  if abilRegex.group(3) != '0' or abilRegex.group(4) != '0': abilCost += ', '
+                  else: abilCost += ' and '
+               abilCost += 'Pay {} Credits'.format(abilRegex.group(2))
+            if abilRegex.group(3) != '0': 
+               if abilCost != '': 
+                  if abilRegex.group(4) != '0': abilCost += ', '
+                  else: abilCost += ' and '
+               abilCost += 'Lose {} Agenda Points'.format(abilRegex.group(3))
+            if abilRegex.group(4) != '0': 
+               if abilCost != '': abilCost += ' and '
+               if abilRegex.group(4) == '1': abilCost += 'Trash this card'
+               else: abilCost += 'Use (Once per turn)'
+            if abilRegex.group(1) == '0' and abilRegex.group(2) == '0' and abilRegex.group(3) == '0' and abilRegex.group(4) == '0':
+               if not re.search(r'-isCost', Autoscripts[idx]): 
+                  abilCost = 'Activate' 
+                  connectTXT = ' to '
+               else: 
+                  abilCost = '' # If the ability claims to be a cost, then we need to put it as part of it, before the "to"
+                  connectTXT = ''
+            else:
+               if not re.search(r'-isCost', Autoscripts[idx]): connectTXT = ' to ' # If there isn't an extra cost, then we connect with a "to" clause
+               else: connectTXT = 'and ' 
+            if abilRegex.group(6):
+               if abilRegex.group(6) == '999': abilX = 'all'
+               else: abilX = abilRegex.group(6)
             else: abilX = abilRegex.group(6)
-         else: abilX = abilRegex.group(6)
-         if re.search(r'-isSubroutine', Autoscripts[idx]): 
-            if abilCost == 'Activate':  # IF there's no extra costs to the subroutine, we just use the "enter" glyph
-               abilCost = uniSubroutine()
-               connectTXT = ''
-            else: abilCost = '{} '.format(uniSubroutine()) + abilCost # If there's extra costs to the subroutine, we prepend the "enter" glyph to the rest of the costs.
-         abilConcat += '{}: {}{}{} {} {}'.format(idx, abilCost, connectTXT, abilRegex.group(5), abilX, abilRegex.group(7)) # We add the first three groups to the concat. Those groups are always Gain/Hoard/Prod ## Favo/Solaris/Spice
-         if abilRegex.group(5) == 'Put' or abilRegex.group(5) == 'Remove' or abilRegex.group(5) == 'Refill': abilConcat += ' counter' # If it's putting a counter, we clarify that.
-         if debugVerbosity >= 3: notify("### About to check rest of choice regex")
-         if abilRegex.group(8): # If the autoscript has an 8th group, then it means it has subconditions. Such as "per Marker" or "is Subroutine"
-            subconditions = abilRegex.group(8).split('$$') # These subconditions are always separated by dashes "-", so we use them to split the string
-            for idx2 in range(len(subconditions)):
-               if debugVerbosity >= 4: notify("#### Checking subcondition {}:{}".format(idx2,subconditions[idx2]))
-               if re.search(r'isCost', Autoscripts[idx]) and idx2 == 1: abilConcat += ' to' # The extra costs of an action are always at the first part (i.e. before the $$)
-               elif idx2 > 0: abilConcat += ' and'
-               subadditions = subconditions[idx2].split('-')
-               for idx3 in range(len(subadditions)):
-                  if debugVerbosity >= 4: notify("#### Checking subaddition {}-{}:{}".format(idx2,idx3,subadditions[idx3]))
-                  if re.search(r'warn[A-Z][A-Za-z0-9 ]+', subadditions[idx3]): continue # Don't mention warnings.
-                  if subadditions[idx3] in IgnoredModulators: continue # We ignore modulators which are internal to the engine.
-                  abilConcat += ' {}'.format(subadditions[idx3]) #  Then we iterate through each distinct subcondition and display it without the dashes between them. (In the future I may also add whitespaces between the distinct words)
-         abilConcat += '\n' # Finally add a newline at the concatenated string for the next ability to be listed.
-      abilChoice = askInteger('{}'.format(abilConcat), 0) # We use the ability concatenation we crafted before to give the player a choice of the abilities on the card.
-      if abilChoice == None: return # If the player closed the window, abort.
-      choiceStr = str(abilChoice) # We convert our number into a string
-      for s in choiceStr: 
-         if num(s) < len(Autoscripts): AutoscriptsList.append(Autoscripts[num(s)].split('$$'))
-         else: continue # if the player put a number that is not a valid option, we just ignore it
+            if re.search(r'-isSubroutine', Autoscripts[idx]): 
+               if abilCost == 'Activate':  # IF there's no extra costs to the subroutine, we just use the "enter" glyph
+                  abilCost = uniSubroutine()
+                  connectTXT = ''
+               else: abilCost = '{} '.format(uniSubroutine()) + abilCost # If there's extra costs to the subroutine, we prepend the "enter" glyph to the rest of the costs.
+            #abilConcat += '{}: {}{}{} {} {}'.format(idx, abilCost, connectTXT, abilRegex.group(5), abilX, abilRegex.group(7)) # We add the first three groups to the concat. Those groups are always Gain/Hoard/Prod ## Favo/Solaris/Spice
+            choices.insert(idx,'{}{}{} {} {}'.format(abilCost, connectTXT, abilRegex.group(5), abilX, abilRegex.group(7)))
+            if abilRegex.group(5) == 'Put' or abilRegex.group(5) == 'Remove' or abilRegex.group(5) == 'Refill': choices[idx] += ' counter' # If it's putting a counter, we clarify that.
+            if debugVerbosity >= 3: notify("### About to check rest of choice regex")
+            if abilRegex.group(8): # If the autoscript has an 8th group, then it means it has subconditions. Such as "per Marker" or "is Subroutine"
+               subconditions = abilRegex.group(8).split('$$') # These subconditions are always separated by dashes "-", so we use them to split the string
+               for idx2 in range(len(subconditions)):
+                  if debugVerbosity >= 4: notify("#### Checking subcondition {}:{}".format(idx2,subconditions[idx2]))
+                  if re.search(r'isCost', Autoscripts[idx]) and idx2 == 1: choices[idx] += ' to' # The extra costs of an action are always at the first part (i.e. before the $$)
+                  elif idx2 > 0: choices[idx] += ' and'
+                  subadditions = subconditions[idx2].split('-')
+                  for idx3 in range(len(subadditions)):
+                     if debugVerbosity >= 4: notify("#### Checking subaddition {}-{}:{}".format(idx2,idx3,subadditions[idx3]))
+                     if re.search(r'warn[A-Z][A-Za-z0-9 ]+', subadditions[idx3]): continue # Don't mention warnings.
+                     if subadditions[idx3] in IgnoredModulators: continue # We ignore modulators which are internal to the engine.
+                     choices[idx] += ' {}'.format(subadditions[idx3]) #  Then we iterate through each distinct subcondition and display it without the dashes between them. (In the future I may also add whitespaces between the distinct words)
+            #abilConcat += '\n' # Finally add a newline at the concatenated string for the next ability to be listed.
+      abilChoice = multiChoice(ChoiceTXT, choices,card) # We use the ability concatenation we crafted before to give the player a choice of the abilities on the card.
+      if abilChoice == [] or abilChoice == 'ABORT' or abilChoice == None: return # If the player closed the window, or pressed Cancel, abort.
+      #choiceStr = str(abilChoice) # We convert our number into a string
+      for choice in abilChoice: 
+         if choice < len(Autoscripts): AutoscriptsList.append(Autoscripts[choice].split('$$'))
+         else: continue # if the player has somehow selected a number that is not a valid option, we just ignore it
       if debugVerbosity >= 2: notify("### AutoscriptsList: {}".format(AutoscriptsList)) # Debug
    else: AutoscriptsList.append(Autoscripts[0].split('$$'))
    for selectedAutoscripts in AutoscriptsList:
@@ -612,7 +618,7 @@ def markerEffects(Time = 'Start'):
 # Core Commands
 #------------------------------------------------------------------------------
    
-def GainX(Autoscript, announceText, card, targetCards = None, notification = None, n = 0, action = 'USE'): # Core Command for modifying counters or global variables
+def GainX(Autoscript, announceText, card, targetCards = None, notification = None, n = 0, actionType = 'USE'): # Core Command for modifying counters or global variables
    if debugVerbosity >= 1: notify(">>> GainX(){}".format(extraASDebug(Autoscript))) #Debug
    if targetCards is None: targetCards = []
    global maxClicks, lastKnownNrClicks
@@ -636,18 +642,18 @@ def GainX(Autoscript, announceText, card, targetCards = None, notification = Non
          if debugVerbosity >= 4: notify("#### We have an overcharge of {}".format(overcharge))
          if overcharge < 0: overcharge = 0 # But if the overcharge is 0 or less, it means that all the loss could be taken out.
       else: overcharge = 0
-      if debugVerbosity >= 2: notify("#### overcharge = {}\n#### Gain = {}.\n #### Multiplier = {}.\n#### Counter = {}".format(overcharge,gain,multiplier,targetPL.counters[action.group(3)].value))
       gain *= -1
-      gainReduce = 0
+      if debugVerbosity >= 2: notify("#### overcharge = {}\n#### Gain = {}.\n #### Multiplier = {}.\n#### Counter = {}".format(overcharge,gain,multiplier,targetPL.counters[action.group(3)].value))
    if re.search(r'ifNoisyOpponent', Autoscript) and targetPL.getGlobalVariable('wasNoisy') != '1': return announceText # If our effect only takes place when our opponent has been noisy, and they haven't been, don't do anything. We return the announcement so that we don't crash the parent function expecting it
-   else: gainReduce = findCounterPrevention(gain * multiplier, action.group(3), targetPL) # If we're going to gain counter, then we check to see if we have any markers which might reduce the cost.
+   gainReduce = findCounterPrevention(gain * multiplier, action.group(3), targetPL) # If we're going to gain counter, then we check to see if we have any markers which might reduce the cost.
    #confirm("multiplier: {}, gain: {}, reduction: {}".format(multiplier, gain, gainReduce)) # Debug
    if re.match(r'Credits', action.group(3)): # Note to self: I can probably comprress the following, by using variables and by putting the counter object into a variable as well.
       if action.group(1) == 'SetTo': targetPL.counters['Credits'].value = 0 # If we're setting to a specific value, we wipe what it's currently.
       if gain == -999: targetPL.counters['Credits'].value = 0
       else: 
          if re.search(r'isCost', Autoscript) and action.group(1) == 'Lose':
-            reduction = reduceCost(card, action, gain * multiplier)
+            if debugVerbosity >= 2: notify("#### Checking Cost Reduction")
+            reduction = reduceCost(card, actionType, gain * multiplier)
             targetPL.counters['Credits'].value += (gain * multiplier) + reduction
             if reduction: extraTXT = ' (Reduced by {})'.format(uniCredit(reduction))
          else: targetPL.counters['Credits'].value += (gain * multiplier) - gainReduce
@@ -717,6 +723,7 @@ def GainX(Autoscript, announceText, card, targetCards = None, notification = Non
    else: 
       whisper("Gain what?! (Bad autoscript)")
       return 'ABORT'
+   if debugVerbosity >= 2: notify("### Gainx() Finished counter manipulation")
    if notification != 'Automatic': # Since the verb is in the middle of the sentence, we want it lowercase.
       if action.group(1) == 'Gain': verb = 'gain'
       elif action.group(1) == 'Lose': 
@@ -1077,18 +1084,14 @@ def RunX(Autoscript, announceText, card, targetCards = None, notification = None
          targets = findTarget('Targeted-atServer')
          if targets == []: # If the player has not targeted a server, then we ask them what they're targeting.
             if debugVerbosity >= 3: notify("### No targets found. Asking")
-            choice = askInteger("Which server are you going to run at?\
-                             \n\n1:Remote Server\
-                               \n2:HQ\
-                               \n3:R&D\
-                               \n4:Archives\
-                             \n\n(In the future you can target a server before you start a run and we will automatically pick that as the target)\
-                                  ",1)
-            if choice: # Just in case the player didn't just close the askInteger window.
-               if choice == 1: targetServer = 'Remote'
-               elif choice == 2: targetServer = 'HQ'
-               elif choice == 3: targetServer = 'R&D'
-               elif choice == 4: targetServer = 'Archives'
+            choice = radioChoice("Which server are you going to run at?\
+                              \n\n(In the future you can target a server before you start a run and we will automatically pick that as the target)",\
+                                  ['Remote Server','HQ','R&D','Archives'])
+            if choice != None: # Just in case the player didn't just close the askInteger window.
+               if choice == 0: targetServer = 'Remote'
+               elif choice == 1: targetServer = 'HQ'
+               elif choice == 2: targetServer = 'R&D'
+               elif choice == 3: targetServer = 'Archives'
                else: return 'ABORT'
             else: return 'ABORT'
          else: # If the player has targeted a server before playing/using their card, then we just use that one
@@ -1203,9 +1206,11 @@ def TraceX(Autoscript, announceText, card, targetCards = None, notification = No
    action = re.search(r'\bTrace([0-9]+)', Autoscript)
    multiplier = per(Autoscript, card, n, targetCards)
    TraceStrength = num(action.group(1)) * multiplier
-   inputTraceValue(card)
-   if notification == 'Quick': announceString = "{} starts a Trace with a base strength of {}".format(announceText, TraceStrength)
-   else: announceString = "{} start a trace with a base strength of {}".format(announceText, TraceStrength)
+   reinforcement = inputTraceValue(card,True)
+   if reinforcement: reinforceTXT =  "and reinforced by {} (Total: {})".format(uniCredit(reinforcement),TraceStrength + reinforcement)
+   else: reinforceTXT = "(Not reinforced)"
+   if notification == 'Quick': announceString = "{} starts a Trace with a base strength of {} {}".format(announceText, TraceStrength, reinforceTXT)
+   else: announceString = "{} start a trace with a base strength of {} {}".format(announceText, TraceStrength, reinforceTXT)
    if notification: notify('--> {}.'.format(announceString))
    if debugVerbosity >= 3: notify("<<< TraceX()")
    return announceString
@@ -1301,6 +1306,17 @@ def InflictX(Autoscript, announceText, card, targetCards = None, notification = 
    else: announceString = "{} inflict {} {} damage{} to {}{}".format(announceText,DMG,action.group(3),enhanceTXT,targetPL,preventTXT)
    if notification and multiplier > 0: notify('--> {}.'.format(announceString))
    if debugVerbosity >= 3: notify("<<< InflictX()")
+   return announceString
+   
+def UseCustomAbility(Autoscript, announceText, card, targetCards = None, notification = None, n = 0):
+   if card.name == "Tollbooth":
+      targetPL = ofwhom('ofOpponent')
+      if targetPL.Credits >= 3: 
+         targetPL.Credits -= 3
+         announceString = announceText + ' force {} to pay {}'.format(targetPL,uniCredit(3))
+      else: 
+         jackOut(silent = True)
+         announceString = announceText + ' end the run'.format(targetPL,uniCredit(3))   
    return announceString
    
 def CustomScript(card, action = 'PLAY'): # Scripts that are complex and fairly unique to specific cards, not worth making a whole generic function for them.

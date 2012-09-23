@@ -42,7 +42,8 @@ clr.AddReference("System.Windows.Forms")
 from System.Windows.Forms import Application, Form, Button, Label, DockStyle, AnchorStyles, FormStartPosition, RadioButton, Panel
 from System.Drawing import Color
 
-def calcStringLabelSize(STRING):
+def calcStringLabelSize(STRING): 
+# A function which returns a slowly expansing size for a label. The more characters, the more the width expands to allow more characters on the same line.
    newlines = 0
    for char in STRING:
       if char == '\n': newlines += 1
@@ -50,6 +51,14 @@ def calcStringLabelSize(STRING):
    STRINGheight = 30 + (20 * newlines) + (30 * (STRINGwidth / 100))
    return (STRINGwidth, STRINGheight)
    
+def formStringEscape(STRING): # A function to escape some characters that are not otherwise displayed by WinForms, like amperasands '&'
+   slist = list(STRING)
+   escapedString = ''
+   for s in slist:
+      if s == '&': char = '&&'
+      else: char = s
+      escapedString += char
+   return escapedString
 
 class OKWindow(Form):
    def __init__(self,InfoTXT):
@@ -63,12 +72,13 @@ class OKWindow(Form):
       self.AutoSize = True
       self.MinimizeBox = False
       self.MaximizeBox = False
+      self.SetTopLevel(True)
       self.BringToFront()
       
       label = Label()
-      label.Text = InfoTXT
+      label.Text = formStringEscape(InfoTXT)
       label.Top = 30
-      label.Left = 50
+      label.Left = 30
       label.Height = STRheight
       label.Width = STRwidth
       #label.AutoSize = True #Well, that's shit.
@@ -105,10 +115,15 @@ class RadioWindow(Form):
       self.MaximizeBox = False
       self.StartPosition = FormStartPosition.CenterScreen
       self.AutoSize = True
+      self.SetTopLevel(True)
       self.BringToFront()
       
+      (STRwidth, STRheight) = calcStringLabelSize(BoxTitle)
+
       labelPanel = Panel()
       labelPanel.Dock = DockStyle.Top
+      labelPanel.Height = STRheight
+      labelPanel.Width = STRwidth
       labelPanel.AutoSize = True
       #labelPanel.BackColor = Color.LightSlateGray # Debug
       
@@ -120,11 +135,10 @@ class RadioWindow(Form):
       self.Controls.Add(radioPanel) # Don't know why, but the lower panel needs to be placed first.
       self.Controls.Add(labelPanel)
 
-      (STRwidth, STRheight) = calcStringLabelSize(BoxTitle)
       label = Label()
-      label.Text = BoxTitle
+      label.Text = formStringEscape(BoxTitle)
       label.Top = 30
-      label.Left = 50
+      label.Left = 25
       label.Height = STRheight
       label.Width = STRwidth
       labelPanel.Controls.Add(label)
@@ -137,7 +151,7 @@ class RadioWindow(Form):
          btn = RadioButton()
          btn.Name = str(self.index)
          self.index = self.index + 1
-         btn.Text = option
+         btn.Text = formStringEscape(option)
          btn.Dock = DockStyle.Top
          btn.Checked = False
          btn.CheckedChanged += self.checkedChanged
@@ -166,14 +180,104 @@ def radioChoice(title, options):
    form.ShowDialog()
    return form.getIndex()
  
-def test(group = table, x = 0, y = 0):
-   abilitylist = ["Draw a card", "Discard a card", "Gain 1 life"]
-   num = radioChoice("Activate Which ability?", abilitylist)
-   if num == None:
-      whisper("You didn't select an ability")
-      return
-   ability = abilitylist[num]
-   notify("{} used the {} ability.".format(me, ability))   
+   
+class MultiChoiceWindow(Form):
+ 
+   def __init__(self, FormTitle, FormChoices,CPType):
+      self.Text = CPType
+      self.index = 0
+      self.MinimizeBox = False
+      self.MaximizeBox = False
+      self.StartPosition = FormStartPosition.CenterScreen
+      self.AutoSize = True
+      self.BringToFront()
+      self.SetTopLevel(True)
+      self.origTitle = formStringEscape(FormTitle) # Used when modifying the label from a button
+      
+      self.confirmValue = [] # A list that can hold multiple choices.
+      
+      (STRwidth, STRheight) = calcStringLabelSize(FormTitle) # I want to calculate the newlines in the size of the label
+
+      labelPanel = Panel()
+      labelPanel.Dock = DockStyle.Top
+      labelPanel.Height = STRheight
+      labelPanel.Width = STRwidth
+      labelPanel.AutoSize = True
+      #labelPanel.BackColor = Color.LightSlateGray # Debug
+      
+      choicePanel = Panel()
+      choicePanel.Dock = DockStyle.Top
+      choicePanel.AutoSize = True
+      #radioPanel.BackColor = Color.LightSalmon # Debug
+
+      self.Controls.Add(choicePanel) # Don't know why, but the lower panel needs to be placed first.
+      self.Controls.Add(labelPanel)
+
+      self.label = Label()
+      self.label.Text = formStringEscape(FormTitle)
+      self.label.Top = 30
+      self.label.Left = 50
+      self.label.Height = STRheight
+      self.label.Width = STRwidth
+      labelPanel.Controls.Add(self.label)
+      
+      choicePush = Panel() # Just to put the radio buttons a bit more to the middle
+      choicePush.Left = 50
+      choicePush.AutoSize = True
+      choicePanel.Controls.Add(choicePush)
+      
+      for option in FormChoices:
+         btn = Button()
+         btn.Name = str(self.index)
+         btn.Text = str(self.index) + ':--> ' + formStringEscape(option)
+         self.index = self.index + 1
+         btn.Dock = DockStyle.Top
+         btn.AutoSize = True
+         btn.Height = 60
+         btn.Click += self.choiceMade
+         choicePush.Controls.Add(btn)
+         btn.BringToFront()
+
+      finishButton = Button()
+      finishButton.Text = "Finish Selection"
+      finishButton.Width = 100
+      finishButton.Dock = DockStyle.Bottom
+      #button.Anchor = AnchorStyles.Bottom
+      finishButton.Click += self.finishPressed
+      self.Controls.Add(finishButton)
+ 
+      cancelButton = Button()
+      cancelButton.Text = "Cancel"
+      cancelButton.Width = 100
+      cancelButton.Dock = DockStyle.Bottom
+      #button.Anchor = AnchorStyles.Bottom
+      cancelButton.Click += self.cancelPressed
+      self.Controls.Add(cancelButton)
+
+   def finishPressed(self, sender, args):
+      self.Close()
+
+   def cancelPressed(self, sender, args):
+      self.confirmValue = 'ABORT'
+      self.Close()
+ 
+   def choiceMade(self, sender, args):
+      self.confirmValue.append(int(sender.Name))
+      self.label.Text = self.origTitle + "\n\nYour current choices are:\n{}".format(self.confirmValue)
+ 
+   def getIndex(self):
+      return self.confirmValue   
+
+def multiChoice(title, options,card):
+   Application.EnableVisualStyles()
+   if card.Type == 'ICE': CPType = 'Intrusion Countermeasures Electronics' 
+   elif re.search(r'Icebreaker', card.Keywords): CPType = 'ICEbreaker GUI'
+   elif card.Type == 'Hardware': CPType = 'Dashboard'
+   else: CPType = 'Control Panel'
+   form = MultiChoiceWindow(title, options, CPType)
+   form.ShowDialog()
+   return form.getIndex()      
+      
 #---------------------------------------------------------------------------
 # Generic
 #---------------------------------------------------------------------------

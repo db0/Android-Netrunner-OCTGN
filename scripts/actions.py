@@ -605,10 +605,14 @@ def inputTraceValue (card, x=0,y=0, limit = 0, silent = False):
       if TraceValue == None: 
          whisper(":::Warning::: Trace attempt aborted by player.")
          return 'ABORT'
-   card.markers[mdict['Credits']] = TraceValue
+   reduction = reduceCost(card, 'TRACE', TraceValue)
+   if reduction: extraText = " (reduced by {})".format(uniCredit(reduction))
+   if payCost(TraceValue - reduction)  == 'ABORT': return
+   #card.markers[mdict['Credits']] = TraceValue
    if not silent: 
       if ds == 'corp': notify("{} strengthens their Trace by {}.".format(me,TraceValue))
       else: notify("{} reinforces their {} by {}.".format(me,uniLink(),TraceValue))
+   return TraceValue
 	
 #def revealTraceValue (card, x=0,y=0): # Obsolete in ANR
 #   if debugVerbosity >= 1: notify(">>> revealTraceValue(){}".format(extraASDebug())) #Debug
@@ -621,17 +625,17 @@ def inputTraceValue (card, x=0,y=0, limit = 0, silent = False):
 #   if TraceValue == 0: autoscriptOtherPlayers('clearTraceAttempt') # if the trace value is 0, then we consider the trace attempt as valid, so we call scripts triggering from that.
 #   TraceValue = 0
 
-def payTraceValue (card, x=0,y=0):
-   if debugVerbosity >= 1: notify(">>> payTraceValue(){}".format(extraASDebug())) #Debug
-   mute()
-   extraText = ''
-   card = getSpecial('Tracing')
-   reduction = reduceCost(card, 'TRACE', card.markers[mdict['Credits']])
-   if reduction: extraText = " (reduced by {})".format(uniCredit(reduction))
-   if payCost(card.markers[mdict['Credits']] - reduction)  == 'ABORT': return
-   notify ("{} pays the {}{} they used during this trace attempt.".format(me,uniCredit(card.markers[mdict['Credits']]),extraText))
-   card.markers[mdict['Credits']] = 0
-   autoscriptOtherPlayers('TraceAttempt',card)
+#def payTraceValue (card, x=0,y=0):
+#   if debugVerbosity >= 1: notify(">>> payTraceValue(){}".format(extraASDebug())) #Debug
+#   mute()
+#   extraText = ''
+#   card = getSpecial('Tracing')
+#   reduction = reduceCost(card, 'TRACE', card.markers[mdict['Credits']])
+#   if reduction: extraText = " (reduced by {})".format(uniCredit(reduction))
+#   if payCost(card.markers[mdict['Credits']] - reduction)  == 'ABORT': return
+#   notify ("{} pays the {}{} they used during this trace attempt.".format(me,uniCredit(card.markers[mdict['Credits']]),extraText))
+#   card.markers[mdict['Credits']] = 0
+#   autoscriptOtherPlayers('TraceAttempt',card)
 
 def cancelTrace ( card, x=0,y=0):
    if debugVerbosity >= 1: notify(">>> cancelTrace(){}".format(extraASDebug())) #Debug
@@ -797,10 +801,11 @@ def findDMGProtection(DMGdone, DMGtype, targetPL): # Find out if the player has 
             if targetPL == me:
                if confirm("You control a {} which can prevent some of the damage you're about to suffer. Do you want to activate it now?".format(card.name)):
                   executePlayScripts(card, 'DAMAGE')
+                  if re.search(r'onlyOnce',CardsAS.get(card.model,'')): card.orientation = Rot90
             else: 
                if confirm("{} controls a {} which can prevent some of the damage you're about to inflict to them. Do they wish you to activate their card for them automatically?".format(targetPL.name,card.name)):
                   executePlayScripts(card, 'DAMAGE')
-            if re.search(r'onlyOnce',CardsAS.get(card.model,'')): card.orientation = Rot90
+                  if re.search(r'onlyOnce',CardsAS.get(card.model,'')): card.orientation = Rot90
    cardList = sortPriority([c for c in table
                if c.controller == targetPL
                and c.markers])
@@ -1423,9 +1428,8 @@ def inspectCard(card, x = 0, y = 0): # This function shows the player the card t
    if ASText == 'This card has the following automations:': ASText = '\nThis card has no automations.'
    if card.name in automatedMarkers:
       ASText += '\n\nThis card can create markers, which also have automated effects.'
-   if card.type == 'Tracing': information("This is your tracing card. Double click on it to start a trace. It will ask you for your power bid and then put the amount as bits token on it.\
-                                   \n\nOnce both players have made their bid, double-click on it again to pay the amount. This will automatically use credits from cards that pay for tracing if you have any.\
-                                   \n\nIf for some reason the trace is cancelled, use the cancel trace from the menu. This will not use any bits and will clear the card.")
+   if card.type == 'Tracing': information("This is your tracing card. Double click on it to reinforce your trace or base link.\
+                                          It will ask you for your bid and then take the same amount of credits from your bank automatically")
    elif card.type == 'Server': information("These are your Servers. Start stacking your Ice above them and your Agendas, Upgrades and Nodes below them.\
                                      \nThey have no automated abilities")
    elif card.type == 'Counter Hold': information("This is your Counter Hold. This card stores all the beneficial and harmful counters you might accumulate over the course of the game.\

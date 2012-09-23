@@ -228,7 +228,7 @@ bc0f047c-01b1-427f-a439-d451eda01051
 -----
 
 +++++
-A0B1G0T0:SimplyAnnounce{break ice subroutine}||A0B1G0T0:Put1PlusOne||A1B0G0T0:Put1Virus	
+A0B1G0T0:SimplyAnnounce{break ice subroutine}||A0B1G0T0:Put1PlusOne||A0B0G0T0:Remove1Virus||A1B0G0T0:Put1Virus
 .....
 Cyberfeeder
 -----
@@ -634,7 +634,7 @@ Posted Bounty
 -----
 bc0f047c-01b1-427f-a439-d451eda01095
 -----
-onScore:Gain1Bad Publicity-isOptional$$Gain1Tags-onOpponent$$TrashMyself
+onScore:Gain1Bad Publicity-isOptional$$Gain1Tags-onOpponent$$ExileMyself
 +++++
 	
 .....
@@ -852,7 +852,7 @@ bc0f047c-01b1-427f-a439-d451eda01090
 -----
 
 +++++
-A0B0G0T0:Lose3Credits-onOpponent||A0B0G0T0:RunEnd-isSubroutine	
+A0B0G0T0:UseCustomAbility||A0B0G0T0:RunEnd-isSubroutine	
 .....
 Viktor 1.0
 -----
