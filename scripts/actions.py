@@ -1423,15 +1423,15 @@ def inspectCard(card, x = 0, y = 0): # This function shows the player the card t
    if re.search(r'atJackOut', CardsAS.get(card.model,'')): ASText += '\n * It will perform an automation at the end of a run.'
    if CardsAA.get(card.model,'') != '':
       if debugVerbosity >= 2: notify("### We have AutoActions") #Debug
-      if ASText == 'This card has the following automations:': ASText = '\nThis card will perform one or more automated clicks when you double click on it.'
-      else: ASText += '\n\nThis card will also perform one or more automated clicks when you double click on it.'
+      if ASText == 'This card has the following automations:': ASText = '\nThis card will perform one or more automated actions when you double click on it.'
+      else: ASText += '\n\nThis card will also perform one or more automated actions when you double click on it.'
    if ASText == 'This card has the following automations:': ASText = '\nThis card has no automations.'
    if card.name in automatedMarkers:
       ASText += '\n\nThis card can create markers, which also have automated effects.'
    if card.type == 'Tracing': information("This is your tracing card. Double click on it to reinforce your trace or base link.\
-                                          It will ask you for your bid and then take the same amount of credits from your bank automatically")
+                                         \nIt will ask you for your bid and then take the same amount of credits from your bank automatically")
    elif card.type == 'Server': information("These are your Servers. Start stacking your Ice above them and your Agendas, Upgrades and Nodes below them.\
-                                     \nThey have no automated abilities")
+                                     \nThey have no automated abilities so remember to manually pay credits for every ICE you install after the first!")
    elif card.type == 'Counter Hold': information("This is your Counter Hold. This card stores all the beneficial and harmful counters you might accumulate over the course of the game.\
                                           \n\nIf you're playing a corp, Bad Publicity, viruses and other such tokens may be put here as well. By double clicking this card, you'll use three clicks to clean all viruses from your cards.\
                                           \nIf you're playing a runner, brain damage markers, tags and any other tokens the corp gives you will be put here. by double clicking this card, you'll be able to select one of the markers to remove by paying its cost.\

@@ -30,6 +30,7 @@ Automations = {'Play, Score and Rez'    : True, # If True, game will automatical
                'Start/End-of-Turn'      : True, # If True, game will automatically trigger effects happening at the start of the player's turn, from cards they control.                
                'Damage Prevention'      : True, # If True, game will automatically use damage prevention counters from card they control.                
                'Triggers'               : True, # If True, game will search the table for triggers based on player's actions, such as installing a card, or trashing one.
+               'WinForms'               : True, # If True, game will use the custom Windows Forms for displaying multiple-choice menus and information pop-ups
                'Damage'                 : True}
 
 UniCode = True # If True, game will display credits, clicks, trash, memory as unicode characters
@@ -289,6 +290,10 @@ def switchPreventDMGAutomation(group,x=0,y=0):
 def switchTriggersAutomation(group,x=0,y=0):
    if debugVerbosity >= 1: notify(">>> switchTriggersAutomation(){}".format(extraASDebug())) #Debug
    switchAutomation('Triggers')
+   
+def switchWinForms(group,x=0,y=0):
+   if debugVerbosity >= 1: notify(">>> switchWinForms(){}".format(extraASDebug())) #Debug
+   switchAutomation('WinForms')
    
 def switchUniCode(group,x=0,y=0,command = 'Off'):
    if debugVerbosity >= 1: notify(">>> switchUniCode(){}".format(extraASDebug())) #Debug

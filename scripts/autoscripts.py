@@ -216,7 +216,8 @@ def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
    if len(Autoscripts) > 1: 
       #abilConcat = "This card has multiple abilities.\nWhich one would you like to use?\
                 #\n\n(Tip: You can put multiple abilities one after the the other (e.g. '110'). Max 9 at once)\n\n" # We start a concat which we use in our confirm window.
-      ChoiceTXT = "This card has multiple abilities.\nSelect the ones you would like to use in order and press the [Finish Selection] button"
+      if Automations['WinForms']: ChoiceTXT = "This card has multiple abilities.\nSelect the ones you would like to use, in order, and press the [Finish Selection] button"
+      else: ChoiceTXT = "This card has multiple abilities.\nType the ones you would like to use, in order, and press the [OK] button"
       cardInstructions = card.Instructions.split('||')
       if len(cardInstructions) > 1: choices = cardInstructions
       else:

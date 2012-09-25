@@ -59,6 +59,15 @@ Changelog
 * **SIGNIFICANT:** The Trace functions now automatically take their costs and announce their total Trace/Link strength. You do not need to double click on the Trace card a second time to Pay the cost. 
   * The Trace Card remains as a fake button though.
 
+#### V1.1.15.1
+
+Small fix to allow the new custom forms to work with fullscreen OCTGN as well.
+
+#### v1.1.15.2
+
+* Added Switch in the game menu to turn the new custom forms ON/OFF, for those who preferred the old way with typing numbers
+* Moved the trash card options to the root of the main menu and replaced the "Trash Target..." shortcuts with [del] and [ctrl][del] to be the same as normal trashing your own cards. So now to pay and trash an opponent's card, all you need to do is target it and press [ctrl]+[del]
+
 
 
 ### v1.1.14

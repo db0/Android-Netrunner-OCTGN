@@ -17,6 +17,8 @@
 ###==================================================File Contents==================================================###
 # This file contains generic game-agnostic scripts. They can be ported as-is in any kind of game.
 # * [Generic] funcrion do basic stuff like convert a sting into a number or store your card's properties.
+# * [Custom Windows Forms] are functions which create custom-crafted WinForms on the table. The MultipleChoice form is heavily commented.
+# * [Card Placement] Are dealing with placing or figuring where to place cards on the table
 ###=================================================================================================================###
 
 import re
@@ -60,7 +62,7 @@ def formStringEscape(STRING): # A function to escape some characters that are no
       escapedString += char
    return escapedString
 
-class OKWindow(Form):
+class OKWindow(Form): # This is a WinForm which creates a simple window, with some text and an OK button to close it.
    def __init__(self,InfoTXT):
       self.StartPosition = FormStartPosition.CenterScreen
       (STRwidth, STRheight) = calcStringLabelSize(InfoTXT)
@@ -72,7 +74,7 @@ class OKWindow(Form):
       self.AutoSize = True
       self.MinimizeBox = False
       self.MaximizeBox = False
-      self.SetTopLevel(True)
+      self.TopMost = True
       self.BringToFront()
       
       label = Label()
@@ -99,10 +101,13 @@ class OKWindow(Form):
       self.Close()
 
 def information(Message):
-   if debugVerbosity >= 1: notify("Message: {}".format(Message))
-   Application.EnableVisualStyles()
-   form = OKWindow(Message)
-   form.ShowDialog()
+   if debugVerbosity >= 1: notify(">>> information() with message: {}".format(Message))
+   if Automations['WinForms']:
+      Application.EnableVisualStyles()
+      form = OKWindow(Message)
+      form.ShowDialog()
+   else: 
+      confirm(Message)
    
    
 class RadioWindow(Form):
@@ -115,7 +120,7 @@ class RadioWindow(Form):
       self.MaximizeBox = False
       self.StartPosition = FormStartPosition.CenterScreen
       self.AutoSize = True
-      self.SetTopLevel(True)
+      self.TopMost = True
       self.BringToFront()
       
       (STRwidth, STRheight) = calcStringLabelSize(BoxTitle)
@@ -175,78 +180,90 @@ class RadioWindow(Form):
       return self.confirmValue
  
 def radioChoice(title, options):
-   Application.EnableVisualStyles()
-   form = RadioWindow(title, options)
-   form.ShowDialog()
-   return form.getIndex()
+   if debugVerbosity >= 1: notify(">>> radioChoice()".format(Message))
+   if Automations['WinForms']:
+      Application.EnableVisualStyles()
+      form = RadioWindow(title, options)
+      form.ShowDialog()
+      choice = form.getIndex()
+   else:
+      concatTXT = title + '\n\n'
+      for iter in range(len(options)):
+         concatTXT += '{}:--> {}\n'.format(iter,options[iter])
+      choice = askInteger(concatTXT,0)
+   if debugVerbosity >= 3: notify("<<< radioChoice()".format(Message))
+   return choice
  
    
 class MultiChoiceWindow(Form):
- 
-   def __init__(self, FormTitle, FormChoices,CPType):
-      self.Text = CPType
-      self.index = 0
-      self.MinimizeBox = False
-      self.MaximizeBox = False
-      self.StartPosition = FormStartPosition.CenterScreen
-      self.AutoSize = True
-      self.BringToFront()
-      self.SetTopLevel(True)
+ # This is a windows form which creates a multiple choice form, with a button for each choice. 
+ # The player can select more than one, and they are then returned as a list of integers
+   def __init__(self, FormTitle, FormChoices,CPType): # We initialize our form, expecting 3 variables. 
+                                                      # FormTitle is the title of the window itself
+                                                      # FormChoices is a list of strings which we use for the names of the buttons
+                                                      # CPType is combined with FormTitle to give a more thematic window name.
+      self.Text = CPType # We just store the variable locally
+      self.index = 0 # We use this variable to set a number to each button
+      self.MinimizeBox = False # We hide the minimize button
+      self.MaximizeBox = False # We hide the maximize button
+      self.StartPosition = FormStartPosition.CenterScreen # We start the form at the center of the player's screen
+      self.AutoSize = True # We allow the form to expand in size depending on its contents
+      self.BringToFront() # Not sure. Brine put that here >_<
+      self.TopMost = True # We make sure our new form will be on the top of all other windows. If we didn't have this here, fullscreen OCTGN would hide the form.
       self.origTitle = formStringEscape(FormTitle) # Used when modifying the label from a button
       
-      self.confirmValue = [] # A list that can hold multiple choices.
+      self.confirmValue = [] # This is our list which will hold the choices of the players as integers
       
-      (STRwidth, STRheight) = calcStringLabelSize(FormTitle) # I want to calculate the newlines in the size of the label
-
-      labelPanel = Panel()
-      labelPanel.Dock = DockStyle.Top
-      labelPanel.Height = STRheight
+      (STRwidth, STRheight) = calcStringLabelSize(FormTitle) # We dynamically calculate the size of the text label to be displayed as info to the player.
+      labelPanel = Panel() # We create a new panel (e.g. container) to store the label.
+      labelPanel.Dock = DockStyle.Top # We Dock the label's container on the top of the form window
+      labelPanel.Height = STRheight # We setup the dynamic size
       labelPanel.Width = STRwidth
-      labelPanel.AutoSize = True
+      labelPanel.AutoSize = True # We allow the panel to expand dynamically according to the size of the label
       #labelPanel.BackColor = Color.LightSlateGray # Debug
       
-      choicePanel = Panel()
-      choicePanel.Dock = DockStyle.Top
-      choicePanel.AutoSize = True
+      choicePanel = Panel() # We create a panel to hold our buttons
+      choicePanel.Dock = DockStyle.Top # We dock this below the label panel
+      choicePanel.AutoSize = True # We allow it to expand in size dynamically
       #radioPanel.BackColor = Color.LightSalmon # Debug
 
       self.Controls.Add(choicePanel) # Don't know why, but the lower panel needs to be placed first.
       self.Controls.Add(labelPanel)
 
-      self.label = Label()
-      self.label.Text = formStringEscape(FormTitle)
-      self.label.Top = 30
+      self.label = Label() # We create a label object which will hold the multiple choice description text
+      self.label.Text = formStringEscape(FormTitle) # We escape any strings that WinForms doesn't like, like ampersand and store it in the label
+      self.label.Top = 30 # We place the label 30 pixels from the top size of its container panel, and 50 pixels from the left.
       self.label.Left = 50
-      self.label.Height = STRheight
+      self.label.Height = STRheight # We set its dynamic size
       self.label.Width = STRwidth
-      labelPanel.Controls.Add(self.label)
+      labelPanel.Controls.Add(self.label) # We add the label to its container
       
-      choicePush = Panel() # Just to put the radio buttons a bit more to the middle
-      choicePush.Left = 50
-      choicePush.AutoSize = True
-      choicePanel.Controls.Add(choicePush)
+      choicePush = Panel() # An extra secondary container for the buttons, that is not docked, to allow us to slightly change its positioning
+      choicePush.Left = 50 # We move it 50 pixels to the left
+      choicePush.AutoSize = True # We allow it to expand dynamically
+      choicePanel.Controls.Add(choicePush) # We add it to its parent container
       
-      for option in FormChoices:
-         btn = Button()
-         btn.Name = str(self.index)
+      for option in FormChoices: # We dynamically add as many buttons as we have options
+         btn = Button() # We initialize a button object
+         btn.Name = str(self.index) # We name the button equal to its numeric value, plus its effect.
          btn.Text = str(self.index) + ':--> ' + formStringEscape(option)
-         self.index = self.index + 1
-         btn.Dock = DockStyle.Top
-         btn.AutoSize = True
-         btn.Height = 60
-         btn.Click += self.choiceMade
-         choicePush.Controls.Add(btn)
-         btn.BringToFront()
+         self.index = self.index + 1 # The internal of the button is also the choice that will be put in our list of integers. 
+         btn.Dock = DockStyle.Top # We dock the buttons one below the other, to the top of their container (choicePush)
+         btn.AutoSize = True # Doesn't seem to do anything
+         btn.Height = 60 # We make them nice and big
+         btn.Click += self.choiceMade # This triggers the function which records each choice into the confirmValue[] list
+         choicePush.Controls.Add(btn) # We add each button to its panel
+         btn.BringToFront() # Add new buttons to the bottom of existing ones (Otherwise the buttons would be placed in reverse numerical order)
 
-      finishButton = Button()
+      finishButton = Button() # We add a button to Finish the selection
       finishButton.Text = "Finish Selection"
       finishButton.Width = 100
-      finishButton.Dock = DockStyle.Bottom
+      finishButton.Dock = DockStyle.Bottom # We dock it to the bottom of the form.
       #button.Anchor = AnchorStyles.Bottom
-      finishButton.Click += self.finishPressed
-      self.Controls.Add(finishButton)
+      finishButton.Click += self.finishPressed # We call its function
+      self.Controls.Add(finishButton) # We add the button to the form
  
-      cancelButton = Button()
+      cancelButton = Button() # We add a bytton to Cancel the selection
       cancelButton.Text = "Cancel"
       cancelButton.Width = 100
       cancelButton.Dock = DockStyle.Bottom
@@ -254,29 +271,42 @@ class MultiChoiceWindow(Form):
       cancelButton.Click += self.cancelPressed
       self.Controls.Add(cancelButton)
 
-   def finishPressed(self, sender, args):
-      self.Close()
+   def finishPressed(self, sender, args): # The function called from the finishButton.
+      self.Close()  # It just closes the form
 
-   def cancelPressed(self, sender, args):
-      self.confirmValue = 'ABORT'
-      self.Close()
+   def cancelPressed(self, sender, args): # The function called from the cancelButton
+      self.confirmValue = 'ABORT' # It replaces the choice list with an ABORT message which is parsed by the calling function
+      self.Close() # And then closes the form
  
-   def choiceMade(self, sender, args):
-      self.confirmValue.append(int(sender.Name))
-      self.label.Text = self.origTitle + "\n\nYour current choices are:\n{}".format(self.confirmValue)
+   def choiceMade(self, sender, args): # The function called when pressing one of the choice buttons
+      self.confirmValue.append(int(sender.Name)) # We append the button's name to the existing choices list
+      self.label.Text = self.origTitle + "\n\nYour current choices are:\n{}".format(self.confirmValue) # We display what choices we've made until now to the player.
  
-   def getIndex(self):
-      return self.confirmValue   
+   def getIndex(self): # The function called after the form is closed, to grab its choices list
+      return self.confirmValue  
 
-def multiChoice(title, options,card):
-   Application.EnableVisualStyles()
-   if card.Type == 'ICE': CPType = 'Intrusion Countermeasures Electronics' 
-   elif re.search(r'Icebreaker', card.Keywords): CPType = 'ICEbreaker GUI'
-   elif card.Type == 'Hardware': CPType = 'Dashboard'
-   else: CPType = 'Control Panel'
-   form = MultiChoiceWindow(title, options, CPType)
-   form.ShowDialog()
-   return form.getIndex()      
+def multiChoice(title, options,card): # This displays a choice where the player can select more than one ability to trigger serially one after the other
+   if debugVerbosity >= 1: notify(">>> multiChoice()".format(Message))
+   if Automations['WinForms']: # If the player has not disabled the custom WinForms, we use those
+      Application.EnableVisualStyles() # To make the window look like all other windows in the user's system
+      if card.Type == 'ICE': CPType = 'Intrusion Countermeasures Electronics'  # Just some nice fluff
+      elif re.search(r'Icebreaker', card.Keywords): CPType = 'ICEbreaker GUI'
+      elif card.Type == 'Hardware': CPType = 'Dashboard'
+      else: CPType = 'Control Panel'
+      form = MultiChoiceWindow(title, options, CPType) # We create an object called "form" which contains an instance of the MultiChoice windows form.
+      form.ShowDialog() # We bring the form to the front to allow the user to make their choices
+      choices = form.getIndex() # Once the form is closed, we check an internal variable within the form object to grab what choices they made
+   else: # If the user has disabled the windows forms, we use instead the OCTGN built-in askInteger function
+      concatTXT = title + "\n\n(Tip: You can put multiple abilities one after the the other (e.g. '110'). Max 9 at once)\n\n" # We prepare the text of the window with a concat string
+      for iter in range(len(options)): # We populate the concat string with the options
+         concatTXT += '{}:--> {}\n'.format(iter,options[iter])
+      choicesInteger = askInteger(concatTXT,0) # We now ask the user to put in an integer.
+      if not choicesInteger: choices = 'ABORT' # If the user just close the window, abort.
+      else: 
+         choices = list(str(choicesInteger)) # We convert our number into a list of numeric chars
+         for iter in range(len(choices)): choices[iter] = int(choices[iter]) # we convert our list of chars into a list of integers      
+   if debugVerbosity >= 3: notify("<<< multiChoice() with list: {}".format(Message,choices))
+   return choices # We finally return a list of integers to the previous function. Those will in turn be iterated one-by-one serially.
       
 #---------------------------------------------------------------------------
 # Generic
