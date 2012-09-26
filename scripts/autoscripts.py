@@ -1085,7 +1085,7 @@ def RunX(Autoscript, announceText, card, targetCards = None, notification = None
          targets = findTarget('Targeted-atServer')
          if targets == []: # If the player has not targeted a server, then we ask them what they're targeting.
             if debugVerbosity >= 3: notify("### No targets found. Asking")
-            choice = radioChoice("Which server are you going to run at?\
+            choice = SingleChoice("Which server are you going to run at?\
                               \n\n(In the future you can target a server before you start a run and we will automatically pick that as the target)",\
                                   ['Remote Server','HQ','R&D','Archives'])
             if choice != None: # Just in case the player didn't just close the askInteger window.

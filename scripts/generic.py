@@ -50,7 +50,7 @@ def calcStringLabelSize(STRING):
    for char in STRING:
       if char == '\n': newlines += 1
    STRINGwidth = 200 + (len(STRING) / 4)
-   STRINGheight = 30 + (20 * newlines) + (30 * (STRINGwidth / 100))
+   STRINGheight = 30 + ((20 - newlines) * newlines) + (30 * (STRINGwidth / 100))
    return (STRINGwidth, STRINGheight)
    
 def formStringEscape(STRING): # A function to escape some characters that are not otherwise displayed by WinForms, like amperasands '&'
@@ -77,24 +77,30 @@ class OKWindow(Form): # This is a WinForm which creates a simple window, with so
       self.TopMost = True
       self.BringToFront()
       
+      labelPanel = Panel()
+      labelPanel.Dock = DockStyle.Top
+      labelPanel.AutoSize = True
+      labelPanel.BackColor = Color.White
+
       label = Label()
       label.Text = formStringEscape(InfoTXT)
       label.Top = 30
-      label.Left = 30
+      label.Left = (self.ClientSize.Width - STRwidth) / 2
       label.Height = STRheight
       label.Width = STRwidth
+      labelPanel.Controls.Add(label)
       #label.AutoSize = True #Well, that's shit.
 
       button = Button()
       button.Text = "OK"
       button.Width = 100
       button.Top = FORMheight - 80
-      button.Left = (FORMwidth / 2) - 50
+      button.Left = (FORMwidth - 100) / 2
       button.Anchor = AnchorStyles.Bottom
 
       button.Click += self.buttonPressed
 
-      self.Controls.Add(label)
+      self.Controls.Add(labelPanel)
       self.Controls.Add(button)
 
    def buttonPressed(self, sender, args):
@@ -110,9 +116,9 @@ def information(Message):
       confirm(Message)
    
    
-class RadioWindow(Form):
+class SingleChoiceWindow(Form):
  
-   def __init__(self, BoxTitle, BoxOptions):
+   def __init__(self, BoxTitle, BoxOptions, type, defaultOption):
       self.Text = "Select an Option"
       self.index = 0
       self.confirmValue = None
@@ -124,43 +130,56 @@ class RadioWindow(Form):
       self.BringToFront()
       
       (STRwidth, STRheight) = calcStringLabelSize(BoxTitle)
+      self.Width = STRwidth + 50
 
       labelPanel = Panel()
       labelPanel.Dock = DockStyle.Top
-      labelPanel.Height = STRheight
-      labelPanel.Width = STRwidth
       labelPanel.AutoSize = True
-      #labelPanel.BackColor = Color.LightSlateGray # Debug
+      labelPanel.BackColor = Color.White
       
-      radioPanel = Panel()
-      radioPanel.Dock = DockStyle.Top
-      radioPanel.AutoSize = True
-      #radioPanel.BackColor = Color.LightSalmon # Debug
+      separatorPanel = Panel()
+      separatorPanel.Dock = DockStyle.Top
+      separatorPanel.Height = 20
+      
+      choicePanel = Panel()
+      choicePanel.Dock = DockStyle.Top
+      choicePanel.AutoSize = True
 
-      self.Controls.Add(radioPanel) # Don't know why, but the lower panel needs to be placed first.
       self.Controls.Add(labelPanel)
+      labelPanel.BringToFront()
+      self.Controls.Add(separatorPanel)
+      separatorPanel.BringToFront()
+      self.Controls.Add(choicePanel)
+      choicePanel.BringToFront()
 
       label = Label()
       label.Text = formStringEscape(BoxTitle)
       label.Top = 30
-      label.Left = 25
+      label.Left = (self.ClientSize.Width - STRwidth) / 2
       label.Height = STRheight
       label.Width = STRwidth
       labelPanel.Controls.Add(label)
       
-      radioPush = Panel() # Just to put the radio buttons a bit more to the middle
-      radioPush.Left = 30
-      radioPanel.Controls.Add(radioPush)
+      bufferPanel = Panel() # Just to put the radio buttons a bit more to the middle
+      bufferPanel.Left = (self.ClientSize.Width - bufferPanel.Width) / 2
+      bufferPanel.AutoSize = True
+      choicePanel.Controls.Add(bufferPanel)
       
       for option in BoxOptions:
-         btn = RadioButton()
+         if type == 'radio':
+            btn = RadioButton()
+            if defaultOption == self.index: btn.Checked = True
+            else: btn.Checked = False
+            btn.CheckedChanged += self.checkedChanged
+         else: 
+            btn = Button()
+            btn.Height = 40 
+            btn.Click += self.choiceMade
          btn.Name = str(self.index)
          self.index = self.index + 1
          btn.Text = formStringEscape(option)
          btn.Dock = DockStyle.Top
-         btn.Checked = False
-         btn.CheckedChanged += self.checkedChanged
-         radioPush.Controls.Add(btn)
+         bufferPanel.Controls.Add(btn)
          btn.BringToFront()
 
       button = Button()
@@ -168,22 +187,26 @@ class RadioWindow(Form):
       button.Width = 100
       button.Dock = DockStyle.Bottom
       button.Click += self.buttonPressed
-      self.Controls.Add(button)
+      if type == 'radio': self.Controls.Add(button) # We only add the "Confirm" button on a radio menu.
  
    def buttonPressed(self, sender, args):
       self.Close()
  
    def checkedChanged(self, sender, args):
       self.confirmValue = int(sender.Name)
- 
+      
+   def choiceMade(self, sender, args):
+      self.confirmValue = int(sender.Name)
+      self.Close()
+      
    def getIndex(self):
       return self.confirmValue
  
-def radioChoice(title, options):
-   if debugVerbosity >= 1: notify(">>> radioChoice()".format(Message))
+def SingleChoice(title, options, type = 'radio', default = 0):
+   if debugVerbosity >= 1: notify(">>> SingleChoice()".format(title))
    if Automations['WinForms']:
       Application.EnableVisualStyles()
-      form = RadioWindow(title, options)
+      form = SingleChoiceWindow(title, options, type, default)
       form.ShowDialog()
       choice = form.getIndex()
    else:
@@ -191,7 +214,7 @@ def radioChoice(title, options):
       for iter in range(len(options)):
          concatTXT += '{}:--> {}\n'.format(iter,options[iter])
       choice = askInteger(concatTXT,0)
-   if debugVerbosity >= 3: notify("<<< radioChoice()".format(Message))
+   if debugVerbosity >= 3: notify("<<< SingleChoice() with return {}".format(choice))
    return choice
  
    
@@ -220,15 +243,23 @@ class MultiChoiceWindow(Form):
       labelPanel.Height = STRheight # We setup the dynamic size
       labelPanel.Width = STRwidth
       labelPanel.AutoSize = True # We allow the panel to expand dynamically according to the size of the label
-      #labelPanel.BackColor = Color.LightSlateGray # Debug
+      labelPanel.BackColor = Color.White
       
       choicePanel = Panel() # We create a panel to hold our buttons
       choicePanel.Dock = DockStyle.Top # We dock this below the label panel
       choicePanel.AutoSize = True # We allow it to expand in size dynamically
       #radioPanel.BackColor = Color.LightSalmon # Debug
 
-      self.Controls.Add(choicePanel) # Don't know why, but the lower panel needs to be placed first.
-      self.Controls.Add(labelPanel)
+      separatorPanel = Panel() # We create a panel to separate the labels from the buttons
+      separatorPanel.Dock = DockStyle.Top # It's going to be docked to the middle of both
+      separatorPanel.Height = 20 # Only 20 pixels high
+
+      self.Controls.Add(labelPanel) # The panels need to be put in the form one by one
+      labelPanel.BringToFront() # This basically tells that the last panel we added should go below all the others that are already there.
+      self.Controls.Add(separatorPanel)
+      separatorPanel.BringToFront() 
+      self.Controls.Add(choicePanel) 
+      choicePanel.BringToFront() 
 
       self.label = Label() # We create a label object which will hold the multiple choice description text
       self.label.Text = formStringEscape(FormTitle) # We escape any strings that WinForms doesn't like, like ampersand and store it in the label
@@ -239,7 +270,7 @@ class MultiChoiceWindow(Form):
       labelPanel.Controls.Add(self.label) # We add the label to its container
       
       choicePush = Panel() # An extra secondary container for the buttons, that is not docked, to allow us to slightly change its positioning
-      choicePush.Left = 50 # We move it 50 pixels to the left
+      choicePush.Left = (self.ClientSize.Width - choicePush.Width) / 2 # We move it 50 pixels to the left
       choicePush.AutoSize = True # We allow it to expand dynamically
       choicePanel.Controls.Add(choicePush) # We add it to its parent container
       
@@ -286,7 +317,7 @@ class MultiChoiceWindow(Form):
       return self.confirmValue  
 
 def multiChoice(title, options,card): # This displays a choice where the player can select more than one ability to trigger serially one after the other
-   if debugVerbosity >= 1: notify(">>> multiChoice()".format(Message))
+   if debugVerbosity >= 1: notify(">>> multiChoice()".format(title))
    if Automations['WinForms']: # If the player has not disabled the custom WinForms, we use those
       Application.EnableVisualStyles() # To make the window look like all other windows in the user's system
       if card.Type == 'ICE': CPType = 'Intrusion Countermeasures Electronics'  # Just some nice fluff
@@ -305,7 +336,7 @@ def multiChoice(title, options,card): # This displays a choice where the player 
       else: 
          choices = list(str(choicesInteger)) # We convert our number into a list of numeric chars
          for iter in range(len(choices)): choices[iter] = int(choices[iter]) # we convert our list of chars into a list of integers      
-   if debugVerbosity >= 3: notify("<<< multiChoice() with list: {}".format(Message,choices))
+   if debugVerbosity >= 3: notify("<<< multiChoice() with list: {}".format(choices))
    return choices # We finally return a list of integers to the previous function. Those will in turn be iterated one-by-one serially.
       
 #---------------------------------------------------------------------------

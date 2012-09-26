@@ -1000,8 +1000,8 @@ def RDaccessX(group = table, x = 0, y = 0): # A function which looks at the top 
          RDtop[iter].moveToTable(0, 0 + yaxisMove(RDtop[iter]), False)
          RDtop[iter].highlight = RevealedColor         
          information("Ambush! You have stumbled into a {}\
-                \n(This card activates even on access from R&D.)\
-              \n\nYour blunder has already triggered the alarms. Please wait until corporate OpSec has decided whether to use its effects or not, before pressing any button\
+                   \n(This card activates even on access from R&D.)\
+                 \n\nYour blunder has already triggered the alarms. Please wait until corporate OpSec has decided whether to use its effects or not, before pressing any button\
                   ".format(RDtop[iter].name))
       if debugVerbosity >= 4: notify("#### Storing...")
       storeProperties(RDtop[iter]) # Otherwise trying to trash the card will crash because of reduceCost()
@@ -1014,41 +1014,33 @@ def RDaccessX(group = table, x = 0, y = 0): # A function which looks at the top 
       if debugVerbosity >= 4: notify("#### Finished Storing. About to move back...")
       RDtop[iter].moveTo(targetPL.piles['R&D/Stack'],iter - removedCards)
       if debugVerbosity >= 3: notify("### Stored properties. Checking type...") #Debug
+      if cType == 'ICE': 
+         cStatTXT = '\nStrength: {}.'.format(cStat)
+      elif cType == 'Asset' or cType == 'Upgrade':
+         cStatTXT = '\nTrash Cost: {}.'.format(cStat)
+      elif cType == 'Agenda':
+         cStatTXT = '\nAgenda Points: {}.'.format(cStat)
+      else: cStatTXT = ''
+      title = "Card: {}.\
+             \nType: {}.\
+             \nKeywords: {}.\
+             \nCost: {}.\
+               {}\n\nCard Text: {}\
+           \n\nWhat do you want to do with this card?".format(cName,cType,cKeywords,cCost,cStatTXT,cRules)
       if cType == 'Agenda' or cType == 'Asset' or cType == 'Upgrade':
-         if cType == 'Agenda': action1TXT = 'Liberate for {} Agenda Points'.format(cStat)
-         else: action1TXT = 'Pay {} to Trash'.format(cStat)
-         choice = 0
-         while choice < 1 or choice > 3:
-            choice = askInteger("Card {}: {}\
-                               \nType: {}\
-                               \nKeywords: {}\
-                               \nCost: {}\
-                             \n\nCard Text: {}\
-                             \n\nWhat do you want to do with this card?\
-                               \n   1: Leave where it is.\
-                               \n   2: Force trash at no cost.\
-                               \n   3: {}\
-                             ".format(iter+1,cName,cType,cKeywords,cCost,cRules,action1TXT),3)
-            if choice == None: choice = 1
+         if cType == 'Agenda': action1TXT = 'Liberate for {} Agenda Points.'.format(cStat)
+         else: action1TXT = 'Pay {} to Trash.'.format(cStat)
+         options = ["Leave where it is.","Force trash at no cost.",action1TXT]
       else:                    
-         choice = 0
-         while choice < 1 or choice > 2:
-            choice = askInteger("Card {}: {}\
-                               \nType: {}\
-                               \nKeywords: {}\
-                               \nCost: {}\
-                             \n\nCard Text: {}\
-                             \n\nWhat do you want to do with this card?\
-                               \n   1: Leave where it is.\
-                               \n   2: Force trash at no cost.\
-                             ".format(iter+1,cName,cType,cKeywords,cCost,cRules),1)
-            if choice == None: choice = 1
-      if choice == 2: 
+         options = ["Leave where it is.","Force trash at no cost."]
+      choice = SingleChoice(title, options, 'button')
+      if choice == None: choice = 1
+      if choice == 1: 
          RDtop[iter].moveTo(targetPL.piles['Heap/Archives(Face-up)'])
          loopChk(RDtop[iter],'Type')
          notify("{} {} {} at no cost".format(me,uniTrash(),RDtop[iter]))
          removedCards += 1
-      elif choice == 3:
+      elif choice == 2:
          if cType == 'Agenda':
             RDtop[iter].moveToTable(0,0)
             RDtop[iter].highlight = RevealedColor
