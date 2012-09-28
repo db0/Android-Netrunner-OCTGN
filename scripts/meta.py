@@ -480,7 +480,8 @@ def reportGame(result = 'AgendaVictory'): # This submits the game results online
    setGlobalVariable('gameEnded','True')
    if debugVerbosity >= 3: notify("<<< reportGame()") #Debug
 
-def fetchLeagues()
+def fetchLeagues():
+   return '' # Code still WiP
    if debugVerbosity >= 1: notify(">>> fetchLeagues()") #Debug
    (LeagueTXT, LeagueCode) = webRead('https://raw.github.com/db0/Android-Netrunner-OCTGN/master/Leagues.txt')
    if LeagueCode != 200 or not LeagueTXT:
@@ -488,9 +489,9 @@ def fetchLeagues()
       return ''
    leaguesSplit = LeagueTXT.split('-----') # Five dashes separate on league from another
    for league in leaguesSplit:
-      if re.search(r'{}'.format(me.name),league): #Check if the player's name exists in the league
+      if re.search(r'{}'.format(me.name),league, re.IGNORECASE): #Check if the player's name exists in the league
          leagueDetails = league.split('=====') # Five equals separate the league name from its participants
-         if confirm("Was this match part of the {} League?".format(leagueDetails[0])):
+         if confirm("Was this a match for the {} League?".format(leagueDetails[0])):
             return leagueDetails[0] # If we matched a league, the return the first entry in the list, which is the league name.
    return '' # If we still haven't found a league name, it means the player is not listed as taking part in a league.
    
