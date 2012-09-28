@@ -602,7 +602,7 @@ def DebugCard(card, x=0, y=0):
       #notify("Stored_AS: {}".format(str(Stored_AutoScripts)))
       notify("Downloaded AA: {}".format(str(CardsAA)))
       notify("Card's AA: {}".format(CardsAA.get(card.model,'???')))
-   storeProperties(card)
+   storeProperties(card, True)
    card.orientation = Rot0
    
 def extraASDebug(Autoscript = None):

@@ -369,22 +369,19 @@ def displaymatch(match):
       return None
    return '<Match: {}, groups={}>'.format(match.group(), match.groups())
    
-def storeProperties(card): # Function that grabs a cards important properties and puts them in a dictionary
+def storeProperties(card, forced = False): # Function that grabs a cards important properties and puts them in a dictionary
    mute()
    coverExists = False
    if debugVerbosity >= 1: notify(">>> storeProperties(){}".format(extraASDebug())) #Debug
    global Stored_Cost, Stored_Type, Stored_Keywords, Stored_AutoActions, Stored_AutoScripts, identName
-   cFaceD = False
-   if card.name == 'Card' and Stored_Type.get(card,'?') == '?':
+   if (card.name == 'Card' and Stored_Type.get(card,'?') == '?') or forced:
       if not card.isFaceUp and card.group == table:
-         if card.controller != me: # If it's not our card, then we cover it up shortly while grabbing its properties
-            x,y = card.position
-            cover = table.create("ac3a3d5d-7e3a-4742-b9b2-7f72596d9c1b",x,y,1,False)
-            cover.moveToTable(x,y,False)
-            if card.orientation == Rot90: cover.orientation = Rot90
-            coverExists = True
+         x,y = card.position
+         cover = table.create("ac3a3d5d-7e3a-4742-b9b2-7f72596d9c1b",x,y,1,False)
+         cover.moveToTable(x,y,False)
+         if card.orientation == Rot90: cover.orientation = Rot90
+         coverExists = True
          card.isFaceUp = True
-         cFaceD = True
          loopcount = 0
          while card.name == 'Card':
             rnd(1,10)
@@ -392,7 +389,7 @@ def storeProperties(card): # Function that grabs a cards important properties an
             if loopcount == 5:
                whisper(":::Error::: Card properties can't be grabbed. Aborting!")
                break
-   if Stored_Type.get(card,'?') == '?' or (Stored_Type.get(card,'?') != card.Type and card.Type != '?'):
+   if Stored_Type.get(card,'?') == '?' or (Stored_Type.get(card,'?') != card.Type and card.Type != '?') or forced:
       if debugVerbosity >= 3: notify("### {} not stored. Storing...".format(card))
       Stored_Cost[card] = card.Cost
       Stored_Type[card] = card.Type
@@ -400,8 +397,8 @@ def storeProperties(card): # Function that grabs a cards important properties an
       Stored_AutoActions[card] = CardsAA.get(card.model,'')
       Stored_AutoScripts[card] = CardsAS.get(card.model,'')
       if card.Type == 'Identity' and card.owner == me: identName = card.name
-   if cFaceD: card.isFaceUp = False
    if coverExists: 
+      card.isFaceUp = False
       rnd(1,10) # To give time to the card facedown automation to complete.
       cover.moveTo(shared.exile) # now destorying cover card
    if debugVerbosity >= 3: notify("<<< storeProperties()")
