@@ -1,8 +1,8 @@
 ======Message of the Day======
 
-Please use Voice Chat!
+Please use Voice Communication!
 
-The developer of this plugin has setup a Mumble server to allow ANR players to be able to effortlessly connect and voice communicate with others.
+The developer of this plugin has setup a Mumble server to allow ANR players to be able to effortlessly connect and voice chat with others.
 
 Voice communication not only improves the speed of the game significantly, but it also makes it actually _feel_ like a boardgame, of which an important aspect if the player interaction outside of the game rules.
 
