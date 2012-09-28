@@ -8,6 +8,8 @@ Voice communication not only improves the speed of the game significantly, but i
 
 Even if you don't own a mic, take the time to install the mumble client and setup a connection to the server, so that you can connect easily. Even with one side being able to talk, it helps.
 
+Plus, you can almost always reach the developer idling in there. He's a total praise addict!
+
 Would you like to learn more?
 ===============================
 &&
