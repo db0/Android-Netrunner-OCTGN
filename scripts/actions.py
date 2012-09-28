@@ -1410,16 +1410,16 @@ def rulings(card, x = 0, y = 0):
 def inspectCard(card, x = 0, y = 0): # This function shows the player the card text, to allow for easy reading until High Quality scans are procured.
    if debugVerbosity >= 1: notify(">>> inspectCard(){}".format(extraASDebug())) #Debug
    ASText = "This card has the following automations:"
-   if re.search(r'onPlay', CardsAS.get(card.model,'')): ASText += '\n * It will have an effect when coming into play from your hand.'
-   if re.search(r'onScore', CardsAS.get(card.model,'')): ASText += '\n * It will have an effect when being scored.'
-   if re.search(r'onRez', CardsAS.get(card.model,'')): ASText += '\n * It will have an effect when its being rezzed.'
-   if re.search(r'whileRezzed', CardsAS.get(card.model,'')): ASText += '\n * It will has a continous effect while in play.'
-   if re.search(r'whileScored', CardsAS.get(card.model,'')): ASText += '\n * It will has a continous effect while scored.'
-   if re.search(r'atTurnStart', CardsAS.get(card.model,'')): ASText += '\n * It will perform an automation at the start of your turn.'
-   if re.search(r'atTurnEnd', CardsAS.get(card.model,'')): ASText += '\n * It will perform an automation at the end of your turn.'
-   if re.search(r'atRunStart', CardsAS.get(card.model,'')): ASText += '\n * It will perform an automation at the start of your run.'
-   if re.search(r'atJackOut', CardsAS.get(card.model,'')): ASText += '\n * It will perform an automation at the end of a run.'
-   if CardsAA.get(card.model,'') != '':
+   if re.search(r'onPlay', Stored_AutoScripts.get(card,'')): ASText += '\n * It will have an effect when coming into play from your hand.'
+   if re.search(r'onScore', Stored_AutoScripts.get(card,'')): ASText += '\n * It will have an effect when being scored.'
+   if re.search(r'onRez', Stored_AutoScripts.get(card,'')): ASText += '\n * It will have an effect when its being rezzed.'
+   if re.search(r'whileRezzed', Stored_AutoScripts.get(card,'')): ASText += '\n * It will has a continous effect while in play.'
+   if re.search(r'whileScored', Stored_AutoScripts.get(card,'')): ASText += '\n * It will has a continous effect while scored.'
+   if re.search(r'atTurnStart', Stored_AutoScripts.get(card,'')): ASText += '\n * It will perform an automation at the start of your turn.'
+   if re.search(r'atTurnEnd', Stored_AutoScripts.get(card,'')): ASText += '\n * It will perform an automation at the end of your turn.'
+   if re.search(r'atRunStart', Stored_AutoScripts.get(card,'')): ASText += '\n * It will perform an automation at the start of your run.'
+   if re.search(r'atJackOut', Stored_AutoScripts.get(card,'')): ASText += '\n * It will perform an automation at the end of a run.'
+   if CardsAA.get(card.model,'') != '' or Stored_AutoActions.get(card,'') != '':
       if debugVerbosity >= 2: notify("### We have AutoActions") #Debug
       if ASText == 'This card has the following automations:': ASText = '\nThis card will perform one or more automated actions when you double click on it.'
       else: ASText += '\n\nThis card will also perform one or more automated actions when you double click on it.'

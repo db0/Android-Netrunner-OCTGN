@@ -603,7 +603,7 @@ def DebugCard(card, x=0, y=0):
       notify("Downloaded AA: {}".format(str(CardsAA)))
       notify("Card's AA: {}".format(CardsAA.get(card.model,'???')))
    storeProperties(card, True)
-   card.orientation = Rot0
+   if Stored_Type.get(card,'?') != 'ICE': card.orientation = Rot0
    
 def extraASDebug(Autoscript = None):
    if Autoscript and debugVerbosity >= 3: return ". Autoscript:{}".format(Autoscript)
