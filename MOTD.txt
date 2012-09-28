@@ -1,10 +1,14 @@
 ======Message of the Day======
 
-The BoardGameGeek crowd is organizing the first OCTGN ANR Tournament!
+Please use Voice Chat!
 
-It's going to start at October 1st, so register to take part in it ASAP!
+The developer of this plugin has setup a Mumble server to allow ANR players to be able to effortlessly connect and voice communicate with others.
+
+Voice communication not only improves the speed of the game significantly, but it also makes it actually _feel_ like a boardgame, of which an important aspect if the player interaction outside of the game rules.
+
+Even if you don't own a mic, take the time to install the mumble client and setup a connection to the server, so that you can connect easily. Even with one side being able to talk, it helps.
 
 Would you like to learn more?
 ===============================
 &&
-http://boardgamegeek.com/thread/861424/netrunner-octgn-tournament-1-registration
+http://octgn.gamersjudgement.com/viewtopic.php?f=52&t=545

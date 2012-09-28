@@ -481,7 +481,7 @@ def reportGame(result = 'AgendaVictory'): # This submits the game results online
    if debugVerbosity >= 3: notify("<<< reportGame()") #Debug
 
 def fetchLeagues():
-   return '' # Code still WiP
+   return '' ### Code still WiP! Remove this at 1.1.16
    if debugVerbosity >= 1: notify(">>> fetchLeagues()") #Debug
    (LeagueTXT, LeagueCode) = webRead('https://raw.github.com/db0/Android-Netrunner-OCTGN/master/Leagues.txt')
    if LeagueCode != 200 or not LeagueTXT:
