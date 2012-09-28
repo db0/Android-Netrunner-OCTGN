@@ -59,19 +59,30 @@ Changelog
 * **SIGNIFICANT:** The Trace functions now automatically take their costs and announce their total Trace/Link strength. You do not need to double click on the Trace card a second time to Pay the cost. 
   * The Trace Card remains as a fake button though.
 
-## v1.1.15.1
+#### v1.1.15.1
 
 Small fix to allow the new custom forms to work with fullscreen OCTGN as well.
 
-## v1.1.15.2
+#### v1.1.15.2
 
 * Added Switch in the game menu to turn the new custom forms ON/OFF, for those who preferred the old way with typing numbers
 * Moved the trash card options to the root of the main menu and replaced the "Trash Target..." shortcuts with [del] and [ctrl][del] to be the same as normal trashing your own cards. So now to pay and trash an opponent's card, all you need to do is target it and press [ctrl]+[del]
 
-## v1.1.15.3
+#### v1.1.15.3
 
 * R&D Access also switched to the new WinForms.
 * WinForms in general modified to look more like the built-in dialogs of OCTGN.
+
+#### v1.1.15.4
+
+* "Debug Card" now force refreshes a card's scripts and should work better on bugged cards.
+* Inspect Card should now work on face-down cards better.
+* End of Turn will now not discard revealed cards
+* End of Run will now not clear highlights anymore
+* Game will warn you if your opponent has a far too old version of the game.
+* Game will inform more forcefully if you played more MUs than you have
+* No more python errors if a players closes the trace reinforce window from an autoscript
+* Fixed a bug which makes it possible that a player will take the identity name of their opponent
 
 
 ### v1.1.14
