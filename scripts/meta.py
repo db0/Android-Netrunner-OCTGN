@@ -438,6 +438,7 @@ def reportGame(result = 'AgendaVictory'): # This submits the game results online
    gameEnded = getGlobalVariable('gameEnded')
    if gameEnded == 'True':
      if not confirm("Your game already seems to have finished once before. Do you want to change the results to '{}' for {}?".format(result,me.name)): return
+   LEAGUE = fetchLeagues()
    PLAYER = me.name # Seeting some variables for readability in the URL
    IDENTITY = identName
    RESULT = result
@@ -448,7 +449,7 @@ def reportGame(result = 'AgendaVictory'): # This submits the game results online
    TURNS = turn
    VERSION = gameVersion
    if debugVerbosity >= 2: notify("### About to report player results online.") #Debug
-   (reportTXT, reportCode) = webRead('http://84.205.248.92/slaghund/game.slag?g={}&u={}&id={}&r={}&s={}&i={}&t={}&v={}&w={}'.format(GUID,PLAYER,IDENTITY,RESULT,SCORE,INFLUENCE,TURNS,VERSION,WIN))
+   (reportTXT, reportCode) = webRead('http://84.205.248.92/slaghund/game.slag?g={}&u={}&id={}&r={}&s={}&i={}&t={}&v={}&w={}&lid={}'.format(GUID,PLAYER,IDENTITY,RESULT,SCORE,INFLUENCE,TURNS,VERSION,WIN,LEAGUE))
    # The victorious player also reports for their enemy
    enemyPL = ofwhom('-ofOpponent')
    ENEMY = enemyPL.name
@@ -475,10 +476,24 @@ def reportGame(result = 'AgendaVictory'): # This submits the game results online
    else: E_TURNS = turn # If we're the runner, the opponent has played one more turn than we have.
    E_VERSION = enemyPL.getGlobalVariable('gameVersion')
    if debugVerbosity >= 2: notify("### About to report enemy results online.") #Debug
-   (EreportTXT, EreportCode) = webRead('http://84.205.248.92/slaghund/game.slag?g={}&u={}&id={}&r={}&s={}&i={}&t={}&v={}&w={}'.format(GUID,ENEMY,E_IDENTITY,E_RESULT,E_SCORE,E_INFLUENCE,E_TURNS,E_VERSION,E_WIN))
+   (EreportTXT, EreportCode) = webRead('http://84.205.248.92/slaghund/game.slag?g={}&u={}&id={}&r={}&s={}&i={}&t={}&v={}&w={}&lid={}'.format(GUID,ENEMY,E_IDENTITY,E_RESULT,E_SCORE,E_INFLUENCE,E_TURNS,E_VERSION,E_WIN,LEAGUE))
    setGlobalVariable('gameEnded','True')
    if debugVerbosity >= 3: notify("<<< reportGame()") #Debug
 
+def fetchLeagues()
+   if debugVerbosity >= 1: notify(">>> fetchLeagues()") #Debug
+   (LeagueTXT, LeagueCode) = webRead('https://raw.github.com/db0/Android-Netrunner-OCTGN/master/Leagues.txt')
+   if LeagueCode != 200 or not LeagueTXT:
+      whisper(":::WARNING::: Cannot check League Details online.")
+      return ''
+   leaguesSplit = LeagueTXT.split('-----') # Five dashes separate on league from another
+   for league in leaguesSplit:
+      if re.search(r'{}'.format(me.name),league): #Check if the player's name exists in the league
+         leagueDetails = league.split('=====') # Five equals separate the league name from its participants
+         if confirm("Was this match part of the {} League?".format(leagueDetails[0])):
+            return leagueDetails[0] # If we matched a league, the return the first entry in the list, which is the league name.
+   return '' # If we still haven't found a league name, it means the player is not listed as taking part in a league.
+   
 def fetchCardScripts(group = table, x=0, y=0): # Creates 2 dictionaries with all scripts for all cards stored, based on a web URL or the local version if that doesn't exist.
    if debugVerbosity >= 1: notify(">>> fetchCardScripts()") #Debug
    global CardsAA, CardsAS # Global dictionaries holding Card AutoActions and Card AutoScripts for all cards.

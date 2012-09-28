@@ -1383,12 +1383,12 @@ def prioritize(card,x=0,y=0):
       notify ("{} prioritizes {} for using counters automatically.".format(me,card))
       if PriorityInform: 
          information("This action prioritizes a card for when selecting which card will use its counters from automated effects\
-                                \nSuch automated effects include losing counters from stealth cards for using noisy icebreakers, or preventing damage\
-                              \n\nSelecting a card for priority gives it first order in the pick. So it will use its counters before any other card will\
-                              \n\nThe second order of priority is targeting a card. A card that is targeted at the time of the effect, will lose its counters after all cards highlighted with priority have\
-                              \n\nFinally, if any part of the effect is left requiring the use of counters, any card without priority or targeted will be used.\
-                              \n\nKeep this in mind if you wish to fine tune which cards use their counter automatically first\
-                                \n(This message will not appear again)")
+                    \nSuch automated effects include losing counters from stealth cards for using noisy icebreakers, or preventing damage\
+                  \n\nSelecting a card for priority gives it first order in the pick. So it will use its counters before any other card will\
+                  \n\nThe second order of priority is targeting a card. A card that is targeted at the time of the effect, will lose its counters after all cards highlighted with priority have\
+                  \n\nFinally, if any part of the effect is left requiring the use of counters, any card without priority or targeted will be used.\
+                  \n\nKeep this in mind if you wish to fine tune which cards use their counter automatically first\
+                    \n(This message will not appear again)")
          PriorityInform = False
    else:
       if card.highlight == DummyColor:
