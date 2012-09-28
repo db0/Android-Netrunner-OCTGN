@@ -399,7 +399,7 @@ def storeProperties(card): # Function that grabs a cards important properties an
       Stored_Keywords[card] = getKeywords(card)
       Stored_AutoActions[card] = CardsAA.get(card.model,'')
       Stored_AutoScripts[card] = CardsAS.get(card.model,'')
-      if card.Type == 'Identity': identName = card.name
+      if card.Type == 'Identity' and card.owner == me: identName = card.name
    if cFaceD: card.isFaceUp = False
    if coverExists: 
       rnd(1,10) # To give time to the card facedown automation to complete.

@@ -184,6 +184,12 @@ def goToSot (group, x=0,y=0):
    atTimedEffects('Start') # Check all our cards to see if there's any Start of Turn effects active.
    if ds == "corp": notify("=> The offices of {} ({}) are now open for business. They have {} {} for this turn{}.".format(identName,me,me.Clicks,uniClick(),extraTXT))
    else: notify ("=> {} ({}) has woken up. They have {} clicks for this turn{}.".format(identName,me,me.Clicks,extraTXT))
+   opponent = ofwhom('onOpponent')
+   if turn == 1:
+      if opponent.getGlobalVariable('gameVersion') == '': 
+         information(":::ATTENTION:::\n\nCannot see your opponent's game version! This likely means that they are using a very old version of this plugin.\
+                      \n\nPlease inform them to update their version.\
+                      \n\nYou can continue with this game, but if you do, you are very likely to run into bugs and unexpected behaviour. You have been warned!")
 
 #------------------------------------------------------------------------------
 # Game Setup
@@ -1169,7 +1175,7 @@ def clear(card, x = 0, y = 0, silent = False):
    if debugVerbosity >= 1: notify(">>> clear() card: {}".format(card)) #Debug
    mute()
    if not silent: notify("{} clears {}.".format(me, card))
-   if card.highlight != DummyColor or card.highlight != RevealedColor or card.highlight != InactiveColor :card.highlight = None
+   if card.highlight != DummyColor and card.highlight != RevealedColor and card.highlight != InactiveColor: card.highlight = None
    card.markers[mdict['BaseLink']] = 0
    card.markers[mdict['PlusOne']] = 0
    card.markers[mdict['MinusOne']] = 0
@@ -1182,7 +1188,7 @@ def clearAll(markersOnly = False, allPlayers = False): # Just clears all the pla
       if allPlayers: clear(card,silent = True)
       elif card.controller == me: clear(card,silent = True)
       if not markersOnly:
-         if card.isFaceUp and (card.Type == 'Operation' or card.Type == 'Event') and card.highlight != DummyColor:
+         if card.isFaceUp and (card.Type == 'Operation' or card.Type == 'Event') and card.highlight != DummyColor and card.highlight != RevealedColor and card.highlight != InactiveColor:
             intTrashCard(card,0,"free") # Clearing all Events and operations for players who keep forgeting to clear them.
    if debugVerbosity >= 3: notify("<<< clearAll()")
    

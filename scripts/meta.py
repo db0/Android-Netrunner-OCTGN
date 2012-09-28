@@ -198,7 +198,10 @@ def chkRAM(card, action = 'INSTALL', silent = False):
          card.controller.MU += MUreq
          MUtext = ", freeing up  {}".format(uniMU(MUreq))
    else: MUtext = ''
-   if card.controller.MU < 0 and not silent: notify(":::Warning:::{}'s programs require more memory than he has available. They must trash enough programs to bring their available Memory to at least 0".format(card.controller))
+   if card.controller.MU < 0 and not silent: 
+      notify(":::Warning:::{}'s programs require more memory than he has available. They must trash enough programs to bring their available Memory to at least 0".format(card.controller))
+      information(":::ATTENTION:::\n\nYou are now using more MUs than you have available memory!\
+                  \nYou need to trash enough programs to bring your Memory to 0 or higher")
    if debugVerbosity >= 3: notify("<<< chkRAM() by returning: {}".format(MUtext))
    return MUtext
 
@@ -340,6 +343,7 @@ def HELP_RunStructure(group,x=0,y=0):
 def versionCheck():
    if debugVerbosity >= 1: notify(">>> versionCheck()") #Debug
    global startupMsg
+   me.setGlobalVariable('gameVersion',gameVersion)
    if not startupMsg:
       (url, code) = webRead('https://raw.github.com/db0/Android-Netrunner-OCTGN/master/current_version.txt')
       if debugVerbosity >= 2: notify("### url:{}, code: {}".format(url,code)) #Debug
@@ -374,7 +378,6 @@ def versionCheck():
          startupMsg = True
       if not startupMsg: MOTD() # If we didn't give out any other message , we give out the MOTD instead.
       startupMsg = True
-   me.setGlobalVariable('gameVersion',gameVersion)
    if debugVerbosity >= 3: notify("<<< versionCheck()") #Debug
       
       
@@ -415,6 +418,7 @@ def MOTDdisplay(MOTD,DYK):
 
 def initGame(): # A function which prepares the game for online submition
    if debugVerbosity >= 1: notify(">>> initGame()") #Debug
+   if getGlobalVariable('gameGUID') != 'None': return #If we've already grabbed a GUID, then just use that.
    (gameInit, initCode) = webRead('http://84.205.248.92/slaghund/init.slag')
    if initCode != 200:
       #whisper("Cannot grab GameGUID at the moment!") # Maybe no need to inform players yet.
@@ -593,7 +597,7 @@ def DebugCard(card, x=0, y=0):
           \nCost: {}\
           \nCard ID: {}\
           \n----------------------\
-          ".format(Stored_Type[card], Stored_Keywords[card], Stored_Cost[card],card._id))
+          ".format(Stored_Type.get(card,'NULL'), Stored_Keywords.get(card,'NULL'), Stored_Cost.get(card,'NULL'),card._id))
    if debugVerbosity >= 4: 
       #notify("Stored_AS: {}".format(str(Stored_AutoScripts)))
       notify("Downloaded AA: {}".format(str(CardsAA)))

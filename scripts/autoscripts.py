@@ -1208,6 +1208,7 @@ def TraceX(Autoscript, announceText, card, targetCards = None, notification = No
    multiplier = per(Autoscript, card, n, targetCards)
    TraceStrength = num(action.group(1)) * multiplier
    reinforcement = inputTraceValue(card,True)
+   if reinforcement == 'ABORT': return 'ABORT'
    if reinforcement: reinforceTXT =  "and reinforced by {} (Total: {})".format(uniCredit(reinforcement),TraceStrength + reinforcement)
    else: reinforceTXT = "(Not reinforced)"
    if notification == 'Quick': announceString = "{} starts a Trace with a base strength of {} {}".format(announceText, TraceStrength, reinforceTXT)
