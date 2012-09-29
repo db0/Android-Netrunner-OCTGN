@@ -1058,7 +1058,8 @@ def RDaccessX(group = table, x = 0, y = 0): # A function which looks at the top 
             if rc == "ABORT": continue # If the player couldn't pay to trash the card, we leave it where it is.
             RDtop[iter].moveTo(targetPL.piles['Heap/Archives(Face-up)'])
             loopChk(RDtop[iter],'Type')
-            notify("{} paid {} to {} {}".format(me,uniCredit(cStat),uniTrash(),RDtop[iter]))            
+            notify("{} paid {} to {} {}".format(me,uniCredit(cStat),uniTrash(),RDtop[iter]))
+            removedCards += 1            
       else: continue
    cover.moveTo(shared.exile) # now putting the cover card to the exile deck that nobody looks at.
    notify("{} has finished accessing {}'s R&D".format(me,targetPL))

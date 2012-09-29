@@ -178,7 +178,7 @@ def clearNoise(): # Clears all player's noisy bits. I.e. nobody is considered to
 def storeSpecial(card): 
 # Function stores into a shared variable some special cards that other players might look up.
    if debugVerbosity >= 1: notify(">>> storeSpecial(){}".format(extraASDebug())) #Debug
-   storeProperties(card)
+   storeProperties(card, True)
    specialCards = eval(me.getGlobalVariable('specialCards'))
    specialCards[card.Type] = card._id
    me.setGlobalVariable('specialCards', str(specialCards))
