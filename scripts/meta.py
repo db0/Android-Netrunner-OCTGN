@@ -23,7 +23,10 @@
 # * [Online Functions] is everything which connects to online files for some purpose, such as checking the game version or displaying a message of the day
 ###=================================================================================================================###
 import re
-
+#import sys # Testing
+#import dateutil # Testing
+#import elementtree # Testing
+#import decimal # Testing
 
         
 Automations = {'Play, Score and Rez'    : True, # If True, game will automatically trigger card effects when playing or double-clicking on cards. Requires specific preparation in the sets.
@@ -488,8 +491,9 @@ def fetchLeagues():
       whisper(":::WARNING::: Cannot check League Details online.")
       return ''
    leaguesSplit = LeagueTXT.split('-----') # Five dashes separate on league from another
+   opponent = ofwhom('onOpponent')
    for league in leaguesSplit:
-      if re.search(r'{}'.format(me.name),league, re.IGNORECASE): #Check if the player's name exists in the league
+      if re.search(r'{}'.format(me.name),league, re.IGNORECASE) and re.search(r'{}'.format(opponent.name),league, re.IGNORECASE): #Check if the player's name exists in the league
          leagueDetails = league.split('=====') # Five equals separate the league name from its participants
          if confirm("Was this a match for the {} League?".format(leagueDetails[0])):
             return leagueDetails[0] # If we matched a league, the return the first entry in the list, which is the league name.
