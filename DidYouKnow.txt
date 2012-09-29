@@ -341,3 +341,11 @@ Even if you don't own a mic, take the time to install the mumble client and setu
 Would you like to learn more?
 &&
 http://octgn.gamersjudgement.com/viewtopic.php?f=52&t=545
+||
+The player Tragic, has been making awesome videos showing both how to play ANR and how to use OCTGN at the same time, along with the developer of this plugin.
+
+The videos show gameplay from both sides of the table, with accompanying commentary from both players on their strategy
+
+Check them out, they're really cool!
+&&
+http://boardgamegeek.com/video/21462/android-netrunner/tragic-vs-db0-core-set-starter-decks
