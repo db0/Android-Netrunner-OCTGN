@@ -435,7 +435,6 @@ def initGame(): # A function which prepares the game for online submition
    
 def reportGame(result = 'AgendaVictory'): # This submits the game results online.
    if debugVerbosity >= 1: notify(">>> reportGame()") #Debug
-   if turn < 1: return # You can never win before the first turn is finished.
    GUID = getGlobalVariable('gameGUID')
    if GUID == 'None': return # If we don't have a GUID, we can't submit
    gameEnded = getGlobalVariable('gameEnded')
@@ -452,6 +451,9 @@ def reportGame(result = 'AgendaVictory'): # This submits the game results online
    TURNS = turn
    VERSION = gameVersion
    if debugVerbosity >= 2: notify("### About to report player results online.") #Debug
+   if turn < 1 or len(players) == 1:
+      notify(":::ATTENTION:::Game stats submit aborted due to number of players ( less than 2 ) or turns played (less than 1)")
+      return # You can never win before the first turn is finished and we don't want to submit stats when there's only one player.
    (reportTXT, reportCode) = webRead('http://84.205.248.92/slaghund/game.slag?g={}&u={}&id={}&r={}&s={}&i={}&t={}&v={}&w={}&lid={}'.format(GUID,PLAYER,IDENTITY,RESULT,SCORE,INFLUENCE,TURNS,VERSION,WIN,LEAGUE))
    # The victorious player also reports for their enemy
    enemyPL = ofwhom('-ofOpponent')
@@ -484,8 +486,8 @@ def reportGame(result = 'AgendaVictory'): # This submits the game results online
    if debugVerbosity >= 3: notify("<<< reportGame()") #Debug
 
 def fetchLeagues():
-   return '' ### Code still WiP! Remove this at 1.1.16
    if debugVerbosity >= 1: notify(">>> fetchLeagues()") #Debug
+   #return '' ### Code still WiP! Remove this at 1.1.16
    (LeagueTXT, LeagueCode) = webRead('https://raw.github.com/db0/Android-Netrunner-OCTGN/master/Leagues.txt')
    if LeagueCode != 200 or not LeagueTXT:
       whisper(":::WARNING::: Cannot check League Details online.")
