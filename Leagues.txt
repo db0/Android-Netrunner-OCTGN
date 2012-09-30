@@ -2,13 +2,35 @@ NetrunnerOCTGNTournament1
 =====
 2012.10.09.16.00
 =====
-#League Not started yet
-#Currently Waiting for matchups information
-#They should be in the form of:
-
-OCTGNPlayer1:::OCTGNPlayer2
-OCTGNPlayer3:::OCTGNPlayer4
-
-etc
-
-Where "OCTGNPlayer#" is the OCTGN username of the player
+fabianfritzer:::Wormhole_Surfer
+raid1280:::Jythier
+Granet:::Shobalk
+ccasin:::MyckKabongo
+argus88:::Pokeratician
+kingjames01:::sydwys8
+Solidhavok:::Juneau585
+OvaMod7:::afifter
+aHein:::ThinkTank
+cham:::AstroLad
+Malefact:::Kam
+ShazzamaPajama:::Zeromus
+BadDecisionDino:::Alexfrog
+Dan G K:::Wimpgod
+OrangeDevil:::Yaiba
+shard:::Ricc0
+kengi:::CitizenFry
+kufel:::db0
+ThoonHulk:::yourbunnywrote
+Bushinone:::jopejope
+raymonkey:::Meepleplex
+byronczimmer:::hidamiyiagi
+hypersoar:::Edwin20er
+LordNat:::IamSalvation
+Tigers:::hollis
+Wolf88:::Phelanpt
+cubbieblue:::nyarlathotep
+Golem:::Fizzster
+kaffis:::Wosho
+arsensei:::hobb3
+paulgrogan:::chaochou
+Tukuturi:::RyanMC 
