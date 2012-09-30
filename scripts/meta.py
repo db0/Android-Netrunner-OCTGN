@@ -502,9 +502,9 @@ def fetchLeagues():
             leagueDetails = league.split('=====') # Five equals separate the league name from its participants
             timeDetails = leagueDetails[1].strip() # We grab the time after which the matchup are not valid anymore.
             endTimes = timeDetails.split('.')
-            currenttime = time.gmtime()
+            currenttime = time.gmtime(time.time())
             if debugVerbosity >= 2: notify("### Current Time:{}\n### End Times:{}".format(currenttime,endTimes)) #Debug
-            if endTimes[0] <= currenttime[0] and endTimes[1] <= currenttime[1] and endTimes[2] <= currenttime[2] and endTimes[3] <= currenttime[3] and endTimes[4] <= currenttime[4]:          
+            if endTimes[0] >= currenttime[0] and endTimes[1] >= currenttime[1] and endTimes[2] >= currenttime[2] and endTimes[3] >= currenttime[3] and endTimes[4] >= currenttime[4]:          
                if confirm("Was this a match for the {} League?".format(leagueDetails[0])):
                   return leagueDetails[0] # If we matched a league, the return the first entry in the list, which is the league name.
    return '' # If we still haven't found a league name, it means the player is not listed as taking part in a league.
