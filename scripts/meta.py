@@ -235,7 +235,7 @@ def checkUnique (card):
    if not re.search(r'Unique', getKeywords(card)): return True #If the played card isn't unique do nothing.
    ExistingUniques = [ c for c in table
          if c.owner == me and c.isFaceUp and c.name == card.name and re.search(r'Unique', getKeywords(c)) ]
-   if len(ExistingUniques) != 0 and not confirm("This unique card is already in play. Are you sure you want to play {}?\n\n(If you do, your existing unique card will be {} at no cost)".format(card.name,uniTrash())) : return False
+   if len(ExistingUniques) != 0 and not confirm("This unique card is already in play. Are you sure you want to play {}?\n\n(If you do, your existing unique card will be Trashed at no cost)".format(card.name)) : return False
    else:
       for uniqueC in ExistingUniques: trashForFree(uniqueC)
    return True   

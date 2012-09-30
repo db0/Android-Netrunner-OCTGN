@@ -1459,13 +1459,13 @@ def intPlay(card, cost = 'not_free'):
    whisper("+++ Processing. Please Hold...")
    storeProperties(card)
    random = rnd(10,100)
+   if not checkNotHardwareConsole(card): return	#If player already has a Console in play and doesnt want to play that card, do nothing.
+   if not checkUnique(card): return #If the player has the unique card and opted not to trash it, do nothing.
    if (card.Type == 'Operation' or card.Type == 'Event') and chkTargeting(card) == 'ABORT': return # If it's an Operation or Event and has targeting requirements, check with the user first.
    if re.search(r'Double', getKeywords(card)): NbReq = 2 # Some cards require two clicks to play. This variable is passed to the useClick() function.
    else: NbReq = 1 #In case it's not a "Double" card. Then it only uses one click to play.
    ClickCost = useClick(count = NbReq)
    if ClickCost == 'ABORT': return  #If the player didn't have enough clicks and opted not to proceed, do nothing.
-   if checkUnique(card) == False: return #If the player has the unique card and opted not to trash it, do nothing.
-   if not checkNotHardwareConsole(card): return	#If player already has a Console in play and doesnt want to play that card, do nothing.
    if card.Type == 'Event' or card.Type == 'Operation': action = 'PLAY'
    else: action = 'INSTALL'
    MUtext = ''

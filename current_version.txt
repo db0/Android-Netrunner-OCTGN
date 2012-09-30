@@ -1,29 +1,14 @@
-1.1.15||
+1.1.16||
 ======New Version Information======
 
-We now have a much improved multi-choice menu for cards with more than one ability on use (i.e. most Icebreakers and Ice). 
-To use it simply do what you always did, and double click on a relevant card.
+The new version fixes some important bugs, such as the one which made Once-per-turn Identity cards stop working, or tracing attempts give a python error.
+Because of this it is STRONGLY advised you update to this version as soon as possible!
 
-Along with this, came better descriptions for those choices. But to make this work...
+It also has code which checks if this is a possible tournament/league game records this fact (after confirming it with the winner). 
+This means we can keep a historical view of all tournament match results as long as the players submit them.
 
-===!MAKE SURE YOU UPDATE TO CORE SET 1.1.20!===
-
-:::IMPORTANT::: There is a small bug that might hide the multiple-choice window behind the OCTGN window!
-(This happens usually if you switched to another program and back to OCTGN without minimizing it)
-
-If you use a card and OCTGN seems stuck and non-responsive, check on your taskbar for a new window in OCTGN's task group.
-
-
-Finally, a significant change in how Traces work: 
-Tracing is done in one action; as soon as you boost your Trace/Base Link strength, it uses your credits.  
-It also announces your total in the same line so it should be easier to compare. 
-
-__You do not need to use the trace card a second time per trace!__
-  
-PS: TollBooth's ability now works according to the rules, so feel free to use it whether your opponent has the money or not.
-
-Enjoy!  
+Have fun!
 ===============================
 ||
-Latest Core Set: 1.1.20
+Latest Core Set: 1.1.21
 Latest Markers Set: 1.1.6

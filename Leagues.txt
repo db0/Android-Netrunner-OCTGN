@@ -10,3 +10,5 @@ OCTGNPlayer1:::OCTGNPlayer2
 OCTGNPlayer3:::OCTGNPlayer4
 
 etc
+
+Where "OCTGNPlayer#" is the OCTGN username of the player
