@@ -84,6 +84,11 @@ Small fix to allow the new custom forms to work with fullscreen OCTGN as well.
 * No more python errors if a players closes the trace reinforce window from an autoscript
 * Fixed a bug which makes it possible that a player will take the identity name of their opponent
 
+#### v1.1.15.6
+
+* Finally traced down and fixed the issue which cased the identity cards to stop after a reset and the tracing cards (and pay2delTag action) give python errors
+* Fixed bug which sometimes caused the R&D to not be sorted correctly after a runner access where they paid to trash a card.
+
 
 ### v1.1.14
 

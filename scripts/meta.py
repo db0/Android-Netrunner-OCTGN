@@ -22,7 +22,7 @@
 # * [Debug] if for helping the developers fix bugs
 # * [Online Functions] is everything which connects to online files for some purpose, such as checking the game version or displaying a message of the day
 ###=================================================================================================================###
-import re
+import re, time
 #import sys # Testing
 #import dateutil # Testing
 #import elementtree # Testing
@@ -493,10 +493,18 @@ def fetchLeagues():
    leaguesSplit = LeagueTXT.split('-----') # Five dashes separate on league from another
    opponent = ofwhom('onOpponent')
    for league in leaguesSplit:
-      if re.search(r'{}'.format(me.name),league, re.IGNORECASE) and re.search(r'{}'.format(opponent.name),league, re.IGNORECASE): #Check if the player's name exists in the league
-         leagueDetails = league.split('=====') # Five equals separate the league name from its participants
-         if confirm("Was this a match for the {} League?".format(leagueDetails[0])):
-            return leagueDetails[0] # If we matched a league, the return the first entry in the list, which is the league name.
+      leagueMatches = league.split('\n')
+      if debugVerbosity >= 4: notify("### League Linebreak Splits: {}".format(leagueMatches))
+      for matchup in leagueMatches:
+         if re.search(r'{}'.format(me.name),matchup, re.IGNORECASE) and re.search(r'{}'.format(opponent.name),matchup, re.IGNORECASE): #Check if the player's name exists in the league
+            leagueDetails = league.split('=====') # Five equals separate the league name from its participants
+            timeDetails = leagueDetails[1].strip() # We grab the time after which the matchup are not valid anymore.
+            endTimes = timeDetails.split('.')
+            currenttime = time.gmtime()
+            if debugVerbosity >= 2: notify("### Current Time:{}\n### End Times:{}".format(currenttime,endTimes)) #Debug
+            if endTimes[0] <= currenttime[0] and endTimes[1] <= currenttime[1] and endTimes[2] <= currenttime[2] and endTimes[3] <= currenttime[3] and endTimes[4] <= currenttime[4]:          
+               if confirm("Was this a match for the {} League?".format(leagueDetails[0])):
+                  return leagueDetails[0] # If we matched a league, the return the first entry in the list, which is the league name.
    return '' # If we still haven't found a league name, it means the player is not listed as taking part in a league.
    
 def fetchCardScripts(group = table, x=0, y=0): # Creates 2 dictionaries with all scripts for all cards stored, based on a web URL or the local version if that doesn't exist.
