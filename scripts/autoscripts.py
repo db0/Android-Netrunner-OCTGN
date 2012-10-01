@@ -453,21 +453,23 @@ def autoscriptOtherPlayers(lookup, origin_card, count = 1): # Function that trig
             cardProperties.append(origin_card.Side) # We are also going to check if the card is for runner or corp.
             if debugVerbosity >= 4: notify("### card Properies: {}".format(cardProperties))
             if not chkType.group(1) in cardProperties: continue 
+         if re.search(r'onTriggerCard',autoS): targetCard = [origin_card] # if we have the "-onTriggerCard" modulator, then the target of the script will be the original card (e.g. see Grimoire)
+         else: targetCard = None
          if debugVerbosity >= 2: notify("### Automatic Autoscripts: {}".format(AutoS)) # Debug
          #effect = re.search(r'\b([A-Z][A-Za-z]+)([0-9]*)([A-Za-z& ]*)\b([^:]?[A-Za-z0-9_&{} -]*)', AutoS)
          #passedScript = "{}".format(effect.group(0))
          #confirm('effects: {}'.format(passedScript)) #Debug
          if regexHooks['GainX'].search(AutoS):
-            gainTuple = GainX(AutoS, costText, card, notification = 'Automatic', n = count)
+            gainTuple = GainX(AutoS, costText, card, targetCard, notification = 'Automatic', n = count)
             if gainTuple == 'ABORT': break
          elif regexHooks['TokensX'].search(AutoS): 
-            if TokensX(AutoS, costText, card, notification = 'Automatic', n = count) == 'ABORT': break
+            if TokensX(AutoS, costText, card, targetCard, notification = 'Automatic', n = count) == 'ABORT': break
          elif regexHooks['TransferX'].search(AutoS): 
-            if TransferX(AutoS, costText, card, notification = 'Automatic', n = count) == 'ABORT': break
+            if TransferX(AutoS, costText, card, targetCard, notification = 'Automatic', n = count) == 'ABORT': break
          elif regexHooks['InflictX'].search(AutoS):
-            if InflictX(AutoS, costText, card, notification = 'Automatic', n = count) == 'ABORT': break
+            if InflictX(AutoS, costText, card, targetCard, notification = 'Automatic', n = count) == 'ABORT': break
          elif regexHooks['DrawX'].search(AutoS):
-            if DrawX(AutoS, costText, card, notification = 'Automatic', n = count) == 'ABORT': break
+            if DrawX(AutoS, costText, card, targetCard, notification = 'Automatic', n = count) == 'ABORT': break
    if debugVerbosity >= 3: notify("<<< autoscriptOtherPlayers()") # Debug
 
 #------------------------------------------------------------------------------

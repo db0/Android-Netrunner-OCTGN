@@ -150,6 +150,9 @@ def goToEndTurn(group, x = 0, y = 0):
    endofturn = False
    newturn = False
    currClicks = 0
+   myCards = (card for card in table if card.controller == me and card.owner == me)
+   for card in myCards: # We refresh once-per-turn cards to be used on the opponent's turn as well (e.g. Net Shield)
+      if card in Stored_Type and Stored_Type[card] != 'ICE': card.orientation &= ~Rot90 
    clearAll() # Just in case the player has forgotten to remove their temp markers.
    atTimedEffects('End')
    if ds == "corp": notify ("=> {} ({}) has reached CoB (Close of Business hours).".format(identName, me))
@@ -1040,7 +1043,7 @@ def RDaccessX(group = table, x = 0, y = 0): # A function which looks at the top 
       else:                    
          options = ["Leave where it is.","Force trash at no cost."]
       choice = SingleChoice(title, options, 'button')
-      if choice == None: choice = 1
+      if choice == None: choice = 0
       if choice == 1: 
          RDtop[iter].moveTo(targetPL.piles['Heap/Archives(Face-up)'])
          loopChk(RDtop[iter],'Type')

@@ -275,3 +275,11 @@ Used during damage reduction to signify a card that needs to be trashed as part 
 ### -isPriority
 
 Used when putting tokens on cards to mark them to use those credits before all others
+
+### -onTriggerCard
+
+used during triggered scripts, to figure out if the target card is the trigger, or the triggered one.
+
+### -afterCardInstall
+
+Just another way of setting the trigger of a script.

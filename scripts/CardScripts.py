@@ -386,9 +386,9 @@ Grimoire
 -----
 bc0f047c-01b1-427f-a439-d451eda01006
 -----
-whileRezzed:Gain2MU
+whileRezzed:Gain2MU||whileRezzed:Put1Virus-afterCardInstall-onTriggerCard-typeVirus
 +++++
-A0B0G0T0:Put1Virus-Targeted-atProgram_and_Virus	
+A0B0G0T0:Put1Virus-Targeted-atProgram_and_Virus
 .....
 Haas-Bioroid
 -----

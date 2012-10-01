@@ -47,31 +47,21 @@ Shaper running on a heavily fortifield Haas-Bioroid server
 Changelog
 ---------
 
-### v1.1.15
+#### v1.1.16.1
 
-* **SIGNIFICANT:** We've got a new Multiple Choice Window, with nice buttons and everything. No more putting numbers in the field and limited to 9 chars. Just put as much as you want and go!
-  * Further to the above, each option is now labeled nicely in a way that should be easy to understand what it does.
-* Now information towards the player will be put in a special window with a single "OK" button. Should avoid confusions about yes/no which is not needed.
-* Generic runs also use a form for selection of the target, with radiobuttons.
-* **WARNING:** The above two windows, __rarely__  end up spawning behind your OCTGN window. In case you double click on a card and OCTGN seems to freeze, check if a new window has opened behind it before panicking!
-* Now Damage inflicting effects will put out a notification just before they're about to do it. This should give a heads-up to the victim, in case their opponent does not inform them.
-* Fixed the first Tollbooth effect which was confusing newbies.
-* **SIGNIFICANT:** The Trace functions now automatically take their costs and announce their total Trace/Link strength. You do not need to double click on the Trace card a second time to Pay the cost. 
-  * The Trace Card remains as a fake button though.
+* One-per-turn cards now refresh at the start **and** and of your turn, to be usable even on the opponent's turn (i.e. Net Shield).
+* Closing the dialog for Accessing R&D cards (with X) does not force a trash now.
+* Grimoire will now automatically place a virus counterson Virus cards you install.
 
-#### v1.1.15.1
+### v1.1.16
 
-Small fix to allow the new custom forms to work with fullscreen OCTGN as well.
+* Added code to be able to submit statistics, filtered by tournament/league
+* Fixed bug when accessing cards from R&D and paying to trash assets/upgrades, causing the next cards to be placed at the wrong index.
 
-#### v1.1.15.2
+#### v1.1.15.6
 
-* Added Switch in the game menu to turn the new custom forms ON/OFF, for those who preferred the old way with typing numbers
-* Moved the trash card options to the root of the main menu and replaced the "Trash Target..." shortcuts with [del] and [ctrl][del] to be the same as normal trashing your own cards. So now to pay and trash an opponent's card, all you need to do is target it and press [ctrl]+[del]
-
-#### v1.1.15.3
-
-* R&D Access also switched to the new WinForms.
-* WinForms in general modified to look more like the built-in dialogs of OCTGN.
+* Finally traced down and fixed the issue which cased the identity cards to stop after a reset and the tracing cards (and pay2delTag action) give python errors
+* Fixed bug which sometimes caused the R&D to not be sorted correctly after a runner access where they paid to trash a card.
 
 #### v1.1.15.4
 
@@ -84,11 +74,31 @@ Small fix to allow the new custom forms to work with fullscreen OCTGN as well.
 * No more python errors if a players closes the trace reinforce window from an autoscript
 * Fixed a bug which makes it possible that a player will take the identity name of their opponent
 
-#### v1.1.15.6
+#### v1.1.15.3
 
-* Finally traced down and fixed the issue which cased the identity cards to stop after a reset and the tracing cards (and pay2delTag action) give python errors
-* Fixed bug which sometimes caused the R&D to not be sorted correctly after a runner access where they paid to trash a card.
+* R&D Access also switched to the new WinForms.
+* WinForms in general modified to look more like the built-in dialogs of OCTGN.
 
+#### v1.1.15.2
+
+* Added Switch in the game menu to turn the new custom forms ON/OFF, for those who preferred the old way with typing numbers
+* Moved the trash card options to the root of the main menu and replaced the "Trash Target..." shortcuts with [del] and [ctrl][del] to be the same as normal trashing your own cards. So now to pay and trash an opponent's card, all you need to do is target it and press [ctrl]+[del]
+
+#### v1.1.15.1
+
+Small fix to allow the new custom forms to work with fullscreen OCTGN as well.
+
+### v1.1.15
+
+* **SIGNIFICANT:** We've got a new Multiple Choice Window, with nice buttons and everything. No more putting numbers in the field and limited to 9 chars. Just put as much as you want and go!
+  * Further to the above, each option is now labeled nicely in a way that should be easy to understand what it does.
+* Now information towards the player will be put in a special window with a single "OK" button. Should avoid confusions about yes/no which is not needed.
+* Generic runs also use a form for selection of the target, with radiobuttons.
+* **WARNING:** The above two windows, __rarely__  end up spawning behind your OCTGN window. In case you double click on a card and OCTGN seems to freeze, check if a new window has opened behind it before panicking!
+* Now Damage inflicting effects will put out a notification just before they're about to do it. This should give a heads-up to the victim, in case their opponent does not inform them.
+* Fixed the first Tollbooth effect which was confusing newbies.
+* **SIGNIFICANT:** The Trace functions now automatically take their costs and announce their total Trace/Link strength. You do not need to double click on the Trace card a second time to Pay the cost. 
+  * The Trace Card remains as a fake button though.
 
 ### v1.1.14
 
