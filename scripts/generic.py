@@ -75,7 +75,6 @@ class OKWindow(Form): # This is a WinForm which creates a simple window, with so
       self.MinimizeBox = False
       self.MaximizeBox = False
       self.TopMost = True
-      self.BringToFront()
       
       labelPanel = Panel()
       labelPanel.Dock = DockStyle.Top
@@ -103,6 +102,10 @@ class OKWindow(Form): # This is a WinForm which creates a simple window, with so
       self.Controls.Add(labelPanel)
       self.Controls.Add(button)
 
+      self.Activate()
+      self.Focus()
+      self.BringToFront()
+
    def buttonPressed(self, sender, args):
       self.Close()
 
@@ -127,7 +130,6 @@ class SingleChoiceWindow(Form):
       self.StartPosition = FormStartPosition.CenterScreen
       self.AutoSize = True
       self.TopMost = True
-      self.BringToFront()
       
       (STRwidth, STRheight) = calcStringLabelSize(BoxTitle)
       self.Width = STRwidth + 50
@@ -189,6 +191,10 @@ class SingleChoiceWindow(Form):
       button.Click += self.buttonPressed
       if type == 'radio': self.Controls.Add(button) # We only add the "Confirm" button on a radio menu.
  
+      self.Activate()
+      self.Focus()
+      self.BringToFront()
+
    def buttonPressed(self, sender, args):
       self.Close()
  
@@ -231,7 +237,6 @@ class MultiChoiceWindow(Form):
       self.MaximizeBox = False # We hide the maximize button
       self.StartPosition = FormStartPosition.CenterScreen # We start the form at the center of the player's screen
       self.AutoSize = True # We allow the form to expand in size depending on its contents
-      self.BringToFront() # Not sure. Brine put that here >_<
       self.TopMost = True # We make sure our new form will be on the top of all other windows. If we didn't have this here, fullscreen OCTGN would hide the form.
       self.origTitle = formStringEscape(FormTitle) # Used when modifying the label from a button
       
@@ -301,6 +306,10 @@ class MultiChoiceWindow(Form):
       #button.Anchor = AnchorStyles.Bottom
       cancelButton.Click += self.cancelPressed
       self.Controls.Add(cancelButton)
+
+      self.Activate() # To make sure the form is visible.
+      self.Focus() # Same.
+      self.BringToFront() # Same.
 
    def finishPressed(self, sender, args): # The function called from the finishButton.
       self.Close()  # It just closes the form
