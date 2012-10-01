@@ -37,13 +37,16 @@ Stored_AutoScripts = {}
 # Custom Windows Forms
 #---------------------------------------------------------------------------
 
-import clr
-clr.AddReference("System.Drawing")
-clr.AddReference("System.Windows.Forms")
+try:
+   import clr
+   clr.AddReference("System.Drawing")
+   clr.AddReference("System.Windows.Forms")
 
-from System.Windows.Forms import Application, Form, Button, Label, DockStyle, AnchorStyles, FormStartPosition, RadioButton, Panel
-from System.Drawing import Color
-
+   from System.Windows.Forms import Application, Form, Button, Label, DockStyle, AnchorStyles, FormStartPosition, RadioButton, Panel
+   from System.Drawing import Color
+except:
+   Automations['WinForms'] = False
+   
 def calcStringLabelSize(STRING): 
 # A function which returns a slowly expansing size for a label. The more characters, the more the width expands to allow more characters on the same line.
    newlines = 0
@@ -102,10 +105,6 @@ class OKWindow(Form): # This is a WinForm which creates a simple window, with so
       self.Controls.Add(labelPanel)
       self.Controls.Add(button)
 
-      self.Activate()
-      self.Focus()
-      self.BringToFront()
-
    def buttonPressed(self, sender, args):
       self.Close()
 
@@ -114,6 +113,7 @@ def information(Message):
    if Automations['WinForms']:
       Application.EnableVisualStyles()
       form = OKWindow(Message)
+      form.BringToFront()
       form.ShowDialog()
    else: 
       confirm(Message)
@@ -191,18 +191,14 @@ class SingleChoiceWindow(Form):
       button.Click += self.buttonPressed
       if type == 'radio': self.Controls.Add(button) # We only add the "Confirm" button on a radio menu.
  
-      self.Activate()
-      self.Focus()
-      self.BringToFront()
-
    def buttonPressed(self, sender, args):
       self.Close()
  
    def checkedChanged(self, sender, args):
-      self.confirmValue = int(sender.Name)
+      self.confirmValue = sender.Name
       
    def choiceMade(self, sender, args):
-      self.confirmValue = int(sender.Name)
+      self.confirmValue = sender.Name
       self.Close()
       
    def getIndex(self):
@@ -213,8 +209,9 @@ def SingleChoice(title, options, type = 'radio', default = 0):
    if Automations['WinForms']:
       Application.EnableVisualStyles()
       form = SingleChoiceWindow(title, options, type, default)
+      form.BringToFront()
       form.ShowDialog()
-      choice = form.getIndex()
+      choice = num(form.getIndex())
    else:
       concatTXT = title + '\n\n'
       for iter in range(len(options)):
@@ -307,10 +304,6 @@ class MultiChoiceWindow(Form):
       cancelButton.Click += self.cancelPressed
       self.Controls.Add(cancelButton)
 
-      self.Activate() # To make sure the form is visible.
-      self.Focus() # Same.
-      self.BringToFront() # Same.
-
    def finishPressed(self, sender, args): # The function called from the finishButton.
       self.Close()  # It just closes the form
 
@@ -323,7 +316,7 @@ class MultiChoiceWindow(Form):
       self.label.Text = self.origTitle + "\n\nYour current choices are:\n{}".format(self.confirmValue) # We display what choices we've made until now to the player.
  
    def getIndex(self): # The function called after the form is closed, to grab its choices list
-      return self.confirmValue  
+      return self.confirmValue
 
 def multiChoice(title, options,card): # This displays a choice where the player can select more than one ability to trigger serially one after the other
    if debugVerbosity >= 1: notify(">>> multiChoice()".format(title))
