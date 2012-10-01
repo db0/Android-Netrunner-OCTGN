@@ -52,6 +52,8 @@ Changelog
 * One-per-turn cards now refresh at the start **and** and of your turn, to be usable even on the opponent's turn (i.e. Net Shield).
 * Closing the dialog for Accessing R&D cards (with X) does not force a trash now.
 * Grimoire will now automatically place a virus counterson Virus cards you install.
+* Fixed Stimhack not getting counters when running on a remote server without targeting it first
+* Made some changes which hopefulle ensure that winforms spawn on top
 
 ### v1.1.16
 

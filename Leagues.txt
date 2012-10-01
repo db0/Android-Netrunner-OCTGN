@@ -13,9 +13,9 @@ aHein:::ThinkTank
 cham:::AstroLad
 Malefact:::Kam 
 ShazzamaPajama:::Zeromus
-Cilantr0:::Alexfrog
+BadDecisionDino:::Alexfrog
 Dan G K:::Yaiba
-orangedevil :::ricco
+orangedevil:::ricco
 shard:::CitizenFry
 kengi:::DbZer0
 kufel:::yourbunnywrote
