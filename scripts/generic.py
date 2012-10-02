@@ -42,7 +42,7 @@ try:
    clr.AddReference("System.Drawing")
    clr.AddReference("System.Windows.Forms")
 
-   from System.Windows.Forms import Application, Form, Button, Label, DockStyle, AnchorStyles, FormStartPosition, RadioButton, Panel
+   from System.Windows.Forms import *
    from System.Drawing import Color
 except:
    Automations['WinForms'] = False
@@ -84,8 +84,15 @@ class OKWindow(Form): # This is a WinForm which creates a simple window, with so
       labelPanel.AutoSize = True
       labelPanel.BackColor = Color.White
 
+      self.timer_tries = 0
+      self.timer = Timer()
+      self.timer.Interval = 200
+      self.timer.Tick += self.onTick
+      self.timer.Start()
+      
       label = Label()
       label.Text = formStringEscape(InfoTXT)
+      if debugVerbosity >= 2: label.Text += '\n\nTopMost: ' + str(self.TopMost) # Debug
       label.Top = 30
       label.Left = (self.ClientSize.Width - STRwidth) / 2
       label.Height = STRheight
@@ -106,8 +113,17 @@ class OKWindow(Form): # This is a WinForm which creates a simple window, with so
       self.Controls.Add(button)
 
    def buttonPressed(self, sender, args):
+      self.timer.Stop()
       self.Close()
 
+   def onTick(self, sender, event):
+      if self.timer_tries < 3:
+         self.TopMost = False
+         self.Focus()
+         self.Activate()
+         self.TopMost = True
+         self.timer_tries += 1
+            
 def information(Message):
    if debugVerbosity >= 1: notify(">>> information() with message: {}".format(Message))
    if Automations['WinForms']:
@@ -134,6 +150,12 @@ class SingleChoiceWindow(Form):
       (STRwidth, STRheight) = calcStringLabelSize(BoxTitle)
       self.Width = STRwidth + 50
 
+      self.timer_tries = 0
+      self.timer = Timer()
+      self.timer.Interval = 200
+      self.timer.Tick += self.onTick
+      self.timer.Start()
+      
       labelPanel = Panel()
       labelPanel.Dock = DockStyle.Top
       labelPanel.AutoSize = True
@@ -156,6 +178,7 @@ class SingleChoiceWindow(Form):
 
       label = Label()
       label.Text = formStringEscape(BoxTitle)
+      if debugVerbosity >= 2: label.Text += '\n\nTopMost: ' + str(self.TopMost) # Debug
       label.Top = 30
       label.Left = (self.ClientSize.Width - STRwidth) / 2
       label.Height = STRheight
@@ -192,6 +215,7 @@ class SingleChoiceWindow(Form):
       if type == 'radio': self.Controls.Add(button) # We only add the "Confirm" button on a radio menu.
  
    def buttonPressed(self, sender, args):
+      self.timer.Stop()
       self.Close()
  
    def checkedChanged(self, sender, args):
@@ -199,11 +223,20 @@ class SingleChoiceWindow(Form):
       
    def choiceMade(self, sender, args):
       self.confirmValue = sender.Name
+      self.timer.Stop()
       self.Close()
       
    def getIndex(self):
       return self.confirmValue
- 
+
+   def onTick(self, sender, event):
+      if self.timer_tries < 3:
+         self.TopMost = False
+         self.Focus()
+         self.Activate()
+         self.TopMost = True
+         self.timer_tries += 1
+
 def SingleChoice(title, options, type = 'radio', default = 0):
    if debugVerbosity >= 1: notify(">>> SingleChoice()".format(title))
    if Automations['WinForms']:
@@ -239,6 +272,12 @@ class MultiChoiceWindow(Form):
       
       self.confirmValue = [] # This is our list which will hold the choices of the players as integers
       
+      self.timer_tries = 0 # Ugly hack to fix the form sometimes not staying on top of OCTGN
+      self.timer = Timer() # Create a timer object
+      self.timer.Interval = 200 # Speed is at one 'tick' per 0.2s
+      self.timer.Tick += self.onTick # Activate the event function on each tick
+      self.timer.Start() # Start the timer.
+      
       (STRwidth, STRheight) = calcStringLabelSize(FormTitle) # We dynamically calculate the size of the text label to be displayed as info to the player.
       labelPanel = Panel() # We create a new panel (e.g. container) to store the label.
       labelPanel.Dock = DockStyle.Top # We Dock the label's container on the top of the form window
@@ -265,6 +304,7 @@ class MultiChoiceWindow(Form):
 
       self.label = Label() # We create a label object which will hold the multiple choice description text
       self.label.Text = formStringEscape(FormTitle) # We escape any strings that WinForms doesn't like, like ampersand and store it in the label
+      if debugVerbosity >= 2: self.label.Text += '\n\nTopMost: ' + str(self.TopMost) # Debug
       self.label.Top = 30 # We place the label 30 pixels from the top size of its container panel, and 50 pixels from the left.
       self.label.Left = 50
       self.label.Height = STRheight # We set its dynamic size
@@ -305,10 +345,12 @@ class MultiChoiceWindow(Form):
       self.Controls.Add(cancelButton)
 
    def finishPressed(self, sender, args): # The function called from the finishButton.
+      self.timer.Stop()
       self.Close()  # It just closes the form
 
    def cancelPressed(self, sender, args): # The function called from the cancelButton
       self.confirmValue = 'ABORT' # It replaces the choice list with an ABORT message which is parsed by the calling function
+      self.timer.Stop()
       self.Close() # And then closes the form
  
    def choiceMade(self, sender, args): # The function called when pressing one of the choice buttons
@@ -318,6 +360,15 @@ class MultiChoiceWindow(Form):
    def getIndex(self): # The function called after the form is closed, to grab its choices list
       return self.confirmValue
 
+   def onTick(self, sender, event): # Ugly hack required because sometimes the winform does not go on top of all
+      if self.timer_tries < 3: # Try three times to bring the form on top
+         if debugVerbosity >= 2: self.label.Text = self.origTitle + '\n\n### Timer Iter: ' + str(self.timer_tries)
+         self.TopMost = False # Set the form as not on top
+         self.Focus() # Focus it
+         self.Activate() # Activate it
+         self.TopMost = True # And re-send it to top
+         self.timer_tries += 1 # Increment this counter to stop after 3 tries.
+      
 def multiChoice(title, options,card): # This displays a choice where the player can select more than one ability to trigger serially one after the other
    if debugVerbosity >= 1: notify(">>> multiChoice()".format(title))
    if Automations['WinForms']: # If the player has not disabled the custom WinForms, we use those

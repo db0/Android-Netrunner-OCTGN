@@ -47,6 +47,10 @@ Shaper running on a heavily fortifield Haas-Bioroid server
 Changelog
 ---------
 
+#### v1.1.16.2
+
+Another attempt to fix the WinForms not appearing over OCTGN sometimes.
+
 #### v1.1.16.1
 
 * One-per-turn cards now refresh at the start **and** and of your turn, to be usable even on the opponent's turn (i.e. Net Shield).
