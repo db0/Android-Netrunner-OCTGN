@@ -1219,20 +1219,18 @@ def ModifyStatus(Autoscript, announceText, card, targetCards = None, notificatio
    if action.group(2) == 'Myself': 
       del targetCards[:] # Empty the list, just in case.
       targetCards.append(card)
-   #confirm("groups: {}".format(action.groups())) #  Debug
    if action.group(3): dest = action.group(3)
    else: dest = 'hand'
-   #confirm("dest: {}".format(dest)) # Debug
-   for targetCard in targetCards: targetCardlist += '{},'.format(targetCard)
+   for targetCard in targetCards: 
+      if action.group(1) == 'Derez': targetCardlist += '{},'.format(fetchProperty(targetCard, 'name')) # Derez saves the name because by the time we announce the action, the card will be face down.
+      else: targetCardlist += '{},'.format(targetCard)
    targetCardlist = targetCardlist.strip(',') # Re remove the trailing comma
-   #confirm("List: {}".format(targetCards)) #Debug
-   #for targetCard in targetCards: notify("ModifyX TargetCard: {}".format(targetCard)) #Debug
    for targetCard in targetCards:
       if re.search(r'-ifEmpty',Autoscript) and targetCard.markers[mdict['Credits']] and targetCard.markers[mdict['Credits']] > 0: 
          if len(targetCards) > 1: continue #If the modification only happens when the card runs out of credits, then we abort if it still has any
          else: return announceText # If there's only 1 card and it's not supposed to be trashed yet, do nothing.
       if action.group(1) == 'Rez' and intRez(targetCard, 'free', silent = True) != 'ABORT': pass
-      elif action.group(1) == 'Derez'and derez(targetCard, silent = True) != 'ABORT': pass
+      elif action.group(1) == 'Derez' and derez(targetCard, silent = True) != 'ABORT': pass
       elif action.group(1) == 'Expose': 
          exposeResult = expose(targetCard, silent = True)
          if exposeResult == 'ABORT': return 'ABORT'
