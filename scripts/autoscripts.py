@@ -505,7 +505,7 @@ def atTimedEffects(Time = 'Start'): # Function which triggers card effects at th
          if debugVerbosity >= 2 and effect: notify("!!! effects: {}".format(effect.groups()))
          if re.search(r'excludeDummy', autoS) and card.highlight == DummyColor: continue
          if re.search(r'onlyforDummy', autoS) and card.highlight != DummyColor: continue
-         if re.search(r'isOptional', effect.group(2)) and not confirm("{} can have its optional ability take effect at this point. Do you want to activate it?".format(card.name)): continue
+         if re.search(r'isOptional', effect.group(2)) and not confirm("{} can have its optional ability take effect at this point. Do you want to activate it?".format(fetchProperty(card, 'name'))): continue
          if re.search(r'onlyOnce',autoS) and oncePerTurn(card, silent = True, act = 'automatic') == 'ABORT': continue
          splitAutoscripts = effect.group(2).split('$$')
          for passedScript in splitAutoscripts:
@@ -1050,7 +1050,7 @@ def RequestInt(Autoscript, announceText, card, targetCards = None, notification 
    if debugVerbosity >= 2: notify("### Checking for Msg")
    if action.group(8): 
       message = action.group(8)
-   else: message = "{}:\nThis effect requires that you provide an 'X'. What should that number be?{}".format(card.name,minTXT)
+   else: message = "{}:\nThis effect requires that you provide an 'X'. What should that number be?{}".format(fetchProperty(card, 'name'),minTXT)
    number = min - 1
    if debugVerbosity >= 2: notify("### About to ask")
    while number < min or number % div or (max and number > max):
@@ -1304,7 +1304,7 @@ def InflictX(Autoscript, announceText, card, targetCards = None, notification = 
    return announceString
    
 def UseCustomAbility(Autoscript, announceText, card, targetCards = None, notification = None, n = 0):
-   if card.name == "Tollbooth":
+   if fetchProperty(card, 'name') == "Tollbooth":
       targetPL = ofwhom('ofOpponent')
       if targetPL.Credits >= 3: 
          targetPL.Credits -= 3
@@ -1355,7 +1355,7 @@ def CustomScript(card, action = 'PLAY'): # Scripts that are complex and fairly u
          return         
       card.markers[selectedMarker] -= 1
       notify("{} to remove {} for {}.".format(clickCost,selectedMarker[0],creditCost))
-   elif card.name == 'Accelerated Beta Test' and action == 'SCORE':
+   elif fetchProperty(card, 'name') == 'Accelerated Beta Test' and action == 'SCORE':
       if not confirm("Would you like to initiate an accelerated beta test?"): return
       iter = 0
       for c in deck.top(3):
@@ -1369,7 +1369,7 @@ def CustomScript(card, action = 'PLAY'): # Scripts that are complex and fairly u
       if iter: # If we found any ice in the top 3
          notify("{} initiates an Accelerated Beta Test and reveals {} Ice from the top of their R&D. These Ice are automatically installed and rezzed".format(me, iter))
       else: notify("{} initiates a Accelerated Beta Test but their beta team was incompetent.".format(me))
-   elif card.name == 'Infiltration' and action == 'PLAY':
+   elif fetchProperty(card, 'name') == 'Infiltration' and action == 'PLAY':
       tCards = [c for c in table if c.targetedBy and c.targetedBy == me and c.isFaceUp == False]
       if tCards: expose(tCards[0]) # If the player has any face-down cards currently targeted, we assume he wanted to expose them.
       elif confirm("Do you wish to gain 2 credits?\
@@ -1377,7 +1377,7 @@ def CustomScript(card, action = 'PLAY'): # Scripts that are complex and fairly u
                 \n\nHowever if you have a target selected when you play this card, the target will be selected and exposed automatically."):
          me.Credits += 2
          notify("--> {} gains {}".format(me,uniCredit(2)))
-   elif card.name == "Rabbit Hole" and action == 'INSTALL':
+   elif fetchProperty(card, 'name') == "Rabbit Hole" and action == 'INSTALL':
       if not confirm("Would you like to extend the rabbit hole?"): 
          return
       cardList = [c for c in deck]
@@ -1513,7 +1513,7 @@ def findTarget(Autoscript): # Function for finding the target of an autoscript
                   if re.search(r'{}'.format(validtargetCHK), fetchProperty(targetLookup, 'Type')) or re.search(r'{}'.format(validtargetCHK), fetchProperty(targetLookup, 'Keywords')) or re.search(r'{}'.format(validtargetCHK), targetLookup.Side):
                      targetC = targetLookup
                for validtargetCHK in validNamedTargets: # look if the card we're going through matches our valid target checks
-                  if validtargetCHK == targetLookup.name:
+                  if validtargetCHK == fetchProperty(targetLookup, 'name'):
                      targetC = targetLookup
             if len(invalidTargets) > 0: # If we have no target restrictions, any selected card will do as long as it's a valid target.
                for invalidtargetCHK in invalidTargets:
@@ -1522,7 +1522,7 @@ def findTarget(Autoscript): # Function for finding the target of an autoscript
                      targetC = None
             if len(invalidNamedTargets) > 0: # If we have no target restrictions, any selected card will do as long as it's a valid target.
                for invalidtargetCHK in invalidNamedTargets:
-                  if invalidtargetCHK == targetLookup.name:
+                  if invalidtargetCHK == fetchProperty(targetLookup, 'name'):
                      targetC = None
             if debugVerbosity >= 4: notify("### Checking Rest...") #Debug
             if re.search(r'isRezzed', Autoscript) and not targetLookup.isFaceUp: 
@@ -1551,7 +1551,7 @@ def findTarget(Autoscript): # Function for finding the target of an autoscript
    #confirm("List is: {}".format(foundTargets)) # Debug
    if debugVerbosity >= 3: 
       tlist = []
-      for foundTarget in foundTargets: tlist.append(foundTarget.name) # Debug
+      for foundTarget in foundTargets: tlist.append(fetchProperty(foundTarget, 'name')) # Debug
       notify("<<< findTarget() by returning: {}".format(tlist))
    return foundTargets
    
@@ -1671,7 +1671,7 @@ def per(Autoscript, card = None, count = 0, targetCards = None, notification = N
                c.isFaceUp = True
                cFaceD = True
                random = rnd(10,100) # Bug workaround.
-            cardProperties.append(c.name) # We are going to check its name
+            cardProperties.append(fetchProperty(c, 'name')) # We are going to check its name
             cardProperties.append(c.Type) # It's type
             cardSubtypes = getKeywords(c).split('-') # And each individual trait. Traits are separated by " - "
             for cardSubtype in cardSubtypes:

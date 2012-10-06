@@ -520,7 +520,7 @@ def sortPriority(cardList):
    sortedList.extend(priority3)
    if debugVerbosity >= 3: 
       tlist = []
-      for sortTarget in sortedList: tlist.append(sortTarget.name) # Debug   
+      for sortTarget in sortedList: tlist.append(fetchProperty(sortTarget, 'name')) # Debug   
       notify("<<< sortPriority() returning {}".format(tlist)) #Debug
    return sortedList
    
@@ -529,7 +529,7 @@ def oncePerTurn(card, x = 0, y = 0, silent = False, act = 'manual'):
    mute()
    if card.orientation == Rot90:
       if act != 'manual': return 'ABORT' # If the player is not activating an effect manually, we always fail silently. So as not to spam the confirm.
-      elif not confirm("The once-per-turn ability of {} has already been used this turn\nBypass restriction?.".format(card.name)): return 'ABORT'
+      elif not confirm("The once-per-turn ability of {} has already been used this turn\nBypass restriction?.".format(fetchProperty(card, 'name'))): return 'ABORT'
       else: 
          if not silent: notify('{} activates the once-per-turn ability of {} another time'.format(me, card))
    else:

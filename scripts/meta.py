@@ -234,8 +234,8 @@ def checkUnique (card):
    mute()
    if not re.search(r'Unique', getKeywords(card)): return True #If the played card isn't unique do nothing.
    ExistingUniques = [ c for c in table
-         if c.owner == me and c.isFaceUp and c.name == card.name and re.search(r'Unique', getKeywords(c)) ]
-   if len(ExistingUniques) != 0 and not confirm("This unique card is already in play. Are you sure you want to play {}?\n\n(If you do, your existing unique card will be Trashed at no cost)".format(card.name)) : return False
+         if c.owner == me and c.isFaceUp and fetchProperty(c, 'name') == fetchProperty(card, 'name') and re.search(r'Unique', getKeywords(c)) ]
+   if len(ExistingUniques) != 0 and not confirm("This unique card is already in play. Are you sure you want to play {}?\n\n(If you do, your existing unique card will be Trashed at no cost)".format(fetchProperty(card, 'name'))) : return False
    else:
       for uniqueC in ExistingUniques: trashForFree(uniqueC)
    return True   
@@ -630,13 +630,13 @@ def DebugCard(card, x=0, y=0):
           \nCost: {}\
           \nCard ID: {}\
           \n----------------------\
-          ".format(Stored_Type.get(card,'NULL'), Stored_Keywords.get(card,'NULL'), Stored_Cost.get(card,'NULL'),card._id))
+          ".format(Stored_Type.get(card._id,'NULL'), Stored_Keywords.get(card._id,'NULL'), Stored_Cost.get(card._id,'NULL'),card._id))
    if debugVerbosity >= 4: 
       #notify("Stored_AS: {}".format(str(Stored_AutoScripts)))
       notify("Downloaded AA: {}".format(str(CardsAA)))
       notify("Card's AA: {}".format(CardsAA.get(card.model,'???')))
    storeProperties(card, True)
-   if Stored_Type.get(card,'?') != 'ICE': card.orientation = Rot0
+   if Stored_Type.get(card._id,'?') != 'ICE': card.orientation = Rot0
    
 def extraASDebug(Autoscript = None):
    if Autoscript and debugVerbosity >= 3: return ". Autoscript:{}".format(Autoscript)

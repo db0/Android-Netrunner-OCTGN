@@ -338,7 +338,7 @@ def checkDeckNoLimit(group):
             notify(":::ERROR::: Extra Identity Cards found in {}'s {}.".format(me, pileName(group)))
             ok = False
          elif card.Faction != identity.Faction:   
-            notify(":::ERROR::: Faction-restricted card ({}) found in {}'s {}.".format(card.name, me, pileName(group)))
+            notify(":::ERROR::: Faction-restricted card ({}) found in {}'s {}.".format(fetchProperty(card, 'name'), me, pileName(group)))
             ok = False
    if len(players) > 1: random = rnd(1,100) # Fix for multiplayer only. Makes Singleplayer setup very slow otherwise.               
    for card in trash: card.moveToBottom(group) # We use a second loop because we do not want to pause after each check
@@ -808,11 +808,11 @@ def findDMGProtection(DMGdone, DMGtype, targetPL): # Find out if the player has 
             if re.search(r'onlyOnce',CardsAS.get(card.model,'')) and card.orientation == Rot90: continue # If the card has a once per-turn ability which has been used, ignore it
             if re.search(r'excludeDummy',CardsAS.get(card.model,'')) and card.highlight == DummyColor: continue
             if targetPL == me:
-               if confirm("You control a {} which can prevent some of the damage you're about to suffer. Do you want to activate it now?".format(card.name)):
+               if confirm("You control a {} which can prevent some of the damage you're about to suffer. Do you want to activate it now?".format(fetchProperty(card, 'name'))):
                   executePlayScripts(card, 'DAMAGE')
                   if re.search(r'onlyOnce',CardsAS.get(card.model,'')): card.orientation = Rot90
             else: 
-               if confirm("{} controls a {} which can prevent some of the damage you're about to inflict to them. Do they wish you to activate their card for them automatically?".format(targetPL.name,card.name)):
+               if confirm("{} controls a {} which can prevent some of the damage you're about to inflict to them. Do they wish you to activate their card for them automatically?".format(targetPL.name,fetchProperty(card, 'name'))):
                   executePlayScripts(card, 'DAMAGE')
                   if re.search(r'onlyOnce',CardsAS.get(card.model,'')): card.orientation = Rot90
    cardList = sortPriority([c for c in table
@@ -940,7 +940,7 @@ def scrAgenda(card, x = 0, y = 0):
             cheapAgenda = True
             currentAdv = card.markers[mdict['Advancement']]
          else: return
-      elif not confirm("Do you want to {} agenda {}?".format(agendaTxt.lower(),card.name)): return
+      elif not confirm("Do you want to {} agenda {}?".format(agendaTxt.lower(),fetchProperty(card, 'name'))): return
       card.isFaceUp = True
       if agendaTxt == 'SCORE' and chkTargeting(card) == 'ABORT': 
          card.isFaceUp = False
@@ -1212,7 +1212,7 @@ def intTrashCard(card, stat, cost = "not free",  ClickCost = '', silent = False)
       goodGrammar = ''
    if UniCode: goodGrammar = ''
    cardowner = card.owner
-   if fetchProperty(card, 'Type') == "Tracing" or fetchProperty(card, 'Type') == "Counter Hold" or (fetchProperty(card, 'Type') == "Server" and card.name != "Remote Server"): 
+   if fetchProperty(card, 'Type') == "Tracing" or fetchProperty(card, 'Type') == "Counter Hold" or (fetchProperty(card, 'Type') == "Server" and fetchProperty(card, 'name') != "Remote Server"): 
       whisper("{}".format(trashEasterEgg[trashEasterEggIDX]))
       if trashEasterEggIDX < 7:
          trashEasterEggIDX += 1
@@ -1338,7 +1338,7 @@ def uninstall(card, x=0, y=0, destination = 'hand', silent = False):
    if destination == 'R&D' or destination == 'Stack': group = me.piles['R&D/Stack']
    else: group = card.owner.hand
    #confirm("destination: {}".format(destination)) # Debug
-   if fetchProperty(card, 'Type') == "Tracing" or fetchProperty(card, 'Type') == "Counter Hold" or (fetchProperty(card, 'Type') == "Server" and card.name != "Remote Server"): 
+   if fetchProperty(card, 'Type') == "Tracing" or fetchProperty(card, 'Type') == "Counter Hold" or (fetchProperty(card, 'Type') == "Server" and fetchProperty(card, 'name') != "Remote Server"): 
       whisper("This kind of card cannot be uninstalled!")
       return 'ABORT'
    else: 
@@ -1407,29 +1407,29 @@ def prioritize(card,x=0,y=0):
 def rulings(card, x = 0, y = 0):
    if debugVerbosity >= 1: notify(">>> rulings(){}".format(extraASDebug())) #Debug
    mute()
-   if not card.isFaceUp: return
+   #if not card.isFaceUp: return
    #openUrl('http://www.netrunneronline.com/cards/{}/'.format(card.Errata))
-   openUrl('http://www.cardgamedb.com/index.php/netrunner/android-netrunner-card-search?text={}'.format(card.name)) # Errata is not filled in most card so this works better until then
+   openUrl('http://www.cardgamedb.com/index.php/netrunner/android-netrunner-card-search?text={}&fTS=0'.format(fetchProperty(card, 'name'))) # Errata is not filled in most card so this works better until then
    
 def inspectCard(card, x = 0, y = 0): # This function shows the player the card text, to allow for easy reading until High Quality scans are procured.
    if debugVerbosity >= 1: notify(">>> inspectCard(){}".format(extraASDebug())) #Debug
    ASText = "This card has the following automations:"
-   if re.search(r'onPlay', Stored_AutoScripts.get(card,'')): ASText += '\n * It will have an effect when coming into play from your hand.'
-   if re.search(r'onScore', Stored_AutoScripts.get(card,'')): ASText += '\n * It will have an effect when being scored.'
-   if re.search(r'onRez', Stored_AutoScripts.get(card,'')): ASText += '\n * It will have an effect when its being rezzed.'
-   if re.search(r'whileRezzed', Stored_AutoScripts.get(card,'')): ASText += '\n * It will has a continous effect while in play.'
-   if re.search(r'whileScored', Stored_AutoScripts.get(card,'')): ASText += '\n * It will has a continous effect while scored.'
-   if re.search(r'atTurnStart', Stored_AutoScripts.get(card,'')): ASText += '\n * It will perform an automation at the start of your turn.'
-   if re.search(r'atTurnEnd', Stored_AutoScripts.get(card,'')): ASText += '\n * It will perform an automation at the end of your turn.'
-   if re.search(r'atRunStart', Stored_AutoScripts.get(card,'')): ASText += '\n * It will perform an automation at the start of your run.'
-   if re.search(r'atJackOut', Stored_AutoScripts.get(card,'')): ASText += '\n * It will perform an automation at the end of a run.'
-   if CardsAA.get(card.model,'') != '' or Stored_AutoActions.get(card,'') != '':
+   if re.search(r'onPlay', Stored_AutoScripts.get(card._id,'')): ASText += '\n * It will have an effect when coming into play from your hand.'
+   if re.search(r'onScore', Stored_AutoScripts.get(card._id,'')): ASText += '\n * It will have an effect when being scored.'
+   if re.search(r'onRez', Stored_AutoScripts.get(card._id,'')): ASText += '\n * It will have an effect when its being rezzed.'
+   if re.search(r'whileRezzed', Stored_AutoScripts.get(card._id,'')): ASText += '\n * It will has a continous effect while in play.'
+   if re.search(r'whileScored', Stored_AutoScripts.get(card._id,'')): ASText += '\n * It will has a continous effect while scored.'
+   if re.search(r'atTurnStart', Stored_AutoScripts.get(card._id,'')): ASText += '\n * It will perform an automation at the start of your turn.'
+   if re.search(r'atTurnEnd', Stored_AutoScripts.get(card._id,'')): ASText += '\n * It will perform an automation at the end of your turn.'
+   if re.search(r'atRunStart', Stored_AutoScripts.get(card._id,'')): ASText += '\n * It will perform an automation at the start of your run.'
+   if re.search(r'atJackOut', Stored_AutoScripts.get(card._id,'')): ASText += '\n * It will perform an automation at the end of a run.'
+   if CardsAA.get(card.model,'') != '' or Stored_AutoActions.get(card._id,'') != '':
       if debugVerbosity >= 2: notify("### We have AutoActions") #Debug
       if ASText == 'This card has the following automations:': ASText = '\nThis card will perform one or more automated actions when you double click on it.'
       else: ASText += '\n\nThis card will also perform one or more automated actions when you double click on it.'
    if ASText == 'This card has the following automations:': ASText = '\nThis card has no automations.'
-   if card.name in automatedMarkers:
-      ASText += '\n\nThis card can create markers, which also have automated effects.'
+   #if fetchProperty(card, 'name') in automatedMarkers:
+   #   ASText += '\n\nThis card can create markers, which also have automated effects.'
    if card.type == 'Tracing': information("This is your tracing card. Double click on it to reinforce your trace or base link.\
                                          \nIt will ask you for your bid and then take the same amount of credits from your bank automatically")
    elif card.type == 'Server': information("These are your Servers. Start stacking your Ice above them and your Agendas, Upgrades and Nodes below them.\
@@ -1525,11 +1525,11 @@ def intPlay(card, cost = 'not_free'):
    autoscriptOtherPlayers('Card'+action.capitalize(),card) # we tell the autoscriptotherplayers that we installed/played a card. (e.g. See Haas-Bioroid ability)
    if debugVerbosity >= 3: notify("<<< intPlay().action: {}\nAutoscriptedothers: {}".format(action,'Card'+action.capitalize())) #Debug
    if debugVerbosity >= 1:
-      if Stored_Type.get(card,None): notify("++++ Stored Type: {}".format(fetchProperty(card, 'Type')))
+      if Stored_Type.get(card._id,None): notify("++++ Stored Type: {}".format(fetchProperty(card, 'Type')))
       else: notify("++++ No Stored Type Found for {}".format(card))
-      if Stored_Keywords.get(card,None): notify("++++ Stored Keywords: {}".format(fetchProperty(card, 'Keywords')))
+      if Stored_Keywords.get(card._id,None): notify("++++ Stored Keywords: {}".format(fetchProperty(card, 'Keywords')))
       else: notify("++++ No Stored Keywords Found for {}".format(card))
-      if Stored_Cost.get(card,None): notify("++++ Stored Cost: {}".format(fetchProperty(card, 'Cost')))
+      if Stored_Cost.get(card._id,None): notify("++++ Stored Cost: {}".format(fetchProperty(card, 'Cost')))
       else: notify("++++ No Stored Cost Found for {}".format(card))
 
 
@@ -1575,7 +1575,7 @@ def checkNotHardwareConsole (card):
    if card.Type != "Hardware" or not re.search(r'Console', getKeywords(card)): return True
    ExistingConsoles = [ c for c in table
          if c.owner == me and c.isFaceUp and re.search(r'Console', getKeywords(c)) ]
-   if len(ExistingConsoles) != 0 and not confirm("You already have at least one console in play. Are you sure you want to install {}?\n\n(If you do, your installed Consoles will be automatically trashed at no cost)".format(card.name)): return False
+   if len(ExistingConsoles) != 0 and not confirm("You already have at least one console in play. Are you sure you want to install {}?\n\n(If you do, your installed Consoles will be automatically trashed at no cost)".format(fetchProperty(card, 'name'))): return False
    else: 
       for HWDeck in ExistingConsoles: trashForFree(HWDeck)
    if debugVerbosity >= 1: notify(">>> checkNotHardwareConsole()") #Debug
@@ -1732,11 +1732,11 @@ def drawMany(group, count = None, destination = None, silent = False):
    for c in group.top(count): 
       c.moveTo(destination)
       if debugVerbosity >= 1:
-         if Stored_Type.get(c,None): notify("++++ Stored Type: {}".format(fetchProperty(c, 'Type')))
+         if Stored_Type.get(c._id,None): notify("++++ Stored Type: {}".format(fetchProperty(c, 'Type')))
          else: notify("++++ No Stored Type Found for {}".format(c))
-         if Stored_Keywords.get(c,None): notify("++++ Stored Keywords: {}".format(fetchProperty(c, 'Keywords')))
+         if Stored_Keywords.get(c._id,None): notify("++++ Stored Keywords: {}".format(fetchProperty(c, 'Keywords')))
          else: notify("++++ No Stored Keywords Found for {}".format(c))
-         if Stored_Cost.get(c,None): notify("++++ Stored Cost: {}".format(fetchProperty(c, 'Cost')))
+         if Stored_Cost.get(c._id,None): notify("++++ Stored Cost: {}".format(fetchProperty(c, 'Cost')))
          else: notify("++++ No Stored Cost Found for {}".format(c))
       storeProperties(c)
    if not silent: notify("{} draws {} cards.".format(me, count))
