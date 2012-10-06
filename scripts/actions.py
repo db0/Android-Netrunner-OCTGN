@@ -1732,11 +1732,11 @@ def drawMany(group, count = None, destination = None, silent = False):
    for c in group.top(count): 
       c.moveTo(destination)
       if debugVerbosity >= 1:
-         if Stored_Type.get(c,None): notify("++++ Stored Type: {}".format(Stored_Type[c]))
+         if Stored_Type.get(c,None): notify("++++ Stored Type: {}".format(fetchProperty(c, 'Type')))
          else: notify("++++ No Stored Type Found for {}".format(c))
-         if Stored_Keywords.get(c,None): notify("++++ Stored Keywords: {}".format(Stored_Keywords[c]))
+         if Stored_Keywords.get(c,None): notify("++++ Stored Keywords: {}".format(fetchProperty(c, 'Keywords')))
          else: notify("++++ No Stored Keywords Found for {}".format(c))
-         if Stored_Cost.get(c,None): notify("++++ Stored Cost: {}".format(Stored_Cost[c]))
+         if Stored_Cost.get(c,None): notify("++++ Stored Cost: {}".format(fetchProperty(c, 'Cost')))
          else: notify("++++ No Stored Cost Found for {}".format(c))
       storeProperties(c)
    if not silent: notify("{} draws {} cards.".format(me, count))

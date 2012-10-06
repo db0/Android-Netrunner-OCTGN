@@ -1510,7 +1510,7 @@ def findTarget(Autoscript): # Function for finding the target of an autoscript
                storeProperties(targetLookup)
                for validtargetCHK in validTargets: # look if the card we're going through matches our valid target checks
                   if debugVerbosity >= 4: notify("### Checking for valid match on {}".format(validtargetCHK)) #Debug
-                  if re.search(r'{}'.format(validtargetCHK), Stored_Type[targetLookup]) or re.search(r'{}'.format(validtargetCHK), Stored_Keywords[targetLookup]) or re.search(r'{}'.format(validtargetCHK), targetLookup.Side):
+                  if re.search(r'{}'.format(validtargetCHK), fetchProperty(targetLookup, 'Type')) or re.search(r'{}'.format(validtargetCHK), fetchProperty(targetLookup, 'Keywords')) or re.search(r'{}'.format(validtargetCHK), targetLookup.Side):
                      targetC = targetLookup
                for validtargetCHK in validNamedTargets: # look if the card we're going through matches our valid target checks
                   if validtargetCHK == targetLookup.name:
@@ -1518,7 +1518,7 @@ def findTarget(Autoscript): # Function for finding the target of an autoscript
             if len(invalidTargets) > 0: # If we have no target restrictions, any selected card will do as long as it's a valid target.
                for invalidtargetCHK in invalidTargets:
                   if debugVerbosity >= 4: notify("### Checking for invalid match on {}".format(invalidtargetCHK)) #Debug
-                  if re.search(r'{}'.format(invalidtargetCHK), Stored_Type[targetLookup]) or re.search(r'{}'.format(invalidtargetCHK), Stored_Keywords[targetLookup]) or re.search(r'{}'.format(invalidtargetCHK), targetLookup.Side):
+                  if re.search(r'{}'.format(invalidtargetCHK), fetchProperty(targetLookup, 'Type')) or re.search(r'{}'.format(invalidtargetCHK), fetchProperty(targetLookup, 'Keywords')) or re.search(r'{}'.format(invalidtargetCHK), targetLookup.Side):
                      targetC = None
             if len(invalidNamedTargets) > 0: # If we have no target restrictions, any selected card will do as long as it's a valid target.
                for invalidtargetCHK in invalidNamedTargets:
