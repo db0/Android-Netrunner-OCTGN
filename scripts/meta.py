@@ -261,7 +261,7 @@ def resetAll(): # Clears all the global variables in order to start a new game.
    currClicks = 0
    turn = 0
    ShowDicts()
-   #debugVerbosity = -1 # Reset means normal game.
+   debugVerbosity = -1 # Reset means normal game.
    if debugVerbosity >= 1: notify("<<< resetAll()") #Debug
 #------------------------------------------------------------------------------
 # Switches
@@ -436,7 +436,7 @@ def initGame(): # A function which prepares the game for online submition
 def reportGame(result = 'AgendaVictory'): # This submits the game results online.
    if debugVerbosity >= 1: notify(">>> reportGame()") #Debug
    GUID = getGlobalVariable('gameGUID')
-   if GUID == 'None': return # If we don't have a GUID, we can't submit
+   if GUID == 'None' and debugVerbosity < 0: return # If we don't have a GUID, we can't submit. But if we're debugging, we go through.
    gameEnded = getGlobalVariable('gameEnded')
    if gameEnded == 'True':
      if not confirm("Your game already seems to have finished once before. Do you want to change the results to '{}' for {}?".format(result,me.name)): return
@@ -451,15 +451,17 @@ def reportGame(result = 'AgendaVictory'): # This submits the game results online
    TURNS = turn
    VERSION = gameVersion
    if debugVerbosity >= 2: notify("### About to report player results online.") #Debug
-   if turn < 1 or len(players) == 1:
+   if (turn < 1 or len(players) == 1) and debugVerbosity < 1:
       notify(":::ATTENTION:::Game stats submit aborted due to number of players ( less than 2 ) or turns played (less than 1)")
       return # You can never win before the first turn is finished and we don't want to submit stats when there's only one player.
-   (reportTXT, reportCode) = webRead('http://84.205.248.92/slaghund/game.slag?g={}&u={}&id={}&r={}&s={}&i={}&t={}&v={}&w={}&lid={}'.format(GUID,PLAYER,IDENTITY,RESULT,SCORE,INFLUENCE,TURNS,VERSION,WIN,LEAGUE))
+   if debugVerbosity < 1: # We only submit stats if we're not in debug mode
+      (reportTXT, reportCode) = webRead('http://84.205.248.92/slaghund/game.slag?g={}&u={}&id={}&r={}&s={}&i={}&t={}&v={}&w={}&lid={}'.format(GUID,PLAYER,IDENTITY,RESULT,SCORE,INFLUENCE,TURNS,VERSION,WIN,LEAGUE))
    # The victorious player also reports for their enemy
    enemyPL = ofwhom('-ofOpponent')
    ENEMY = enemyPL.name
    enemyIdent = getSpecial('Identity',enemyPL)
-   E_IDENTITY = enemyIdent.name
+   E_IDENTITY = fetchProperty(enemyIdent, 'name') # Debug
+   if debugVerbosity >= 2: notify("### Enemy Identity Name: {}".format(E_IDENTITY)) #Debug
    if result == 'FlatlineVictory': 
       E_RESULT = 'Flatlined'
       E_WIN = 0
@@ -481,7 +483,8 @@ def reportGame(result = 'AgendaVictory'): # This submits the game results online
    else: E_TURNS = turn # If we're the runner, the opponent has played one more turn than we have.
    E_VERSION = enemyPL.getGlobalVariable('gameVersion')
    if debugVerbosity >= 2: notify("### About to report enemy results online.") #Debug
-   (EreportTXT, EreportCode) = webRead('http://84.205.248.92/slaghund/game.slag?g={}&u={}&id={}&r={}&s={}&i={}&t={}&v={}&w={}&lid={}'.format(GUID,ENEMY,E_IDENTITY,E_RESULT,E_SCORE,E_INFLUENCE,E_TURNS,E_VERSION,E_WIN,LEAGUE))
+   if debugVerbosity < 1: # We only submit stats if we're not debugging
+      (EreportTXT, EreportCode) = webRead('http://84.205.248.92/slaghund/game.slag?g={}&u={}&id={}&r={}&s={}&i={}&t={}&v={}&w={}&lid={}'.format(GUID,ENEMY,E_IDENTITY,E_RESULT,E_SCORE,E_INFLUENCE,E_TURNS,E_VERSION,E_WIN,LEAGUE))
    setGlobalVariable('gameEnded','True')
    if debugVerbosity >= 3: notify("<<< reportGame()") #Debug
 

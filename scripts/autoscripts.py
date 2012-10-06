@@ -158,7 +158,7 @@ def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
    storeProperties(card) # Just in case
    failedRequirement = False # We set it to false when we start a new autoscript.
    if debugVerbosity >= 5: notify("+++ Checking if Tracing card...")
-   if (card in Stored_Type and Stored_Type[card] == 'Tracing') or card.model == 'eb7e719e-007b-4fab-973c-3fe228c6ce20': # If the player double clicks on the Tracing card...
+   if (card in Stored_Type and fetchProperty(card, 'Type') == 'Tracing') or card.model == 'eb7e719e-007b-4fab-973c-3fe228c6ce20': # If the player double clicks on the Tracing card...
       if debugVerbosity >= 5: notify("+++ Confirmed tacting card. Checking Status...")
       if card.isFaceUp and not card.markers[mdict['Credits']]: inputTraceValue(card, limit = 0)
       elif card.isFaceUp and card.markers[mdict['Credits']]: payTraceValue(card)
@@ -169,37 +169,28 @@ def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
       whisper("You cannot use inactive cards. Please use the relevant card abilities to clear them first. Aborting")
       return
    if debugVerbosity >= 5: notify("+++ Not an inactive card. Checking Stored_Autoactions{}...")
-   if not card in Stored_AutoActions:
-      if not card.isFaceUp:
-         card.isFaceUp = True
-         cFaceD = True
-      else: cFaceD = False
-      random = rnd(10,300)
-      if debugVerbosity >= 2: notify(">>> Storing Autoactions for {}".format(card)) #Debug
-      Stored_AutoActions[card] = CardsAA.get(card.model,'')
-      if cFaceD: card.isFaceUp = False
    if debugVerbosity >= 5: notify("+++ Finished storing CardsAA.get(card.model,'')s. Checking Rez status")
    if not card.isFaceUp:
-      if re.search(r'onAccess',Stored_AutoActions[card]) and confirm("This card has an ability that can be activated even when unrezzed. Would you like to activate that now?"): card.isFaceUp = True # Activating an on-access ability requires the card to be exposed, it it's no already.
-      elif re.search(r'Hidden',Stored_Keywords[card]): card.isFaceUp # If the card is a hidden resource, just turn it face up for its imminent use.
-      elif Stored_Type[card] == 'Agenda': 
+      if re.search(r'onAccess',fetchProperty(card, 'AutoActions')) and confirm("This card has an ability that can be activated even when unrezzed. Would you like to activate that now?"): card.isFaceUp = True # Activating an on-access ability requires the card to be exposed, it it's no already.
+      elif re.search(r'Hidden',fetchProperty(card, 'Keywords')): card.isFaceUp # If the card is a hidden resource, just turn it face up for its imminent use.
+      elif fetchProperty(card, 'Type') == 'Agenda': 
          scrAgenda(card) # If the player double-clicks on an Agenda card, assume they wanted to Score it.
          return
       else: 
          intRez(card) # If card is face down or not rezzed assume they wanted to rez       
          return
    if debugVerbosity >= 5: notify("+++ Card not unrezzed. Checking for automations switch...")
-   if not Automations['Play, Score and Rez'] or Stored_AutoActions[card] == "": 
+   if not Automations['Play, Score and Rez'] or fetchProperty(card, 'AutoActions') == "": 
       useCard(card) # If card is face up but has no autoscripts, or automation is disabled just notify that we're using it.
       return
    if debugVerbosity >= 5: notify("+++ Automations active. Checking for CustomScript...")
-   if re.search(r'CustomScript', Stored_AutoActions[card]): 
+   if re.search(r'CustomScript', fetchProperty(card, 'AutoActions')): 
       if chkTargeting(card) == 'ABORT': return
       CustomScript(card,'USE') # Some cards just have a fairly unique effect and there's no use in trying to make them work in the generic framework.
       return
    if debugVerbosity >= 5: notify("+++ All checks done!. Starting Choice Parse...")
    ### Checking if card has multiple autoscript options and providing choice to player.
-   Autoscripts = Stored_AutoActions[card].split('||')
+   Autoscripts = fetchProperty(card, 'AutoActions').split('||')
    AutoScriptSnapshot = list(Autoscripts)
    for autoS in AutoScriptSnapshot: # Checking and removing any clickscripts which were put here in error.
       if (re.search(r'while(Rezzed|Scored)', autoS) 
@@ -1425,14 +1416,14 @@ def CustomScript(card, action = 'PLAY'): # Scripts that are complex and fairly u
    
 def chkNoisy(card): # Check if the player successfully used a noisy icebreaker, and if so, give them the consequences...
    if debugVerbosity >= 1: notify(">>> chkNoisy()") #Debug
-   if re.search(r'Noisy', Stored_Keywords[card]) and re.search(r'Icebreaker', Stored_Keywords[card]): 
+   if re.search(r'Noisy', fetchProperty(card, 'Keywords')) and re.search(r'Icebreaker', fetchProperty(card, 'Keywords')): 
       me.setGlobalVariable('wasNoisy', '1') # First of all, let all players know of this fact.
       if debugVerbosity >= 2: notify("### Noisy credit Set!") #Debug
    if debugVerbosity >= 3: notify("<<< chkNoisy()") #Debug
 
 def penaltyNoisy(card):
    if debugVerbosity >= 1: notify(">>> penaltyNoisy()") #Debug
-   if re.search(r'Noisy', Stored_Keywords[card]) and re.search(r'Icebreaker', Stored_Keywords[card]): 
+   if re.search(r'Noisy', fetchProperty(card, 'Keywords')) and re.search(r'Icebreaker', fetchProperty(card, 'Keywords')): 
       NoisyCost = re.search(r'triggerNoisy([0-9]+)',CardsAS.get(card.model,''))
       if debugVerbosity >= 2: 
          if NoisyCost: notify("### Noisy Trigger Found: {}".format(NoisyCost.group(1))) #Debug      

@@ -427,7 +427,7 @@ def storeProperties(card, forced = False): # Function that grabs a cards importa
    coverExists = False
    if debugVerbosity >= 1: notify(">>> storeProperties(){}".format(extraASDebug())) #Debug
    global Stored_Cost, Stored_Type, Stored_Keywords, Stored_AutoActions, Stored_AutoScripts, identName
-   if (card.name == 'Card' and Stored_Type.get(card,'?') == '?') or forced:
+   if (card.name == 'Card' and Stored_Type.get(card._id,'?') == '?') or forced:
       if not card.isFaceUp and card.group == table:
          x,y = card.position
          cover = table.create("ac3a3d5d-7e3a-4742-b9b2-7f72596d9c1b",x,y,1,False)
@@ -442,13 +442,13 @@ def storeProperties(card, forced = False): # Function that grabs a cards importa
             if loopcount == 5:
                whisper(":::Error::: Card properties can't be grabbed. Aborting!")
                break
-   if Stored_Type.get(card,'?') == '?' or (Stored_Type.get(card,'?') != card.Type and card.Type != '?') or forced:
+   if Stored_Type.get(card._id,'?') == '?' or (Stored_Type.get(card._id,'?') != card.Type and card.Type != '?') or forced:
       if debugVerbosity >= 3: notify("### {} not stored. Storing...".format(card))
-      Stored_Cost[card] = card.Cost
-      Stored_Type[card] = card.Type
-      Stored_Keywords[card] = getKeywords(card)
-      Stored_AutoActions[card] = CardsAA.get(card.model,'')
-      Stored_AutoScripts[card] = CardsAS.get(card.model,'')
+      Stored_Cost[card._id] = card.Cost
+      Stored_Type[card._id] = card.Type
+      getKeywords(card)
+      Stored_AutoActions[card._id] = CardsAA.get(card.model,'')
+      Stored_AutoScripts[card._id] = CardsAS.get(card.model,'')
       if card.Type == 'Identity' and card.owner == me: identName = card.name
    if coverExists: 
       card.isFaceUp = False
@@ -458,16 +458,34 @@ def storeProperties(card, forced = False): # Function that grabs a cards importa
 
 def fetchProperty(card, property): 
    mute()
+   coverExists = False
    if debugVerbosity >= 1: notify(">>> fetchProperty(){}".format(extraASDebug())) #Debug
-   cFaceD = False
-   if card.properties[property] == '?':
-      if not card.isFaceUp: 
+   if property == 'name': currentValue = card.name
+   elif property == 'Cost': currentValue = Stored_Cost.get(card._id,'?') == '?'
+   elif property == 'Type': currentValue = Stored_Type.get(card._id,'?') == '?'
+   elif property == 'Keywords': currentValue = Stored_Keywords.get(card._id,'?') == '?'
+   elif property == 'AutoScripts': currentValue = Stored_AutoScripts.get(card._id,'?') == '?'
+   elif property == 'AutoActions': currentValue = Stored_AutoActions.get(card._id,'?') == '?'
+   else: currentValue = card.properties[property]
+   if currentValue == '?' or currentValue == 'Card':
+      if not card.isFaceUp and card.group == table:
+         x,y = card.position
+         cover = table.create("ac3a3d5d-7e3a-4742-b9b2-7f72596d9c1b",x,y,1,False)
+         cover.moveToTable(x,y,False)
+         if card.orientation == Rot90: cover.orientation = Rot90
+         coverExists = True
          card.isFaceUp = True
-         cFaceD = True
-      loopChk(card,'Type')
-   if cFaceD: card.isFaceUp = False
+         loopChk(card)
+      if property == 'name': currentValue = card.name # Now that we had a chance to flip the card face up temporarily, we grab its property again.
+      else: 
+         currentValue = card.properties[property]
+         storeProperties(card)
+   if coverExists: 
+      card.isFaceUp = False
+      rnd(1,10) # To give time to the card facedown automation to complete.
+      cover.moveTo(shared.exile) # now destorying cover card
    if debugVerbosity >= 3: notify("<<< fetchProperty() by returning: {}".format(card.properties[property]))
-   return card.properties[property]
+   return currentValue
 
 def loopChk(card,property = 'Type'):
    if debugVerbosity >= 1: notify(">>> loopChk(){}".format(extraASDebug())) #Debug
