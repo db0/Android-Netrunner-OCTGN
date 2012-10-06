@@ -461,14 +461,16 @@ def fetchProperty(card, property):
    coverExists = False
    if debugVerbosity >= 1: notify(">>> fetchProperty(){}".format(extraASDebug())) #Debug
    if property == 'name': currentValue = card.name
-   elif property == 'Cost': currentValue = Stored_Cost.get(card._id,'?') == '?'
-   elif property == 'Type': currentValue = Stored_Type.get(card._id,'?') == '?'
-   elif property == 'Keywords': currentValue = Stored_Keywords.get(card._id,'?') == '?'
-   elif property == 'AutoScripts': currentValue = Stored_AutoScripts.get(card._id,'?') == '?'
-   elif property == 'AutoActions': currentValue = Stored_AutoActions.get(card._id,'?') == '?'
+   elif property == 'Cost': currentValue = Stored_Cost.get(card._id,'?')
+   elif property == 'Type': currentValue = Stored_Type.get(card._id,'?')
+   elif property == 'Keywords': currentValue = Stored_Keywords.get(card._id,'?')
+   elif property == 'AutoScripts': currentValue = Stored_AutoScripts.get(card._id,'?')
+   elif property == 'AutoActions': currentValue = Stored_AutoActions.get(card._id,'?')
    else: currentValue = card.properties[property]
    if currentValue == '?' or currentValue == 'Card':
+      if debugVerbosity >= 4: notify("### Card properties unreadable") #Debug
       if not card.isFaceUp and card.group == table:
+         if debugVerbosity >= 3: notify("### Need to flip card up to read its properties.") #Debug
          x,y = card.position
          cover = table.create("ac3a3d5d-7e3a-4742-b9b2-7f72596d9c1b",x,y,1,False)
          cover.moveToTable(x,y,False)
@@ -476,6 +478,7 @@ def fetchProperty(card, property):
          coverExists = True
          card.isFaceUp = True
          loopChk(card)
+      if debugVerbosity >= 3: notify("### Ready to grab real properties.") #Debug
       if property == 'name': currentValue = card.name # Now that we had a chance to flip the card face up temporarily, we grab its property again.
       else: 
          currentValue = card.properties[property]
@@ -484,7 +487,7 @@ def fetchProperty(card, property):
       card.isFaceUp = False
       rnd(1,10) # To give time to the card facedown automation to complete.
       cover.moveTo(shared.exile) # now destorying cover card
-   if debugVerbosity >= 3: notify("<<< fetchProperty() by returning: {}".format(card.properties[property]))
+   if debugVerbosity >= 3: notify("<<< fetchProperty() by returning: {}".format(currentValue))
    return currentValue
 
 def loopChk(card,property = 'Type'):

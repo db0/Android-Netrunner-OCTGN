@@ -59,7 +59,7 @@ lastKnownNrClicks = 0 # A Variable keeping track of what the engine thinks our a
 def placeCard(card, action = 'INSTALL'):
    if debugVerbosity >= 1: notify(">>> placeCard() with action: {}".format(action)) #Debug
    global installedCount
-   type = card.Type
+   type = fetchProperty(card, 'Type')
    if action != 'INSTALL' and type == 'Agenda':
       if ds == 'corp': type == 'scoredAgenda'
       else: type == 'liberatedAgenda'
@@ -152,7 +152,7 @@ def goToEndTurn(group, x = 0, y = 0):
    currClicks = 0
    myCards = (card for card in table if card.controller == me and card.owner == me)
    for card in myCards: # We refresh once-per-turn cards to be used on the opponent's turn as well (e.g. Net Shield)
-      if card._id Stored_Type and fetchProperty(card, 'Type') != 'ICE': card.orientation &= ~Rot90 
+      if card._id in Stored_Type and fetchProperty(card, 'Type') != 'ICE': card.orientation &= ~Rot90 
    clearAll() # Just in case the player has forgotten to remove their temp markers.
    atTimedEffects('End')
    if ds == "corp": notify ("=> {} ({}) has reached CoB (Close of Business hours).".format(identName, me))
@@ -181,7 +181,7 @@ def goToSot (group, x=0,y=0):
    lastKnownNrClicks = me.Clicks
    myCards = (card for card in table if card.controller == me and card.owner == me)
    for card in myCards: 
-      if card._id Stored_Type and fetchProperty(card, 'Type') != 'ICE': card.orientation &= ~Rot90 # Refresh all cards which can be used once a turn.
+      if card._id in Stored_Type and fetchProperty(card, 'Type') != 'ICE': card.orientation &= ~Rot90 # Refresh all cards which can be used once a turn.
    newturn = True
    turn += 1
    atTimedEffects('Start') # Check all our cards to see if there's any Start of Turn effects active.

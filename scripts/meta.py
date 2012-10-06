@@ -150,7 +150,7 @@ def getKeywords(card): # A function which combines the existing card keywords, w
    keywords = ''
    for KW in keywordsList:
       keywords += '{}-'.format(KW)
-   Stored_Keywords[card] = keywords[:-1] # We also update the global variable for this card, which is used by many functions.
+   Stored_Keywords[card._id] = keywords[:-1] # We also update the global variable for this card, which is used by many functions.
    if debugVerbosity >= 3: notify("<<< getKeywords() by returning: {}.".format(keywords[:-1]))
    return keywords[:-1] # We need to remove the trailing dash '-'
    
