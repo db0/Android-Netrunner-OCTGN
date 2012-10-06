@@ -185,8 +185,8 @@ def goToSot (group, x=0,y=0):
    newturn = True
    turn += 1
    atTimedEffects('Start') # Check all our cards to see if there's any Start of Turn effects active.
-   if ds == "corp": notify("=> The offices of {} ({}) are now open for business. They have {} {} for this turn{}.".format(identName,me,me.Clicks,uniClick(),extraTXT))
-   else: notify ("=> {} ({}) has woken up. They have {} clicks for this turn{}.".format(identName,me,me.Clicks,extraTXT))
+   if ds == "corp": notify("=> The offices of {} ({}) are now open for business. They have {} and {} {} for this turn{}.".format(identName,me,uniCredit(me.Credits),me.Clicks,uniClick(),extraTXT))
+   else: notify ("=> {} ({}) has woken up. They have {} and {} {} for this turn{}.".format(identName,me,uniCredit(me.Credits),me.Clicks,uniClick(),extraTXT))
    opponent = ofwhom('onOpponent')
    if turn == 1:
       if opponent.getGlobalVariable('gameVersion') == '': 
@@ -1707,7 +1707,7 @@ def draw(group):
    card = group.top()
    if ds == 'corp' and newturn: 
       card.moveTo(me.hand)
-      notify("--> {} perform's the turn's mandatory draw.".format(me))
+      notify("--> {} performs the turn's mandatory draw.".format(me))
       newturn = False
    else:
       ClickCost = useClick()
