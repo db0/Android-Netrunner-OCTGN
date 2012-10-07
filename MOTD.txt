@@ -1,16 +1,1 @@
-======Message of the Day======
-
-A note about voice communication.
-
-The developer of this plugin has setup a Mumble server to allow ANR players to be able to effortlessly connect and voice chat with others. Many players already use it due to its benefits.
-
-Voice communication not only improves the speed of the game significantly, but it also makes it actually _feel_ like a boardgame, of which an important aspect if the player interaction outside of the game rules.
-
-Even if you don't own a mic, take the time to install the mumble client and setup a connection to the server, so that you can connect easily. Even with one side being able to talk, it helps.
-
-Plus, you can almost always reach the developer idling in there. He's a total praise addict!
-
-Would you like to learn more?
-===============================
-&&
-http://octgn.gamersjudgement.com/viewtopic.php?f=52&t=545
+ 
