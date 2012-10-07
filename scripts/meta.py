@@ -368,17 +368,6 @@ def versionCheck():
                      ".format(gameVersion, detailsplit[0],detailsplit[2],detailsplit[1])):
             openUrl('https://github.com/db0/Android-Netrunner-OCTGN/downloads')
          startupMsg = True
-      elif len(currentVers) == 4:
-         if len(installedVers) < 4: emergencyV = True 
-         elif currentVers[3] != installedVers[3]: emergencyV = True 
-         else: emergencyV = False
-         if emergencyV and confirm("There is an emergency fix available for your current version!\nYour version: {}.\nCurrent version: {}.\
-                                    {}\
-                                \n\nDo you want to be redirected to download the latest version?.\
-                                  \n(An emergency update probably means there's a significant bug left in the engine. We strongly suggest you update before proceeding.)\
-                                    ".format(gameVersion, detailsplit[0],detailsplit[1])): 
-            openUrl('https://github.com/db0/Android-Netrunner-OCTGN/downloads')
-         startupMsg = True
       if not startupMsg: MOTD() # If we didn't give out any other message , we give out the MOTD instead.
       startupMsg = True
    if debugVerbosity >= 3: notify("<<< versionCheck()") #Debug

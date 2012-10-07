@@ -50,6 +50,7 @@ failedRequirement = True #A Global boolean that we set in case an Autoscript cos
 AfterRunInf = True # A warning to remind players that some actions have effects that need to be activated after a run.
 AfterTraceInf = True # Similar to above
 lastKnownNrClicks = 0 # A Variable keeping track of what the engine thinks our action counter should be, in case we change it manually.
+SuccessfulRun = False # Set by the runner when a run is successful, in order to avoid asking the player every time.
 
 
 #---------------------------------------------------------------------------
@@ -98,8 +99,9 @@ def useClick(group = table, x=0, y=0, count = 1):
    extraText = ''
    if count == 0: return '{} takes a free action'.format(me)
    if ds == 'runner' and re.search(r'running',getGlobalVariable('status')): 
-      if not confirm("You have not yet finished your previous run. Normally you're not allowed to use clicks during runs, are you sure you want to continue?\
-                 \n\n(Pressing 'No' will abort this action and you can then Jack-out of the run with [ESC] or [F3]"): return 'ABORT'
+      if SuccessfulRun: jackOut() # If the runner has done a successful run but forgot to end it, then simply jack them out automatically.
+      elif not confirm("You have not yet finished your previous run. Normally you're not allowed to use clicks during runs, are you sure you want to continue?\
+                    \n\n(Pressing 'No' will abort this action and you can then Jack-out or finish the run succesfully with [ESC] or [F3] respectively"): return 'ABORT'
    clicksReduce = findCounterPrevention(me.Clicks, 'Clicks', me)
    if clicksReduce: notify(":::WARNING::: {} had to forfeit their next {} clicks".format(me, clicksReduce))
    me.Clicks -= clicksReduce
@@ -367,6 +369,8 @@ def intRun(aCost = 1, Name = 'R&D', silent = False):
    if ds != 'runner':  
       whisper(":::ERROR:::Corporations can't run!")
       return 'ABORT'
+   ClickCost = useClick(count = aCost)
+   if ClickCost == 'ABORT': return 'ABORT'
    if re.search(r'running',getGlobalVariable('status')):
       whisper(":::ERROR:::You are already jacked-in. Please end the previous run (press [Esc] or [F3]) before starting a new one")
       return
@@ -374,8 +378,6 @@ def intRun(aCost = 1, Name = 'R&D', silent = False):
    #if findMarker(CounterHold,'Fang') or findMarker(CounterHold,'Rex') or findMarker(CounterHold,'Fragmentation Storm'): # These are counters which prevent the runner from running.
    #   notify(":::Warning:::{} attempted to run but was prevented by a resident Sentry effect in their Rig. They will have to remove all such effects before attempting a run".format(me))
    #   return 'ABORT'
-   ClickCost = useClick(count = aCost)
-   if ClickCost == 'ABORT': return 'ABORT'
    if not silent: 
       if Name == 'Archives': announceTXT = 'the Archives'
       elif Name == 'Remote': announceTXT = 'a remote server'
@@ -407,9 +409,9 @@ def runServer(group, x=0,y=0):
    if debugVerbosity >= 1: notify(">>> runSDF(){}".format(extraASDebug())) #Debug
    intRun(1, "Remote")
 
-def jackOut(group=table,x=0,y=0, silent = False, result = 'failure'):
+def jackOut(group=table,x=0,y=0, silent = False):
    if debugVerbosity >= 1: notify(">>> jackOut(). Current status:{}".format(getGlobalVariable('status'))) #Debug
-   global feintTarget
+   global feintTarget, SuccessfulRun
    opponent = ofwhom('-ofOpponent') # First we check if our opponent is a runner or a corp.
    if ds == 'corp': targetPL = opponent
    else: targetPL = me
@@ -420,24 +422,40 @@ def jackOut(group=table,x=0,y=0, silent = False, result = 'failure'):
       if targetPL != me: whisper("{} is not running at the moment.".format(targetPL))
       else: whisper("You are not currently jacked-in.")
    else: # Else announce they are jacked in and resolve all post-run effects.
-      if feintTarget: runTarget = feintTarget #If the runner is feinting, now change the target server to the right one
-      else: runTarget = runTargetRegex.group(1) # If the runner is not feinting, then extract the target from the shared variable
+      runTarget = runTargetRegex.group(1) # If the runner is not feinting, then extract the target from the shared variable
       if ds == 'runner' : myIdent.markers[mdict['BadPublicity']] = 0 #If we're the runner, then remove out remaining bad publicity tokens
       else: enemyIdent.markers[mdict['BadPublicity']] = 0 # If we're not the runner, then find the runners and remove any bad publicity tokens
-      if result == 'failure': atTimedEffects('JackOut') # If this was a simple jack-out, then make the end-of-run effects trigger only jack-out effects
-      else: atTimedEffects('SuccessfulRun') # If this was a successful run, then the end-of-run effects will also trigger success effects
+      atTimedEffects('JackOut') # If this was a simple jack-out, then make the end-of-run effects trigger only jack-out effects
       setGlobalVariable('status','idle') # Clear the run variable
       feintTarget = None # Clear any feinted targets
+      SuccessfulRun = False # Set the variable which tells the code if the run was successful or not, to false.
       if debugVerbosity >= 2: notify("### About to announce end of Run") #Debug
       if not silent: # Announce the end of run from the perspective of each player.
          if targetPL != me: notify("{} has kicked {} out of their corporate grid".format(myIdent,enemyIdent))
-         else: 
-            if result == 'failure': notify("{} has jacked out of their run on {} server".format(myIdent,runTarget))
-            else: notify("{} has finished their run on the {} server successfully".format(myIdent,runTarget))
+         else: notify("{} has jacked out of their run on the {} server".format(myIdent,runTarget))
       clearAll(True, True) # On jack out we clear all player's counters, but don't discard cards from the table.
+   if debugVerbosity >= 3: notify("<<< jackOut()") # Debug
       
 def runSuccess(group=table,x=0,y=0, silent = False):
-   jackOut(silent = False, result = 'success')
+   if debugVerbosity >= 1: notify(">>> runSuccess(). Current status:{}".format(getGlobalVariable('status'))) #Debug
+   global SuccessfulRun, feintTarget
+   opponent = ofwhom('-ofOpponent') # First we check if our opponent is a runner or a corp.
+   if ds == 'corp': targetPL = opponent
+   else: targetPL = me
+   runTargetRegex = re.search(r'running([A-Za-z&]+)',getGlobalVariable('status'))
+   if not runTargetRegex: # If the runner is not running at the moment, do nothing
+      if targetPL != me: whisper(":::Error:::{} is not running at the moment.".format(targetPL))
+      else: whisper(":::Error::: You are not currently jacked-in.")
+   elif SuccessfulRun: 
+      whisper(":::Error::: You have already completed this run succesfully. Jacking out instead...")
+      jackOut()
+   else:
+      SuccessfulRun = True
+      if feintTarget: runTarget = feintTarget #If the runner is feinting, now change the target server to the right one
+      else: runTarget = runTargetRegex.group(1) # If the runner is not feinting, then extract the target from the shared variable
+      atTimedEffects('SuccessfulRun')
+      notify("{} has successfully run the {} server".format(identName,runTarget))
+   if debugVerbosity >= 3: notify("<<< runSuccess()") # Debug
 #------------------------------------------------------------------------------
 # Tags...
 #------------------------------------------------------------------------------
@@ -987,7 +1005,7 @@ def RDaccessX(group = table, x = 0, y = 0): # A function which looks at the top 
    if ds == 'corp': 
       whisper("This action is only for the use of the runner. Use the 'Look at top X cards' function on your R&D's context manu to access your own deck")
       return
-   count = askInteger("How many cards are you accessing from the corporation's R&D?",1)
+   count = askInteger("How many files are you able to access from the corporation's R&D?",1)
    if count == None: return
    targetPL = ofwhom('-ofOpponent')
    if debugVerbosity >= 3: notify("### Found opponent. Storing the top {} as a list".format(count)) #Debug
@@ -1067,7 +1085,7 @@ def RDaccessX(group = table, x = 0, y = 0): # A function which looks at the top 
    cover.moveTo(shared.exile) # now putting the cover card to the exile deck that nobody looks at.
    notify("{} has finished accessing {}'s R&D".format(me,targetPL))
 
-def ARCscore(group, x=0,y=0):
+def ARCscore(group=table, x=0,y=0):
    mute()
    if debugVerbosity >= 1: notify(">>> ARCscore(){}".format(extraASDebug())) #Debug
    removedCards = 0

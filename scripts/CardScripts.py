@@ -34,7 +34,7 @@ Account Siphon
 -----
 bc0f047c-01b1-427f-a439-d451eda01018
 -----
-onPlay:RunHQ||atJackOut:Lose5Credits-ofOpponent-isOptional$$Gain2Credits-perX$$Gain2Tags$$TrashMyself-ifSuccessfulRunHQ
+onPlay:RunHQ||atSuccessfulRun:Lose5Credits-ofOpponent-isOptional-isAlternativeRunResult$$Gain2Credits-perX$$Gain2Tags$$TrashMyself-ifSuccessfulRunHQ
 +++++
 	
 .....
@@ -138,7 +138,7 @@ Bank Job
 -----
 bc0f047c-01b1-427f-a439-d451eda01029
 -----
-onInstall:Put8Credits||atJackOut:RequestInt$$Transfer1Credits-perX-ifSuccessfulRunRemote$$TrashMyself-ifEmpty
+onInstall:Put8Credits||atSuccessfulRun:RequestInt-isOptional-isAlternativeRunResult$$Transfer1Credits-perX-ifSuccessfulRunRemote$$TrashMyself-ifEmpty
 +++++
 	
 .....
@@ -266,7 +266,7 @@ Datasucker
 -----
 bc0f047c-01b1-427f-a439-d451eda01008
 -----
-atJackOut:Put1Virus-ifSuccessfulRunHQ||atJackOut:Put1Virus-ifSuccessfulRunR&D||atJackOut:Put1Virus-ifSuccessfulRunArchives
+atSuccessfulRun:Put1Virus-ifSuccessfulRunHQ||atSuccessfulRun:Put1Virus-ifSuccessfulRunR&D||atSuccessfulRun:Put1Virus-ifSuccessfulRunArchives
 +++++
 A0B0G0T0:Remove1Virus-isCost$$Put1MinusOne-Targeted-atICE	
 .....
@@ -298,7 +298,7 @@ Desperado
 -----
 bc0f047c-01b1-427f-a439-d451eda01024
 -----
-whileRezzed:Gain1MU||atJackOut:Gain1Credits-ifSuccessfulRunAny
+whileRezzed:Gain1MU||atSuccessfulRun:Gain1Credits
 +++++
 	
 .....
@@ -362,7 +362,7 @@ Gabriel Santiago
 -----
 bc0f047c-01b1-427f-a439-d451eda01017
 -----
-atJackOut:Gain2Credits-ifSuccessfulRunHQ-onlyOnce
+atSuccessfulRun:Gain2Credits-ifSuccessfulRunHQ-onlyOnce
 +++++
 	
 .....
@@ -522,7 +522,7 @@ Medium
 -----
 bc0f047c-01b1-427f-a439-d451eda01010
 -----
-atJackOut:Put1Virus-ifSuccessfulRunR&D
+atSuccessfulRun:Put1Virus-ifSuccessfulRunR&D
 +++++
 	
 .....
