@@ -1084,6 +1084,7 @@ def RDaccessX(group = table, x = 0, y = 0): # A function which looks at the top 
       else: continue
    cover.moveTo(shared.exile) # now putting the cover card to the exile deck that nobody looks at.
    notify("{} has finished accessing {}'s R&D".format(me,targetPL))
+   if debugVerbosity >= 3: notify("<<< RDaccessX()")
 
 def ARCscore(group=table, x=0,y=0):
    mute()
@@ -1108,7 +1109,68 @@ def ARCscore(group=table, x=0,y=0):
          card.highlight = RevealedColor
          scrAgenda(card)
          if card.highlight == RevealedColor: card.moveTo(ARC) # If the runner opted not to score the agenda, put it back into the deck.
-      
+   if debugVerbosity >= 3: notify("<<< ARCscore()")
+
+def HQaccess(group=table, x=0,y=0, silent = False):
+   mute()
+   if debugVerbosity >= 1: notify(">>> HQAccess(){}".format(extraASDebug())) #Debug
+   if ds == 'corp': 
+      whisper("This action is only for the use of the runner.")
+      return
+   if not silent and not confirm("You are about to access a random card from the corp's HQ.\
+                                \nPlease make sure your opponent is not manipulating their hand, and does not have a way to cancel this effect before continuing\
+                              \n\nProceed?"): return
+   targetPL = ofwhom('-ofOpponent')
+   if debugVerbosity >= 3: notify("### Found opponent.") #Debug
+   revealedCard = showatrandom(targetPL = targetPL)
+   if not revealedCard: return # If the corp's hand is empty, do nothing.
+   if re.search(r'onAccess:Reveal',CardsAS.get(revealedCard.model,'')):
+      information("Ambush! You have stumbled into a {}\
+                \n(This card activates even on access from HQ.)\
+              \n\nYour blunder has already triggered the alarms. Please wait until corporate OpSec has decided whether to use its effects or not, before pressing any button\
+               ".format(revealedCard.name))
+   if debugVerbosity >= 2: notify("### Not a Trap.") #Debug
+   if revealedCard.Type == 'ICE': 
+      cStatTXT = '\nStrength: {}.'.format(revealedCard.Stat)
+   elif revealedCard.Type == 'Asset' or revealedCard.Type == 'Upgrade':
+      cStatTXT = '\nTrash Cost: {}.'.format(revealedCard.Stat)
+   elif revealedCard.Type == 'Agenda':
+      cStatTXT = '\nAgenda Points: {}.'.format(revealedCard.Stat)
+   else: cStatTXT = ''
+   if debugVerbosity >= 2: notify("### Crafting Title") #Debug
+   title = "Card: {}.\
+          \nType: {}.\
+          \nKeywords: {}.\
+          \nCost: {}.\
+            {}\n\nCard Text: {}\
+        \n\nWhat do you want to do with this card?".format(revealedCard.name,revealedCard.Type,revealedCard.Keywords,revealedCard.Cost,cStatTXT,revealedCard.Rules)
+   if revealedCard.Type == 'Agenda' or revealedCard.Type == 'Asset' or revealedCard.Type == 'Upgrade':
+      if revealedCard.Type == 'Agenda': action1TXT = 'Liberate for {} Agenda Points.'.format(revealedCard.Stat)
+      else: action1TXT = 'Pay {} to Trash.'.format(revealedCard.Stat)
+      options = ["Leave where it is.","Force trash at no cost.",action1TXT]
+   else:                    
+      options = ["Leave where it is.","Force trash at no cost."]
+   if debugVerbosity >= 2: notify("### Opening Choice Window") #Debug
+   choice = SingleChoice(title, options, 'button')
+   if choice == None: choice = 0
+   revealedCard.highlight = None
+   if choice == 1: 
+      revealedCard.moveTo(targetPL.piles['Heap/Archives(Face-up)'])
+      loopChk(revealedCard,'Type')
+      notify("{} {} {} at no cost".format(me,uniTrash(),revealedCard))
+   elif choice == 2:
+      if revealedCard.Type == 'Agenda':
+         scrAgenda(revealedCard)
+      else: 
+         reduction = reduceCost(revealedCard, 'TRASH', num(revealedCard.Stat))
+         rc = payCost(num(revealedCard.Stat) - reduction, "not free")
+         if rc == "ABORT": revealedCard.moveTo(targetPL.hand) # If the player couldn't pay to trash the card, we leave it where it is.
+         revealedCard.moveTo(targetPL.piles['Heap/Archives(Face-up)'])
+         loopChk(revealedCard,'Type')
+         notify("{} paid {} to {} {}".format(me,uniCredit(revealedCard.Stat),uniTrash(),revealedCard))
+   else: revealedCard.moveTo(targetPL.hand)
+   if debugVerbosity >= 3: notify("<<< HQAccess()")
+         
 def isRezzable (card):
    if debugVerbosity >= 1: notify(">>> isRezzable(){}".format(extraASDebug())) #Debug
    mute()
@@ -1674,18 +1736,24 @@ def handRandomDiscard(group, count = None, player = None, destination = None, si
    if debugVerbosity >= 2: notify("<<< handRandomDiscard() with return {}".format(iter + 1)) #Debug
    return iter + 1 #We need to increase the iter by 1 because it starts iterating from 0
     		
-def showatrandom(group, count = 1, silent = False):
+def showatrandom(group = None, count = 1, targetPL = None, silent = False):
    if debugVerbosity >= 1: notify(">>> showatrandom(){}".format(extraASDebug())) #Debug
    mute()
+   side = 1
+   if not targetPL: targetPL = me
+   if not group: group = targetPL.hand
+   if targetPL != me: side = -1
    for iter in range(count):
       card = group.random()
       if card == None: 
-         notify(":::Info:::{} has no more cards in their hand to reveal".format(me))
+         notify(":::Info:::{} has no more cards in their hand to reveal".format(targetPL))
          break
-      card.moveToTable(playerside * iter * cwidth(card) - (count * cwidth(card) / 2), 0 - yaxisMove(card), False)
+      card.moveToTable(playerside * side * iter * cwidth(card) - (count * cwidth(card) / 2), 0 - yaxisMove(card) * side, False)
       card.highlight = RevealedColor
       loopChk(card) # A small delay to make sure we grab the card's name to announce
-   if not silent: notify("{} reveals {} at random from their hand.".format(me,card))
+   if not silent: notify("{} reveals {} at random from their hand.".format(targetPL,card))
+   if debugVerbosity >= 2: notify("<<< showatrandom() with return {}".format(card)) #Debug
+   return card
 
 def groupToDeck (group = me.hand, player = me, silent = False):
    if debugVerbosity >= 1: notify(">>> groupToDeck(){}".format(extraASDebug())) #Debug

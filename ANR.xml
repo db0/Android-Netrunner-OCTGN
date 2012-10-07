@@ -66,7 +66,8 @@
          <groupaction menu="Jack Out" default="false" shortcut="Esc" execute="jackOut" />
          <groupaction menu="Finish the Run succesfully" default="false" shortcut="F3" execute="runSuccess" />
          <groupaction menu="Score Target Agenda" default="false" shortcut="Ctrl+G" execute="scrTargetAgenda" />
-         <groupaction menu="Access top X cards form corp R&amp;D" default="false" shortcut="Ctrl+A" execute="RDaccessX" />
+         <groupaction menu="Access a random card form corp HQ" default="false" shortcut="Ctrl+Q" execute="HQaccess" />
+         <groupaction menu="Access top X cards from corp R&amp;D" default="false" shortcut="Ctrl+A" execute="RDaccessX" />
          <groupaction menu="Score all Agendas in the Archives" default="false" shortcut="Ctrl+H" execute="ARCscore" />
          <groupaction menu="Suffer 1 Meat Damage" default="false" execute="addMeatDmg" />
          <groupaction menu="Suffer 1 Net Damage" default="false" execute="addNetDmg" />

@@ -495,7 +495,7 @@ def atTimedEffects(Time = 'Start'): # Function which triggers card effects at th
                   currentRunTargetRegex = re.search(r'running([A-Za-z&]+)', getGlobalVariable('status')) # We check what the target of the current run was.
                   currentRunTarget = currentRunTargetRegex.group(1)
                if debugVerbosity >= 2: 
-                  if requiredTarget and currentRunTarget: notify("!!! Regex requiredTarget: {}\n!!! currentRunTarget: {}".format(requiredTarget.groups(),currentRunTarget.groups()))
+                  if requiredTarget and currentRunTargetRegex: notify("!!! Regex requiredTarget: {}\n!!! currentRunTarget: {}".format(requiredTarget.groups(),currentRunTarget))
                   else: notify ("No requiredTarget or currentRunTarget regex match :(")
                if requiredTarget.group(1) == 'Any': pass # -ifSuccessfulRunAny means we run the script on any successful run (e.g. Desperado)
                elif requiredTarget.group(1) == currentRunTarget: pass # If the card requires a successful run on a server that the global variable points that we were running at, we can proceed.
@@ -509,7 +509,12 @@ def atTimedEffects(Time = 'Start'): # Function which triggers card effects at th
          if re.search(r'excludeDummy', autoS) and card.highlight == DummyColor: continue
          if re.search(r'onlyforDummy', autoS) and card.highlight != DummyColor: continue
          if re.search(r'isAlternativeRunResult', effect.group(2)) and AlternativeRunResultUsed: continue # If we're already used an alternative run result and this card has one as well, ignore it
-         if re.search(r'isOptional', effect.group(2)) and not confirm("{} can have its optional ability take effect at this point. Do you want to activate it?".format(fetchProperty(card, 'name'))): continue         
+         if re.search(r'isOptional', effect.group(2)):
+            extraCountersTXT = '' 
+            for cmarker in card.markers: # If the card has any markers, we mention them do that the player can better decide which one they wanted to use (e.g. multiple bank jobs)
+               extraCountersTXT += " {}x {}\n".format(card.markers[cmarker],cmarker[0])
+            if extraCountersTXT != '': extraCountersTXT = "\n\nThis card has the following counters on it\n" + extraCountersTXT
+            if not confirm("{} can have its optional ability take effect at this point. Do you want to activate it?{}".format(fetchProperty(card, 'name'),extraCountersTXT)): continue         
          if re.search(r'isAlternativeRunResult', effect.group(2)): AlternativeRunResultUsed = True # If the card has an alternative result to the normal access for a run, mark that we've used it.         
          if re.search(r'onlyOnce',autoS) and oncePerTurn(card, silent = True, act = 'automatic') == 'ABORT': continue
          splitAutoscripts = effect.group(2).split('$$')
@@ -565,11 +570,18 @@ def atTimedEffects(Time = 'Start'): # Function which triggers card effects at th
       else: 
          currentRunTargetRegex = re.search(r'running([A-Za-z&]+)', getGlobalVariable('status')) # We check what the target of the current run was.
          currentRunTarget = currentRunTargetRegex.group(1)
-      if currentRunTarget == 'R&D' and confirm("Access to R&D files authorized for user {}.\nProceed? Y/N:\
-                                            \n\n(If you select 'No', you'll be able to continue with this action by pressing [Ctrl]+[A].)".format(me.name)):
+      if currentRunTarget == 'HQ' and confirm("Rerouting to auth.level 9 corporate grid...OK\
+                                             \nAuthenticating secure credentials...OK\
+                                             \nDecrypting Home Folder...OK\
+                                           \n\nAccess to HQ Granted!\
+                                             \nWelcome back Err:::[Segmentation Fault]. Would you like to see today's priority item? Y/N:\
+                                          \n\n(If you select 'No', you'll be able to continue with this action later by pressing [Ctrl]+[Q].)"):
+         HQaccess(silent = True)
+      if currentRunTarget == 'R&D' and confirm("Processing Sec. Token...OK. Access to R&D files authorized for user {}.\nProceed? Y/N:\
+                                            \n\n(If you select 'No', you'll be able to continue with this action later by pressing [Ctrl]+[A].)".format(me.name)):
          RDaccessX()
       if currentRunTarget == 'Archives' and confirm("Authorization for user {} processed. Decrypting Archive Store...OK.\nProceed? Y/N:\
-                                                \n\n(If you select 'No', you'll be able to continue with this action by pressing [Ctrl]+[H].)".format(me.name)):
+                                                \n\n(If you select 'No', you'll be able to continue with this action later by pressing [Ctrl]+[H].)".format(me.name)):
          ARCscore()
    if TitleDone: notify(":::{:=^30}:::".format('='))   
    if debugVerbosity >= 3: notify("<<< atTimedEffects()") # Debug
