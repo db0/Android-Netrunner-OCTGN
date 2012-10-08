@@ -477,16 +477,17 @@ def atTimedEffects(Time = 'Start'): # Function which triggers card effects at th
    X = 0
    for card in table:
       #if card.controller != me: continue # Obsoleted. Using the chkPlayer() function below
-      if card.highlight == InactiveColor: continue
+      if card.highlight == InactiveColor or card.highlight == RevealedColor: continue
       if not card.isFaceUp: continue
-      if debugVerbosity >= 3: notify("### {} Autoscript: {}".format(card, CardsAS.get(card.model,'')))
       Autoscripts = CardsAS.get(card.model,'').split('||')
       for autoS in Autoscripts:
+         if debugVerbosity >= 3: notify("### Processing {} Autoscript: {}".format(card, autoS))
          if Time == 'Run': effect = re.search(r'at(Run)Start:(.*)', autoS) # Putting Run in a group, only to retain the search results groupings later
          elif Time == 'JackOut': effect = re.search(r'at(JackOut):(.*)', autoS) # Same as above
          elif Time == 'SuccessfulRun': effect = re.search(r'at(SuccessfulRun):(.*)', autoS) # Same as above
          else: effect = re.search(r'atTurn(Start|End):(.*)', autoS) #Putting "Start" or "End" in a group to compare with the Time variable later
          if not effect: continue
+         if debugVerbosity >= 3: notify("### Time maches. Script triggers on: {}".format(effect.group(1)))
          if re.search(r'-ifSuccessfulRun', autoS):
             if Time == 'SuccessfulRun': #If we're looking only for successful runs, we need the Time to be a successful run.
                requiredTarget = re.search(r'-ifSuccessfulRun([A-Za-z&]+)', autoS) # We check what the script requires to be the successful target
