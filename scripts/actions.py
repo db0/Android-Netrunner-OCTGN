@@ -1123,6 +1123,7 @@ def HQaccess(group=table, x=0,y=0, silent = False):
    targetPL = ofwhom('-ofOpponent')
    if debugVerbosity >= 3: notify("### Found opponent.") #Debug
    revealedCard = showatrandom(targetPL = targetPL)
+   storeProperties(revealedCard) # So as not to crash reduceCost() later
    if not revealedCard: return # If the corp's hand is empty, do nothing.
    if re.search(r'onAccess:Reveal',CardsAS.get(revealedCard.model,'')):
       information("Ambush! You have stumbled into a {}\
