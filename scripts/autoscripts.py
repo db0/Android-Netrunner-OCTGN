@@ -48,6 +48,7 @@ def executePlayScripts(card, action):
           re.search(r'atRunStart', autoS) or 
           re.search(r'whileRunning', autoS) or 
           re.search(r'atJackOut', autoS) or 
+          re.search(r'atSuccessfulRun', autoS) or 
           re.search(r'onAccess', autoS) or 
           re.search(r'onPay', autoS) or # onPay effects are only useful before we go to the autoscripts, for the cost reduction.
           re.search(r'triggerNoisy', autoS) or # Trigger Noisy are used automatically during action use.
@@ -158,7 +159,7 @@ def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
    storeProperties(card) # Just in case
    failedRequirement = False # We set it to false when we start a new autoscript.
    if debugVerbosity >= 5: notify("+++ Checking if Tracing card...")
-   if (card in Stored_Type and Stored_Type[card] == 'Tracing') or card.model == 'eb7e719e-007b-4fab-973c-3fe228c6ce20': # If the player double clicks on the Tracing card...
+   if (card._id in Stored_Type and fetchProperty(card, 'Type') == 'Tracing') or card.model == 'eb7e719e-007b-4fab-973c-3fe228c6ce20': # If the player double clicks on the Tracing card...
       if debugVerbosity >= 5: notify("+++ Confirmed tacting card. Checking Status...")
       if card.isFaceUp and not card.markers[mdict['Credits']]: inputTraceValue(card, limit = 0)
       elif card.isFaceUp and card.markers[mdict['Credits']]: payTraceValue(card)
@@ -169,37 +170,28 @@ def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
       whisper("You cannot use inactive cards. Please use the relevant card abilities to clear them first. Aborting")
       return
    if debugVerbosity >= 5: notify("+++ Not an inactive card. Checking Stored_Autoactions{}...")
-   if not card in Stored_AutoActions:
-      if not card.isFaceUp:
-         card.isFaceUp = True
-         cFaceD = True
-      else: cFaceD = False
-      random = rnd(10,300)
-      if debugVerbosity >= 2: notify(">>> Storing Autoactions for {}".format(card)) #Debug
-      Stored_AutoActions[card] = CardsAA.get(card.model,'')
-      if cFaceD: card.isFaceUp = False
    if debugVerbosity >= 5: notify("+++ Finished storing CardsAA.get(card.model,'')s. Checking Rez status")
    if not card.isFaceUp:
-      if re.search(r'onAccess',Stored_AutoActions[card]) and confirm("This card has an ability that can be activated even when unrezzed. Would you like to activate that now?"): card.isFaceUp = True # Activating an on-access ability requires the card to be exposed, it it's no already.
-      elif re.search(r'Hidden',Stored_Keywords[card]): card.isFaceUp # If the card is a hidden resource, just turn it face up for its imminent use.
-      elif Stored_Type[card] == 'Agenda': 
+      if re.search(r'onAccess',fetchProperty(card, 'AutoActions')) and confirm("This card has an ability that can be activated even when unrezzed. Would you like to activate that now?"): card.isFaceUp = True # Activating an on-access ability requires the card to be exposed, it it's no already.
+      elif re.search(r'Hidden',fetchProperty(card, 'Keywords')): card.isFaceUp # If the card is a hidden resource, just turn it face up for its imminent use.
+      elif fetchProperty(card, 'Type') == 'Agenda': 
          scrAgenda(card) # If the player double-clicks on an Agenda card, assume they wanted to Score it.
          return
       else: 
          intRez(card) # If card is face down or not rezzed assume they wanted to rez       
          return
    if debugVerbosity >= 5: notify("+++ Card not unrezzed. Checking for automations switch...")
-   if not Automations['Play, Score and Rez'] or Stored_AutoActions[card] == "": 
+   if not Automations['Play, Score and Rez'] or fetchProperty(card, 'AutoActions') == "": 
       useCard(card) # If card is face up but has no autoscripts, or automation is disabled just notify that we're using it.
       return
    if debugVerbosity >= 5: notify("+++ Automations active. Checking for CustomScript...")
-   if re.search(r'CustomScript', Stored_AutoActions[card]): 
+   if re.search(r'CustomScript', fetchProperty(card, 'AutoActions')): 
       if chkTargeting(card) == 'ABORT': return
       CustomScript(card,'USE') # Some cards just have a fairly unique effect and there's no use in trying to make them work in the generic framework.
       return
    if debugVerbosity >= 5: notify("+++ All checks done!. Starting Choice Parse...")
    ### Checking if card has multiple autoscript options and providing choice to player.
-   Autoscripts = Stored_AutoActions[card].split('||')
+   Autoscripts = fetchProperty(card, 'AutoActions').split('||')
    AutoScriptSnapshot = list(Autoscripts)
    for autoS in AutoScriptSnapshot: # Checking and removing any clickscripts which were put here in error.
       if (re.search(r'while(Rezzed|Scored)', autoS) 
@@ -481,46 +473,57 @@ def atTimedEffects(Time = 'Start'): # Function which triggers card effects at th
    if debugVerbosity >= 1: notify(">>> atTimedEffects() at time: {}".format(Time)) #Debug
    if not Automations['Start/End-of-Turn']: return
    TitleDone = False
+   AlternativeRunResultUsed = False # Used for SuccessfulRun effects which replace the normal effect of running a server. If set to True, then no more effects on that server will be processed (to avoid 2 bank jobs triggering at the same time for example).
    X = 0
    for card in table:
       #if card.controller != me: continue # Obsoleted. Using the chkPlayer() function below
-      if card.highlight == InactiveColor: continue
+      if card.highlight == InactiveColor or card.highlight == RevealedColor: continue
       if not card.isFaceUp: continue
-      if debugVerbosity >= 3: notify("### {} Autoscript: {}".format(card, CardsAS.get(card.model,'')))
       Autoscripts = CardsAS.get(card.model,'').split('||')
       for autoS in Autoscripts:
+         if debugVerbosity >= 3: notify("### Processing {} Autoscript: {}".format(card, autoS))
          if Time == 'Run': effect = re.search(r'at(Run)Start:(.*)', autoS) # Putting Run in a group, only to retain the search results groupings later
-         elif Time == 'JackOut' or Time == 'SuccessfulRun': effect = re.search(r'at(JackOut):(.*)', autoS) # Same as above
+         elif Time == 'JackOut': effect = re.search(r'at(JackOut):(.*)', autoS) # Same as above
+         elif Time == 'SuccessfulRun': effect = re.search(r'at(SuccessfulRun):(.*)', autoS) # Same as above
          else: effect = re.search(r'atTurn(Start|End):(.*)', autoS) #Putting "Start" or "End" in a group to compare with the Time variable later
          if not effect: continue
+         if debugVerbosity >= 3: notify("### Time maches. Script triggers on: {}".format(effect.group(1)))
          if re.search(r'-ifSuccessfulRun', autoS):
             if Time == 'SuccessfulRun': #If we're looking only for successful runs, we need the Time to be a successful run.
                requiredTarget = re.search(r'-ifSuccessfulRun([A-Za-z&]+)', autoS) # We check what the script requires to be the successful target
-               currentRunTarget = re.search(r'running([A-Za-z&]+)', getGlobalVariable('status')) # We check what the target of the current run was.
+               if feintTarget: currentRunTarget = feintTarget
+               else: 
+                  currentRunTargetRegex = re.search(r'running([A-Za-z&]+)', getGlobalVariable('status')) # We check what the target of the current run was.
+                  currentRunTarget = currentRunTargetRegex.group(1)
                if debugVerbosity >= 2: 
-                  if requiredTarget and currentRunTarget: notify("!!! Regex requiredTarget: {}\n!!! currentRunTarget: {}".format(requiredTarget.groups(),currentRunTarget.groups()))
+                  if requiredTarget and currentRunTargetRegex: notify("!!! Regex requiredTarget: {}\n!!! currentRunTarget: {}".format(requiredTarget.groups(),currentRunTarget))
                   else: notify ("No requiredTarget or currentRunTarget regex match :(")
                if requiredTarget.group(1) == 'Any': pass # -ifSuccessfulRunAny means we run the script on any successful run (e.g. Desperado)
-               elif feintTarget:
-                  if feintTarget == requiredTarget.group(1): pass # If we're doing a feinted run (e.g. Sneakdoor beta) then check with the actual target.
-                  else: continue
-               elif requiredTarget.group(1) == currentRunTarget.group(1): pass # If the card requires a successful run on a server that the global variable points that we were running at, we can proceed.
+               elif requiredTarget.group(1) == currentRunTarget: pass # If the card requires a successful run on a server that the global variable points that we were running at, we can proceed.
                else: continue # If none of the above, it means the card script is not triggering for this server.
                if debugVerbosity >= 3: notify("### All checked OK")
             else: continue
          if chkPlayer(effect.group(2), card.controller,False) == 0: continue # Check that the effect's origninator is valid. 
-         if (effect.group(1) != Time and Time != 'SuccessfulRun') or (Time == 'SuccessfulRun' and effect.group(1) != 'JackOut'): continue # If it's a start-of-turn effect and we're at the end, or vice-versa, do nothing.
+         if effect.group(1) != Time: continue # If the effect trigger we're checking (e.g. start-of-run) does not match the period trigger we're in (e.g. end-of-turn)
          if debugVerbosity >= 3: notify("### split Autoscript: {}".format(autoS))
          if debugVerbosity >= 2 and effect: notify("!!! effects: {}".format(effect.groups()))
          if re.search(r'excludeDummy', autoS) and card.highlight == DummyColor: continue
          if re.search(r'onlyforDummy', autoS) and card.highlight != DummyColor: continue
-         if re.search(r'isOptional', effect.group(2)) and not confirm("{} can have its optional ability take effect at this point. Do you want to activate it?".format(card.name)): continue
+         if re.search(r'isAlternativeRunResult', effect.group(2)) and AlternativeRunResultUsed: continue # If we're already used an alternative run result and this card has one as well, ignore it
+         if re.search(r'isOptional', effect.group(2)):
+            extraCountersTXT = '' 
+            for cmarker in card.markers: # If the card has any markers, we mention them do that the player can better decide which one they wanted to use (e.g. multiple bank jobs)
+               extraCountersTXT += " {}x {}\n".format(card.markers[cmarker],cmarker[0])
+            if extraCountersTXT != '': extraCountersTXT = "\n\nThis card has the following counters on it\n" + extraCountersTXT
+            if not confirm("{} can have its optional ability take effect at this point. Do you want to activate it?{}".format(fetchProperty(card, 'name'),extraCountersTXT)): continue         
+         if re.search(r'isAlternativeRunResult', effect.group(2)): AlternativeRunResultUsed = True # If the card has an alternative result to the normal access for a run, mark that we've used it.         
          if re.search(r'onlyOnce',autoS) and oncePerTurn(card, silent = True, act = 'automatic') == 'ABORT': continue
          splitAutoscripts = effect.group(2).split('$$')
          for passedScript in splitAutoscripts:
             if not TitleDone: 
                if Time == 'Run': title = "{}'s Start-of-Run Effects".format(me)
-               elif Time == 'JackOut' or Time == 'SuccessfulRun': title = "{}'s Jack-Out Effects".format(me)
+               elif Time == 'JackOut': title = "{}'s Jack-Out Effects".format(me)
+               elif Time == 'SuccessfulRun': title = "{}'s Successful Run Effects".format(me)
                else: title = "{}'s {}-of-Turn Effects".format(me,effect.group(1))
                notify("{:=^36}".format(title))
             TitleDone = True
@@ -559,9 +562,28 @@ def atTimedEffects(Time = 'Start'): # Function which triggers card effects at th
    markerEffects(Time) 
    if me.counters['Credits'].value < 0: 
       if Time == 'Run': notify(":::Warning::: {}'s Start-of-run effects cost more Credits than {} had in their Credit Pool!".format(me,me))
-      elif Time == 'JackOut' or Time == 'SuccessfulRun': notify(":::Warning::: {}'s Jacking-Out effects cost more Credits than {} had in their Credit Pool!".format(me,me))
+      elif Time == 'JackOut': notify(":::Warning::: {}'s Jacking-Out effects cost more Credits than {} had in their Credit Pool!".format(me,me))
+      elif Time == 'SuccessfulRun': notify(":::Warning::: {}'s Successful Run effects cost more Credits than {} had in their Credit Pool!".format(me,me))
       else: notify(":::Warning::: {}'s {}-of-turn effects cost more Credits than {} had in their Credit Pool!".format(me,Time,me))
    if ds == 'corp' and Time =='Start': draw(me.piles['R&D/Stack'])
+   if Time == 'SuccessfulRun' and not AlternativeRunResultUsed: # If we have a successful Run and no alternative effect was used, we ask the user if they want to automatically use one of the standard ones.
+      if feintTarget: currentRunTarget = feintTarget
+      else: 
+         currentRunTargetRegex = re.search(r'running([A-Za-z&]+)', getGlobalVariable('status')) # We check what the target of the current run was.
+         currentRunTarget = currentRunTargetRegex.group(1)
+      if currentRunTarget == 'HQ' and confirm("Rerouting to auth.level 9 corporate grid...OK\
+                                             \nAuthenticating secure credentials...OK\
+                                             \nDecrypting Home Folder...OK\
+                                           \n\nAccess to HQ Granted!\
+                                             \nWelcome back Err:::[Segmentation Fault]. Would you like to see today's priority item? Y/N:\
+                                          \n\n(If you select 'No', you'll be able to continue with this action later by pressing [Ctrl]+[Q].)"):
+         HQaccess(silent = True)
+      if currentRunTarget == 'R&D' and confirm("Processing Sec. Token...OK. Access to R&D files authorized for user {}.\nProceed? Y/N:\
+                                            \n\n(If you select 'No', you'll be able to continue with this action later by pressing [Ctrl]+[A].)".format(me.name)):
+         RDaccessX()
+      if currentRunTarget == 'Archives' and confirm("Authorization for user {} processed. Decrypting Archive Store...OK.\nProceed? Y/N:\
+                                                \n\n(If you select 'No', you'll be able to continue with this action later by pressing [Ctrl]+[H].)".format(me.name)):
+         ARCscore()
    if TitleDone: notify(":::{:=^30}:::".format('='))   
    if debugVerbosity >= 3: notify("<<< atTimedEffects()") # Debug
 
@@ -1059,7 +1081,7 @@ def RequestInt(Autoscript, announceText, card, targetCards = None, notification 
    if debugVerbosity >= 2: notify("### Checking for Msg")
    if action.group(8): 
       message = action.group(8)
-   else: message = "{}:\nThis effect requires that you provide an 'X'. What should that number be?{}".format(card.name,minTXT)
+   else: message = "{}:\nThis effect requires that you provide an 'X'. What should that number be?{}".format(fetchProperty(card, 'name'),minTXT)
    number = min - 1
    if debugVerbosity >= 2: notify("### About to ask")
    while number < min or number % div or (max and number > max):
@@ -1228,20 +1250,18 @@ def ModifyStatus(Autoscript, announceText, card, targetCards = None, notificatio
    if action.group(2) == 'Myself': 
       del targetCards[:] # Empty the list, just in case.
       targetCards.append(card)
-   #confirm("groups: {}".format(action.groups())) #  Debug
    if action.group(3): dest = action.group(3)
    else: dest = 'hand'
-   #confirm("dest: {}".format(dest)) # Debug
-   for targetCard in targetCards: targetCardlist += '{},'.format(targetCard)
+   for targetCard in targetCards: 
+      if action.group(1) == 'Derez': targetCardlist += '{},'.format(fetchProperty(targetCard, 'name')) # Derez saves the name because by the time we announce the action, the card will be face down.
+      else: targetCardlist += '{},'.format(targetCard)
    targetCardlist = targetCardlist.strip(',') # Re remove the trailing comma
-   #confirm("List: {}".format(targetCards)) #Debug
-   #for targetCard in targetCards: notify("ModifyX TargetCard: {}".format(targetCard)) #Debug
    for targetCard in targetCards:
       if re.search(r'-ifEmpty',Autoscript) and targetCard.markers[mdict['Credits']] and targetCard.markers[mdict['Credits']] > 0: 
          if len(targetCards) > 1: continue #If the modification only happens when the card runs out of credits, then we abort if it still has any
          else: return announceText # If there's only 1 card and it's not supposed to be trashed yet, do nothing.
       if action.group(1) == 'Rez' and intRez(targetCard, 'free', silent = True) != 'ABORT': pass
-      elif action.group(1) == 'Derez'and derez(targetCard, silent = True) != 'ABORT': pass
+      elif action.group(1) == 'Derez' and derez(targetCard, silent = True) != 'ABORT': pass
       elif action.group(1) == 'Expose': 
          exposeResult = expose(targetCard, silent = True)
          if exposeResult == 'ABORT': return 'ABORT'
@@ -1313,7 +1333,7 @@ def InflictX(Autoscript, announceText, card, targetCards = None, notification = 
    return announceString
    
 def UseCustomAbility(Autoscript, announceText, card, targetCards = None, notification = None, n = 0):
-   if card.name == "Tollbooth":
+   if fetchProperty(card, 'name') == "Tollbooth":
       targetPL = ofwhom('ofOpponent')
       if targetPL.Credits >= 3: 
          targetPL.Credits -= 3
@@ -1364,7 +1384,7 @@ def CustomScript(card, action = 'PLAY'): # Scripts that are complex and fairly u
          return         
       card.markers[selectedMarker] -= 1
       notify("{} to remove {} for {}.".format(clickCost,selectedMarker[0],creditCost))
-   elif card.name == 'Accelerated Beta Test' and action == 'SCORE':
+   elif fetchProperty(card, 'name') == 'Accelerated Beta Test' and action == 'SCORE':
       if not confirm("Would you like to initiate an accelerated beta test?"): return
       iter = 0
       for c in deck.top(3):
@@ -1378,7 +1398,7 @@ def CustomScript(card, action = 'PLAY'): # Scripts that are complex and fairly u
       if iter: # If we found any ice in the top 3
          notify("{} initiates an Accelerated Beta Test and reveals {} Ice from the top of their R&D. These Ice are automatically installed and rezzed".format(me, iter))
       else: notify("{} initiates a Accelerated Beta Test but their beta team was incompetent.".format(me))
-   elif card.name == 'Infiltration' and action == 'PLAY':
+   elif fetchProperty(card, 'name') == 'Infiltration' and action == 'PLAY':
       tCards = [c for c in table if c.targetedBy and c.targetedBy == me and c.isFaceUp == False]
       if tCards: expose(tCards[0]) # If the player has any face-down cards currently targeted, we assume he wanted to expose them.
       elif confirm("Do you wish to gain 2 credits?\
@@ -1386,7 +1406,7 @@ def CustomScript(card, action = 'PLAY'): # Scripts that are complex and fairly u
                 \n\nHowever if you have a target selected when you play this card, the target will be selected and exposed automatically."):
          me.Credits += 2
          notify("--> {} gains {}".format(me,uniCredit(2)))
-   elif card.name == "Rabbit Hole" and action == 'INSTALL':
+   elif fetchProperty(card, 'name') == "Rabbit Hole" and action == 'INSTALL':
       if not confirm("Would you like to extend the rabbit hole?"): 
          return
       cardList = [c for c in deck]
@@ -1425,14 +1445,14 @@ def CustomScript(card, action = 'PLAY'): # Scripts that are complex and fairly u
    
 def chkNoisy(card): # Check if the player successfully used a noisy icebreaker, and if so, give them the consequences...
    if debugVerbosity >= 1: notify(">>> chkNoisy()") #Debug
-   if re.search(r'Noisy', Stored_Keywords[card]) and re.search(r'Icebreaker', Stored_Keywords[card]): 
+   if re.search(r'Noisy', fetchProperty(card, 'Keywords')) and re.search(r'Icebreaker', fetchProperty(card, 'Keywords')): 
       me.setGlobalVariable('wasNoisy', '1') # First of all, let all players know of this fact.
       if debugVerbosity >= 2: notify("### Noisy credit Set!") #Debug
    if debugVerbosity >= 3: notify("<<< chkNoisy()") #Debug
 
 def penaltyNoisy(card):
    if debugVerbosity >= 1: notify(">>> penaltyNoisy()") #Debug
-   if re.search(r'Noisy', Stored_Keywords[card]) and re.search(r'Icebreaker', Stored_Keywords[card]): 
+   if re.search(r'Noisy', fetchProperty(card, 'Keywords')) and re.search(r'Icebreaker', fetchProperty(card, 'Keywords')): 
       NoisyCost = re.search(r'triggerNoisy([0-9]+)',CardsAS.get(card.model,''))
       if debugVerbosity >= 2: 
          if NoisyCost: notify("### Noisy Trigger Found: {}".format(NoisyCost.group(1))) #Debug      
@@ -1519,19 +1539,19 @@ def findTarget(Autoscript): # Function for finding the target of an autoscript
                storeProperties(targetLookup)
                for validtargetCHK in validTargets: # look if the card we're going through matches our valid target checks
                   if debugVerbosity >= 4: notify("### Checking for valid match on {}".format(validtargetCHK)) #Debug
-                  if re.search(r'{}'.format(validtargetCHK), Stored_Type[targetLookup]) or re.search(r'{}'.format(validtargetCHK), Stored_Keywords[targetLookup]) or re.search(r'{}'.format(validtargetCHK), targetLookup.Side):
+                  if re.search(r'{}'.format(validtargetCHK), fetchProperty(targetLookup, 'Type')) or re.search(r'{}'.format(validtargetCHK), fetchProperty(targetLookup, 'Keywords')) or re.search(r'{}'.format(validtargetCHK), targetLookup.Side):
                      targetC = targetLookup
                for validtargetCHK in validNamedTargets: # look if the card we're going through matches our valid target checks
-                  if validtargetCHK == targetLookup.name:
+                  if validtargetCHK == fetchProperty(targetLookup, 'name'):
                      targetC = targetLookup
             if len(invalidTargets) > 0: # If we have no target restrictions, any selected card will do as long as it's a valid target.
                for invalidtargetCHK in invalidTargets:
                   if debugVerbosity >= 4: notify("### Checking for invalid match on {}".format(invalidtargetCHK)) #Debug
-                  if re.search(r'{}'.format(invalidtargetCHK), Stored_Type[targetLookup]) or re.search(r'{}'.format(invalidtargetCHK), Stored_Keywords[targetLookup]) or re.search(r'{}'.format(invalidtargetCHK), targetLookup.Side):
+                  if re.search(r'{}'.format(invalidtargetCHK), fetchProperty(targetLookup, 'Type')) or re.search(r'{}'.format(invalidtargetCHK), fetchProperty(targetLookup, 'Keywords')) or re.search(r'{}'.format(invalidtargetCHK), targetLookup.Side):
                      targetC = None
             if len(invalidNamedTargets) > 0: # If we have no target restrictions, any selected card will do as long as it's a valid target.
                for invalidtargetCHK in invalidNamedTargets:
-                  if invalidtargetCHK == targetLookup.name:
+                  if invalidtargetCHK == fetchProperty(targetLookup, 'name'):
                      targetC = None
             if debugVerbosity >= 4: notify("### Checking Rest...") #Debug
             if re.search(r'isRezzed', Autoscript) and not targetLookup.isFaceUp: 
@@ -1560,7 +1580,7 @@ def findTarget(Autoscript): # Function for finding the target of an autoscript
    #confirm("List is: {}".format(foundTargets)) # Debug
    if debugVerbosity >= 3: 
       tlist = []
-      for foundTarget in foundTargets: tlist.append(foundTarget.name) # Debug
+      for foundTarget in foundTargets: tlist.append(fetchProperty(foundTarget, 'name')) # Debug
       notify("<<< findTarget() by returning: {}".format(tlist))
    return foundTargets
    
@@ -1680,7 +1700,7 @@ def per(Autoscript, card = None, count = 0, targetCards = None, notification = N
                c.isFaceUp = True
                cFaceD = True
                random = rnd(10,100) # Bug workaround.
-            cardProperties.append(c.name) # We are going to check its name
+            cardProperties.append(fetchProperty(c, 'name')) # We are going to check its name
             cardProperties.append(c.Type) # It's type
             cardSubtypes = getKeywords(c).split('-') # And each individual trait. Traits are separated by " - "
             for cardSubtype in cardSubtypes:

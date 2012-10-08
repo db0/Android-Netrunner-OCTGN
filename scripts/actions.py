@@ -50,6 +50,7 @@ failedRequirement = True #A Global boolean that we set in case an Autoscript cos
 AfterRunInf = True # A warning to remind players that some actions have effects that need to be activated after a run.
 AfterTraceInf = True # Similar to above
 lastKnownNrClicks = 0 # A Variable keeping track of what the engine thinks our action counter should be, in case we change it manually.
+SuccessfulRun = False # Set by the runner when a run is successful, in order to avoid asking the player every time.
 
 
 #---------------------------------------------------------------------------
@@ -59,7 +60,7 @@ lastKnownNrClicks = 0 # A Variable keeping track of what the engine thinks our a
 def placeCard(card, action = 'INSTALL'):
    if debugVerbosity >= 1: notify(">>> placeCard() with action: {}".format(action)) #Debug
    global installedCount
-   type = card.Type
+   type = fetchProperty(card, 'Type')
    if action != 'INSTALL' and type == 'Agenda':
       if ds == 'corp': type == 'scoredAgenda'
       else: type == 'liberatedAgenda'
@@ -98,8 +99,9 @@ def useClick(group = table, x=0, y=0, count = 1):
    extraText = ''
    if count == 0: return '{} takes a free action'.format(me)
    if ds == 'runner' and re.search(r'running',getGlobalVariable('status')): 
-      if not confirm("You have not yet finished your previous run. Normally you're not allowed to use clicks during runs, are you sure you want to continue?\
-                 \n\n(Pressing 'No' will abort this action and you can then Jack-out of the run with [ESC] or [F3]"): return 'ABORT'
+      if SuccessfulRun: jackOut() # If the runner has done a successful run but forgot to end it, then simply jack them out automatically.
+      elif not confirm("You have not yet finished your previous run. Normally you're not allowed to use clicks during runs, are you sure you want to continue?\
+                    \n\n(Pressing 'No' will abort this action and you can then Jack-out or finish the run succesfully with [ESC] or [F3] respectively"): return 'ABORT'
    clicksReduce = findCounterPrevention(me.Clicks, 'Clicks', me)
    if clicksReduce: notify(":::WARNING::: {} had to forfeit their next {} clicks".format(me, clicksReduce))
    me.Clicks -= clicksReduce
@@ -152,7 +154,7 @@ def goToEndTurn(group, x = 0, y = 0):
    currClicks = 0
    myCards = (card for card in table if card.controller == me and card.owner == me)
    for card in myCards: # We refresh once-per-turn cards to be used on the opponent's turn as well (e.g. Net Shield)
-      if card in Stored_Type and Stored_Type[card] != 'ICE': card.orientation &= ~Rot90 
+      if card._id in Stored_Type and fetchProperty(card, 'Type') != 'ICE': card.orientation &= ~Rot90 
    clearAll() # Just in case the player has forgotten to remove their temp markers.
    atTimedEffects('End')
    if ds == "corp": notify ("=> {} ({}) has reached CoB (Close of Business hours).".format(identName, me))
@@ -181,12 +183,12 @@ def goToSot (group, x=0,y=0):
    lastKnownNrClicks = me.Clicks
    myCards = (card for card in table if card.controller == me and card.owner == me)
    for card in myCards: 
-      if card in Stored_Type and Stored_Type[card] != 'ICE': card.orientation &= ~Rot90 # Refresh all cards which can be used once a turn.
+      if card._id in Stored_Type and fetchProperty(card, 'Type') != 'ICE': card.orientation &= ~Rot90 # Refresh all cards which can be used once a turn.
    newturn = True
    turn += 1
    atTimedEffects('Start') # Check all our cards to see if there's any Start of Turn effects active.
-   if ds == "corp": notify("=> The offices of {} ({}) are now open for business. They have {} {} for this turn{}.".format(identName,me,me.Clicks,uniClick(),extraTXT))
-   else: notify ("=> {} ({}) has woken up. They have {} clicks for this turn{}.".format(identName,me,me.Clicks,extraTXT))
+   if ds == "corp": notify("=> The offices of {} ({}) are now open for business. They have {} and {} {} for this turn{}.".format(identName,me,uniCredit(me.Credits),me.Clicks,uniClick(),extraTXT))
+   else: notify ("=> {} ({}) has woken up. They have {} and {} {} for this turn{}.".format(identName,me,uniCredit(me.Credits),me.Clicks,uniClick(),extraTXT))
    opponent = ofwhom('onOpponent')
    if turn == 1:
       if opponent.getGlobalVariable('gameVersion') == '': 
@@ -338,7 +340,7 @@ def checkDeckNoLimit(group):
             notify(":::ERROR::: Extra Identity Cards found in {}'s {}.".format(me, pileName(group)))
             ok = False
          elif card.Faction != identity.Faction:   
-            notify(":::ERROR::: Faction-restricted card ({}) found in {}'s {}.".format(card.name, me, pileName(group)))
+            notify(":::ERROR::: Faction-restricted card ({}) found in {}'s {}.".format(fetchProperty(card, 'name'), me, pileName(group)))
             ok = False
    if len(players) > 1: random = rnd(1,100) # Fix for multiplayer only. Makes Singleplayer setup very slow otherwise.               
    for card in trash: card.moveToBottom(group) # We use a second loop because we do not want to pause after each check
@@ -367,6 +369,8 @@ def intRun(aCost = 1, Name = 'R&D', silent = False):
    if ds != 'runner':  
       whisper(":::ERROR:::Corporations can't run!")
       return 'ABORT'
+   ClickCost = useClick(count = aCost)
+   if ClickCost == 'ABORT': return 'ABORT'
    if re.search(r'running',getGlobalVariable('status')):
       whisper(":::ERROR:::You are already jacked-in. Please end the previous run (press [Esc] or [F3]) before starting a new one")
       return
@@ -374,8 +378,6 @@ def intRun(aCost = 1, Name = 'R&D', silent = False):
    #if findMarker(CounterHold,'Fang') or findMarker(CounterHold,'Rex') or findMarker(CounterHold,'Fragmentation Storm'): # These are counters which prevent the runner from running.
    #   notify(":::Warning:::{} attempted to run but was prevented by a resident Sentry effect in their Rig. They will have to remove all such effects before attempting a run".format(me))
    #   return 'ABORT'
-   ClickCost = useClick(count = aCost)
-   if ClickCost == 'ABORT': return 'ABORT'
    if not silent: 
       if Name == 'Archives': announceTXT = 'the Archives'
       elif Name == 'Remote': announceTXT = 'a remote server'
@@ -407,9 +409,9 @@ def runServer(group, x=0,y=0):
    if debugVerbosity >= 1: notify(">>> runSDF(){}".format(extraASDebug())) #Debug
    intRun(1, "Remote")
 
-def jackOut(group=table,x=0,y=0, silent = False, result = 'failure'):
+def jackOut(group=table,x=0,y=0, silent = False):
    if debugVerbosity >= 1: notify(">>> jackOut(). Current status:{}".format(getGlobalVariable('status'))) #Debug
-   global feintTarget
+   global feintTarget, SuccessfulRun
    opponent = ofwhom('-ofOpponent') # First we check if our opponent is a runner or a corp.
    if ds == 'corp': targetPL = opponent
    else: targetPL = me
@@ -420,24 +422,40 @@ def jackOut(group=table,x=0,y=0, silent = False, result = 'failure'):
       if targetPL != me: whisper("{} is not running at the moment.".format(targetPL))
       else: whisper("You are not currently jacked-in.")
    else: # Else announce they are jacked in and resolve all post-run effects.
-      if feintTarget: runTarget = feintTarget #If the runner is feinting, now change the target server to the right one
-      else: runTarget = runTargetRegex.group(1) # If the runner is not feinting, then extract the target from the shared variable
+      runTarget = runTargetRegex.group(1) # If the runner is not feinting, then extract the target from the shared variable
       if ds == 'runner' : myIdent.markers[mdict['BadPublicity']] = 0 #If we're the runner, then remove out remaining bad publicity tokens
       else: enemyIdent.markers[mdict['BadPublicity']] = 0 # If we're not the runner, then find the runners and remove any bad publicity tokens
-      if result == 'failure': atTimedEffects('JackOut') # If this was a simple jack-out, then make the end-of-run effects trigger only jack-out effects
-      else: atTimedEffects('SuccessfulRun') # If this was a successful run, then the end-of-run effects will also trigger success effects
+      atTimedEffects('JackOut') # If this was a simple jack-out, then make the end-of-run effects trigger only jack-out effects
       setGlobalVariable('status','idle') # Clear the run variable
       feintTarget = None # Clear any feinted targets
+      SuccessfulRun = False # Set the variable which tells the code if the run was successful or not, to false.
       if debugVerbosity >= 2: notify("### About to announce end of Run") #Debug
       if not silent: # Announce the end of run from the perspective of each player.
          if targetPL != me: notify("{} has kicked {} out of their corporate grid".format(myIdent,enemyIdent))
-         else: 
-            if result == 'failure': notify("{} has jacked out of their run on {} server".format(myIdent,runTarget))
-            else: notify("{} has finished their run on the {} server successfully".format(myIdent,runTarget))
+         else: notify("{} has jacked out of their run on the {} server".format(myIdent,runTarget))
       clearAll(True, True) # On jack out we clear all player's counters, but don't discard cards from the table.
+   if debugVerbosity >= 3: notify("<<< jackOut()") # Debug
       
 def runSuccess(group=table,x=0,y=0, silent = False):
-   jackOut(silent = False, result = 'success')
+   if debugVerbosity >= 1: notify(">>> runSuccess(). Current status:{}".format(getGlobalVariable('status'))) #Debug
+   global SuccessfulRun, feintTarget
+   opponent = ofwhom('-ofOpponent') # First we check if our opponent is a runner or a corp.
+   if ds == 'corp': targetPL = opponent
+   else: targetPL = me
+   runTargetRegex = re.search(r'running([A-Za-z&]+)',getGlobalVariable('status'))
+   if not runTargetRegex: # If the runner is not running at the moment, do nothing
+      if targetPL != me: whisper(":::Error:::{} is not running at the moment.".format(targetPL))
+      else: whisper(":::Error::: You are not currently jacked-in.")
+   elif SuccessfulRun: 
+      whisper(":::Error::: You have already completed this run succesfully. Jacking out instead...")
+      jackOut()
+   else:
+      SuccessfulRun = True
+      if feintTarget: runTarget = feintTarget #If the runner is feinting, now change the target server to the right one
+      else: runTarget = runTargetRegex.group(1) # If the runner is not feinting, then extract the target from the shared variable
+      atTimedEffects('SuccessfulRun')
+      notify("{} has successfully run the {} server".format(identName,runTarget))
+   if debugVerbosity >= 3: notify("<<< runSuccess()") # Debug
 #------------------------------------------------------------------------------
 # Tags...
 #------------------------------------------------------------------------------
@@ -681,7 +699,7 @@ def reduceCost(card, action = 'REZ', fullCost = 0):
    status = getGlobalVariable('status')
    if debugVerbosity >= 3: notify("### Status: {}".format(status))
    ### First we check if the card has an innate reduction. 
-   Autoscripts = Stored_AutoScripts[card].split('||') 
+   Autoscripts = fetchProperty(card, 'AutoScripts').split('||') 
    if len(Autoscripts): 
       for autoS in Autoscripts:
          if not re.search(r'onPay', autoS): 
@@ -728,8 +746,8 @@ def reduceCost(card, action = 'REZ', fullCost = 0):
             if debugVerbosity >= 3: notify("### Possible Match found in {}".format(c)) # Debug         
             if reductionSearch.group(4): 
                exclusion = re.search(r'-not([A-Za-z_& ]+)'.format(type), reductionSearch.group(4))
-               if exclusion and (re.search(r'{}'.format(exclusion.group(1)), Stored_Type[card]) or re.search(r'{}'.format(exclusion.group(1)), Stored_Keywords[card])): continue
-            if reductionSearch.group(3) == 'All' or re.search(r'{}'.format(reductionSearch.group(3)), Stored_Type[card]) or re.search(r'{}'.format(reductionSearch.group(3)), Stored_Keywords[card]): #Looking for the type of card being reduced into the properties of the card we're currently paying.
+               if exclusion and (re.search(r'{}'.format(exclusion.group(1)), fetchProperty(card, 'Type')) or re.search(r'{}'.format(exclusion.group(1)), fetchProperty(card, 'Keywords'))): continue
+            if reductionSearch.group(3) == 'All' or re.search(r'{}'.format(reductionSearch.group(3)), fetchProperty(card, 'Type')) or re.search(r'{}'.format(reductionSearch.group(3)), fetchProperty(card, 'Keywords')): #Looking for the type of card being reduced into the properties of the card we're currently paying.
                if debugVerbosity >= 3: notify(" ### Search match! Group is {}".format(reductionSearch.group(1))) # Debug
                if re.search(r'onlyOnce',autoS) and oncePerTurn(c, silent = True, act = 'automatic') == 'ABORT': continue # if the card's effect has already been used, check the next one
                if reductionSearch.group(1) != '#':
@@ -808,11 +826,11 @@ def findDMGProtection(DMGdone, DMGtype, targetPL): # Find out if the player has 
             if re.search(r'onlyOnce',CardsAS.get(card.model,'')) and card.orientation == Rot90: continue # If the card has a once per-turn ability which has been used, ignore it
             if re.search(r'excludeDummy',CardsAS.get(card.model,'')) and card.highlight == DummyColor: continue
             if targetPL == me:
-               if confirm("You control a {} which can prevent some of the damage you're about to suffer. Do you want to activate it now?".format(card.name)):
+               if confirm("You control a {} which can prevent some of the damage you're about to suffer. Do you want to activate it now?".format(fetchProperty(card, 'name'))):
                   executePlayScripts(card, 'DAMAGE')
                   if re.search(r'onlyOnce',CardsAS.get(card.model,'')): card.orientation = Rot90
             else: 
-               if confirm("{} controls a {} which can prevent some of the damage you're about to inflict to them. Do they wish you to activate their card for them automatically?".format(targetPL.name,card.name)):
+               if confirm("{} controls a {} which can prevent some of the damage you're about to inflict to them. Do they wish you to activate their card for them automatically?".format(targetPL.name,fetchProperty(card, 'name'))):
                   executePlayScripts(card, 'DAMAGE')
                   if re.search(r'onlyOnce',CardsAS.get(card.model,'')): card.orientation = Rot90
    cardList = sortPriority([c for c in table
@@ -934,13 +952,13 @@ def scrAgenda(card, x = 0, y = 0):
          return
    if ds == 'runner': agendaTxt = 'LIBERATE'
    else: agendaTxt = 'SCORE'
-   if Stored_Type[card] == "Agenda":
-      if ds == 'corp' and card.markers[mdict['Advancement']] < num(Stored_Cost[card]):
+   if fetchProperty(card, 'Type') == "Agenda":
+      if ds == 'corp' and card.markers[mdict['Advancement']] < num(fetchProperty(card, 'Cost')):
          if confirm("You have not advanced this agenda enough to score it. Bypass?"): 
             cheapAgenda = True
             currentAdv = card.markers[mdict['Advancement']]
          else: return
-      elif not confirm("Do you want to {} agenda {}?".format(agendaTxt.lower(),card.name)): return
+      elif not confirm("Do you want to {} agenda {}?".format(agendaTxt.lower(),fetchProperty(card, 'name'))): return
       card.isFaceUp = True
       if agendaTxt == 'SCORE' and chkTargeting(card) == 'ABORT': 
          card.isFaceUp = False
@@ -972,7 +990,7 @@ def scrTargetAgenda(group = table, x = 0, y = 0):
    cardList = [c for c in table if c.targetedBy and c.targetedBy == me]
    for card in cardList:
       storeProperties(card)
-      if Stored_Type[card] == 'Agenda':
+      if fetchProperty(card, 'Type') == 'Agenda':
          if card.markers[mdict['Scored']] and card.markers[mdict['Scored']] > 0: whisper(":::ERROR::: This agenda has already been scored")
          else:
             scrAgenda(card)
@@ -987,7 +1005,7 @@ def RDaccessX(group = table, x = 0, y = 0): # A function which looks at the top 
    if ds == 'corp': 
       whisper("This action is only for the use of the runner. Use the 'Look at top X cards' function on your R&D's context manu to access your own deck")
       return
-   count = askInteger("How many cards are you accessing from the corporation's R&D?",1)
+   count = askInteger("How many files are you able to access from the corporation's R&D?",1)
    if count == None: return
    targetPL = ofwhom('-ofOpponent')
    if debugVerbosity >= 3: notify("### Found opponent. Storing the top {} as a list".format(count)) #Debug
@@ -1066,8 +1084,9 @@ def RDaccessX(group = table, x = 0, y = 0): # A function which looks at the top 
       else: continue
    cover.moveTo(shared.exile) # now putting the cover card to the exile deck that nobody looks at.
    notify("{} has finished accessing {}'s R&D".format(me,targetPL))
+   if debugVerbosity >= 3: notify("<<< RDaccessX()")
 
-def ARCscore(group, x=0,y=0):
+def ARCscore(group=table, x=0,y=0):
    mute()
    if debugVerbosity >= 1: notify(">>> ARCscore(){}".format(extraASDebug())) #Debug
    removedCards = 0
@@ -1090,11 +1109,72 @@ def ARCscore(group, x=0,y=0):
          card.highlight = RevealedColor
          scrAgenda(card)
          if card.highlight == RevealedColor: card.moveTo(ARC) # If the runner opted not to score the agenda, put it back into the deck.
-      
+   if debugVerbosity >= 3: notify("<<< ARCscore()")
+
+def HQaccess(group=table, x=0,y=0, silent = False):
+   mute()
+   if debugVerbosity >= 1: notify(">>> HQAccess(){}".format(extraASDebug())) #Debug
+   if ds == 'corp': 
+      whisper("This action is only for the use of the runner.")
+      return
+   if not silent and not confirm("You are about to access a random card from the corp's HQ.\
+                                \nPlease make sure your opponent is not manipulating their hand, and does not have a way to cancel this effect before continuing\
+                              \n\nProceed?"): return
+   targetPL = ofwhom('-ofOpponent')
+   if debugVerbosity >= 3: notify("### Found opponent.") #Debug
+   revealedCard = showatrandom(targetPL = targetPL)
+   if not revealedCard: return # If the corp's hand is empty, do nothing.
+   if re.search(r'onAccess:Reveal',CardsAS.get(revealedCard.model,'')):
+      information("Ambush! You have stumbled into a {}\
+                \n(This card activates even on access from HQ.)\
+              \n\nYour blunder has already triggered the alarms. Please wait until corporate OpSec has decided whether to use its effects or not, before pressing any button\
+               ".format(revealedCard.name))
+   if debugVerbosity >= 2: notify("### Not a Trap.") #Debug
+   if revealedCard.Type == 'ICE': 
+      cStatTXT = '\nStrength: {}.'.format(revealedCard.Stat)
+   elif revealedCard.Type == 'Asset' or revealedCard.Type == 'Upgrade':
+      cStatTXT = '\nTrash Cost: {}.'.format(revealedCard.Stat)
+   elif revealedCard.Type == 'Agenda':
+      cStatTXT = '\nAgenda Points: {}.'.format(revealedCard.Stat)
+   else: cStatTXT = ''
+   if debugVerbosity >= 2: notify("### Crafting Title") #Debug
+   title = "Card: {}.\
+          \nType: {}.\
+          \nKeywords: {}.\
+          \nCost: {}.\
+            {}\n\nCard Text: {}\
+        \n\nWhat do you want to do with this card?".format(revealedCard.name,revealedCard.Type,revealedCard.Keywords,revealedCard.Cost,cStatTXT,revealedCard.Rules)
+   if revealedCard.Type == 'Agenda' or revealedCard.Type == 'Asset' or revealedCard.Type == 'Upgrade':
+      if revealedCard.Type == 'Agenda': action1TXT = 'Liberate for {} Agenda Points.'.format(revealedCard.Stat)
+      else: action1TXT = 'Pay {} to Trash.'.format(revealedCard.Stat)
+      options = ["Leave where it is.","Force trash at no cost.",action1TXT]
+   else:                    
+      options = ["Leave where it is.","Force trash at no cost."]
+   if debugVerbosity >= 2: notify("### Opening Choice Window") #Debug
+   choice = SingleChoice(title, options, 'button')
+   if choice == None: choice = 0
+   revealedCard.highlight = None
+   if choice == 1: 
+      revealedCard.moveTo(targetPL.piles['Heap/Archives(Face-up)'])
+      loopChk(revealedCard,'Type')
+      notify("{} {} {} at no cost".format(me,uniTrash(),revealedCard))
+   elif choice == 2:
+      if revealedCard.Type == 'Agenda':
+         scrAgenda(revealedCard)
+      else: 
+         reduction = reduceCost(revealedCard, 'TRASH', num(revealedCard.Stat))
+         rc = payCost(num(revealedCard.Stat) - reduction, "not free")
+         if rc == "ABORT": revealedCard.moveTo(targetPL.hand) # If the player couldn't pay to trash the card, we leave it where it is.
+         revealedCard.moveTo(targetPL.piles['Heap/Archives(Face-up)'])
+         loopChk(revealedCard,'Type')
+         notify("{} paid {} to {} {}".format(me,uniCredit(revealedCard.Stat),uniTrash(),revealedCard))
+   else: revealedCard.moveTo(targetPL.hand)
+   if debugVerbosity >= 3: notify("<<< HQAccess()")
+         
 def isRezzable (card):
    if debugVerbosity >= 1: notify(">>> isRezzable(){}".format(extraASDebug())) #Debug
    mute()
-   Type = Stored_Type[card]
+   Type = fetchProperty(card, 'Type')
    if Type == "ICE" or Type == "Asset" or Type == "Upgrade": return True
    else: return False
 
@@ -1113,9 +1193,9 @@ def intRez (card, cost = 'not free', x=0, y=0, silent = False):
    if chkTargeting(card) == 'ABORT': 
       notify("{} cancels their action".format(me))
       return
-   reduction = reduceCost(card, 'REZ', num(Stored_Cost[card]))
+   reduction = reduceCost(card, 'REZ', num(fetchProperty(card, 'Cost')))
    if reduction: extraText = " (reduced by {})".format(uniCredit(reduction))
-   rc = payCost(num(Stored_Cost[card]) - reduction, cost)
+   rc = payCost(num(fetchProperty(card, 'Cost')) - reduction, cost)
    if rc == "ABORT": return # If the player didn't have enough money to pay and aborted the function, then do nothing.
    elif rc == "free": extraText = " at no cost"
    elif rc != 0: rc = "for {}".format(rc)
@@ -1212,7 +1292,7 @@ def intTrashCard(card, stat, cost = "not free",  ClickCost = '', silent = False)
       goodGrammar = ''
    if UniCode: goodGrammar = ''
    cardowner = card.owner
-   if Stored_Type[card] == "Tracing" or Stored_Type[card] == "Counter Hold" or (Stored_Type[card] == "Server" and card.name != "Remote Server"): 
+   if fetchProperty(card, 'Type') == "Tracing" or fetchProperty(card, 'Type') == "Counter Hold" or (fetchProperty(card, 'Type') == "Server" and fetchProperty(card, 'name') != "Remote Server"): 
       whisper("{}".format(trashEasterEgg[trashEasterEggIDX]))
       if trashEasterEggIDX < 7:
          trashEasterEggIDX += 1
@@ -1234,7 +1314,7 @@ def intTrashCard(card, stat, cost = "not free",  ClickCost = '', silent = False)
    else: 
       ClickCost += "pays {} to".format(rc) # If we have Credit cost, append it to the Click cost to be announced.
       goodGrammar = ''
-   if Stored_Type[card] == 'Event' or Stored_Type[card] == 'Operation': silent = True # These cards are already announced when played. No need to mention them a second time.
+   if fetchProperty(card, 'Type') == 'Event' or fetchProperty(card, 'Type') == 'Operation': silent = True # These cards are already announced when played. No need to mention them a second time.
    if card.isFaceUp:
       MUtext = chkRAM(card, 'UNINSTALL')    
       if rc == "free" and not silent: notify("{} {} {} at no cost{}.".format(me, uniTrash(), card, MUtext))
@@ -1298,7 +1378,7 @@ def trashTargetPaid(group, x=0, y=0):
    for card in targetCards:
       storeProperties(card)
       if ds == 'corp':
-         if Stored_Type[card] == 'Resource':
+         if fetchProperty(card, 'Type') == 'Resource':
             ClickCost = useClick()
             if not card.controller.Tags:
                whisper("You can only {} the runner's resources when they're tagged".format(uniTrash()))
@@ -1307,7 +1387,7 @@ def trashTargetPaid(group, x=0, y=0):
             intTrashCard(card, 2, ClickCost = ClickCost)
          else: whisper("Only resources can be trashed from the runner")
       else: 
-         if Stored_Type[card] == 'Upgrade' or Stored_Type[card] == 'Asset':
+         if fetchProperty(card, 'Type') == 'Upgrade' or fetchProperty(card, 'Type') == 'Asset':
             intTrashCard(card, fetchProperty(card, 'Stat')) # If we're a runner, trash with the cost of the card's trash.
          else: whisper("You can only pay to trash the Corp's Nodes and Upgrades".format(uniTrash()))
       
@@ -1316,7 +1396,7 @@ def exileCard(card, silent = False):
    # Puts the removed card in the shared pile and outside of view.
    mute()
    storeProperties(card)
-   if Stored_Type[card] == "Tracing" or Stored_Type[card] == "Counter Hold" or Stored_Type[card] == "Server": 
+   if fetchProperty(card, 'Type') == "Tracing" or fetchProperty(card, 'Type') == "Counter Hold" or fetchProperty(card, 'Type') == "Server": 
       whisper("This kind of card cannot be exiled!")
       return 'ABORT'
    else:
@@ -1338,7 +1418,7 @@ def uninstall(card, x=0, y=0, destination = 'hand', silent = False):
    if destination == 'R&D' or destination == 'Stack': group = me.piles['R&D/Stack']
    else: group = card.owner.hand
    #confirm("destination: {}".format(destination)) # Debug
-   if Stored_Type[card] == "Tracing" or Stored_Type[card] == "Counter Hold" or (Stored_Type[card] == "Server" and card.name != "Remote Server"): 
+   if fetchProperty(card, 'Type') == "Tracing" or fetchProperty(card, 'Type') == "Counter Hold" or (fetchProperty(card, 'Type') == "Server" and fetchProperty(card, 'name') != "Remote Server"): 
       whisper("This kind of card cannot be uninstalled!")
       return 'ABORT'
    else: 
@@ -1407,29 +1487,29 @@ def prioritize(card,x=0,y=0):
 def rulings(card, x = 0, y = 0):
    if debugVerbosity >= 1: notify(">>> rulings(){}".format(extraASDebug())) #Debug
    mute()
-   if not card.isFaceUp: return
+   #if not card.isFaceUp: return
    #openUrl('http://www.netrunneronline.com/cards/{}/'.format(card.Errata))
-   openUrl('http://www.cardgamedb.com/index.php/netrunner/android-netrunner-card-search?text={}'.format(card.name)) # Errata is not filled in most card so this works better until then
+   openUrl('http://www.cardgamedb.com/index.php/netrunner/android-netrunner-card-search?text={}&fTS=0'.format(fetchProperty(card, 'name'))) # Errata is not filled in most card so this works better until then
    
 def inspectCard(card, x = 0, y = 0): # This function shows the player the card text, to allow for easy reading until High Quality scans are procured.
    if debugVerbosity >= 1: notify(">>> inspectCard(){}".format(extraASDebug())) #Debug
    ASText = "This card has the following automations:"
-   if re.search(r'onPlay', Stored_AutoScripts.get(card,'')): ASText += '\n * It will have an effect when coming into play from your hand.'
-   if re.search(r'onScore', Stored_AutoScripts.get(card,'')): ASText += '\n * It will have an effect when being scored.'
-   if re.search(r'onRez', Stored_AutoScripts.get(card,'')): ASText += '\n * It will have an effect when its being rezzed.'
-   if re.search(r'whileRezzed', Stored_AutoScripts.get(card,'')): ASText += '\n * It will has a continous effect while in play.'
-   if re.search(r'whileScored', Stored_AutoScripts.get(card,'')): ASText += '\n * It will has a continous effect while scored.'
-   if re.search(r'atTurnStart', Stored_AutoScripts.get(card,'')): ASText += '\n * It will perform an automation at the start of your turn.'
-   if re.search(r'atTurnEnd', Stored_AutoScripts.get(card,'')): ASText += '\n * It will perform an automation at the end of your turn.'
-   if re.search(r'atRunStart', Stored_AutoScripts.get(card,'')): ASText += '\n * It will perform an automation at the start of your run.'
-   if re.search(r'atJackOut', Stored_AutoScripts.get(card,'')): ASText += '\n * It will perform an automation at the end of a run.'
-   if CardsAA.get(card.model,'') != '' or Stored_AutoActions.get(card,'') != '':
+   if re.search(r'onPlay', Stored_AutoScripts.get(card._id,'')): ASText += '\n * It will have an effect when coming into play from your hand.'
+   if re.search(r'onScore', Stored_AutoScripts.get(card._id,'')): ASText += '\n * It will have an effect when being scored.'
+   if re.search(r'onRez', Stored_AutoScripts.get(card._id,'')): ASText += '\n * It will have an effect when its being rezzed.'
+   if re.search(r'whileRezzed', Stored_AutoScripts.get(card._id,'')): ASText += '\n * It will has a continous effect while in play.'
+   if re.search(r'whileScored', Stored_AutoScripts.get(card._id,'')): ASText += '\n * It will has a continous effect while scored.'
+   if re.search(r'atTurnStart', Stored_AutoScripts.get(card._id,'')): ASText += '\n * It will perform an automation at the start of your turn.'
+   if re.search(r'atTurnEnd', Stored_AutoScripts.get(card._id,'')): ASText += '\n * It will perform an automation at the end of your turn.'
+   if re.search(r'atRunStart', Stored_AutoScripts.get(card._id,'')): ASText += '\n * It will perform an automation at the start of your run.'
+   if re.search(r'atJackOut', Stored_AutoScripts.get(card._id,'')): ASText += '\n * It will perform an automation at the end of a run.'
+   if CardsAA.get(card.model,'') != '' or Stored_AutoActions.get(card._id,'') != '':
       if debugVerbosity >= 2: notify("### We have AutoActions") #Debug
       if ASText == 'This card has the following automations:': ASText = '\nThis card will perform one or more automated actions when you double click on it.'
       else: ASText += '\n\nThis card will also perform one or more automated actions when you double click on it.'
    if ASText == 'This card has the following automations:': ASText = '\nThis card has no automations.'
-   if card.name in automatedMarkers:
-      ASText += '\n\nThis card can create markers, which also have automated effects.'
+   #if fetchProperty(card, 'name') in automatedMarkers:
+   #   ASText += '\n\nThis card can create markers, which also have automated effects.'
    if card.type == 'Tracing': information("This is your tracing card. Double click on it to reinforce your trace or base link.\
                                          \nIt will ask you for your bid and then take the same amount of credits from your bank automatically")
    elif card.type == 'Server': information("These are your Servers. Start stacking your Ice above them and your Agendas, Upgrades and Nodes below them.\
@@ -1477,7 +1557,7 @@ def intPlay(card, cost = 'not_free'):
    else: hiddenresource = 'no'
    if card.Type == 'ICE' or card.Type == 'Agenda' or card.Type == 'Asset' or card.Type == 'Upgrade':
       placeCard(card, action)
-      if Stored_Type[card] == 'ICE': card.orientation ^= Rot90 # Ice are played sideways.
+      if fetchProperty(card, 'Type') == 'ICE': card.orientation ^= Rot90 # Ice are played sideways.
       notify("{} to install a card.".format(ClickCost))
       #card.isFaceUp = False # Now Handled by placeCard()
    elif card.Type == 'Program' or card.Type == 'Event' or card.Type == 'Resource' or card.Type == 'Hardware':
@@ -1525,11 +1605,11 @@ def intPlay(card, cost = 'not_free'):
    autoscriptOtherPlayers('Card'+action.capitalize(),card) # we tell the autoscriptotherplayers that we installed/played a card. (e.g. See Haas-Bioroid ability)
    if debugVerbosity >= 3: notify("<<< intPlay().action: {}\nAutoscriptedothers: {}".format(action,'Card'+action.capitalize())) #Debug
    if debugVerbosity >= 1:
-      if Stored_Type.get(card,None): notify("++++ Stored Type: {}".format(Stored_Type[card]))
+      if Stored_Type.get(card._id,None): notify("++++ Stored Type: {}".format(fetchProperty(card, 'Type')))
       else: notify("++++ No Stored Type Found for {}".format(card))
-      if Stored_Keywords.get(card,None): notify("++++ Stored Keywords: {}".format(Stored_Keywords[card]))
+      if Stored_Keywords.get(card._id,None): notify("++++ Stored Keywords: {}".format(fetchProperty(card, 'Keywords')))
       else: notify("++++ No Stored Keywords Found for {}".format(card))
-      if Stored_Cost.get(card,None): notify("++++ Stored Cost: {}".format(Stored_Cost[card]))
+      if Stored_Cost.get(card._id,None): notify("++++ Stored Cost: {}".format(fetchProperty(card, 'Cost')))
       else: notify("++++ No Stored Cost Found for {}".format(card))
 
 
@@ -1575,7 +1655,7 @@ def checkNotHardwareConsole (card):
    if card.Type != "Hardware" or not re.search(r'Console', getKeywords(card)): return True
    ExistingConsoles = [ c for c in table
          if c.owner == me and c.isFaceUp and re.search(r'Console', getKeywords(c)) ]
-   if len(ExistingConsoles) != 0 and not confirm("You already have at least one console in play. Are you sure you want to install {}?\n\n(If you do, your installed Consoles will be automatically trashed at no cost)".format(card.name)): return False
+   if len(ExistingConsoles) != 0 and not confirm("You already have at least one console in play. Are you sure you want to install {}?\n\n(If you do, your installed Consoles will be automatically trashed at no cost)".format(fetchProperty(card, 'name'))): return False
    else: 
       for HWDeck in ExistingConsoles: trashForFree(HWDeck)
    if debugVerbosity >= 1: notify(">>> checkNotHardwareConsole()") #Debug
@@ -1656,18 +1736,24 @@ def handRandomDiscard(group, count = None, player = None, destination = None, si
    if debugVerbosity >= 2: notify("<<< handRandomDiscard() with return {}".format(iter + 1)) #Debug
    return iter + 1 #We need to increase the iter by 1 because it starts iterating from 0
     		
-def showatrandom(group, count = 1, silent = False):
+def showatrandom(group = None, count = 1, targetPL = None, silent = False):
    if debugVerbosity >= 1: notify(">>> showatrandom(){}".format(extraASDebug())) #Debug
    mute()
+   side = 1
+   if not targetPL: targetPL = me
+   if not group: group = targetPL.hand
+   if targetPL != me: side = -1
    for iter in range(count):
       card = group.random()
       if card == None: 
-         notify(":::Info:::{} has no more cards in their hand to reveal".format(me))
+         notify(":::Info:::{} has no more cards in their hand to reveal".format(targetPL))
          break
-      card.moveToTable(playerside * iter * cwidth(card) - (count * cwidth(card) / 2), 0 - yaxisMove(card), False)
+      card.moveToTable(playerside * side * iter * cwidth(card) - (count * cwidth(card) / 2), 0 - yaxisMove(card) * side, False)
       card.highlight = RevealedColor
       loopChk(card) # A small delay to make sure we grab the card's name to announce
-   if not silent: notify("{} reveals {} at random from their hand.".format(me,card))
+   if not silent: notify("{} reveals {} at random from their hand.".format(targetPL,card))
+   if debugVerbosity >= 2: notify("<<< showatrandom() with return {}".format(card)) #Debug
+   return card
 
 def groupToDeck (group = me.hand, player = me, silent = False):
    if debugVerbosity >= 1: notify(">>> groupToDeck(){}".format(extraASDebug())) #Debug
@@ -1707,7 +1793,7 @@ def draw(group):
    card = group.top()
    if ds == 'corp' and newturn: 
       card.moveTo(me.hand)
-      notify("--> {} perform's the turn's mandatory draw.".format(me))
+      notify("--> {} performs the turn's mandatory draw.".format(me))
       newturn = False
    else:
       ClickCost = useClick()
@@ -1732,11 +1818,11 @@ def drawMany(group, count = None, destination = None, silent = False):
    for c in group.top(count): 
       c.moveTo(destination)
       if debugVerbosity >= 1:
-         if Stored_Type.get(c,None): notify("++++ Stored Type: {}".format(Stored_Type[c]))
+         if Stored_Type.get(c._id,None): notify("++++ Stored Type: {}".format(fetchProperty(c, 'Type')))
          else: notify("++++ No Stored Type Found for {}".format(c))
-         if Stored_Keywords.get(c,None): notify("++++ Stored Keywords: {}".format(Stored_Keywords[c]))
+         if Stored_Keywords.get(c._id,None): notify("++++ Stored Keywords: {}".format(fetchProperty(c, 'Keywords')))
          else: notify("++++ No Stored Keywords Found for {}".format(c))
-         if Stored_Cost.get(c,None): notify("++++ Stored Cost: {}".format(Stored_Cost[c]))
+         if Stored_Cost.get(c._id,None): notify("++++ Stored Cost: {}".format(fetchProperty(c, 'Cost')))
          else: notify("++++ No Stored Cost Found for {}".format(c))
       storeProperties(c)
    if not silent: notify("{} draws {} cards.".format(me, count))

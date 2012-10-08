@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<game xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="Android:Netrunner" id="0f38e453-26df-4c04-9d67-6d43de939c77" octgnVersion="3.0.1.14" version="1.1.16.2" markersize="20">
+<game xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="Android:Netrunner" id="0f38e453-26df-4c04-9d67-6d43de939c77" octgnVersion="3.0.1.14" version="1.1.17" markersize="20">
    <scripts>
       <script src="r3" />
       <script src="r17" />
@@ -66,7 +66,8 @@
          <groupaction menu="Jack Out" default="false" shortcut="Esc" execute="jackOut" />
          <groupaction menu="Finish the Run succesfully" default="false" shortcut="F3" execute="runSuccess" />
          <groupaction menu="Score Target Agenda" default="false" shortcut="Ctrl+G" execute="scrTargetAgenda" />
-         <groupaction menu="Access top X cards form corp R&amp;D" default="false" shortcut="Ctrl+A" execute="RDaccessX" />
+         <groupaction menu="Access a random card form corp HQ" default="false" shortcut="Ctrl+Q" execute="HQaccess" />
+         <groupaction menu="Access top X cards from corp R&amp;D" default="false" shortcut="Ctrl+A" execute="RDaccessX" />
          <groupaction menu="Score all Agendas in the Archives" default="false" shortcut="Ctrl+H" execute="ARCscore" />
          <groupaction menu="Suffer 1 Meat Damage" default="false" execute="addMeatDmg" />
          <groupaction menu="Suffer 1 Net Damage" default="false" execute="addNetDmg" />

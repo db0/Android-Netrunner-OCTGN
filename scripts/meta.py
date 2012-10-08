@@ -150,7 +150,7 @@ def getKeywords(card): # A function which combines the existing card keywords, w
    keywords = ''
    for KW in keywordsList:
       keywords += '{}-'.format(KW)
-   Stored_Keywords[card] = keywords[:-1] # We also update the global variable for this card, which is used by many functions.
+   Stored_Keywords[card._id] = keywords[:-1] # We also update the global variable for this card, which is used by many functions.
    if debugVerbosity >= 3: notify("<<< getKeywords() by returning: {}.".format(keywords[:-1]))
    return keywords[:-1] # We need to remove the trailing dash '-'
    
@@ -234,8 +234,8 @@ def checkUnique (card):
    mute()
    if not re.search(r'Unique', getKeywords(card)): return True #If the played card isn't unique do nothing.
    ExistingUniques = [ c for c in table
-         if c.owner == me and c.isFaceUp and c.name == card.name and re.search(r'Unique', getKeywords(c)) ]
-   if len(ExistingUniques) != 0 and not confirm("This unique card is already in play. Are you sure you want to play {}?\n\n(If you do, your existing unique card will be Trashed at no cost)".format(card.name)) : return False
+         if c.owner == me and c.isFaceUp and fetchProperty(c, 'name') == fetchProperty(card, 'name') and re.search(r'Unique', getKeywords(c)) ]
+   if len(ExistingUniques) != 0 and not confirm("This unique card is already in play. Are you sure you want to play {}?\n\n(If you do, your existing unique card will be Trashed at no cost)".format(fetchProperty(card, 'name'))) : return False
    else:
       for uniqueC in ExistingUniques: trashForFree(uniqueC)
    return True   
@@ -261,7 +261,7 @@ def resetAll(): # Clears all the global variables in order to start a new game.
    currClicks = 0
    turn = 0
    ShowDicts()
-   #debugVerbosity = -1 # Reset means normal game.
+   debugVerbosity = -1 # Reset means normal game.
    if debugVerbosity >= 1: notify("<<< resetAll()") #Debug
 #------------------------------------------------------------------------------
 # Switches
@@ -368,17 +368,6 @@ def versionCheck():
                      ".format(gameVersion, detailsplit[0],detailsplit[2],detailsplit[1])):
             openUrl('https://github.com/db0/Android-Netrunner-OCTGN/downloads')
          startupMsg = True
-      elif len(currentVers) == 4:
-         if len(installedVers) < 4: emergencyV = True 
-         elif currentVers[3] != installedVers[3]: emergencyV = True 
-         else: emergencyV = False
-         if emergencyV and confirm("There is an emergency fix available for your current version!\nYour version: {}.\nCurrent version: {}.\
-                                    {}\
-                                \n\nDo you want to be redirected to download the latest version?.\
-                                  \n(An emergency update probably means there's a significant bug left in the engine. We strongly suggest you update before proceeding.)\
-                                    ".format(gameVersion, detailsplit[0],detailsplit[1])): 
-            openUrl('https://github.com/db0/Android-Netrunner-OCTGN/downloads')
-         startupMsg = True
       if not startupMsg: MOTD() # If we didn't give out any other message , we give out the MOTD instead.
       startupMsg = True
    if debugVerbosity >= 3: notify("<<< versionCheck()") #Debug
@@ -436,7 +425,7 @@ def initGame(): # A function which prepares the game for online submition
 def reportGame(result = 'AgendaVictory'): # This submits the game results online.
    if debugVerbosity >= 1: notify(">>> reportGame()") #Debug
    GUID = getGlobalVariable('gameGUID')
-   if GUID == 'None': return # If we don't have a GUID, we can't submit
+   if GUID == 'None' and debugVerbosity < 0: return # If we don't have a GUID, we can't submit. But if we're debugging, we go through.
    gameEnded = getGlobalVariable('gameEnded')
    if gameEnded == 'True':
      if not confirm("Your game already seems to have finished once before. Do you want to change the results to '{}' for {}?".format(result,me.name)): return
@@ -451,15 +440,17 @@ def reportGame(result = 'AgendaVictory'): # This submits the game results online
    TURNS = turn
    VERSION = gameVersion
    if debugVerbosity >= 2: notify("### About to report player results online.") #Debug
-   if turn < 1 or len(players) == 1:
+   if (turn < 1 or len(players) == 1) and debugVerbosity < 1:
       notify(":::ATTENTION:::Game stats submit aborted due to number of players ( less than 2 ) or turns played (less than 1)")
       return # You can never win before the first turn is finished and we don't want to submit stats when there's only one player.
-   (reportTXT, reportCode) = webRead('http://84.205.248.92/slaghund/game.slag?g={}&u={}&id={}&r={}&s={}&i={}&t={}&v={}&w={}&lid={}'.format(GUID,PLAYER,IDENTITY,RESULT,SCORE,INFLUENCE,TURNS,VERSION,WIN,LEAGUE))
+   if debugVerbosity < 1: # We only submit stats if we're not in debug mode
+      (reportTXT, reportCode) = webRead('http://84.205.248.92/slaghund/game.slag?g={}&u={}&id={}&r={}&s={}&i={}&t={}&v={}&w={}&lid={}'.format(GUID,PLAYER,IDENTITY,RESULT,SCORE,INFLUENCE,TURNS,VERSION,WIN,LEAGUE))
    # The victorious player also reports for their enemy
    enemyPL = ofwhom('-ofOpponent')
    ENEMY = enemyPL.name
    enemyIdent = getSpecial('Identity',enemyPL)
-   E_IDENTITY = enemyIdent.name
+   E_IDENTITY = fetchProperty(enemyIdent, 'name') # Debug
+   if debugVerbosity >= 2: notify("### Enemy Identity Name: {}".format(E_IDENTITY)) #Debug
    if result == 'FlatlineVictory': 
       E_RESULT = 'Flatlined'
       E_WIN = 0
@@ -481,7 +472,8 @@ def reportGame(result = 'AgendaVictory'): # This submits the game results online
    else: E_TURNS = turn # If we're the runner, the opponent has played one more turn than we have.
    E_VERSION = enemyPL.getGlobalVariable('gameVersion')
    if debugVerbosity >= 2: notify("### About to report enemy results online.") #Debug
-   (EreportTXT, EreportCode) = webRead('http://84.205.248.92/slaghund/game.slag?g={}&u={}&id={}&r={}&s={}&i={}&t={}&v={}&w={}&lid={}'.format(GUID,ENEMY,E_IDENTITY,E_RESULT,E_SCORE,E_INFLUENCE,E_TURNS,E_VERSION,E_WIN,LEAGUE))
+   if debugVerbosity < 1: # We only submit stats if we're not debugging
+      (EreportTXT, EreportCode) = webRead('http://84.205.248.92/slaghund/game.slag?g={}&u={}&id={}&r={}&s={}&i={}&t={}&v={}&w={}&lid={}'.format(GUID,ENEMY,E_IDENTITY,E_RESULT,E_SCORE,E_INFLUENCE,E_TURNS,E_VERSION,E_WIN,LEAGUE))
    setGlobalVariable('gameEnded','True')
    if debugVerbosity >= 3: notify("<<< reportGame()") #Debug
 
@@ -515,7 +507,7 @@ def fetchCardScripts(group = table, x=0, y=0): # Creates 2 dictionaries with all
    whisper("+++ Fetching fresh scripts. Please Wait...")
    (ScriptsDownload, code) = webRead('https://raw.github.com/db0/Android-Netrunner-OCTGN/master/scripts/CardScripts.py')
    if debugVerbosity >= 4: notify("### code:{}, text: {}".format(code, ScriptsDownload)) #Debug
-   if code != 200 or not ScriptsDownload or (ScriptsDownload and not re.search(r'ANR CARD SCRIPTS', ScriptsDownload)): 
+   if code != 200 or not ScriptsDownload or (ScriptsDownload and not re.search(r'ANR CARD SCRIPTS', ScriptsDownload)) or debugVerbosity >= 0: 
       whisper(":::WARNING::: Cannot download card scripts at the moment. Will use localy stored ones.")
       Split_Main = ScriptsLocal.split('=====') # Split_Main is separating the file description from the rest of the code
    else: 
@@ -627,13 +619,13 @@ def DebugCard(card, x=0, y=0):
           \nCost: {}\
           \nCard ID: {}\
           \n----------------------\
-          ".format(Stored_Type.get(card,'NULL'), Stored_Keywords.get(card,'NULL'), Stored_Cost.get(card,'NULL'),card._id))
+          ".format(Stored_Type.get(card._id,'NULL'), Stored_Keywords.get(card._id,'NULL'), Stored_Cost.get(card._id,'NULL'),card._id))
    if debugVerbosity >= 4: 
       #notify("Stored_AS: {}".format(str(Stored_AutoScripts)))
       notify("Downloaded AA: {}".format(str(CardsAA)))
       notify("Card's AA: {}".format(CardsAA.get(card.model,'???')))
    storeProperties(card, True)
-   if Stored_Type.get(card,'?') != 'ICE': card.orientation = Rot0
+   if Stored_Type.get(card._id,'?') != 'ICE': card.orientation = Rot0
    
 def extraASDebug(Autoscript = None):
    if Autoscript and debugVerbosity >= 3: return ". Autoscript:{}".format(Autoscript)

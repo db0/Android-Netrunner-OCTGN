@@ -215,6 +215,10 @@ Another modulator for the CreateDummy core command. Any core command with -exclu
 
 Specifies a script as optional. Will prompt the player to proceed, and if the player refuses, the rest of the script will abort as well. (e.g. see card Caryatid)
 
+### -isAlternative
+
+Specifies if a atSuccessfulRun effect is replacing the normal effect that running on that fort would have (accessing R&D cards etc)
+
 ### -for
 
 used by the "Reduce" Resident Effect. It signifies what is a valid trigger for the reduction of the cost. Anything after the -for is looked for in the card's type and keywords.

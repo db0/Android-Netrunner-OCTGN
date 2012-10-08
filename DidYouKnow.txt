@@ -349,3 +349,13 @@ The videos show gameplay from both sides of the table, with accompanying comment
 Check them out, they're really cool!
 &&
 http://boardgamegeek.com/video/21462/android-netrunner/tragic-vs-db0-core-set-starter-decks
+||
+You can have all the keyboard shortcuts in a single-page cheat sheet
+
+We've created a cheat sheet with all the hotkeys you use regularly in the game, which you can use to speed up your play.
+
+You can print it, or keep it open in another window if it's easier for you.
+
+Would you like to learn more?
+&&
+https://raw.github.com/db0/Android-Netrunner-OCTGN/master/OCTGN%20Android_Netrunner%20Hotkeys.png
