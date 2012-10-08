@@ -47,6 +47,18 @@ Shaper running on a heavily fortifield Haas-Bioroid server
 Changelog
 ---------
 
+### v1.1.17
+
+* Runs work slightly differently now. [F3] does not jack-out the runner as well, but merely triggers the successful run effect (Gabriel, Desperato, Bank Job etc). This means that you can use both Bad Publicity tokens and Gabe's/Desperado ability at the same time to trash cards for example.
+* Because [F3] does not finish a run, this needs to be done afterwards with [ESC] or by taking your next action. If you've pressed [F3] and take one action, the game will automatically jack you out (so for most players the gameplay should remain the same)
+* Added a function to access a card from HQ [Ctrl]+[Q]. Don't use that before confirming with the corp.
+* Now running central servers will automatically trigger their default access command. A confirmation window will pop-up if the runner has successfully run and ask them if they want to use that.
+* Because of the above, if the runner opts to use cards which replace normal access with their own effects (Account Siphon for example), then the prompt for normal access won't be brought up.
+* Cards which have optional effects which replace the normal access, now stop other cards from triggering them again (e.g. having two bank jobs on the table)
+* When asking you to use optional effect, the game will also inform the player how many tokens each card has (to allow you to select the right bank job if you have multiple for example)
+* The game announces the player's available credits at the start of their turn. Should make take-backsies a bit easier.
+* Cell Portal should now announce its name when used
+
 #### v1.1.16.2
 
 Another attempt to fix the WinForms not appearing over OCTGN sometimes.
