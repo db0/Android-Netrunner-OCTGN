@@ -25,7 +25,6 @@ import re
 #---------------------------------------------------------------------------
 ds = None # The side of the player. 'runner' or 'corp'
 identName = None # The name of our current identity
-feintTarget = None # A Variable that holds a secondary target for a run (e.g. see SneakDoor Beta)
 ModifyDraw = 0 #if True the audraw should warn the player to look at r&D instead 
 
 DifficultyLevels = { }
@@ -411,7 +410,6 @@ def runServer(group, x=0,y=0):
 
 def jackOut(group=table,x=0,y=0, silent = False):
    if debugVerbosity >= 1: notify(">>> jackOut(). Current status:{}".format(getGlobalVariable('status'))) #Debug
-   global feintTarget, SuccessfulRun
    opponent = ofwhom('-ofOpponent') # First we check if our opponent is a runner or a corp.
    if ds == 'corp': targetPL = opponent
    else: targetPL = me
@@ -427,8 +425,8 @@ def jackOut(group=table,x=0,y=0, silent = False):
       else: enemyIdent.markers[mdict['BadPublicity']] = 0 # If we're not the runner, then find the runners and remove any bad publicity tokens
       atTimedEffects('JackOut') # If this was a simple jack-out, then make the end-of-run effects trigger only jack-out effects
       setGlobalVariable('status','idle') # Clear the run variable
-      feintTarget = None # Clear any feinted targets
-      SuccessfulRun = False # Set the variable which tells the code if the run was successful or not, to false.
+      setGlobalVariable('feintTarget','None') # Clear any feinted targets
+      setGlobalVariable('SuccessfulRun','False') # Set the variable which tells the code if the run was successful or not, to false.
       if debugVerbosity >= 2: notify("### About to announce end of Run") #Debug
       if not silent: # Announce the end of run from the perspective of each player.
          if targetPL != me: notify("{} has kicked {} out of their corporate grid".format(myIdent,enemyIdent))
@@ -438,7 +436,6 @@ def jackOut(group=table,x=0,y=0, silent = False):
       
 def runSuccess(group=table,x=0,y=0, silent = False):
    if debugVerbosity >= 1: notify(">>> runSuccess(). Current status:{}".format(getGlobalVariable('status'))) #Debug
-   global SuccessfulRun, feintTarget
    opponent = ofwhom('-ofOpponent') # First we check if our opponent is a runner or a corp.
    if ds == 'corp': targetPL = opponent
    else: targetPL = me
@@ -446,12 +443,12 @@ def runSuccess(group=table,x=0,y=0, silent = False):
    if not runTargetRegex: # If the runner is not running at the moment, do nothing
       if targetPL != me: whisper(":::Error:::{} is not running at the moment.".format(targetPL))
       else: whisper(":::Error::: You are not currently jacked-in.")
-   elif SuccessfulRun: 
+   elif getGlobalVariable('SuccessfulRun') == 'True': 
       whisper(":::Error::: You have already completed this run succesfully. Jacking out instead...")
       jackOut()
    else:
-      SuccessfulRun = True
-      if feintTarget: runTarget = feintTarget #If the runner is feinting, now change the target server to the right one
+      setGlobalVariable('SuccessfulRun','True')
+      if getGlobalVariable('feintTarget') != 'None': runTarget = getGlobalVariable('feintTarget') #If the runner is feinting, now change the target server to the right one
       else: runTarget = runTargetRegex.group(1) # If the runner is not feinting, then extract the target from the shared variable
       atTimedEffects('SuccessfulRun')
       notify("{} has successfully run the {} server".format(identName,runTarget))

@@ -491,7 +491,7 @@ def atTimedEffects(Time = 'Start'): # Function which triggers card effects at th
          if re.search(r'-ifSuccessfulRun', autoS):
             if Time == 'SuccessfulRun': #If we're looking only for successful runs, we need the Time to be a successful run.
                requiredTarget = re.search(r'-ifSuccessfulRun([A-Za-z&]+)', autoS) # We check what the script requires to be the successful target
-               if feintTarget: currentRunTarget = feintTarget
+               if getGlobalVariable('feintTarget') != 'None': currentRunTarget = getGlobalVariable('feintTarget')
                else: 
                   currentRunTargetRegex = re.search(r'running([A-Za-z&]+)', getGlobalVariable('status')) # We check what the target of the current run was.
                   currentRunTarget = currentRunTargetRegex.group(1)
@@ -567,7 +567,7 @@ def atTimedEffects(Time = 'Start'): # Function which triggers card effects at th
       else: notify(":::Warning::: {}'s {}-of-turn effects cost more Credits than {} had in their Credit Pool!".format(me,Time,me))
    if ds == 'corp' and Time =='Start': draw(me.piles['R&D/Stack'])
    if Time == 'SuccessfulRun' and not AlternativeRunResultUsed: # If we have a successful Run and no alternative effect was used, we ask the user if they want to automatically use one of the standard ones.
-      if feintTarget: currentRunTarget = feintTarget
+      if getGlobalVariable('feintTarget') != 'None': currentRunTarget = getGlobalVariable('feintTarget')
       else: 
          currentRunTargetRegex = re.search(r'running([A-Za-z&]+)', getGlobalVariable('status')) # We check what the target of the current run was.
          currentRunTarget = currentRunTargetRegex.group(1)
@@ -1093,7 +1093,6 @@ def RequestInt(Autoscript, announceText, card, targetCards = None, notification 
    return (announceText, number) # We do not modify the announcement with this function.
    
 def RunX(Autoscript, announceText, card, targetCards = None, notification = None, n = 0): # Core Command for drawing X Cards from the house deck to your hand.
-   global feintTarget
    if debugVerbosity >= 1: notify(">>> RunX(){}".format(extraASDebug(Autoscript))) #Debug
    if targetCards is None: targetCards = []
    action = re.search(r'\bRun([A-Z][A-Za-z& ]+)', Autoscript)
@@ -1126,7 +1125,7 @@ def RunX(Autoscript, announceText, card, targetCards = None, notification = None
       else: targetServer = action.group(1)
       feint = re.search(r'-feintTo([A-Za-z&]+)', Autoscript)
       if feint:
-         feintTarget = feint.group(1)
+         setGlobalVariable('feintTarget',feint.group(1)) # If the card script is feinting to a different fort, set a shared variable so that the corp knows it.
       runTarget = ' on {}'.format(targetServer)
       intRun(0,targetServer,True)
       if notification == 'Quick': announceString = "{} starts a run{}".format(announceText, runTarget)
