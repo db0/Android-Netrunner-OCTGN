@@ -204,7 +204,7 @@ bc0f047c-01b1-427f-a439-d451eda01065
 -----
 
 +++++
-A0B0G0T1:RequestInt$$Put1PlusOne-perX-Targeted-atICE-isRezzed	
+A0B0G0T1:RequestInt$$Lose1Credits-perX-isCost$$Put1PlusOne-perX-Targeted-atICE-isRezzed
 .....
 Corroder
 -----
