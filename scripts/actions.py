@@ -315,8 +315,8 @@ def checkDeckNoLimit(group):
    loAP = 0.0
    loInf = 0
    loRunner = False
-   trash = me.piles['Heap/Archives(Face-up)']
-   if debugVerbosity >= 5: notify("### About to moving cards into trash") #Debug
+   trash = me.piles['Archives(Hidden)'] # We use the hidden archives so that the opponent can't see the cards as we check them
+   if debugVerbosity >= 5: notify("### About to move cards into trash") #Debug
    for card in group: card.moveTo(trash)
    if len(players) > 1: random = rnd(1,100) # Fix for multiplayer only. Makes Singleplayer setup very slow otherwise.               
    if debugVerbosity >= 5: notify("### About to check each card in the deck") #Debug
