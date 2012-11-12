@@ -1188,6 +1188,7 @@ def intRez (card, cost = 'not free', x=0, y=0, silent = False):
    if not isRezzable(card): 
       whisper("Not a rezzable card")
       return 'ABORT'
+   if not checkUnique(card): return 'ABORT' #If the player has the unique card rezzed and opted not to trash it, do nothing.   
    if chkTargeting(card) == 'ABORT': 
       notify("{} cancels their action".format(me))
       return
@@ -1541,7 +1542,8 @@ def intPlay(card, cost = 'not_free'):
    storeProperties(card)
    random = rnd(10,100)
    if not checkNotHardwareConsole(card): return	#If player already has a Console in play and doesnt want to play that card, do nothing.
-   if not checkUnique(card): return #If the player has the unique card and opted not to trash it, do nothing.
+   if card.Type != 'ICE' and card.Type != 'Agenda' and card.Type != 'Upgrade' and card.Type != 'Asset': # We only check for uniqueness on install, against cards that install face-up
+      if not checkUnique(card): return #If the player has the unique card and opted not to trash it, do nothing.
    if (card.Type == 'Operation' or card.Type == 'Event') and chkTargeting(card) == 'ABORT': return # If it's an Operation or Event and has targeting requirements, check with the user first.
    if re.search(r'Double', getKeywords(card)): NbReq = 2 # Some cards require two clicks to play. This variable is passed to the useClick() function.
    else: NbReq = 1 #In case it's not a "Double" card. Then it only uses one click to play.
