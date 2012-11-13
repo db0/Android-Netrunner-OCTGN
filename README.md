@@ -47,6 +47,14 @@ Shaper running on a heavily fortifield Haas-Bioroid server
 Changelog
 ---------
 
+### v.1.1.18
+
+* Face-down Unique card now can be played when another face up unique card exists.
+* Unique cards also use their restrictions on rezzing as well
+* Setting up the game does not give your opponent an opportunity to glimpse cards in your deck
+* Stopped automated exposes from opponents. This is to avoid mistakes from people rushing their actions without reading the pop-up windows. Now the game will just announce the attempted expose, and the owner needs to do it manually.
+
+
 ### v1.1.17
 
 * Runs work slightly differently now. [F3] does not jack-out the runner as well, but merely triggers the successful run effect (Gabriel, Desperato, Bank Job etc). This means that you can use both Bad Publicity tokens and Gabe's/Desperado ability at the same time to trash cards for example.
