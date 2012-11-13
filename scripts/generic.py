@@ -482,7 +482,7 @@ def fetchProperty(card, property):
       if property == 'name': currentValue = card.name # Now that we had a chance to flip the card face up temporarily, we grab its property again.
       else: 
          currentValue = card.properties[property]
-         storeProperties(card)
+         #storeProperties(card) # Commented out because putting it here can cause an infinite loop
    if coverExists: 
       card.isFaceUp = False
       rnd(1,10) # To give time to the card facedown automation to complete.

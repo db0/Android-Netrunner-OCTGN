@@ -1232,7 +1232,7 @@ def expose(card, x = 0, y = 0, silent = False):
    if debugVerbosity >= 1: notify(">>> expose(){}".format(extraASDebug())) #Debug
    if not card.isFaceUp:
       mute()
-      if card.controller != me: notify("{} attempts to expose a card") # When the opponent exposes, we don't actually go through with it, to avoid mistakes.
+      if card.controller != me: notify("{} attempts to expose target card.".format(me)) # When the opponent exposes, we don't actually go through with it, to avoid mistakes.
       else:
          card.isFaceUp = True
          if card.highlight == None: card.highlight = RevealedColor # we don't want to accidentally wipe dummy card highlight.

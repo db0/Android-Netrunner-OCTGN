@@ -1,15 +1,11 @@
-1.1.17||
+1.1.18||
 ======New Version Information======
 
-Slight changes to how runs work: [F3] does not jack-out the runner as well, but merely triggers the successful run effect (Gabriel, Desperato, Bank Job etc). 
-This means that you can use both Bad Publicity tokens and Gabe's/Desperado ability at the same time to trash cards for example.
+After popular demand, I've stopped automated exposing via opponents targeted card effects. 
+This is to avoid mistakes from people rushing their actions without reading the pop-up warnings or checking with their opponent. 
+Now the game will just announce the attempted expose, and the owner needs to do it manually.
 
-Because [F3] does not finish a run, this needs to be done afterwards with [ESC] or by taking your next action. 
-If you've pressed [F3] and take one action, the game will automatically jack you out (so for most players the gameplay should remain the same)
-
-NEW: Added a function to access a card from HQ [Ctrl]+[Q]. Don't use that before confirming with the corp that it's OK to access.
-
-NEW: Now running central servers will automatically trigger their default access command. A confirmation window will pop-up if the runner has successfully run and ask them if they want to use that.
+Also various small bug fixes.
 
 Have fun!
 ===============================

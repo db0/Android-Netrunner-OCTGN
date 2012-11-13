@@ -49,11 +49,11 @@ Changelog
 
 ### v.1.1.18
 
-* Face-down Unique card now can be played when another face up unique card exists.
+* Face-down Unique card now can be played when another face up unique card exists. (Bug #69)
 * Unique cards also use their restrictions on rezzing as well
-* Setting up the game does not give your opponent an opportunity to glimpse cards in your deck
-* Stopped automated exposes from opponents. This is to avoid mistakes from people rushing their actions without reading the pop-up windows. Now the game will just announce the attempted expose, and the owner needs to do it manually.
-
+* Setting up the game does not give your opponent an opportunity to glimpse cards in your deck (Bug #67)
+* After popular demand, I've stopped automated exposes from opponents. This is to avoid mistakes from people rushing their actions without reading the pop-up windows. Now the game will just announce the attempted expose, and the owner needs to do it manually.
+* Fixed #66
 
 ### v1.1.17
 
