@@ -98,7 +98,7 @@ def useClick(group = table, x=0, y=0, count = 1):
    extraText = ''
    if count == 0: return '{} takes a free action'.format(me)
    if ds == 'runner' and re.search(r'running',getGlobalVariable('status')): 
-      if SuccessfulRun: jackOut() # If the runner has done a successful run but forgot to end it, then simply jack them out automatically.
+      if getGlobalVariable('SuccessfulRun') == 'True': jackOut() # If the runner has done a successful run but forgot to end it, then simply jack them out automatically.
       elif not confirm("You have not yet finished your previous run. Normally you're not allowed to use clicks during runs, are you sure you want to continue?\
                     \n\n(Pressing 'No' will abort this action and you can then Jack-out or finish the run succesfully with [ESC] or [F3] respectively"): return 'ABORT'
    clicksReduce = findCounterPrevention(me.Clicks, 'Clicks', me)

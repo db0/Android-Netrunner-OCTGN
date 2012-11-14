@@ -46,8 +46,11 @@ Shaper running on a heavily fortifield Haas-Bioroid server
 
 Changelog
 ---------
+### v1.1.18.1
 
-### v.1.1.18
+Fixed issue where succeeding the run would not jack-out immediately on next action, requiring an extra shortcut press
+
+### v1.1.18
 
 * Face-down Unique card now can be played when another face up unique card exists. (Bug #69)
 * Unique cards also use their restrictions on rezzing as well

@@ -1,1 +1,5 @@
- 
+=====Message of the Day======
+
+Fixed a small issue introduced in v1.1.18 where it would require an extra [ESC] or [F3] after succeeding a run, or you'd get a warning window.
+
+Sorry for the annoyingment. Please download v1.1.18.1 to fix this

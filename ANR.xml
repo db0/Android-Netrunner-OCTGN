@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<game xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="Android:Netrunner" id="0f38e453-26df-4c04-9d67-6d43de939c77" octgnVersion="3.0.1.14" version="1.1.18" markersize="20">
+<game xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="Android:Netrunner" id="0f38e453-26df-4c04-9d67-6d43de939c77" octgnVersion="3.0.1.14" version="1.1.18.1" markersize="20">
    <scripts>
       <script src="r3" />
       <script src="r17" />
