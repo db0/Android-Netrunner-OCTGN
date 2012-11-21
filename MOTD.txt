@@ -1,5 +1,8 @@
 =====Message of the Day======
 
-Fixed a small issue introduced in v1.1.18 where it would require an extra [ESC] or [F3] after succeeding a run, or you'd get a warning window.
+The First OCTGN is concluded and we have taking a screencast of the finals. You can watch the two best players duke it out, on youtube.
 
-Sorry for the annoyingment. Please download v1.1.18.1 to fix this
+Would you like to learn more?
+===============================
+&&
+http://boardgamegeek.com/video/23183/android-netrunner/octgn-tournament-1-finals-1st-match-malefact-hb
