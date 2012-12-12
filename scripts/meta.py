@@ -565,9 +565,8 @@ def TrialError(group, x=0, y=0): # Debugging
    mute()
    #test()
    ######## Testing Corner ########
-   #for hook in regexHooks: notify("regex for {} is {}".format(hook, regexHooks[hook]))
-   #if regexHooks['GainX'].search('TrashMyself'): confirm("Found!")
-   #else: confirm("Not Found :(")
+   if ds = "corp": ds = "runner"
+   else: ds = "corp"
    ###### End Testing Corner ######
    if debugVerbosity >=0: 
       if debugVerbosity == 0: 

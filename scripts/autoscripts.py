@@ -660,7 +660,6 @@ def executeTraceEffects(origin_card,Autoscript):
          targetPL = ofwhom(passedScript,card.controller) # So that we know to announce the right person the effect, affects.
          announceText = "{} uses {}'s ability and".format(targetPL,card)
          if debugVerbosity >= 3: notify("#### targetC: {}".format(targetC)) # Debug
-         passedScript = effect.group(0)
          if regexHooks['GainX'].search(passedScript):
             gainTuple = GainX(passedScript, announceText, card, notification = 'Quick', n = X)
             if gainTuple == 'ABORT': break
