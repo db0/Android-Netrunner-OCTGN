@@ -28,6 +28,8 @@
 import re
 
 secretCred = None # Used to allow the player to spend credits in secret for some card abilities (e.g. Snowflake)
+failedRequirement = True # A Global boolean that we set in case an Autoscript cost cannot be paid, so that we know to abort the rest of the script.
+
 #------------------------------------------------------------------------------
 # Play/Score/Rez/Trash trigger
 #------------------------------------------------------------------------------
@@ -473,6 +475,8 @@ def autoscriptOtherPlayers(lookup, origin_card, count = 1): # Function that trig
 def atTimedEffects(Time = 'Start'): # Function which triggers card effects at the start or end of the turn.
    mute()
    if debugVerbosity >= 1: notify(">>> atTimedEffects() at time: {}".format(Time)) #Debug
+   global failedRequirement
+   failedRequirement = False
    if not Automations['Start/End-of-Turn']: return
    TitleDone = False
    AlternativeRunResultUsed = False # Used for SuccessfulRun effects which replace the normal effect of running a server. If set to True, then no more effects on that server will be processed (to avoid 2 bank jobs triggering at the same time for example).
@@ -649,6 +653,9 @@ def markerEffects(Time = 'Start'):
 
 def executeTraceEffects(card,Autoscript):
    if debugVerbosity >= 1: notify(">>> executeTraceEffects(){}".format(extraASDebug(Autoscript))) #Debug
+   global failedRequirement
+   failedRequirement = False
+   X = 0
    Autoscripts = Autoscript.split('||')
    for AutoS in Autoscripts:
       selectedAutoscripts = AutoS.split('$$')
@@ -665,39 +672,53 @@ def executeTraceEffects(card,Autoscript):
             if gainTuple == 'ABORT': break
             X = gainTuple[1] 
          elif regexHooks['CreateDummy'].search(passedScript): 
+            if debugVerbosity >= 1: notify("#### In CreateDummy")
             if CreateDummy(passedScript, announceText, card, targetC, notification = 'Quick', n = X) == 'ABORT': return
          elif regexHooks['DrawX'].search(passedScript): 
+            if debugVerbosity >= 1: notify("#### In DrawX")
             if DrawX(passedScript, announceText, card, targetC, notification = 'Quick', n = X) == 'ABORT': return
          elif regexHooks['TokensX'].search(passedScript): 
+            if debugVerbosity >= 1: notify("#### In TokensX")
             if TokensX(passedScript, announceText, card, targetC, notification = 'Quick', n = X) == 'ABORT': return
          elif regexHooks['RollX'].search(passedScript): 
+            if debugVerbosity >= 1: notify("#### In RollX")
             rollTuple = RollX(passedScript, announceText, card, targetC, notification = 'Quick', n = X)
             if rollTuple == 'ABORT': return
             X = rollTuple[1] 
          elif regexHooks['RequestInt'].search(passedScript): 
+            if debugVerbosity >= 1: notify("#### In RequestInt")
             numberTuple = RequestInt(passedScript, announceText, card, targetC, notification = 'Quick', n = X)
             if numberTuple == 'ABORT': return
             X = numberTuple[1] 
          elif regexHooks['DiscardX'].search(passedScript): 
+            if debugVerbosity >= 1: notify("#### In DiscardX")
             discardTuple = DiscardX(passedScript, announceText, card, targetC, notification = 'Quick', n = X)
             if discardTuple == 'ABORT': return
             X = discardTuple[1] 
          elif regexHooks['RunX'].search(passedScript): 
+            if debugVerbosity >= 1: notify("#### In RunX")
             if RunX(passedScript, announceText, card, targetC, notification = 'Quick', n = X) == 'ABORT': return
          elif regexHooks['TraceX'].search(passedScript): 
+            if debugVerbosity >= 1: notify("#### In TraceX")
             if TraceX(passedScript, announceText, card, targetC, notification = 'Quick', n = X) == 'ABORT': return
          elif regexHooks['ReshuffleX'].search(passedScript): 
+            if debugVerbosity >= 1: notify("#### In ReshuffleX")
             reshuffleTuple = ReshuffleX(passedScript, announceText, card, targetC, notification = 'Quick', n = X)
             if reshuffleTuple == 'ABORT': return
             X = reshuffleTuple[1]
          elif regexHooks['ShuffleX'].search(passedScript): 
+            if debugVerbosity >= 1: notify("#### In ShuffleX")
             if ShuffleX(passedScript, announceText, card, targetC, notification = 'Quick', n = X) == 'ABORT': return
          elif regexHooks['ChooseKeyword'].search(passedScript): 
+            if debugVerbosity >= 1: notify("#### In ChooseKeyword")
             if ChooseKeyword(passedScript, announceText, card, targetC, notification = 'Quick', n = X) == 'ABORT': return
          elif regexHooks['InflictX'].search(passedScript): 
+            if debugVerbosity >= 1: notify("#### In InflictX")
             if InflictX(passedScript, announceText, card, targetC, notification = 'Quick', n = X) == 'ABORT': return
          elif regexHooks['ModifyStatus'].search(passedScript): 
+            if debugVerbosity >= 1: notify("#### In ModifyStatus")
             if ModifyStatus(passedScript, announceText, card, targetC, notification = 'Quick', n = X) == 'ABORT': return
+         elif debugVerbosity >= 1: notify("#### No regexhook match! :(") # Debug
       if failedRequirement: break # If one of the Autoscripts was a cost that couldn't be paid, stop everything else.
       if debugVerbosity >= 2: notify("### Trace Loop for scipt {} finished".format(passedScript))         
 #------------------------------------------------------------------------------

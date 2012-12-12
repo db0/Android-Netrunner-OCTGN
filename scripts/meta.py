@@ -583,14 +583,14 @@ def TrialError(group, x=0, y=0): # Debugging
    if not (len(players) == 1 or debugVerbosity >= 0): 
       whisper("This function is only for development purposes")
       return
-   testcards = ["bc0f047c-01b1-427f-a439-d451eda01018", #Account Siphon
-                "bc0f047c-01b1-427f-a439-d451eda01030", #Crash Space
-                "bc0f047c-01b1-427f-a439-d451eda01056", #Adonis Campaign
-                "bc0f047c-01b1-427f-a439-d451eda01081", #AstroScript Pilot Program
-                "bc0f047c-01b1-427f-a439-d451eda01057", #Aggressive Secretary
-                "bc0f047c-01b1-427f-a439-d451eda01029", #Bank Job
-                "bc0f047c-01b1-427f-a439-d451eda01052", #Access to Globalsec
-                "bc0f047c-01b1-427f-a439-d451eda01060", #Shipment from Mirrormorph
+   testcards = ["bc0f047c-01b1-427f-a439-d451eda02017", #TMI
+#                "bc0f047c-01b1-427f-a439-d451eda01030", #Crash Space
+#                "bc0f047c-01b1-427f-a439-d451eda01056", #Adonis Campaign
+#                "bc0f047c-01b1-427f-a439-d451eda01081", #AstroScript Pilot Program
+#                "bc0f047c-01b1-427f-a439-d451eda01057", #Aggressive Secretary
+#                "bc0f047c-01b1-427f-a439-d451eda01029", #Bank Job
+#                "bc0f047c-01b1-427f-a439-d451eda01052", #Access to Globalsec
+#                "bc0f047c-01b1-427f-a439-d451eda01060", #Shipment from Mirrormorph
                 "bc0f047c-01b1-427f-a439-d451eda01031"] #Data Dealer # Checking to see if the targeting works.
    if not ds: 
       if confirm("corp?"): ds = "corp"
@@ -609,10 +609,10 @@ def TrialError(group, x=0, y=0): # Debugging
       notify("### About to create starting cards.") #Debug   
       createStartingCards()
    notify("<<< TrialError()") #Debug
-#   for idx in range(len(testcards)):
-#      test = table.create(testcards[idx], (70 * idx) - 150, 0, 1, True)
-#      storeProperties(test)
-#      if test.Type == 'ICE' or test.Type == 'Agenda' or test.Type == 'Asset': test.isFaceUp = False
+   for idx in range(len(testcards)):
+      test = table.create(testcards[idx], (70 * idx) - 150, 0, 1, True)
+      storeProperties(test)
+      if test.Type == 'ICE' or test.Type == 'Agenda' or test.Type == 'Asset': test.isFaceUp = False
 
 
 def ShowDicts():

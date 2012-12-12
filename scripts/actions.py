@@ -45,7 +45,6 @@ ExposeTargetsWarn = True # A boolean variable that reminds the player to select 
 RevealandShuffleWarn = True # Similar to above.
 newturn = True #We use this variable to track whether a player has yet to do anything this turn.
 endofturn = False #We use this variable to know if the player is in the end-of-turn phase.
-failedRequirement = True #A Global boolean that we set in case an Autoscript cost cannot be paid, so that we know to abort the rest of the script.
 AfterRunInf = True # A warning to remind players that some actions have effects that need to be activated after a run.
 AfterTraceInf = True # Similar to above
 lastKnownNrClicks = 0 # A Variable keeping track of what the engine thinks our action counter should be, in case we change it manually.
