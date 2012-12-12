@@ -377,7 +377,7 @@ def versionCheck():
                  \n\nDo you want to be redirected to download the latest version?.\
                    \n(You'll have to download the game definition, any patch for the current version and the markers if they're newer than what you have installed)\
                      ".format(gameVersion, detailsplit[0],detailsplit[2],detailsplit[1])):
-            openUrl('https://github.com/db0/Android-Netrunner-OCTGN/downloads')
+            openUrl('http://octgn.gamersjudgement.com/viewtopic.php?f=52&t=494')
          startupMsg = True
       if debugVerbosity >= 2: notify("### Finished version check. Seeing if I should MOTD.") #Debug
       if not startupMsg: MOTD() # If we didn't give out any other message , we give out the MOTD instead.

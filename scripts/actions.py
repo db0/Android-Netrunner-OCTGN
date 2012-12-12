@@ -641,11 +641,11 @@ def inputTraceValue (card, x=0,y=0, limit = 0, silent = False):
    if ds == 'corp': 
       if not silent: notify("{} strengthens their Trace by {}.".format(me,TraceValue))
    else: 
-      if not silent: notify("{} reinforces their {} by {}.".format(me,uniLink(),TraceValue))
+      if not silent: notify("{} reinforces their {} by {} for a total of {}.".format(me,uniLink(),TraceValue, TraceValue + me.counters['Base Link'].value))
       CorpTraceValue = num(getGlobalVariable('CorpTraceValue'))
       currentTraceEffectTuple = eval(getGlobalVariable('CurrentTraceEffect'))
       if debugVerbosity >= 2: notify("currentTraceEffectTuple = {}".format(currentTraceEffectTuple))
-      if CorpTraceValue > TraceValue:
+      if CorpTraceValue > TraceValue  + me.counters['Base Link'].value:
          notify("-- {} has been traced".format(identName))
          try:
             if currentTraceEffectTuple[1] != 'None': 

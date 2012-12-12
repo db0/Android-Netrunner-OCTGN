@@ -12,6 +12,7 @@ Some basic instructions on how to use the new system will be forthcoming, but th
 * At the start of your turn, declare it with F1
 * At the end of your turn, declare it with F12. Make sure the game announces that your turn has ended and is not expecting you to discard down to your max hand size ;)
 * Play/Install cards from your hand by double-clicking them. Use cards on the table in the same way. 
+* As the runner, use the blue card on your left to fight off traces. This is important for automation purposes (and it also looks nicer)
 * Always try to Trash or Uninstall cards by using the relevant function in the menu (e.g. 'del' key)
   * If you want to trash the card of an opponent, _first let them know_ then target the card (shift+click) and use the "Trash Target" options in the **table menu** (i.e. right-click on an empty spot on the table)
 * Only ever drag & drop cards from your hand to the table, or from the table/hand to your trash, if there's no other way.
@@ -46,6 +47,16 @@ Shaper running on a heavily fortifield Haas-Bioroid server
 
 Changelog
 ---------
+
+### v2.0.0
+
+Big update which falls at the same time as What Lies Ahead. The most significant update is in the way traces work
+
+* Traces are now automated. When the runner uses the trace card after being traced, the game will then calculate who wins
+* Cards which trace now prepare their post-trace effect. Depending on who needs to win for it to fire, it will activate after the runner calculates their base link and compares with the corp's trace.
+* Stats now include the subtitle in the name of the winner, in order to differentiate between identities in the same corp faction.
+* What Lies Ahead added and scripted.
+
 ### v1.1.18.1
 
 Fixed issue where succeeding the run would not jack-out immediately on next action, requiring an extra shortcut press

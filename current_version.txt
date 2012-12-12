@@ -1,14 +1,27 @@
-1.1.18.1||
+2.0.0||
 ======New Version Information======
 
-After popular demand, I've stopped automated exposing via opponents targeted card effects. 
-This is to avoid mistakes from people rushing their actions without reading the pop-up warnings or checking with their opponent. 
-Now the game will just announce the attempted expose, and the owner needs to do it manually.
+What Lies Ahead?
 
-Also various small bug fixes.
+Why, the new update of the ANR plugin for OCTGN is now live, of course! 
+This not only includes the latest expansion but also significantly updated scripts to support it.
 
-Have fun!
+=== IMPORTANT INFORMATION ===
+
+With version 2.0.0, trace effects are now automated as well. This means that the effects of failed traces will happen as soon as the runner fails to reach the appropriate link.
+Because of the way this works THE RUNNER MUST USE THE TRACE CARD to calculate, compare and announce their base link strength. 
+This applies even if you already exceed the current trace!
+
+What this means for eveyrone is less abilities per card and less clicking around after traces to being their effects.
+It also means that I can now also automate abilities such as the one from Spinal Modem.
+
+Because of the above changes, I have progressed to v2.0.0 of the plugin, which makes your existing sets incompatible. 
+I have already created a patch so all you need to do is patch your existing core set and you're good to go!
+
+You can find the What Lies Ahead expansion at the forum.
+
+Now go forth and run!
 ===============================
 ||
-Latest Core Set: 1.1.21
-Latest Markers Set: 1.1.6
+Latest Core Set: 2.0.0
+Latest Markers Set: 2.0.0

@@ -1,8 +1,11 @@
 =====Message of the Day======
 
-The experienced player hollis has been making excellent strategy videos. Based on his own games, he provides commentary on what mistakes he did during play and the best ways to utilize your various cards
+The first Data Set: What Lies Ahead is now available for OCTGN!
+
+Also please remember to end traces properly from now on, as they trigger automations behind them. 
+The corp stats the effect and the runner needs to double click their trace card (blue card on their left) to declare their link.
 
 Would you like to learn more?
 =============================
 &&
-http://boardgamegeek.com/blogpost/15182/early-aggression-and-ambush-assets-pt-2
+http://octgn.gamersjudgement.com/viewtopic.php?f=52&t=508
