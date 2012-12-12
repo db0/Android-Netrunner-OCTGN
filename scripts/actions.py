@@ -640,7 +640,6 @@ def inputTraceValue (card, x=0,y=0, limit = 0, silent = False):
    #card.markers[mdict['Credits']] = TraceValue
    if ds == 'corp': 
       if not silent: notify("{} strengthens their Trace by {}.".format(me,TraceValue))
-      setGlobalVariable('CorpTraceValue',str(TraceValue))
    else: 
       if not silent: notify("{} reinforces their {} by {}.".format(me,uniLink(),TraceValue))
       CorpTraceValue = num(getGlobalVariable('CorpTraceValue'))

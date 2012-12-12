@@ -658,66 +658,55 @@ def executeTraceEffects(card,Autoscript):
    X = 0
    Autoscripts = Autoscript.split('||')
    for AutoS in Autoscripts:
-      selectedAutoscripts = AutoS.split('$$')
+      selectedAutoscripts = AutoS.split('++')
       if debugVerbosity >= 2: notify ('### selectedAutoscripts: {}'.format(selectedAutoscripts)) # Debug
       for passedScript in selectedAutoscripts:
          if debugVerbosity >= 2: notify("### Second Processing: {}".format(passedScript)) # Debug
          if re.search(r':Pass\b', passedScript): return # Pass is a simple command of doing nothing ^_^
          targetC = findTarget(passedScript)
          targetPL = ofwhom(passedScript,card.controller) # So that we know to announce the right person the effect, affects.
-         announceText = "{} uses {}'s ability and".format(targetPL,card) 
+         announceText = "{} uses {}'s ability to".format(targetPL,card) 
          if debugVerbosity >= 3: notify("#### targetC: {}".format(targetC)) # Debug
          if regexHooks['GainX'].search(passedScript):
             gainTuple = GainX(passedScript, announceText, card, notification = 'Quick', n = X)
             if gainTuple == 'ABORT': break
             X = gainTuple[1] 
          elif regexHooks['CreateDummy'].search(passedScript): 
-            if debugVerbosity >= 1: notify("#### In CreateDummy")
             if CreateDummy(passedScript, announceText, card, targetC, notification = 'Quick', n = X) == 'ABORT': return
          elif regexHooks['DrawX'].search(passedScript): 
-            if debugVerbosity >= 1: notify("#### In DrawX")
             if DrawX(passedScript, announceText, card, targetC, notification = 'Quick', n = X) == 'ABORT': return
          elif regexHooks['TokensX'].search(passedScript): 
-            if debugVerbosity >= 1: notify("#### In TokensX")
             if TokensX(passedScript, announceText, card, targetC, notification = 'Quick', n = X) == 'ABORT': return
          elif regexHooks['RollX'].search(passedScript): 
-            if debugVerbosity >= 1: notify("#### In RollX")
             rollTuple = RollX(passedScript, announceText, card, targetC, notification = 'Quick', n = X)
             if rollTuple == 'ABORT': return
             X = rollTuple[1] 
          elif regexHooks['RequestInt'].search(passedScript): 
-            if debugVerbosity >= 1: notify("#### In RequestInt")
             numberTuple = RequestInt(passedScript, announceText, card, targetC, notification = 'Quick', n = X)
             if numberTuple == 'ABORT': return
             X = numberTuple[1] 
          elif regexHooks['DiscardX'].search(passedScript): 
-            if debugVerbosity >= 1: notify("#### In DiscardX")
             discardTuple = DiscardX(passedScript, announceText, card, targetC, notification = 'Quick', n = X)
             if discardTuple == 'ABORT': return
             X = discardTuple[1] 
          elif regexHooks['RunX'].search(passedScript): 
-            if debugVerbosity >= 1: notify("#### In RunX")
             if RunX(passedScript, announceText, card, targetC, notification = 'Quick', n = X) == 'ABORT': return
          elif regexHooks['TraceX'].search(passedScript): 
-            if debugVerbosity >= 1: notify("#### In TraceX")
             if TraceX(passedScript, announceText, card, targetC, notification = 'Quick', n = X) == 'ABORT': return
          elif regexHooks['ReshuffleX'].search(passedScript): 
-            if debugVerbosity >= 1: notify("#### In ReshuffleX")
             reshuffleTuple = ReshuffleX(passedScript, announceText, card, targetC, notification = 'Quick', n = X)
             if reshuffleTuple == 'ABORT': return
             X = reshuffleTuple[1]
          elif regexHooks['ShuffleX'].search(passedScript): 
-            if debugVerbosity >= 1: notify("#### In ShuffleX")
             if ShuffleX(passedScript, announceText, card, targetC, notification = 'Quick', n = X) == 'ABORT': return
          elif regexHooks['ChooseKeyword'].search(passedScript): 
-            if debugVerbosity >= 1: notify("#### In ChooseKeyword")
             if ChooseKeyword(passedScript, announceText, card, targetC, notification = 'Quick', n = X) == 'ABORT': return
          elif regexHooks['InflictX'].search(passedScript): 
-            if debugVerbosity >= 1: notify("#### In InflictX")
             if InflictX(passedScript, announceText, card, targetC, notification = 'Quick', n = X) == 'ABORT': return
          elif regexHooks['ModifyStatus'].search(passedScript): 
-            if debugVerbosity >= 1: notify("#### In ModifyStatus")
             if ModifyStatus(passedScript, announceText, card, targetC, notification = 'Quick', n = X) == 'ABORT': return
+         elif regexHooks['SimplyAnnounce'].search(passedScript):
+            SimplyAnnounce(passedScript, announceText, card, targetC, notification = 'Quick', n = X)
          elif debugVerbosity >= 1: notify("#### No regexhook match! :(") # Debug
       if failedRequirement: break # If one of the Autoscripts was a cost that couldn't be paid, stop everything else.
       if debugVerbosity >= 2: notify("### Trace Loop for scipt {} finished".format(passedScript))         
@@ -997,7 +986,7 @@ def TokensX(Autoscript, announceText, card, targetCards = None, notification = N
       if not victim or victim == me: announceString = '{} forfeit their next {} {}'.format(announceText,total,counter.group(1)) # If we're putting on forfeit counters, we don't announce it as an infection.
       else: announceString = '{} force {} to forfeit their next {} {}'.format(announceText, victim, total,counter.group(1))
    else: announceString = "{} {}{} {} {} counters{}{}".format(announceText, action.group(1).lower(),infectTXT, total, token[0],targetCardlist,preventTXT)
-   if notification == 'Automatic' and modtokens != 0: notify('--> {}.'.format(announceString))
+   if notification and modtokens != 0: notify('--> {}.'.format(announceString))
    if debugVerbosity >= 2: notify("### TokensX() String: {}".format(announceString)) #Debug
    if debugVerbosity >= 3: notify("<<< TokensX()")
    return announceString
@@ -1312,11 +1301,12 @@ def TraceX(Autoscript, announceText, card, targetCards = None, notification = No
    action = re.search(r'\bTrace([0-9]+)', Autoscript)
    multiplier = per(Autoscript, card, n, targetCards)
    TraceStrength = num(action.group(1)) * multiplier
-   reinforcement = inputTraceValue(card,True)
+   reinforcement = inputTraceValue(card,silent = True)
    if reinforcement == 'ABORT': return 'ABORT'
    if reinforcement: reinforceTXT =  "and reinforced by {} (Total: {})".format(uniCredit(reinforcement),TraceStrength + reinforcement)
    else: reinforceTXT = "(Not reinforced)"
-   traceEffects = re.search(r'-traceEffects{(.*?),(.*?)}', Autoscript)
+   setGlobalVariable('CorpTraceValue',str(TraceStrength + reinforcement))
+   traceEffects = re.search(r'-traceEffects<(.*?),(.*?)>', Autoscript)
    if debugVerbosity >= 2: notify("### Checking for Trace Effects") #Debug
    if traceEffects:
       traceEffectTuple = (card._id,traceEffects.group(1),traceEffects.group(2))
@@ -1340,7 +1330,8 @@ def ModifyStatus(Autoscript, announceText, card, targetCards = None, notificatio
    if action.group(3): dest = action.group(3)
    else: dest = 'hand'
    for targetCard in targetCards: 
-      if action.group(1) == 'Derez': targetCardlist += '{},'.format(fetchProperty(targetCard, 'name')) # Derez saves the name because by the time we announce the action, the card will be face down.
+      if action.group(1) == 'Derez': 
+         targetCardlist += '{},'.format(fetchProperty(targetCard, 'name')) # Derez saves the name because by the time we announce the action, the card will be face down.
       else: targetCardlist += '{},'.format(targetCard)
    targetCardlist = targetCardlist.strip(',') # Re remove the trailing comma
    for targetCard in targetCards:

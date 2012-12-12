@@ -260,7 +260,7 @@ bc0f047c-01b1-427f-a439-d451eda01088
 -----
 
 +++++
-A0B0G0T0:Trace3-isSubroutine||A0B0G0T0:Put1Power||A0B0G0T0:Remove1Power-isCost$$Gain1Tags-onOpponent	
+A0B0G0T0:Trace3-isSubroutine-traceEffects<Put1Power,None>||A0B0G0T0:Remove1Power-isCost$$Gain1Tags-onOpponent	
 .....
 Datasucker
 -----
@@ -436,7 +436,7 @@ bc0f047c-01b1-427f-a439-d451eda01112
 -----
 
 +++++
-A0B0G0T0:Trace3-isSubroutine||A0B0G0T0:Gain1Tags-onOpponent	
+A0B0G0T0:Trace3-isSubroutine-traceEffects<Gain1Tags-onOpponent,None>
 .....
 Ice Carver
 -----
@@ -460,7 +460,7 @@ bc0f047c-01b1-427f-a439-d451eda01062
 -----
 
 +++++
-A0B0G0T0:TrashTarget-Targeted-atProgram-isSubroutine||A0B0G0T0:Trace1-isSubroutine||A0B0G0T0:Gain1Tags-onOpponent$$Inflict1BrainDamage-onOpponent	
+A0B0G0T0:TrashTarget-Targeted-atProgram-isSubroutine||A0B0G0T0:Trace1-isSubroutine-traceEffects<Gain1Tags-onOpponent++Inflict1BrainDamage-onOpponent,None>	
 .....
 Infiltration
 -----
@@ -516,7 +516,7 @@ bc0f047c-01b1-427f-a439-d451eda01089
 -----
 
 +++++
-A0B1G0T0:Put1Advancement-Targeted||A0B0G0T0:Trace2-isSubroutine||A0B0G0T0:Gain1Tags-onOpponent	
+A0B1G0T0:Put1Advancement-Targeted||A0B0G0T0:Trace2-isSubroutine-traceEffects<Gain1Tags-onOpponent,None>
 .....
 Medium
 -----
@@ -738,9 +738,9 @@ SEA Source
 -----
 bc0f047c-01b1-427f-a439-d451eda01086
 -----
-onPlay:Trace3-warnAfterTrace
+onPlay:Trace3-traceEffects<Gain1Tags-onOpponent,None>
 +++++
-A0B0G0T0:Gain1Tags-onOpponent$$TrashMyself	
+
 .....
 Security Subcontract
 -----
@@ -756,7 +756,7 @@ bc0f047c-01b1-427f-a439-d451eda01104
 -----
 
 +++++
-A0B0G0T0:Gain2Credits-isSubroutine||A0B0G0T0:Trace3-isSubroutine||A0B0G0T0:Gain1Tags-onOpponent	
+A0B0G0T0:Gain2Credits-isSubroutine||A0B0G0T0:Trace3-isSubroutine-traceEffects<Gain1Tags-onOpponent,None>
 .....
 Shipment from Kaguya
 -----
@@ -924,7 +924,7 @@ bc0f047c-01b1-427f-a439-d451eda02013
 -----
 
 +++++
-A0B0G0T0:Trace4
+A0B0G0T0:Trace4-traceEffects<SimplyAnnounce{stop the runner from accessing anymore cards},None>
 .....
 Braintrust
 -----
@@ -940,7 +940,7 @@ bc0f047c-01b1-427f-a439-d451eda02019
 -----
 
 +++++
-A0B0G0T0:Trace3-isSubroutine||A0B0G0T0:Trace2-isSubroutine
+A0B0G0T0:Trace3-isSubroutine-traceEffects<Gain3Credits,None>||A0B0G0T0:Trace2-isSubroutine-traceEffects<RunEnd,None>
 .....
 Cortez Chip
 -----
@@ -956,7 +956,7 @@ bc0f047c-01b1-427f-a439-d451eda02020
 -----
 onRez:RequestInt-Msg{How many Power counters do you want to add on Draco?}$$Lose1Credits-perX-isCost$$Put1PlusOnePerm-perX
 +++++
-A0B0G0T0:Trace2-isSubroutine||A0B0G0T0:Gain1Tags-onOpponent||A0B0G0T0:RunEnd
+A0B0G0T0:Trace2-isSubroutine-traceEffects<Gain1Tags-onOpponent++RunEnd,None>
 .....
 Imp
 -----
@@ -1020,7 +1020,7 @@ bc0f047c-01b1-427f-a439-d451eda02016
 -----
 
 +++++
-A1B0G0T0:Trace2||A0B0G0T0:Gain1Tags-onOpponent
+A1B0G0T0:Trace2e-traceEffects<Gain1Tags-onOpponent,None>
 .....
 Snowflake
 -----
@@ -1050,7 +1050,7 @@ TMI
 -----
 bc0f047c-01b1-427f-a439-d451eda02017
 -----
-onRez:Trace2-traceEffects{None,DerezMyself}
+onRez:Trace2-traceEffects<None,DerezMyself>
 +++++
 A0B0G0T0:RunEnd
 .....

@@ -565,8 +565,12 @@ def TrialError(group, x=0, y=0): # Debugging
    mute()
    #test()
    ######## Testing Corner ########
-   if ds == "corp": ds = "runner"
-   else: ds = "corp"
+   if ds == "corp": 
+      notify("Runner now")
+      ds = "runner"
+   else: 
+      ds = "corp"
+      notify("Corp Now")
    ###### End Testing Corner ######
    if debugVerbosity >=0: 
       if debugVerbosity == 0: 
@@ -579,19 +583,21 @@ def TrialError(group, x=0, y=0): # Debugging
       notify("Debug verbosity is now: {}".format(debugVerbosity))
       return
    for player in players:
-      if player.name == 'db0' or player.name == 'dbzer0': debugVerbosity = 0
+      if player.name == 'db0' or player.name == 'dbzer0': 
+         debugVerbosity = 0
+         fetchCardScripts()
    if not (len(players) == 1 or debugVerbosity >= 0): 
       whisper("This function is only for development purposes")
       return
    testcards = ["bc0f047c-01b1-427f-a439-d451eda02017", #TMI
-#                "bc0f047c-01b1-427f-a439-d451eda01030", #Crash Space
-#                "bc0f047c-01b1-427f-a439-d451eda01056", #Adonis Campaign
-#                "bc0f047c-01b1-427f-a439-d451eda01081", #AstroScript Pilot Program
-#                "bc0f047c-01b1-427f-a439-d451eda01057", #Aggressive Secretary
-#                "bc0f047c-01b1-427f-a439-d451eda01029", #Bank Job
+                "bc0f047c-01b1-427f-a439-d451eda01112", #Hunter
+                "bc0f047c-01b1-427f-a439-d451eda01062", #Ichi
+                "bc0f047c-01b1-427f-a439-d451eda02020", #Draco
+                "bc0f047c-01b1-427f-a439-d451eda02019", #Caduceus
+                "bc0f047c-01b1-427f-a439-d451eda02013", #Ash 2X3ZB9CY
 #                "bc0f047c-01b1-427f-a439-d451eda01052", #Access to Globalsec
 #                "bc0f047c-01b1-427f-a439-d451eda01060", #Shipment from Mirrormorph
-                "bc0f047c-01b1-427f-a439-d451eda01031"] #Data Dealer # Checking to see if the targeting works.
+                "bc0f047c-01b1-427f-a439-d451eda01088"] #Data Raven
    if not ds: 
       if confirm("corp?"): ds = "corp"
       else: ds = "runner"
