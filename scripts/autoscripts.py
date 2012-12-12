@@ -647,7 +647,7 @@ def markerEffects(Time = 'Start'):
 # Post-Trace Trigger
 #------------------------------------------------------------------------------
 
-def executeTraceEffects(origin_card,Autoscript):
+def executeTraceEffects(card,Autoscript):
    if debugVerbosity >= 1: notify(">>> executeTraceEffects(){}".format(extraASDebug(Autoscript))) #Debug
    Autoscripts = Autoscript.split('||')
    for AutoS in Autoscripts:
@@ -658,7 +658,7 @@ def executeTraceEffects(origin_card,Autoscript):
          if re.search(r':Pass\b', passedScript): return # Pass is a simple command of doing nothing ^_^
          targetC = findTarget(passedScript)
          targetPL = ofwhom(passedScript,card.controller) # So that we know to announce the right person the effect, affects.
-         announceText = "{} uses {}'s ability and".format(targetPL,card)
+         announceText = "{} uses {}'s ability and".format(targetPL,card) 
          if debugVerbosity >= 3: notify("#### targetC: {}".format(targetC)) # Debug
          if regexHooks['GainX'].search(passedScript):
             gainTuple = GainX(passedScript, announceText, card, notification = 'Quick', n = X)

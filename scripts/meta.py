@@ -565,7 +565,7 @@ def TrialError(group, x=0, y=0): # Debugging
    mute()
    #test()
    ######## Testing Corner ########
-   if ds = "corp": ds = "runner"
+   if ds == "corp": ds = "runner"
    else: ds = "corp"
    ###### End Testing Corner ######
    if debugVerbosity >=0: 
