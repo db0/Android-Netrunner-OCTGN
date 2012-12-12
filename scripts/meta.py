@@ -368,7 +368,9 @@ def versionCheck():
       if len(installedVers) < 3:
          whisper("Your game definition does not follow the correct version conventions. It is most likely outdated or modified from its official release.")
          startupMsg = True
-      elif num(currentVers[0]) > num(installedVers[0]) or num(currentVers[1]) > num(installedVers[1]) or num(currentVers[2]) > num(installedVers[2]):
+      elif (num(currentVers[0]) > num(installedVers[0]) or 
+           (num(currentVers[0]) == num(installedVers[0]) and num(currentVers[1]) > num(installedVers[1])) or 
+           (num(currentVers[0]) == num(installedVers[0]) and num(currentVers[1]) == num(installedVers[1]) and num(currentVers[2]) > num(installedVers[2]))):
          notify("{}'s game definition ({}) is out-of-date!".format(me, gameVersion))
          if confirm("There is a new game definition available!\nYour version: {}.\nCurrent version: {}\n{}\
                      {}\
@@ -595,7 +597,7 @@ def TrialError(group, x=0, y=0): # Debugging
                 "bc0f047c-01b1-427f-a439-d451eda02020", #Draco
                 "bc0f047c-01b1-427f-a439-d451eda02019", #Caduceus
                 "bc0f047c-01b1-427f-a439-d451eda02013", #Ash 2X3ZB9CY
-#                "bc0f047c-01b1-427f-a439-d451eda01052", #Access to Globalsec
+                "bc0f047c-01b1-427f-a439-d451eda02002", #Spinal Modem
 #                "bc0f047c-01b1-427f-a439-d451eda01060", #Shipment from Mirrormorph
                 "bc0f047c-01b1-427f-a439-d451eda01088"] #Data Raven
    if not ds: 

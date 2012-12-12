@@ -651,12 +651,14 @@ def inputTraceValue (card, x=0,y=0, limit = 0, silent = False):
             if currentTraceEffectTuple[1] != 'None': 
                executeTraceEffects(Card(currentTraceEffectTuple[0]),currentTraceEffectTuple[1]) # We sent this function the card which triggered the trace, and the effect which was triggered.
          except: pass # If it's an exception it means our tuple does not exist, so there's no current trace effects. Manual use of the trace card?
+         autoscriptOtherPlayers('UnavoidedTrace', card)
       else:
          notify("-- {} has eluded the trace".format(identName))
          try:
             if currentTraceEffectTuple[2] != 'None': 
                executeTraceEffects(Card(currentTraceEffectTuple[0]),currentTraceEffectTuple[2]) # We sent this function the card which triggered the trace, and the effect which was triggered.
          except: pass # If it's an exception it means our tuple does not exist, so there's no current trace effects. Manual use of the trace card?
+         autoscriptOtherPlayers('EludedTrace', card)
       setGlobalVariable('CurrentTraceEffect','None') # Once we're done with the current effects of the trace, we clear the CurrentTraceEffect global variable
       setGlobalVariable('CorpTraceValue','None') # And the corp's trace value
    return TraceValue
