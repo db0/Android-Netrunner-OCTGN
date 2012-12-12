@@ -918,6 +918,158 @@ bc0f047c-01b1-427f-a439-d451eda01071
 +++++
 A0B1G0T0:SimplyAnnounce{prevent card from being exposed}||A0B0G0T1:SimplyAnnounce{prevent card from being exposed}
 ......
+Ash 2X3ZB9CY
+-----
+bc0f047c-01b1-427f-a439-d451eda02013
+-----
+
++++++
+A0B0G0T0:Trace4
+.....
+Braintrust
+-----
+bc0f047c-01b1-427f-a439-d451eda02014
+-----
+onScore:Put1Agenda-perMarker{Advancement}-ignore3-div2||whileScored:ReduceXCostRez-forICE-perMarker{Agenda}
++++++
+
+.....
+Caduceus
+-----
+bc0f047c-01b1-427f-a439-d451eda02019
+-----
+
++++++
+A0B0G0T0:Trace3-isSubroutine||A0B0G0T0:Trace2-isSubroutine
+.....
+Cortez Chip
+-----
+bc0f047c-01b1-427f-a439-d451eda02005
+-----
+
++++++
+A0B0G0T1:Put1Cortez Chip-Targeted-onICE
+.....
+Draco
+-----
+bc0f047c-01b1-427f-a439-d451eda02020
+-----
+onRez:RequestInt-Msg{How many Power counters do you want to add on Draco?}$$Put1PlusOnePerm-perX
++++++
+A0B0G0T0:Trace2-isSubroutine||A0B0G0T0:Gain1Tags-onOpponent||A0B0G0T0:RunEnd
+.....
+Imp
+-----
+bc0f047c-01b1-427f-a439-d451eda02003
+-----
+onInstall:Put2Virus
++++++
+A0B0G0T0:Remove1Virus-isCost-onlyOnce$$SimplyAnnounce{Trash Accessed Card}
+.....
+Janus 1.0
+-----
+bc0f047c-01b1-427f-a439-d451eda02012
+-----
+
++++++
+A0B0G0T0:Inflict1BrainDamage-onOpponent-isSubroutine
+.....
+Mandatory Upgrades
+-----
+bc0f047c-01b1-427f-a439-d451eda02011
+-----
+whileScored:Gain1Max Click
++++++
+
+.....
+Morning Star
+-----
+bc0f047c-01b1-427f-a439-d451eda02004
+-----
+
++++++
+A0B1G0T0:SimplyAnnounce{break any number of barrier subroutines}
+.....
+Peacock
+-----
+bc0f047c-01b1-427f-a439-d451eda02006
+-----
+
++++++
+A0B2G0T0:SimplyAnnounce{break code gate subroutine}||A0B2G0T0:Put3PlusOne
+.....
+Plascrete Carapace
+-----
+bc0f047c-01b1-427f-a439-d451eda02009
+-----
+onInstall:Put4protectionMeatDMG
++++++
+
+.....
+Project Atlas
+-----
+bc0f047c-01b1-427f-a439-d451eda02018
+-----
+onScore:Put1Agenda-perMarker{Advancement}-ignore3
++++++
+A0B0G0T0:Remove1Agenda-isCost$$SimplyAnnounce{Retrieve one card from R&D}
+.....
+Restructured Datapool
+-----
+bc0f047c-01b1-427f-a439-d451eda02016
+-----
+
++++++
+A1B0G0T0:Trace2||A0B0G0T0:Gain1Tags-onOpponent
+.....
+Snowflake
+-----
+bc0f047c-01b1-427f-a439-d451eda02015
+-----
+
++++++
+A0B0G0T0:CustomScript
+.....
+Spinal Modem
+-----
+bc0f047c-01b1-427f-a439-d451eda02002
+-----
+onInstall:Put2Credits||whileRezzed:Gain1MU||atTurnStart:Refill2Credits-byMe||Reduce#Cost-forIcebreaker
++++++
+A0B0G0T0:Inflict1BrainDamage
+.....
+The Helpful AI
+-----
+bc0f047c-01b1-427f-a439-d451eda02008
+-----
+whileRezzed:Gain1Base Link
++++++
+A0B0G0T1:Put2PlusOne-Targeted-atIcebreaker
+.....
+TMI
+-----
+bc0f047c-01b1-427f-a439-d451eda02017
+-----
+onRez:Trace2
++++++
+A0B0G0T0:RunEnd
+.....
+Whizzard
+-----
+bc0f047c-01b1-427f-a439-d451eda02001
+-----
+atTurnStart:Refill3Credits-byMe||Reduce#CostTrash-forAll
++++++
+
+.....
+ZU.13 Key Master
+-----
+bc0f047c-01b1-427f-a439-d451eda02007
+-----
+
++++++
+A0B1G0T0:SimplyAnnounce{break code gate subroutine}||A0B1G0T0:Put1PlusOne
+.....
 
 
 ENDSCRIPTS

@@ -265,7 +265,7 @@ def resetAll(): # Clears all the global variables in order to start a new game.
    currClicks = 0
    turn = 0
    ShowDicts()
-   debugVerbosity = -1 # Reset means normal game.
+   #debugVerbosity = -1 # Reset means normal game.
    if debugVerbosity >= 1: notify("<<< resetAll()") #Debug
 #------------------------------------------------------------------------------
 # Switches

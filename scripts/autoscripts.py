@@ -27,6 +27,7 @@
 
 import re
 
+secretCred = None # Used to allow the player to spend credits in secret for some card abilities (e.g. Snowflake)
 #------------------------------------------------------------------------------
 # Play/Score/Rez/Trash trigger
 #------------------------------------------------------------------------------
@@ -637,6 +638,9 @@ def markerEffects(Time = 'Start'):
             TokensX('Remove1Keyword:Barrier', "Tinkering:", card)
             TokensX('Remove1Tinkering', "Tinkering:", card)
             notify("--> {} removes tinkering effect from {}".format(me,card))
+         if re.search(r'Cortez Chip',marker[0]) and Time == 'End':
+            TokensX('Remove1Cortez Chip', "Cortez Chip:", card)
+            notify("--> {} removes Cortez Chip effect from {}".format(me,card))
    
    
 #------------------------------------------------------------------------------
@@ -1436,6 +1440,18 @@ def CustomScript(card, action = 'PLAY'): # Scripts that are complex and fairly u
          me.counters['Base Link'].value += rabbits
          notify("{} has extended the Rabbit Hole by {} {} by paying {}{}".format(me,rabbits,uniLink(),uniCredit(totalCost),extraText))
       else: notify("{} does not find enough rabbits.".format(me))
+   elif fetchProperty(card, 'name') == 'Snowflake' and action == 'USE':
+      global secretCred
+      if secretCred == None:
+         secretCred = askInteger("How many credits do you want to secretly spend?\n\nOnce you have selected your total, ask your opponent to spend their own amount visibly, then re-use this card.",0)
+         while secretCred and (secretCred > me.Credits) or (secretCred > 2):
+            if secretCred > me.Credits and confirm("You do not have that many credits to spend. Bypass?"): break
+            if secretCred > 2: warn = ":::ERROR::: You cannot spend more than 2 credits!\n"
+            else: warn = ''
+            secretCred = askInteger("{}How many credits do you want to secretly spend?".format(warn),0)
+      else: 
+         notify("{} has spent {} in secret for {}'s subroutine".format(me,uniCredit(secretCred),card))
+         secretCred = None
    elif action == 'USE': useCard(card)
    if debugVerbosity >= 3: notify("<<< CustomScript()") #Debug
 #------------------------------------------------------------------------------

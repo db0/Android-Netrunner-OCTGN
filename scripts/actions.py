@@ -687,6 +687,17 @@ def payCost(count = 1, cost = 'not_free', counter = 'BP'): # A function that rem
       me.counters['Agenda Points'].value -= count
    return uniCredit(count)
 
+def findExtraCosts(card, action = 'REZ'):
+   # Some hardcoded effects that increase the cost of a card.
+   type = action.capitalize()
+   if debugVerbosity >= 1: notify(">>> findExtraCosts(). Action is: {}.".format(type)) #Debug
+   increase = 0
+   for marker in card.markers:
+      if re.search(r'Cortez Chip',marker[0]) and type == 'REZ': increase += 2 * card.markers[marker]
+   if debugVerbosity >= 3: notify("<<< findExtraCosts(). Increase: {}.".format(increase)) #Debug
+   return increase
+
+   
 def reduceCost(card, action = 'REZ', fullCost = 0):
    type = action.capitalize()
    if debugVerbosity >= 1: notify(">>> reduceCost(). Action is: {}. FullCost = {}".format(type,fullCost)) #Debug
@@ -734,7 +745,7 @@ def reduceCost(card, action = 'REZ', fullCost = 0):
       for autoS in Autoscripts:
          if re.search(r'whileRunning', autoS) and not re.search(r'running',status): continue # if the reduction is only during runs, and we're not in a run, bypass this effect
          if debugVerbosity >= 2: notify("### Checking {} with AS: {}".format(c, autoS)) #Debug
-         reductionSearch = re.search(r'Reduce([0-9#]+)Cost({}|All)-for([A-Z][A-Za-z ]+)(-not[A-Za-z_& ]+)?'.format(type), autoS) 
+         reductionSearch = re.search(r'Reduce([0-9#X]+)Cost({}|All)-for([A-Z][A-Za-z ]+)(-not[A-Za-z_& ]+)?'.format(type), autoS) 
          if debugVerbosity >= 2: #Debug
             if reductionSearch: notify("!!! Regex is {}".format(reductionSearch.groups()))
             else: notify("!!! No reduceCost regex Match!") 
@@ -747,14 +758,20 @@ def reduceCost(card, action = 'REZ', fullCost = 0):
             if reductionSearch.group(3) == 'All' or re.search(r'{}'.format(reductionSearch.group(3)), fetchProperty(card, 'Type')) or re.search(r'{}'.format(reductionSearch.group(3)), fetchProperty(card, 'Keywords')): #Looking for the type of card being reduced into the properties of the card we're currently paying.
                if debugVerbosity >= 3: notify(" ### Search match! Group is {}".format(reductionSearch.group(1))) # Debug
                if re.search(r'onlyOnce',autoS) and oncePerTurn(c, silent = True, act = 'automatic') == 'ABORT': continue # if the card's effect has already been used, check the next one
-               if reductionSearch.group(1) != '#':
-                  reduction += num(reductionSearch.group(1)) # if there is a match, the total reduction for this card's cost is increased.
-               else: 
+               if reductionSearch.group(1) == '#': 
                   while fullCost > 0 and c.markers[mdict['Credits']] > 0:
                      if debugVerbosity >= 2: notify("### Reducing Cost with and Markers from {}".format(c)) # Debug
                      reduction += 1
                      fullCost -= 1
                      c.markers[mdict['Credits']] -= 1
+               elif reductionSearch.group(1) == 'X':
+                  markerName = re.search(r'-perMarker{([\w ]+)}'.format(type), autoS)
+                  try: 
+                     marker = findMarker(card, markerName.group(1))
+                     if marker: reduction = card.markers[marker]
+                  except: notify("!!!ERROR!!! ReduceXCost - Bad Script")
+               else:
+                  reduction += num(reductionSearch.group(1)) # if there is a match, the total reduction for this card's cost is increased.
    return reduction
 
 def intdamageDiscard(group,x=0,y=0):
@@ -1194,7 +1211,8 @@ def intRez (card, cost = 'not free', x=0, y=0, silent = False):
       return
    reduction = reduceCost(card, 'REZ', num(fetchProperty(card, 'Cost')))
    if reduction: extraText = " (reduced by {})".format(uniCredit(reduction))
-   rc = payCost(num(fetchProperty(card, 'Cost')) - reduction, cost)
+   increase = findExtraCosts(card, 'REZ')
+   rc = payCost(num(fetchProperty(card, 'Cost')) - reduction + increase, cost)
    if rc == "ABORT": return # If the player didn't have enough money to pay and aborted the function, then do nothing.
    elif rc == "free": extraText = " at no cost"
    elif rc != 0: rc = "for {}".format(rc)
