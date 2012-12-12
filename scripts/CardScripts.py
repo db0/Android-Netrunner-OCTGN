@@ -964,7 +964,7 @@ bc0f047c-01b1-427f-a439-d451eda02003
 -----
 onInstall:Put2Virus
 +++++
-A0B0G0T0:Remove1Virus-isCost-onlyOnce$$SimplyAnnounce{trash an accessed card}
+A0B0G0T2:Remove1Virus-isCost$$SimplyAnnounce{trash an accessed card}
 .....
 Janus 1.0
 -----
