@@ -443,7 +443,8 @@ def reportGame(result = 'AgendaVictory'): # This submits the game results online
      if not confirm("Your game already seems to have finished once before. Do you want to change the results to '{}' for {}?".format(result,me.name)): return
    LEAGUE = fetchLeagues()
    PLAYER = me.name # Seeting some variables for readability in the URL
-   IDENTITY = identName
+   id = getSpecial('Identity',me)
+   IDENTITY = "{}: {}".format(id.name,id.Subtitle)
    RESULT = result
    if result == 'Flatlined' or result == 'Conceded': WIN = 0
    else: WIN = 1
@@ -457,11 +458,12 @@ def reportGame(result = 'AgendaVictory'): # This submits the game results online
       return # You can never win before the first turn is finished and we don't want to submit stats when there's only one player.
    if debugVerbosity < 1: # We only submit stats if we're not in debug mode
       (reportTXT, reportCode) = webRead('http://84.205.248.92/slaghund/game.slag?g={}&u={}&id={}&r={}&s={}&i={}&t={}&v={}&w={}&lid={}'.format(GUID,PLAYER,IDENTITY,RESULT,SCORE,INFLUENCE,TURNS,VERSION,WIN,LEAGUE))
+   else: confirm('Report URL: http://84.205.248.92/slaghund/game.slag?g={}&u={}&id={}&r={}&s={}&i={}&t={}&v={}&w={}&lid={}'.format(GUID,PLAYER,IDENTITY,RESULT,SCORE,INFLUENCE,TURNS,VERSION,WIN,LEAGUE))
    # The victorious player also reports for their enemy
    enemyPL = ofwhom('-ofOpponent')
    ENEMY = enemyPL.name
    enemyIdent = getSpecial('Identity',enemyPL)
-   E_IDENTITY = fetchProperty(enemyIdent, 'name') # Debug
+   E_IDENTITY = "{}: {}".format(enemyIdent.name,enemyIdent.Subtitle)
    if debugVerbosity >= 2: notify("### Enemy Identity Name: {}".format(E_IDENTITY)) #Debug
    if result == 'FlatlineVictory': 
       E_RESULT = 'Flatlined'
