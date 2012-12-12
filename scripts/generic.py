@@ -424,37 +424,39 @@ def displaymatch(match):
    
 def storeProperties(card, forced = False): # Function that grabs a cards important properties and puts them in a dictionary
    mute()
-   coverExists = False
-   if debugVerbosity >= 1: notify(">>> storeProperties(){}".format(extraASDebug())) #Debug
-   global Stored_Cost, Stored_Type, Stored_Keywords, Stored_AutoActions, Stored_AutoScripts, identName
-   if (card.name == 'Card' and Stored_Type.get(card._id,'?') == '?') or forced:
-      if not card.isFaceUp and card.group == table:
-         x,y = card.position
-         cover = table.create("ac3a3d5d-7e3a-4742-b9b2-7f72596d9c1b",x,y,1,False)
-         cover.moveToTable(x,y,False)
-         if card.orientation == Rot90: cover.orientation = Rot90
-         coverExists = True
-         card.isFaceUp = True
-         loopcount = 0
-         while card.name == 'Card':
-            rnd(1,10)
-            loopcount += 1
-            if loopcount == 5:
-               whisper(":::Error::: Card properties can't be grabbed. Aborting!")
-               break
-   if Stored_Type.get(card._id,'?') == '?' or (Stored_Type.get(card._id,'?') != card.Type and card.Type != '?') or forced:
-      if debugVerbosity >= 3: notify("### {} not stored. Storing...".format(card))
-      Stored_Cost[card._id] = card.Cost
-      Stored_Type[card._id] = card.Type
-      getKeywords(card)
-      Stored_AutoActions[card._id] = CardsAA.get(card.model,'')
-      Stored_AutoScripts[card._id] = CardsAS.get(card.model,'')
-      if card.Type == 'Identity' and card.owner == me: identName = card.name
-   if coverExists: 
-      card.isFaceUp = False
-      rnd(1,10) # To give time to the card facedown automation to complete.
-      cover.moveTo(shared.exile) # now destorying cover card
-   if debugVerbosity >= 3: notify("<<< storeProperties()")
+   try:
+      coverExists = False
+      if debugVerbosity >= 1: notify(">>> storeProperties(){}".format(extraASDebug())) #Debug
+      global Stored_Cost, Stored_Type, Stored_Keywords, Stored_AutoActions, Stored_AutoScripts, identName
+      if (card.name == 'Card' and Stored_Type.get(card._id,'?') == '?') or forced:
+         if not card.isFaceUp and card.group == table:
+            x,y = card.position
+            cover = table.create("ac3a3d5d-7e3a-4742-b9b2-7f72596d9c1b",x,y,1,False)
+            cover.moveToTable(x,y,False)
+            if card.orientation == Rot90: cover.orientation = Rot90
+            coverExists = True
+            card.isFaceUp = True
+            loopcount = 0
+            while card.name == 'Card':
+               rnd(1,10)
+               loopcount += 1
+               if loopcount == 5:
+                  whisper(":::Error::: Card properties can't be grabbed. Aborting!")
+                  break
+      if Stored_Type.get(card._id,'?') == '?' or (Stored_Type.get(card._id,'?') != card.Type and card.Type != '?') or forced:
+         if debugVerbosity >= 3: notify("### {} not stored. Storing...".format(card))
+         Stored_Cost[card._id] = card.Cost
+         Stored_Type[card._id] = card.Type
+         getKeywords(card)
+         Stored_AutoActions[card._id] = CardsAA.get(card.model,'')
+         Stored_AutoScripts[card._id] = CardsAS.get(card.model,'')
+         if card.Type == 'Identity' and card.owner == me: identName = card.name
+      if coverExists: 
+         card.isFaceUp = False
+         rnd(1,10) # To give time to the card facedown automation to complete.
+         cover.moveTo(shared.exile) # now destorying cover card
+      if debugVerbosity >= 3: notify("<<< storeProperties()")
+   except: notify("!!!ERROR!!! In storeProperties()")
 
 def fetchProperty(card, property): 
    mute()

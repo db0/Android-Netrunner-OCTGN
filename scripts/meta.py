@@ -178,11 +178,13 @@ def clearNoise(): # Clears all player's noisy bits. I.e. nobody is considered to
 
 def storeSpecial(card): 
 # Function stores into a shared variable some special cards that other players might look up.
-   if debugVerbosity >= 1: notify(">>> storeSpecial(){}".format(extraASDebug())) #Debug
-   storeProperties(card, True)
-   specialCards = eval(me.getGlobalVariable('specialCards'))
-   specialCards[card.Type] = card._id
-   me.setGlobalVariable('specialCards', str(specialCards))
+   try:
+      if debugVerbosity >= 1: notify(">>> storeSpecial(){}".format(extraASDebug())) #Debug
+      storeProperties(card, True)
+      specialCards = eval(me.getGlobalVariable('specialCards'))
+      specialCards[card.Type] = card._id
+      me.setGlobalVariable('specialCards', str(specialCards))
+   except: notify("!!!ERROR!!! In storeSpecial()")
 
 def getSpecial(cardType,player = me):
 # Functions takes as argument the name of a special card, and the player to whom it belongs, and returns the card object.
@@ -360,6 +362,7 @@ def versionCheck():
       detailsplit = url.split('||')
       currentVers = detailsplit[0].split('.')
       installedVers = gameVersion.split('.')
+      if debugVerbosity >= 2: notify("### Finished version split. About to check") #Debug
       if len(installedVers) < 3:
          whisper("Your game definition does not follow the correct version conventions. It is most likely outdated or modified from its official release.")
          startupMsg = True
@@ -372,6 +375,7 @@ def versionCheck():
                      ".format(gameVersion, detailsplit[0],detailsplit[2],detailsplit[1])):
             openUrl('https://github.com/db0/Android-Netrunner-OCTGN/downloads')
          startupMsg = True
+      if debugVerbosity >= 2: notify("### Finished version check. Seeing if I should MOTD.") #Debug
       if not startupMsg: MOTD() # If we didn't give out any other message , we give out the MOTD instead.
       startupMsg = True
    if debugVerbosity >= 3: notify("<<< versionCheck()") #Debug
@@ -597,9 +601,13 @@ def TrialError(group, x=0, y=0): # Debugging
    me.counters['Agenda Points'].value = 0
    me.counters['Bad Publicity'].value = 10
    me.Clicks = 15
+   notify("### Variables Reset") #Debug   
    if not playerside:  # If we've already run this command once, don't recreate the cards.
+      notify("### Playerside not chosen yet. Doing now") #Debug   
       chooseSide()
+      notify("### About to create starting cards.") #Debug   
       createStartingCards()
+   notify("<<< TrialError()") #Debug
 #   for idx in range(len(testcards)):
 #      test = table.create(testcards[idx], (70 * idx) - 150, 0, 1, True)
 #      storeProperties(test)

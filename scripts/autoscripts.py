@@ -47,6 +47,7 @@ def executePlayScripts(card, action):
    for autoS in AutoScriptsSnapshot: # Checking and removing any "AtTurnStart" clicks.
       if (re.search(r'atTurn(Start|End)', autoS) or 
           re.search(r'atRunStart', autoS) or 
+          re.search(r'Reduce[0-9#X]Cost', autoS) or 
           re.search(r'whileRunning', autoS) or 
           re.search(r'atJackOut', autoS) or 
           re.search(r'atSuccessfulRun', autoS) or 
@@ -92,7 +93,7 @@ def executePlayScripts(card, action):
          else: Removal = False
          targetC = findTarget(activeAutoscript)
          targetPL = ofwhom(activeAutoscript,card.controller) # So that we know to announce the right person the effect, affects.
-         announceText = "{}".format(targetPL)
+         announceText = "{} uses {}'s ability and".format(targetPL,card)
          if debugVerbosity >= 3: notify("#### targetC: {}".format(targetC)) # Debug
          if effect.group(1) == 'Gain' or effect.group(1) == 'Lose':
             if Removal: 
@@ -1449,8 +1450,10 @@ def CustomScript(card, action = 'PLAY'): # Scripts that are complex and fairly u
             if secretCred > 2: warn = ":::ERROR::: You cannot spend more than 2 credits!\n"
             else: warn = ''
             secretCred = askInteger("{}How many credits do you want to secretly spend?".format(warn),0)
+         if secretCred != None: notify("{} has spent a hidden amount of credits for {}. Runner must now declare how many credits to spend".format(me,card))
       else: 
          notify("{} has spent {} in secret for {}'s subroutine".format(me,uniCredit(secretCred),card))
+         me.Credits -= secretCred
          secretCred = None
    elif action == 'USE': useCard(card)
    if debugVerbosity >= 3: notify("<<< CustomScript()") #Debug

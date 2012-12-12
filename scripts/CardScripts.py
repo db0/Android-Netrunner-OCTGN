@@ -954,7 +954,7 @@ Draco
 -----
 bc0f047c-01b1-427f-a439-d451eda02020
 -----
-onRez:RequestInt-Msg{How many Power counters do you want to add on Draco?}$$Put1PlusOnePerm-perX
+onRez:RequestInt-Msg{How many Power counters do you want to add on Draco?}$$Lose1Credits-perX-isCost$$Put1PlusOnePerm-perX
 +++++
 A0B0G0T0:Trace2-isSubroutine||A0B0G0T0:Gain1Tags-onOpponent||A0B0G0T0:RunEnd
 .....
@@ -964,7 +964,7 @@ bc0f047c-01b1-427f-a439-d451eda02003
 -----
 onInstall:Put2Virus
 +++++
-A0B0G0T0:Remove1Virus-isCost-onlyOnce$$SimplyAnnounce{Trash Accessed Card}
+A0B0G0T0:Remove1Virus-isCost-onlyOnce$$SimplyAnnounce{trash an accessed card}
 .....
 Janus 1.0
 -----
@@ -1034,7 +1034,7 @@ Spinal Modem
 -----
 bc0f047c-01b1-427f-a439-d451eda02002
 -----
-onInstall:Put2Credits||whileRezzed:Gain1MU||atTurnStart:Refill2Credits-byMe||Reduce#Cost-forIcebreaker
+onInstall:Put2Credits||whileRezzed:Gain1MU||atTurnStart:Refill2Credits-byMe||Reduce#CostUse-forIcebreaker
 +++++
 A0B0G0T0:Inflict1BrainDamage
 .....
