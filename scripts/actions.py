@@ -639,9 +639,28 @@ def inputTraceValue (card, x=0,y=0, limit = 0, silent = False):
    if reduction: extraText = " (reduced by {})".format(uniCredit(reduction))
    if payCost(TraceValue - reduction)  == 'ABORT': return
    #card.markers[mdict['Credits']] = TraceValue
-   if not silent: 
-      if ds == 'corp': notify("{} strengthens their Trace by {}.".format(me,TraceValue))
-      else: notify("{} reinforces their {} by {}.".format(me,uniLink(),TraceValue))
+   if ds == 'corp': 
+      if not silent: notify("{} strengthens their Trace by {}.".format(me,TraceValue))
+      setGlobalVariable('CorpTraceValue',str(TraceValue))
+   else: 
+      if not silent: notify("{} reinforces their {} by {}.".format(me,uniLink(),TraceValue))
+      CorpTraceValue = num(getGlobalVariable('CorpTraceValue'))
+      currentTraceEffectTuple = eval(getGlobalVariable('CurrentTraceEffect'))
+      if debugVerbosity >= 2: notify("currentTraceEffectTuple = {}".format(currentTraceEffectTuple))
+      if CorpTraceValue > TraceValue:
+         notify("-- {} has been traced".format(identName))
+         try:
+            if currentTraceEffectTuple[1] != 'None': 
+               executeTraceEffects(Card(currentTraceEffectTuple[0]),currentTraceEffectTuple[1]) # We sent this function the card which triggered the trace, and the effect which was triggered.
+         except: pass # If it's an exception it means our tuple does not exist, so there's no current trace effects. Manual use of the trace card?
+      else:
+         notify("-- {} has eluded the trace".format(identName))
+         try:
+            if currentTraceEffectTuple[2] != 'None': 
+               executeTraceEffects(Card(currentTraceEffectTuple[0]),currentTraceEffectTuple[2]) # We sent this function the card which triggered the trace, and the effect which was triggered.
+         except: pass # If it's an exception it means our tuple does not exist, so there's no current trace effects. Manual use of the trace card?
+      setGlobalVariable('CurrentTraceEffect','None') # Once we're done with the current effects of the trace, we clear the CurrentTraceEffect global variable
+      setGlobalVariable('CorpTraceValue','None') # And the corp's trace value
    return TraceValue
 	
 #def revealTraceValue (card, x=0,y=0): # Obsolete in ANR

@@ -1050,7 +1050,7 @@ TMI
 -----
 bc0f047c-01b1-427f-a439-d451eda02017
 -----
-onRez:Trace2
+onRez:Trace2-traceEffects{None,DerezMyself}
 +++++
 A0B0G0T0:RunEnd
 .....

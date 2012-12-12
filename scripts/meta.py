@@ -262,6 +262,8 @@ def resetAll(): # Clears all the global variables in order to start a new game.
    Stored_AutoActions.clear()
    Stored_AutoScripts.clear()
    installedCount.clear()
+   setGlobalVariable('CurrentTraceEffect','None')
+   setGlobalVariable('CorpTraceValue','None')
    newturn = False 
    endofturn = False
    currClicks = 0

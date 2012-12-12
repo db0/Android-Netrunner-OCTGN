@@ -16,6 +16,8 @@
      <globalvariable name="gameGUID" value="None" /> 
      <globalvariable name="feintTarget" value="None" /> 
      <globalvariable name="SuccessfulRun" value="False" /> 
+     <globalvariable name="CurrentTraceEffect" value="None" />
+     <globalvariable name="CorpTraceValue" value="None" />
    </globalvariables>
    <card back="r4" front="r5" width="63" height="88" cornerRadius="2">
       <property name="Subtitle" type="String" hidden="false" ignoreText="False"/>

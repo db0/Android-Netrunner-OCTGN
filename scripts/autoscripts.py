@@ -83,7 +83,7 @@ def executePlayScripts(card, action):
          if debugVerbosity >= 2: notify("### Second Processing: {}".format(activeAutoscript)) # Debug
          if chkWarn(card, activeAutoscript) == 'ABORT': return
          if re.search(r':Pass\b', activeAutoscript): return # Pass is a simple command of doing nothing ^_^
-         effect = re.search(r'\b([A-Z][A-Za-z]+)([0-9]*)([A-Za-z& ]*)\b([^:]?[A-Za-z0-9_&{}\|: -]*)', activeAutoscript)
+         effect = re.search(r'\b([A-Z][A-Za-z]+)([0-9]*)([A-Za-z& ]*)\b([^:]?[A-Za-z0-9_&{}\|:, -]*)', activeAutoscript)
          if debugVerbosity >= 2: notify('### effects: {}'.format(effect.groups())) #Debug
          if effectType.group(1) == 'whileRezzed' or effectType.group(1) == 'whileScored':
             if effect.group(1) != 'Gain' and effect.group(1) != 'Lose': continue # The only things that whileRezzed and whileScored affect in execute Automations is GainX scripts (for now). All else is onTrash, onPlay etc
@@ -643,7 +643,64 @@ def markerEffects(Time = 'Start'):
             TokensX('Remove1Cortez Chip', "Cortez Chip:", card)
             notify("--> {} removes Cortez Chip effect from {}".format(me,card))
    
-   
+#------------------------------------------------------------------------------
+# Post-Trace Trigger
+#------------------------------------------------------------------------------
+
+def executeTraceEffects(origin_card,Autoscript):
+   if debugVerbosity >= 1: notify(">>> executeTraceEffects(){}".format(extraASDebug(Autoscript))) #Debug
+   Autoscripts = Autoscript.split('||')
+   for AutoS in Autoscripts:
+      selectedAutoscripts = AutoS.split('$$')
+      if debugVerbosity >= 2: notify ('### selectedAutoscripts: {}'.format(selectedAutoscripts)) # Debug
+      for passedScript in selectedAutoscripts:
+         if debugVerbosity >= 2: notify("### Second Processing: {}".format(passedScript)) # Debug
+         if re.search(r':Pass\b', passedScript): return # Pass is a simple command of doing nothing ^_^
+         targetC = findTarget(passedScript)
+         targetPL = ofwhom(passedScript,card.controller) # So that we know to announce the right person the effect, affects.
+         announceText = "{} uses {}'s ability and".format(targetPL,card)
+         if debugVerbosity >= 3: notify("#### targetC: {}".format(targetC)) # Debug
+         passedScript = effect.group(0)
+         if regexHooks['GainX'].search(passedScript):
+            gainTuple = GainX(passedScript, announceText, card, notification = 'Quick', n = X)
+            if gainTuple == 'ABORT': break
+            X = gainTuple[1] 
+         elif regexHooks['CreateDummy'].search(passedScript): 
+            if CreateDummy(passedScript, announceText, card, targetC, notification = 'Quick', n = X) == 'ABORT': return
+         elif regexHooks['DrawX'].search(passedScript): 
+            if DrawX(passedScript, announceText, card, targetC, notification = 'Quick', n = X) == 'ABORT': return
+         elif regexHooks['TokensX'].search(passedScript): 
+            if TokensX(passedScript, announceText, card, targetC, notification = 'Quick', n = X) == 'ABORT': return
+         elif regexHooks['RollX'].search(passedScript): 
+            rollTuple = RollX(passedScript, announceText, card, targetC, notification = 'Quick', n = X)
+            if rollTuple == 'ABORT': return
+            X = rollTuple[1] 
+         elif regexHooks['RequestInt'].search(passedScript): 
+            numberTuple = RequestInt(passedScript, announceText, card, targetC, notification = 'Quick', n = X)
+            if numberTuple == 'ABORT': return
+            X = numberTuple[1] 
+         elif regexHooks['DiscardX'].search(passedScript): 
+            discardTuple = DiscardX(passedScript, announceText, card, targetC, notification = 'Quick', n = X)
+            if discardTuple == 'ABORT': return
+            X = discardTuple[1] 
+         elif regexHooks['RunX'].search(passedScript): 
+            if RunX(passedScript, announceText, card, targetC, notification = 'Quick', n = X) == 'ABORT': return
+         elif regexHooks['TraceX'].search(passedScript): 
+            if TraceX(passedScript, announceText, card, targetC, notification = 'Quick', n = X) == 'ABORT': return
+         elif regexHooks['ReshuffleX'].search(passedScript): 
+            reshuffleTuple = ReshuffleX(passedScript, announceText, card, targetC, notification = 'Quick', n = X)
+            if reshuffleTuple == 'ABORT': return
+            X = reshuffleTuple[1]
+         elif regexHooks['ShuffleX'].search(passedScript): 
+            if ShuffleX(passedScript, announceText, card, targetC, notification = 'Quick', n = X) == 'ABORT': return
+         elif regexHooks['ChooseKeyword'].search(passedScript): 
+            if ChooseKeyword(passedScript, announceText, card, targetC, notification = 'Quick', n = X) == 'ABORT': return
+         elif regexHooks['InflictX'].search(passedScript): 
+            if InflictX(passedScript, announceText, card, targetC, notification = 'Quick', n = X) == 'ABORT': return
+         elif regexHooks['ModifyStatus'].search(passedScript): 
+            if ModifyStatus(passedScript, announceText, card, targetC, notification = 'Quick', n = X) == 'ABORT': return
+      if failedRequirement: break # If one of the Autoscripts was a cost that couldn't be paid, stop everything else.
+      if debugVerbosity >= 2: notify("### Trace Loop for scipt {} finished".format(passedScript))         
 #------------------------------------------------------------------------------
 # Core Commands
 #------------------------------------------------------------------------------
@@ -1239,6 +1296,12 @@ def TraceX(Autoscript, announceText, card, targetCards = None, notification = No
    if reinforcement == 'ABORT': return 'ABORT'
    if reinforcement: reinforceTXT =  "and reinforced by {} (Total: {})".format(uniCredit(reinforcement),TraceStrength + reinforcement)
    else: reinforceTXT = "(Not reinforced)"
+   traceEffects = re.search(r'-traceEffects{(.*?),(.*?)}', Autoscript)
+   if debugVerbosity >= 2: notify("### Checking for Trace Effects") #Debug
+   if traceEffects:
+      traceEffectTuple = (card._id,traceEffects.group(1),traceEffects.group(2))
+      if debugVerbosity >= 2: notify("### TraceEffectsTuple: {}".format(traceEffectTuple)) #Debug
+      setGlobalVariable('CurrentTraceEffect',str(traceEffectTuple))
    if notification == 'Quick': announceString = "{} starts a Trace with a base strength of {} {}".format(announceText, TraceStrength, reinforceTXT)
    else: announceString = "{} start a trace with a base strength of {} {}".format(announceText, TraceStrength, reinforceTXT)
    if notification: notify('--> {}.'.format(announceString))
@@ -1606,6 +1669,7 @@ def chkWarn(card, Autoscript): # Function for checking that an autoscript announ
    if debugVerbosity >= 1: notify(">>> chkWarn(){}".format(extraASDebug(Autoscript))) #Debug
    global AfterRunInf, AfterTraceInf
    warning = re.search(r'warn([A-Z][A-Za-z0-9 ]+)-?', Autoscript)
+   if debugVerbosity >= 2:  notify("### About to check warning")
    if warning:
       if warning.group(1) == 'Discard': 
          if not confirm("This action requires that you discard some cards. Have you done this already?"):
