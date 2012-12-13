@@ -446,7 +446,7 @@ def reportGame(result = 'AgendaVictory'): # This submits the game results online
    id = getSpecial('Identity',me)
    IDENTITY = "{}: {}".format(id.name,id.Subtitle)
    RESULT = result
-   if result == 'Flatlined' or result == 'Conceded': WIN = 0
+   if result == 'Flatlined' or result == 'Conceded' or result == 'DeckDefeat': WIN = 0
    else: WIN = 1
    SCORE = me.counters['Agenda Points'].value
    INFLUENCE = me.getGlobalVariable('Influence')
@@ -473,6 +473,9 @@ def reportGame(result = 'AgendaVictory'): # This submits the game results online
       E_WIN = 1
    elif result == 'Conceded': 
       E_RESULT = 'ConcedeVictory'
+      E_WIN = 1  
+   elif result == 'DeckDefeat': 
+      E_RESULT = 'DeckVictory'
       E_WIN = 1  
    elif result == 'AgendaVictory': 
       E_RESULT = 'AgendaDefeat'

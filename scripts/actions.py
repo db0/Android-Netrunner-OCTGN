@@ -1830,7 +1830,13 @@ def draw(group):
    if debugVerbosity >= 1: notify(">>> draw(){}".format(extraASDebug())) #Debug
    global newturn
    mute()
-   if len(group) == 0: return
+   if len(group) == 0: 
+      if ds == 'corp': 
+         notify(":::ATTENTION::: {} cannot draw another card. {} loses the game!".format(me,me))
+         reportGame('DeckDefeat')
+      else:
+         whisper(":::ERROR::: No more cards in your stack")
+      return
    card = group.top()
    if ds == 'corp' and newturn: 
       card.moveTo(me.hand)
