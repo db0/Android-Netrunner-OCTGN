@@ -444,7 +444,7 @@ def reportGame(result = 'AgendaVictory'): # This submits the game results online
    LEAGUE = fetchLeagues()
    PLAYER = me.name # Seeting some variables for readability in the URL
    id = getSpecial('Identity',me)
-   IDENTITY = "{}: {}".format(id.name,id.Subtitle)
+   IDENTITY = id.Subtitle
    RESULT = result
    if result == 'Flatlined' or result == 'Conceded' or result == 'DeckDefeat': WIN = 0
    else: WIN = 1
@@ -463,7 +463,7 @@ def reportGame(result = 'AgendaVictory'): # This submits the game results online
    enemyPL = ofwhom('-ofOpponent')
    ENEMY = enemyPL.name
    enemyIdent = getSpecial('Identity',enemyPL)
-   E_IDENTITY = "{}: {}".format(enemyIdent.name,enemyIdent.Subtitle)
+   E_IDENTITY = enemyIdent.Subtitle
    if debugVerbosity >= 2: notify("### Enemy Identity Name: {}".format(E_IDENTITY)) #Debug
    if result == 'FlatlineVictory': 
       E_RESULT = 'Flatlined'
