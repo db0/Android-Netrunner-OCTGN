@@ -343,7 +343,7 @@ def checkDeckNoLimit(group):
          if card.Type == 'Identity': 
             notify(":::ERROR::: Extra Identity Cards found in {}'s {}.".format(me, pileName(group)))
             ok = False
-         elif card.Faction != identity.Faction:   
+         elif card.Faction != identity.Faction and card.Faction != 'Neutral':   
             notify(":::ERROR::: Faction-restricted card ({}) found in {}'s {}.".format(fetchProperty(card, 'name'), me, pileName(group)))
             ok = False
    if len(players) > 1: random = rnd(1,100) # Fix for multiplayer only. Makes Singleplayer setup very slow otherwise.               
