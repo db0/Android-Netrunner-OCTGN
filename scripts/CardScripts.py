@@ -348,7 +348,7 @@ bc0f047c-01b1-427f-a439-d451eda01026
 -----
 onInstall:Put1Femme Fatale-Targeted-atICE-isOptional
 +++++
-A0B1G0T0:SimplyAnnounce{break sentry subroutine}||A0B2G0T0:Put1PlusOne||A0B0G0T0:RequestInt-Msg{How many subroutines does the target ice have?}-Targeted-atICE$$Lose1Credits-perX-isCost$$SimplyAnnounce{bypass target ice}	
+A0B1G0T0:SimplyAnnounce{break sentry subroutine}||A0B2G0T0:Put1PlusOne||A0B0G0T0:RequestInt-Msg{How many subroutines does the target ice have?}-Targeted-atICE$$Lose1Credits-perX$$SimplyAnnounce{bypass target ice}	
 .....
 Forged Activation Orders
 -----
