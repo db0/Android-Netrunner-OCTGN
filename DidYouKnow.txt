@@ -359,3 +359,12 @@ You can print it, or keep it open in another window if it's easier for you.
 Would you like to learn more?
 &&
 https://raw.github.com/db0/Android-Netrunner-OCTGN/master/OCTGN%20Android_Netrunner%20Hotkeys.png
+||
+Trace effects are now automated as well. 
+
+This means that the effects of failed traces will happen as soon as the runner fails to reach the appropriate link.
+Because of the way this works THE RUNNER MUST USE THE TRACE CARD to calculate, compare and announce their base link strength. 
+This applies even if you already exceed the current trace!
+
+What this means for eveyrone is less abilities per card and less clicking around after traces to being their effects.
+It also means that I can now also automate abilities such as the one from Spinal Modem.

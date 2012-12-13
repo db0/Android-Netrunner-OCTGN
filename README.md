@@ -48,6 +48,11 @@ Shaper running on a heavily fortifield Haas-Bioroid server
 Changelog
 ---------
 
+### v.2.0.1
+
+* Stats should now be able to submit again
+* Decking defeat is now collected as well
+
 ### v2.0.0
 
 Big update which falls at the same time as What Lies Ahead. The most significant update is in the way traces work

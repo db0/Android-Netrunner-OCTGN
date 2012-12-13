@@ -122,6 +122,10 @@ For example it is checked when the player is about to play a card from his handm
 
 A valid target is one that has been targeted by the player who has used shift+click on it and has the proper requirements (see -at below)
 
+### -AutoTargeted
+
+This is very similar to the above, but instead of the player having to target a card first, the game will seek and select all the cards which match the requirements
+
 #### -at[Requirements_and_exclusions_or_moreRequirements]
 
 This modulator basically informs that -Targeted modulator on what is a valid target. the [part in the brackets] is the type of requirements for a valid target
@@ -287,3 +291,15 @@ used during triggered scripts, to figure out if the target card is the trigger, 
 ### -afterCardInstall
 
 Just another way of setting the trigger of a script.
+
+### -afterUnavoidedTrace / -afterEludedTrace
+
+Trigger after a trace has ended with the runner being traced or eluding it respectively. Usually this script is run by the runner player, in which case effects which need to target them (such as Spinal Modem's Brain Damage) need the -byMe modulator
+
+### -traceEffects<Success Effect,Failure Effect>
+
+A modulator added after the TraceX core command. It will put into memory what effects as successful or failed trace will have. 
+Those effects will be run by the runner once they use their trace card to declare their final base link.
+The modulator needs to be followed by the lesser/greater symbols <> wrapping two comma separated scripts. The script follow the usual core command rules and allow all modulators. 
+The first script is for a successful Trace and the second script if for a failed trace (e.g. TMI)
+If there is no script for either of these conditions, then the entry should say "None" exactly.
