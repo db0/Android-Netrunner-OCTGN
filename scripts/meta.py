@@ -458,7 +458,13 @@ def reportGame(result = 'AgendaVictory'): # This submits the game results online
       return # You can never win before the first turn is finished and we don't want to submit stats when there's only one player.
    if debugVerbosity < 1: # We only submit stats if we're not in debug mode
       (reportTXT, reportCode) = webRead('http://84.205.248.92/slaghund/game.slag?g={}&u={}&id={}&r={}&s={}&i={}&t={}&v={}&w={}&lid={}'.format(GUID,PLAYER,IDENTITY,RESULT,SCORE,INFLUENCE,TURNS,VERSION,WIN,LEAGUE))
-   else: confirm('Report URL: http://84.205.248.92/slaghund/game.slag?g={}&u={}&id={}&r={}&s={}&i={}&t={}&v={}&w={}&lid={}'.format(GUID,PLAYER,IDENTITY,RESULT,SCORE,INFLUENCE,TURNS,VERSION,WIN,LEAGUE))
+   else: 
+      if confirm('Report URL: http://84.205.248.92/slaghund/game.slag?g={}&u={}&id={}&r={}&s={}&i={}&t={}&v={}&w={}&lid={}\n\nSubmit?'.format(GUID,PLAYER,IDENTITY,RESULT,SCORE,INFLUENCE,TURNS,VERSION,WIN,LEAGUE)):
+         (reportTXT, reportCode) = webRead('http://84.205.248.92/slaghund/game.slag?g={}&u={}&id={}&r={}&s={}&i={}&t={}&v={}&w={}&lid={}'.format(GUID,PLAYER,IDENTITY,RESULT,SCORE,INFLUENCE,TURNS,VERSION,WIN,LEAGUE))
+         notify('Report URL: http://84.205.248.92/slaghund/game.slag?g={}&u={}&id={}&r={}&s={}&i={}&t={}&v={}&w={}&lid={}\n\nSubmit?'.format(GUID,PLAYER,IDENTITY,RESULT,SCORE,INFLUENCE,TURNS,VERSION,WIN,LEAGUE))
+   try:
+      if reportTXT != "Updating result...Ok!" and debugVerbosity >=0: whisper("Failed to submit match results") 
+   except: pass
    # The victorious player also reports for their enemy
    enemyPL = ofwhom('-ofOpponent')
    ENEMY = enemyPL.name
@@ -501,6 +507,7 @@ def fetchLeagues():
    if LeagueCode != 200 or not LeagueTXT:
       whisper(":::WARNING::: Cannot check League Details online.")
       return ''
+   if LeagueTXT == "No Leagues Ongoing": return
    leaguesSplit = LeagueTXT.split('-----') # Five dashes separate on league from another
    opponent = ofwhom('onOpponent')
    for league in leaguesSplit:
