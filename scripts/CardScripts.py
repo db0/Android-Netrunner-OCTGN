@@ -978,7 +978,7 @@ Mandatory Upgrades
 -----
 bc0f047c-01b1-427f-a439-d451eda02011
 -----
-whileScored:Gain1Max Click$$Gain1Clicks
+whileScored:Gain1Max Click||onScore:Gain1Clicks
 +++++
 
 .....
