@@ -70,6 +70,8 @@ def executePlayScripts(card, action):
           (effectType.group(1) == 'onPlay' and action != 'PLAY') or
           (effectType.group(1) == 'onInstall' and action != 'INSTALL') or
           (effectType.group(1) == 'onScore' and action != 'SCORE') or
+          (effectType.group(1) == 'whileScored' and ds != 'corp') or
+          (effectType.group(1) == 'whileLiberated' and ds != 'runner') or
           (effectType.group(1) == 'onDamage' and action != 'DAMAGE') or
           (effectType.group(1) == 'onLiberation' and action != 'LIBERATE') or
           (effectType.group(1) == 'onTrash' and (action != 'TRASH' or action!= 'UNINSTALL' or action != 'DEREZ')) or
