@@ -1,11 +1,10 @@
 =====Message of the Day======
 
-The first Data Set: What Lies Ahead is now available for OCTGN!
+I've added v2.0.1.1 to fix a bug which allowed the runner to get benefits from a liberated mandatory upgrades agenda.
 
-Also please remember to end traces properly from now on, as they trigger automations behind them. 
-The corp stats the effect and the runner needs to double click their trace card (blue card on their left) to declare their link.
+Not a biggie but I suggest you upgrade to it to avoid mistakes.
 
-Would you like to learn more?
+Do you want to download it now?
 =============================
 &&
-http://octgn.gamersjudgement.com/viewtopic.php?f=52&t=508
+http://dbzer0.com/pub/ANR/Android-Netrunner-2.0.1.1.o8g
