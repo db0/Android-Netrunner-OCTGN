@@ -1034,7 +1034,7 @@ Spinal Modem
 -----
 bc0f047c-01b1-427f-a439-d451eda02002
 -----
-onInstall:Put2Credits||whileRezzed:Gain1MU||atTurnStart:Refill2Credits-byMe||Reduce#CostUse-forIcebreaker||whileRezzed:Inflict1BrainDamage-afterUnavoidedTrace-byMe
+onInstall:Put2Credits||whileRezzed:Gain1MU||atTurnStart:Refill2Credits-byMe||Reduce#CostUse-forIcebreaker||whileRunning:Inflict1BrainDamage-afterUnavoidedTrace-byMe
 +++++
 
 .....
