@@ -1,10 +1,10 @@
 =====Message of the Day======
 
-I've added v2.0.1.1 to fix a bug which allowed the runner to get benefits from a liberated mandatory upgrades agenda.
+v.2.0.1.2 has a quick fix for Spinal Modem so that it doesn't work outside of runs. 
 
-Not a biggie but I suggest you upgrade to it to avoid mistakes.
+Grab it if that's annoying you ;)
 
 Do you want to download it now?
 =============================
 &&
-http://dbzer0.com/pub/ANR/Android-Netrunner-2.0.1.1.o8g
+http://dbzer0.com/pub/ANR/Android-Netrunner-2.0.1.2.o8g

@@ -48,6 +48,10 @@ Shaper running on a heavily fortifield Haas-Bioroid server
 Changelog
 ---------
 
+### v.2.0.1.2 
+
+* Fixed Spinal Modem working outside of runs
+
 ### v.2.0.1.1
 
 * Fixed cards like Mandatory Upgrades giving their effects to the runners.
