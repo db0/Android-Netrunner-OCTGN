@@ -1,4 +1,4 @@
-2.0.1||
+2.0.1.2||
 ======New Version Information======
 
 (Note: 2.0.1 fixes broken statistics collection and some other minor bugs. Please update)

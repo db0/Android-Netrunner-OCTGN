@@ -432,7 +432,7 @@ def autoscriptOtherPlayers(lookup, origin_card, count = 1): # Function that trig
       AutoScriptSnapshot = list(Autoscripts)
       for autoS in AutoScriptSnapshot: # Checking and removing anything other than whileRezzed or whileScored.
          if not re.search(r'while(Rezzed|Scored|Running)', autoS): Autoscripts.remove(autoS)
-         elif re.search(r'whileRunning)', autoS) and not re.search(r'running',getGlobalVariable('status')): Autoscripts.remove(autoS) # Some autoscripted abilities only work while a run is in progress (e.g. Spinal Modem.)
+         elif re.search(r'whileRunning', autoS) and not re.search(r'running',getGlobalVariable('status')): Autoscripts.remove(autoS) # Some autoscripted abilities only work while a run is in progress (e.g. Spinal Modem.)
       if len(Autoscripts) == 0: continue
       for AutoS in Autoscripts:
          if debugVerbosity >= 2: notify('Checking AutoS: {}'.format(AutoS)) # Debug

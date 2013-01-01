@@ -529,7 +529,15 @@ def fetchCardScripts(group = table, x=0, y=0): # Creates 2 dictionaries with all
    if debugVerbosity >= 1: notify(">>> fetchCardScripts()") #Debug
    global CardsAA, CardsAS # Global dictionaries holding Card AutoActions and Card AutoScripts for all cards.
    whisper("+++ Fetching fresh scripts. Please Wait...")
-   (ScriptsDownload, code) = webRead('https://raw.github.com/db0/Android-Netrunner-OCTGN/master/scripts/CardScripts.py')
+   if len(players) > 1 or debugVerbosity == 0:
+      try: (ScriptsDownload, code) = webRead('https://raw.github.com/db0/Android-Netrunner-OCTGN/master/scripts/CardScripts.py',5000)
+      except: 
+         if debugVerbosity >= 0: notify("Timeout Error when trying to download scripts")
+         code = ScriptsDownload = None
+   else: # If we have only one player, we assume it's a debug game and load scripts from local to save time.
+      if debugVerbosity >= 0: notify("Skipping Scripts Download for faster debug")
+      code = 0
+      ScriptsDownload = None
    if debugVerbosity >= 4: notify("### code:{}, text: {}".format(code, ScriptsDownload)) #Debug
    if code != 200 or not ScriptsDownload or (ScriptsDownload and not re.search(r'ANR CARD SCRIPTS', ScriptsDownload)) or debugVerbosity >= 0: 
       whisper(":::WARNING::: Cannot download card scripts at the moment. Will use localy stored ones.")
