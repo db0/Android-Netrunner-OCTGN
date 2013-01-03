@@ -533,10 +533,11 @@ def oncePerTurn(card, x = 0, y = 0, silent = False, act = 'manual'):
       if act != 'manual': return 'ABORT' # If the player is not activating an effect manually, we always fail silently. So as not to spam the confirm.
       elif not confirm("The once-per-turn ability of {} has already been used this turn\nBypass restriction?.".format(fetchProperty(card, 'name'))): return 'ABORT'
       else: 
-         if not silent: notify('{} activates the once-per-turn ability of {} another time'.format(me, card))
+         if not silent and act != 'dryRun': notify('{} activates the once-per-turn ability of {} another time'.format(me, card))
    else:
-      if not silent: notify('{} activates the once-per-turn ability of {}'.format(me, card))
-   card.orientation = Rot90
+      if not silent and act != 'dryRun': notify('{} activates the once-per-turn ability of {}'.format(me, card))
+   if act != 'dryRun': card.orientation = Rot90
+   if debugVerbosity >= 3: notify("<<< oncePerTurn() exit OK") #Debug
 
 #---------------------------------------------------------------------------
 # Card Placement functions

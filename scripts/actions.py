@@ -629,7 +629,7 @@ def inputTraceValue (card, x=0,y=0, limit = 0, silent = False):
       if TraceValue == None: 
          whisper(":::Warning::: Trace attempt aborted by player.")
          return 'ABORT'
-   while TraceValue > me.Credits and not confirm("You do not have enough bits to increase your Trace Strength by this amount. Continue anyway?"):
+   while TraceValue - reduceCost(card, 'TRACE', TraceValue, dryRun = True) > me.Credits and not confirm("You do not seem to have enough bits to increase your Trace Strength by this amount. Continue anyway?"):
       TraceValue = askInteger("Increase {} Strength by how much?{}".format(traceTXT, limitText), 0)
       if TraceValue == None: 
          whisper(":::Warning::: Trace attempt aborted by player.")
@@ -722,7 +722,7 @@ def findExtraCosts(card, action = 'REZ'):
    return increase
 
    
-def reduceCost(card, action = 'REZ', fullCost = 0):
+def reduceCost(card, action = 'REZ', fullCost = 0, dryRun = False):
    type = action.capitalize()
    if debugVerbosity >= 1: notify(">>> reduceCost(). Action is: {}. FullCost = {}".format(type,fullCost)) #Debug
    if fullCost == 0: return 0 # If there's no cost, there's no use checking the table.
@@ -781,13 +781,21 @@ def reduceCost(card, action = 'REZ', fullCost = 0):
                if exclusion and (re.search(r'{}'.format(exclusion.group(1)), fetchProperty(card, 'Type')) or re.search(r'{}'.format(exclusion.group(1)), fetchProperty(card, 'Keywords'))): continue
             if reductionSearch.group(3) == 'All' or re.search(r'{}'.format(reductionSearch.group(3)), fetchProperty(card, 'Type')) or re.search(r'{}'.format(reductionSearch.group(3)), fetchProperty(card, 'Keywords')): #Looking for the type of card being reduced into the properties of the card we're currently paying.
                if debugVerbosity >= 3: notify(" ### Search match! Group is {}".format(reductionSearch.group(1))) # Debug
-               if re.search(r'onlyOnce',autoS) and oncePerTurn(c, silent = True, act = 'automatic') == 'ABORT': continue # if the card's effect has already been used, check the next one
+               if re.search(r'onlyOnce',autoS):
+                  if dryRun: # For dry Runs we do not want to add the "Activated" token on the card. 
+                     if oncePerTurn(c, act = 'dryRun') == 'ABORT': continue 
+                  else:
+                     if oncePerTurn(c, act = 'automatic') == 'ABORT': continue # if the card's effect has already been used, check the next one
                if reductionSearch.group(1) == '#': 
-                  while fullCost > 0 and c.markers[mdict['Credits']] > 0:
+                  markersCount = c.markers[mdict['Credits']]
+                  markersRemoved = 0
+                  while fullCost > 0 and markersCount > 0:
                      if debugVerbosity >= 2: notify("### Reducing Cost with and Markers from {}".format(c)) # Debug
                      reduction += 1
                      fullCost -= 1
-                     c.markers[mdict['Credits']] -= 1
+                     markersCount -= 1
+                     markersRemoved += 1
+                  if not dryRun: c.markers[mdict['Credits']] -= markersRemoved # If we have a dryRun, we don't remove any tokens.
                elif reductionSearch.group(1) == 'X':
                   markerName = re.search(r'-perMarker{([\w ]+)}', autoS)
                   try: 
