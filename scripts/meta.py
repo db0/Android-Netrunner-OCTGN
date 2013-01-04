@@ -586,14 +586,6 @@ def TrialError(group, x=0, y=0): # Debugging
    global ds, debugVerbosity
    mute()
    #test()
-   ######## Testing Corner ########
-   if ds == "corp": 
-      notify("Runner now")
-      ds = "runner"
-   else: 
-      ds = "corp"
-      notify("Corp Now")
-   ###### End Testing Corner ######
    if debugVerbosity >=0: 
       if debugVerbosity == 0: 
          debugVerbosity = 1
@@ -604,13 +596,20 @@ def TrialError(group, x=0, y=0): # Debugging
       else: debugVerbosity = 0
       notify("Debug verbosity is now: {}".format(debugVerbosity))
       return
-   for player in players:
-      if player.name == 'db0' or player.name == 'dbzer0': 
-         debugVerbosity = 0
-         fetchCardScripts()
+   if me.name == 'db0' or me.name == 'dbzer0': 
+      debugVerbosity = 0
+      fetchCardScripts()
    if not (len(players) == 1 or debugVerbosity >= 0): 
       whisper("This function is only for development purposes")
       return
+   ######## Testing Corner ########
+   if ds == "corp": 
+      notify("Runner now")
+      ds = "runner"
+   else: 
+      ds = "corp"
+      notify("Corp Now")
+   ###### End Testing Corner ######
    testcards = ["bc0f047c-01b1-427f-a439-d451eda02017", #TMI
                 "bc0f047c-01b1-427f-a439-d451eda01112", #Hunter
                 "bc0f047c-01b1-427f-a439-d451eda01062", #Ichi
