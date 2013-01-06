@@ -1865,33 +1865,15 @@ def per(Autoscript, card = None, count = 0, targetCards = None, notification = N
       multiplier = 0
       if debugVerbosity >= 2: notify("Groups: {}. Count: {}".format(per.groups(),count)) #Debug
       if per.group(2) and (per.group(2) == 'Target' or per.group(2) == 'Every'): # If we're looking for a target or any specific type of card, we need to scour the requested group for targets.
-         #confirm("Bump per Tablesearch") #Debug
+         ### IMPORTANT. THIS NEEDS WORK! cardgroup needs to NOT be assigned chkItem. FIX THIS BEFORE ADDING TARGETED PER ###
          perCHK = per.group(3).split('_on_') # First we check to see if in our conditions we're looking for markers or card properties, to remove them from the checks
          perCHKSnapshot = list(perCHK)
-         #confirm("Group3: {}\nperCHK: {}".format(per.group(3),perCHK)) #Debug
          for chkItem in perCHKSnapshot:
             if re.search(r'(Marker|Property|Any)',chkItem):
                perCHK.remove(chkItem) # We remove markers and card.properties from names of the card keywords  we'll be looking for later.
-         #confirm("perCHK: {}".format(perCHK)) #Debug
-         perItemMatch = [] # A list with all the properties we'll need to match on each card on the table.
-         perItemExclusion = [] # A list with all the properties we'll need to match on each card on the table.
+         if re.search(r'fromHand', Autoscript): cardgroup = findTarget('Targeted-at' + chkItem, fromHand = True)
+         else: cardgroup = findTarget('Targeted-at' + chkItem)
          cardProperties = [] #we're making a big list with all the properties of the card we need to match
-         iter = 0
-         # We need to put all the different card keywords we'll be looking for in two lists. So we iterate through the available items and split on _or_ and _and_
-         # The following code is not perfect (it will not figure out two different card types with different exclusions for example, but there's no such cards (yet)
-         for chkItem in perCHK: 
-            perItems = chkItem.split('_or_')              
-            for perItem in perItems:
-               subItems = perItem.split('_and_')
-               for subItem in subItems:
-                  regexCondition = re.search(r'{?([A-Z][A-Za-z0-9, ]*)}?', subItem)
-                  if re.search(r'no[nt]', subItem): # If this is an exclusion item, we put it on the exclusion list.
-                     perItemExclusion.append(regexCondition.group(1))
-                  else:
-                     perItemMatch.append(regexCondition.group(1))
-         if debugVerbosity >= 2: notify('+++ Matches: {}\n+++ Exclusions: {}'.format(perItemMatch, perItemExclusion)) # Debug
-         if re.search(r'fromHand', Autoscript): cardgroup = [c for c in me.hand]
-         else: cardgroup = [c for c in table if c.highlight != DummyColor and c.highlight != RevealedColor and c.highlight != InactiveColor]
          for c in cardgroup: # Go through each card on the table and gather its properties, then see if they match.
             del cardProperties[:] # Cleaning the previous entries
             cFaceD = False # Variable to note down if a card was face-down when we were checking it, or not.
