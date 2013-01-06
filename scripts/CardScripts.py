@@ -52,7 +52,7 @@ bc0f047c-01b1-427f-a439-d451eda01047
 -----
 
 +++++
-A0B0G0T2:TrashTarget-Targeted-byMe$$Gain3Credits	
+A0B0G0T2:TrashTarget-Targeted-targetMine$$Gain3Credits	
 .....
 Aggressive Negotiation
 -----
@@ -244,7 +244,7 @@ bc0f047c-01b1-427f-a439-d451eda01031
 -----
 
 +++++
-A1B0G0T0:ExileTarget-Targeted-atAgenda-byMe$$Gain9Credits	
+A1B0G0T0:ExileTarget-Targeted-atAgenda-targetMine$$Gain9Credits	
 .....
 Data Mine
 -----
@@ -316,7 +316,7 @@ bc0f047c-01b1-427f-a439-d451eda01009
 -----
 onInstall:Put3DaemonMU
 +++++
-A0B0G0T0:PossessTarget-Targeted-atProgram_and_nonIcebreaker-byMe||A1B1G0T0:SimplyAnnounce{look through his deck for a virus program}	
+A0B0G0T0:PossessTarget-Targeted-atProgram_and_nonIcebreaker-targetMine||A1B1G0T0:SimplyAnnounce{look through his deck for a virus program}	
 .....
 Easy Mark
 -----
@@ -348,7 +348,7 @@ bc0f047c-01b1-427f-a439-d451eda01026
 -----
 onInstall:Put1Femme Fatale-Targeted-atICE-isOptional
 +++++
-A0B1G0T0:SimplyAnnounce{break sentry subroutine}||A0B2G0T0:Put1PlusOne||A0B0G0T0:RequestInt-Msg{How many subroutines does the target ice have?}-Targeted-atICE$$Lose1Credits-perX$$SimplyAnnounce{bypass target ice}	
+A0B1G0T0:SimplyAnnounce{break sentry subroutine}||A0B2G0T0:Put1PlusOne||A0B0G0T0:RequestInt-Msg{How many subroutines does the target ice have?}$$Lose1Credits-perX$$SimplyAnnounce{bypass target ice}	
 .....
 Forged Activation Orders
 -----
@@ -748,7 +748,7 @@ bc0f047c-01b1-427f-a439-d451eda01096
 -----
 
 +++++
-A1B0G0T0:TrashTarget-Targeted-atICE-byMe-isRezzed$$Gain4Credits	
+A1B0G0T0:TrashTarget-Targeted-atICE-targetMine-isRezzed$$Gain4Credits	
 .....
 Shadow
 -----

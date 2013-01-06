@@ -29,6 +29,7 @@ import re
 
 secretCred = None # Used to allow the player to spend credits in secret for some card abilities (e.g. Snowflake)
 failedRequirement = True # A Global boolean that we set in case an Autoscript cost cannot be paid, so that we know to abort the rest of the script.
+reversePlayerChk = False
 
 #------------------------------------------------------------------------------
 # Play/Score/Rez/Trash trigger
@@ -1484,7 +1485,7 @@ def CustomScript(card, action = 'PLAY'): # Scripts that are complex and fairly u
       if tCards: expose(tCards[0]) # If the player has any face-down cards currently targeted, we assume he wanted to expose them.
       elif confirm("Do you wish to gain 2 credits?\
                 \n\nIf you want to expose a target, simply ask the corp to use the 'Expose' option on the table.\
-                \n\nHowever if you have a target selected when you play this card, the target will be selected and exposed automatically."):
+                \n\nHowever if you have a target selected when you play this card, we will also announce that for you."):
          me.Credits += 2
          notify("--> {} gains {}".format(me,uniCredit(2)))
    elif fetchProperty(card, 'name') == "Rabbit Hole" and action == 'INSTALL':
@@ -1581,103 +1582,205 @@ def autoscriptCostUndo(card, Autoscript): # Function for undoing the cost of an 
       random = rnd(10,5000) # A little wait...
       card.orientation = Rot0
 
-      
-def findTarget(Autoscript): # Function for finding the target of an autoscript
+def findTarget(Autoscript, fromHand = False, card = None): # Function for finding the target of an autoscript
    if debugVerbosity >= 1: notify(">>> findTarget(){}".format(extraASDebug(Autoscript))) #Debug
-   targetC = None
-   #confirm("Looking for targets.\n\nAutoscript: {}".format(Autoscript)) #Debug
-   foundTargets = []
-   if re.search(r'Targeted', Autoscript):
-      validTargets = [] # a list that holds any type that a card must be, in order to be a valid target.
-      validNamedTargets = [] # a list that holds any name or allegiance that a card must have, in order to be a valid target.
-      invalidTargets = [] # a list that holds any type that a card must not be to be a valid target.
-      invalidNamedTargets = [] # a list that holds the name or allegiance that the card must not have to be a valid target.
-      requiredAllegiances = []
-      whatTarget = re.search(r'\bat([A-Za-z_{},& ]+)[-]?', Autoscript) # We signify target restrictions keywords by starting a string with "or"
-      if whatTarget: validTargets = whatTarget.group(1).split('_or_') # If we have a list of valid targets, split them into a list, separated by the string "_or_". Usually this results in a list of 1 item.
+   try:
+      if fromHand == True: group = me.hand
+      else: group = table
+      foundTargets = []
+      if re.search(r'Targeted', Autoscript):
+         requiredAllegiances = []
+         targetGroups = prepareRestrictions(Autoscript)
+         if debugVerbosity >= 2: notify("### About to start checking all targeted cards.\n### targetGroups:{}".format(targetGroups)) #Debug
+         for targetLookup in group: # Now that we have our list of restrictions, we go through each targeted card on the table to check if it matches.
+            if (targetLookup.targetedBy and targetLookup.targetedBy == me) or (re.search(r'AutoTargeted', Autoscript) and targetLookup.highlight != DummyColor and targetLookup.highlight != RevealedColor and targetLookup.highlight != InactiveColor):
+            # OK the above target check might need some decoding:
+            # Look through all the cards on the group and start checking only IF...
+            # * Card is targeted and targeted by the player OR target search has the -AutoTargeted modulator and it is NOT highlighted as a Dummy, Inactive or Revealed.
+            # * The player who controls this card is supposed to be me or the enemy.
+               if debugVerbosity >= 2: notify("### Checking {}".format(targetLookup))
+               if not checkSpecialRestrictions(Autoscript,targetLookup): continue
+               if re.search(r'-onHost',Autoscript): 
+                  if debugVerbosity >= 2: notify("### Looking for Host")
+                  if not card: continue # If this targeting script targets only a host and we have not passed what the attachment is, we cannot find the host, so we abort.
+                  if debugVerbosity >= 2: notify("### Attachment is: {}".format(card))
+                  hostCards = eval(getGlobalVariable('Host Cards'))
+                  isHost = False
+                  for attachment in hostCards:
+                     if attachment == card._id and hostCards[attachment] == targetLookup._id: 
+                        if debugVerbosity >= 2: notify("### Host found! {}".format(targetLookup))
+                        isHost = True
+                  if not isHost: continue
+               if checkCardRestrictions(gatherCardProperties(targetLookup), targetGroups): 
+                  if not targetLookup in foundTargets: 
+                     if debugVerbosity >= 3: notify("### About to append {}".format(targetLookup)) #Debug
+                     foundTargets.append(targetLookup) # I don't know why but the first match is always processed twice by the for loop.
+               elif debugVerbosity >= 3: notify("### findTarget() Rejected {}".format(targetLookup))# Debug
+         if debugVerbosity >= 2: notify("### Finished seeking. foundTargets List = {}".format(foundTargets))
+         if re.search(r'DemiAutoTargeted', Autoscript):
+            if debugVerbosity >= 2: notify("### Checking DemiAutoTargeted switches")# Debug
+            targetNRregex = re.search(r'-choose([1-9])',Autoscript)
+            targetedCards = 0
+            foundTargetsTargeted = []
+            if debugVerbosity >= 2: notify("### About to count targeted cards")# Debug
+            for targetC in foundTargets:
+               if targetC.targetedBy and targetC.targetedBy == me: foundTargetsTargeted.append(targetC)
+            if targetNRregex:
+               if debugVerbosity >= 2: notify("!!! targetNRregex exists")# Debug
+               if num(targetNRregex.group(1)) > len(foundTargetsTargeted): pass # Not implemented yet. Once I have choose2 etc I'll work on this
+               else: # If we have the same amount of cards targeted as the amount we need, then we just select the targeted cards
+                  foundTargets = foundTargetsTargeted # This will also work if the player has targeted more cards than they need. The later choice will be simply between those cards.
+            else: # If we do not want to choose, then it's probably a bad script. In any case we make sure that the player has targeted something (as the alternative it giving them a random choice of the valid targets)
+               del foundTargets[:]
+         if len(foundTargets) == 0 and not re.search(r'(?<!Demi)AutoTargeted', Autoscript): 
+            targetsText = ''
+            mergedList = []
+            for posRestrictions in targetGroups: 
+               if debugVerbosity >= 2: notify("### About to notify on restrictions")# Debug
+               if targetsText == '': targetsText = '\nYou need: '
+               else: targetsText += ', or '
+               del mergedList[:]
+               mergedList += posRestrictions[0]
+               if len(mergedList) > 0: targetsText += "{} and ".format(mergedList)  
+               del mergedList[:]
+               mergedList += posRestrictions[1]
+               if len(mergedList) > 0: targetsText += "not {}".format(mergedList)
+               if targetsText.endswith(' and '): targetsText = targetsText[:-len(' and ')]
+            if debugVerbosity >= 2: notify("### About to chkPlayer()")# Debug
+            if not chkPlayer(Autoscript, targetLookup.controller, False, True): 
+               allegiance = re.search(r'by(Opponent|Me)', Autoscript)
+               requiredAllegiances.append(allegiance.group(1))
+            if len(requiredAllegiances) > 0: targetsText += "\nValid Target Allegiance: {}.".format(requiredAllegiances)
+            whisper(":::ERROR::: You need to target a valid card before using this action{}.".format(targetsText))
+         elif len(foundTargets) >= 1 and re.search(r'-choose',Autoscript):
+            if debugVerbosity >= 2: notify("### Going for a choice menu")# Debug
+            choiceType = re.search(r'-choose([0-9]+)',Autoscript)
+            targetChoices = makeChoiceListfromCardList(foundTargets)
+            if not card: choiceTitle = "Choose one of the valid targets for this effect"
+            else: choiceTitle = "Choose one of the valid targets for {}'s ability".format(card.name)
+            if debugVerbosity >= 2: notify("### Checking for SingleChoice")# Debug
+            if choiceType.group(1) == '1':
+               if len(foundTargets) == 1: choice = 0 # If we only have one valid target, autoselect it.
+               else: choice = SingleChoice(choiceTitle, targetChoices, type = 'button', default = 0)
+               if choice == 'ABORT': del foundTargets[:]
+               else: foundTargets = [foundTargets.pop(choice)] # if we select the target we want, we make our list only hold that target
+      if debugVerbosity >= 3: # Debug
+         tlist = [] 
+         for foundTarget in foundTargets: tlist.append(foundTarget.name) # Debug
+         notify("<<< findTarget() by returning: {}".format(tlist))
+      return foundTargets
+   except: notify("!!!ERROR!!! on findTarget()")   
+   
+def gatherCardProperties(card):
+   if debugVerbosity >= 1: notify(">>> gatherCardProperties()") #Debug
+   cardProperties = []
+   if debugVerbosity >= 4: notify("### Appending name") #Debug                
+   cardProperties.append(fetchProperty(card, 'name')) # We are going to check its name
+   if debugVerbosity >= 4: notify("### Appending Type") #Debug                
+   cardProperties.append(fetchProperty(card, 'Type')) # We are going to check its Type
+   if debugVerbosity >= 4: notify("### Appending Keywords") #Debug                
+   cardSubkeywords = fetchProperty(card, 'Keywords').split('-') # And each individual keyword. keywords are separated by " - "
+   for cardSubkeyword in cardSubkeywords:
+      strippedCS = cardSubkeyword.strip() # Remove any leading/trailing spaces between keywords. We need to use a new variable, because we can't modify the loop iterator.
+      if strippedCS: cardProperties.append(strippedCS) # If there's anything left after the stip (i.e. it's not an empty string anymrore) add it to the list.
+   if debugVerbosity >= 3: notify("<<< gatherCardProperties() with Card Properties: {}".format(cardProperties)) #Debug
+   return cardProperties
+
+def prepareRestrictions(Autoscript):
+# This is a function that takes an autoscript and attempts to find restrictions on card keywords/types/names etc. 
+# It goes looks for a specific working and then gathers all restrictions into a list of tuples, where each tuple has a negative and a positive entry
+# The positive entry (position [0] in the tuple) contains what card properties a card needs to have to be a valid selection
+# The negative entry (position [1] in the tuple) contains what card properties a card needs to NOT have to be a vaid selection.
+   if debugVerbosity >= 1: notify(">>> prepareRestrictions() {}".format(extraASDebug(Autoscript))) #Debug
+   validTargets = [] # a list that holds any type that a card must be, in order to be a valid target.
+   targetGroups = []
+   whatTarget = re.search(r'\b(at|for)([A-Za-z_{},& ]+)[-]?', Autoscript) # We signify target restrictions keywords by starting a string with "or"
+   if whatTarget: 
+      if debugVerbosity >= 2: notify("### Splitting on _or_") #Debug
+      validTargets = whatTarget.group(2).split('_or_') # If we have a list of valid targets, split them into a list, separated by the string "_or_". Usually this results in a list of 1 item.
       ValidTargetsSnapshot = list(validTargets) # We have to work on a snapshot, because we're going to be modifying the actual list as we iterate.
-      for chkTarget in ValidTargetsSnapshot: # Now we go through each list item and see if it has more than one condition (Eg, non-desert fief)
-         if re.search(r'_and_', chkTarget):  # If there's a string "_and_" between our restriction keywords, then this keyword has mutliple conditions
-            multiConditionTargets = chkTarget.split('_and_') # We put all the mutliple conditions in a new list, separating each element.
-            for chkCondition in multiConditionTargets:
-               regexCondition = re.search(r'(no[nt]){?([A-Za-z,& ]+)}?', chkCondition) # Do a search to see if in the multicondition targets there's one with "non" in front
-               if regexCondition and regexCondition.group(1) == 'non':
-                  if regexCondition.group(2) not in invalidTargets: invalidTargets.append(regexCondition.group(2)) # If there is, move it without the "non" into the invalidTargets list.
-               elif regexCondition and regexCondition.group(1) == 'not':
-                  if regexCondition.group(2) not in invalidNamedTargets: invalidNamedTargets.append(regexCondition.group(2)) #"not" means that it's a name.
-               else: validTargets.append(chkCondition) # Else just move the individual condition to the end if validTargets list
-            validTargets.remove(chkTarget) # Finally, remove the multicondition keyword from the valid list. Its individual elements should now be on this list or the invalid targets one.
-         else:
-            regexCondition = re.search(r'(no[nt]){?([A-Za-z,& ]+)}?', chkTarget)
-            if regexCondition and regexCondition.group(1) == 'non' and regexCondition.group(2) not in invalidTargets: # If the keyword has "non" in front, it means it's something we need to avoid, so we move it to a different list.
-               invalidTargets.append(regexCondition.group(2))
-               validTargets.remove(chkTarget)
-               continue
-            if regexCondition and regexCondition.group(1) == 'not' and regexCondition.group(2) not in invalidNamedTargets: # Same as above but keywords with "not" in front as specific card names.
-               invalidNamedTargets.append(regexCondition.group(2))
-               validTargets.remove(chkTarget)
-               continue
-            regexCondition = re.search(r'{([A-Za-z,& ]+)}', chkTarget)
-            if regexCondition and regexCondition.group(1) not in validNamedTargets: # Same as above but keywords in {curly brackets} are exact names in front as specific card names.
-               validNamedTargets.append(regexCondition.group(1))
-               validTargets.remove(chkTarget)
-      if debugVerbosity >= 2: notify("### About to start checking all targeted cards.\nValids:{}. Invalids:{}".format(validTargets,invalidTargets)) #Debug
-      for targetLookup in table: # Now that we have our list of restrictions, we go through each targeted card on the table to check if it matches.
-         if ((targetLookup.targetedBy and targetLookup.targetedBy == me) or (re.search(r'AutoTargeted', Autoscript) and targetLookup.highlight != DummyColor and targetLookup.highlight != RevealedColor and targetLookup.highlight != InactiveColor)) and chkPlayer(Autoscript, targetLookup.controller, False): # The card needs to be targeted by the player. If the card needs to belong to a specific player (me or rival) this also is taken into account.
-         # OK the above target check might need some decoding:
-         # Look through all the cards on the table and start checking only IF...
-         # * Card is targeted and targeted by the player OR target search has the -AutoTargeted modulator and it is NOT highlighted as a Dummy, Revealed or Inactive.
-         # * The player who controls this card is supposed to be me or the enemy.
-            if debugVerbosity >= 3: notify("### Checking {}".format(targetLookup)) #Debug
-            if len(validTargets) == 0 and len(validNamedTargets) == 0: targetC = targetLookup # If we have no target restrictions, any targeted  card will do.
-            else:
-               storeProperties(targetLookup)
-               for validtargetCHK in validTargets: # look if the card we're going through matches our valid target checks
-                  if debugVerbosity >= 4: notify("### Checking for valid match on {}".format(validtargetCHK)) #Debug
-                  if re.search(r'{}'.format(validtargetCHK), fetchProperty(targetLookup, 'Type')) or re.search(r'{}'.format(validtargetCHK), fetchProperty(targetLookup, 'Keywords')) or re.search(r'{}'.format(validtargetCHK), targetLookup.Side):
-                     targetC = targetLookup
-               for validtargetCHK in validNamedTargets: # look if the card we're going through matches our valid target checks
-                  if validtargetCHK == fetchProperty(targetLookup, 'name'):
-                     targetC = targetLookup
-            if len(invalidTargets) > 0: # If we have no target restrictions, any selected card will do as long as it's a valid target.
-               for invalidtargetCHK in invalidTargets:
-                  if debugVerbosity >= 4: notify("### Checking for invalid match on {}".format(invalidtargetCHK)) #Debug
-                  if re.search(r'{}'.format(invalidtargetCHK), fetchProperty(targetLookup, 'Type')) or re.search(r'{}'.format(invalidtargetCHK), fetchProperty(targetLookup, 'Keywords')) or re.search(r'{}'.format(invalidtargetCHK), targetLookup.Side):
-                     targetC = None
-            if len(invalidNamedTargets) > 0: # If we have no target restrictions, any selected card will do as long as it's a valid target.
-               for invalidtargetCHK in invalidNamedTargets:
-                  if invalidtargetCHK == fetchProperty(targetLookup, 'name'):
-                     targetC = None
-            if debugVerbosity >= 4: notify("### Checking Rest...") #Debug
-            if re.search(r'isRezzed', Autoscript) and not targetLookup.isFaceUp: 
-               targetC = None
-               if debugVerbosity >= 4: notify("### Target shouldn't be unrezzed") #Debug
-            if re.search(r'isUnrezzed', Autoscript) and targetLookup.isFaceUp: 
-               targetC = None
-               if debugVerbosity >= 4: notify("### Target shouldn't be rezzed") #Debug
-            if targetC and not targetC in foundTargets: 
-               if debugVerbosity >= 3: notify("### About to append {}".format(targetC)) #Debug
-               foundTargets.append(targetC) # I don't know why but the first match is always processed twice by the for loop.
-            elif debugVerbosity >= 3: notify("### findTarget() Rejected {}".format(targetLookup))
-      if targetC == None and not re.search(r'AutoTargeted', Autoscript): 
-         targetsText = ''
-         if len(validTargets) > 0: targetsText += "\nValid Target types: {}.".format(validTargets)
-         if len(validNamedTargets) > 0: targetsText += "\nSpecific Valid Targets: {}.".format(validNamedTargets)
-         if len(invalidTargets) > 0: targetsText += "\nInvalid Target types: {}.".format(invalidTargets)
-         if len(invalidNamedTargets) > 0: targetsText += "\nSpecific Invalid Targets: {}.".format(invalidNamedTargets)
-         if not chkPlayer(Autoscript, targetLookup.controller, False): 
-            allegiance = re.search(r'by(Opponent|Me)', Autoscript)
-            requiredAllegiances.append(allegiance.group(1))
-         if re.search(r'isRezzed', Autoscript): targetsText += "\nValid Status: Rezzed."
-         if re.search(r'isUnrezzed', Autoscript): targetsText += "\nValid Status: Unrezzed."
-         if len(requiredAllegiances) > 0: targetsText += "\nValid Target Allegiance: {}.".format(requiredAllegiances)
-         whisper("You need to target a valid card before using this action{}".format(targetsText))
-   #confirm("List is: {}".format(foundTargets)) # Debug
-   if debugVerbosity >= 3: 
-      tlist = []
-      for foundTarget in foundTargets: tlist.append(fetchProperty(foundTarget, 'name')) # Debug
-      notify("<<< findTarget() by returning: {}".format(tlist))
-   return foundTargets
+      for iter in range(len(ValidTargetsSnapshot)): # Now we go through each list item and see if it has more than one condition (Eg, non-desert fief)
+         if debugVerbosity >= 2: notify("### Creating empty list tuple") #Debug            
+         targetGroups.insert(iter,([],[])) # We create a tuple of two list. The first list is the valid properties, the second the invalid ones
+         multiConditionTargets = ValidTargetsSnapshot[iter].split('_and_') # We put all the mutliple conditions in a new list, separating each element.
+         if debugVerbosity >= 2: notify("###Splitting on _and_ & _or_ ") #Debug
+         if debugVerbosity >= 4: notify("### multiConditionTargets is: {}".format(multiConditionTargets)) #Debug
+         for chkCondition in multiConditionTargets:
+            if debugVerbosity >= 4: notify("### Checking: {}".format(chkCondition)) #Debug
+            regexCondition = re.search(r'(no[nt]){?([A-Za-z,& ]+)}?', chkCondition) # Do a search to see if in the multicondition targets there's one with "non" in front
+            if regexCondition and (regexCondition.group(1) == 'non' or regexCondition.group(1) == 'not'):
+               if debugVerbosity >= 4: notify("### Invalid Target") #Debug
+               if regexCondition.group(2) not in targetGroups[iter][1]: targetGroups[iter][1].append(regexCondition.group(2)) # If there is, move it without the "non" into the invalidTargets list.
+            else: 
+               if debugVerbosity >= 4: notify("### Valid Target") #Debug
+               targetGroups[iter][0].append(chkCondition) # Else just move the individual condition to the end if validTargets list
+   elif debugVerbosity >= 2: notify("### No restrictions regex") #Debug 
+   if debugVerbosity >= 3: notify("<<< prepareRestrictions() by returning: {}.".format(targetGroups))
+   return targetGroups
+
+def checkCardRestrictions(cardPropertyList, restrictionsList):
+   if debugVerbosity >= 1: notify(">>> checkCardRestrictions()") #Debug
+   if debugVerbosity >= 2: notify("### cardPropertyList = {}".format(cardPropertyList)) #Debug
+   if debugVerbosity >= 2: notify("### restrictionsList = {}".format(restrictionsList)) #Debug
+   validCard = True
+   for restrictionsGroup in restrictionsList: 
+   # We check each card's properties against each restrictions group of valid + invalid properties.
+   # Each Restrictions group is a tuple of two lists. First list (tuple[0]) is the valid properties, and the second list is the invalid properties
+   # We check if all the properties from the valid list are in the card properties
+   # And then we check if no properties from the invalid list are in the properties
+   # If both of these are true, then the card is a valid choice for our action.
+      validCard = True # We need to set it here as well for further loops
+      if debugVerbosity >= 3: notify("### restrictionsGroup checking: {}".format(restrictionsGroup))
+      if len(restrictionsList) > 0 and len(restrictionsGroup[0]) > 0: 
+         for validtargetCHK in restrictionsGroup[0]: # look if the card we're going through matches our valid target checks
+            if debugVerbosity >= 4: notify("### Checking for valid match on {}".format(validtargetCHK)) #Debug
+            if not validtargetCHK in cardPropertyList: 
+               if debugVerbosity >= 4: notify("### {} not found in {}".format(validtargetCHK,cardPropertyList)) #Debug
+               validCard = False
+      elif debugVerbosity >= 4: notify("### No positive restrictions")
+      if len(restrictionsList) > 0 and len(restrictionsGroup[1]) > 0: # If we have no target restrictions, any selected card will do as long as it's a valid target.
+         for invalidtargetCHK in restrictionsGroup[1]:
+            if debugVerbosity >= 4: notify("### Checking for invalid match on {}".format(invalidtargetCHK)) #Debug
+            if invalidtargetCHK in cardPropertyList: validCard = False
+      elif debugVerbosity >= 4: notify("### No negative restrictions")
+      if validCard: break # If we already passed a restrictions check, we don't need to continue checking restrictions 
+   if debugVerbosity >= 1: notify("<<< checkCardRestrictions() with return {}".format(validCard)) #Debug
+   return validCard
+
+def checkSpecialRestrictions(Autoscript,card):
+# Check the autoscript for special restrictions of a valid card
+# If the card does not validate all the restrictions included in the autoscript, we reject it
+   if debugVerbosity >= 1: notify(">>> checkSpecialRestrictions() {}".format(extraASDebug(Autoscript))) #Debug
+   if debugVerbosity >= 1: notify("### Card: {}".format(card)) #Debug
+   validCard = True
+   if not chkPlayer(Autoscript, card.controller, False, True): validCard = False
+   if re.search(r'isRezzed',Autoscript) and not card.isFaceUp: validCard = False
+   if re.search(r'isUnrezzed',Autoscript) and card.isFaceUp: validCard = False
+   markerName = re.search(r'-hasMarker{([\w ]+)}',Autoscript) # Checking if we need specific markers on the card.
+   if markerName: #If we're looking for markers, then we go through each targeted card and check if it has any relevant markers
+      if debugVerbosity >= 2: notify("### Checking marker restrictions")# Debug
+      if debugVerbosity >= 2: notify("### Marker Name: {}".format(markerName.group(1)))# Debug
+      marker = findMarker(card, markerName.group(1))
+      if not marker: validCard = False
+   markerNeg = re.search(r'-hasntMarker{([\w ]+)}',Autoscript) # Checking if we need to not have specific markers on the card.
+   if markerNeg: #If we're looking for markers, then we go through each targeted card and check if it has any relevant markers
+      if debugVerbosity >= 2: notify("### Checking negative marker restrictions")# Debug
+      if debugVerbosity >= 2: notify("### Marker Name: {}".format(markerNeg.group(1)))# Debug
+      marker = findMarker(card, markerNeg.group(1))
+      if marker: validCard = False
+   elif debugVerbosity >= 4: notify("### No marker restrictions.")
+   propertyReq = re.search(r'-hasProperty{([\w ]+)}(eq|le|ge|gt|lt)([0-9])',Autoscript) 
+   # Checking if the target needs to have a property at a certiain value. 
+   # eq = equal, le = less than/equal, ge = greater than/equal, lt = less than, gt = greater than.
+   if propertyReq:
+      if propertyReq.group(2) == 'eq' and card.properties[propertyReq.group(1)] != propertyReq.group(3): validCard = False
+      if propertyReq.group(2) == 'le' and num(card.properties[propertyReq.group(1)]) > num(propertyReq.group(3)): validCard = False
+      if propertyReq.group(2) == 'ge' and num(card.properties[propertyReq.group(1)]) < num(propertyReq.group(3)): validCard = False
+      if propertyReq.group(2) == 'lt' and num(card.properties[propertyReq.group(1)]) >= num(propertyReq.group(3)): validCard = False
+      if propertyReq.group(2) == 'gt' and num(card.properties[propertyReq.group(1)]) <= num(propertyReq.group(3)): validCard = False
+   if debugVerbosity >= 1: notify("<<< checkSpecialRestrictions() with return {}".format(validCard)) #Debug
+   return validCard
+
    
 def chkWarn(card, Autoscript): # Function for checking that an autoscript announces a warning to the player
    if debugVerbosity >= 1: notify(">>> chkWarn(){}".format(extraASDebug(Autoscript))) #Debug
@@ -1873,25 +1976,41 @@ def per(Autoscript, card = None, count = 0, targetCards = None, notification = N
    if debugVerbosity >= 2: notify("<<< per() with Multiplier: {}".format((multiplier - ignore) / div)) # Debug
    return (multiplier - ignore) / div
 
-def chkPlayer(Autoscript, controller, manual): # Function for figuring out if an autoscript is supposed to target an opponent's cards or ours.
+def chkPlayer(Autoscript, controller, manual, targetChk = False): # Function for figuring out if an autoscript is supposed to target an opponent's cards or ours.
 # Function returns 1 if the card is not only for rivals, or if it is for rivals and the card being activated it not ours.
 # This is then multiplied by the multiplier, which means that if the card activated only works for Rival's cards, our cards will have a 0 gain.
 # This will probably make no sense when I read it in 10 years...
    if debugVerbosity >= 1: notify(">>> chkPlayer(). Controller is: {}".format(controller)) #Debug
-   byOpponent = re.search(r'byOpponent', Autoscript)
-   byMe = re.search(r'byMe', Autoscript)
-   if manual: 
-      if debugVerbosity >= 3: notify("<<< chkPlayer() with return 1 (Manual)")
-      return 1 #manual means that the clicks was called by a player double clicking on the card. In which case we always do it.
-   elif not byOpponent and not byMe: 
-      if debugVerbosity >= 3: notify("<<< chkPlayer() with return 1 (Neutral)")   
-      return 1 # If the card has no restrictions on being us or a rival.
-   elif byOpponent and controller != me: 
-      if debugVerbosity >= 3: notify("<<< chkPlayer() with return 1 (byOpponent)")   
-      return 1 # If the card needs to be played by a rival.
-   elif byMe and controller == me: 
-      if debugVerbosity >= 3: notify("<<< chkPlayer() with return 1 (byMe)")   
-      return 1 # If the card needs to be played by us.
-   if debugVerbosity >= 3: notify("<<< chkPlayer() with return 0") # Debug
-   else: return 0 # If all the above fail, it means that we're not supposed to be triggering, so we'll return 0 which will make the multiplier 0.
+   try:
+      if targetChk: # If set to true, it means we're checking from the findTarget() function, which needs a different keyword in case we end up with two checks on a card's controller on the same script
+         byOpponent = re.search(r'targetOpponents', Autoscript)
+         byMe = re.search(r'targetMine', Autoscript)
+      else:
+         byOpponent = re.search(r'(byOpponent|duringOpponentTurn|forOpponent)', Autoscript)
+         byMe = re.search(r'(byMe|duringMyTurn|forMe)', Autoscript)
+      if manual or len(players) == 1: # If there's only one player, we always return true for debug purposes.
+         if debugVerbosity >= 2: notify("### Succeeded at Manual/Debug")
+         validPlayer = 1 #manual means that the clicks was called by a player double clicking on the card. In which case we always do it.
+      elif not byOpponent and not byMe: 
+         if debugVerbosity >= 2: notify("### Succeeded at Neutral")   
+         validPlayer = 1 # If the card has no restrictions on being us or a rival.
+      elif byOpponent and controller != me: 
+         if debugVerbosity >= 2: notify("### Succeeded at byOpponent")   
+         validPlayer =  1 # If the card needs to be played by a rival.
+      elif byMe and controller == me: 
+         if debugVerbosity >= 2: notify("### Succeeded at byMe")   
+         validPlayer =  1 # If the card needs to be played by us.
+      else: 
+         if debugVerbosity >= 2: notify("### Failed all checks") # Debug
+         validPlayer =  0 # If all the above fail, it means that we're not supposed to be triggering, so we'll return 0 whic
+      if not reversePlayerChk: 
+         if debugVerbosity >= 3: notify("<<< chkPlayer() with validPlayer") # Debug
+         return validPlayer
+      else: # In case reversePlayerChk is set to true, we want to return the opposite result. This means that if a scripts expect the one running the effect to be the player, we'll return 1 only if the one running the effect is the opponent. See Decoy at Dantoine for a reason
+         if debugVerbosity >= 3: notify("<<< chkPlayer() reversed!") # Debug      
+         if validPlayer == 0: return 1
+         else: return 0
+   except: 
+      notify("!!!ERROR!!! Null value on chkPlayer()")
+      return 0
    

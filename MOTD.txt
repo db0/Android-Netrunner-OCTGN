@@ -1,10 +1,10 @@
 =====Message of the Day======
 
-v.2.0.1.2 has a quick fix for Spinal Modem so that it doesn't work outside of runs. 
+Trace Amount has been spoiled. 
 
-Grab it if that's annoying you ;)
+Cards will be coming soon to OCTGN!
 
-Do you want to download it now?
+Do you want to open a page to the spoiled cards?
 =============================
 &&
-http://dbzer0.com/pub/ANR/Android-Netrunner-2.0.1.2.o8g
+http://www.facebook.com/media/set/?set=oa.152980918183853&type=1

@@ -60,8 +60,8 @@ def placeCard(card, action = 'INSTALL'):
    global installedCount
    type = fetchProperty(card, 'Type')
    if action != 'INSTALL' and type == 'Agenda':
-      if ds == 'corp': type == 'scoredAgenda'
-      else: type == 'liberatedAgenda'
+      if ds == 'corp': type = 'scoredAgenda'
+      else: type = 'liberatedAgenda'
    if action == 'INSTALL' and type in CorporationCardTypes: CfaceDown = True
    else: CfaceDown = False
    if debugVerbosity >= 3: notify("### Setting installedCount. Type is: {}, CfaceDown: {}".format(type, str(CfaceDown))) #Debug
@@ -1665,9 +1665,13 @@ def intPlay(card, cost = 'not_free'):
 def chkTargeting(card):
    if debugVerbosity >= 1: notify(">>> chkTargeting(){}".format(extraASDebug())) #Debug
    global ExposeTargetsWarn, RevealandShuffleWarn
-   if re.search(r'Targeted', CardsAS.get(card.model,'')) and findTarget(CardsAS.get(card.model,'')) == [] and not re.search(r'isOptional', CardsAS.get(card.model,'')) and not confirm("This card requires a valid target for it to work correctly.\
-                                                                                                                                                      \nIf you proceed without a target, strange things might happen.\
-                                                                                                                                                     \n\nProceed anyway?"): return 'ABORT'
+   if (re.search(r'Targeted', CardsAS.get(card.model,''))
+         and len(findTarget(CardsAS.get(card.model,''))) == 0
+         and not re.search(r'isOptional', CardsAS.get(card.model,''))
+         and not confirm("This card requires a valid target for it to work correctly.\
+                        \nIf you proceed without a target, strange things might happen.\
+                      \n\nProceed anyway?")):
+      return 'ABORT'
    targetPL = ofwhom(CardsAS.get(card.model,''))                                                                                                                                                      
    if re.search(r'ifTagged', CardsAS.get(card.model,'')) and targetPL.Tags == 0 and not re.search(r'isOptional', CardsAS.get(card.model,'')): 
       whisper("{} must be tagged in order to use this card".format(targetPL))
