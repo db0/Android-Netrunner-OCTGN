@@ -57,6 +57,26 @@ SuccessfulRun = False # Set by the runner when a run is successful, in order to 
 
 def placeCard(card, action = 'INSTALL'):
    if debugVerbosity >= 1: notify(">>> placeCard() with action: {}".format(action)) #Debug
+   hostType = re.search(r'Placement:([A-Za-z1-9:_ ]+)', fetchProperty(card, 'AutoScripts'))
+   if hostType:
+      if debugVerbosity >= 2: notify("### hostType: {}.".format(hostType.group(1))) #Debug
+      host = findTarget('Targeted-at{}'.format(hostType.group(1)))
+      if host == []: 
+         whisper("ABORTING!")
+         return
+      else:
+         if debugVerbosity >= 2: notify("### We have a host") #Debug
+         hostCards = eval(getGlobalVariable('Host Cards'))
+         hostCards[card._id] = host[0]._id
+         setGlobalVariable('Host Cards',str(hostCards))
+         cardAttachementsNR = len([att_id for att_id in hostCards if hostCards[att_id] == host[0]._id])
+         if debugVerbosity >= 2: notify("### About to move into position") #Debug
+         x,y = host[0].position
+         if host[0].controller != me: xAxis = -1
+         else: xAxis = 1
+         if host[0].Type == 'Objective': card.moveToTable(x + (playerside * xAxis * cwidth(card,0) / 2 * cardAttachementsNR), y)
+         else: card.moveToTable(x, y - ((cwidth(card) / 4 * playerside) * cardAttachementsNR))
+         card.sendToBack()
    global installedCount
    type = fetchProperty(card, 'Type')
    if action != 'INSTALL' and type == 'Agenda':
@@ -1594,6 +1614,14 @@ def intPlay(card, cost = 'not_free'):
    if card.Type != 'ICE' and card.Type != 'Agenda' and card.Type != 'Upgrade' and card.Type != 'Asset': # We only check for uniqueness on install, against cards that install face-up
       if not checkUnique(card): return #If the player has the unique card and opted not to trash it, do nothing.
    if (card.Type == 'Operation' or card.Type == 'Event') and chkTargeting(card) == 'ABORT': return # If it's an Operation or Event and has targeting requirements, check with the user first.
+   hostType = re.search(r'Placement:([A-Za-z1-9:_ ]+)', fetchProperty(card, 'AutoScripts'))
+   if hostType:
+      if debugVerbosity >= 2: notify("### hostType: {}.".format(hostType.group(1))) #Debug
+      host = findTarget('Targeted-at{}'.format(hostType.group(1)))
+      if len(host) == 0:
+         whisper("ABORTING!")
+         return
+      else: extraTXT = ' on {}'.format(host[0])
    if re.search(r'Double', getKeywords(card)): NbReq = 2 # Some cards require two clicks to play. This variable is passed to the useClick() function.
    else: NbReq = 1 #In case it's not a "Double" card. Then it only uses one click to play.
    ClickCost = useClick(count = NbReq)

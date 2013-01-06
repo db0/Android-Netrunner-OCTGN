@@ -55,6 +55,7 @@ def executePlayScripts(card, action):
           re.search(r'atJackOut', autoS) or 
           re.search(r'atSuccessfulRun', autoS) or 
           re.search(r'onAccess', autoS) or 
+          re.search(r'Placement', autoS) or 
           re.search(r'onPay', autoS) or # onPay effects are only useful before we go to the autoscripts, for the cost reduction.
           re.search(r'triggerNoisy', autoS) or # Trigger Noisy are used automatically during action use.
           re.search(r'-isTrigger', autoS)): Autoscripts.remove(autoS)

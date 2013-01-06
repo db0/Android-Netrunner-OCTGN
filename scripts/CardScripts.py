@@ -618,7 +618,7 @@ Parasite
 -----
 bc0f047c-01b1-427f-a439-d451eda01012
 -----
-atTurnStart:Put1Virus-byMe
+atTurnStart:Put1Virus-byMe||Placement:ICE
 +++++
 	
 .....
@@ -826,7 +826,7 @@ The Personal Touch
 -----
 bc0f047c-01b1-427f-a439-d451eda01040
 -----
-onInstall:Put1PlusOnePerm-Targeted-atIcebreaker
+onInstall:Put1PlusOnePerm-Targeted-atIcebreaker||Placement:Icebreaker
 +++++
 	
 .....
