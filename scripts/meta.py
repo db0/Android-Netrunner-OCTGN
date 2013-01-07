@@ -245,6 +245,32 @@ def checkUnique (card):
       for uniqueC in ExistingUniques: trashForFree(uniqueC)
    if debugVerbosity >= 3: notify("<<< checkUnique() - Returning True") #Debug
    return True   
+   
+def clearAttachLinks(card):
+# This function takes care to discard any attachments of a card that left play
+# It also clear the card from the host dictionary, if it was itself attached to another card
+# If the card was hosted by a Daemon, it also returns the free MU token to that daemon
+   if debugVerbosity >= 1: notify(">>> clearAttachLinks()") #Debug
+   hostCards = eval(getGlobalVariable('Host Cards'))
+   cardAttachementsNR = len([att_id for att_id in hostCards if hostCards[att_id] == card._id])
+   if cardAttachementsNR >= 1:
+      hostCardSnapshot = dict(hostCards)
+      for attachment in hostCardSnapshot:
+         if hostCardSnapshot[attachment] == card._id:
+            if Card(attachment) in table: intTrashCard(Card(attachment),0,cost = "host removed")
+            del hostCards[attachment]
+   if debugVerbosity >= 2: notify("### Checking if the card is attached to unlink.")      
+   if hostCards.has_key(card._id):
+      hostCard = Card(hostCards[card._id])
+      if re.search(r'Daemon',getKeywords(hostCard)) and hostCard.group == table: 
+         if card.markers[mdict['DaemonMU']] and not re.search(r'Daemon',getKeywords(card)):
+            hostCard.markers[mdict['DaemonMU']] += card.markers[mdict['DaemonMU']] # If the card was hosted by a Daemon, we return any Daemon MU's used.
+         DaemonHosted = findMarker(card,'Daemon Hosted MU')
+         if DaemonHosted: # if the card just removed was a daemon hosted by a daemon, then it's going to have a different kind of token.
+            hostCard.markers[mdict['DaemonMU']] += card.markers[DaemonHosted] # If the card was hosted by a Daemon, we return any Daemon MU's used.
+      del hostCards[card._id] # If the card was an attachment, delete the link
+   setGlobalVariable('Host Cards',str(hostCards))
+   if debugVerbosity >= 3: notify("<<< clearAttachLinks()") #Debug   
  
 def resetAll(): # Clears all the global variables in order to start a new game.
    if debugVerbosity >= 1: notify(">>> resetAll(){}".format(extraASDebug())) #Debug

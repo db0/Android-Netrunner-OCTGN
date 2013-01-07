@@ -57,7 +57,7 @@ SuccessfulRun = False # Set by the runner when a run is successful, in order to 
 
 def placeCard(card, action = 'INSTALL'):
    if debugVerbosity >= 1: notify(">>> placeCard() with action: {}".format(action)) #Debug
-   hostType = re.search(r'Placement:([A-Za-z1-9:_ ]+)', fetchProperty(card, 'AutoScripts'))
+   hostType = re.search(r'Placement:([A-Za-z1-9:_ -]+)', fetchProperty(card, 'AutoScripts'))
    if hostType:
       if debugVerbosity >= 2: notify("### hostType: {}.".format(hostType.group(1))) #Debug
       host = findTarget('Targeted-at{}'.format(hostType.group(1)))
@@ -716,9 +716,9 @@ def cancelTrace ( card, x=0,y=0):
 # Counter & Damage Functions
 #-----------------------------------------------------------------------------
 
-def payCost(count = 1, cost = 'not_free', counter = 'BP'): # A function that removed the cost provided from our credit pool, after checking that we have enough.
+def payCost(count = 1, cost = 'not free', counter = 'BP'): # A function that removed the cost provided from our credit pool, after checking that we have enough.
    if debugVerbosity >= 1: notify(">>> payCost(){}".format(extraASDebug())) #Debug
-   if cost == 'free': return 'free'
+   if cost != 'not free': return 'free'
    count = num(count)
    if count <= 0 : return 0# If the card has 0 cost, there's nothing to do.
    if counter == 'BP':
@@ -1384,21 +1384,26 @@ def intTrashCard(card, stat, cost = "not free",  ClickCost = '', silent = False)
    if fetchProperty(card, 'Type') == 'Event' or fetchProperty(card, 'Type') == 'Operation': silent = True # These cards are already announced when played. No need to mention them a second time.
    if card.isFaceUp:
       MUtext = chkRAM(card, 'UNINSTALL')    
-      if rc == "free" and not silent: notify("{} {} {} at no cost{}.".format(me, uniTrash(), card, MUtext))
+      if rc == "free" and not silent:
+         if cost == "host removed": notify("{} {} {} because its host has been removed from play{}.".format(card.owner, uniTrash(), card, reason, MUtext))
+         else: notify("{} {} {} at no cost{}.".format(me, uniTrash(), card, reason, MUtext))
       elif not silent: notify("{} {}{} {}{}{}.".format(ClickCost, uniTrash(), goodGrammar, card, extraText, MUtext))
       if card.Type == 'Agenda' and card.markers[mdict['Scored']]: 
          me.counters['Agenda Points'].value -= num(card.Stat) # Trashing Agendas for any reason, now takes they value away as well.
          notify("--> {} loses {} Agenda Points".format(me, card.Stat))
       if card.highlight != RevealedColor: executePlayScripts(card,'TRASH') # We don't want to run automations on simply revealed cards.
+      clearAttachLinks(card)
       card.moveTo(cardowner.piles['Heap/Archives(Face-up)'])
    elif (ds == "runner" and card.controller == me) or (ds == "runner" and card.controller != me and cost == "not free") or (ds == "corp" and card.controller != me ): 
    #I'm the runner and I trash my cards, or an accessed card from the corp, or I 'm the corp and I trash a runner's card.
+      clearAttachLinks(card)
       card.moveTo(cardowner.piles['Heap/Archives(Face-up)'])
       if rc == "free" and not silent: 
          if card.highlight == DummyColor: notify ("{} clears {}'s lingering effects.".format(me, card)) # In case the card is a dummy card, we change the notification slightly.
          else: notify ("{} {} {}{} at no cost.".format(me, uniTrash(), card))
       elif not silent: notify("{} {}{} {}{}.".format(ClickCost, uniTrash() , goodGrammar, card, extraText))
    else: #I'm the corp and I trash my own hidden cards or the runner and trash a hidden corp card without cost (e.g. randomly picking one from their hand)
+      clearAttachLinks(card)
       card.moveTo(cardowner.piles['Archives(Hidden)'])
       if rc == "free" and not silent: notify("{} {} a hidden card at no cost.".format(me, uniTrash()))
       elif not silent: notify("{} {}{} a hidden card.".format(ClickCost, uniTrash(), goodGrammar))
@@ -1439,25 +1444,23 @@ def trashTargetPaid(group, x=0, y=0):
                  if c.targetedBy
                  and c.targetedBy == me]
    if len(targetCards) == 0: return
-   if not confirm("You are about to trash your opponent's cards. This may cause issue if your opponent is currently manipulating them\
-             \nPlease ask your opponent to wait until the notification appears before doing anything else\
-           \n\nProceed?"): return
+### I think the below is not necessary from experience ###
+#   if not confirm("You are about to trash your opponent's cards. This may cause issue if your opponent is currently manipulating them\
+#             \nPlease ask your opponent to wait until the notification appears before doing anything else\
+#           \n\nProceed?"): return
    for card in targetCards:
       storeProperties(card)
+      cardType = fetchProperty(card, 'Type')
       if ds == 'corp':
-         if fetchProperty(card, 'Type') == 'Resource':
-            ClickCost = useClick()
-            if not card.controller.Tags:
-               whisper("You can only {} the runner's resources when they're tagged".format(uniTrash()))
-               continue
-            if ClickCost == 'ABORT': return
-            intTrashCard(card, 2, ClickCost = ClickCost)
-         else: whisper("Only resources can be trashed from the runner")
+         if cardType != 'Resource' and not confirm("Only resources can be trashed from the runner.\n\nBypass Restriction?"): continue
+         if not card.controller.Tags and not confirm("You can only Trash the runner's resources when they're tagged\n\nBypass Restriction?"): continue
+         ClickCost = useClick()
+         if ClickCost == 'ABORT': return
+         intTrashCard(card, 2, ClickCost = ClickCost)
       else: 
-         if fetchProperty(card, 'Type') == 'Upgrade' or fetchProperty(card, 'Type') == 'Asset':
-            intTrashCard(card, fetchProperty(card, 'Stat')) # If we're a runner, trash with the cost of the card's trash.
-         else: whisper("You can only pay to trash the Corp's Nodes and Upgrades".format(uniTrash()))
-      
+         if cardType != 'Upgrade' and cardType != 'Asset' and not confirm("You can normally only pay to trash the Corp's Nodes and Upgrades.\n\nBypass Restriction?"): continue
+         intTrashCard(card, fetchProperty(card, 'Stat')) # If we're a runner, trash with the cost of the card's trash.
+         
 def exileCard(card, silent = False):
    if debugVerbosity >= 1: notify(">>> exileCard(){}".format(extraASDebug())) #Debug
    # Puts the removed card in the shared pile and outside of view.
@@ -1492,13 +1495,14 @@ def uninstall(card, x=0, y=0, destination = 'hand', silent = False):
       if card.isFaceUp: MUtext = chkRAM(card, 'UNINSTALL')
       else: MUtext = ''
       executePlayScripts(card,'UNINSTALL')
+      clearAttachLinks(card)
       card.moveTo(group)
    if not silent: notify("{} uninstalled {}{}.".format(me,card,MUtext))
 
 def possess(daemonCard, programCard, silent = False):
    if debugVerbosity >= 1: notify(">>> possess(){}".format(extraASDebug())) #Debug
    #This function takes as arguments 2 cards. A Daemon and a program requiring MUs, then assigns the program to the Daemon, restoring the used MUs to the player.
-   hostType = re.search(r'Placement:([A-Za-z1-9:_ ]+)', fetchProperty(programCard, 'AutoScripts'))
+   hostType = re.search(r'Placement:([A-Za-z1-9:_ -]+)', fetchProperty(programCard, 'AutoScripts'))
    if hostType and not re.search(r'Daemon',hostType.group(1)): 
       delayed_whisper("This card cannot be hosted on a Daemon as it needs a special host type")
       return 'ABORT'
@@ -1513,9 +1517,11 @@ def possess(daemonCard, programCard, silent = False):
       if debugVerbosity >= 2: notify("### We have a valid daemon host") #Debug
       hostCards = eval(getGlobalVariable('Host Cards'))
       hostCards[programCard._id] = daemonCard._id
-      setGlobalVariable('Host Cards',str(hostCards))      
+      setGlobalVariable('Host Cards',str(hostCards))   
       daemonCard.markers[mdict['DaemonMU']] -= count
-      programCard.markers[mdict['DaemonMU']] += count
+      if re.search(r'Daemon',fetchProperty(programCard, 'Keywords')): # If it's a daemon, we do not want to give it the same daemon token, as that's going to be reused for other programs and we do not want that.
+         TokensX('Put{}Daemon Hosted MU-isSilent'.format(count), '', programCard)
+      else: programCard.markers[mdict['DaemonMU']] += count
       programCard.owner.MU += count # We return the MUs the card would be otherwise using.
       if not silent: notify("{} installs {} into {}".format(me,programCard,daemonCard))
 
@@ -1609,7 +1615,7 @@ def currentHandSize(player = me):
    else: currHandSize = player.counters['Hand Size'].value
    return currHandSize
 
-def intPlay(card, cost = 'not_free'):
+def intPlay(card, cost = 'not free'):
    if debugVerbosity >= 1: notify(">>> intPlay(){}".format(extraASDebug())) #Debug
    extraText = ''
    mute() 
@@ -1621,7 +1627,7 @@ def intPlay(card, cost = 'not_free'):
    if card.Type != 'ICE' and card.Type != 'Agenda' and card.Type != 'Upgrade' and card.Type != 'Asset': # We only check for uniqueness on install, against cards that install face-up
       if not checkUnique(card): return #If the player has the unique card and opted not to trash it, do nothing.
    if (card.Type == 'Operation' or card.Type == 'Event') and chkTargeting(card) == 'ABORT': return # If it's an Operation or Event and has targeting requirements, check with the user first.
-   hostType = re.search(r'Placement:([A-Za-z1-9:_ ]+)', fetchProperty(card, 'AutoScripts'))
+   hostType = re.search(r'Placement:([A-Za-z1-9:_ -]+)', fetchProperty(card, 'AutoScripts'))
    if hostType:
       if debugVerbosity >= 2: notify("### hostType: {}.".format(hostType.group(1))) #Debug
       host = findTarget('Targeted-at{}'.format(hostType.group(1)))

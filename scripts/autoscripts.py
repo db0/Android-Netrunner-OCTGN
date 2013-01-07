@@ -991,10 +991,11 @@ def TokensX(Autoscript, announceText, card, targetCards = None, notification = N
       if not victim or victim == me: announceString = '{} forfeit their next {} {}'.format(announceText,total,counter.group(1)) # If we're putting on forfeit counters, we don't announce it as an infection.
       else: announceString = '{} force {} to forfeit their next {} {}'.format(announceText, victim, total,counter.group(1))
    else: announceString = "{} {}{} {} {} counters{}{}".format(announceText, action.group(1).lower(),infectTXT, total, token[0],targetCardlist,preventTXT)
-   if notification and modtokens != 0: notify('--> {}.'.format(announceString))
+   if notification and modtokens != 0 and not re.search(r'isSilent', Autoscript): notify('--> {}.'.format(announceString))
    if debugVerbosity >= 2: notify("### TokensX() String: {}".format(announceString)) #Debug
    if debugVerbosity >= 3: notify("<<< TokensX()")
-   return announceString
+   if re.search(r'isSilent', Autoscript): return announceText # If it's a silent marker, we don't want to announce anything. Returning the original announceText will be processed by any receiving function as having done nothing.
+   else: return announceString
  
 def DrawX(Autoscript, announceText, card, targetCards = None, notification = None, n = 0): # Core Command for drawing X Cards from the house deck to your hand.
    if debugVerbosity >= 1: notify(">>> DrawX(){}".format(extraASDebug(Autoscript))) #Debug
@@ -1574,7 +1575,7 @@ def penaltyNoisy(card):
    
 def autoscriptCostUndo(card, Autoscript): # Function for undoing the cost of an autoscript.
    if debugVerbosity >= 1: notify(">>> autoscriptCostUndo(){}".format(extraASDebug(Autoscript))) #Debug
-   whisper("--> Undoing action...")
+   delayed_whisper("--> Undoing action...")
    actionCost = re.match(r"A([0-9]+)B([0-9]+)G([0-9]+)T([0-9]+):", Autoscript)
    me.Clicks += num(actionCost.group(1))
    me.counters['Credits'].value += num(actionCost.group(2))
@@ -1652,7 +1653,7 @@ def findTarget(Autoscript, fromHand = False, card = None): # Function for findin
                allegiance = re.search(r'by(Opponent|Me)', Autoscript)
                requiredAllegiances.append(allegiance.group(1))
             if len(requiredAllegiances) > 0: targetsText += "\nValid Target Allegiance: {}.".format(requiredAllegiances)
-            whisper(":::ERROR::: You need to target a valid card before using this action{}.".format(targetsText))
+            delayed_whisper(":::ERROR::: You need to target a valid card before using this action{}.".format(targetsText))
          elif len(foundTargets) >= 1 and re.search(r'-choose',Autoscript):
             if debugVerbosity >= 2: notify("### Going for a choice menu")# Debug
             choiceType = re.search(r'-choose([0-9]+)',Autoscript)
