@@ -61,9 +61,7 @@ def placeCard(card, action = 'INSTALL'):
    if hostType:
       if debugVerbosity >= 2: notify("### hostType: {}.".format(hostType.group(1))) #Debug
       host = findTarget('Targeted-at{}'.format(hostType.group(1)))
-      if host == []: 
-         whisper("ABORTING!")
-         return
+      if len(host) == 0: delayed_whisper(":::ERROR::: No Valid Host Targeted! Aborting Placement.")
       else:
          if debugVerbosity >= 2: notify("### We have a host") #Debug
          hostCards = eval(getGlobalVariable('Host Cards'))
@@ -77,33 +75,34 @@ def placeCard(card, action = 'INSTALL'):
          if host[0].Type == 'Objective': card.moveToTable(x + (playerside * xAxis * cwidth(card,0) / 2 * cardAttachementsNR), y)
          else: card.moveToTable(x, y - ((cwidth(card) / 4 * playerside) * cardAttachementsNR))
          card.sendToBack()
-   global installedCount
-   type = fetchProperty(card, 'Type')
-   if action != 'INSTALL' and type == 'Agenda':
-      if ds == 'corp': type = 'scoredAgenda'
-      else: type = 'liberatedAgenda'
-   if action == 'INSTALL' and type in CorporationCardTypes: CfaceDown = True
-   else: CfaceDown = False
-   if debugVerbosity >= 3: notify("### Setting installedCount. Type is: {}, CfaceDown: {}".format(type, str(CfaceDown))) #Debug
-   if installedCount.get(type,None) == None: installedCount[type] = 0
-   else: installedCount[type] += 1
-   if debugVerbosity >= 2: notify("### installedCount is: {}. Setting loops...".format(installedCount[type])) #Debug
-   loopsNR = installedCount[type] / (place[type][3]) 
-   loopback = place[type][3] * loopsNR 
-   if loopsNR and place[type][3] != 1: offset = 15 * (loopsNR % 3) # This means that in one loop the offset is going to be 0 and in another 15.
-   else: offset = 0
-   if debugVerbosity >= 3: notify("### installedCount[type] is: {}.\nLoopsNR is: {}.\nLoopback is: {}\nOffset is: {}".format(installedCount[type],offset, loopback, offset)) #Debug
-   card.moveToTable(place[type][0] + (((cwidth(card,0) + place[type][2]) * (installedCount[type] - loopback)) + offset) * place[type][4],place[type][1],CfaceDown) 
-   # To explain the above, we place the card at: Its original location
-   #                                             + the width of the card
-   #                                             + a predefined distance from each other times the number of other cards of the same type
-   #                                             + the special offset in case we've done one or more loops
-   #                                             And all of the above, multiplied by +1/-1 (place[type][4]) in order to direct the cards towards the left or the right
-   #                                             And finally, the Y axis is always the same in ANR.
-   if type == 'Agenda' or type == 'Upgrade' or type == 'Asset': # camouflage until I create function to install them on specific Server, via targeting.
-      installedCount['Agenda'] = installedCount[type]
-      installedCount['Asset'] = installedCount[type]
-      installedCount['Upgrade'] = installedCount[type]
+   else:
+      global installedCount
+      type = fetchProperty(card, 'Type')
+      if action != 'INSTALL' and type == 'Agenda':
+         if ds == 'corp': type = 'scoredAgenda'
+         else: type = 'liberatedAgenda'
+      if action == 'INSTALL' and type in CorporationCardTypes: CfaceDown = True
+      else: CfaceDown = False
+      if debugVerbosity >= 3: notify("### Setting installedCount. Type is: {}, CfaceDown: {}".format(type, str(CfaceDown))) #Debug
+      if installedCount.get(type,None) == None: installedCount[type] = 0
+      else: installedCount[type] += 1
+      if debugVerbosity >= 2: notify("### installedCount is: {}. Setting loops...".format(installedCount[type])) #Debug
+      loopsNR = installedCount[type] / (place[type][3]) 
+      loopback = place[type][3] * loopsNR 
+      if loopsNR and place[type][3] != 1: offset = 15 * (loopsNR % 3) # This means that in one loop the offset is going to be 0 and in another 15.
+      else: offset = 0
+      if debugVerbosity >= 3: notify("### installedCount[type] is: {}.\nLoopsNR is: {}.\nLoopback is: {}\nOffset is: {}".format(installedCount[type],offset, loopback, offset)) #Debug
+      card.moveToTable(place[type][0] + (((cwidth(card,0) + place[type][2]) * (installedCount[type] - loopback)) + offset) * place[type][4],place[type][1],CfaceDown) 
+      # To explain the above, we place the card at: Its original location
+      #                                             + the width of the card
+      #                                             + a predefined distance from each other times the number of other cards of the same type
+      #                                             + the special offset in case we've done one or more loops
+      #                                             And all of the above, multiplied by +1/-1 (place[type][4]) in order to direct the cards towards the left or the right
+      #                                             And finally, the Y axis is always the same in ANR.
+      if type == 'Agenda' or type == 'Upgrade' or type == 'Asset': # camouflage until I create function to install them on specific Server, via targeting.
+         installedCount['Agenda'] = installedCount[type]
+         installedCount['Asset'] = installedCount[type]
+         installedCount['Upgrade'] = installedCount[type]
    if debugVerbosity >= 3: notify("<<< placeCard()") #Debug
    
 #---------------------------------------------------------------------------
@@ -1499,14 +1498,22 @@ def uninstall(card, x=0, y=0, destination = 'hand', silent = False):
 def possess(daemonCard, programCard, silent = False):
    if debugVerbosity >= 1: notify(">>> possess(){}".format(extraASDebug())) #Debug
    #This function takes as arguments 2 cards. A Daemon and a program requiring MUs, then assigns the program to the Daemon, restoring the used MUs to the player.
+   hostType = re.search(r'Placement:([A-Za-z1-9:_ ]+)', fetchProperty(programCard, 'AutoScripts'))
+   if hostType and not re.search(r'Daemon',hostType.group(1)): 
+      delayed_whisper("This card cannot be hosted on a Daemon as it needs a special host type")
+      return 'ABORT'
    count = num(programCard.properties["Requirement"])
    if count > daemonCard.markers[mdict['DaemonMU']]:
-      whisper("{} does not have enough free MUs to possess {}.".format(daemonCard, programCard))
+      delayed_whisper("{} does not have enough free MUs to possess {}.".format(daemonCard, programCard))
       return 'ABORT'
    elif programCard.markers[mdict['DaemonMU']]:
-      whisper("{} is already possessed by a daemon.".format(programCard))
+      delayed_whisper("{} is already possessed by a daemon.".format(programCard))
       return 'ABORT'
    else: 
+      if debugVerbosity >= 2: notify("### We have a valid daemon host") #Debug
+      hostCards = eval(getGlobalVariable('Host Cards'))
+      hostCards[programCard._id] = daemonCard._id
+      setGlobalVariable('Host Cards',str(hostCards))      
       daemonCard.markers[mdict['DaemonMU']] -= count
       programCard.markers[mdict['DaemonMU']] += count
       programCard.owner.MU += count # We return the MUs the card would be otherwise using.

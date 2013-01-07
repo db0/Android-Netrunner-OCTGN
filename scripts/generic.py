@@ -539,6 +539,9 @@ def oncePerTurn(card, x = 0, y = 0, silent = False, act = 'manual'):
    if act != 'dryRun': card.orientation = Rot90
    if debugVerbosity >= 3: notify("<<< oncePerTurn() exit OK") #Debug
 
+def delayed_whisper(text): # Because whispers for some reason execute before notifys
+   rnd(1,10)
+   whisper(text)   
 #---------------------------------------------------------------------------
 # Card Placement functions
 #---------------------------------------------------------------------------
