@@ -1385,8 +1385,9 @@ def intTrashCard(card, stat, cost = "not free",  ClickCost = '', silent = False)
    if card.isFaceUp:
       MUtext = chkRAM(card, 'UNINSTALL')    
       if rc == "free" and not silent:
-         if cost == "host removed": notify("{} {} {} because its host has been removed from play{}.".format(card.owner, uniTrash(), card, reason, MUtext))
-         else: notify("{} {} {} at no cost{}.".format(me, uniTrash(), card, reason, MUtext))
+         if debugVerbosity >= 2: notify("About to trash card for free. Cost = {}".format(cost))
+         if cost == "host removed": notify("{} {} {} because its host has been removed from play{}.".format(card.owner, uniTrash(), card, MUtext))
+         else: notify("{} {} {} at no cost{}.".format(me, uniTrash(), card, MUtext))
       elif not silent: notify("{} {}{} {}{}{}.".format(ClickCost, uniTrash(), goodGrammar, card, extraText, MUtext))
       if card.Type == 'Agenda' and card.markers[mdict['Scored']]: 
          me.counters['Agenda Points'].value -= num(card.Stat) # Trashing Agendas for any reason, now takes they value away as well.

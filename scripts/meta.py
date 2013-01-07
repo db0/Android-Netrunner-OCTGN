@@ -196,15 +196,19 @@ def getSpecial(cardType,player = me):
 def chkRAM(card, action = 'INSTALL', silent = False):
    if debugVerbosity >= 1: notify(">>> chkRAM(){}".format(extraASDebug())) #Debug
    MUreq = num(fetchProperty(card,'Requirement'))
-   if MUreq > 0 and not card.markers[mdict['DaemonMU']] and card.highlight != InactiveColor and card.highlight != RevealedColor:
+   if (MUreq > 0
+         and not (card.markers[mdict['DaemonMU']] and not re.search(r'Daemon',getKeywords(card)))
+         and not findMarker(card,'Daemon Hosted MU')
+         and card.highlight != InactiveColor 
+         and card.highlight != RevealedColor):
       if action == 'INSTALL':
-         card.controller.MU -= MUreq
+         card.owner.MU -= MUreq
          MUtext = ", using up  {}".format(uniMU(MUreq))
       elif action == 'UNINSTALL':
-         card.controller.MU += MUreq
+         card.owner.MU += MUreq
          MUtext = ", freeing up  {}".format(uniMU(MUreq))
    else: MUtext = ''
-   if card.controller.MU < 0 and not silent: 
+   if card.owner.MU < 0 and not silent: 
       notify(":::Warning:::{}'s programs require more memory than he has available. They must trash enough programs to bring their available Memory to at least 0".format(card.controller))
       information(":::ATTENTION:::\n\nYou are now using more MUs than you have available memory!\
                   \nYou need to trash enough programs to bring your Memory to 0 or higher")

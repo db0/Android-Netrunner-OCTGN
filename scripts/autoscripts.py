@@ -1639,7 +1639,7 @@ def findTarget(Autoscript, fromHand = False, card = None): # Function for findin
             mergedList = []
             for posRestrictions in targetGroups: 
                if debugVerbosity >= 2: notify("### About to notify on restrictions")# Debug
-               if targetsText == '': targetsText = '\nYou need: '
+               if targetsText == '': targetsText = '\n -- You need: '
                else: targetsText += ', or '
                del mergedList[:]
                mergedList += posRestrictions[0]
@@ -1652,7 +1652,9 @@ def findTarget(Autoscript, fromHand = False, card = None): # Function for findin
             if not chkPlayer(Autoscript, targetLookup.controller, False, True): 
                allegiance = re.search(r'by(Opponent|Me)', Autoscript)
                requiredAllegiances.append(allegiance.group(1))
-            if len(requiredAllegiances) > 0: targetsText += "\nValid Target Allegiance: {}.".format(requiredAllegiances)
+            if len(requiredAllegiances) > 0: targetsText += "\n00 Valid Target Allegiance: {}.".format(requiredAllegiances)
+            if re.search(r'isRezzed',Autoscript): targetsText += "\n -- Card Status: Rezzed"
+            if re.search(r'isUnrezzed',Autoscript): targetsText += "\n -- Card Status: Unrezzed"
             delayed_whisper(":::ERROR::: You need to target a valid card before using this action{}.".format(targetsText))
          elif len(foundTargets) >= 1 and re.search(r'-choose',Autoscript):
             if debugVerbosity >= 2: notify("### Going for a choice menu")# Debug
