@@ -190,8 +190,15 @@ def getSpecial(cardType,player = me):
 # Functions takes as argument the name of a special card, and the player to whom it belongs, and returns the card object.
    if debugVerbosity >= 1: notify(">>> getSpecial(){}".format(extraASDebug())) #Debug
    specialCards = eval(player.getGlobalVariable('specialCards'))
-   if debugVerbosity >= 3: notify("<<< getSpecial() by returning: {}".format(Card(specialCards[cardType])))
-   return Card(specialCards[cardType])
+   card = Card(specialCards[cardType])
+   if debugVerbosity >= 2: notify("### Stored_Type = {}".format(Stored_Type.get(card._id,'NULL')))
+   if Stored_Type.get(card._id,'NULL') == 'NULL':
+      delayed_whisper(":::DEBUG::: {} was NULL. Re-storing as an attempt to fix".format(cardType))
+      if debugVerbosity >= 1: notify("### card ID = {}".format(card._id))
+      if debugVerbosity >= 1: notify("### Stored Type = {}".format(Stored_Type[card._id]))
+      storeProperties(card, True)
+   if debugVerbosity >= 3: notify("<<< getSpecial() by returning: {}".format())
+   return card
 
 def chkRAM(card, action = 'INSTALL', silent = False):
    if debugVerbosity >= 1: notify(">>> chkRAM(){}".format(extraASDebug())) #Debug
@@ -299,7 +306,8 @@ def resetAll(): # Clears all the global variables in order to start a new game.
    currClicks = 0
    turn = 0
    ShowDicts()
-   #debugVerbosity = -1 # Reset means normal game.
+   if len(players) > 1: debugVerbosity = -1 # Reset means normal game.
+   elif debugVerbosity != -1 and confirm("Reset Debug Verbosity?"): debugVerbosity = -1    
    if debugVerbosity >= 1: notify("<<< resetAll()") #Debug
 #------------------------------------------------------------------------------
 # Switches
@@ -625,6 +633,12 @@ def TrialError(group, x=0, y=0): # Debugging
       elif debugVerbosity == 3: debugVerbosity = 4
       else: debugVerbosity = 0
       notify("Debug verbosity is now: {}".format(debugVerbosity))
+      if ds == "corp": 
+         notify("Runner now")
+         ds = "runner"
+      else: 
+         ds = "corp"
+         notify("Corp Now")
       return
    if me.name == 'db0' or me.name == 'dbzer0': 
       debugVerbosity = 0
@@ -640,14 +654,14 @@ def TrialError(group, x=0, y=0): # Debugging
       ds = "corp"
       notify("Corp Now")
    ###### End Testing Corner ######
-   testcards = ["bc0f047c-01b1-427f-a439-d451eda02017", #TMI
-                "bc0f047c-01b1-427f-a439-d451eda01112", #Hunter
-                "bc0f047c-01b1-427f-a439-d451eda01062", #Ichi
-                "bc0f047c-01b1-427f-a439-d451eda02020", #Draco
-                "bc0f047c-01b1-427f-a439-d451eda02019", #Caduceus
-                "bc0f047c-01b1-427f-a439-d451eda02013", #Ash 2X3ZB9CY
-                "bc0f047c-01b1-427f-a439-d451eda02002", #Spinal Modem
-#                "bc0f047c-01b1-427f-a439-d451eda01060", #Shipment from Mirrormorph
+   testcards = ["bc0f047c-01b1-427f-a439-d451eda02039", #Corporate Retreat
+                "bc0f047c-01b1-427f-a439-d451eda01004", #Stimhack
+                "bc0f047c-01b1-427f-a439-d451eda02025", #Compromised Employee
+                "bc0f047c-01b1-427f-a439-d451eda02032", #Fetal AI
+                "bc0f047c-01b1-427f-a439-d451eda02026", #Notoriety
+                "bc0f047c-01b1-427f-a439-d451eda02022", #Liberated Account
+                "bc0f047c-01b1-427f-a439-d451eda02040", #Freelancer
+                "bc0f047c-01b1-427f-a439-d451eda02037", #Power Grid Overload
                 "bc0f047c-01b1-427f-a439-d451eda01088"] #Data Raven
    if not ds: 
       if confirm("corp?"): ds = "corp"
@@ -677,8 +691,8 @@ def ShowDicts():
    notify("Stored_Types:\n {}".format(str(Stored_Type)))
    notify("Stored_Costs:\n {}".format(str(Stored_Cost)))
    notify("Stored_Keywords: {}".format(str(Stored_Keywords)))
-   notify("Stored_AA: {}".format(str(Stored_AutoActions)))
-   notify("Stored_AS: {}".format(str(Stored_AutoScripts)))
+   if debugVerbosity >= 4: notify("Stored_AA: {}".format(str(Stored_AutoActions)))
+   if debugVerbosity >= 4: notify("Stored_AS: {}".format(str(Stored_AutoScripts)))
    notify("installedCounts: {}".format(str(installedCount)))
 
 def DebugCard(card, x=0, y=0):

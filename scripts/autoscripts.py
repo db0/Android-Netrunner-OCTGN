@@ -319,7 +319,8 @@ def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
             else: announceText = '{}'.format(me) # A variable with the text to be announced at the end of the action.
             if actionCost.group(2) != '0': # If we need to pay credits
                reduction = reduceCost(card, 'USE', num(actionCost.group(2)))
-               if reduction: extraText = " (reduced by {})".format(uniCredit(reduction))  
+               if reduction > 0: extraText = " (reduced by {})".format(uniCredit(reduction))  
+               elif reduction < 0: extraText = " (increased by {})".format(uniCredit(abs(reduction)))
                else: extraText = ''
                Bcost = payCost(num(actionCost.group(2)) - reduction)
                if Bcost == 'ABORT': # if they can't pay the cost afterall, we return them their clicks and abort.
@@ -419,7 +420,7 @@ def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
 # Other Player trigger
 #------------------------------------------------------------------------------
    
-def autoscriptOtherPlayers(lookup, origin_card, count = 1): # Function that triggers effects based on the opponent's cards.
+def autoscriptOtherPlayers(lookup, origin_card = Identity, count = 1): # Function that triggers effects based on the opponent's cards.
 # This function is called from other functions in order to go through the table and see if other players have any cards which would be activated by it.
 # For example a card that would produce credits whenever a trace was attempted. 
    if not Automations['Triggers']: return
@@ -441,19 +442,7 @@ def autoscriptOtherPlayers(lookup, origin_card, count = 1): # Function that trig
          if not re.search(r'{}'.format(lookup), AutoS): continue # Search if in the script of the card, the string that was sent to us exists. The sent string is decided by the function calling us, so for example the ProdX() function knows it only needs to send the 'GeneratedSpice' string.
          if chkPlayer(AutoS, card.controller,False) == 0: continue # Check that the effect's origninator is valid.
          if re.search(r'onlyOnce',autoS) and oncePerTurn(card, silent = True, act = 'automatic') == 'ABORT': continue # If the card's ability is only once per turn, use it or silently abort if it's already been used
-         chkType = re.search(r'-type([A-Za-z ]+)',autoS)
-         if chkType: #If we have this modulator in the script, then need ot check what type of property it's looking for
-            if debugVerbosity >= 4: notify("### Looking for : {}".format(chkType.group(1)))
-            cardProperties = []
-            del cardProperties [:] # Just in case
-            cardProperties.append(origin_card.Type) # Its type
-            cardSubtypes = getKeywords(origin_card).split('-') # And each individual trait. Traits are separated by " - "
-            for cardSubtype in cardSubtypes:
-               strippedCS = cardSubtype.strip() # Remove any leading/trailing spaces between traits. We need to use a new variable, because we can't modify the loop iterator.
-               if strippedCS: cardProperties.append(strippedCS) # If there's anything left after the stip (i.e. it's not an empty string anymrore) add it to the list.
-            cardProperties.append(origin_card.Side) # We are also going to check if the card is for runner or corp.
-            if debugVerbosity >= 4: notify("### card Properies: {}".format(cardProperties))
-            if not chkType.group(1) in cardProperties: continue 
+         if not checkCardRestrictions(gatherCardProperties(card), prepareRestrictions(autoS)): continue #If we have the '-type' modulator in the script, then need ot check what type of property it's looking for
          if re.search(r'onTriggerCard',autoS): targetCard = [origin_card] # if we have the "-onTriggerCard" modulator, then the target of the script will be the original card (e.g. see Grimoire)
          else: targetCard = None
          if debugVerbosity >= 2: notify("### Automatic Autoscripts: {}".format(AutoS)) # Debug
@@ -662,59 +651,63 @@ def executeTraceEffects(card,Autoscript):
    failedRequirement = False
    X = 0
    Autoscripts = Autoscript.split('||')
-   for AutoS in Autoscripts:
-      selectedAutoscripts = AutoS.split('++')
+   for autoS in Autoscripts:
+      selectedAutoscripts = autoS.split('++')
       if debugVerbosity >= 2: notify ('### selectedAutoscripts: {}'.format(selectedAutoscripts)) # Debug
-      for passedScript in selectedAutoscripts:
-         if debugVerbosity >= 2: notify("### Second Processing: {}".format(passedScript)) # Debug
-         if re.search(r':Pass\b', passedScript): return # Pass is a simple command of doing nothing ^_^
-         targetC = findTarget(passedScript)
-         targetPL = ofwhom(passedScript,card.controller) # So that we know to announce the right person the effect, affects.
-         announceText = "{} uses {}'s ability to".format(targetPL,card) 
-         if debugVerbosity >= 3: notify("#### targetC: {}".format(targetC)) # Debug
-         if regexHooks['GainX'].search(passedScript):
-            gainTuple = GainX(passedScript, announceText, card, notification = 'Quick', n = X)
-            if gainTuple == 'ABORT': break
-            X = gainTuple[1] 
-         elif regexHooks['CreateDummy'].search(passedScript): 
-            if CreateDummy(passedScript, announceText, card, targetC, notification = 'Quick', n = X) == 'ABORT': return
-         elif regexHooks['DrawX'].search(passedScript): 
-            if DrawX(passedScript, announceText, card, targetC, notification = 'Quick', n = X) == 'ABORT': return
-         elif regexHooks['TokensX'].search(passedScript): 
-            if TokensX(passedScript, announceText, card, targetC, notification = 'Quick', n = X) == 'ABORT': return
-         elif regexHooks['RollX'].search(passedScript): 
-            rollTuple = RollX(passedScript, announceText, card, targetC, notification = 'Quick', n = X)
-            if rollTuple == 'ABORT': return
-            X = rollTuple[1] 
-         elif regexHooks['RequestInt'].search(passedScript): 
-            numberTuple = RequestInt(passedScript, announceText, card, targetC, notification = 'Quick', n = X)
-            if numberTuple == 'ABORT': return
-            X = numberTuple[1] 
-         elif regexHooks['DiscardX'].search(passedScript): 
-            discardTuple = DiscardX(passedScript, announceText, card, targetC, notification = 'Quick', n = X)
-            if discardTuple == 'ABORT': return
-            X = discardTuple[1] 
-         elif regexHooks['RunX'].search(passedScript): 
-            if RunX(passedScript, announceText, card, targetC, notification = 'Quick', n = X) == 'ABORT': return
-         elif regexHooks['TraceX'].search(passedScript): 
-            if TraceX(passedScript, announceText, card, targetC, notification = 'Quick', n = X) == 'ABORT': return
-         elif regexHooks['ReshuffleX'].search(passedScript): 
-            reshuffleTuple = ReshuffleX(passedScript, announceText, card, targetC, notification = 'Quick', n = X)
-            if reshuffleTuple == 'ABORT': return
-            X = reshuffleTuple[1]
-         elif regexHooks['ShuffleX'].search(passedScript): 
-            if ShuffleX(passedScript, announceText, card, targetC, notification = 'Quick', n = X) == 'ABORT': return
-         elif regexHooks['ChooseKeyword'].search(passedScript): 
-            if ChooseKeyword(passedScript, announceText, card, targetC, notification = 'Quick', n = X) == 'ABORT': return
-         elif regexHooks['InflictX'].search(passedScript): 
-            if InflictX(passedScript, announceText, card, targetC, notification = 'Quick', n = X) == 'ABORT': return
-         elif regexHooks['ModifyStatus'].search(passedScript): 
-            if ModifyStatus(passedScript, announceText, card, targetC, notification = 'Quick', n = X) == 'ABORT': return
-         elif regexHooks['SimplyAnnounce'].search(passedScript):
-            SimplyAnnounce(passedScript, announceText, card, targetC, notification = 'Quick', n = X)
-         elif debugVerbosity >= 1: notify("#### No regexhook match! :(") # Debug
+      for passedScript in selectedAutoscripts: X = redirect(passedScript, card, 'Quick', X)
       if failedRequirement: break # If one of the Autoscripts was a cost that couldn't be paid, stop everything else.
-      if debugVerbosity >= 2: notify("### Trace Loop for scipt {} finished".format(passedScript))         
+            
+def redirect(Autoscript, card, notificationType = 'Quick', X = 0):
+   if debugVerbosity >= 1: notify(">>> redirect(){}".format(extraASDebug(Autoscript))) #Debug
+   if re.search(r':Pass\b', Autoscript): return # Pass is a simple command of doing nothing ^_^
+   targetC = findTarget(Autoscript)
+   targetPL = ofwhom(Autoscript,card.controller) # So that we know to announce the right person the effect, affects.
+   announceText = "{} uses {}'s ability to".format(targetPL,card) 
+   if debugVerbosity >= 3: notify("#### targetC: {}".format(targetC)) # Debug
+   if regexHooks['GainX'].search(Autoscript):
+      gainTuple = GainX(Autoscript, announceText, card, notificationType, n = X)
+      if gainTuple == 'ABORT': return
+      X = gainTuple[1] 
+   elif regexHooks['CreateDummy'].search(Autoscript): 
+      if CreateDummy(Autoscript, announceText, card, targetC, notificationType, n = X) == 'ABORT': return
+   elif regexHooks['DrawX'].search(Autoscript): 
+      if DrawX(Autoscript, announceText, card, targetC, notificationType, n = X) == 'ABORT': return
+   elif regexHooks['TokensX'].search(Autoscript): 
+      if TokensX(Autoscript, announceText, card, targetC, notificationType, n = X) == 'ABORT': return
+   elif regexHooks['RollX'].search(Autoscript): 
+      rollTuple = RollX(Autoscript, announceText, card, targetC, notificationType, n = X)
+      if rollTuple == 'ABORT': return
+      X = rollTuple[1] 
+   elif regexHooks['RequestInt'].search(Autoscript): 
+      numberTuple = RequestInt(Autoscript, announceText, card, targetC, notificationType, n = X)
+      if numberTuple == 'ABORT': return
+      X = numberTuple[1] 
+   elif regexHooks['DiscardX'].search(Autoscript): 
+      discardTuple = DiscardX(Autoscript, announceText, card, targetC, notificationType, n = X)
+      if discardTuple == 'ABORT': return
+      X = discardTuple[1] 
+   elif regexHooks['RunX'].search(Autoscript): 
+      if RunX(Autoscript, announceText, card, targetC, notificationType, n = X) == 'ABORT': return
+   elif regexHooks['TraceX'].search(Autoscript): 
+      if TraceX(Autoscript, announceText, card, targetC, notificationType, n = X) == 'ABORT': return
+   elif regexHooks['ReshuffleX'].search(Autoscript): 
+      reshuffleTuple = ReshuffleX(Autoscript, announceText, card, targetC, notificationType, n = X)
+      if reshuffleTuple == 'ABORT': return
+      X = reshuffleTuple[1]
+   elif regexHooks['ShuffleX'].search(Autoscript): 
+      if ShuffleX(Autoscript, announceText, card, targetC, notificationType, n = X) == 'ABORT': return
+   elif regexHooks['ChooseKeyword'].search(Autoscript): 
+      if ChooseKeyword(Autoscript, announceText, card, targetC, notificationType, n = X) == 'ABORT': return
+   elif regexHooks['InflictX'].search(Autoscript): 
+      if InflictX(Autoscript, announceText, card, targetC, notificationType, n = X) == 'ABORT': return
+   elif regexHooks['ModifyStatus'].search(Autoscript): 
+      if ModifyStatus(Autoscript, announceText, card, targetC, notificationType, n = X) == 'ABORT': return
+   elif regexHooks['SimplyAnnounce'].search(Autoscript):
+      SimplyAnnounce(Autoscript, announceText, card, targetC, notificationType, n = X)
+   elif debugVerbosity >= 1: notify("#### No regexhook match! :(") # Debug
+   if debugVerbosity >= 2: notify("### Loop for scipt {} finished".format(Autoscript))
+   return X
+
 #------------------------------------------------------------------------------
 # Core Commands
 #------------------------------------------------------------------------------
@@ -724,7 +717,7 @@ def GainX(Autoscript, announceText, card, targetCards = None, notification = Non
    if targetCards is None: targetCards = []
    global maxClicks, lastKnownNrClicks
    gain = 0
-   extraTXT = ''
+   extraText = ''
    reduction = 0
    action = re.search(r'\b(Gain|Lose|SetTo)([0-9]+)([A-Z][A-Za-z &]+)-?', Autoscript)
    if debugVerbosity >= 2: notify("### action groups: {}. Autoscript: {}".format(action.groups(0),Autoscript)) # Debug
@@ -756,7 +749,8 @@ def GainX(Autoscript, announceText, card, targetCards = None, notification = Non
             if debugVerbosity >= 2: notify("#### Checking Cost Reduction")
             reduction = reduceCost(card, actionType, gain * multiplier)
             targetPL.counters['Credits'].value += (gain * multiplier) + reduction
-            if reduction: extraTXT = ' (Reduced by {})'.format(uniCredit(reduction))
+            if reduction > 0: extraText = ' (Reduced by {})'.format(uniCredit(reduction))
+            elif reduction < 0: extraText = " (increased by {})".format(uniCredit(abs(reduction)))
          else: targetPL.counters['Credits'].value += (gain * multiplier) - gainReduce
       if targetPL.counters['Credits'].value < 0: 
          if re.search(r'isCost', Autoscript): notify(":::Warning:::{} did not have enough {} to pay the cost of this action".format(targetPL,action.group(3)))
@@ -831,17 +825,14 @@ def GainX(Autoscript, announceText, card, targetCards = None, notification = Non
          if re.search(r'isCost', Autoscript): verb = 'pay'
          else: verb = 'lose'
       else: verb = 'set to'
-      if notification == 'Quick':
-         if verb == 'gain' or verb == 'lose' or verb == 'pay': verb += 's'
-         else: verb = 'sets to'      
    else: verb = action.group(1) # Automatic notifications start with the verb, so it needs to be capitaliszed. 
    if abs(gain) == abs(999): total = 'all' # If we have +/-999 as the count, then this mean "all" of the particular counter.
    elif action.group(1) == 'Lose' and not re.search(r'isPenalty', Autoscript): total = abs(gain * multiplier) - overcharge
    else: total = abs(gain * multiplier) - reduction# Else it's just the absolute value which we announce they "gain" or "lose"
    closureTXT = ASclosureTXT(action.group(3), total)
    if debugVerbosity >= 2: notify("### Gainx() about to announce")
-   if notification == 'Quick': announceString = "{}{} {} {}{}".format(announceText, otherTXT, verb, closureTXT,extraTXT)
-   else: announceString = "{}{} {} {}{}".format(announceText, otherTXT, verb, closureTXT,extraTXT)
+   if notification == 'Quick': announceString = "{}{} {} {}{}".format(announceText, otherTXT, verb, closureTXT,extraText)
+   else: announceString = "{}{} {} {}{}".format(announceText, otherTXT, verb, closureTXT,extraText)
    if notification and multiplier > 0: notify('--> {}.'.format(announceString))
    if debugVerbosity >= 3: notify("<<< Gain() total: {}".format(total))
    return (announceString,total)
@@ -1328,7 +1319,7 @@ def ModifyStatus(Autoscript, announceText, card, targetCards = None, notificatio
    if debugVerbosity >= 1: notify(">>> ModifyStatus(){}".format(extraASDebug(Autoscript))) #Debug
    if targetCards is None: targetCards = []
    targetCardlist = '' # A text field holding which cards are going to get tokens.
-   extraTXT = ''
+   extraText = ''
    action = re.search(r'\b(Rez|Derez|Expose|Trash|Uninstall|Possess|Exile)(Target|Parent|Multi|Myself)[-to]*([A-Z][A-Za-z&_ ]+)?', Autoscript)
    if action.group(2) == 'Myself': 
       del targetCards[:] # Empty the list, just in case.
@@ -1349,18 +1340,18 @@ def ModifyStatus(Autoscript, announceText, card, targetCards = None, notificatio
       elif action.group(1) == 'Expose': 
          exposeResult = expose(targetCard, silent = True)
          if exposeResult == 'ABORT': return 'ABORT'
-         elif exposeResult == 'COUNTERED': extraTXT = " (Countered!)"
+         elif exposeResult == 'COUNTERED': extraText = " (Countered!)"
       elif action.group(1) == 'Uninstall' and uninstall(targetCard, destination = dest, silent = True) != 'ABORT': pass
       elif action.group(1) == 'Possess' and possess(card, targetCard, silent = True) != 'ABORT': pass
       elif action.group(1) == 'Trash':
          trashResult = intTrashCard(targetCard, fetchProperty(targetCard,'Stat'), "free", silent = True)
          if trashResult == 'ABORT': return 'ABORT'
-         elif trashResult == 'COUNTERED': extraTXT = " (Countered!)"
+         elif trashResult == 'COUNTERED': extraText = " (Countered!)"
       elif action.group(1) == 'Exile' and exileCard(targetCard, silent = True) != 'ABORT': pass
       else: return 'ABORT'
       if action.group(2) != 'Multi': break # If we're not doing a multi-targeting, abort after the first run.
-   if notification == 'Quick': announceString = "{} {}es {}{}".format(announceText, action.group(1), targetCardlist,extraTXT)
-   else: announceString = "{} {} {}{}".format(announceText, action.group(1), targetCardlist, extraTXT)
+   if notification == 'Quick': announceString = "{} {}es {}{}".format(announceText, action.group(1), targetCardlist,extraText)
+   else: announceString = "{} {} {}{}".format(announceText, action.group(1), targetCardlist, extraText)
    if notification: notify('--> {}.'.format(announceString))
    if debugVerbosity >= 3: notify("<<< ModifyStatus()")
    return announceString
@@ -1516,7 +1507,8 @@ def CustomScript(card, action = 'PLAY'): # Scripts that are complex and fairly u
       rnd(1,10)
       shuffle(deck)
       if rabbits: # If the player managed to find and install some extra rabbit holes...
-         if reduction: extraText = " (reduced by {})".format(uniCredit(reduction)) #If it is, make sure to inform.    
+         if reduction > 0: extraText = " (reduced by {})".format(uniCredit(reduction)) #If it is, make sure to inform.    
+         elif reduction < 0: extraText = " (increased by {})".format(uniCredit(abs(reduction)))
          else: extraText = ''
          me.counters['Base Link'].value += rabbits
          notify("{} has extended the Rabbit Hole by {} {} by paying {}{}".format(me,rabbits,uniLink(),uniCredit(totalCost),extraText))
@@ -1698,7 +1690,7 @@ def prepareRestrictions(Autoscript):
    if debugVerbosity >= 1: notify(">>> prepareRestrictions() {}".format(extraASDebug(Autoscript))) #Debug
    validTargets = [] # a list that holds any type that a card must be, in order to be a valid target.
    targetGroups = []
-   whatTarget = re.search(r'\b(at|for)([A-Za-z_{},& ]+)[-]?', Autoscript) # We signify target restrictions keywords by starting a string with "or"
+   whatTarget = re.search(r'\b(at|for|type)([A-Za-z_{},& ]+)[-]?', Autoscript) # We signify target restrictions keywords by starting a string with "or"
    if whatTarget: 
       if debugVerbosity >= 2: notify("### Splitting on _or_") #Debug
       validTargets = whatTarget.group(2).split('_or_') # If we have a list of valid targets, split them into a list, separated by the string "_or_". Usually this results in a list of 1 item.

@@ -218,7 +218,7 @@ Crash Space
 -----
 bc0f047c-01b1-427f-a439-d451eda01030
 -----
-onInstall:Put2Credits||whileRezzed:Reduce#CostDeltag-forAll-excludeDummy||atTurnStart:Refill2Credits-excludeDummy-byMe||onDamage:Put3protectionMeatDMG-trashCost-excludeDummy
+onInstall:Put2Credits||whileRezzed:Reduce#CostDeltag-forAll-excludeDummy-forMe||atTurnStart:Refill2Credits-excludeDummy-byMe||onDamage:Put3protectionMeatDMG-trashCost-excludeDummy
 +++++
 A0B0G0T1:CreateDummy-with3protectionMeatDMG-trashCost
 .....
@@ -234,7 +234,7 @@ Cyberfeeder
 -----
 bc0f047c-01b1-427f-a439-d451eda01005
 -----
-onInstall:Put1Credits||whileRezzed:Reduce#CostUse-forIcebreaker||whileRezzed:Reduce#CostInstall-forVirus||atTurnStart:Refill1Credits-byMe
+onInstall:Put1Credits||whileRezzed:Reduce#CostUse-forIcebreaker-forMe||whileRezzed:Reduce#CostInstall-forVirus-forMe||atTurnStart:Refill1Credits-byMe
 +++++
 	
 .....
@@ -490,7 +490,7 @@ Kate "Mac" McCaffrey
 -----
 bc0f047c-01b1-427f-a439-d451eda01033
 -----
-whileRezzed:Reduce1CostInstall-forHardware-onlyOnce||whileRezzed:Reduce1CostInstall-forProgram-onlyOnce
+whileRezzed:Reduce1CostInstall-forHardware-onlyOnce-forMe||whileRezzed:Reduce1CostInstall-forProgram-onlyOnce-forMe
 +++++
 	
 .....
@@ -546,7 +546,7 @@ Modded
 -----
 bc0f047c-01b1-427f-a439-d451eda01035
 -----
-onPlay:Put3Credits$$Put1Click-isPriority||whileRezzed:Reduce#CostInstall-forHardware-onlyOnce||whileRezzed:Reduce#CostInstall-forProgram-onlyOnce||whileRezzed:Transfer1Click-perCardInstall
+onPlay:Put3Credits$$Put1Click-isPriority||whileRezzed:Reduce#CostInstall-forHardware-onlyOnce-forMe||whileRezzed:Reduce#CostInstall-forProgram-onlyOnce-forMe||whileRezzed:Transfer1Click-perCardInstall
 +++++
 	
 .....
@@ -554,7 +554,7 @@ NBN
 -----
 bc0f047c-01b1-427f-a439-d451eda01080
 -----
-atTurnStart:Refill2Credits-byMe||whileRezzed:Reduce#CostTrace-forAll
+atTurnStart:Refill2Credits-byMe||whileRezzed:Reduce#CostTrace-forAll-forMe
 +++++
 	
 .....
@@ -780,7 +780,7 @@ bc0f047c-01b1-427f-a439-d451eda01070
 -----
 onAccess:Reveal
 +++++
-A0B4G0T0:Inflict3NetDamage-onOpponent-onAccess$$Gain1Tags-onOpponent	
+A0B4G0T0:Inflict3NetDamage-onOpponent-onAccess$$Gain1Tags-onOpponent
 .....
 Sneakdoor Beta
 -----
@@ -802,7 +802,7 @@ Stimhack
 -----
 bc0f047c-01b1-427f-a439-d451eda01004
 -----
-onPlay:RunGeneric$$Put9Credits||whileRunning:Reduce#CostUse-forAll||whileRunning:Reduce#CostPlay-forAll||whileRunning:Reduce#CostTrash-forAll||atJackOut:Inflict1BrainDamage-nonPreventable$$TrashMyself
+onPlay:RunGeneric$$Put9Credits||whileRunning:Reduce#CostAll-forAll-forMe||atJackOut:Inflict1BrainDamage-nonPreventable$$TrashMyself
 +++++
 	
 .....
@@ -834,7 +834,7 @@ The Toolbox
 -----
 bc0f047c-01b1-427f-a439-d451eda01041
 -----
-whileRezzed:Gain2MU$$Gain2Base Link||onInstall:Put2Credits||atTurnStart:Refill2Credits-byMe||whileRezzed:Reduce#CostUse-forIcebreaker
+whileRezzed:Gain2MU$$Gain2Base Link||onInstall:Put2Credits||atTurnStart:Refill2Credits-byMe||whileRezzed:Reduce#CostUse-forIcebreaker-forMe
 +++++
 	
 .....
@@ -930,7 +930,7 @@ Braintrust
 -----
 bc0f047c-01b1-427f-a439-d451eda02014
 -----
-onScore:Put1Agenda-perMarker{Advancement}-ignore3-div2||whileScored:ReduceXCostRez-forICE-perMarker{Agenda}
+onScore:Put1Agenda-perMarker{Advancement}-ignore3-div2||whileScored:ReduceXCostRez-forICE-perMarker{Agenda}-forMe
 +++++
 
 .....
@@ -1034,7 +1034,7 @@ Spinal Modem
 -----
 bc0f047c-01b1-427f-a439-d451eda02002
 -----
-onInstall:Put2Credits||whileRezzed:Gain1MU||atTurnStart:Refill2Credits-byMe||Reduce#CostUse-forIcebreaker||whileRunning:Inflict1BrainDamage-afterUnavoidedTrace-byMe
+onInstall:Put2Credits||whileRezzed:Gain1MU||atTurnStart:Refill2Credits-byMe||Reduce#CostUse-forIcebreaker-forMe||whileRunning:Inflict1BrainDamage-afterUnavoidedTrace-byMe
 +++++
 
 .....
@@ -1058,7 +1058,7 @@ Whizzard
 -----
 bc0f047c-01b1-427f-a439-d451eda02001
 -----
-atTurnStart:Refill3Credits-byMe||Reduce#CostTrash-forAll
+atTurnStart:Refill3Credits-byMe||Reduce#CostTrash-forAll-forMe
 +++++
 
 .....
@@ -1069,6 +1069,166 @@ bc0f047c-01b1-427f-a439-d451eda02007
 
 +++++
 A0B1G0T0:SimplyAnnounce{break code gate subroutine}||A0B1G0T0:Put1PlusOne
+.....
+Amazon Industrial Zone
+-----
+bc0f047c-01b1-427f-a439-d451eda02038
+-----
+
++++++
+
+.....
+Big Brother
+-----
+bc0f047c-01b1-427f-a439-d451eda02035
+-----
+onPlay:Gain2Tags-onOpponent-ifTagged1
++++++
+
+.....
+ChiLo City Grid
+-----
+bc0f047c-01b1-427f-a439-d451eda02036
+-----
+
++++++
+A0B0G0T0:Gain1Tags-onOpponent
+.....
+Compromised Employee
+-----
+bc0f047c-01b1-427f-a439-d451eda02025
+-----
+onInstall:Put1Credits-isSilent||atTurnStart:Refill1Credits||whileRezzed:Reduce#CostTrace-forAll-forMe||whileRezzed:Gain1Credits-perCardRezzed-typeICE
++++++
+
+.....
+Dyson Mem Chip
+-----
+bc0f047c-01b1-427f-a439-d451eda02028
+-----
+whileRezzed:Gain1Base Link$$Gain1MU
++++++
+
+.....
+E3 Feedback Implants
+-----
+bc0f047c-01b1-427f-a439-d451eda02024
+-----
+
++++++
+A0B1G0T0:SimplyAnnounce{break 1 additional subroutine on the current ICE}
+.....
+Encryption Protocol
+-----
+bc0f047c-01b1-427f-a439-d451eda02029
+-----
+whileRezzed:Increase1CostTrash-forAll-forOpponent-ifInstalled
++++++
+
+.....
+Executive Retreat
+-----
+bc0f047c-01b1-427f-a439-d451eda02039
+-----
+onScore:Put1Agenda-isSilent$$ReshuffleHQ
++++++
+A0B0G0T0:Remove1Agenda-isCost$$Draw5Cards
+.....
+Fetal AI
+-----
+bc0f047c-01b1-427f-a439-d451eda02032
+-----
+onAccess:Inflict2NetDamage-onOpponent||onLiberate:Lose2Credits-isCost-onOpponent
++++++
+
+.....
+Freelancer
+-----
+bc0f047c-01b1-427f-a439-d451eda02040
+-----
+onPlay:TrashMulti-Targeted-atResource
++++++
+
+.....
+Jinteki
+-----
+bc0f047c-01b1-427f-a439-d451eda02031
+-----
+
++++++
+
+.....
+Liberated Account
+-----
+bc0f047c-01b1-427f-a439-d451eda02022
+-----
+onInstall:Put16Credits
++++++
+A1B0G0T0:Transfer4Credits$$TrashMyself-ifEmpty	
+.....
+Notoriety
+-----
+bc0f047c-01b1-427f-a439-d451eda02026
+-----
+onPlay:Gain1Agenda Points$$Put1Scored
++++++
+
+.....
+Power Grid Overload
+-----
+bc0f047c-01b1-427f-a439-d451eda02037
+-----
+onPlay:Trace2
++++++
+A0B0G0T0:TrashTarget-Targeted-atHardware
+.....
+Satellite Uplink
+-----
+bc0f047c-01b1-427f-a439-d451eda02023
+-----
+
++++++
+
+.....
+Sensei
+-----
+bc0f047c-01b1-427f-a439-d451eda02034
+-----
+
++++++
+
+.....
+Sherlock 1.0
+-----
+bc0f047c-01b1-427f-a439-d451eda02030
+-----
+
++++++
+
+.....
+Snowball
+-----
+bc0f047c-01b1-427f-a439-d451eda02027
+-----
+
++++++
+
+.....
+Trick of Light
+-----
+bc0f047c-01b1-427f-a439-d451eda02033
+-----
+
++++++
+
+.....
+Vamp
+-----
+bc0f047c-01b1-427f-a439-d451eda02021
+-----
+
++++++
+
 .....
 
 

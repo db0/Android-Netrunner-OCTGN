@@ -25,6 +25,7 @@ import re
 #---------------------------------------------------------------------------
 ds = None # The side of the player. 'runner' or 'corp'
 identName = None # The name of our current identity
+Identity = None
 ModifyDraw = 0 #if True the audraw should warn the player to look at r&D instead 
 
 DifficultyLevels = { }
@@ -253,7 +254,7 @@ def createStartingCards():
  
 def intJackin(group, x = 0, y = 0):
    if debugVerbosity >= 1: notify(">>> intJackin(){}".format(extraASDebug())) #Debug
-   global ds, maxClicks
+   global ds, maxClicks, Identity
    mute()
    if not startupMsg: fetchCardScripts() # We only download the scripts at the very first setup of each play session.
    versionCheck()
@@ -291,24 +292,24 @@ def intJackin(group, x = 0, y = 0):
       if not confirm("We have found illegal cards in your deck. Bypass?"): return
       else: 
          notify("{} has chosen to proceed with an illegal deck.".format(me))
-         identity = deckStatus[1]
-   else: identity = deckStatus[1] # For code readability
+         Identity = deckStatus[1]
+   else: Identity = deckStatus[1] # For code readability
    if debugVerbosity >= 3: confirm("Placing Identity")
-   if debugVerbosity >= 3: notify("Identity is: {}".format(identity))
+   if debugVerbosity >= 3: notify("Identity is: {}".format(Identity))
    if ds == "corp":
-      identity.moveToTable(125, 240)
+      Identity.moveToTable(125, 240)
       rnd(1,10) # Allow time for the ident to be recognised
       maxClicks = 3
       me.MU = 0
-      notify("{} is the CEO of the {} Corporation".format(me,identity))
+      notify("{} is the CEO of the {} Corporation".format(me,Identity))
    else:
-      identity.moveToTable(105, -345)
+      Identity.moveToTable(105, -345)
       rnd(1,10)  # Allow time for the ident to be recognised
       maxClicks = 4
       me.MU = 4
-      BL = num(identity.Cost)
+      BL = num(Identity.Cost)
       me.counters['Base Link'].value = BL
-      notify("{} is representing the Runner {}. They start with {} {}".format(me,identity,BL,uniLink()))
+      notify("{} is representing the Runner {}. They start with {} {}".format(me,Identity,BL,uniLink()))
    if debugVerbosity >= 3: confirm("Creating Starting Cards")
    createStartingCards()
    if debugVerbosity >= 3: confirm("Shuffling Deck")
@@ -433,6 +434,7 @@ def runServer(group, x=0,y=0):
    intRun(1, "Remote")
 
 def jackOut(group=table,x=0,y=0, silent = False):
+   mute()
    if debugVerbosity >= 1: notify(">>> jackOut(). Current status:{}".format(getGlobalVariable('status'))) #Debug
    opponent = ofwhom('-ofOpponent') # First we check if our opponent is a runner or a corp.
    if ds == 'corp': targetPL = opponent
@@ -494,7 +496,8 @@ def pay2andDelTag(group, x = 0, y = 0):
    if ClickCost == 'ABORT': return
    dummyCard = getSpecial('Tracing') # Just a random card to pass to the next function. Can't be bothered to modify the function to not need this.
    reduction = reduceCost(dummyCard, 'DELTAG', 2)
-   if reduction: extraText = " (reduced by {})".format(uniCredit(reduction))
+   if reduction > 0: extraText = " (reduced by {})".format(uniCredit(reduction))
+   elif reduction < 0: extraText = " (increased by {})".format(uniCredit(abs(reduction)))
    if payCost(2 - reduction) == "ABORT": 
       me.Clicks += 1 # If the player didn't notice they didn't have enough credits, we give them back their click
       return # If the player didn't have enough money to pay and aborted the function, then do nothing.
@@ -591,7 +594,8 @@ def advanceCardP(card, x = 0, y = 0):
    ClickCost = useClick()
    if ClickCost == 'ABORT': return
    reduction = reduceCost(card, 'ADVANCEMENT', 1)
-   if reduction: extraText = " (reduced by {})".format(uniCredit(reduction))
+   if reduction > 0: extraText = " (reduced by {})".format(uniCredit(reduction))
+   elif reduction < 0: extraText = " (increased by {})".format(uniCredit(abs(reduction)))
    if payCost(1 - reduction) == "ABORT": 
       me.Clicks += 1 # If the player didn't notice they didn't have enough credits, we give them back their click
       return # If the player didn't have enough money to pay and aborted the function, then do nothing.
@@ -654,7 +658,8 @@ def inputTraceValue (card, x=0,y=0, limit = 0, silent = False):
          whisper(":::Warning::: Trace attempt aborted by player.")
          return 'ABORT'
    reduction = reduceCost(card, 'TRACE', TraceValue)
-   if reduction: extraText = " (reduced by {})".format(uniCredit(reduction))
+   if reduction > 0: extraText = " (reduced by {})".format(uniCredit(reduction))
+   elif reduction < 0: extraText = " (increased by {})".format(uniCredit(abs(reduction)))
    if payCost(TraceValue - reduction)  == 'ABORT': return
    #card.markers[mdict['Credits']] = TraceValue
    if ds == 'corp': 
@@ -777,8 +782,7 @@ def reduceCost(card, action = 'REZ', fullCost = 0, dryRun = False):
          if fullCost == 0: break      
    ### Finally we go through the table and see if there's any cards providing cost reduction
    cardList = sortPriority([c for c in table
-                           if c.controller == me
-                           and c.isFaceUp])
+                           if c.isFaceUp])
    for c in cardList: # Then check if there's other cards in the table that reduce its costs.
       if fullCost == 0: 
          if debugVerbosity >= 2: notify("### No more cost. Aborting")
@@ -787,42 +791,48 @@ def reduceCost(card, action = 'REZ', fullCost = 0, dryRun = False):
       if len(Autoscripts) == 0: continue
       for autoS in Autoscripts:
          if re.search(r'whileRunning', autoS) and not re.search(r'running',status): continue # if the reduction is only during runs, and we're not in a run, bypass this effect
+         if not chkPlayer(autoS, c.controller, False): continue
          if debugVerbosity >= 2: notify("### Checking {} with AS: {}".format(c, autoS)) #Debug
-         reductionSearch = re.search(r'Reduce([0-9#X]+)Cost({}|All)-for([A-Z][A-Za-z ]+)(-not[A-Za-z_& ]+)?'.format(type), autoS) 
+         reductionSearch = re.search(r'(Reduce|Increase)([0-9#X]+)Cost({}|All)-for([A-Z][A-Za-z ]+)(-not[A-Za-z_& ]+)?'.format(type), autoS) 
          if debugVerbosity >= 2: #Debug
             if reductionSearch: notify("!!! Regex is {}".format(reductionSearch.groups()))
             else: notify("!!! No reduceCost regex Match!") 
          if re.search(r'excludeDummy', autoS) and c.highlight == DummyColor: continue 
+         if re.search(r'ifInstalled',autoS) and card.group != table: continue
          if reductionSearch: # If the above search matches (i.e. we have a card with reduction for Rez and a condition we continue to check if our card matches the condition)
             if debugVerbosity >= 3: notify("### Possible Match found in {}".format(c)) # Debug         
-            if reductionSearch.group(4): 
-               exclusion = re.search(r'-not([A-Za-z_& ]+)'.format(type), reductionSearch.group(4))
-               if exclusion and (re.search(r'{}'.format(exclusion.group(1)), fetchProperty(card, 'Type')) or re.search(r'{}'.format(exclusion.group(1)), fetchProperty(card, 'Keywords'))): continue
-            if reductionSearch.group(3) == 'All' or re.search(r'{}'.format(reductionSearch.group(3)), fetchProperty(card, 'Type')) or re.search(r'{}'.format(reductionSearch.group(3)), fetchProperty(card, 'Keywords')): #Looking for the type of card being reduced into the properties of the card we're currently paying.
-               if debugVerbosity >= 3: notify(" ### Search match! Group is {}".format(reductionSearch.group(1))) # Debug
+            if reductionSearch.group(4) == 'All' or checkCardRestrictions(gatherCardProperties(card), prepareRestrictions(autoS)):
+               if debugVerbosity >= 3: notify(" ### Search match! Reduction Value is {}".format(reductionSearch.group(2))) # Debug
                if re.search(r'onlyOnce',autoS):
                   if dryRun: # For dry Runs we do not want to add the "Activated" token on the card. 
                      if oncePerTurn(c, act = 'dryRun') == 'ABORT': continue 
                   else:
                      if oncePerTurn(c, act = 'automatic') == 'ABORT': continue # if the card's effect has already been used, check the next one
-               if reductionSearch.group(1) == '#': 
+               if reductionSearch.group(2) == '#': 
                   markersCount = c.markers[mdict['Credits']]
                   markersRemoved = 0
                   while fullCost > 0 and markersCount > 0:
                      if debugVerbosity >= 2: notify("### Reducing Cost with and Markers from {}".format(c)) # Debug
-                     reduction += 1
-                     fullCost -= 1
+                     if reductionSearch.group(1) == 'Reduce':
+                        reduction += 1
+                        fullCost -= 1
+                     else: # If it's not a reduction, it's an increase in the cost.
+                        reduction -= 1
+                        fullCost += 1                     
                      markersCount -= 1
                      markersRemoved += 1
                   if not dryRun: c.markers[mdict['Credits']] -= markersRemoved # If we have a dryRun, we don't remove any tokens.
-               elif reductionSearch.group(1) == 'X':
+               elif reductionSearch.group(2) == 'X':
                   markerName = re.search(r'-perMarker{([\w ]+)}', autoS)
                   try: 
                      marker = findMarker(c, markerName.group(1))
-                     if marker: reduction = c.markers[marker]
+                     if marker: 
+                        if reductionSearch.group(1) == 'Reduce': reduction = c.markers[marker]
+                        else: reduction = -c.markers[marker]
                   except: notify("!!!ERROR!!! ReduceXCost - Bad Script")
                else:
-                  reduction += num(reductionSearch.group(1)) # if there is a match, the total reduction for this card's cost is increased.
+                  if reductionSearch.group(1) == 'Reduce': reduction += num(reductionSearch.group(2)) # if there is a match, the total reduction for this card's cost is increased.
+                  else: reduction -= num(reductionSearch.group(2)) # if there is a match, the total reduction for this card's cost is increased.
    return reduction
 
 def intdamageDiscard(group,x=0,y=0):
@@ -1062,6 +1072,7 @@ def scrTargetAgenda(group = table, x = 0, y = 0):
             return
    notify("You need to target an unscored agenda in order to use this action")
          
+
 def RDaccessX(group = table, x = 0, y = 0): # A function which looks at the top X cards of the corp's deck and then asks the runner what to do with each one.
    if debugVerbosity >= 1: notify(">>> RDaccessX(){}".format(extraASDebug())) #Debug
    mute()
@@ -1088,13 +1099,21 @@ def RDaccessX(group = table, x = 0, y = 0): # A function which looks at the top 
       RDtop[iter].moveToBottom(targetPL.piles['Heap/Archives(Face-up)'])
       if debugVerbosity >= 4: notify("#### Looping...")
       loopChk(RDtop[iter],'Type')
-      if re.search(r'onAccess:Reveal',CardsAS.get(RDtop[iter].model,'')):
-         RDtop[iter].moveToTable(0, 0 + yaxisMove(RDtop[iter]), False)
-         RDtop[iter].highlight = RevealedColor         
-         information("Ambush! You have stumbled into a {}\
-                   \n(This card activates even on access from R&D.)\
-                 \n\nYour blunder has already triggered the alarms. Please wait until corporate OpSec has decided whether to use its effects or not, before pressing any button\
-                  ".format(RDtop[iter].name))
+      accessRegex = re.search(r'onAccess:([^|]+)',CardsAS.get(RDtop[iter].model,''))
+      if accessRegex:
+         if debugVerbosity >= 2: notify("#### accessRegex found! {}".format(accessRegex.group(1)))
+         notify("{} has just accessed a {}!".format(me,RDtop[iter]))
+         Autoscripts = accessRegex.group(1).split('$$')
+         X = 0
+         for autoS in Autoscripts:
+            if autoS == 'Reveal':
+               RDtop[iter].moveToTable(0, 0 + yaxisMove(RDtop[iter]), False)
+               RDtop[iter].highlight = RevealedColor         
+               information("Ambush! You have stumbled into a {}\
+                         \n(This card activates even on access from R&D.)\
+                       \n\nYour blunder has already triggered the alarms. Please wait until corporate OpSec has decided whether to use its effects or not, before pressing any button\
+                        ".format(RDtop[iter].name))
+            else: X = redirect(autoS, RDtop[iter], 'Quick', X)
       if debugVerbosity >= 4: notify("#### Storing...")
       storeProperties(RDtop[iter]) # Otherwise trying to trash the card will crash because of reduceCost()
       cType = RDtop[iter].Type
@@ -1261,7 +1280,8 @@ def intRez (card, cost = 'not free', x=0, y=0, silent = False):
       notify("{} cancels their action".format(me))
       return
    reduction = reduceCost(card, 'REZ', num(fetchProperty(card, 'Cost')))
-   if reduction: extraText = " (reduced by {})".format(uniCredit(reduction))
+   if reduction > 0: extraText = " (reduced by {})".format(uniCredit(reduction))
+   elif reduction < 0: extraText = " (increased by {})".format(uniCredit(abs(reduction)))
    increase = findExtraCosts(card, 'REZ')
    rc = payCost(num(fetchProperty(card, 'Cost')) - reduction + increase, cost)
    if rc == "ABORT": return # If the player didn't have enough money to pay and aborted the function, then do nothing.
@@ -1275,6 +1295,7 @@ def intRez (card, cost = 'not free', x=0, y=0, silent = False):
       if card.Type == 'Upgrade': notify("{} has installed {} {}{}.".format(me, card, rc, extraText))
    random = rnd(10,100) # Bug workaround.
    executePlayScripts(card,'REZ')
+   autoscriptOtherPlayers('CardRezzed',card)
     
 def rezForFree (card, x = 0, y = 0):
    if debugVerbosity >= 1: notify(">>> rezForFree(){}".format(extraASDebug())) #Debug
@@ -1339,7 +1360,7 @@ def clearAll(markersOnly = False, allPlayers = False): # Just clears all the pla
       if allPlayers: clear(card,silent = True)
       elif card.controller == me: clear(card,silent = True)
       if not markersOnly:
-         if card.isFaceUp and (card.Type == 'Operation' or card.Type == 'Event') and card.highlight != DummyColor and card.highlight != RevealedColor and card.highlight != InactiveColor:
+         if card.isFaceUp and (card.Type == 'Operation' or card.Type == 'Event') and card.highlight != DummyColor and card.highlight != RevealedColor and card.highlight != InactiveColor and not card.markers[mdict['Scored']]: # We do not trash "scored" events (e.g. see Notoriety)
             intTrashCard(card,0,"free") # Clearing all Events and operations for players who keep forgeting to clear them.
    if debugVerbosity >= 3: notify("<<< clearAll()")
    
@@ -1373,7 +1394,8 @@ def intTrashCard(card, stat, cost = "not free",  ClickCost = '', silent = False)
       return
    else: DummyTrashWarn = False
    reduction = reduceCost(card, 'TRASH', num(stat)) # So as not to waste time.
-   if reduction: extraText = " (reduced by {})".format(uniCredit(reduction))    
+   if reduction > 0: extraText = " (reduced by {})".format(uniCredit(reduction))    
+   elif reduction < 0: extraText = " (increased by {})".format(uniCredit(abs(reduction)))
    rc = payCost(num(stat) - reduction, cost)
    if rc == "ABORT": return 'ABORT' # If the player didn't have enough money to pay and aborted the function, then do nothing.
    elif rc == 0: 
@@ -1392,7 +1414,9 @@ def intTrashCard(card, stat, cost = "not free",  ClickCost = '', silent = False)
       if card.Type == 'Agenda' and card.markers[mdict['Scored']]: 
          me.counters['Agenda Points'].value -= num(card.Stat) # Trashing Agendas for any reason, now takes they value away as well.
          notify("--> {} loses {} Agenda Points".format(me, card.Stat))
-      if card.highlight != RevealedColor: executePlayScripts(card,'TRASH') # We don't want to run automations on simply revealed cards.
+      if card.highlight != RevealedColor: 
+         executePlayScripts(card,'TRASH') # We don't want to run automations on simply revealed cards.
+         autoscriptOtherPlayers('CardTrashed',card)
       clearAttachLinks(card)
       card.moveTo(cardowner.piles['Heap/Archives(Face-up)'])
    elif (ds == "runner" and card.controller == me) or (ds == "runner" and card.controller != me and cost == "not free") or (ds == "corp" and card.controller != me ): 
@@ -1480,7 +1504,6 @@ def exileCard(card, silent = False):
       card.moveTo(shared.exile)
    if not silent: notify("{} exiled {}{}.".format(me,card,MUtext))
    
-   
 def uninstall(card, x=0, y=0, destination = 'hand', silent = False):
    if debugVerbosity >= 1: notify(">>> uninstall(){}".format(extraASDebug())) #Debug
    # Returns an installed card into our hand.
@@ -1496,6 +1519,7 @@ def uninstall(card, x=0, y=0, destination = 'hand', silent = False):
       if card.isFaceUp: MUtext = chkRAM(card, 'UNINSTALL')
       else: MUtext = ''
       executePlayScripts(card,'UNINSTALL')
+      autoscriptOtherPlayers('CardUninstalled',card)
       clearAttachLinks(card)
       card.moveTo(group)
    if not silent: notify("{} uninstalled {}{}.".format(me,card,MUtext))
@@ -1660,7 +1684,8 @@ def intPlay(card, cost = 'not free'):
          notify("{} to install a hidden resource.".format(ClickCost))
          return
       reduction = reduceCost(card, action, num(card.Cost)) #Checking to see if the cost is going to be reduced by cards we have in play.
-      if reduction: extraText = " (reduced by {})".format(uniCredit(reduction)) #If it is, make sure to inform.
+      if reduction > 0: extraText = " (reduced by {})".format(uniCredit(reduction)) #If it is, make sure to inform.
+      elif reduction < 0: extraText = " (increased by {})".format(uniCredit(abs(reduction)))
       rc = payCost(num(card.Cost) - reduction, cost)
       if rc == "ABORT": 
          me.Clicks += NbReq # If the player didn't notice they didn't have enough credits, we give them back their click
@@ -1681,7 +1706,8 @@ def intPlay(card, cost = 'not free'):
       else: notify("{}{} to play {}{}{}.".format(ClickCost, rc, card, extraText,MUtext))
    else:
       reduction = reduceCost(card, action, num(card.Cost)) #Checking to see if the cost is going to be reduced by cards we have in play.
-      if reduction: extraText = " (reduced by {})".format(uniCredit(reduction)) #If it is, make sure to inform.
+      if reduction > 0: extraText = " (reduced by {})".format(uniCredit(reduction)) #If it is, make sure to inform.
+      elif reduction < 0: extraText = " (increased by {})".format(uniCredit(abs(reduction)))
       rc = payCost(num(card.Cost) - reduction, cost)
       if rc == "ABORT": 
          me.Clicks += NbReq # If the player didn't notice they didn't have enough credits, we give them back their click
