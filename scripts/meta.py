@@ -567,7 +567,7 @@ def fetchCardScripts(group = table, x=0, y=0): # Creates 2 dictionaries with all
    if debugVerbosity >= 1: notify(">>> fetchCardScripts()") #Debug
    global CardsAA, CardsAS # Global dictionaries holding Card AutoActions and Card AutoScripts for all cards.
    whisper("+++ Fetching fresh scripts. Please Wait...")
-   if len(players) > 1 or debugVerbosity == 0:
+   if (len(players) > 1 or debugVerbosity == 0) and me.name != 'dbzer0': # I put my debug account to always use local scripts.
       try: (ScriptsDownload, code) = webRead('https://raw.github.com/db0/Android-Netrunner-OCTGN/master/scripts/CardScripts.py',5000)
       except: 
          if debugVerbosity >= 0: notify("Timeout Error when trying to download scripts")
@@ -659,10 +659,10 @@ def TrialError(group, x=0, y=0): # Debugging
                 "bc0f047c-01b1-427f-a439-d451eda02025", #Compromised Employee
                 "bc0f047c-01b1-427f-a439-d451eda02032", #Fetal AI
                 "bc0f047c-01b1-427f-a439-d451eda02026", #Notoriety
-                "bc0f047c-01b1-427f-a439-d451eda02022", #Liberated Account
-                "bc0f047c-01b1-427f-a439-d451eda02040", #Freelancer
-                "bc0f047c-01b1-427f-a439-d451eda02037", #Power Grid Overload
-                "bc0f047c-01b1-427f-a439-d451eda01088"] #Data Raven
+                "bc0f047c-01b1-427f-a439-d451eda02002", #Spinal Modem
+                "bc0f047c-01b1-427f-a439-d451eda02021", #Vamp
+                "bc0f047c-01b1-427f-a439-d451eda02033", #Trick of Light
+                "bc0f047c-01b1-427f-a439-d451eda02030"] #Sherlock
    if not ds: 
       if confirm("corp?"): ds = "corp"
       else: ds = "runner"

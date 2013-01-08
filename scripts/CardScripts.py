@@ -1034,7 +1034,7 @@ Spinal Modem
 -----
 bc0f047c-01b1-427f-a439-d451eda02002
 -----
-onInstall:Put2Credits||whileRezzed:Gain1MU||atTurnStart:Refill2Credits-byMe||Reduce#CostUse-forIcebreaker-forMe||whileRunning:Inflict1BrainDamage-afterUnavoidedTrace-byMe
+onInstall:Put2Credits-isSilent||whileInstalled:Gain1MU||atTurnStart:Refill2Credits-byMe||whileRezzed:Reduce#CostUse-forIcebreaker-forMe||whileRunning:Inflict1BrainDamage-afterUnavoidedTrace-byMe
 +++++
 
 .....
@@ -1170,7 +1170,7 @@ Notoriety
 -----
 bc0f047c-01b1-427f-a439-d451eda02026
 -----
-onPlay:Gain1Agenda Points$$Put1Scored
+onPlay:Gain1Agenda Points$$Put1Scored-isSilent
 +++++
 
 .....
@@ -1186,7 +1186,7 @@ Satellite Uplink
 -----
 bc0f047c-01b1-427f-a439-d451eda02023
 -----
-
+onPlay:ExposeMulti-Targeted-isUnrezzed
 +++++
 
 .....
@@ -1196,7 +1196,7 @@ bc0f047c-01b1-427f-a439-d451eda02034
 -----
 
 +++++
-
+A0B0G0T0:RunEnd-isSubroutine
 .....
 Sherlock 1.0
 -----
@@ -1204,15 +1204,15 @@ bc0f047c-01b1-427f-a439-d451eda02030
 -----
 
 +++++
-
+A0B0G0T0:Trace4||A0B0G0T0:UninstallTarget-toStack-Targeted-atProgram
 .....
 Snowball
 -----
 bc0f047c-01b1-427f-a439-d451eda02027
 -----
-
+atJackOut:Remove999Snowball
 +++++
-
+A0B1G0T0:SimplyAnnounce{break barrier subroutine}$$Put1Snowball||A0B1G0T0:Put1PlusOne	
 .....
 Trick of Light
 -----
@@ -1226,7 +1226,7 @@ Vamp
 -----
 bc0f047c-01b1-427f-a439-d451eda02021
 -----
-
+onPlay:RunHQ||atSuccessfulRun:RequestInt-Msg{How many credits do you want to burn?}$$Lose1Credits-perX-isCost-isOptional-isAlternativeRunResult$$Lose1Credits-perX-ofOpponent$$Gain1Tags$$TrashMyself-ifSuccessfulRunHQ
 +++++
 
 .....

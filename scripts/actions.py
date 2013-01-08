@@ -408,6 +408,7 @@ def intRun(aCost = 1, Name = 'R&D', silent = False):
       else: announceTXT = Name
       notify ("{} to start a run on {}.".format(ClickCost,announceTXT))
    targetPL = ofwhom('-ofOpponent')
+   if debugVerbosity >= 2: notify("Setting bad publicity")
    BadPub = targetPL.counters['Bad Publicity'].value
    enemyIdent = getSpecial('Identity',targetPL)
    myIdent = getSpecial('Identity',me)
@@ -1011,7 +1012,7 @@ def findCounterPrevention(count, counter, targetPL): # Find out if the player ha
    
 def scrAgenda(card, x = 0, y = 0):
    if debugVerbosity >= 1: notify(">>> scrAgenda(){}".format(extraASDebug())) #Debug
-   global scoredAgendas
+   #global scoredAgendas
    mute()
    cheapAgenda = False
    storeProperties(card)
@@ -1046,9 +1047,10 @@ def scrAgenda(card, x = 0, y = 0):
       else: extraTXT = ''
       if debugVerbosity >= 2: notify("### About to Score")
       me.counters['Agenda Points'].value += ap - apReduce
-      if ds == 'corp': card.moveToTable(495 + (scoredAgendas * 15), 8, False) # Location of the Agenda Scoring point for the Corp.
-      else: card.moveToTable(336 + (scoredAgendas * 15), -206, False) # Location of the Agenda Scoring point for the Runner.
-      scoredAgendas += 1
+      placeCard(card, action = 'SCORE')
+      #if ds == 'corp': card.moveToTable(495 + (scoredAgendas * 15), 8, False) # Location of the Agenda Scoring point for the Corp.
+      #else: card.moveToTable(336 + (scoredAgendas * 15), -206, False) # Location of the Agenda Scoring point for the Runner.
+      #scoredAgendas += 1
       notify("{} {}s {} and receives {} agenda point(s){}".format(me, agendaTxt.lower(), card, ap - apReduce,extraTXT))
       if cheapAgenda: notify(":::Warning:::{} did not have enough advance tokens ({} out of {})! ".format(card,currentAdv,card.Cost))
       executePlayScripts(card,agendaTxt)

@@ -529,7 +529,7 @@ def atTimedEffects(Time = 'Start'): # Function which triggers card effects at th
             TitleDone = True
             if debugVerbosity >= 2: notify("### passedScript: {}".format(passedScript))
             if card.highlight == DummyColor: announceText = "{}'s lingering effects:".format(card)
-            else: announceText = "{}:".format(card)
+            else: announceText = "{} triggers to".format(card)
             if regexHooks['GainX'].search(passedScript):
                gainTuple = GainX(passedScript, announceText, card, notification = 'Automatic', n = X)
                if gainTuple == 'ABORT': break
@@ -723,7 +723,7 @@ def GainX(Autoscript, announceText, card, targetCards = None, notification = Non
    if debugVerbosity >= 2: notify("### action groups: {}. Autoscript: {}".format(action.groups(0),Autoscript)) # Debug
    gain += num(action.group(2))
    targetPL = ofwhom(Autoscript, card.controller)
-   if targetPL != me and not notification: otherTXT = ' force {} to'.format(targetPL)
+   if targetPL != me: otherTXT = ' force {} to'.format(targetPL)
    else: otherTXT = ''
    if re.search(r'ifTagged', Autoscript) and targetPL.Tags == 0:
       whisper("Your opponent needs to be tagged to use this action")
@@ -760,6 +760,9 @@ def GainX(Autoscript, announceText, card, targetCards = None, notification = Non
       if action.group(1) == 'SetTo': targetPL.counters['Agenda Points'].value = 0 # If we're setting to a specific value, we wipe what it's currently.
       if gain == -999: targetPL.counters['Agenda Points'].value = 0
       else: targetPL.counters['Agenda Points'].value += (gain * multiplier) - gainReduce
+      if me.counters['Agenda Points'].value >= 7: 
+         notify("{} wins the game!".format(me))
+         reportGame()      
       if targetPL.counters['Agenda Points'].value < 0: 
          if re.search(r'isCost', Autoscript): notify(":::Warning:::{} did not have enough {} to pay the cost of this action".format(targetPL,action.group(3)))
          elif re.search(r'isPenalty', Autoscript): pass #If an action is marked as penalty, it means that the value can go negative and the player will have to recover that amount.
@@ -1610,7 +1613,7 @@ def findTarget(Autoscript, fromHand = False, card = None): # Function for findin
                      if debugVerbosity >= 3: notify("### About to append {}".format(targetLookup)) #Debug
                      foundTargets.append(targetLookup) # I don't know why but the first match is always processed twice by the for loop.
                elif debugVerbosity >= 3: notify("### findTarget() Rejected {}".format(targetLookup))# Debug
-         if debugVerbosity >= 2: notify("### Finished seeking. foundTargets List = {}".format(foundTargets))
+         if debugVerbosity >= 2: notify("### Finished seeking. foundTargets List = {}".format([T.name for T in foundTargets]))
          if re.search(r'DemiAutoTargeted', Autoscript):
             if debugVerbosity >= 2: notify("### Checking DemiAutoTargeted switches")# Debug
             targetNRregex = re.search(r'-choose([1-9])',Autoscript)
@@ -1653,7 +1656,7 @@ def findTarget(Autoscript, fromHand = False, card = None): # Function for findin
             choiceType = re.search(r'-choose([0-9]+)',Autoscript)
             targetChoices = makeChoiceListfromCardList(foundTargets)
             if not card: choiceTitle = "Choose one of the valid targets for this effect"
-            else: choiceTitle = "Choose one of the valid targets for {}'s ability".format(card.name)
+            else: choiceTitle = "Choose one of the valid targets for {}'s ability".format(fetchProperty(card, 'name'))
             if debugVerbosity >= 2: notify("### Checking for SingleChoice")# Debug
             if choiceType.group(1) == '1':
                if len(foundTargets) == 1: choice = 0 # If we only have one valid target, autoselect it.
@@ -1669,6 +1672,7 @@ def findTarget(Autoscript, fromHand = False, card = None): # Function for findin
    
 def gatherCardProperties(card):
    if debugVerbosity >= 1: notify(">>> gatherCardProperties()") #Debug
+   storeProperties(card)
    cardProperties = []
    if debugVerbosity >= 4: notify("### Appending name") #Debug                
    cardProperties.append(fetchProperty(card, 'name')) # We are going to check its name
@@ -1777,6 +1781,35 @@ def checkSpecialRestrictions(Autoscript,card):
    if debugVerbosity >= 1: notify("<<< checkSpecialRestrictions() with return {}".format(validCard)) #Debug
    return validCard
 
+def makeChoiceListfromCardList(cardList):
+# A function that returns a list of strings suitable for a choice menu, out of a list of cards
+# Each member of the list includes a card's name, traits, resources, markers and, if applicable, combat icons
+   if debugVerbosity >= 1: notify(">>> makeChoiceListfromCardList()")
+   targetChoices = []
+   if debugVerbosity >= 2: notify("### About to prepare choices list.")# Debug
+   for T in cardList:
+      if debugVerbosity >= 4: notify("### Checking {}".format(T))# Debug
+      markers = 'Counters:'
+      if T.markers[mdict['Advance']] and T.markers[mdict['Advance']] >= 1: markers += " {} Advance,".format(T.markers[mdict['Advance']])
+      if T.markers[mdict['Credits']] and T.markers[mdict['Credits']] >= 1: markers += " {} Credits,".format(T.markers[mdict['Credits']])
+      if T.markers[mdict['Power']] and T.markers[mdict['Power']] >= 1: markers += " {} Power.".format(T.markers[mdict['Power']])
+      if T.markers[mdict['Virus']] and T.markers[mdict['Virus']] >= 1: markers += " {} Virus.".format(T.markers[mdict['Virus']])
+      if T.markers[mdict['Agenda']] and T.markers[mdict['Agenda']] >= 1: markers += " {} Agenda.".format(T.markers[mdict['Agenda']])
+      if markers != 'Counters:': markers += '\n'
+      else: markers = ''
+      if debugVerbosity >= 4: notify("### Finished Adding Markers. Adding stats...")# Debug               
+      stats = ''
+      stats += "Cost: {}. ".format(fetchProperty(card, 'Cost'))
+      cStat = fetchProperty(card, 'Stat')
+      cType = fetchProperty(card, 'Type')
+      if cType == 'ICE': stats += "Strength: {}.".format(cStat)
+      if cType == 'Agenda': stats += "Agenda Points: {}.".format(cStat)
+      if cType == 'Asset' or cType == 'Upgrade': stats += "Trash Cost: {}.".format(cStat)
+      if debugVerbosity >= 4: notify("### Finished Adding Stats. Going to choice...")# Debug               
+      choiceTXT = "{}\n{}\n{}{}".format(fetchProperty(card, 'name'),cType,markers,stats)
+      targetChoices.append(choiceTXT)
+   return targetChoices
+   if debugVerbosity >= 3: notify("<<< makeChoiceListfromCardList()")
    
 def chkWarn(card, Autoscript): # Function for checking that an autoscript announces a warning to the player
    if debugVerbosity >= 1: notify(">>> chkWarn(){}".format(extraASDebug(Autoscript))) #Debug
@@ -1833,6 +1866,7 @@ def ASclosureTXT(string, count): # Used by Gain and Transfer, to return unicode 
 def ofwhom(Autoscript, controller = me): 
    if debugVerbosity >= 1: notify(">>> ofwhom(){}".format(extraASDebug(Autoscript))) #Debug
    if re.search(r'o[fn]Opponent', Autoscript):
+      if debugVerbosity >= 2:  notify("### Autoscript requirement found!")
       if len(players) > 1:
          if controller == me: # If we're the current controller of the card who's scripts are being checked, then we look for our opponent
             for player in players:
@@ -1845,10 +1879,12 @@ def ofwhom(Autoscript, controller = me):
          if debugVerbosity >= 1: whisper("There's no valid Opponents! Selecting myself.")
          targetPL = me
    else: 
+      if debugVerbosity >= 2:  notify("### No autoscript requirement found")
       if len(players) > 1:
          if controller != me: targetPL = controller         
          else: targetPL = me
       else: targetPL = me
+   if debugVerbosity >= 3:  notify("<<< ofwhom() returning {}".format(targetPL.name))
    return targetPL
    
 def per(Autoscript, card = None, count = 0, targetCards = None, notification = None): # This function goes through the autoscript and looks for the words "per<Something>". Then figures out what the card multiplies its effect with, and returns the appropriate multiplier.

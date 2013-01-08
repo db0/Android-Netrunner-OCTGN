@@ -1,29 +1,30 @@
-2.0.1.2||
+2.1.0||
 ======New Version Information======
 
 (Note: 2.0.1 fixes broken statistics collection and some other minor bugs. Please update)
 
-What Lies Ahead?
+More than a Trace Amount of updates
 
-Why, the new update of the ANR plugin for OCTGN is now live, of course! 
-This not only includes the latest expansion but also significantly updated scripts to support it.
+The latest data pack is now live on OCTGN and it comes with a another hefty upgrade of systems.
 
-=== IMPORTANT INFORMATION ===
+:::IMPORTANT::: There's two significant changes other than the availability of the latest data pack.
 
-With version 2.0.0, trace effects are now automated as well. This means that the effects of failed traces will happen as soon as the runner fails to reach the appropriate link.
-Because of the way this works THE RUNNER MUST USE THE TRACE CARD to calculate, compare and announce their base link strength. 
-This applies even if you already exceed the current trace!
+1. Card can now be hosted properly on other cards. Cards which require a host will not be able to be played, unless you've targeted an appropriate host for them
+This affects cards like Parasite and Personal Touch but on the background it also is working for Daemons like Djinn.
 
-What this means for eveyrone is less abilities per card and less clicking around after traces to being their effects.
-It also means that I can now also automate abilities such as the one from Spinal Modem.
+A hosted card will be trashed if its host ever leaves play. You don't need to do it manually anymore. 
+This is important because now trashing a Djinn which hosts programs will trash all its hosted programs as well. Yes, this will also cascade on nested Djinns as it should ;)
 
-Because of the above changes, I have progressed to v2.0.0 of the plugin, which makes your existing sets incompatible. 
-I have already created a patch so all you need to do is patch your existing core set and you're good to go!
+2. There's a new function which allows the runner to access cards in a fort. It's in the table menu under "Access Target".
+You should use this after you've just had a successful run on a fort and the Corp has passed on rezzing or triggering any abilities.
 
-You can find the What Lies Ahead expansion at the forum.
+It will provide a function similar to the one when you access R&D or HQ, which will also automatically trigger abilities such as the Fetal AI, and require less actions from you.
 
-Now go forth and run!
+-- So remember, once you succeed a run on a remote server, check if the Corp wants to rez anything, and if not, target all cards in the root of the fort and "Access Target". --
+
+Because of the scale of the updates to make the new set work, I'm forcing a set upgrade to 2.1.0. Patches have been provided as usual.
+Happy Trace Dodging!
 ===============================
 ||
-Latest Core Set: 2.0.0
-Latest Markers Set: 2.0.0
+Latest Core Set: 2.1.0
+Latest Markers Set: 2.1.0

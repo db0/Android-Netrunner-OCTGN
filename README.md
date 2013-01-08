@@ -48,6 +48,16 @@ Shaper running on a heavily fortifield Haas-Bioroid server
 Changelog
 ---------
 
+### v2.1.0
+
+* Card can now be hosted properly on other cards. Cards which require a host will not be able to be played, unless you've targeted an appropriate host for them
+  This affects cards like Parasite and Personal Touch but on the background it also is working for Daemons like Djinn.
+  A hosted card will be trashed if its host ever leaves play. You don't need to do it manually anymore. 
+  This is important because now trashing a Djinn which hosts programs will trash all its hosted programs as well. Yes, this will also cascade on nested Djinns as it should ;)  
+* There's a new function which allows the runner to access cards in a fort. It's in the table menu under "Access Target".
+  You should use this after you've just had a successful run on a fort and the Corp has passed on rezzing or triggering any abilities.
+* Many more to add later.
+
 ### v.2.0.1.2 
 
 * Fixed Spinal Modem working outside of runs
