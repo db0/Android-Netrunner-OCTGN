@@ -1,9 +1,7 @@
 2.1.0||
 ======New Version Information======
 
-(Note: 2.0.1 fixes broken statistics collection and some other minor bugs. Please update)
-
-More than a Trace Amount of updates
+More than a Trace Amount of updates! :)
 
 The latest data pack is now live on OCTGN and it comes with a another hefty upgrade of systems.
 
