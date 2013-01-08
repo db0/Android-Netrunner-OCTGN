@@ -101,13 +101,13 @@
    <!-- <cardaction menu="Reveal" default="false" execute="revealTraceValue" /> -->
       <groupaction menu="Modify your max actions per turn" default="false" execute="modClicks" />
       <cardaction menu="Inspect" default="false" shortcut="Ctrl+I" execute="inspectCard" />
-      <cardaction menu="Access Target" default="false" shortcut="Ctrl+Enter" execute="accessTarget" />
       <cardaction menu="(Un)Expose" default="false" shortcut="Ctrl+E" execute="expose" />
       <cardaction menu="Prioritize" default="false" shortcut="Ctrl+P" execute="prioritize" />
       <cardaction menu="Uninstall" default="false" shortcut="Ctrl+U" execute="uninstall" />
       <cardaction menu="Score Agenda" default="false" shortcut="Ctrl+G" execute="scrAgenda" />
       <cardaction menu="Pay and &#9167;" default="false" shortcut="Ctrl+del" execute="trashCard" />
       <cardaction menu="&#9167; at No Cost" default="false" shortcut="del" execute="trashForFree" />
+      <groupaction menu="Access Target" default="false" shortcut="Ctrl+Enter" execute="accessTarget" />
       <groupaction menu="Pay and &#9167; Target (Resource, Asset or Upgrade)" default="false" shortcut="Ctrl+del" execute="trashTargetPaid" />
       <groupaction menu="&#9167; Target for free" default="false" shortcut="del" execute="trashTargetFree" />
       <groupaction menu="Create new Remote Server" default="false" shortcut="Ctrl+S" execute="createRemoteServer" />

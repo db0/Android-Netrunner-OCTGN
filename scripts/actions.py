@@ -1072,7 +1072,85 @@ def scrTargetAgenda(group = table, x = 0, y = 0):
             return
    notify("You need to target an unscored agenda in order to use this action")
          
-
+def accessTarget(group = table, x = 0, y = 0):
+   if debugVerbosity >= 1: notify(">>> accessTarget()") #Debug
+   mute()
+   targetPL = ofwhom('-ofOpponent')
+   cardList = [c for c in table 
+               if c.targetedBy 
+               and c.targetedBy == me 
+               and c.controller == targetPL
+               and not c.markers[mdict['Scored']]
+               and c.Type != 'Server' 
+               and c.Type != 'Remote Server']
+   for card in cardList:
+      cFaceD = False
+      if not card.isFaceUp:
+         card.isFaceUp = True
+         rnd(1,100)
+         cFaceD = True
+      card.highlight = RevealedColor
+      storeProperties(card)
+      accessRegex = re.search(r'onAccess:([^|]+)',CardsAS.get(card.model,''))
+      if accessRegex:
+         if debugVerbosity >= 2: notify("#### accessRegex found! {}".format(accessRegex.group(1)))
+         notify("{} has just accessed a {}!".format(me,card))
+         Autoscripts = accessRegex.group(1).split('$$')
+         X = 0
+         for autoS in Autoscripts:
+            if autoS == 'Reveal':
+               information("Ambush! You have stumbled into a {}\
+                         \n(This card activates even when inactive.)\
+                       \n\nYour blunder has already triggered the alarms. Please wait until corporate OpSec has decided whether to use its effects or not, before pressing any button\
+                        ".format(card.name))
+            else: X = redirect(autoS, card, 'Quick', X)
+      if card.Type == 'ICE': 
+         cStatTXT = '\nStrength: {}.'.format(card.Stat)
+      elif card.Type == 'Asset' or card.Type == 'Upgrade':
+         cStatTXT = '\nTrash Cost: {}.'.format(card.Stat)
+      elif card.Type == 'Agenda':
+         cStatTXT = '\nAgenda Points: {}.'.format(card.Stat)
+      else: cStatTXT = ''      
+      title = "Card: {}.\
+             \nType: {}.\
+             \nKeywords: {}.\
+             \nCost: {}.\
+               {}\n\nCard Text: {}\
+           \n\nWhat do you want to do with this card?".format(card.name,card.Type,card.Keywords,card.Cost,cStatTXT,card.Rules)
+      if card.Type == 'Agenda' or card.Type == 'Asset' or card.Type == 'Upgrade':
+         if card.Type == 'Agenda': action1TXT = 'Liberate for {} Agenda Points.'.format(card.Stat)
+         else: 
+            extraText = ''
+            extraText2 = ''
+            reduction = reduceCost(card, 'TRASH', num(card.Stat), dryRun = True)
+            if reduction > 0: 
+               extraText = " ({} - {})".format(card.Stat,reduction)
+               extraText2 = " (reduced by {})".format(uniCredit(reduction))
+            elif reduction < 0: 
+               extraText = " ({} + {})".format(card.Stat,abs(reduction))
+               extraText2 = " (increased by {})".format(uniCredit(abs(reduction)))
+            action1TXT = 'Pay {}{} to Trash.'.format(num(card.Stat) - reduction,extraText)
+         options = ["Leave where it is.","Force trash at no cost.",action1TXT]
+      else:                    
+         options = ["Leave where it is.","Force trash at no cost."]
+      choice = SingleChoice(title, options, 'button')
+      if choice == None: choice = 0
+      if choice == 1: 
+         card.moveTo(targetPL.piles['Heap/Archives(Face-up)'])
+         notify("{} {} {} at no cost".format(me,uniTrash(),card))
+      elif choice == 2:
+         if card.Type == 'Agenda': 
+            scrAgenda(card)
+         else: 
+            reduction = reduceCost(card, 'TRASH', num(card.Stat))
+            rc = payCost(num(card.Stat) - reduction, "not free")
+            if rc == "ABORT": pass # If the player couldn't pay to trash the card, we leave it where it is.
+            card.moveTo(targetPL.piles['Heap/Archives(Face-up)'])
+            notify("{} paid {}{} to {} {}".format(me,uniCredit(num(card.Stat) - reduction),extraText2,uniTrash(),card))
+      else: pass
+      if cFaceD and card.group == table and not card.markers[mdict['Scored']]: card.isFaceUp = False
+      card.highlight = None
+   
 def RDaccessX(group = table, x = 0, y = 0): # A function which looks at the top X cards of the corp's deck and then asks the runner what to do with each one.
    if debugVerbosity >= 1: notify(">>> RDaccessX(){}".format(extraASDebug())) #Debug
    mute()
@@ -1106,13 +1184,14 @@ def RDaccessX(group = table, x = 0, y = 0): # A function which looks at the top 
          Autoscripts = accessRegex.group(1).split('$$')
          X = 0
          for autoS in Autoscripts:
-            if autoS == 'Reveal':
-               RDtop[iter].moveToTable(0, 0 + yaxisMove(RDtop[iter]), False)
-               RDtop[iter].highlight = RevealedColor         
-               information("Ambush! You have stumbled into a {}\
-                         \n(This card activates even on access from R&D.)\
-                       \n\nYour blunder has already triggered the alarms. Please wait until corporate OpSec has decided whether to use its effects or not, before pressing any button\
-                        ".format(RDtop[iter].name))
+            if re.search(r'Reveal',autoS):
+               if not re.search(r'ifInstalled',autoS):
+                  RDtop[iter].moveToTable(0, 0 + yaxisMove(RDtop[iter]), False)
+                  RDtop[iter].highlight = RevealedColor         
+                  information("Ambush! You have stumbled into a {}\
+                            \n(This card activates even on access from R&D.)\
+                          \n\nYour blunder has already triggered the alarms. Please wait until corporate OpSec has decided whether to use its effects or not, before pressing any button\
+                           ".format(RDtop[iter].name))
             else: X = redirect(autoS, RDtop[iter], 'Quick', X)
       if debugVerbosity >= 4: notify("#### Storing...")
       storeProperties(RDtop[iter]) # Otherwise trying to trash the card will crash because of reduceCost()
@@ -1140,7 +1219,17 @@ def RDaccessX(group = table, x = 0, y = 0): # A function which looks at the top 
            \n\nWhat do you want to do with this card?".format(cName,cType,cKeywords,cCost,cStatTXT,cRules)
       if cType == 'Agenda' or cType == 'Asset' or cType == 'Upgrade':
          if cType == 'Agenda': action1TXT = 'Liberate for {} Agenda Points.'.format(cStat)
-         else: action1TXT = 'Pay {} to Trash.'.format(cStat)
+         else: 
+            extraText = ''
+            extraText2 = ''
+            reduction = reduceCost(RDtop[iter], 'TRASH', num(cStat), dryRun = True)
+            if reduction > 0: 
+               extraText = " ({} - {})".format(cStat,reduction)
+               extraText2 = " (reduced by {})".format(uniCredit(reduction))
+            elif reduction < 0: 
+               extraText = " ({} + {})".format(cStat,abs(reduction))
+               extraText2 = " (increased by {})".format(uniCredit(reduction))
+            action1TXT = 'Pay {}{} to Trash.'.format(num(cStat) - reduction,extraText)
          options = ["Leave where it is.","Force trash at no cost.",action1TXT]
       else:                    
          options = ["Leave where it is.","Force trash at no cost."]
@@ -1163,7 +1252,7 @@ def RDaccessX(group = table, x = 0, y = 0): # A function which looks at the top 
             if rc == "ABORT": continue # If the player couldn't pay to trash the card, we leave it where it is.
             RDtop[iter].moveTo(targetPL.piles['Heap/Archives(Face-up)'])
             loopChk(RDtop[iter],'Type')
-            notify("{} paid {} to {} {}".format(me,uniCredit(cStat),uniTrash(),RDtop[iter]))
+            notify("{} paid {}{} to {} {}".format(me,uniCredit(num(cStat) - reduction),extraText2,uniTrash(),RDtop[iter]))
             removedCards += 1            
       else: continue
    cover.moveTo(shared.exile) # now putting the cover card to the exile deck that nobody looks at.
@@ -1209,11 +1298,22 @@ def HQaccess(group=table, x=0,y=0, silent = False):
    revealedCard = showatrandom(targetPL = targetPL)
    storeProperties(revealedCard) # So as not to crash reduceCost() later
    if not revealedCard: return # If the corp's hand is empty, do nothing.
-   if re.search(r'onAccess:Reveal',CardsAS.get(revealedCard.model,'')):
-      information("Ambush! You have stumbled into a {}\
-                \n(This card activates even on access from HQ.)\
-              \n\nYour blunder has already triggered the alarms. Please wait until corporate OpSec has decided whether to use its effects or not, before pressing any button\
-               ".format(revealedCard.name))
+   accessRegex = re.search(r'onAccess:([^|]+)',CardsAS.get(revealedCard.model,''))
+   if accessRegex:
+      if debugVerbosity >= 2: notify("#### accessRegex found! {}".format(accessRegex.group(1)))
+      notify("{} has just accessed a {}!".format(me,revealedCard))
+      Autoscripts = accessRegex.group(1).split('$$')
+      X = 0
+      for autoS in Autoscripts:
+         if re.search(r'Reveal',autoS):
+            if not re.search(r'ifInstalled',autoS):
+               revealedCard.moveToTable(0, 0 + yaxisMove(revealedCard), False)
+               revealedCard.highlight = RevealedColor         
+               information("Ambush! You have stumbled into a {}\
+                         \n(This card activates even on access from HQ.)\
+                       \n\nYour blunder has already triggered the alarms. Please wait until corporate OpSec has decided whether to use its effects or not, before pressing any button\
+                        ".format(revealedCard.name))
+         else: X = redirect(autoS, revealedCard, 'Quick', X)
    if debugVerbosity >= 2: notify("### Not a Trap.") #Debug
    if revealedCard.Type == 'ICE': 
       cStatTXT = '\nStrength: {}.'.format(revealedCard.Stat)
@@ -1231,7 +1331,17 @@ def HQaccess(group=table, x=0,y=0, silent = False):
         \n\nWhat do you want to do with this card?".format(revealedCard.name,revealedCard.Type,revealedCard.Keywords,revealedCard.Cost,cStatTXT,revealedCard.Rules)
    if revealedCard.Type == 'Agenda' or revealedCard.Type == 'Asset' or revealedCard.Type == 'Upgrade':
       if revealedCard.Type == 'Agenda': action1TXT = 'Liberate for {} Agenda Points.'.format(revealedCard.Stat)
-      else: action1TXT = 'Pay {} to Trash.'.format(revealedCard.Stat)
+      else: 
+         extraText = ''
+         extraText2 = ''
+         reduction = reduceCost(revealedCard, 'TRASH', num(revealedCard.Stat), dryRun = True)
+         if reduction > 0: 
+            extraText = " ({} - {})".format(revealedCard.Stat,reduction)
+            extraText2 = " (reduced by {})".format(uniCredit(reduction))
+         elif reduction < 0: 
+            extraText = " ({} + {})".format(revealedCard.Stat,abs(reduction))
+            extraText2 = " (increased by {})".format(uniCredit(abs(reduction)))
+         action1TXT = 'Pay {}{} to Trash.'.format(num(revealedCard.Stat) - reduction,extraText)
       options = ["Leave where it is.","Force trash at no cost.",action1TXT]
    else:                    
       options = ["Leave where it is.","Force trash at no cost."]
@@ -1252,7 +1362,7 @@ def HQaccess(group=table, x=0,y=0, silent = False):
          if rc == "ABORT": revealedCard.moveTo(targetPL.hand) # If the player couldn't pay to trash the card, we leave it where it is.
          revealedCard.moveTo(targetPL.piles['Heap/Archives(Face-up)'])
          loopChk(revealedCard,'Type')
-         notify("{} paid {} to {} {}".format(me,uniCredit(revealedCard.Stat),uniTrash(),revealedCard))
+         notify("{} paid {}{} to {} {}".format(me,uniCredit(num(revealedCard.Stat) - reduction),extraText2,uniTrash(),revealedCard))
    else: revealedCard.moveTo(targetPL.hand)
    if debugVerbosity >= 3: notify("<<< HQAccess()")
          

@@ -197,7 +197,7 @@ def getSpecial(cardType,player = me):
       if debugVerbosity >= 1: notify("### card ID = {}".format(card._id))
       if debugVerbosity >= 1: notify("### Stored Type = {}".format(Stored_Type[card._id]))
       storeProperties(card, True)
-   if debugVerbosity >= 3: notify("<<< getSpecial() by returning: {}".format())
+   if debugVerbosity >= 3: notify("<<< getSpecial() by returning: {}".format(card))
    return card
 
 def chkRAM(card, action = 'INSTALL', silent = False):

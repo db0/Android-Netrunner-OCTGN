@@ -66,7 +66,7 @@ Aggressive Secretary
 -----
 bc0f047c-01b1-427f-a439-d451eda01057
 -----
-
+onAccess:Reveal-ifInstalled
 +++++
 A0B2G0T0:Remove1Advancement-perTargetAny-isCost-onAccess$$TrashMulti-Targeted-atProgram
 .....
@@ -370,7 +370,7 @@ Ghost Branch
 -----
 bc0f047c-01b1-427f-a439-d451eda01087
 -----
-
+onAccess:Reveal-ifInstalled
 +++++
 A0B0G0T0:Gain1Tags-onOpponent-perMarker{Advancement}-onAccess	
 .....
@@ -666,7 +666,7 @@ Project Junebug
 -----
 bc0f047c-01b1-427f-a439-d451eda01069
 -----
-
+onAccess:Reveal-ifInstalled
 +++++
 A0B1G0T0:Inflict2NetDamage-onOpponent-perMarker{Advancement}-onAccess	
 .....
