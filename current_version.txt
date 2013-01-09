@@ -1,5 +1,7 @@
-2.1.0||
+2.1.1||
 ======New Version Information======
+
+(2.1.1 includes the fix for the "Create New Server" bugging out. Sorry about that)
 
 More than a Trace Amount of updates! :)
 
