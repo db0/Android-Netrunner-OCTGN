@@ -484,12 +484,14 @@ def fetchProperty(card, property):
       if property == 'name': currentValue = card.name # Now that we had a chance to flip the card face up temporarily, we grab its property again.
       else: 
          currentValue = card.properties[property]
+         if debugVerbosity >= 3: notify("### Grabbing {}'s {} manually: {}.".format(card,property,card.properties[property]))
          #storeProperties(card) # Commented out because putting it here can cause an infinite loop
    if coverExists: 
       card.isFaceUp = False
       rnd(1,10) # To give time to the card facedown automation to complete.
       cover.moveTo(shared.exile) # now destorying cover card
    if debugVerbosity >= 3: notify("<<< fetchProperty() by returning: {}".format(currentValue))
+   if not currentValue: currentValue = ''
    return currentValue
 
 def loopChk(card,property = 'Type'):

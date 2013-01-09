@@ -56,6 +56,8 @@ Changelog
   This is important because now trashing a Djinn which hosts programs will trash all its hosted programs as well. Yes, this will also cascade on nested Djinns as it should ;)  
 * There's a new function which allows the runner to access cards in a fort. It's in the table menu under "Access Target".
   You should use this after you've just had a successful run on a fort and the Corp has passed on rezzing or triggering any abilities.
+* Workaround for the borked traces and identities
+* Trashing Djinns should now calculate MUs correctly.
 * Many more to add later.
 
 ### v.2.0.1.2 
