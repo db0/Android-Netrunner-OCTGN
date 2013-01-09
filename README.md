@@ -47,6 +47,13 @@ Shaper running on a heavily fortifield Haas-Bioroid server
 
 Changelog
 ---------
+### v2.1.2
+
+* Fixed Grimoire/Noise's abilities not triggering automatically
+
+### v2.1.1
+
+* Fixed creating remote server giving a python error
 
 ### v2.1.0
 
@@ -54,21 +61,34 @@ Changelog
   This affects cards like Parasite and Personal Touch but on the background it also is working for Daemons like Djinn.
   A hosted card will be trashed if its host ever leaves play. You don't need to do it manually anymore. 
   This is important because now trashing a Djinn which hosts programs will trash all its hosted programs as well. Yes, this will also cascade on nested Djinns as it should ;)  
-* There's a new function which allows the runner to access cards in a fort. It's in the table menu under "Access Target".
-  You should use this after you've just had a successful run on a fort and the Corp has passed on rezzing or triggering any abilities.
+* There's a new function which allows the runner to access cards in a server. It's in the table menu under "Access Target".
+  You should use this after you've just had a successful run on a server and the Corp has passed on rezzing or triggering any abilities.
 * Workaround for the borked traces and identities
 * Trashing Djinns should now calculate MUs correctly.
-* Many more to add later.
+* Fixed Spinal Modem not working at all
+* Accessing cards now show you the final cost you're going to pay after all bonuses and penalties from other cards. It will show it in the form of "Pay 0 to trash (4-4)". 
+  Cards like Stimhack and Bad Publicity are considered to be reducing the cost for this purpose.
+* Cards can now affect the costs of your opponent
+* Card effect can now increase the costs as well as decrease them
+* Accessed card effects can now have the full range of scripting associated with them (e.g. Fetal AI). 
+  When the runner accesses traps such as Junebug, it will reveal itself like a snare and allow the corp to use it.
+* Swapped the Targeting functions for the more modular ones I developed for SW:LCG
+* Players have the option to bypass the restriction on which cards can be trashed, when using the  "Pay to Trash" action.
+* Removed the warning about trashing the opponent's cards. Never saw that being an issue after all and it's one extra click every time.
+* Added the delayed_whisper() function
+* Socred Agendas finally reset their positions after the game setup.
+* Added a fix for the fonts for OCTGN 3.0.1.27
+* Added fix so that only I can use the debug function, and not when I'm just in the game.
 
-### v.2.0.1.2 
+### v2.0.1.2 
 
 * Fixed Spinal Modem working outside of runs
 
-### v.2.0.1.1
+### v2.0.1.1
 
 * Fixed cards like Mandatory Upgrades giving their effects to the runners.
 
-### v.2.0.1
+### v2.0.1
 
 * Stats should now be able to submit again
 * Decking defeat is now collected as well
