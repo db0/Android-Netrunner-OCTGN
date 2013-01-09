@@ -258,7 +258,7 @@ def intJackin(group, x = 0, y = 0):
    mute()
    if not startupMsg: fetchCardScripts() # We only download the scripts at the very first setup of each play session.
    versionCheck()
-   if ds and not notify("Are you sure you want to setup for a new game? (This action should only be done after a table reset)"): return
+   if ds and not confirm("Are you sure you want to setup for a new game? (This action should only be done after a table reset)"): return
    ds = None
    if not table.isTwoSided() and not notify(":::WARNING::: This game is designed to be played on a two-sided table. Things will be extremely uncomfortable otherwise!! Please start a new game and makde sure the  the appropriate button is checked. Are you sure you want to continue?"): return
    chooseSide()
@@ -1480,6 +1480,10 @@ def clearAll(markersOnly = False, allPlayers = False): # Just clears all the pla
       if not markersOnly:
          if card.isFaceUp and (card.Type == 'Operation' or card.Type == 'Event') and card.highlight != DummyColor and card.highlight != RevealedColor and card.highlight != InactiveColor and not card.markers[mdict['Scored']]: # We do not trash "scored" events (e.g. see Notoriety)
             intTrashCard(card,0,"free") # Clearing all Events and operations for players who keep forgeting to clear them.
+      if card.owner == me and card.Type == 'Identity' and Stored_Type.get(card._id,'NULL') == 'NULL':
+         delayed_whisper(":::DEBUG::: Identity was NULL. Re-storing as an attempt to fix")
+         storeProperties(card, True)
+      
    if debugVerbosity >= 3: notify("<<< clearAll()")
    
 def intTrashCard(card, stat, cost = "not free",  ClickCost = '', silent = False):

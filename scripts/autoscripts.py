@@ -1355,9 +1355,10 @@ def ModifyStatus(Autoscript, announceText, card, targetCards = None, notificatio
       if action.group(2) != 'Multi': break # If we're not doing a multi-targeting, abort after the first run.
    if notification == 'Quick': announceString = "{} {}es {}{}".format(announceText, action.group(1), targetCardlist,extraText)
    else: announceString = "{} {} {}{}".format(announceText, action.group(1), targetCardlist, extraText)
-   if notification: notify('--> {}.'.format(announceString))
+   if notification and not re.search(r'isSilent', Autoscript): notify('--> {}.'.format(announceString))
    if debugVerbosity >= 3: notify("<<< ModifyStatus()")
-   return announceString
+   if re.search(r'isSilent', Autoscript): return announceText
+   else: return announceString
          
 def InflictX(Autoscript, announceText, card, targetCards = None, notification = None, n = 0): # Core Command for inflicting Damage to players (even ourselves)
    if debugVerbosity >= 1: notify(">>> InflictX(){}".format(extraASDebug(Autoscript))) #Debug
