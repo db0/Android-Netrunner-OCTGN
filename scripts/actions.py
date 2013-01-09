@@ -1381,7 +1381,7 @@ def isRezzable (card):
    if Type == "ICE" or Type == "Asset" or Type == "Upgrade": return True
    else: return False
 
-def intRez (card, cost = 'not free', x=0, y=0, silent = False):
+def intRez (card, x=0, y=0, cost = 'not free', silent = False):
    if debugVerbosity >= 1: notify(">>> intRez(){}".format(extraASDebug())) #Debug
    mute()
    extraText = ''
@@ -1417,7 +1417,7 @@ def intRez (card, cost = 'not free', x=0, y=0, silent = False):
     
 def rezForFree (card, x = 0, y = 0):
    if debugVerbosity >= 1: notify(">>> rezForFree(){}".format(extraASDebug())) #Debug
-   intRez(card, "free")
+   intRez(card, cost = 'free')
 
 def derez(card, x = 0, y = 0, silent = False):
    if debugVerbosity >= 1: notify(">>> derez(){}".format(extraASDebug())) #Debug
