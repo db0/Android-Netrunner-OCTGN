@@ -747,7 +747,7 @@ def GainX(Autoscript, announceText, card, targetCards = None, notification = Non
       else: 
          if re.search(r'isCost', Autoscript) and action.group(1) == 'Lose':
             if debugVerbosity >= 2: notify("#### Checking Cost Reduction")
-            reduction = reduceCost(card, actionType, gain * multiplier)
+            reduction = reduceCost(card, actionType, gain * multiplier, targetPL = targetPL)
             targetPL.counters['Credits'].value += (gain * multiplier) + reduction
             if reduction > 0: extraText = ' (Reduced by {})'.format(uniCredit(reduction))
             elif reduction < 0: extraText = " (increased by {})".format(uniCredit(abs(reduction)))
@@ -1413,9 +1413,13 @@ def InflictX(Autoscript, announceText, card, targetCards = None, notification = 
 def UseCustomAbility(Autoscript, announceText, card, targetCards = None, notification = None, n = 0):
    if fetchProperty(card, 'name') == "Tollbooth":
       targetPL = ofwhom('ofOpponent')
-      if targetPL.Credits >= 3: 
-         targetPL.Credits -= 3
-         announceString = announceText + ' force {} to pay {}'.format(targetPL,uniCredit(3))
+      reduction = reduceCost(card, 'FORCE', 3, True, targetPL = targetPL) # We use a dry-run to see if they have a card which card reduce the tollbooth cost such as stimhack
+      if reduction > 0: extraText = " (reduced by {})".format(uniCredit(reduction))  
+      elif reduction < 0: extraText = " (increased by {})".format(uniCredit(abs(reduction)))
+      else: extraText = ''
+      if targetPL.Credits >= 3 - reduction: 
+         targetPL.Credits -= 3 - reduceCost(card, 'FORCE', 3, targetPL = targetPL)
+         announceString = announceText + ' force {} to pay {}{}'.format(targetPL,uniCredit(3),extraText)
       else: 
          jackOut(silent = True)
          announceString = announceText + ' end the run'.format(targetPL,uniCredit(3))   

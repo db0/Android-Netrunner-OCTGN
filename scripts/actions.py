@@ -747,7 +747,7 @@ def findExtraCosts(card, action = 'REZ'):
    return increase
 
    
-def reduceCost(card, action = 'REZ', fullCost = 0, dryRun = False):
+def reduceCost(card, action = 'REZ', fullCost = 0, dryRun = False, targetPL = me):
    type = action.capitalize()
    if debugVerbosity >= 1: notify(">>> reduceCost(). Action is: {}. FullCost = {}".format(type,fullCost)) #Debug
    if fullCost == 0: return 0 # If there's no cost, there's no use checking the table.
@@ -776,11 +776,17 @@ def reduceCost(card, action = 'REZ', fullCost = 0, dryRun = False):
    ### Now we check if we're in a run and we have bad publicity credits to spend
    if re.search(r'running',status):
       myIdent = getSpecial('Identity',me)
-      while fullCost > 0 and myIdent.markers[mdict['BadPublicity']] and myIdent.markers[mdict['BadPublicity']] > 0: 
-         reduction += 1
-         fullCost -= 1
-         myIdent.markers[mdict['BadPublicity']] -= 1
-         if fullCost == 0: break      
+      if myIdent.markers[mdict['BadPublicity']]:
+         usedBP = 0
+         BPcount = myIdent.markers[mdict['BadPublicity']]
+         if debugVerbosity >= 2: notify("### BPcount = {}".format(BPcount))
+         while fullCost > 0 and BPcount > 0: 
+            reduction += 1
+            fullCost -= 1
+            usedBP += 1
+            BPcount -= 1
+            if fullCost == 0: break
+         if not dryRun: myIdent.markers[mdict['BadPublicity']] -= usedBP
    ### Finally we go through the table and see if there's any cards providing cost reduction
    cardList = sortPriority([c for c in table
                            if c.isFaceUp])
@@ -792,7 +798,10 @@ def reduceCost(card, action = 'REZ', fullCost = 0, dryRun = False):
       if len(Autoscripts) == 0: continue
       for autoS in Autoscripts:
          if re.search(r'whileRunning', autoS) and not re.search(r'running',status): continue # if the reduction is only during runs, and we're not in a run, bypass this effect
-         if not chkPlayer(autoS, c.controller, False): continue
+         if targetPL == me: 
+            if not chkPlayer(autoS, c.controller, False): continue
+         else: #If we passed explicitly another player as the target of the cost (e.g. Tollbooth) then we use them to see if they have any cost reduction cards.
+            if not chkPlayer(autoS, targetPL, False): continue
          if debugVerbosity >= 2: notify("### Checking {} with AS: {}".format(c, autoS)) #Debug
          reductionSearch = re.search(r'(Reduce|Increase)([0-9#X]+)Cost({}|All)-for([A-Z][A-Za-z ]+)(-not[A-Za-z_& ]+)?'.format(type), autoS) 
          if debugVerbosity >= 2: #Debug
