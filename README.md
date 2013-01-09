@@ -47,6 +47,12 @@ Shaper running on a heavily fortifield Haas-Bioroid server
 
 Changelog
 ---------
+
+### v2.1.3
+
+* Tollbooth now uses money from Bad Publicity and Stimhack
+* Also fixed bug which made bad publicty credits sometimes be spent twice.
+
 ### v2.1.2
 
 * Fixed Grimoire/Noise's abilities not triggering automatically
