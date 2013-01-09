@@ -188,14 +188,14 @@ def storeSpecial(card):
 
 def getSpecial(cardType,player = me):
 # Functions takes as argument the name of a special card, and the player to whom it belongs, and returns the card object.
-   if debugVerbosity >= 1: notify(">>> getSpecial(){}".format(extraASDebug())) #Debug
+   if debugVerbosity >= 1: notify(">>> getSpecial() for player: {}".format(me.name)) #Debug
    specialCards = eval(player.getGlobalVariable('specialCards'))
    card = Card(specialCards[cardType])
    if debugVerbosity >= 2: notify("### Stored_Type = {}".format(Stored_Type.get(card._id,'NULL')))
    if Stored_Type.get(card._id,'NULL') == 'NULL':
       delayed_whisper(":::DEBUG::: {} was NULL. Re-storing as an attempt to fix".format(cardType))
       if debugVerbosity >= 1: notify("### card ID = {}".format(card._id))
-      if debugVerbosity >= 1: notify("### Stored Type = {}".format(Stored_Type[card._id]))
+      if debugVerbosity >= 1: notify("### Stored Type = {}".format(Stored_Type.get(card._id,'NULL')))
       storeProperties(card, True)
    if debugVerbosity >= 3: notify("<<< getSpecial() by returning: {}".format(card))
    return card

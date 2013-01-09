@@ -747,7 +747,7 @@ def GainX(Autoscript, announceText, card, targetCards = None, notification = Non
       else: 
          if re.search(r'isCost', Autoscript) and action.group(1) == 'Lose':
             if debugVerbosity >= 2: notify("#### Checking Cost Reduction")
-            reduction = reduceCost(card, actionType, gain * multiplier, targetPL = targetPL)
+            reduction = reduceCost(card, actionType, gain * multiplier)
             targetPL.counters['Credits'].value += (gain * multiplier) + reduction
             if reduction > 0: extraText = ' (Reduced by {})'.format(uniCredit(reduction))
             elif reduction < 0: extraText = " (increased by {})".format(uniCredit(abs(reduction)))
@@ -1413,12 +1413,17 @@ def InflictX(Autoscript, announceText, card, targetCards = None, notification = 
 def UseCustomAbility(Autoscript, announceText, card, targetCards = None, notification = None, n = 0):
    if fetchProperty(card, 'name') == "Tollbooth":
       targetPL = ofwhom('ofOpponent')
-      reduction = reduceCost(card, 'FORCE', 3, True, targetPL = targetPL) # We use a dry-run to see if they have a card which card reduce the tollbooth cost such as stimhack
+      global reversePlayerChk
+      reversePlayerChk = True
+      reduction = reduceCost(card, 'FORCE', 3, True) # We use a dry-run to see if they have a card which card reduce the tollbooth cost such as stimhack
+      reversePlayerChk = False
       if reduction > 0: extraText = " (reduced by {})".format(uniCredit(reduction))  
       elif reduction < 0: extraText = " (increased by {})".format(uniCredit(abs(reduction)))
       else: extraText = ''
       if targetPL.Credits >= 3 - reduction: 
-         targetPL.Credits -= 3 - reduceCost(card, 'FORCE', 3, targetPL = targetPL)
+         reversePlayerChk = True
+         targetPL.Credits -= 3 - reduceCost(card, 'FORCE', 3)
+         reversePlayerChk = False
          announceString = announceText + ' force {} to pay {}{}'.format(targetPL,uniCredit(3),extraText)
       else: 
          jackOut(silent = True)
@@ -2022,10 +2027,10 @@ def chkPlayer(Autoscript, controller, manual, targetChk = False): # Function for
          if debugVerbosity >= 2: notify("### Failed all checks") # Debug
          validPlayer =  0 # If all the above fail, it means that we're not supposed to be triggering, so we'll return 0 whic
       if not reversePlayerChk: 
-         if debugVerbosity >= 3: notify("<<< chkPlayer() with validPlayer") # Debug
+         if debugVerbosity >= 3: notify("<<< chkPlayer() (not reversed)") # Debug
          return validPlayer
       else: # In case reversePlayerChk is set to true, we want to return the opposite result. This means that if a scripts expect the one running the effect to be the player, we'll return 1 only if the one running the effect is the opponent. See Decoy at Dantoine for a reason
-         if debugVerbosity >= 3: notify("<<< chkPlayer() reversed!") # Debug      
+         if debugVerbosity >= 3: notify("<<< chkPlayer() (reversed)") # Debug      
          if validPlayer == 0: return 1
          else: return 0
    except: 
