@@ -842,7 +842,7 @@ Tinkering
 -----
 bc0f047c-01b1-427f-a439-d451eda01037
 -----
-onPlay:Put1Keyword:Sentry-Targeted-atICE$$Put1Keyword:Code Gate-Targeted-atICE$$Put1Keyword:Barrier-Targeted-atICE$$Put1Tinkering-Targeted-atICE
+onPlay:Put1Keyword:Sentry-Targeted-atICE-isSilent$$Put1Keyword:Code Gate-Targeted-atICE-isSilent$$Put1Keyword:Barrier-Targeted-atICE-isSilent$$Put1Tinkering-Targeted-atICE
 +++++
 	
 .....

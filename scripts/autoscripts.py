@@ -1509,7 +1509,7 @@ def CustomScript(card, action = 'PLAY'): # Scripts that are complex and fairly u
             if debugVerbosity >= 2: notify("found rabbit!")
             storeProperties(c)
             reduction += reduceCost(c, action, num(c.Cost)) #Checking to see if the cost is going to be reduced by cards we have in play.
-            rc = payCost(num(c.Cost) - reduction, "not_free")
+            rc = payCost(num(c.Cost) - reduction, "not free")
             if rc == "ABORT": break
             else: totalCost += (num(c.Cost) - reduction)
             placeCard(c, action)
@@ -1618,7 +1618,7 @@ def findTarget(Autoscript, fromHand = False, card = None): # Function for findin
                         if debugVerbosity >= 2: notify("### Host found! {}".format(targetLookup))
                         isHost = True
                   if not isHost: continue
-               if checkCardRestrictions(gatherCardProperties(targetLookup), targetGroups): 
+               if checkCardRestrictions(gatherCardProperties(targetLookup,Autoscript), targetGroups): 
                   if not targetLookup in foundTargets: 
                      if debugVerbosity >= 3: notify("### About to append {}".format(targetLookup)) #Debug
                      foundTargets.append(targetLookup) # I don't know why but the first match is always processed twice by the for loop.
@@ -1680,16 +1680,18 @@ def findTarget(Autoscript, fromHand = False, card = None): # Function for findin
       return foundTargets
    except: notify("!!!ERROR!!! on findTarget()")   
    
-def gatherCardProperties(card):
+def gatherCardProperties(card,Autoscript = ''):
    if debugVerbosity >= 1: notify(">>> gatherCardProperties()") #Debug
-   storeProperties(card)
+   # This function can also sent an autoscript with it, which I then check to see that I'm not doing an autotargeted search of the table, 
+   # This will allow me to avoid looking up running storeProperties() on every card the opponent has.
+   if not re.search(r'AutoTargeted', Autoscript): storeProperties(card)
    cardProperties = []
    if debugVerbosity >= 4: notify("### Appending name") #Debug                
-   cardProperties.append(fetchProperty(card, 'name')) # We are going to check its name
+   cardProperties.append(card.name) # We are going to check its name
    if debugVerbosity >= 4: notify("### Appending Type") #Debug                
    cardProperties.append(fetchProperty(card, 'Type')) # We are going to check its Type
    if debugVerbosity >= 4: notify("### Appending Keywords") #Debug                
-   cardSubkeywords = fetchProperty(card, 'Keywords').split('-') # And each individual keyword. keywords are separated by " - "
+   cardSubkeywords = getKeywords(card).split('-') # And each individual keyword. keywords are separated by " - "
    for cardSubkeyword in cardSubkeywords:
       strippedCS = cardSubkeyword.strip() # Remove any leading/trailing spaces between keywords. We need to use a new variable, because we can't modify the loop iterator.
       if strippedCS: cardProperties.append(strippedCS) # If there's anything left after the stip (i.e. it's not an empty string anymrore) add it to the list.

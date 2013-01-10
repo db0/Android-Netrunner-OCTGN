@@ -51,6 +51,7 @@ Changelog
 ### v.2.1.5
 
 * Fix for Rabbit Hole ability not costing any credits.
+* Fix for tinkering revealing an ICEs name.
 
 ### v2.1.4
 
