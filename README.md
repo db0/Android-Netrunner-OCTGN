@@ -59,7 +59,7 @@ Changelog
 * Fixed the "Pay and Rez" action always rezzing for free
 * Fix not being able to setup the game a second time (i.e. after a table reset)
 * Added some code which hopefully catches and fixes broken identity/trace card before it gives an error. 5 test games resulted in 0 bugs due to borked identity/trace card.
-* Tollbooth now uses money from Bad Publicity and Stimhack
+* Tollbooth now uses money from Bad Publicity and Stimhack (bug #95)
 
 ### v2.1.3
 
@@ -75,11 +75,11 @@ Changelog
 
 ### v2.1.0
 
-* Card can now be hosted properly on other cards. Cards which require a host will not be able to be played, unless you've targeted an appropriate host for them
+* **SIGNIFICANT:** Card can now be hosted properly on other cards. Cards which require a host will not be able to be played, unless you've targeted an appropriate host for them
   This affects cards like Parasite and Personal Touch but on the background it also is working for Daemons like Djinn.
   A hosted card will be trashed if its host ever leaves play. You don't need to do it manually anymore. 
   This is important because now trashing a Djinn which hosts programs will trash all its hosted programs as well. Yes, this will also cascade on nested Djinns as it should ;)  
-* There's a new function which allows the runner to access cards in a server. It's in the table menu under "Access Target".
+* **SIGNIFICANT:** There's a new function which allows the runner to access cards in a server. It's in the table menu under "Access Target".
   You should use this after you've just had a successful run on a server and the Corp has passed on rezzing or triggering any abilities.
 * Workaround for the borked traces and identities
 * Trashing Djinns should now calculate MUs correctly.
@@ -115,8 +115,8 @@ Changelog
 
 Big update which falls at the same time as What Lies Ahead. The most significant update is in the way traces work
 
-* Traces are now automated. When the runner uses the trace card after being traced, the game will then calculate who wins
-* Cards which trace now prepare their post-trace effect. Depending on who needs to win for it to fire, it will activate after the runner calculates their base link and compares with the corp's trace.
+* **SIGNIFICANT:** Traces are now automated. When the runner uses the trace card after being traced, the game will then calculate who wins
+* **SIGNIFICANT:** Cards which trace now prepare their post-trace effect. Depending on who needs to win for it to fire, it will activate after the runner calculates their base link and compares with the corp's trace.
 * Stats now include the subtitle in the name of the winner, in order to differentiate between identities in the same corp faction.
 * What Lies Ahead added and scripted.
 
@@ -129,15 +129,15 @@ Fixed issue where succeeding the run would not jack-out immediately on next acti
 * Face-down Unique card now can be played when another face up unique card exists. (Bug #69)
 * Unique cards also use their restrictions on rezzing as well
 * Setting up the game does not give your opponent an opportunity to glimpse cards in your deck (Bug #67)
-* After popular demand, I've stopped automated exposes from opponents. This is to avoid mistakes from people rushing their actions without reading the pop-up windows. Now the game will just announce the attempted expose, and the owner needs to do it manually.
+* **SIGNIFICANT:** After popular demand, I've stopped automated exposes from opponents. This is to avoid mistakes from people rushing their actions without reading the pop-up windows. Now the game will just announce the attempted expose, and the owner needs to do it manually.
 * Fixed #66
 
 ### v1.1.17
 
-* Runs work slightly differently now. [F3] does not jack-out the runner as well, but merely triggers the successful run effect (Gabriel, Desperato, Bank Job etc). This means that you can use both Bad Publicity tokens and Gabe's/Desperado ability at the same time to trash cards for example.
+* **SIGNIFICANT:** Runs work slightly differently now. [F3] does not jack-out the runner as well, but merely triggers the successful run effect (Gabriel, Desperato, Bank Job etc). This means that you can use both Bad Publicity tokens and Gabe's/Desperado ability at the same time to trash cards for example.
 * Because [F3] does not finish a run, this needs to be done afterwards with [ESC] or by taking your next action. If you've pressed [F3] and take one action, the game will automatically jack you out (so for most players the gameplay should remain the same)
 * Added a function to access a card from HQ [Ctrl]+[Q]. Don't use that before confirming with the corp.
-* Now running central servers will automatically trigger their default access command. A confirmation window will pop-up if the runner has successfully run and ask them if they want to use that.
+* **SIGNIFICANT:** Now running central servers will automatically trigger their default access command. A confirmation window will pop-up if the runner has successfully run and ask them if they want to use that.
 * Because of the above, if the runner opts to use cards which replace normal access with their own effects (Account Siphon for example), then the prompt for normal access won't be brought up.
 * Cards which have optional effects which replace the normal access, now stop other cards from triggering them again (e.g. having two bank jobs on the table)
 * When asking you to use optional effect, the game will also inform the player how many tokens each card has (to allow you to select the right bank job if you have multiple for example)
@@ -163,7 +163,6 @@ Another attempt to fix the WinForms not appearing over OCTGN sometimes.
 
 #### v1.1.15.6
 
-* Finally traced down and fixed the issue which cased the identity cards to stop after a reset and the tracing cards (and pay2delTag action) give python errors
 * Fixed bug which sometimes caused the R&D to not be sorted correctly after a runner access where they paid to trash a card.
 
 #### v1.1.15.4
