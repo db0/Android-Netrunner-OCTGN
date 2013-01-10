@@ -48,9 +48,21 @@ Shaper running on a heavily fortifield Haas-Bioroid server
 Changelog
 ---------
 
+### v.2.1.5
+
+* Fix for Rabbit Hole ability not costing any credits.
+
+### v2.1.4
+
+* Effects which reduce or increase cost (Stimhack, Bad Publicity, Encryption Protocol etc) now mention their reduction in the announcements
+  Those cards also inform you of the final amount of credits you're going to pay from your pool when you trash cards during access
+* Fixed the "Pay and Rez" action always rezzing for free
+* Fix not being able to setup the game a second time (i.e. after a table reset)
+* Added some code which hopefully catches and fixes broken identity/trace card before it gives an error. 5 test games resulted in 0 bugs due to borked identity/trace card.
+* Tollbooth now uses money from Bad Publicity and Stimhack
+
 ### v2.1.3
 
-* Tollbooth now uses money from Bad Publicity and Stimhack
 * Also fixed bug which made bad publicty credits sometimes be spent twice.
 
 ### v2.1.2
