@@ -260,17 +260,17 @@ def intJackin(group, x = 0, y = 0):
    versionCheck()
    if ds and not confirm("Are you sure you want to setup for a new game? (This action should only be done after a table reset)"): return
    ds = None
-   if not table.isTwoSided() and not notify(":::WARNING::: This game is designed to be played on a two-sided table. Things will be extremely uncomfortable otherwise!! Please start a new game and makde sure the  the appropriate button is checked. Are you sure you want to continue?"): return
+   if not table.isTwoSided() and not confirm(":::WARNING::: This game is designed to be played on a two-sided table. Things will be extremely uncomfortable otherwise!! Please start a new game and makde sure the  the appropriate button is checked. Are you sure you want to continue?"): return
    chooseSide()
    #for type in Automations: switchAutomation(type,'Announce') # Too much spam.
    deck = me.piles['R&D/Stack']
-   if debugVerbosity >= 3: notify("Checking Deck")
+   if debugVerbosity >= 3: notify("### Checking Deck")
    if len(deck) == 0:
       whisper ("Please load a deck first!")
       return
-   if debugVerbosity >= 3: notify("Reseting Variables")
+   if debugVerbosity >= 3: notify("### Reseting Variables")
    resetAll()
-   if debugVerbosity >= 3: notify("Placing Identity")
+   if debugVerbosity >= 3: notify("### Placing Identity")
    for card in me.hand:
       if card.Type != 'Identity': 
          whisper(":::Warning::: You are not supposed to have any non-Identity cards in your hand when you start the game")
@@ -283,10 +283,10 @@ def intJackin(group, x = 0, y = 0):
    if not ds: 
       confirm("You need to have your identity card in your hand when you try to setup the game. If you have it in your deck, please look for it and put it in your hand before running this function again")
       return
-   if debugVerbosity >= 3: notify("Giving Possible Warning")
+   if debugVerbosity >= 3: notify("### Giving Possible Warning")
    if (ds == 'corp' and me.hasInvertedTable()) or (ds == 'runner' and not me.hasInvertedTable()):
       if not confirm(":::ERROR::: Due to engine limitations, the corp player must always be player [A] in order to properly utilize the board. Please start a new game and make sure you've set the corp to be player [A] in the lobby. Are you sure you want to continue?"): return   
-   if debugVerbosity >= 3: notify("Checking Illegality")
+   if debugVerbosity >= 3: notify("### Checking Illegality")
    deckStatus = checkDeckNoLimit(deck)
    if not deckStatus[0]:
       if not confirm("We have found illegal cards in your deck. Bypass?"): return
@@ -294,8 +294,8 @@ def intJackin(group, x = 0, y = 0):
          notify("{} has chosen to proceed with an illegal deck.".format(me))
          Identity = deckStatus[1]
    else: Identity = deckStatus[1] # For code readability
-   if debugVerbosity >= 3: notify("Placing Identity")
-   if debugVerbosity >= 3: notify("Identity is: {}".format(Identity))
+   if debugVerbosity >= 3: notify("### Placing Identity")
+   if debugVerbosity >= 3: notify("### Identity is: {}".format(Identity))
    if ds == "corp":
       Identity.moveToTable(125, 240)
       rnd(1,10) # Allow time for the ident to be recognised
@@ -310,14 +310,14 @@ def intJackin(group, x = 0, y = 0):
       BL = num(Identity.Cost)
       me.counters['Base Link'].value = BL
       notify("{} is representing the Runner {}. They start with {} {}".format(me,Identity,BL,uniLink()))
-   if debugVerbosity >= 3: notify("Creating Starting Cards")
+   if debugVerbosity >= 3: notify("### Creating Starting Cards")
    createStartingCards()
-   if debugVerbosity >= 3: notify("Shuffling Deck")
+   if debugVerbosity >= 3: notify("### Shuffling Deck")
    shuffle(me.piles['R&D/Stack'])
-   if debugVerbosity >= 3: notify("Drawing 5 Cards")
+   if debugVerbosity >= 3: notify("### Drawing 5 Cards")
    notify("{}'s {} is shuffled ".format(me,pileName(me.piles['R&D/Stack'])))
    drawMany(me.piles['R&D/Stack'], 5)
-   if debugVerbosity >= 3: notify("Reshuffling Deck")
+   if debugVerbosity >= 3: notify("### Reshuffling Deck")
    shuffle(me.piles['R&D/Stack']) # And another one just to be sure
    initGame()
 
