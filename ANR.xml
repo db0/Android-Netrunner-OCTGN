@@ -101,6 +101,7 @@
    <!-- <cardaction menu="Reveal" default="false" execute="revealTraceValue" /> -->
       <groupaction menu="Modify your max actions per turn" default="false" execute="modClicks" />
       <cardaction menu="Inspect" default="false" shortcut="Ctrl+I" execute="inspectCard" />
+      <groupaction menu="Inspect Target" default="false" shortcut="Ctrl+I" execute="inspectTargetCard" />
       <cardaction menu="(Un)Expose" default="false" shortcut="Ctrl+E" execute="expose" />
       <cardaction menu="Prioritize" default="false" shortcut="Ctrl+P" execute="prioritize" />
       <cardaction menu="Uninstall" default="false" shortcut="Ctrl+U" execute="uninstall" />

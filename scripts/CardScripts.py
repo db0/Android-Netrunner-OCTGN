@@ -1132,7 +1132,7 @@ bc0f047c-01b1-427f-a439-d451eda02039
 -----
 onScore:Put1Agenda-isSilent$$ReshuffleHQ
 +++++
-A0B0G0T0:Remove1Agenda-isCost$$Draw5Cards
+A1B0G0T0:Remove1Agenda-isCost$$Draw5Cards
 .....
 Fetal AI
 -----
