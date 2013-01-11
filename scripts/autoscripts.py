@@ -1483,6 +1483,7 @@ def CustomScript(card, action = 'PLAY'): # Scripts that are complex and fairly u
             c.orientation ^= Rot90
             iter +=1
             autoscriptOtherPlayers('CardInstall',card)
+            autoscriptOtherPlayers('CardRezzed',card)
       if iter: # If we found any ice in the top 3
          notify("{} initiates an Accelerated Beta Test and reveals {} Ice from the top of their R&D. These Ice are automatically installed and rezzed".format(me, iter))
       else: notify("{} initiates a Accelerated Beta Test but their beta team was incompetent.".format(me))

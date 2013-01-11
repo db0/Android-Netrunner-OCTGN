@@ -1727,10 +1727,12 @@ def inspectCard(card, x = 0, y = 0): # This function shows the player the card t
    if re.search(r'onRez', Stored_AutoScripts.get(card._id,'')): ASText += '\n * It will have an effect when its being rezzed.'
    if re.search(r'whileRezzed', Stored_AutoScripts.get(card._id,'')): ASText += '\n * It will has a continous effect while in play.'
    if re.search(r'whileScored', Stored_AutoScripts.get(card._id,'')): ASText += '\n * It will has a continous effect while scored.'
+   if re.search(r'whileRunning', Stored_AutoScripts.get(card._id,'')): ASText += '\n * It will has a continous effect while running.'
    if re.search(r'atTurnStart', Stored_AutoScripts.get(card._id,'')): ASText += '\n * It will perform an automation at the start of your turn.'
    if re.search(r'atTurnEnd', Stored_AutoScripts.get(card._id,'')): ASText += '\n * It will perform an automation at the end of your turn.'
    if re.search(r'atRunStart', Stored_AutoScripts.get(card._id,'')): ASText += '\n * It will perform an automation at the start of your run.'
    if re.search(r'atJackOut', Stored_AutoScripts.get(card._id,'')): ASText += '\n * It will perform an automation at the end of a run.'
+   if re.search(r'onAccess', Stored_AutoScripts.get(card._id,'')): ASText += '\n * It will perform an automation when the runner accesses it.'
    if CardsAA.get(card.model,'') != '' or Stored_AutoActions.get(card._id,'') != '':
       if debugVerbosity >= 2: notify("### We have AutoActions") #Debug
       if ASText == 'This card has the following automations:': ASText = '\nThis card will perform one or more automated actions when you double click on it.'

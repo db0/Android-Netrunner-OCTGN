@@ -52,6 +52,7 @@ Changelog
 
 * Fix for Rabbit Hole ability not costing any credits.
 * Fix for tinkering revealing an ICEs name.
+* Can now Inspect Opponent's card with "Inspect Target"
 
 ### v2.1.4
 
