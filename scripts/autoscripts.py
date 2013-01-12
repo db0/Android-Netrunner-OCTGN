@@ -89,7 +89,7 @@ def executePlayScripts(card, action):
          if debugVerbosity >= 2: notify("### Second Processing: {}".format(activeAutoscript)) # Debug
          if chkWarn(card, activeAutoscript) == 'ABORT': return
          if re.search(r':Pass\b', activeAutoscript): return # Pass is a simple command of doing nothing ^_^
-         effect = re.search(r'\b([A-Z][A-Za-z]+)([0-9]*)([A-Za-z& ]*)\b([^:]?[A-Za-z0-9_&{}\|:, -]*)', activeAutoscript)
+         effect = re.search(r'\b([A-Z][A-Za-z]+)([0-9]*)([A-Za-z& ]*)\b([^:]?[A-Za-z0-9_&{}\|:,<> -]*)', activeAutoscript)
          if debugVerbosity >= 2: notify('### effects: {}'.format(effect.groups())) #Debug
          if effectType.group(1) == 'whileRezzed' or effectType.group(1) == 'whileScored':
             if effect.group(1) != 'Gain' and effect.group(1) != 'Lose': continue # The only things that whileRezzed and whileScored affect in execute Automations is GainX scripts (for now). All else is onTrash, onPlay etc

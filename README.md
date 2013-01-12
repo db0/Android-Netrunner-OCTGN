@@ -53,6 +53,7 @@ Changelog
 * Fix for Rabbit Hole ability not costing any credits.
 * Fix for tinkering revealing an ICEs name.
 * Can now Inspect Opponent's card with "Inspect Target"
+* Fixed TMI not derezzing itself after a failed trace
 
 ### v2.1.4
 
