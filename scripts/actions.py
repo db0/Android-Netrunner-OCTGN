@@ -659,14 +659,14 @@ def inputTraceValue (card, x=0,y=0, limit = 0, silent = False):
          whisper(":::Warning::: Trace attempt aborted by player.")
          return 'ABORT'
    reduction = reduceCost(card, 'TRACE', TraceValue)
-   if reduction > 0: extraText = " (reduced by {})".format(uniCredit(reduction))
-   elif reduction < 0: extraText = " (increased by {})".format(uniCredit(abs(reduction)))
+   if reduction > 0: extraText = " (Cost reduced by {})".format(uniCredit(reduction))
+   elif reduction < 0: extraText = " (Cost increased by {})".format(uniCredit(abs(reduction)))
    if payCost(TraceValue - reduction)  == 'ABORT': return
    #card.markers[mdict['Credits']] = TraceValue
    if ds == 'corp': 
-      if not silent: notify("{} strengthens their Trace by {}.".format(me,TraceValue))
+      if not silent: notify("{} strengthens their Trace by {}{}.".format(me,TraceValue,extraText))
    else: 
-      if not silent: notify("{} reinforces their {} by {} for a total of {}.".format(me,uniLink(),TraceValue, TraceValue + me.counters['Base Link'].value))
+      if not silent: notify("{} reinforces their {} by {} for a total of {}{}.".format(me,uniLink(),TraceValue, TraceValue + me.counters['Base Link'].value,extraText))
       CorpTraceValue = num(getGlobalVariable('CorpTraceValue'))
       currentTraceEffectTuple = eval(getGlobalVariable('CurrentTraceEffect'))
       if debugVerbosity >= 2: notify("currentTraceEffectTuple = {}".format(currentTraceEffectTuple))
