@@ -1631,7 +1631,7 @@ def uninstall(card, x=0, y=0, destination = 'hand', silent = False):
    # Returns an installed card into our hand.
    mute()
    storeProperties(card)
-   if destination == 'R&D' or destination == 'Stack': group = me.piles['R&D/Stack']
+   if destination == 'R&D' or destination == 'Stack': group = card.owner.piles['R&D/Stack']
    else: group = card.owner.hand
    #confirm("destination: {}".format(destination)) # Debug
    if fetchProperty(card, 'Type') == "Tracing" or fetchProperty(card, 'Type') == "Counter Hold" or (fetchProperty(card, 'Type') == "Server" and fetchProperty(card, 'name') != "Remote Server"): 
