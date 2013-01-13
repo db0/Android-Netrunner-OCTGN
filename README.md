@@ -54,6 +54,8 @@ Changelog
 * Fix for tinkering revealing an ICEs name.
 * Can now Inspect Opponent's card with "Inspect Target"
 * Fixed TMI not derezzing itself after a failed trace
+* Fixed Sherlock returning programs on top of the corps deck (bug #101)
+* Trace boosting now mentions if the cost was reduced (feature #102)
 
 ### v2.1.4
 

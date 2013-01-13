@@ -1,30 +1,14 @@
-2.1.4||
+2.1.5||
 ======New Version Information======
 
-(2.1.4 includes the fix for the "Create New Server" bugging out,Noise/Grimoire not working and not being able to re-setup the table. Sorry about that)
+New version provides some small but important bugfixes. Please make sure you update to it ASAP.
 
-More than a Trace Amount of updates! :)
+One new feature added is that you can now inspect your opponents card. 
+Just target the card first and then use the "Inspect Target" function on the table context menu (Ctrl+I)
+This will means you don't have to first take control of an opponent's card you want to inspect.
 
-The latest data pack is now live on OCTGN and it comes with a another hefty upgrade of systems.
-
-:::IMPORTANT::: There's two significant changes other than the availability of the latest data pack.
-
-1. Card can now be hosted properly on other cards. Cards which require a host will not be able to be played, unless you've targeted an appropriate host for them
-This affects cards like Parasite and Personal Touch but on the background it also is working for Daemons like Djinn.
-
-A hosted card will be trashed if its host ever leaves play. You don't need to do it manually anymore. 
-This is important because now trashing a Djinn which hosts programs will trash all its hosted programs as well. Yes, this will also cascade on nested Djinns as it should ;)
-
-2. There's a new function which allows the runner to access cards in a server. It's in the table menu under "Access Target".
-You should use this after you've just had a successful run on a server and the Corp has passed on rezzing or triggering any abilities.
-
-It will provide a function similar to the one when you access R&D or HQ, which will also automatically trigger abilities such as the Fetal AI, and require less actions from you.
-
--- So remember, once you succeed a run on a remote server, check if the Corp wants to rez anything, and if not, target all cards in the root of the server and "Access Target". --
-
-Because of the scale of the updates to make the new set work, I'm forcing a set upgrade to 2.1.x. Patches have been provided as usual.
-Happy Trace Dodging!
+Enjoy!
 ===============================
 ||
-Latest Core Set: 2.1.0
+Latest Sets: 2.1.0
 Latest Markers Set: 2.1.0
