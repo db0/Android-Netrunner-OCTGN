@@ -834,8 +834,8 @@ def reduceCost(card, action = 'REZ', fullCost = 0, dryRun = False):
                   try: 
                      marker = findMarker(c, markerName.group(1))
                      if marker: 
-                        if reductionSearch.group(1) == 'Reduce': reduction = c.markers[marker]
-                        else: reduction = -c.markers[marker]
+                        if reductionSearch.group(1) == 'Reduce': reduction += c.markers[marker]
+                        else: reduction += -c.markers[marker]
                   except: notify("!!!ERROR!!! ReduceXCost - Bad Script")
                else:
                   if reductionSearch.group(1) == 'Reduce': reduction += num(reductionSearch.group(2)) # if there is a match, the total reduction for this card's cost is increased.
