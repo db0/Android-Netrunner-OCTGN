@@ -485,8 +485,7 @@ def runSuccess(group=table,x=0,y=0, silent = False):
 #------------------------------------------------------------------------------
 def pay2andDelTag(group, x = 0, y = 0):
    if debugVerbosity >= 1: notify(">>> pay2andDelTag(){}".format(extraASDebug())) #Debug
-   mute()
-   extraText = ''
+   mute()   
    if ds != "runner":
       whisper("Only runners can use this action")
       return
@@ -499,6 +498,7 @@ def pay2andDelTag(group, x = 0, y = 0):
    reduction = reduceCost(dummyCard, 'DELTAG', 2)
    if reduction > 0: extraText = " (reduced by {})".format(uniCredit(reduction))
    elif reduction < 0: extraText = " (increased by {})".format(uniCredit(abs(reduction)))
+   else: extraText = ''
    if payCost(2 - reduction) == "ABORT": 
       me.Clicks += 1 # If the player didn't notice they didn't have enough credits, we give them back their click
       return # If the player didn't have enough money to pay and aborted the function, then do nothing.
@@ -590,13 +590,13 @@ def addAgendaCounter(card, x = 0, y = 0):
 #------------------------------------------------------------------------------
 def advanceCardP(card, x = 0, y = 0):
    if debugVerbosity >= 1: notify(">>> advanceCardP(){}".format(extraASDebug())) #Debug
-   mute()
-   extraText = ''
+   mute()  
    ClickCost = useClick()
    if ClickCost == 'ABORT': return
    reduction = reduceCost(card, 'ADVANCEMENT', 1)
    if reduction > 0: extraText = " (reduced by {})".format(uniCredit(reduction))
    elif reduction < 0: extraText = " (increased by {})".format(uniCredit(abs(reduction)))
+   else: extraText = ''
    if payCost(1 - reduction) == "ABORT": 
       me.Clicks += 1 # If the player didn't notice they didn't have enough credits, we give them back their click
       return # If the player didn't have enough money to pay and aborted the function, then do nothing.
@@ -638,7 +638,6 @@ def inputTraceValue (card, x=0,y=0, limit = 0, silent = False):
    if debugVerbosity >= 1: notify(">>> inputTraceValue(){}".format(extraASDebug())) #Debug
    mute()
    limitText = ''
-   extraText = ''
    card = getSpecial('Tracing')   
    limit = num(limit) # Just in case
    if debugVerbosity >= 2: notify("### Trace Limit: {}".format(limit))
@@ -662,6 +661,7 @@ def inputTraceValue (card, x=0,y=0, limit = 0, silent = False):
    reduction = reduceCost(card, 'TRACE', TraceValue)
    if reduction > 0: extraText = " (Cost reduced by {})".format(uniCredit(reduction))
    elif reduction < 0: extraText = " (Cost increased by {})".format(uniCredit(abs(reduction)))
+   else: extraText = ''
    if payCost(TraceValue - reduction)  == 'ABORT': return
    #card.markers[mdict['Credits']] = TraceValue
    if ds == 'corp': 
@@ -1160,8 +1160,6 @@ def accessTarget(group = table, x = 0, y = 0):
       if card.Type == 'Agenda' or card.Type == 'Asset' or card.Type == 'Upgrade':
          if card.Type == 'Agenda': action1TXT = 'Liberate for {} Agenda Points.'.format(card.Stat)
          else: 
-            extraText = ''
-            extraText2 = ''
             reduction = reduceCost(card, 'TRASH', num(card.Stat), dryRun = True)
             if reduction > 0: 
                extraText = " ({} - {})".format(card.Stat,reduction)
@@ -1169,6 +1167,9 @@ def accessTarget(group = table, x = 0, y = 0):
             elif reduction < 0: 
                extraText = " ({} + {})".format(card.Stat,abs(reduction))
                extraText2 = " (increased by {})".format(uniCredit(abs(reduction)))
+            else:
+               extraText = ''
+               extraText2 = '' # I only set this here, even though it's used in line 1190 later, because to reach that part, it will have to pass through this if clause always.
             action1TXT = 'Pay {}{} to Trash.'.format(num(card.Stat) - reduction,extraText)
          options = ["Leave where it is.","Force trash at no cost.",action1TXT]
       else:                    
@@ -1260,8 +1261,6 @@ def RDaccessX(group = table, x = 0, y = 0): # A function which looks at the top 
       if cType == 'Agenda' or cType == 'Asset' or cType == 'Upgrade':
          if cType == 'Agenda': action1TXT = 'Liberate for {} Agenda Points.'.format(cStat)
          else: 
-            extraText = ''
-            extraText2 = ''
             reduction = reduceCost(RDtop[iter], 'TRASH', num(cStat), dryRun = True)
             if reduction > 0: 
                extraText = " ({} - {})".format(cStat,reduction)
@@ -1269,6 +1268,9 @@ def RDaccessX(group = table, x = 0, y = 0): # A function which looks at the top 
             elif reduction < 0: 
                extraText = " ({} + {})".format(cStat,abs(reduction))
                extraText2 = " (increased by {})".format(uniCredit(reduction))
+            else:
+               extraText = ''
+               extraText2 = ''            
             action1TXT = 'Pay {}{} to Trash.'.format(num(cStat) - reduction,extraText)
          options = ["Leave where it is.","Force trash at no cost.",action1TXT]
       else:                    
@@ -1372,8 +1374,6 @@ def HQaccess(group=table, x=0,y=0, silent = False):
    if revealedCard.Type == 'Agenda' or revealedCard.Type == 'Asset' or revealedCard.Type == 'Upgrade':
       if revealedCard.Type == 'Agenda': action1TXT = 'Liberate for {} Agenda Points.'.format(revealedCard.Stat)
       else: 
-         extraText = ''
-         extraText2 = ''
          reduction = reduceCost(revealedCard, 'TRASH', num(revealedCard.Stat), dryRun = True)
          if reduction > 0: 
             extraText = " ({} - {})".format(revealedCard.Stat,reduction)
@@ -1381,6 +1381,9 @@ def HQaccess(group=table, x=0,y=0, silent = False):
          elif reduction < 0: 
             extraText = " ({} + {})".format(revealedCard.Stat,abs(reduction))
             extraText2 = " (increased by {})".format(uniCredit(abs(reduction)))
+         else:
+            extraText = ''
+            extraText2 = ''
          action1TXT = 'Pay {}{} to Trash.'.format(num(revealedCard.Stat) - reduction,extraText)
       options = ["Leave where it is.","Force trash at no cost.",action1TXT]
    else:                    
@@ -1416,7 +1419,6 @@ def isRezzable (card):
 def intRez (card, x=0, y=0, cost = 'not free', silent = False):
    if debugVerbosity >= 1: notify(">>> intRez(){}".format(extraASDebug())) #Debug
    mute()
-   extraText = ''
    rc = ''
    storeProperties(card)
    if card.isFaceUp: 
@@ -1432,6 +1434,7 @@ def intRez (card, x=0, y=0, cost = 'not free', silent = False):
    reduction = reduceCost(card, 'REZ', num(fetchProperty(card, 'Cost')))
    if reduction > 0: extraText = " (reduced by {})".format(uniCredit(reduction))
    elif reduction < 0: extraText = " (increased by {})".format(uniCredit(abs(reduction)))
+   else: extraText = ''
    increase = findExtraCosts(card, 'REZ')
    rc = payCost(num(fetchProperty(card, 'Cost')) - reduction + increase, cost)
    if rc == "ABORT": return # If the player didn't have enough money to pay and aborted the function, then do nothing.
@@ -1524,7 +1527,6 @@ def intTrashCard(card, stat, cost = "not free",  ClickCost = '', silent = False)
    mute()
    MUtext = ""
    rc = ''
-   extraText = ''
    storeProperties(card)
    if ClickCost == '': 
       ClickCost = '{} '.format(me) # If not clicks were used, then just announce our name.
@@ -1550,6 +1552,7 @@ def intTrashCard(card, stat, cost = "not free",  ClickCost = '', silent = False)
    reduction = reduceCost(card, 'TRASH', num(stat)) # So as not to waste time.
    if reduction > 0: extraText = " (reduced by {})".format(uniCredit(reduction))    
    elif reduction < 0: extraText = " (increased by {})".format(uniCredit(abs(reduction)))
+   else: extraText = ''
    rc = payCost(num(stat) - reduction, cost)
    if rc == "ABORT": return 'ABORT' # If the player didn't have enough money to pay and aborted the function, then do nothing.
    elif rc == 0: 
@@ -1802,7 +1805,7 @@ def currentHandSize(player = me):
 
 def intPlay(card, cost = 'not free'):
    if debugVerbosity >= 1: notify(">>> intPlay(){}".format(extraASDebug())) #Debug
-   extraText = ''
+   extraText = '' # We set this here, because the if clause that may modify this variable will not be reached in all cases. So we need to set it to null here to avoid a python error later.
    mute() 
    chooseSide() # Just in case...
    whisper("+++ Processing. Please Hold...")
