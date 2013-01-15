@@ -638,6 +638,7 @@ def inputTraceValue (card, x=0,y=0, limit = 0, silent = False):
    if debugVerbosity >= 1: notify(">>> inputTraceValue(){}".format(extraASDebug())) #Debug
    mute()
    limitText = ''
+   extraText = ''
    card = getSpecial('Tracing')   
    limit = num(limit) # Just in case
    if debugVerbosity >= 2: notify("### Trace Limit: {}".format(limit))
