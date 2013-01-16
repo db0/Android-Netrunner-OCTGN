@@ -1,6 +1,5 @@
 =====Message of the Day======
 
-Trace Amount has landed. Enjoy the new Jinteki ;)
+Nothing to see here. Move along citizen.
 
-I hope I've also worked around that annoying bug with the Tracing or the malfunctioning Identities. Let me know if it persists.
 =============================

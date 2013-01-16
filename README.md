@@ -48,6 +48,15 @@ Shaper running on a heavily fortifield Haas-Bioroid server
 Changelog
 ---------
 
+### 2.1.6
+
+* **IMPORTANT** Fixed a bug introduced in 2.1.5 which somehow made all attempts by the runner to declare their link give a python error.
+  (I do not understand how nobody has reported it yet. Wasn't your traces failing?)
+* Now cards which reduce costs via credits, announce how many credits they used.
+* When BP is used to reduce costs, this is also announced.
+* Fixed some broken issues with reducing costs (from multiple braintrusts or Encryption protocols for example). 
+  
+
 ### v.2.1.5
 
 * Fix for Rabbit Hole ability not costing any credits.
