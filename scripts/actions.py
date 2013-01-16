@@ -789,7 +789,9 @@ def reduceCost(card, action = 'REZ', fullCost = 0, dryRun = False):
             usedBP += 1
             BPcount -= 1
             if fullCost == 0: break
-         if not dryRun: myIdent.markers[mdict['BadPublicity']] -= usedBP
+         if not dryRun: 
+            myIdent.markers[mdict['BadPublicity']] -= usedBP
+            notify(" -- {} spends {} Bad Publicity credits".format(myIdent,usedBP))
    ### Finally we go through the table and see if there's any cards providing cost reduction
    cardList = sortPriority([c for c in table
                            if c.isFaceUp])
@@ -843,12 +845,15 @@ def reduceCost(card, action = 'REZ', fullCost = 0, dryRun = False):
                      fullCost -= 1
                      markersCount -= 1
                      markersRemoved += 1
+                  else: break
                else: # If it's not a reduction, it's an increase in the cost.
                   reduction -= 1
                   fullCost += 1                     
                   markersCount -= 1
                   markersRemoved += 1
-            if not dryRun: c.markers[mdict['Credits']] -= markersRemoved # If we have a dryRun, we don't remove any tokens.
+            if not dryRun: 
+               c.markers[mdict['Credits']] -= markersRemoved # If we have a dryRun, we don't remove any tokens.
+               notify(" -- {} credits are used from {}".format(markersRemoved,c))
          elif reductionSearch.group(2) == 'X':
             markerName = re.search(r'-perMarker{([\w ]+)}', autoS)
             try: 
