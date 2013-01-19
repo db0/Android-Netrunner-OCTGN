@@ -48,6 +48,10 @@ Shaper running on a heavily fortifield Haas-Bioroid server
 Changelog
 ---------
 
+### 2.1.7
+
+* Made custom fonts work again with the new version of OCTGN
+
 ### 2.1.6
 
 * **IMPORTANT** Fixed a bug introduced in 2.1.5 which somehow made all attempts by the runner to declare their link give a python error.

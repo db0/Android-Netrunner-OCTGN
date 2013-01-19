@@ -23,4 +23,6 @@
   <Relationship Target="/scripts/CardScripts.py"         Id="r21" Type="http://schemas.octgn.org/script" />
   <Relationship Target="/counters/Tags.png"              Id="r26" Type="http://schemas.octgn.org/picture" />
   <Relationship Target="/table/Tabletop.jpg"             Id="r35" Type="http://schemas.octgn.org/picture" />
+  <Relationship Target="/CyberpunkIsNotDead_ANR.ttf"     Id="r40" Type="http://schemas.octgn.org/game/font" />
+  <Relationship Target="/ANR_symbols_only-enlarged.ttf"  Id="r41" Type="http://schemas.octgn.org/game/font" />  
 </Relationships>

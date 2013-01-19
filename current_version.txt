@@ -1,16 +1,8 @@
-2.1.6||
+2.1.7||
 ======New Version Information======
 
-New version fixes an significant bug introduced in 2.1.5 where all attempts to declare the runner's link by double clicking on their trace cards would fail with a python error
+Custom fonts work again with the new version of OCTGN
 
-Please update to 2.1.6 ASAP, and if your opponent gets a python error while playing, make sure they're using 2.1.6+ as well.
-
-(As a sidenote, I'm a bit surprised that nobody reported this bug. Did nobody encounter it, or does nobody use the trace card to boost their link?)
-
-Also included are some bugfixes for cards reducing or increasing costs. 
-Multiple Braintrusts and Encryption Protocols should work fine now.
-
-Please update ASAP.
 ===============================
 ||
 Latest Sets: 2.1.0
