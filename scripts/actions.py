@@ -789,7 +789,7 @@ def reduceCost(card, action = 'REZ', fullCost = 0, dryRun = False):
             usedBP += 1
             BPcount -= 1
             if fullCost == 0: break
-         if not dryRun: 
+         if not dryRun and usedBP != 0: 
             myIdent.markers[mdict['BadPublicity']] -= usedBP
             notify(" -- {} spends {} Bad Publicity credits".format(myIdent,usedBP))
    ### Finally we go through the table and see if there's any cards providing cost reduction
@@ -851,7 +851,7 @@ def reduceCost(card, action = 'REZ', fullCost = 0, dryRun = False):
                   fullCost += 1                     
                   markersCount -= 1
                   markersRemoved += 1
-            if not dryRun: 
+            if not dryRun and markersRemoved != 0: 
                c.markers[mdict['Credits']] -= markersRemoved # If we have a dryRun, we don't remove any tokens.
                notify(" -- {} credits are used from {}".format(markersRemoved,c))
          elif reductionSearch.group(2) == 'X':
