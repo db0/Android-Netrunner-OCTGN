@@ -48,6 +48,16 @@ Shaper running on a heavily fortifield Haas-Bioroid server
 Changelog
 ---------
 
+### 2.1.8
+
+* **SIGNIFICANT** Accessing an ambush like Snare will now allow you to see what the corp writes in the chatbox, or any actions taken
+* Accessed ambushes allow the runner to press "No" to send a "ping" to the corp to take action.
+* Compromised Employee will now trigger from each ICE installed by an accelerated beta test
+* Accelerated beta test will now announce which ICE it installed
+* Encryption protocol will now not increase the cost of cards accessed from HQ
+* Statistics will now start recording number of cards in the deck and number of agendas in the deck.
+* Statistics will now record game names, which should be useful for tournament statistic gathering.
+
 ### 2.1.7
 
 * Made custom fonts work again with the new version of OCTGN

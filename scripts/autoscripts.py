@@ -175,8 +175,10 @@ def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
       return
    if debugVerbosity >= 5: notify("+++ Not a tracing card. Checking highlight...")
    if card.highlight == InactiveColor:
-      whisper("You cannot use inactive cards. Please use the relevant card abilities to clear them first. Aborting")
-      return
+      accessRegex = re.search(r'onAccess:([^|]+)',CardsAS.get(card.model,''))
+      if not accessRegex:
+         whisper("You cannot use inactive cards. Please use the relevant card abilities to clear them first. Aborting")
+         return
    if debugVerbosity >= 5: notify("+++ Not an inactive card. Checking Stored_Autoactions{}...")
    if debugVerbosity >= 5: notify("+++ Finished storing CardsAA.get(card.model,'')s. Checking Rez status")
    if not card.isFaceUp:
