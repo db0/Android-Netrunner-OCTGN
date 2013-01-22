@@ -425,6 +425,7 @@ def autoscriptOtherPlayers(lookup, origin_card = Identity, count = 1): # Functio
 # For example a card that would produce credits whenever a trace was attempted. 
    if not Automations['Triggers']: return
    if debugVerbosity >= 1: notify(">>> autoscriptOtherPlayers() with lookup: {}".format(lookup)) #Debug
+   if debugVerbosity >= 3: notify("### origin_card = {}".format(origin_card)) #Debug
    if not Automations['Play, Score and Rez']: return # If automations have been disabled, do nothing.
    for card in table:
       if debugVerbosity >= 2: notify('Checking {}'.format(card)) # Debug
@@ -1482,8 +1483,9 @@ def CustomScript(card, action = 'PLAY'): # Scripts that are complex and fairly u
             placeCard(c,'InstallRezzed')
             c.orientation ^= Rot90
             iter +=1
-            autoscriptOtherPlayers('CardInstall',card)
-            autoscriptOtherPlayers('CardRezzed',card)
+            notify(" -- {} Beta Tested!".format(c))
+            autoscriptOtherPlayers('CardInstall',c)
+            autoscriptOtherPlayers('CardRezzed',c)
       if iter: # If we found any ice in the top 3
          notify("{} initiates an Accelerated Beta Test and reveals {} Ice from the top of their R&D. These Ice are automatically installed and rezzed".format(me, iter))
       else: notify("{} initiates a Accelerated Beta Test but their beta team was incompetent.".format(me))
