@@ -404,6 +404,13 @@ def num (s):
    except ValueError:
       return 0
 
+def numOrder(num):
+   if num == 0: order = '1st'
+   elif num == 1: order = '2nd'
+   elif num == 2: order = '3rd'
+   else: order = str(num + 1)+'th'
+   return order
+      
 def chooseSide(): # Called from many functions to check if the player has chosen a side for this game.
    if debugVerbosity >= 1: notify(">>> chooseSide(){}".format(extraASDebug())) #Debug
    mute()

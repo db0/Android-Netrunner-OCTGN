@@ -1148,10 +1148,11 @@ def accessTarget(group = table, x = 0, y = 0):
          X = 0
          for autoS in Autoscripts:
             if autoS == 'Reveal':
-               information("Ambush! You have stumbled into a {}\
+               while not confirm("Ambush! You have stumbled into a {}\
                          \n(This card activates even when inactive.)\
                        \n\nYour blunder has already triggered the alarms. Please wait until corporate OpSec has decided whether to use its effects or not, before pressing any button\
-                        ".format(card.name))
+                       \n\nHas the corporation decided whether or not to the effects of this ambush?\
+                        ".format(card.name)): rnd(1,1000)
             else: X = redirect(autoS, card, 'Quick', X)
       if card.Type == 'ICE': 
          cStatTXT = '\nStrength: {}.'.format(card.Stat)
@@ -1224,6 +1225,7 @@ def RDaccessX(group = table, x = 0, y = 0): # A function which looks at the top 
    cover.moveTo(targetPL.piles['Heap/Archives(Face-up)']) # Moving that dummy card on top of their archives
    for iter in range(len(RDtop)):
       if debugVerbosity >= 3: notify("### Moving card {}".format(iter)) #Debug
+      notify(" -- {} is now accessing the {} card".format(me,numOrder(iter)))
       RDtop[iter].moveToBottom(targetPL.piles['Heap/Archives(Face-up)'])
       if debugVerbosity >= 4: notify("#### Looping...")
       loopChk(RDtop[iter],'Type')
@@ -1238,10 +1240,11 @@ def RDaccessX(group = table, x = 0, y = 0): # A function which looks at the top 
                if not re.search(r'ifInstalled',autoS):
                   RDtop[iter].moveToTable(0, 0 + yaxisMove(RDtop[iter]), False)
                   RDtop[iter].highlight = RevealedColor         
-                  information("Ambush! You have stumbled into a {}\
+                  while not confirm("Ambush! You have stumbled into a {}\
                             \n(This card activates even on access from R&D.)\
-                          \n\nYour blunder has already triggered the alarms. Please wait until corporate OpSec has decided whether to use its effects or not, before pressing any button\
-                           ".format(RDtop[iter].name))
+                          \n\nYour blunder has already triggered the alarms. Please wait until corporate OpSec has decided whether to use its effects or not.\
+                          \n\nHas the corporation decided whether or not to the effects of this ambush?\
+                           ".format(RDtop[iter].name)): rnd(1,1000)
             else: X = redirect(autoS, RDtop[iter], 'Quick', X)
       if debugVerbosity >= 4: notify("#### Storing...")
       storeProperties(RDtop[iter]) # Otherwise trying to trash the card will crash because of reduceCost()
@@ -1360,10 +1363,11 @@ def HQaccess(group=table, x=0,y=0, silent = False):
             if not re.search(r'ifInstalled',autoS):
                revealedCard.moveToTable(0, 0 + yaxisMove(revealedCard), False)
                revealedCard.highlight = RevealedColor         
-               information("Ambush! You have stumbled into a {}\
+               while not confirm("Ambush! You have stumbled into a {}\
                          \n(This card activates even on access from HQ.)\
-                       \n\nYour blunder has already triggered the alarms. Please wait until corporate OpSec has decided whether to use its effects or not, before pressing any button\
-                        ".format(revealedCard.name))
+                       \n\nYour blunder has already triggered the alarms. Please wait until corporate OpSec has decided whether to use its effects or not, before pressing any button.\
+                       \n\nHas the corporation decided whether or not to the effects of this ambush?\
+                        ".format(revealedCard.name)): rnd(1,1000) # We put a hacky delay if the player presses 'No'
          else: X = redirect(autoS, revealedCard, 'Quick', X)
    if debugVerbosity >= 2: notify("### Not a Trap.") #Debug
    if revealedCard.Type == 'ICE': 
