@@ -1,8 +1,11 @@
 =====Message of the Day======
 
-Signups for the 2nd OCTGN Tournament are now open.
+These seems to be more crashes happening in the latest version of OCTGN/A:NR plugin
 
-Do you want to take part?
+I'm currently trying to figure out where and why this is happening. 
+
+Please, if you experience a crash, note down what was going on in the table at that point and contact db0 in github or dbzer0 in BGG.
+Provide as much info as possible. What were you doing when this happened. What cards you had on the table. Even grab a screenshot it possible.
+
+Thanks for your help and understanding.
 =============================
-&&
-http://boardgamegeek.com/thread/917357/octgn-netrunner-tournament-2-signup
