@@ -798,7 +798,9 @@ def reduceCost(card, action = 'REZ', fullCost = 0, dryRun = False):
             notify(" -- {} spends {} Bad Publicity credits".format(myIdent,usedBP))
    ### Finally we go through the table and see if there's any cards providing cost reduction
    cardList = sortPriority([c for c in table
-                           if c.isFaceUp])
+                           if c.isFaceUp
+                           and c.highlight != RevealedColor
+                           and c.highlight != InactiveColor])
    for c in cardList: # Then check if there's other cards in the table that reduce its costs.
       Autoscripts = CardsAS.get(c.model,'').split('||')
       if len(Autoscripts) == 0: continue
@@ -811,7 +813,7 @@ def reduceCost(card, action = 'REZ', fullCost = 0, dryRun = False):
             if reductionSearch: notify("!!! Regex is {}".format(reductionSearch.groups()))
             else: notify("!!! No reduceCost regex Match!") 
          if re.search(r'excludeDummy', autoS) and c.highlight == DummyColor: continue 
-         if re.search(r'ifInstalled',autoS) and card.group != table: continue
+         if re.search(r'ifInstalled',autoS) and (card.group != table or card.highlight == RevealedColor): continue
          if reductionSearch: # If the above search matches (i.e. we have a card with reduction for Rez and a condition we continue to check if our card matches the condition)
             if debugVerbosity >= 3: notify("### Possible Match found in {}".format(c)) # Debug         
             if reductionSearch.group(1) == 'Reduce': 
@@ -1138,7 +1140,7 @@ def accessTarget(group = table, x = 0, y = 0):
          card.isFaceUp = True
          rnd(1,100)
          cFaceD = True
-      card.highlight = RevealedColor
+      card.highlight = InactiveColor
       storeProperties(card)
       accessRegex = re.search(r'onAccess:([^|]+)',CardsAS.get(card.model,''))
       if accessRegex:
