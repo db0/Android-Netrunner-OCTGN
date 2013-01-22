@@ -1149,12 +1149,15 @@ def accessTarget(group = table, x = 0, y = 0):
          Autoscripts = accessRegex.group(1).split('$$')
          X = 0
          for autoS in Autoscripts:
-            if autoS == 'Reveal':
+            if re.search(r'Reveal',autoS):
                while not confirm("Ambush! You have stumbled into a {}\
                          \n(This card activates even when inactive.)\
                        \n\nYour blunder has already triggered the alarms. Please wait until corporate OpSec has decided whether to use its effects or not, before pressing any button\
                        \n\nHas the corporation decided whether or not to the effects of this ambush?\
-                        ".format(card.name)): rnd(1,1000)
+                         \n(Pressing 'No' will send a ping to the corporation player to remind him to take action)\
+                        ".format(card.name)): 
+                  rnd(1,1000)
+                  notify(":::NOTICE::: {} is still waiting for {} to decide whether to use {} or not".format(me,card.owner,card))
             else: X = redirect(autoS, card, 'Quick', X)
       if card.Type == 'ICE': 
          cStatTXT = '\nStrength: {}.'.format(card.Stat)
@@ -1246,7 +1249,10 @@ def RDaccessX(group = table, x = 0, y = 0): # A function which looks at the top 
                             \n(This card activates even on access from R&D.)\
                           \n\nYour blunder has already triggered the alarms. Please wait until corporate OpSec has decided whether to use its effects or not.\
                           \n\nHas the corporation decided whether or not to the effects of this ambush?\
-                           ".format(RDtop[iter].name)): rnd(1,1000)
+                            \n(Pressing 'No' will send a ping to the corporation player to remind him to take action)\
+                           ".format(RDtop[iter].name)): 
+                     rnd(1,1000)
+                     notify(":::NOTICE::: {} is still waiting for {} to decide whether to use {} or not".format(me,RDtop[iter].owner,RDtop[iter]))
             else: X = redirect(autoS, RDtop[iter], 'Quick', X)
       if debugVerbosity >= 4: notify("#### Storing...")
       storeProperties(RDtop[iter]) # Otherwise trying to trash the card will crash because of reduceCost()
@@ -1369,7 +1375,10 @@ def HQaccess(group=table, x=0,y=0, silent = False):
                          \n(This card activates even on access from HQ.)\
                        \n\nYour blunder has already triggered the alarms. Please wait until corporate OpSec has decided whether to use its effects or not, before pressing any button.\
                        \n\nHas the corporation decided whether or not to the effects of this ambush?\
-                        ".format(revealedCard.name)): rnd(1,1000) # We put a hacky delay if the player presses 'No'
+                         \n(Pressing 'No' will send a ping to the corporation player to remind him to take action)\
+                        ".format(revealedCard.name)): 
+                  rnd(1,1000) # We put a hacky delay if the player presses 'No'
+                  notify(":::NOTICE::: {} is still waiting for {} to decide whether to use {} or not".format(me,revealedCard.owner,revealedCard))
          else: X = redirect(autoS, revealedCard, 'Quick', X)
    if debugVerbosity >= 2: notify("### Not a Trap.") #Debug
    if revealedCard.Type == 'ICE': 
