@@ -375,6 +375,7 @@ def checkDeckNoLimit(group):
       notify(":::ERROR::: Too much rival faction influence in {}'s R&D. {} found with a max of {}".format(me, loInf, num(identity.Stat)))
       ok = False
    me.setGlobalVariable('Influence',str(loInf))
+   me.setGlobalVariable('Cards Nr.',str(loDeckCount))
    if debugVerbosity >= 2: notify("### Total Influence used: {} (Influence string stored is: {}".format(loInf, me.getGlobalVariable('Influence'))) #Debug
    if ok: notify("-> Deck of {} is OK!".format(me))
    if debugVerbosity >= 3: notify("<<< checkDeckNoLimit() with return: {},{}.".format(ok,identity)) #Debug
