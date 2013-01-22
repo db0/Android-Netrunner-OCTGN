@@ -7,5 +7,9 @@ I'm currently trying to figure out where and why this is happening.
 Please, if you experience a crash, note down what was going on in the table at that point and contact db0 in github or dbzer0 in BGG.
 Provide as much info as possible. What were you doing when this happened. What cards you had on the table. Even grab a screenshot it possible.
 
-Thanks for your help and understanding.
+Thanks for your help and understanding. 
+
+(Do you want to be redirected to the crash report page?)
 =============================
+&&
+https://github.com/db0/Android-Netrunner-OCTGN/issues/117
