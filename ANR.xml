@@ -131,8 +131,7 @@
       <globalvariable name="ds" value="" /> 
       <globalvariable name="specialCards" value="{}" /> 
       <globalvariable name="wasNoisy" value="0" /> 
-      <globalvariable name="Influence" value="0" /> 
-      <globalvariable name="Cards Nr." value="0" /> 
+      <globalvariable name="Deck Stats" value="" /> 
       <globalvariable name="gameVersion" value="" /> 
       <hand name="HQ/Grip" visibility="me" ordered="false" width="63" height="88" icon="r11">
          <cardaction menu="&#8986; Pay and Install Card" default="true" shortcut="enter" execute="intPlay" />

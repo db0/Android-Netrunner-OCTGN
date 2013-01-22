@@ -340,6 +340,7 @@ def checkDeckNoLimit(group):
    loAP = 0.0
    loInf = 0
    loRunner = False
+   agendasCount = 0
    trash = me.piles['Archives(Hidden)'] # We use the hidden archives so that the opponent can't see the cards as we check them
    if debugVerbosity >= 5: notify("### About to move cards into trash") #Debug
    for card in group: card.moveTo(trash)
@@ -348,7 +349,9 @@ def checkDeckNoLimit(group):
    for card in trash: 
       #if ok == False: continue # If we've already found illegal cards, no sense in checking anymore. Will activate this after checking
       if card.Type == 'Agenda': 
-         if ds == 'corp': loAP += num(card.Stat)
+         if ds == 'corp': 
+            loAP += num(card.Stat)
+            agendasCount += 1
          else: 
             notify(":::ERROR::: Agendas found in {}'s Stack.".format(me))
             ok = False
@@ -374,8 +377,8 @@ def checkDeckNoLimit(group):
    if loInf > num(identity.Stat):
       notify(":::ERROR::: Too much rival faction influence in {}'s R&D. {} found with a max of {}".format(me, loInf, num(identity.Stat)))
       ok = False
-   me.setGlobalVariable('Influence',str(loInf))
-   me.setGlobalVariable('Cards Nr.',str(loDeckCount))
+   deckStats = (loInf,loDeckCount,agendasCount) # The deck stats is a tuple that we stored shared, and stores how much influence is in the player's deck, how many cards it has and how many agendas
+   me.setGlobalVariable('Deck Stats',str(deckStats))
    if debugVerbosity >= 2: notify("### Total Influence used: {} (Influence string stored is: {}".format(loInf, me.getGlobalVariable('Influence'))) #Debug
    if ok: notify("-> Deck of {} is OK!".format(me))
    if debugVerbosity >= 3: notify("<<< checkDeckNoLimit() with return: {},{}.".format(ok,identity)) #Debug

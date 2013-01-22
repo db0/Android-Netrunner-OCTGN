@@ -488,8 +488,12 @@ def reportGame(result = 'AgendaVictory'): # This submits the game results online
    if result == 'Flatlined' or result == 'Conceded' or result == 'DeckDefeat': WIN = 0
    else: WIN = 1
    SCORE = me.counters['Agenda Points'].value
-   INFLUENCE = me.getGlobalVariable('Influence')
-   CARDSNR = me.getGlobalVariable('Cards Nr.')
+   deckStats = eval(me.getGlobalVariable('Deck Stats'))
+   if debugVerbosity >= 2: notify("### Retrieved deckStats ") #Debug
+   if debugVerbosity >= 2: notify("### deckStats = {}".format(deckStats)) #Debug
+   INFLUENCE = deckStats[0]
+   CARDSNR = deckStats[1]
+   AGENDASNR = deckStats[2]
    TURNS = turn
    VERSION = gameVersion
    if debugVerbosity >= 2: notify("### About to report player results online.") #Debug
@@ -497,11 +501,11 @@ def reportGame(result = 'AgendaVictory'): # This submits the game results online
       notify(":::ATTENTION:::Game stats submit aborted due to number of players ( less than 2 ) or turns played (less than 1)")
       return # You can never win before the first turn is finished and we don't want to submit stats when there's only one player.
    if debugVerbosity < 1: # We only submit stats if we're not in debug mode
-      (reportTXT, reportCode) = webRead('http://84.205.248.92/slaghund/game.slag?g={}&u={}&id={}&r={}&s={}&i={}&t={}&cnr={}&v={}&w={}&lid={}&gname={}'.format(GUID,PLAYER,IDENTITY,RESULT,SCORE,INFLUENCE,TURNS,CARDSNR,VERSION,WIN,LEAGUE,GNAME))
+      (reportTXT, reportCode) = webRead('http://84.205.248.92/slaghund/game.slag?g={}&u={}&id={}&r={}&s={}&i={}&t={}&cnr={}&anr={}&v={}&w={}&lid={}&gname={}'.format(GUID,PLAYER,IDENTITY,RESULT,SCORE,INFLUENCE,TURNS,CARDSNR,AGENDASNR,VERSION,WIN,LEAGUE,GNAME))
    else: 
-      if confirm('Report URL: http://84.205.248.92/slaghund/game.slag?g={}&u={}&id={}&r={}&s={}&i={}&t={}&cnr={}&v={}&w={}&lid={}&gname={}\n\nSubmit?'.format(GUID,PLAYER,IDENTITY,RESULT,SCORE,INFLUENCE,TURNS,CARDSNR,VERSION,WIN,LEAGUE,GNAME)):
-         (reportTXT, reportCode) = webRead('http://84.205.248.92/slaghund/game.slag?g={}&u={}&id={}&r={}&s={}&i={}&t={}&cnr={}&v={}&w={}&lid={}&gname={}'.format(GUID,PLAYER,IDENTITY,RESULT,SCORE,INFLUENCE,TURNS,CARDSNR,VERSION,WIN,LEAGUE,GNAME))
-         notify('Report URL: http://84.205.248.92/slaghund/game.slag?g={}&u={}&id={}&r={}&s={}&i={}&t={}&cnr={}&v={}&w={}&lid={}&gname={}\n\nSubmit?'.format(GUID,PLAYER,IDENTITY,RESULT,SCORE,INFLUENCE,TURNS,CARDSNR,VERSION,WIN,LEAGUE,GNAME))
+      if confirm('Report URL: http://84.205.248.92/slaghund/game.slag?g={}&u={}&id={}&r={}&s={}&i={}&t={}&cnr={}&anr={}&v={}&w={}&lid={}&gname={}\n\nSubmit?'.format(GUID,PLAYER,IDENTITY,RESULT,SCORE,INFLUENCE,TURNS,CARDSNR,AGENDASNR,VERSION,WIN,LEAGUE,GNAME)):
+         (reportTXT, reportCode) = webRead('http://84.205.248.92/slaghund/game.slag?g={}&u={}&id={}&r={}&s={}&i={}&t={}&cnr={}&anr={}&v={}&w={}&lid={}&gname={}'.format(GUID,PLAYER,IDENTITY,RESULT,SCORE,INFLUENCE,TURNS,CARDSNR,AGENDASNR,VERSION,WIN,LEAGUE,GNAME))
+         notify('Report URL: http://84.205.248.92/slaghund/game.slag?g={}&u={}&id={}&r={}&s={}&i={}&t={}&cnr={}&anr={}&v={}&w={}&lid={}&gname={}\n\nSubmit?'.format(GUID,PLAYER,IDENTITY,RESULT,SCORE,INFLUENCE,TURNS,CARDSNR,AGENDASNR,VERSION,WIN,LEAGUE,GNAME))
    try:
       if reportTXT != "Updating result...Ok!" and debugVerbosity >=0: whisper("Failed to submit match results") 
    except: pass
@@ -530,14 +534,18 @@ def reportGame(result = 'AgendaVictory'): # This submits the game results online
       E_RESULT = 'Unknown'
       E_WIN = 0
    E_SCORE = enemyPL.counters['Agenda Points'].value
-   E_INFLUENCE = enemyPL.getGlobalVariable('Influence')
-   E_CARDSNR = enemyPL.getGlobalVariable('Cards Nr.')
+   if debugVerbosity >= 2: notify("### About to retrieve E_deckStats") #Debug
+   E_deckStats = eval(enemyPL.getGlobalVariable('Deck Stats'))
+   if debugVerbosity >= 2: notify("### E_deckStats = {}".format(E_deckStats)) #Debug
+   E_INFLUENCE = E_deckStats[0]
+   E_CARDSNR = E_deckStats[1]
+   E_AGENDASNR = E_deckStats[2]
    if ds == 'corp': E_TURNS = turn - 1 # If we're a corp, the opponent has played one less turn than we have.
    else: E_TURNS = turn # If we're the runner, the opponent has played one more turn than we have.
    E_VERSION = enemyPL.getGlobalVariable('gameVersion')
    if debugVerbosity >= 2: notify("### About to report enemy results online.") #Debug
    if debugVerbosity < 1: # We only submit stats if we're not debugging
-      (EreportTXT, EreportCode) = webRead('http://84.205.248.92/slaghund/game.slag?g={}&u={}&id={}&r={}&s={}&i={}&t={}&cnr={}&v={}&w={}&lid={}&gname={}'.format(GUID,ENEMY,E_IDENTITY,E_RESULT,E_SCORE,E_INFLUENCE,E_TURNS,E_CARDSNR,E_VERSION,E_WIN,LEAGUE,GNAME))
+      (EreportTXT, EreportCode) = webRead('http://84.205.248.92/slaghund/game.slag?g={}&u={}&id={}&r={}&s={}&i={}&t={}&cnr={}&anr={}&v={}&w={}&lid={}&gname={}'.format(GUID,ENEMY,E_IDENTITY,E_RESULT,E_SCORE,E_INFLUENCE,E_TURNS,E_CARDSNR,E_AGENDASNR,E_VERSION,E_WIN,LEAGUE,GNAME))
    setGlobalVariable('gameEnded','True')
    if debugVerbosity >= 3: notify("<<< reportGame()") #Debug
 
