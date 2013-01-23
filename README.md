@@ -44,6 +44,7 @@ Wayland Corporation baits a criminal into a deadly ambush.
 [![](http://i.imgur.com/u3YXqVyl.jpg)](http://i.imgur.com/u3YXqVy.jpg)
 
 Kate Stealing the game from R&D.
+
 [![](http://i.imgur.com/PgYecKsl.jpg)](http://i.imgur.com/PgYecKs.jpg)
 
 Shaper running on a heavily fortifield Haas-Bioroid server.
