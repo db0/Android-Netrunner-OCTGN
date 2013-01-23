@@ -1,9 +1,6 @@
 2.1.8||
 ======New Version Information======
 
-NOTE: There's some bug in the forum at the moment which doesn't allow me to edit the main post. 
-Go the the last reply in the thread to get the download link.
-
 Ambushes are now more interactive!
 
 When the pop-up window for a Snare! or similar ambush accessed from R&D appears, the runner can now read comunication written by the corp player in the chat box.
