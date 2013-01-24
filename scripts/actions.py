@@ -1059,7 +1059,7 @@ def findCounterPrevention(count, counter, targetPL): # Find out if the player ha
 # Card Actions
 #------------------------------------------------------------------------------
    
-def scrAgenda(card, x = 0, y = 0):
+def scrAgenda(card, x = 0, y = 0,silent = False):
    if debugVerbosity >= 1: notify(">>> scrAgenda(){}".format(extraASDebug())) #Debug
    #global scoredAgendas
    mute()
@@ -1083,7 +1083,7 @@ def scrAgenda(card, x = 0, y = 0):
             cheapAgenda = True
             currentAdv = card.markers[mdict['Advancement']]
          else: return
-      elif not confirm("Do you want to {} agenda {}?".format(agendaTxt.lower(),fetchProperty(card, 'name'))): return
+      elif not silent and not confirm("Do you want to {} agenda {}?".format(agendaTxt.lower(),fetchProperty(card, 'name'))): return
       card.isFaceUp = True
       if agendaTxt == 'SCORE' and chkTargeting(card) == 'ABORT': 
          card.isFaceUp = False
@@ -1196,7 +1196,7 @@ def accessTarget(group = table, x = 0, y = 0):
          notify("{} {} {} at no cost".format(me,uniTrash(),card))
       elif choice == 2:
          if card.Type == 'Agenda': 
-            scrAgenda(card)
+            scrAgenda(card,silent = True)
          else: 
             reduction = reduceCost(card, 'TRASH', num(card.Stat))
             rc = payCost(num(card.Stat) - reduction, "not free")
@@ -1306,7 +1306,7 @@ def RDaccessX(group = table, x = 0, y = 0): # A function which looks at the top 
          if cType == 'Agenda':
             RDtop[iter].moveToTable(0,0)
             RDtop[iter].highlight = RevealedColor
-            scrAgenda(RDtop[iter])
+            scrAgenda(RDtop[iter],silent = True)
             removedCards += 1
          else: 
             reduction = reduceCost(RDtop[iter], 'TRASH', num(cStat))
@@ -1342,7 +1342,7 @@ def ARCscore(group=table, x=0,y=0):
       if card.Type == 'Agenda':
          card.moveToTable(0,0)
          card.highlight = RevealedColor
-         scrAgenda(card)
+         scrAgenda(card,silent = True)
          if card.highlight == RevealedColor: card.moveTo(ARC) # If the runner opted not to score the agenda, put it back into the deck.
    if debugVerbosity >= 3: notify("<<< ARCscore()")
 
@@ -1422,7 +1422,7 @@ def HQaccess(group=table, x=0,y=0, silent = False):
       notify("{} {} {} at no cost".format(me,uniTrash(),revealedCard))
    elif choice == 2:
       if revealedCard.Type == 'Agenda':
-         scrAgenda(revealedCard)
+         scrAgenda(revealedCard,silent = True)
       else: 
          reduction = reduceCost(revealedCard, 'TRASH', num(revealedCard.Stat))
          rc = payCost(num(revealedCard.Stat) - reduction, "not free")
