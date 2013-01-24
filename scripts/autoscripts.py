@@ -405,7 +405,7 @@ def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
          if debugVerbosity >= 3: notify("<<< useAbility() choice. TXT = {}".format(announceText)) # Debug
          if announceText == 'ABORT': 
             autoscriptCostUndo(card, selectedAutoscripts[0]) # If nothing was done, try to undo. The first item in selectedAutoscripts[] contains the cost.
-            gatheredCardList = FalsegatheredCardList
+            gatheredCardList = False
             return
          if failedRequirement: break # If part of an AutoAction could not pay the cost, we stop the rest of it.
       if announceText.endswith(' in order to'): # If our text annouce ends with " to", it means that nothing happened. Try to undo and inform player.

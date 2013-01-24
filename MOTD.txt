@@ -1,15 +1,12 @@
 =====Message of the Day======
 
-These seems to be more crashes happening in the latest version of OCTGN/A:NR plugin
+I've released a minor version 2.1.8.1, which attempts to alleviate the "OCTGN stopped responding" crashing that some people are experiencing often.
 
-I'm currently trying to figure out where and why this is happening. 
+If you're one of those whose OCTGN crashes far more than it used to, please install the latest version and see if it makes a difference.
 
-Please, if you experience a crash, note down what was going on in the table at that point and contact db0 in github or dbzer0 in BGG.
-Provide as much info as possible. What were you doing when this happened. What cards you had on the table. Even grab a screenshot it possible.
+Please let the developer know if things improve or not.
 
-Thanks for your help and understanding. 
-
-(Do you want to be redirected to the crash report page?)
+(Do you want to be redirected to download 2.1.8.1?)
 =============================
 &&
-https://github.com/db0/Android-Netrunner-OCTGN/issues/117
+http://dbzer0.com/pub/ANR/Android-Netrunner-2.1.8.1.o8g

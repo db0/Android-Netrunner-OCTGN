@@ -1351,7 +1351,7 @@ def ARCscore(group=table, x=0,y=0):
       if card.Type == 'Agenda':
          card.moveToTable(0,0)
          card.highlight = RevealedColor
-         scrAgenda(card,silent = True)
+         scrAgenda(card) # We don't want it silent, as it needs to ask the runner to score, in case of agendas like Fetal AI for which they have to pay as well.
          if card.highlight == RevealedColor: card.moveTo(ARC) # If the runner opted not to score the agenda, put it back into the deck.
    if debugVerbosity >= 3: notify("<<< ARCscore()")
 

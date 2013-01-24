@@ -54,6 +54,11 @@ Shaper running on a heavily fortifield Haas-Bioroid server.
 Changelog
 ---------
 
+### 2.1.8.1
+
+* Made some modifications in reduceCost() to hopefully stop the "OCTGN stopped respondng" crashes, or at least make them more infrequent.
+* Scoring agendas during access now won't ask you a second if you want to score them.
+
 ### 2.1.8
 
 * **SIGNIFICANT** Accessing an ambush like Snare will now allow you to see what the corp writes in the chatbox, or any actions taken
