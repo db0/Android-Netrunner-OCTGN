@@ -21,7 +21,11 @@
 # * [Card Placement] Are dealing with placing or figuring where to place cards on the table
 ###=================================================================================================================###
 
-import re
+import os, re
+
+if os.environ['RUNNING_TEST_SUITE'] == 'TRUE':
+    from meta import Automations
+    Form = object
 
 playerside = None # Variable to keep track on which side each player is
 playeraxis = None # Variable to keep track on which axis the player is
