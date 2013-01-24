@@ -162,7 +162,7 @@ def executePlayScripts(card, action):
 def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
    if debugVerbosity >= 1: notify(">>> useAbility(){}".format(extraASDebug())) #Debug
    mute()
-   global failedRequirement
+   global failedRequirement,gatheredCardList
    AutoscriptsList = [] # An empty list which we'll put the AutoActions to execute.
    storeProperties(card) # Just in case
    failedRequirement = False # We set it to false when we start a new autoscript.
@@ -321,6 +321,7 @@ def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
             else: announceText = '{}'.format(me) # A variable with the text to be announced at the end of the action.
             if actionCost.group(2) != '0': # If we need to pay credits
                reduction = reduceCost(card, 'USE', num(actionCost.group(2)))
+               gatheredCardList = True # We set this to true, so that reduceCost doesn't scan the table for subsequent executions
                if reduction > 0: extraText = " (reduced by {})".format(uniCredit(reduction))  
                elif reduction < 0: extraText = " (increased by {})".format(uniCredit(abs(reduction)))
                else: extraText = ''
@@ -404,6 +405,7 @@ def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
          if debugVerbosity >= 3: notify("<<< useAbility() choice. TXT = {}".format(announceText)) # Debug
          if announceText == 'ABORT': 
             autoscriptCostUndo(card, selectedAutoscripts[0]) # If nothing was done, try to undo. The first item in selectedAutoscripts[] contains the cost.
+            gatheredCardList = FalsegatheredCardList
             return
          if failedRequirement: break # If part of an AutoAction could not pay the cost, we stop the rest of it.
       if announceText.endswith(' in order to'): # If our text annouce ends with " to", it means that nothing happened. Try to undo and inform player.
@@ -417,6 +419,7 @@ def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
             card.moveTo(card.owner.piles['Heap/Archives(Face-up)'])
       notify("{}.".format(announceText)) # Finally announce what the player just did by using the concatenated string.
       chkNoisy(card)
+      gatheredCardList = False  # We set this variable to False, so that reduceCost() calls from other functions can start scanning the table again.
 
 #------------------------------------------------------------------------------
 # Other Player trigger

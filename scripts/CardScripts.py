@@ -234,7 +234,7 @@ Cyberfeeder
 -----
 bc0f047c-01b1-427f-a439-d451eda01005
 -----
-onInstall:Put1Credits||whileRezzed:Reduce#CostUse-forIcebreaker-forMe||whileRezzed:Reduce#CostInstall-forVirus-forMe||atTurnStart:Refill1Credits-byMe
+onInstall:Put1Credits-isSilent||whileRezzed:Reduce#CostUse-forIcebreaker-forMe||whileRezzed:Reduce#CostInstall-forVirus-forMe||atTurnStart:Refill1Credits-byMe
 +++++
 	
 .....

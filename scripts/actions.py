@@ -28,6 +28,9 @@ identName = None # The name of our current identity
 Identity = None
 ModifyDraw = 0 #if True the audraw should warn the player to look at r&D instead 
 
+gatheredCardList = False # A variable used in reduceCost to avoid scanning the table too many times.
+costModifiers = [] # used in reduceCost to store the cards that might hold potential cost-modifying effects. We store them globally so that we only scan the table once per execution
+
 DifficultyLevels = { }
 
 installedCount = {} # A dictionary which keeps track how many of each card type have been installed by the player.
@@ -759,7 +762,6 @@ def reduceCost(card, action = 'REZ', fullCost = 0, dryRun = False):
    fullCost = abs(fullCost)
    reduction = 0
    status = getGlobalVariable('status')
-   costModifiers = [] # A list which holds all the cards which somehow modify the cost of a card
    costReducers = []
    if debugVerbosity >= 3: notify("### Status: {}".format(status))
    ### First we check if the card has an innate reduction. 
@@ -797,35 +799,39 @@ def reduceCost(card, action = 'REZ', fullCost = 0, dryRun = False):
             myIdent.markers[mdict['BadPublicity']] -= usedBP
             notify(" -- {} spends {} Bad Publicity credits".format(myIdent,usedBP))
    ### Finally we go through the table and see if there's any cards providing cost reduction
-   cardList = sortPriority([c for c in table
-                           if c.isFaceUp
-                           and c.highlight != RevealedColor
-                           and c.highlight != InactiveColor])
-   for c in cardList: # Then check if there's other cards in the table that reduce its costs.
-      Autoscripts = CardsAS.get(c.model,'').split('||')
-      if len(Autoscripts) == 0: continue
-      for autoS in Autoscripts:
-         if debugVerbosity >= 2: notify("### Checking {} with AS: {}".format(c, autoS)) #Debug
-         if re.search(r'whileRunning', autoS) and not re.search(r'running',status): continue # if the reduction is only during runs, and we're not in a run, bypass this effect
-         if not chkPlayer(autoS, c.controller, False): continue
-         reductionSearch = re.search(r'(Reduce|Increase)([0-9#X]+)Cost({}|All)-for([A-Z][A-Za-z ]+)(-not[A-Za-z_& ]+)?'.format(type), autoS) 
-         if debugVerbosity >= 2: #Debug
-            if reductionSearch: notify("!!! Regex is {}".format(reductionSearch.groups()))
-            else: notify("!!! No reduceCost regex Match!") 
-         if re.search(r'excludeDummy', autoS) and c.highlight == DummyColor: continue 
-         if re.search(r'ifInstalled',autoS) and (card.group != table or card.highlight == RevealedColor): continue
-         if reductionSearch: # If the above search matches (i.e. we have a card with reduction for Rez and a condition we continue to check if our card matches the condition)
-            if debugVerbosity >= 3: notify("### Possible Match found in {}".format(c)) # Debug         
-            if reductionSearch.group(1) == 'Reduce': 
-               if fullCost == 0:
-                  if debugVerbosity >= 2: notify("### No more cost to reduce with {}. Aborting".format(c))
-                  continue # If we don't have any more reduction to do, just break out.
+   if not gatheredCardList: # A global variable that stores if we've scanned the tables for cards which reduce costs, so that we don't have to do it again.
+      global costModifiers
+      del costModifiers[:]
+      RC_cardList = sortPriority([c for c in table
+                              if c.isFaceUp
+                              and c.highlight != RevealedColor
+                              and c.highlight != InactiveColor])
+      reductionRegex = re.compile(r'(Reduce|Increase)([0-9#X]+)Cost({}|All)-for([A-Z][A-Za-z ]+)(-not[A-Za-z_& ]+)?'.format(type)) # Doing this now, to reduce load.
+      for c in RC_cardList: # Then check if there's other cards in the table that reduce its costs.
+         Autoscripts = CardsAS.get(c.model,'').split('||')
+         if len(Autoscripts) == 0: continue
+         for autoS in Autoscripts:
+            if debugVerbosity >= 2: notify("### Checking {} with AS: {}".format(c, autoS)) #Debug
+            if re.search(r'whileRunning', autoS) and not re.search(r'running',status): continue # if the reduction is only during runs, and we're not in a run, bypass this effect
+            if not chkPlayer(autoS, c.controller, False): continue
+            reductionSearch = reductionRegex.search(autoS) 
+            if debugVerbosity >= 2: #Debug
+               if reductionSearch: notify("!!! Regex is {}".format(reductionSearch.groups()))
+               else: notify("!!! No reduceCost regex Match!") 
+            if re.search(r'excludeDummy', autoS) and c.highlight == DummyColor: continue 
+            if re.search(r'ifInstalled',autoS) and (card.group != table or card.highlight == RevealedColor): continue
+            if reductionSearch: # If the above search matches (i.e. we have a card with reduction for Rez and a condition we continue to check if our card matches the condition)
+               if debugVerbosity >= 3: notify("### Possible Match found in {}".format(c)) # Debug         
+               if reductionSearch.group(1) == 'Reduce': 
+                  if fullCost == 0:
+                     if debugVerbosity >= 2: notify("### No more cost to reduce with {}. Aborting".format(c))
+                     continue # If we don't have any more reduction to do, just break out.
+                  else:
+                     costReducers.append((c,reductionSearch,autoS)) # We put the costReducers in a different list, as we want it to be checked after all the increasers are checked
                else:
-                  costReducers.append((c,reductionSearch,autoS)) # We put the costReducers in a different list, as we want it to be checked after all the increasers are checked
-            else:
-               costModifiers.append((c,reductionSearch,autoS)) # Cost increasing cards go into the main list we'll check in a bit, as we need to check them first. 
-                                                         # In each entry we store a tuple of the card object and the search result for its cost modifying abilities, so that we don't regex again later. 
-   if len(costReducers): costModifiers.extend(costReducers)
+                  costModifiers.append((c,reductionSearch,autoS)) # Cost increasing cards go into the main list we'll check in a bit, as we need to check them first. 
+                                                            # In each entry we store a tuple of the card object and the search result for its cost modifying abilities, so that we don't regex again later. 
+      if len(costReducers): costModifiers.extend(costReducers)
    for cTuple in costModifiers: # Now we check what kind of cost modification each card provides. First we check for cost increasers and then for cost reducers
       if debugVerbosity >= 4: notify("### Checking next cTuple") #Debug
       c = cTuple[0]
@@ -1210,6 +1216,7 @@ def accessTarget(group = table, x = 0, y = 0):
 def RDaccessX(group = table, x = 0, y = 0): # A function which looks at the top X cards of the corp's deck and then asks the runner what to do with each one.
    if debugVerbosity >= 1: notify(">>> RDaccessX(){}".format(extraASDebug())) #Debug
    mute()
+   global gatheredCardList 
    RDtop = []
    removedCards = 0
    if ds == 'corp': 
@@ -1282,6 +1289,7 @@ def RDaccessX(group = table, x = 0, y = 0): # A function which looks at the top 
          if cType == 'Agenda': action1TXT = 'Liberate for {} Agenda Points.'.format(cStat)
          else: 
             reduction = reduceCost(RDtop[iter], 'TRASH', num(cStat), dryRun = True)
+            gatheredCardList = True # We set this variable to True, to tell future reducecosts in this execution, not to scan the table a second time.
             if reduction > 0: 
                extraText = " ({} - {})".format(cStat,reduction)
                extraText2 = " (reduced by {})".format(uniCredit(reduction))
@@ -1319,6 +1327,7 @@ def RDaccessX(group = table, x = 0, y = 0): # A function which looks at the top 
       else: continue
    cover.moveTo(shared.exile) # now putting the cover card to the exile deck that nobody looks at.
    notify("{} has finished accessing {}'s R&D".format(me,targetPL))
+   gatheredCardList = False  # We set this variable to False, so that reduceCost() calls from other functions can start scanning the table again.
    if debugVerbosity >= 3: notify("<<< RDaccessX()")
 
 def ARCscore(group=table, x=0,y=0):
