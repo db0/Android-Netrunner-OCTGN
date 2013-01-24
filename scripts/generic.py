@@ -405,12 +405,22 @@ def num (s):
       return 0
 
 def numOrder(num):
-   if num == 0: order = '1st'
-   elif num == 1: order = '2nd'
-   elif num == 2: order = '3rd'
-   else: order = str(num + 1)+'th'
-   return order
-      
+    """Return the ordinal for each place in a zero-indexed list.
+
+    list[0] (the first item) returns '1st', list[1] return '2nd', etc.
+    """
+    def int_to_ordinal(i):
+        """Return the ordinal for an integer."""
+        # if i is a teen (e.g. 14, 113, 2517), append 'th'
+        if 10 <= i % 100 < 20:
+            return str(i) + 'th'
+        # elseif i ends in 1, 2 or 3 append 'st', 'nd' or 'rd'
+        # otherwise append 'th'
+        else:
+            return  str(i) + {1 : 'st', 2 : 'nd', 3 : 'rd'}.get(i % 10, "th")
+
+    return int_to_ordinal(num + 1)
+
 def chooseSide(): # Called from many functions to check if the player has chosen a side for this game.
    if debugVerbosity >= 1: notify(">>> chooseSide(){}".format(extraASDebug())) #Debug
    mute()
