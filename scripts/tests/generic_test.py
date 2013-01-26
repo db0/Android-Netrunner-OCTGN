@@ -13,9 +13,12 @@ I suspect there might be another way to handle this, like initializing them
 in main() of the test suite, but the current method is sufficient to run the
 tests while ensuring these mock objects do not leak when OCTGN is running.
 """
-import os
 import unittest
-os.environ['RUNNING_TEST_SUITE'] = 'TRUE'
+try:
+    import os
+    os.environ['RUNNING_TEST_SUITE'] = 'TRUE'
+except ImportError:
+    pass
 
 from scripts import generic
 
