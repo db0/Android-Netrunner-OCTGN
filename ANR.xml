@@ -113,7 +113,7 @@
       <groupaction menu="Access Target" default="false" shortcut="Ctrl+Enter" execute="accessTarget" />
       <groupaction menu="Pay and &#9167; Target (Resource, Asset or Upgrade)" default="false" shortcut="Ctrl+del" execute="trashTargetPaid" />
       <groupaction menu="&#9167; Target for free" default="false" shortcut="del" execute="trashTargetFree" />
-      <groupaction menu="Create new Remote Server" default="false" shortcut="Ctrl+S" execute="createRemoteServer" />
+      <groupaction menu="Create new Remote Server" default="false" shortcut="Alt+S" execute="createRemoteServer" />
    <!-- <groupaction menu="Roll d6" default="false" shortcut="Ctrl+6" execute="rolld6" /> -->
       <groupaction menu="&#8986; Receive 1 ¥" default="false" shortcut="Ctrl+C" execute="getCredit" />
       <groupactions menu="Help &amp; References">
