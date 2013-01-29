@@ -28,10 +28,17 @@ import re, time
 #import elementtree # Testing
 #import decimal # Testing
 
-        
+try:
+    import os
+    if os.environ['RUNNING_TEST_SUITE'] == 'TRUE':
+        me = object
+        table = object
+except ImportError:
+    pass
+
 Automations = {'Play, Score and Rez'    : True, # If True, game will automatically trigger card effects when playing or double-clicking on cards. Requires specific preparation in the sets.
-               'Start/End-of-Turn'      : True, # If True, game will automatically trigger effects happening at the start of the player's turn, from cards they control.                
-               'Damage Prevention'      : True, # If True, game will automatically use damage prevention counters from card they control.                
+               'Start/End-of-Turn'      : True, # If True, game will automatically trigger effects happening at the start of the player's turn, from cards they control.
+               'Damage Prevention'      : True, # If True, game will automatically use damage prevention counters from card they control.
                'Triggers'               : True, # If True, game will search the table for triggers based on player's actions, such as installing a card, or trashing one.
                'WinForms'               : True, # If True, game will use the custom Windows Forms for displaying multiple-choice menus and information pop-ups
                'Damage'                 : True}
