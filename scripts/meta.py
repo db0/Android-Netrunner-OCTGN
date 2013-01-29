@@ -698,10 +698,11 @@ def TrialError(group, x=0, y=0): # Debugging
       notify("### About to create starting cards.") #Debug   
       createStartingCards()
    notify("<<< TrialError()") #Debug
-   for idx in range(len(testcards)):
-      test = table.create(testcards[idx], (70 * idx) - 150, 0, 1, True)
-      storeProperties(test)
-      if test.Type == 'ICE' or test.Type == 'Agenda' or test.Type == 'Asset': test.isFaceUp = False
+   if confirm("Spawn Test Cards?"):
+      for idx in range(len(testcards)):
+         test = table.create(testcards[idx], (70 * idx) - 150, 0, 1, True)
+         storeProperties(test)
+         if test.Type == 'ICE' or test.Type == 'Agenda' or test.Type == 'Asset': test.isFaceUp = False
 
 
 def ShowDicts():
