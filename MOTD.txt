@@ -1,12 +1,6 @@
 =====Message of the Day======
 
-I've released a minor version 2.1.8.1, which attempts to alleviate the "OCTGN stopped responding" crashing that some people are experiencing often.
+2nd OCTGN Tournament is about to start. 
 
-If you're one of those whose OCTGN crashes far more than it used to, please install the latest version and see if it makes a difference.
-
-Please let the developer know if things improve or not.
-
-(Do you want to be redirected to download 2.1.8.1?)
+I hope your rigs are ready!
 =============================
-&&
-http://dbzer0.com/pub/ANR/Android-Netrunner-2.1.8.1.o8g

@@ -1244,7 +1244,7 @@ def RDaccessX(group = table, x = 0, y = 0): # A function which looks at the top 
       accessRegex = re.search(r'onAccess:([^|]+)',CardsAS.get(RDtop[iter].model,''))
       if accessRegex:
          if debugVerbosity >= 2: notify("#### accessRegex found! {}".format(accessRegex.group(1)))
-         notify("{} has just accessed a {}!".format(me,RDtop[iter]))
+         if not re.search(r'ifInstalled',accessRegex.group(1)): notify("{} has just accessed a {}!".format(me,RDtop[iter]))
          Autoscripts = accessRegex.group(1).split('$$')
          X = 0
          for autoS in Autoscripts:
