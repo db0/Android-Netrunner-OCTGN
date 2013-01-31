@@ -368,3 +368,13 @@ This applies even if you already exceed the current trace!
 
 What this means for eveyrone is less abilities per card and less clicking around after traces to being their effects.
 It also means that I can now also automate abilities such as the one from Spinal Modem.
+||
+You do not need to take control of opponent's cards when accessing in a remote server.
+
+The game provides a way to properly access cards in an opponent's central server. 
+After you have pressed F3 to signify that a successful run on that server, simply target the cards you are about to access and press Ctrl+Enter (Or use 'Access Target' from the table menu)
+
+The card will be flipped up and you will be presented with any relevant options depending on the card type. 
+This will also trigger any automations on the card, such as Fetal AI's ability and give your opponent an opportunity to activate any traps.
+
+So don't rush to click 'Yes' when you hit an ambush.
