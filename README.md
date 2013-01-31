@@ -59,6 +59,8 @@ Changelog
 * Fix for Vamp eating less credits when using bad publicity credits
 * When accessed traps are found in R&D and they can't trigger there, they won't be mentioned (e.g. Junebug)
 * Better ordinal announces
+* When game is won, it will inform the winner that it's submitting the stats.
+* Added timeouts to stats submitting, in case they take too long.
 
 ### 2.1.8.1
 
