@@ -1,15 +1,8 @@
-2.1.8||
+2.1.9||
 ======New Version Information======
 
-Ambushes are now more interactive!
+Among bug fixes, this version has necessary code for the next BGG OCTGN Tournament, so if you're planning to participate, please upgrade first.
 
-When the pop-up window for a Snare! or similar ambush accessed from R&D appears, the runner can now read comunication written by the corp player in the chat box.
-Unfortunately they cannot write back, but the pop-up dialogue allows the runner to send a "ping" to the corp to take action if they're taking too long to decide.
-
-Hopefully this should allow the game to progress more comfortably, even without voice communication.
-Please make sure to wait until the corp decides to use their accessed ambushes or not before clikging 'Yes'.
-
-There's also a few other bug fixes so please update ASAP.
 ===============================
 ||
 Latest Sets: 2.1.0
