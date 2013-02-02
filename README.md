@@ -57,6 +57,8 @@ Changelog
 ### 2.1.10
 
 * Now multiple identical notifications will be grouped together and displayed in one line, with a mutliplier ('2x', '4x' etc in front)
+  Here's how it will look when Crypsis breaks an Archer for example
+  ![](http://i.imgur.com/8uHUwnU.png)
 * Fix for Fetal AI charging the runner 2 credits when scored by the corp.
 
 ### 2.1.9

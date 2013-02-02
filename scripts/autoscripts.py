@@ -1002,7 +1002,7 @@ def TokensX(Autoscript, announceText, card, targetCards = None, notification = N
                #confirm("count: {}".format(count)) # Debug
             elif targetCard.markers[token]: count = targetCard.markers[token]
             else: 
-               whisper("There was nothing to remove.")
+               delayed_whisper("There was nothing to remove.")
                count = 0
          elif re.search(r'isCost', Autoscript) and (not targetCard.markers[token] or (targetCard.markers[token] and count > targetCard.markers[token])):
             if notification != 'Automatic': whisper ("No markers to remove. Aborting!") #Some end of turn effect put a special counter and then remove it so that they only run for one turn. This avoids us announcing that it doesn't have markers every turn.
