@@ -39,10 +39,15 @@ def executePlayScripts(card, action):
    action = action.upper() # Just in case we passed the wrong case
    if debugVerbosity >= 1: notify(">>> executePlayScripts() with action: {}".format(action)) #Debug
    global failedRequirement
-   if not Automations['Play, Score and Rez']: return
-   if not card.isFaceUp: return
-   if CardsAS.get(card.model,'') == '': return
-   if card.highlight == InactiveColor: return
+   if not Automations['Play, Score and Rez']: 
+      if debugVerbosity >= 2: notify("Exiting because automations are off")
+      return
+   if not card.isFaceUp: 
+      if debugVerbosity >= 2: notify("Exiting because card is face down")
+      return
+   if CardsAS.get(card.model,'') == '': 
+      if debugVerbosity >= 2: notify("Exiting because card has no autoscripts")
+      return
    failedRequirement = False
    X = 0
    Autoscripts = CardsAS.get(card.model,'').split('||') # When playing cards, the || is used as an "and" separator, rather than "or". i.e. we don't do choices (yet)
