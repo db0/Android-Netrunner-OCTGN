@@ -54,6 +54,11 @@ Shaper running on a heavily fortifield Haas-Bioroid server.
 Changelog
 ---------
 
+### 2.1.10
+
+* Now multiple identical notifications will be grouped together and displayed in one line, with a mutliplier ('2x', '4x' etc in front)
+* Fix for Fetal AI charging the runner 2 credits when scored by the corp.
+
 ### 2.1.9
 
 * Fix for Vamp eating less credits when using bad publicity credits

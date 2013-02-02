@@ -1,7 +1,10 @@
-2.1.9||
+2.1.10||
 ======New Version Information======
 
-Among bug fixes, this version has necessary code for the next BGG OCTGN Tournament, so if you're planning to participate, please upgrade first.
+This version adds code that merges duplicate notifications (e.g. from icebreakers) so that the chat window is much more readable.
+Please let me know if this is an improvement.
+
+Also included is a fix for Fetal AI charging the runner 2 credits when scored by the corp normally.
 
 ===============================
 ||
