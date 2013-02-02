@@ -288,7 +288,11 @@ def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
          else: continue # if the player has somehow selected a number that is not a valid option, we just ignore it
       if debugVerbosity >= 2: notify("### AutoscriptsList: {}".format(AutoscriptsList)) # Debug
    else: AutoscriptsList.append(Autoscripts[0].split('$$'))
-   for selectedAutoscripts in AutoscriptsList:
+   prev_announceText = 'NULL'
+   multiCount = 0
+   for iter in range(len(AutoscriptsList)):
+      if debugVerbosity >= 2: notify("### iter = {}".format(iter))
+      selectedAutoscripts = AutoscriptsList[iter]
       timesNothingDone = 0 # A variable that keeps track if we've done any of the autoscripts defined. If none have been coded, we just engage the card.
       X = 0 # Variable for special costs.
       if card.highlight == DummyColor: lingering = ' the lingering effect of' # A text that we append to point out when a player is using a lingering effect in the form of a dummy card.
@@ -417,7 +421,31 @@ def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
          if re.search(r"T1:", selectedAutoscripts[0]): 
             executePlayScripts(card,'trash')
             card.moveTo(card.owner.piles['Heap/Archives(Face-up)'])
-      notify("{}.".format(announceText)) # Finally announce what the player just did by using the concatenated string.
+      if iter == len(AutoscriptsList) - 1: # If this is the last script in the list, then we always announce the script we're running (We reduce by 1 because iterators always start as '0')
+         if debugVerbosity >= 2: notify("### Entering last notification")
+         if prev_announceText == 'NULL': # If it's NULL it's the only  script we run in this loop, so we just announce.
+            notify("{}.".format(announceText)) # Finally announce what the player just did by using the concatenated string.
+         else: # If it's not NULL, then there was a script run last time, so we check to see if it's a duplicate
+            if prev_announceText == announceText: # If the previous script had the same notification output as the current one, we merge them.
+               multiCount += 1
+               notify("({}x) {}.".format(multiCount,announceText))
+            else: # If the previous script did not have the same output as the current one, we announce them both together.
+               if multiCount > 1: notify("({}x) {}.".format(multiCount,prev_announceText)) # If there were multiple versions of the last script used, announce them along with how many there were
+               else: notify("{}.".format(prev_announceText))
+               notify("{}.".format(announceText)) # Finally we announce the current script's concatenated notification.
+      else: #if it's not the last script we run, then we just check if we should announce the previous script or just add another replication.
+         if debugVerbosity >= 2: notify("### Entering notification grouping check")
+         if prev_announceText == 'NULL': # If it's null, it's the first script we run in this loop...
+            multiCount += 1 # ...so we don't announce but rather increase a counter and and just move to the next script, in case it's a duplicate announcement.
+            prev_announceText = announceText # We also set the variable we're going to check in the next iteration, to see if it's a duplicate announcement.
+         else:
+            if prev_announceText == announceText: # If the previous script had the same notification output as the current one...
+               multiCount += 1 # ...we merge them and continue without announcing.
+            else: # If the previous script did not have the same notification output as the current one, we announce the previous one.
+               if multiCount > 1: notify("({}x) {}.".format(multiCount,prev_announceText)) # If there were multiple versions of the last script used, announce them along with how many there were
+               else: notify("{}.".format(prev_announceText)) 
+               multiCount = 1 # We reset the counter so that we start counting how many duplicates of the current script we're going to have in the future.
+               prev_announceText = announceText # And finally we reset the variable holding the previous script.
       chkNoisy(card)
       gatheredCardList = False  # We set this variable to False, so that reduceCost() calls from other functions can start scanning the table again.
 
