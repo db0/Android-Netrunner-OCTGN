@@ -328,7 +328,7 @@ You can find an analysis of the balance between factions based on the gathered d
 
 Would you like to learn more?
 &&
-https://docs.google.com/spreadsheet/ccc?key=0AugMiPlH3rBAdFVTR0luQ3R2SlVuNmhlX1psLTV3Z2c
+http://84.205.248.92/slaghund/slagview.aspx
 ||
 The Developer of this plugin provides a voice chat server.
 
