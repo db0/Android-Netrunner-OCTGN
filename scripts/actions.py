@@ -107,6 +107,7 @@ def placeCard(card, action = 'INSTALL'):
          installedCount['Agenda'] = installedCount[type]
          installedCount['Asset'] = installedCount[type]
          installedCount['Upgrade'] = installedCount[type]
+      if CfaceDown: card.peek() # Added in octgn 3.0.5.47
    if debugVerbosity >= 3: notify("<<< placeCard()") #Debug
    
 #---------------------------------------------------------------------------
@@ -180,6 +181,8 @@ def goToEndTurn(group, x = 0, y = 0):
    atTimedEffects('End')
    if ds == "corp": notify ("=> {} ({}) has reached CoB (Close of Business hours).".format(identName, me))
    else: notify ("=> {} ({}) has gone to sleep for the day.".format(identName,me))
+   opponent = ofwhom('onOpponent')
+   opponent.setActivePlayer() # new in OCTGN 3.0.5.47 
 
 def goToSot (group, x=0,y=0):
    if debugVerbosity >= 1: notify(">>> goToSot(){}".format(extraASDebug())) #Debug
@@ -196,6 +199,10 @@ def goToSot (group, x=0,y=0):
    if ds == None:
       whisper ("Please perform the game setup first (Ctrl+Shift+S)")
       return
+   if debugVerbosity >= 1: notify("turncount = {}".format(turnCount()))
+   if not me.isActivePlayer:
+      if turn != 0 and not confirm("You opponent does not seem to have finished their turn properly with F12 yet. Continue?"): return
+      else: me.setActivePlayer()
    currClicks = 0 # We wipe it again just in case they ended their last turn badly but insist on going through the next one.
    clicksReduce = findCounterPrevention(maxClicks, 'Clicks', me) # Checking if the player has any effects which force them to forfeit clicks.
    if clicksReduce: extraTXT = " ({} forfeited)".format(clicksReduce)
