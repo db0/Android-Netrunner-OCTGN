@@ -54,6 +54,11 @@ Shaper running on a heavily fortifield Haas-Bioroid server.
 Changelog
 ---------
 
+### 2.1.11
+
+* Installed corp cards will be autopeeked at
+* Ending your turn will automatically use the green arrow function to signify the next player's turn.
+
 ### 2.1.10
 
 * Now multiple identical notifications will be grouped together and displayed in one line, with a mutliplier ('2x', '4x' etc in front)

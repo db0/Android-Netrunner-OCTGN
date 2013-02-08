@@ -199,7 +199,7 @@ def goToSot (group, x=0,y=0):
    if ds == None:
       whisper ("Please perform the game setup first (Ctrl+Shift+S)")
       return
-   if debugVerbosity >= 1: notify("turncount = {}".format(turnCount()))
+   #if debugVerbosity >= 1: notify("turncount = {}".format(turnCount())) #Debug (not yet implemented)
    if not me.isActivePlayer:
       if turn != 0 and not confirm("You opponent does not seem to have finished their turn properly with F12 yet. Continue?"): return
       else: me.setActivePlayer()
