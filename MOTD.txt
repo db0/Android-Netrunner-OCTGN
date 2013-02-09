@@ -1,12 +1,11 @@
 =====Message of the Day======
 
-Hey everyone, this is Db0, the developer of this here fine plugin ;)
+I have just finished creating a brand new Android:Netrunner OCTGN use tutorial video
 
-I'd like to start casting more games being played for A:NR, particularly for the upcoming BGG Tournament 2. 
+I have gone  into depth and explained the best ways to use the game definition efficiently in a way that I hope it easy for new players to follow.
 
-If you are in an EU timezone, have some skill in the game, and are fine with me recording your matches to comment and publish as videos, please contact me to arrange a time.
+Please share this to anyone interested in online play of A:NR.
 
-My email address is: mail@dbzer0.com
-
-Cheers!
+Would you like to open a browser page to the tutorial video?
 =============================
+http://www.youtube.com/watch?v=nGGECL7nom0

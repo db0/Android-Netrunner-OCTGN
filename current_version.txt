@@ -1,10 +1,11 @@
-2.1.10||
+2.1.11||
 ======New Version Information======
 
-This version adds code that merges duplicate notifications (e.g. from icebreakers) so that the chat window is much more readable.
-Please let me know if this is an improvement.
+This version adds some nice efficiency improvements. Now all your face-down cards will come in automatically peeked-at
 
-Also included is a fix for Fetal AI charging the runner 2 credits when scored by the corp normally.
+Also turn end will also trigger the OCTGN-built-in turn change, which should make it more obvious who's turn it is
+
+Finally, fixed some minor bugs
 
 ===============================
 ||

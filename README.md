@@ -58,6 +58,10 @@ Changelog
 
 * Installed corp cards will be autopeeked at
 * Ending your turn will automatically use the green arrow function to signify the next player's turn.
+* Tollbooth will now use Bad Publicity Credits
+* Compromised Employee won't refill at the start of the corp's turn
+* Parasite won't fail to install after a successful run but still take your money, MU and clicks
+
 
 ### 2.1.10
 
