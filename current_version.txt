@@ -1,11 +1,11 @@
 2.1.11||
 ======New Version Information======
 
-This version adds some nice efficiency improvements. Now all your face-down cards will come in automatically peeked-at
+This version adds some nice efficiency improvements. Now all your face-down cards will come in automatically peeked-at.
 
-Also turn end will also trigger the OCTGN-built-in turn change, which should make it more obvious who's turn it is
+Also turn end will also trigger the OCTGN-built-in turn change, which should make it more obvious who's turn it is.
 
-Finally, fixed some minor bugs
+Finally, fixed some minor bugs.
 
 ===============================
 ||

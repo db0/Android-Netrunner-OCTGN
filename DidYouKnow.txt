@@ -377,3 +377,11 @@ The card will be flipped up and you will be presented with any relevant options 
 This will also trigger any automations on the card, such as Fetal AI's ability and give your opponent an opportunity to activate any traps.
 
 So don't rush to click 'Yes' when you hit an ambush.
+||
+We have an instructional video available!
+
+It contains everything you need to know and were always afraid to ask, about playing A:NR on OCTGN
+
+Would you like to learn more?
+&&
+http://www.youtube.com/watch?v=nGGECL7nom0
