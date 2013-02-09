@@ -791,7 +791,8 @@ def reduceCost(card, action = 'REZ', fullCost = 0, dryRun = False):
    elif debugVerbosity >= 2: notify("### No self-reducing autoscripts found!")
    ### Now we check if we're in a run and we have bad publicity credits to spend
    if re.search(r'running',status) and fullCost > 0:
-      myIdent = getSpecial('Identity',me)
+      if ds == 'corp' and type == 'Force': myIdent = getSpecial('Identity',ofwhom('-ofOpponent'))
+      else: myIdent = getSpecial('Identity',me)
       if myIdent.markers[mdict['BadPublicity']]:
          usedBP = 0
          BPcount = myIdent.markers[mdict['BadPublicity']]
@@ -1854,19 +1855,22 @@ def intPlay(card, cost = 'not free'):
    if not checkNotHardwareConsole(card): return	#If player already has a Console in play and doesnt want to play that card, do nothing.
    if card.Type != 'ICE' and card.Type != 'Agenda' and card.Type != 'Upgrade' and card.Type != 'Asset': # We only check for uniqueness on install, against cards that install face-up
       if not checkUnique(card): return #If the player has the unique card and opted not to trash it, do nothing.
-   if (card.Type == 'Operation' or card.Type == 'Event') and chkTargeting(card) == 'ABORT': return # If it's an Operation or Event and has targeting requirements, check with the user first.
+   if re.search(r'Double', getKeywords(card)): NbReq = 2 # Some cards require two clicks to play. This variable is passed to the useClick() function.
+   else: NbReq = 1 #In case it's not a "Double" card. Then it only uses one click to play.
+   ClickCost = useClick(count = NbReq)
+   if ClickCost == 'ABORT': return  #If the player didn't have enough clicks and opted not to proceed, do nothing.
+   if (card.Type == 'Operation' or card.Type == 'Event') and chkTargeting(card) == 'ABORT': 
+      me.Clicks += NbReq # We return any used clicks in case of aborting due to missing target
+      return # If it's an Operation or Event and has targeting requirements, check with the user first.
    hostType = re.search(r'Placement:([A-Za-z1-9:_ -]+)', fetchProperty(card, 'AutoScripts'))
    if hostType:
       if debugVerbosity >= 2: notify("### hostType: {}.".format(hostType.group(1))) #Debug
       host = findTarget('Targeted-at{}'.format(hostType.group(1)))
       if len(host) == 0:
          whisper("ABORTING!")
+         me.Clicks += NbReq # We return any used clicks in case of aborting due to missing target
          return
       else: extraTXT = ' on {}'.format(host[0])
-   if re.search(r'Double', getKeywords(card)): NbReq = 2 # Some cards require two clicks to play. This variable is passed to the useClick() function.
-   else: NbReq = 1 #In case it's not a "Double" card. Then it only uses one click to play.
-   ClickCost = useClick(count = NbReq)
-   if ClickCost == 'ABORT': return  #If the player didn't have enough clicks and opted not to proceed, do nothing.
    if card.Type == 'Event' or card.Type == 'Operation': action = 'PLAY'
    else: action = 'INSTALL'
    MUtext = ''
