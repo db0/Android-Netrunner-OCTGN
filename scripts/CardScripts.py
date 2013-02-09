@@ -1098,7 +1098,7 @@ Compromised Employee
 -----
 bc0f047c-01b1-427f-a439-d451eda02025
 -----
-onInstall:Put1Credits-isSilent||atTurnStart:Refill1Credits||whileRezzed:Reduce#CostTrace-forAll-forMe||whileRezzed:Gain1Credits-perCardRezzed-typeICE
+onInstall:Put1Credits-isSilent||atTurnStart:Refill1Credits-byMe||whileRezzed:Reduce#CostTrace-forAll-forMe||whileRezzed:Gain1Credits-perCardRezzed-typeICE
 +++++
 
 .....
