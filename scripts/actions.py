@@ -1372,82 +1372,84 @@ def HQaccess(group=table, x=0,y=0, silent = False):
    if not silent and not confirm("You are about to access a random card from the corp's HQ.\
                                 \nPlease make sure your opponent is not manipulating their hand, and does not have a way to cancel this effect before continuing\
                               \n\nProceed?"): return
+   count = askInteger("How many files are you able to access from the corporation's HQ?",1)
+   if count == None: return
    targetPL = ofwhom('-ofOpponent')
    if debugVerbosity >= 3: notify("### Found opponent.") #Debug
-   revealedCard = showatrandom(targetPL = targetPL)
-   storeProperties(revealedCard) # So as not to crash reduceCost() later
-   if not revealedCard: return # If the corp's hand is empty, do nothing.
-   accessRegex = re.search(r'onAccess:([^|]+)',CardsAS.get(revealedCard.model,''))
-   if accessRegex:
-      if debugVerbosity >= 2: notify("#### accessRegex found! {}".format(accessRegex.group(1)))
-      notify("{} has just accessed a {}!".format(me,revealedCard))
-      Autoscripts = accessRegex.group(1).split('$$')
-      X = 0
-      for autoS in Autoscripts:
-         if re.search(r'Reveal',autoS):
-            if not re.search(r'ifInstalled',autoS):
-               revealedCard.moveToTable(0, 0 + yaxisMove(revealedCard), False)
-               revealedCard.highlight = RevealedColor         
-               while not confirm("Ambush! You have stumbled into a {}\
-                         \n(This card activates even on access from HQ.)\
-                       \n\nYour blunder has already triggered the alarms. Please wait until corporate OpSec has decided whether to use its effects or not, before pressing any button.\
-                       \n\nHas the corporation decided whether or not to the effects of this ambush?\
-                         \n(Pressing 'No' will send a ping to the corporation player to remind him to take action)\
-                        ".format(revealedCard.name)): 
-                  rnd(1,1000) # We put a hacky delay if the player presses 'No'
-                  notify(":::NOTICE::: {} is still waiting for {} to decide whether to use {} or not".format(me,revealedCard.owner,revealedCard))
-         else: X = redirect(autoS, revealedCard, 'Quick', X)
-   if debugVerbosity >= 2: notify("### Not a Trap.") #Debug
-   if revealedCard.Type == 'ICE': 
-      cStatTXT = '\nStrength: {}.'.format(revealedCard.Stat)
-   elif revealedCard.Type == 'Asset' or revealedCard.Type == 'Upgrade':
-      cStatTXT = '\nTrash Cost: {}.'.format(revealedCard.Stat)
-   elif revealedCard.Type == 'Agenda':
-      cStatTXT = '\nAgenda Points: {}.'.format(revealedCard.Stat)
-   else: cStatTXT = ''
-   if debugVerbosity >= 2: notify("### Crafting Title") #Debug
-   title = "Card: {}.\
-          \nType: {}.\
-          \nKeywords: {}.\
-          \nCost: {}.\
-            {}\n\nCard Text: {}\
-        \n\nWhat do you want to do with this card?".format(revealedCard.name,revealedCard.Type,revealedCard.Keywords,revealedCard.Cost,cStatTXT,revealedCard.Rules)
-   if revealedCard.Type == 'Agenda' or revealedCard.Type == 'Asset' or revealedCard.Type == 'Upgrade':
-      if revealedCard.Type == 'Agenda': action1TXT = 'Liberate for {} Agenda Points.'.format(revealedCard.Stat)
-      else: 
-         reduction = reduceCost(revealedCard, 'TRASH', num(revealedCard.Stat), dryRun = True)
-         if reduction > 0: 
-            extraText = " ({} - {})".format(revealedCard.Stat,reduction)
-            extraText2 = " (reduced by {})".format(uniCredit(reduction))
-         elif reduction < 0: 
-            extraText = " ({} + {})".format(revealedCard.Stat,abs(reduction))
-            extraText2 = " (increased by {})".format(uniCredit(abs(reduction)))
-         else:
-            extraText = ''
-            extraText2 = ''
-         action1TXT = 'Pay {}{} to Trash.'.format(num(revealedCard.Stat) - reduction,extraText)
-      options = ["Leave where it is.","Force trash at no cost.",action1TXT]
-   else:                    
-      options = ["Leave where it is.","Force trash at no cost."]
-   if debugVerbosity >= 2: notify("### Opening Choice Window") #Debug
-   choice = SingleChoice(title, options, 'button')
-   if choice == None: choice = 0
-   revealedCard.highlight = None
-   if choice == 1: 
-      revealedCard.moveTo(targetPL.piles['Heap/Archives(Face-up)'])
-      loopChk(revealedCard,'Type')
-      notify("{} {} {} at no cost".format(me,uniTrash(),revealedCard))
-   elif choice == 2:
-      if revealedCard.Type == 'Agenda':
-         scrAgenda(revealedCard,silent = True)
-      else: 
-         reduction = reduceCost(revealedCard, 'TRASH', num(revealedCard.Stat))
-         rc = payCost(num(revealedCard.Stat) - reduction, "not free")
-         if rc == "ABORT": revealedCard.moveTo(targetPL.hand) # If the player couldn't pay to trash the card, we leave it where it is.
+   revealedCards = showatrandom(count = count, targetPL = targetPL)
+   for revealedCard in revealedCards:
+      storeProperties(revealedCard) # So as not to crash reduceCost() later
+      accessRegex = re.search(r'onAccess:([^|]+)',CardsAS.get(revealedCard.model,''))
+      if accessRegex:
+         if debugVerbosity >= 2: notify("#### accessRegex found! {}".format(accessRegex.group(1)))
+         notify("{} has just accessed a {}!".format(me,revealedCard))
+         Autoscripts = accessRegex.group(1).split('$$')
+         X = 0
+         for autoS in Autoscripts:
+            if re.search(r'Reveal',autoS):
+               if not re.search(r'ifInstalled',autoS):
+                  revealedCard.moveToTable(0, 0 + yaxisMove(revealedCard), False)
+                  revealedCard.highlight = RevealedColor         
+                  while not confirm("Ambush! You have stumbled into a {}\
+                            \n(This card activates even on access from HQ.)\
+                          \n\nYour blunder has already triggered the alarms. Please wait until corporate OpSec has decided whether to use its effects or not, before pressing any button.\
+                          \n\nHas the corporation decided whether or not to the effects of this ambush?\
+                            \n(Pressing 'No' will send a ping to the corporation player to remind him to take action)\
+                           ".format(revealedCard.name)): 
+                     rnd(1,1000) # We put a hacky delay if the player presses 'No'
+                     notify(":::NOTICE::: {} is still waiting for {} to decide whether to use {} or not".format(me,revealedCard.owner,revealedCard))
+            else: X = redirect(autoS, revealedCard, 'Quick', X)
+      if debugVerbosity >= 2: notify("### Not a Trap.") #Debug
+      if revealedCard.Type == 'ICE': 
+         cStatTXT = '\nStrength: {}.'.format(revealedCard.Stat)
+      elif revealedCard.Type == 'Asset' or revealedCard.Type == 'Upgrade':
+         cStatTXT = '\nTrash Cost: {}.'.format(revealedCard.Stat)
+      elif revealedCard.Type == 'Agenda':
+         cStatTXT = '\nAgenda Points: {}.'.format(revealedCard.Stat)
+      else: cStatTXT = ''
+      if debugVerbosity >= 2: notify("### Crafting Title") #Debug
+      title = "Card: {}.\
+             \nType: {}.\
+             \nKeywords: {}.\
+             \nCost: {}.\
+               {}\n\nCard Text: {}\
+           \n\nWhat do you want to do with this card?".format(revealedCard.name,revealedCard.Type,revealedCard.Keywords,revealedCard.Cost,cStatTXT,revealedCard.Rules)
+      if revealedCard.Type == 'Agenda' or revealedCard.Type == 'Asset' or revealedCard.Type == 'Upgrade':
+         if revealedCard.Type == 'Agenda': action1TXT = 'Liberate for {} Agenda Points.'.format(revealedCard.Stat)
+         else: 
+            reduction = reduceCost(revealedCard, 'TRASH', num(revealedCard.Stat), dryRun = True)
+            if reduction > 0: 
+               extraText = " ({} - {})".format(revealedCard.Stat,reduction)
+               extraText2 = " (reduced by {})".format(uniCredit(reduction))
+            elif reduction < 0: 
+               extraText = " ({} + {})".format(revealedCard.Stat,abs(reduction))
+               extraText2 = " (increased by {})".format(uniCredit(abs(reduction)))
+            else:
+               extraText = ''
+               extraText2 = ''
+            action1TXT = 'Pay {}{} to Trash.'.format(num(revealedCard.Stat) - reduction,extraText)
+         options = ["Leave where it is.","Force trash at no cost.",action1TXT]
+      else:                    
+         options = ["Leave where it is.","Force trash at no cost."]
+      if debugVerbosity >= 2: notify("### Opening Choice Window") #Debug
+      choice = SingleChoice(title, options, 'button')
+      if choice == None: choice = 0
+      revealedCard.highlight = None
+      if choice == 1: 
          revealedCard.moveTo(targetPL.piles['Heap/Archives(Face-up)'])
          loopChk(revealedCard,'Type')
-         notify("{} paid {}{} to {} {}".format(me,uniCredit(num(revealedCard.Stat) - reduction),extraText2,uniTrash(),revealedCard))
-   else: revealedCard.moveTo(targetPL.hand)
+         notify("{} {} {} at no cost".format(me,uniTrash(),revealedCard))
+      elif choice == 2:
+         if revealedCard.Type == 'Agenda':
+            scrAgenda(revealedCard,silent = True)
+         else: 
+            reduction = reduceCost(revealedCard, 'TRASH', num(revealedCard.Stat))
+            rc = payCost(num(revealedCard.Stat) - reduction, "not free")
+            if rc == "ABORT": revealedCard.moveTo(targetPL.hand) # If the player couldn't pay to trash the card, we leave it where it is.
+            revealedCard.moveTo(targetPL.piles['Heap/Archives(Face-up)'])
+            loopChk(revealedCard,'Type')
+            notify("{} paid {}{} to {} {}".format(me,uniCredit(num(revealedCard.Stat) - reduction),extraText2,uniTrash(),revealedCard))
+      else: revealedCard.moveTo(targetPL.hand)
    if debugVerbosity >= 3: notify("<<< HQAccess()")
          
 def isRezzable (card):
@@ -2067,6 +2069,7 @@ def handRandomDiscard(group, count = None, player = None, destination = None, si
 def showatrandom(group = None, count = 1, targetPL = None, silent = False):
    if debugVerbosity >= 1: notify(">>> showatrandom(){}".format(extraASDebug())) #Debug
    mute()
+   shownCards = []
    side = 1
    if not targetPL: targetPL = me
    if not group: group = targetPL.hand
@@ -2079,9 +2082,10 @@ def showatrandom(group = None, count = 1, targetPL = None, silent = False):
       card.moveToTable(playerside * side * iter * cwidth(card) - (count * cwidth(card) / 2), 0 - yaxisMove(card) * side, False)
       card.highlight = RevealedColor
       loopChk(card) # A small delay to make sure we grab the card's name to announce
+      shownCards.append(card) # We put the revealed cards in a list to return to other functions that call us
    if not silent: notify("{} reveals {} at random from their hand.".format(targetPL,card))
    if debugVerbosity >= 2: notify("<<< showatrandom() with return {}".format(card)) #Debug
-   return card
+   return shownCards
 
 def groupToDeck (group = me.hand, player = me, silent = False):
    if debugVerbosity >= 1: notify(">>> groupToDeck(){}".format(extraASDebug())) #Debug
