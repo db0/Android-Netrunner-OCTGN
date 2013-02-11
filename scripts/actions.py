@@ -1724,7 +1724,7 @@ def uninstall(card, x=0, y=0, destination = 'hand', silent = False):
       card.moveTo(group)
    if not silent: notify("{} uninstalled {}{}.".format(me,card,MUtext))
 
-def possess(daemonCard, programCard, silent = False):
+def possess(daemonCard, programCard, silent = False, force = False):
    if debugVerbosity >= 1: notify(">>> possess(){}".format(extraASDebug())) #Debug
    #This function takes as arguments 2 cards. A Daemon and a program requiring MUs, then assigns the program to the Daemon, restoring the used MUs to the player.
    hostType = re.search(r'Placement:([A-Za-z1-9:_ -]+)', fetchProperty(programCard, 'AutoScripts'))
@@ -1732,21 +1732,31 @@ def possess(daemonCard, programCard, silent = False):
       delayed_whisper("This card cannot be hosted on a Daemon as it needs a special host type")
       return 'ABORT'
    count = num(programCard.properties["Requirement"])
-   if count > daemonCard.markers[mdict['DaemonMU']]:
+   if debugVerbosity >= 2: notify("Looking for custom hosting marker")
+   customHostMarker = findMarker(daemonCard, '{} Hosted'.format(daemonCard.name)) # We check if the card has a custom hosting marker which we use when the hosting is forced
+   if debugVerbosity >= 2: notify("Custom hosting marker: {}".format(customHostMarker))
+   if not force and count > daemonCard.markers[mdict['DaemonMU']]:
       delayed_whisper("{} does not have enough free MUs to possess {}.".format(daemonCard, programCard))
       return 'ABORT'
+   elif force and daemonCard.markers.get(customHostMarker,0) > 0: # LOL NO idea if this will work.
+      delayed_whisper("{} has already hosted the maximum amount of programs it can hold.".format(daemonCard))
+      return 'ABORT'
    elif programCard.markers[mdict['DaemonMU']]:
-      delayed_whisper("{} is already possessed by a daemon.".format(programCard))
+      delayed_whisper("{} is already possessed by another daemon.".format(programCard))
       return 'ABORT'
    else: 
       if debugVerbosity >= 2: notify("### We have a valid daemon host") #Debug
       hostCards = eval(getGlobalVariable('Host Cards'))
       hostCards[programCard._id] = daemonCard._id
-      setGlobalVariable('Host Cards',str(hostCards))   
-      daemonCard.markers[mdict['DaemonMU']] -= count
-      if re.search(r'Daemon',fetchProperty(programCard, 'Keywords')): # If it's a daemon, we do not want to give it the same daemon token, as that's going to be reused for other programs and we do not want that.
-         TokensX('Put{}Daemon Hosted MU-isSilent'.format(count), '', programCard)
-      else: programCard.markers[mdict['DaemonMU']] += count
+      setGlobalVariable('Host Cards',str(hostCards))
+      if not force:
+         daemonCard.markers[mdict['DaemonMU']] -= count
+         if re.search(r'Daemon',fetchProperty(programCard, 'Keywords')): # If it's a daemon, we do not want to give it the same daemon token, as that's going to be reused for other programs and we do not want that.
+            TokensX('Put{}Daemon Hosted MU-isSilent'.format(count), '', programCard)
+         else: programCard.markers[mdict['DaemonMU']] += count
+      else: 
+         daemonCard.markers[customHostMarker] -= 1 # If this a forced host, the host should have a special counter on top of it...
+         programCard.markers[customHostMarker] += 1 # ...that we move to the hosted program to signify it's hosted
       programCard.owner.MU += count # We return the MUs the card would be otherwise using.
       if not silent: notify("{} installs {} into {}".format(me,programCard,daemonCard))
 

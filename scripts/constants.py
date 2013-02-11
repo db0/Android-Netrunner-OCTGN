@@ -106,6 +106,9 @@ RunnerCardTypes = [
          'Hardware',
          'Resource',
          'Event']
+         
+SpecialDaemons = [ # These are cards which can host programs and avoid their MU cost, but don't have the daemon keyword
+         'Dinosaurus'] # Not in use yet.
 
 IgnoredModulators = [ # These are modulators to core commands that we do not want to be mentioning on the multiple choice, of cards that have one
                'isSubroutine',

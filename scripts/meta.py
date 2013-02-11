@@ -210,9 +210,13 @@ def getSpecial(cardType,player = me):
 def chkRAM(card, action = 'INSTALL', silent = False):
    if debugVerbosity >= 1: notify(">>> chkRAM(){}".format(extraASDebug())) #Debug
    MUreq = num(fetchProperty(card,'Requirement'))
+   hostCards = eval(getGlobalVariable('Host Cards'))
+   if hostCards.has_key(card._id): hostC = Card(hostCards[card._id])
+   else: hostC = None
    if (MUreq > 0
          and not (card.markers[mdict['DaemonMU']] and not re.search(r'Daemon',getKeywords(card)))
          and not findMarker(card,'Daemon Hosted MU')
+         and not (hostC and findMarker(card, '{} Hosted'.format(hostC.name))) # No idea if this will work.
          and card.highlight != InactiveColor 
          and card.highlight != RevealedColor):
       if action == 'INSTALL':
@@ -286,6 +290,9 @@ def clearAttachLinks(card):
          DaemonHosted = findMarker(card,'Daemon Hosted MU')
          if DaemonHosted: # if the card just removed was a daemon hosted by a daemon, then it's going to have a different kind of token.
             hostCard.markers[mdict['DaemonMU']] += card.markers[DaemonHosted] # If the card was hosted by a Daemon, we return any Daemon MU's used.
+      customMU = findMarker(card, '{} Hosted'.format(hostCard.name)) 
+      if customMU and hostCard.group == table: # If the card has a custom hosting marker (e.g. Dinosaurus)
+         hostCard.markers[customMU] += 1 # Then we return the custom hosting marker to its original card to signifiy it's free to host another program.
       del hostCards[card._id] # If the card was an attachment, delete the link
    setGlobalVariable('Host Cards',str(hostCards))
    if debugVerbosity >= 3: notify("<<< clearAttachLinks()") #Debug   

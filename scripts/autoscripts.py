@@ -1385,7 +1385,9 @@ def ModifyStatus(Autoscript, announceText, card, targetCards = None, notificatio
          if exposeResult == 'ABORT': return 'ABORT'
          elif exposeResult == 'COUNTERED': extraText = " (Countered!)"
       elif action.group(1) == 'Uninstall' and uninstall(targetCard, destination = dest, silent = True) != 'ABORT': pass
-      elif action.group(1) == 'Possess' and possess(card, targetCard, silent = True) != 'ABORT': pass
+      elif action.group(1) == 'Possess':
+         if re.search(r'-forceHost',Autoscript) and possess(card, targetCard, silent = True, force = True) == 'ABORT': return 'ABORT'
+         elif possess(card, targetCard, silent = True) == 'ABORT': return 'ABORT'
       elif action.group(1) == 'Trash':
          trashResult = intTrashCard(targetCard, fetchProperty(targetCard,'Stat'), "free", silent = True)
          if trashResult == 'ABORT': return 'ABORT'

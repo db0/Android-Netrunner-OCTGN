@@ -1230,6 +1230,30 @@ onPlay:RunHQ||atSuccessfulRun:RequestInt-Msg{How many credits do you want to bur
 +++++
 
 .....
+Nerve Agent
+-----
+
+-----
+atSuccessfulRun:Put1Virus-ifSuccessfulRunHQ
++++++
+	
+.....
+Joshua B.
+-----
+
+-----
+atTurnEnd:Remove1Used-byMe-isCost-isSilent$$Gain1Tag
++++++
+A0B0G0T0:Gain1Clicks-onlyOnce$$Put1Used
+.....
+Dinosaurus
+-----
+
+-----
+onInstall:Put1Dinosaurus Hosted-isSilent
++++++
+A0B0G0T0:PossessTarget-Targeted-atIcebreaker_and_nonAI-targetMine-forceHost$$Put2PlusOnePerm-Targeted-atIcebreaker_and_nonAI-targetMine
+.....
 
 
 ENDSCRIPTS
