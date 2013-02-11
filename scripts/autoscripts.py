@@ -179,6 +179,7 @@ def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
       elif not card.isFaceUp: card.isFaceUp = True
       return
    if debugVerbosity >= 5: notify("+++ Not a tracing card. Checking highlight...")
+   if markerScripts(card): return # If there's a special marker, it means the card triggers to do something else with the default action
    if card.highlight == InactiveColor:
       accessRegex = re.search(r'onAccess:([^|]+)',CardsAS.get(card.model,''))
       if not accessRegex:
@@ -596,7 +597,7 @@ def atTimedEffects(Time = 'Start'): # Function which triggers card effects at th
                if numberTuple == 'ABORT': break
                X = numberTuple[1] 
             elif regexHooks['CustomScript'].search(passedScript):
-               if CustomScript(card, action = 'Turn{}'.format(Time)) == 'ABORT': break
+               if CustomScript(card, action = Time) == 'ABORT': break
             if failedRequirement: break # If one of the Autoscripts was a cost that couldn't be paid, stop everything else.
    markerEffects(Time) 
    if me.counters['Credits'].value < 0: 
@@ -679,7 +680,34 @@ def markerEffects(Time = 'Start'):
          if re.search(r'Cortez Chip',marker[0]) and Time == 'End':
             TokensX('Remove1Cortez Chip', "Cortez Chip:", card)
             notify("--> {} removes Cortez Chip effect from {}".format(me,card))
-   
+
+def markerScripts(card, action = 'USE'):
+   if debugVerbosity >= 1: notify(">>> markerScripts() at action: {}".format(action)) #Debug
+   foundSpecial = False
+   for key in card.markers:
+      if key[0] == 'Personal Workshop' and action == 'USE':
+         foundSpecial = True
+         remainingCost = num(card.Cost) - card.markers[mdict['Power']]
+         reduction = reduceCost(card, 'USE', remainingCost, dryRun = True)
+         if confirm("Do you want to pay {} credits to install this card from your Personal Workshop?".format(remainingCost - reduction)):
+            rc = payCost(remainingCost - reduction, "not free")
+            if rc == 'ABORT': return # If the cost couldn't be paid, we don't proceed.
+            reduceCost(card, 'USE', remainingCost) # If the cost could be paid, we finally take the credits out from cost reducing cards.
+            placeCard(card)
+            PWmarker = findMarker(card,'Personal Workshop')
+            card.markers[PWmarker] = 0
+            card.markers[mdict['Power']] = 0
+            card.highlight = None
+            executePlayScripts(card,'INSTALL')
+            autoscriptOtherPlayers('CardInstall',card)
+            MUtext = chkRAM(card)
+            if reduction: reduceTXT = ' (reduced by {})'.format(reduction)
+            else: reduceTXT = ''
+            notify("{} has paid {}{} in order to install {} from their Personal Workshop{}".format(me,uniCredit(remainingCost),reduceTXT,card,MUtext))
+   return foundSpecial
+           
+         
+         
 #------------------------------------------------------------------------------
 # Post-Trace Trigger
 #------------------------------------------------------------------------------
@@ -1584,6 +1612,54 @@ def CustomScript(card, action = 'PLAY'): # Scripts that are complex and fairly u
          notify("{} has spent {} in secret for {}'s subroutine".format(me,uniCredit(secretCred),card))
          me.Credits -= secretCred
          secretCred = None
+   elif fetchProperty(card, 'name') == 'Personal Workshop':
+      if action == 'USE':
+         targetList = [c for c in me.hand  # First we see if they've targeted a card from their hand
+                        if c.targetedBy 
+                        and c.targetedBy == me 
+                        and num(c.Cost) > 0
+                        and (c.Type == 'Program' or c.Type == 'Hardware')]
+         if len(targetList) > 0:
+            selectedCard = targetList[0]
+            actionCost = useClick(count = 1)
+            if actionCost == 'ABORT': return
+            hostCards = eval(getGlobalVariable('Host Cards'))
+            hostCards[selectedCard._id] = card._id # We set the Personal Workshop to be the card's host
+            setGlobalVariable('Host Cards',str(hostCards))
+            cardAttachementsNR = len([att_id for att_id in hostCards if hostCards[att_id] == card._id])
+            if debugVerbosity >= 2: notify("### About to move into position") #Debug
+            x,y = card.position
+            selectedCard.moveToTable(x, y - ((cwidth(card) / 4 * playerside) * cardAttachementsNR))
+            selectedCard.sendToBack()
+            TokensX('Put1Personal Workshop-isSilent', "", selectedCard) # We add a Personal Workshop counter to be able to trigger the paying the cost ability
+            announceText = TokensX('Put1Power-perProperty{Cost}', "{} to activate {} in order to ".format(actionCost,card), selectedCard)
+            selectedCard.highlight = InactiveColor
+            notify(announceText)
+         else: 
+            whisper(":::ERROR::: You need to target a program or hardware in your hand, with a cost of 1 or more, before using this action")  
+            return
+      elif action == 'Start':
+         hostCards = eval(getGlobalVariable('Host Cards'))
+         PWcards = [Card(att_id) for att_id in hostCards if hostCards[att_id] == card._id]
+         if len(PWcards) == 0: return # No cards are hosted in the PW, we're doing nothing
+         elif len(PWcards) == 1: selectedCard = PWcards[0] # If only one card is hosted in the PW, we remove a power from one of those.
+         else: # Else we have to ask which one to remove.
+            selectTXT = 'The Shell Traders: Please select a target to remove a shell marker\n\n'
+            iter = 0
+            PWchoices = makeChoiceListfromCardList(PWcards)
+            choice = SingleChoice("Choose one of the Personal Workshop hosted cards from which to remove a power counter", PWchoices, type = 'button', default = 0)
+            selectedCard = PWcards[choice]
+         TokensX('Remove1Power', "Personal Workshop:",selectedCard)
+         notify("--> {}'s Personal Workshop removes 1 power marker from {}".format(me,selectedCard))
+         if selectedCard.markers[mdict['Power']] == 0: # Empty of power markers means the card can be automatically installed
+            placeCard(selectedCard)
+            PWmarker = findMarker(selectedCard,'Personal Workshop')
+            selectedCard.markers[PWmarker] = 0
+            selectedCard.highlight = None
+            executePlayScripts(selectedCard,'INSTALL')
+            autoscriptOtherPlayers('CardInstall',selectedCard)
+            MUtext = chkRAM(selectedCard)
+            notify("--> {} is Installed from their Personal Workshop{}".format(selectedCard,MUtext))         
    elif action == 'USE': useCard(card)
    if debugVerbosity >= 3: notify("<<< CustomScript()") #Debug
 #------------------------------------------------------------------------------
