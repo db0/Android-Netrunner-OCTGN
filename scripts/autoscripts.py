@@ -77,6 +77,7 @@ def executePlayScripts(card, action):
           (effectType.group(1) == 'onPlay' and action != 'PLAY') or
           (effectType.group(1) == 'onInstall' and action != 'INSTALL') or
           (effectType.group(1) == 'onScore' and action != 'SCORE') or
+          (effectType.group(1) == 'onStartup' and action != 'STARTUP') or
           (effectType.group(1) == 'whileScored' and ds != 'corp') or
           (effectType.group(1) == 'whileLiberated' and ds != 'runner') or
           (effectType.group(1) == 'onDamage' and action != 'DAMAGE') or
@@ -2031,9 +2032,9 @@ def per(Autoscript, card = None, count = 0, targetCards = None, notification = N
       if per.group(2) and (per.group(2) == 'Target' or per.group(2) == 'Every'): # If we're looking for a target or any specific type of card, we need to scour the requested group for targets.
          if debugVerbosity >= 2: notify("Checking for Targeted per")
          if per.group(2) == 'Target' and len(targetCards) == 0: 
-            whisper(":::ERROR::: Script expected a card targeted but found none! Exiting with 0 multiplier.")
+            delayed_whisper(":::ERROR::: Script expected a card targeted but found none! Exiting with 0 multiplier.")
             # If we were expecting a target card and we have none we shouldn't even be in here. But in any case, we return a multiplier of 0
-         elif per.group(2) == 'Every' and len(targetCards) == 0: pass: #If we looking for a number of cards and we found none, then obviously we return 0
+         elif per.group(2) == 'Every' and len(targetCards) == 0: pass #If we looking for a number of cards and we found none, then obviously we return 0
          else:
             if per.group(2) == 'Host': 
                if debugVerbosity >= 2: notify("Checking for perHost")

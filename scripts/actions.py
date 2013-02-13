@@ -320,6 +320,7 @@ def intJackin(group, x = 0, y = 0):
       BL = num(Identity.Cost)
       me.counters['Base Link'].value = BL
       notify("{} is representing the Runner {}. They start with {} {}".format(me,Identity,BL,uniLink()))
+   executePlayScripts(Identity,'STARTUP')   
    if debugVerbosity >= 3: notify("### Creating Starting Cards")
    createStartingCards()
    if debugVerbosity >= 3: notify("### Shuffling Deck")
