@@ -1244,7 +1244,7 @@ bc0f047c-01b1-427f-a439-d451eda02042
 -----
 atTurnEnd:Remove1Used-byMe-isCost-isSilent$$Gain1Tags
 +++++
-A0B0G0T2:Gain1Clicks$$Put1Used
+A0B0G0T2:Gain1Clicks$$Put1Used-isSilent
 .....
 Dinosaurus
 -----
@@ -1290,7 +1290,7 @@ Chimera
 -----
 bc0f047c-01b1-427f-a439-d451eda02060
 -----
-onRez:ChooseKeyword{Code Gate|Barrier|Sentry}||atJackOut:DerezMyself$$Remove1Sentry-isSilent$$Remove1Barrier-isSilent$$Remove1Code Gate-isSilent
+onRez:ChooseKeyword{Code Gate|Barrier|Sentry}||atJackOut:DerezMyself$$Remove1Keyword:Sentry-isSilent$$Remove1Keyword:Barrier-isSilent$$Remove1Keyword:Code Gate-isSilent
 +++++
 A0B0G0T0:RunEnd-isSubroutine
 .....
@@ -1348,7 +1348,7 @@ bc0f047c-01b1-427f-a439-d451eda02051
 -----
 onScore:Put1Agenda-perMarker{Advancement}-ignore3
 +++++
-A0B0G0T0:Remove1Agenda-isCost$$SimplyAnnounce{Retrieve one card from Archives}
+A0B0G0T0:Remove1Agenda-isCost$$SimplyAnnounce{Retrieve one card from their Archives to their HQ}
 .....
 Test Run
 -----

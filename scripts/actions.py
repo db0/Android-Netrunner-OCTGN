@@ -177,8 +177,8 @@ def goToEndTurn(group, x = 0, y = 0):
    myCards = (card for card in table if card.controller == me and card.owner == me)
    for card in myCards: # We refresh once-per-turn cards to be used on the opponent's turn as well (e.g. Net Shield)
       if card._id in Stored_Type and fetchProperty(card, 'Type') != 'ICE': card.orientation &= ~Rot90 
-   clearAll() # Just in case the player has forgotten to remove their temp markers.
    atTimedEffects('End')
+   clearAll() # Just in case the player has forgotten to remove their temp markers.
    if ds == "corp": notify ("=> {} ({}) has reached CoB (Close of Business hours).".format(identName, me))
    else: notify ("=> {} ({}) has gone to sleep for the day.".format(identName,me))
    opponent = ofwhom('onOpponent')
@@ -1739,7 +1739,7 @@ def possess(daemonCard, programCard, silent = False, force = False):
    if not force and count > daemonCard.markers[mdict['DaemonMU']]:
       delayed_whisper("{} does not have enough free MUs to possess {}.".format(daemonCard, programCard))
       return 'ABORT'
-   elif force and daemonCard.markers.get(customHostMarker,0) > 0: # LOL NO idea if this will work.
+   elif force and not (customHostMarker and daemonCard.markers[customHostMarker] > 0): # .get didn't work on card.markers[] :-(
       delayed_whisper("{} has already hosted the maximum amount of programs it can hold.".format(daemonCard))
       return 'ABORT'
    elif programCard.markers[mdict['DaemonMU']]:

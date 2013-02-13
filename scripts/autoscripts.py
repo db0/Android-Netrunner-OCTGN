@@ -1006,7 +1006,6 @@ def TokensX(Autoscript, announceText, card, targetCards = None, notification = N
    count = num(action.group(2))
    multiplier = per(Autoscript, card, n, targetCards, notification)
    for targetCard in targetCards:
-      #confirm("TargetCard ID: {}".format(targetCard._id)) # Debug
       if action.group(1) == 'Put': modtokens = count * multiplier
       elif action.group(1) == 'Refill': modtokens = count - targetCard.markers[token]
       elif action.group(1) == 'Infect':
@@ -1020,10 +1019,9 @@ def TokensX(Autoscript, announceText, card, targetCards = None, notification = N
                preventTXT = ' ({} prevented)'.format(Virusprevented)
                modtokens -= Virusprevented
          infectTXT = ' {} with'.format(victim)
-         #notify("Token is {}".format(token[0])) # Debug
       elif action.group(1) == 'USE':
          if not targetCard.markers[token] or count > targetCard.markers[token]: 
-            whisper("There's not enough counters left on the card to use this ability!")
+            delayed_whisper("There's not enough counters left on the card to use this ability!")
             return 'ABORT'
          else: modtokens = -count * multiplier
       else: #Last option is for removing tokens.
@@ -1034,16 +1032,15 @@ def TokensX(Autoscript, announceText, card, targetCards = None, notification = N
                if not targetCard or targetCard == card: targetCard = getSpecial('Identity',victim)
                if targetCard.markers[token]: count = targetCard.markers[token]
                else: count = 0
-               #confirm("count: {}".format(count)) # Debug
             elif targetCard.markers[token]: count = targetCard.markers[token]
             else: 
-               delayed_whisper("There was nothing to remove.")
+               if not re.search(r'isSilent', Autoscript): delayed_whisper("There was nothing to remove.")
                count = 0
          elif re.search(r'isCost', Autoscript) and (not targetCard.markers[token] or (targetCard.markers[token] and count > targetCard.markers[token])):
-            if notification != 'Automatic': whisper ("No markers to remove. Aborting!") #Some end of turn effect put a special counter and then remove it so that they only run for one turn. This avoids us announcing that it doesn't have markers every turn.
+            if notification != 'Automatic': delayed_whisper ("No markers to remove. Aborting!") #Some end of turn effect put a special counter and then remove it so that they only run for one turn. This avoids us announcing that it doesn't have markers every turn.
             return 'ABORT'
          elif not targetCard.markers[token]: 
-            whisper("There was nothing to remove.")        
+            if not re.search(r'isSilent', Autoscript): delayed_whisper("There was nothing to remove.")        
             count = 0 # If we don't have any markers, we have obviously nothing to remove.
          modtokens = -count * multiplier
       targetCard.markers[token] += modtokens # Finally we apply the marker modification
