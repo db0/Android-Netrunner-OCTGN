@@ -105,7 +105,7 @@ def executePlayScripts(card, action):
          else: Removal = False
          targetC = findTarget(activeAutoscript)
          targetPL = ofwhom(activeAutoscript,card.controller) # So that we know to announce the right person the effect, affects.
-         announceText = "{} uses {}'s ability and".format(targetPL,card)
+         announceText = "{} uses {}'s ability to".format(targetPL,card)
          if debugVerbosity >= 3: notify("#### targetC: {}".format(targetC)) # Debug
          if effect.group(1) == 'Gain' or effect.group(1) == 'Lose':
             if Removal: 

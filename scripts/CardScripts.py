@@ -1338,7 +1338,7 @@ Private Contracts
 -----
 bc0f047c-01b1-427f-a439-d451eda02059
 -----
-onInstall:Put14Credits
+onRez:Put14Credits
 +++++
 A1B0G0T0:Transfer2Credits$$TrashMyself-ifEmpty	
 .....
