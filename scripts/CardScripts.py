@@ -1242,9 +1242,9 @@ Joshua B.
 -----
 bc0f047c-01b1-427f-a439-d451eda02042
 -----
-atTurnEnd:Remove1Used-byMe-isCost-isSilent$$Gain1Tag
+atTurnEnd:Remove1Used-byMe-isCost-isSilent$$Gain1Tags
 +++++
-A0B0G0T0:Gain1Clicks-onlyOnce$$Put1Used
+A0B0G0T2:Gain1Clicks$$Put1Used
 .....
 Dinosaurus
 -----
