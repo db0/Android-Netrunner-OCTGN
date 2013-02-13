@@ -1326,6 +1326,54 @@ atTurnStart:CustomScript
 +++++
 A1B0G0T0:CustomScript
 .....
+Pop-up Window
+-----
+bc0f047c-01b1-427f-a439-d451eda02056
+-----
+
++++++
+A0B0G0T0:Gain1Credits||A0B0G0T0:Lose1Credits-ofOpponent-isCost-isSubroutine||A0B0G0T0:RunEnd-isSubroutine
+.....
+Private Contracts
+-----
+bc0f047c-01b1-427f-a439-d451eda02059
+-----
+onInstall:Put14Credits
++++++
+A1B0G0T0:Transfer2Credits$$TrashMyself-ifEmpty	
+.....
+Project Vitruvius
+-----
+bc0f047c-01b1-427f-a439-d451eda02051
+-----
+onScore:Put1Agenda-perMarker{Advancement}-ignore3
++++++
+A0B0G0T0:Remove1Agenda-isCost$$SimplyAnnounce{Retrieve one card from Archives}
+.....
+Test Run
+-----
+bc0f047c-01b1-427f-a439-d451eda02047
+-----
+atTurnEnd:SimplyAnnounce{Expire test run return installed program to the top of the stack}
++++++
+A0B0G0T0:UninstallTarget-toStack-Targeted-atProgram$$TrashMyself
+.....
+Viper
+-----
+bc0f047c-01b1-427f-a439-d451eda02052
+-----
+
++++++
+A0B0G0T0:Trace3-isSubroutine-traceEffects<Lose1Clicks-ofOpponent,None>||A0B0G0T0:Trace3-isSubroutine-traceEffects<RunEnd,None>
+.....
+Woodcutter
+-----
+bc0f047c-01b1-427f-a439-d451eda02057
+-----
+
++++++
+A0B0G0T0:Inflict1NetDamage-onOpponent-isSubroutine	
+.....
 
 ENDSCRIPTS
 =====
