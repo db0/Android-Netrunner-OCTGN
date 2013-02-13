@@ -690,23 +690,27 @@ def markerScripts(card, action = 'USE'):
    for key in card.markers:
       if key[0] == 'Personal Workshop' and action == 'USE':
          foundSpecial = True
-         remainingCost = num(card.Cost) - card.markers[mdict['Power']]
-         reduction = reduceCost(card, 'USE', remainingCost, dryRun = True)
-         if confirm("Do you want to pay {} credits to install this card from your Personal Workshop?".format(remainingCost - reduction)):
-            rc = payCost(remainingCost - reduction, "not free")
-            if rc == 'ABORT': return # If the cost couldn't be paid, we don't proceed.
-            reduceCost(card, 'USE', remainingCost) # If the cost could be paid, we finally take the credits out from cost reducing cards.
+         count = askInteger("{} has {} power counters left.\nHow many do you want to pay to remove?".format(card.name,card.markers[mdict['Power']]),card.name,card.markers[mdict['Power']])
+         if not count: return
+         if count > card.markers[mdict['Power']]: count = card.markers[mdict['Power']]
+         reduction = reduceCost(card, 'USE', count, dryRun = True)
+         rc = payCost(count - reduction, "not free")
+         if rc == 'ABORT': return # If the cost couldn't be paid, we don't proceed.
+         reduceCost(card, 'USE', count) # If the cost could be paid, we finally take the credits out from cost reducing cards.
+         card.markers[mdict['Power']] -= count
+         if reduction: reduceTXT = ' (reduced by {})'.format(reduction)
+         else: reduceTXT = ''
+         if card.markers[mdict['Power']] == 0: 
             placeCard(card)
             PWmarker = findMarker(card,'Personal Workshop')
             card.markers[PWmarker] = 0
-            card.markers[mdict['Power']] = 0
             card.highlight = None
             executePlayScripts(card,'INSTALL')
             autoscriptOtherPlayers('CardInstall',card)
             MUtext = chkRAM(card)
-            if reduction: reduceTXT = ' (reduced by {})'.format(reduction)
-            else: reduceTXT = ''
-            notify("{} has paid {}{} in order to install {} from their Personal Workshop{}".format(me,uniCredit(remainingCost),reduceTXT,card,MUtext))
+            notify("{} has paid {}{} in order to install {} from their Personal Workshop{}".format(me,uniCredit(count),reduceTXT,card,MUtext))
+         else:
+            notify("{} has paid {}{} to remove {} power counters from {} in their Personal Workshop".format(me,uniCredit(count),reduceTXT,count,card))         
    return foundSpecial
            
          
@@ -959,7 +963,7 @@ def TransferX(Autoscript, announceText, card, targetCards = None, notification =
    else: reduceTXT = ''
    closureTXT = ASclosureTXT(action.group(2), total)
    if notification == 'Quick': announceString = "{} takes {}{}".format(announceText, closureTXT, reduceTXT)
-   elif notification == 'Automatic': announceString = "{} Transfers {} to {}{}".format(announceText, closureTXT, me, reduceTXT)
+   elif notification == 'Automatic': announceString = "{} Transfer {} to {}{}".format(announceText, closureTXT, me, reduceTXT)
    else: announceString = "{} take {} from {}{}".format(announceText, closureTXT, targetCardlist,reduceTXT)
    if notification: notify('--> {}.'.format(announceString))
    if debugVerbosity >= 3: notify("<<< TransferX()")
