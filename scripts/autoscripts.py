@@ -597,6 +597,8 @@ def atTimedEffects(Time = 'Start'): # Function which triggers card effects at th
                numberTuple = RequestInt(passedScript, announceText, card) # Returns like reshuffleX()
                if numberTuple == 'ABORT': break
                X = numberTuple[1] 
+            elif regexHooks['SimplyAnnounce'].search(passedScript):
+               SimplyAnnounce(passedScript, announceText, card, notification = 'Automatic', n = X)
             elif regexHooks['CustomScript'].search(passedScript):
                if CustomScript(card, action = Time) == 'ABORT': break
             if failedRequirement: break # If one of the Autoscripts was a cost that couldn't be paid, stop everything else.
