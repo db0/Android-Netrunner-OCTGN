@@ -1333,15 +1333,10 @@ def ChooseKeyword(Autoscript, announceText, card, targetCards = None, notificati
    for targetCard in targetCards: targetCardlist += '{},'.format(targetCard)
    targetCardlist = targetCardlist.strip(',') # Re remove the trailing comma
    action = re.search(r'\bChooseKeyword{([A-Za-z\| ]+)}', Autoscript)
-   #confirm("search results: {}".format(action.groups())) # Debug
    keywords = action.group(1).split('|')
-   #confirm("List: {}".format(keywords)) # Debug
-   if len(keywords) > 1:
-      for i in range(len(keywords)): choiceTXT += '{}: {}\n'.format(i, keywords[i])
-      choice = len(keywords)
-   else: choice = 0
-   while choice > len(keywords) - 1: 
-      choice = askInteger("Choose one of the following keywords to assign to this card:\n\n{}".format(choiceTXT),0)
+   if len(keywords) == 1: choice = 0
+   else:
+      choice = SingleChoice("Choose one of the following keywords to assign to this card", keywords, type = 'button', default = 0)
       if choice == None: return 'ABORT'
    for targetCard in targetCards:
       if targetCard.markers:
