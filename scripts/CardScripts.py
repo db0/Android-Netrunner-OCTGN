@@ -1268,7 +1268,7 @@ bc0f047c-01b1-427f-a439-d451eda02044
 -----
 onDamage:Put1protectionMeatDMG-onlyOnce-isPriority
 +++++
-A0B0G0T2:Put1protectionMeatDMG-onlyOnce
+A0B0G0T2:Put1protectionMeatDMG
 .....
 Snitch
 -----
@@ -1298,7 +1298,7 @@ Commercialization
 -----
 bc0f047c-01b1-427f-a439-d451eda02058
 -----
-onPlay:Gain1Credit-perTargetMarker{Advancement}-Targeted-onICE
+onPlay:Gain1Credits-perTargetMarker{Advancement}-Targeted-onICE
 +++++
 
 .....
