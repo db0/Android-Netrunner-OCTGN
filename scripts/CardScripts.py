@@ -1232,7 +1232,7 @@ onPlay:RunHQ||atSuccessfulRun:RequestInt-Msg{How many credits do you want to bur
 .....
 Nerve Agent
 -----
-
+bc0f047c-01b1-427f-a439-d451eda02041
 -----
 atSuccessfulRun:Put1Virus-ifSuccessfulRunHQ
 +++++
@@ -1240,7 +1240,7 @@ atSuccessfulRun:Put1Virus-ifSuccessfulRunHQ
 .....
 Joshua B.
 -----
-
+bc0f047c-01b1-427f-a439-d451eda02042
 -----
 atTurnEnd:Remove1Used-byMe-isCost-isSilent$$Gain1Tag
 +++++
@@ -1248,13 +1248,84 @@ A0B0G0T0:Gain1Clicks-onlyOnce$$Put1Used
 .....
 Dinosaurus
 -----
-
+bc0f047c-01b1-427f-a439-d451eda02048
 -----
 onInstall:Put1Dinosaurus Hosted-isSilent
 +++++
 A0B0G0T0:PossessTarget-Targeted-atIcebreaker_and_nonAI-targetMine-forceHost$$Put2PlusOnePerm-Targeted-atIcebreaker_and_nonAI-targetMine
 .....
+Emergency Shutdown
+-----
+bc0f047c-01b1-427f-a439-d451eda02043
+-----
+onPlay:DerezTarget-Targeted-atICE
++++++
 
+.....
+Muresh Bodysuit
+-----
+bc0f047c-01b1-427f-a439-d451eda02044
+-----
+onDamage:Put1protectionMeatDMG-onlyOnce-isPriority
++++++
+A0B0G0T2:Put1protectionMeatDMG-onlyOnce
+.....
+Snitch
+-----
+bc0f047c-01b1-427f-a439-d451eda02045
+-----
+
++++++
+A0B0G0T2:ExposeTarget-Targeted-atICE
+.....
+Public Sympathy
+-----
+bc0f047c-01b1-427f-a439-d451eda02050
+-----
+whileRezzed:Gain2Hand Size
++++++
+
+.....
+Chimera
+-----
+bc0f047c-01b1-427f-a439-d451eda02060
+-----
+onRez:ChooseKeyword{Code Gate|Barrier|Sentry}||atJackOut:DerezMyself
++++++
+A0B0G0T0:RunEnd-isSubroutine
+.....
+Commercialization
+-----
+bc0f047c-01b1-427f-a439-d451eda02058
+-----
+onPlay:Gain1Credit-perTargetMarker{Advancement}-Targeted-onICE
++++++
+
+.....
+Edge of World
+-----
+bc0f047c-01b1-427f-a439-d451eda02053
+-----
+onAccess:Reveal-ifInstalled
++++++
+A0B3G0T0:RequestInt-Msg{How many ICE are installed on this server?}-onAccess-ifInstalled$$A0B3G0T0:Inflict1BrainDamage-onOpponent-perX
+.....
+Marked Accounts
+-----
+bc0f047c-01b1-427f-a439-d451eda02055
+-----
+atTurnStart:Transfer1Credits-byMe
++++++
+A1B0G0T0:Put3Credits
+.....
+Personal Workshop
+-----
+bc0f047c-01b1-427f-a439-d451eda02049
+-----
+atTurnStart:CustomScript
++++++
+A1B0G0T0:CustomScript
+.....
 
 ENDSCRIPTS
 =====

@@ -2024,80 +2024,33 @@ def per(Autoscript, card = None, count = 0, targetCards = None, notification = N
    if targetCards is None: targetCards = []
    div = 1
    ignore = 0
-   per = re.search(r'\b(per|upto)(Target|Parent|Every)?([A-Z][^-]*)-?', Autoscript) # We're searching for the word per, and grabbing all after that, until the first dash "-" as the variable.   
+   per = re.search(r'\b(per|upto)(Target|Host|Every)?([A-Z][^-]*)-?', Autoscript) # We're searching for the word per, and grabbing all after that, until the first dash "-" as the variable.   
    if per: # If the  search was successful...
       multiplier = 0
       if debugVerbosity >= 2: notify("Groups: {}. Count: {}".format(per.groups(),count)) #Debug
       if per.group(2) and (per.group(2) == 'Target' or per.group(2) == 'Every'): # If we're looking for a target or any specific type of card, we need to scour the requested group for targets.
-         ### IMPORTANT. THIS NEEDS WORK! cardgroup needs to NOT be assigned chkItem. FIX THIS BEFORE ADDING TARGETED PER ###
-         perCHK = per.group(3).split('_on_') # First we check to see if in our conditions we're looking for markers or card properties, to remove them from the checks
-         perCHKSnapshot = list(perCHK)
-         for chkItem in perCHKSnapshot:
-            if re.search(r'(Marker|Property|Any)',chkItem):
-               perCHK.remove(chkItem) # We remove markers and card.properties from names of the card keywords  we'll be looking for later.
-         if re.search(r'fromHand', Autoscript): cardgroup = findTarget('Targeted-at' + chkItem, fromHand = True)
-         else: cardgroup = findTarget('Targeted-at' + chkItem)
-         cardProperties = [] #we're making a big list with all the properties of the card we need to match
-         for c in cardgroup: # Go through each card on the table and gather its properties, then see if they match.
-            del cardProperties[:] # Cleaning the previous entries
-            cFaceD = False # Variable to note down if a card was face-down when we were checking it, or not.
-            if c.targetedBy and not c.isFaceUp: # If the card we're checking is not face up, we turn it temporarily to grab its properties for checking. We only check targeted cards though.
-               c.isFaceUp = True
-               cFaceD = True
-               random = rnd(10,100) # Bug workaround.
-            cardProperties.append(fetchProperty(c, 'name')) # We are going to check its name
-            cardProperties.append(c.Type) # It's type
-            cardSubtypes = getKeywords(c).split('-') # And each individual trait. Traits are separated by " - "
-            for cardSubtype in cardSubtypes:
-               strippedCS = cardSubtype.strip() # Remove any leading/trailing spaces between traits. We need to use a new variable, because we can't modify the loop iterator.
-               if strippedCS: cardProperties.append(strippedCS) # If there's anything left after the stip (i.e. it's not an empty string anymrore) add it to the list.
-            cardProperties.append(c.Side) # We are also going to check if the card is for runner or corp.
-            if cFaceD: c.isFaceUp = False # If the card was originally face-down, return it to that state again.
-            perCHK = True # Variable to show us if the card we're checking is still passing all the requirements.
-            #confirm("Bump") #Debug
-            if debugVerbosity >= 2: notify("### Starting check with {}.\nProperties: {}".format(c, cardProperties)) # Debug
-            for perItem in perItemMatch: # Now we check if the card properties include all the properties we need
-               if perItem not in cardProperties: perCHK = False # The perCHK starts as True. We only need one missing item to turn it to False, since they all have to exist.
-            for perItem in perItemExclusion:
-               if perItem in cardProperties: perCHK = False # Pretty much the opposite of the above.
-            if perCHK: # If we still have not dismissed the card and we're supposed to reveal them to the other players...
-               #notify("group2: {}. card is: {}. Targeting is: {}".format(per.group(2),c,c.targetedBy))
-               if re.search(r'isExposeTarget', Autoscript) and c.isFaceUp: perCHK = False                             # We exclude the card if it's supposed to get exposed but can't (i.e. see encryption breakthrough)
-               if re.search(r'isRezzed', Autoscript) and not c.isFaceUp: perCHK = False    # We exclude the card if it's supposed to be rezzed but isn't
-               if re.search(r'isUnrezzed', Autoscript) and c.isFaceUp: perCHK = False  # We exclude the card if it's supposed to be unrezzed but isn't
-               if re.search(r'Target',per.group(2)) and (not c.targetedBy or not c.targetedBy == me): perCHK = False  # We exclude the card if we only gather targets but it's not one.
-            if perCHK: # Here we find out how much multiplier we get from those cards.
-               if debugVerbosity >= 2: notify("### Target Found: {}".format(c)) # Debug
-               if re.search(r'isExposeTarget', Autoscript) and not c.isFaceUp and c.targetedBy == me: expose(c) # If the card is supposed to be exposed to get the benefit, then do so now.
-               if re.search(r'(Reveal&Shuffle|Reveal&Recover)', Autoscript) and c.targetedBy and c.targetedBy == me: 
-                  c.moveToTable((70 * iter) - 150, 0 - yaxisMove(card), False) # If the card is supposed to be revealed to get the benefit, then we do so now
-                  c.highlight = RevealedColor
-                  notify("- {} reveals {} from their hand".format(me,c))
-                  iter +=1
-               if re.search(r'SendToTrash', Autoscript) and c.targetedBy and c.targetedBy == me: handDiscard(c)
-               if re.search(r'Marker',per.group(3)): #If we're looking for markers, then we go through each targeted card and check if it has any relevant markers
-                  markerName = re.search(r'Marker{([\w ]+)}',per.group(3)) # If we're looking for markers on the card, increase the multiplier by the number of markers found.
-                  marker = findMarker(card, markerName.group(1))
-                  if marker: multiplier += card.markers[marker]
-               elif re.search(r'Property',per.group(3)): # If we're looking for a specific property on the card, increase the multiplier by the total of the properties on the cards found.
+         if debugVerbosity >= 2: notify("Checking for Targeted per")
+         if per.group(2) == 'Target' and len(targetCards) == 0: 
+            whisper(":::ERROR::: Script expected a card targeted but found none! Exiting with 0 multiplier.")
+            # If we were expecting a target card and we have none we shouldn't even be in here. But in any case, we return a multiplier of 0
+         elif per.group(2) == 'Every' and len(targetCards) == 0: pass: #If we looking for a number of cards and we found none, then obviously we return 0
+         else:
+            if per.group(2) == 'Host': 
+               if debugVerbosity >= 2: notify("Checking for perHost")
+               hostCards = eval(getGlobalVariable('Host Cards'))
+               hostID = hostCards.get(card._id,None)
+               if hostID: # If we do not have a parent, then we do nothing and return 0
+                  targetCards = [Card(hostID)] # if we have a host, we make him the only one in the list of cards to process.
+            for perCard in targetCards:
+               if debugVerbosity >= 2: notify("perCard = {}".format(perCard))
+               if re.search(r'Marker',per.group(3)):
+                  markerName = re.search(r'Marker{([\w ]+)}',per.group(3)) # I don't understand why I had to make the curly brackets optional, but it seens atTurnStart/End completely eats them when it parses the CardsAS.get(card.model,'')
+                  marker = findMarker(perCard, markerName.group(1))
+                  if marker: multiplier += perCard.markers[marker]
+               elif re.search(r'Property',per.group(3)):
                   property = re.search(r'Property{([\w ]+)}',per.group(3))
-                  multiplier += num(c.properties[property.group(1)]) # Don't forget to turn it into an integer first!
-               else: multiplier += 1 * chkPlayer(Autoscript, c.controller, False) # If the perCHK remains 1 after the above loop, means that the card matches all our requirements. We only check faceup cards so that we don't take into acoount peeked face-down ones.
-                                                                                  # We also multiply it with chkPlayer() which will return 0 if the player is not of the correct allegiance (i.e. Rival, or Me)
-         #confirm("Finished checking") # Debug
-         revealedCards = [c for c in table if c.highlight == RevealedColor] # If we have any revealed cards that need to be reshuffled, we need to do so now.
-         if re.search(r'Reveal&Shuffle', Autoscript) and len(revealedCards) > 0: 
-            information("The cards you've just revealed will be reshuffled into your deck once your opponents have had a chance to look at them.\
-                   \nOnce you are ready, press any button to reshuffle them back into your deck")
-            for c in revealedCards: c.moveTo(me.piles['R&D/Stack'])
-            random = rnd(10,500) # Bug workaround.
-            shuffle(me.piles['R&D/Stack'])
-            notify("- {} Shuffles their revealed cards back into their {}".format(me,pileName(me.piles['R&D/Stack'])))
-         if re.search(r'Reveal&Recover', Autoscript) and len(revealedCards) > 0: 
-            information("The cards you've just revealed will be returned to your hand once your opponents have had a chance to look at them.\
-                   \nOnce you are ready, press any button to return them to your hand.")
-            for c in revealedCards: c.moveTo(me.hand)
-            notify("- {} returns the revealed cards back into their hand".format(me))
+                  multiplier += num(perCard.properties[property.group(1)])
+               else: multiplier += 1 # If there's no special conditions, then we just add one multiplier per valid (auto)target. Ef. "-perEvery-AutoTargeted-onICE" would give 1 multiplier per ICE on the table
       else: #If we're not looking for a particular target, then we check for everything else.
          if debugVerbosity >= 2: notify("### Doing no table lookup") # Debug.
          if per.group(3) == 'X': multiplier = count # Probably not needed and the next elif can handle alone anyway.
@@ -2111,7 +2064,7 @@ def per(Autoscript, card = None, count = 0, targetCards = None, notification = N
             else: multiplier = 0
          elif re.search(r'Property',per.group(3)):
             property = re.search(r'Property{([\w ]+)}',per.group(3))
-            multiplier = card.properties[property.group(1)]
+            multiplier = num(card.properties[property.group(1)])
       if debugVerbosity >= 2: notify("### Checking ignore") # Debug.            
       ignS = re.search(r'-ignore([0-9]+)',Autoscript)
       if ignS: ignore = num(ignS.group(1))
