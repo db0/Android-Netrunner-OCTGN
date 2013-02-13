@@ -1290,7 +1290,7 @@ Chimera
 -----
 bc0f047c-01b1-427f-a439-d451eda02060
 -----
-onRez:ChooseKeyword{Code Gate|Barrier|Sentry}||atJackOut:DerezMyself
+onRez:ChooseKeyword{Code Gate|Barrier|Sentry}||atJackOut:DerezMyself$$Remove1Sentry-isSilent$$Remove1Barrier-isSilent$$Remove1Code Gate-isSilent
 +++++
 A0B0G0T0:RunEnd-isSubroutine
 .....
