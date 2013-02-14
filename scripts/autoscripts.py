@@ -675,14 +675,18 @@ def markerEffects(Time = 'Start'):
    for card in cardList:
       for marker in card.markers:
          if re.search(r'Tinkering',marker[0]) and Time == 'End':
-            TokensX('Remove1Keyword:Code Gate', "Tinkering:", card)
-            TokensX('Remove1Keyword:Sentry', "Tinkering:", card)
-            TokensX('Remove1Keyword:Barrier', "Tinkering:", card)
+            TokensX('Remove1Keyword:Code Gate-isSilent', "Tinkering:", card)
+            TokensX('Remove1Keyword:Sentry-isSilent', "Tinkering:", card)
+            TokensX('Remove1Keyword:Barrier-isSilent', "Tinkering:", card)
             TokensX('Remove1Tinkering', "Tinkering:", card)
             notify("--> {} removes tinkering effect from {}".format(me,card))
          if re.search(r'Cortez Chip',marker[0]) and Time == 'End':
-            TokensX('Remove1Cortez Chip', "Cortez Chip:", card)
+            TokensX('Remove1Cortez Chip-isSilent', "Cortez Chip:", card)
             notify("--> {} removes Cortez Chip effect from {}".format(me,card))
+         if re.search(r'Joshua Enhancement',marker[0]) and Time == 'End': # We put Joshua's effect here, in case the runner trashes the card with Æsop's after using it
+            TokensX('Remove1Joshua Enhancement-isSilent', "Joshua Enhancement:", card)
+            GainX('Gain1Tags', "Joshua's Enhancements:".format(me), card)
+            notify("--> Joshua's Enhancements give {} a tag".format(identName))
 
 def markerScripts(card, action = 'USE'):
    if debugVerbosity >= 1: notify(">>> markerScripts() with action: {}".format(action)) #Debug
