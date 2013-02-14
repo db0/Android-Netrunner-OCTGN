@@ -10,6 +10,6 @@ At the start of each of your turn, it will ask you which program to work on (if 
 To pay credits to remove power counters from a card, simply double-click on the relevant card you want to work on.
 
 Easy-Peasy!
+
+PS: If you have the cyber exodus 2.2.0, update to 2.2.1 to fix private contract's trash cost
 =============================
-&&
-http://www.youtube.com/watch?v=nGGECL7nom0

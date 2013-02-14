@@ -1,7 +1,9 @@
-2.2.0||
+2.2.1||
 ======New Version Information======
 
-v2.2.0 is now rezzed. A Cyber Exodus of updates! 
+(Update: Please download 2.2.1 to fix a PW bug)
+
+v2.2.1 is now rezzed. A Cyber Exodus of updates! 
 
 Due to the extensive rework of the code required to work with cards like Dinosaurus and Personal Workshop, this set will require once more a complete set update.
 

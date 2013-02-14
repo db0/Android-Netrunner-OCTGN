@@ -54,7 +54,7 @@ Shaper running on a heavily fortifield Haas-Bioroid server.
 Changelog
 ---------
 
-### 2.2.0.1
+### 2.2.1
 
 * Fix for PW taking power counters on the corp's turn
 
