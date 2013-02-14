@@ -54,6 +54,10 @@ Shaper running on a heavily fortifield Haas-Bioroid server.
 Changelog
 ---------
 
+### 2.2.0.1
+
+* Fix for PW taking power counters on the corp's turn
+
 ### 2.2.0
 
 * New game definition for Cyber Exodus! Almost all cards in the data pack scripted
