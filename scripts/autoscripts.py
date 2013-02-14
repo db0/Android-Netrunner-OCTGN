@@ -685,30 +685,38 @@ def markerEffects(Time = 'Start'):
             notify("--> {} removes Cortez Chip effect from {}".format(me,card))
 
 def markerScripts(card, action = 'USE'):
-   if debugVerbosity >= 1: notify(">>> markerScripts() at action: {}".format(action)) #Debug
+   if debugVerbosity >= 1: notify(">>> markerScripts() with action: {}".format(action)) #Debug
    foundSpecial = False
    for key in card.markers:
       if key[0] == 'Personal Workshop' and action == 'USE':
          foundSpecial = True
-         count = askInteger("{} has {} power counters left.\nHow many do you want to pay to remove?".format(card.name,card.markers[mdict['Power']]),card.name,card.markers[mdict['Power']])
-         if not count: return
+         count = askInteger("{} has {} power counters left.\nHow many do you want to pay to remove?".format(card.name,card.markers[mdict['Power']]),card.markers[mdict['Power']])
+         if not count: return foundSpecial
          if count > card.markers[mdict['Power']]: count = card.markers[mdict['Power']]
+         host = chkHostType(card) 
+         if host:
+            try:
+               if count == card.markers[mdict['Power']] and host == 'ABORT': 
+                  delayed_whisper("-- Undoing Personal Workshop build")
+                  return foundSpecial
+            except: extraTXT = ' on {}'.format(host) # If the card requires a valid host and we found one, we will mention it later.
+         else: extraTXT = ''
          reduction = reduceCost(card, 'USE', count, dryRun = True)
          rc = payCost(count - reduction, "not free")
-         if rc == 'ABORT': return # If the cost couldn't be paid, we don't proceed.
+         if rc == 'ABORT': return foundSpecial # If the cost couldn't be paid, we don't proceed.
          reduceCost(card, 'USE', count) # If the cost could be paid, we finally take the credits out from cost reducing cards.
          card.markers[mdict['Power']] -= count
          if reduction: reduceTXT = ' (reduced by {})'.format(reduction)
          else: reduceTXT = ''
          if card.markers[mdict['Power']] == 0: 
+            clearAttachLinks(card) # We unhost it from Personal Workshop so that it's not trashed if PW is trashed
             placeCard(card)
-            PWmarker = findMarker(card,'Personal Workshop')
-            card.markers[PWmarker] = 0
+            card.markers[mdict['PersonalWorkshop']] = 0
             card.highlight = None
             executePlayScripts(card,'INSTALL')
             autoscriptOtherPlayers('CardInstall',card)
             MUtext = chkRAM(card)
-            notify("{} has paid {}{} in order to install {} from their Personal Workshop{}".format(me,uniCredit(count),reduceTXT,card,MUtext))
+            notify("{} has paid {}{} in order to install {}{} from their Personal Workshop{}".format(me,uniCredit(count),reduceTXT,card,extraTXT,MUtext))
          else:
             notify("{} has paid {}{} to remove {} power counters from {} in their Personal Workshop".format(me,uniCredit(count),reduceTXT,count,card))         
    return foundSpecial
@@ -737,7 +745,7 @@ def redirect(Autoscript, card, notificationType = 'Quick', X = 0):
    targetC = findTarget(Autoscript)
    targetPL = ofwhom(Autoscript,card.controller) # So that we know to announce the right person the effect, affects.
    announceText = "{} uses {}'s ability to".format(targetPL,card) 
-   if debugVerbosity >= 3: notify("#### targetC: {}".format(targetC)) # Debug
+   if debugVerbosity >= 3: notify("#### targetC: {}. Notification Type = {}".format(targetC,notificationType)) # Debug
    if regexHooks['GainX'].search(Autoscript):
       gainTuple = GainX(Autoscript, announceText, card, notificationType, n = X)
       if gainTuple == 'ABORT': return
@@ -911,6 +919,7 @@ def GainX(Autoscript, announceText, card, targetCards = None, notification = Non
    if debugVerbosity >= 2: notify("### Gainx() about to announce")
    if notification == 'Quick': announceString = "{}{} {} {}{}".format(announceText, otherTXT, verb, closureTXT,extraText)
    else: announceString = "{}{} {} {}{}".format(announceText, otherTXT, verb, closureTXT,extraText)
+   if debugVerbosity >= 4: notify("notification = {}".format(notification))
    if notification and multiplier > 0: notify('--> {}.'.format(announceString))
    if debugVerbosity >= 3: notify("<<< Gain() total: {}".format(total))
    return (announceString,total)
@@ -1413,7 +1422,8 @@ def ModifyStatus(Autoscript, announceText, card, targetCards = None, notificatio
          elif exposeResult == 'COUNTERED': extraText = " (Countered!)"
       elif action.group(1) == 'Uninstall' and uninstall(targetCard, destination = dest, silent = True) != 'ABORT': pass
       elif action.group(1) == 'Possess':
-         if re.search(r'-forceHost',Autoscript) and possess(card, targetCard, silent = True, force = True) == 'ABORT': return 'ABORT'
+         if re.search(r'-forceHost',Autoscript):
+            if possess(card, targetCard, silent = True, force = True) == 'ABORT': return 'ABORT'
          elif possess(card, targetCard, silent = True) == 'ABORT': return 'ABORT'
       elif action.group(1) == 'Trash':
          trashResult = intTrashCard(targetCard, fetchProperty(targetCard,'Stat'), "free", silent = True)
@@ -1630,7 +1640,7 @@ def CustomScript(card, action = 'PLAY'): # Scripts that are complex and fairly u
             x,y = card.position
             selectedCard.moveToTable(x, y - ((cwidth(card) / 4 * playerside) * cardAttachementsNR))
             selectedCard.sendToBack()
-            TokensX('Put1Personal Workshop-isSilent', "", selectedCard) # We add a Personal Workshop counter to be able to trigger the paying the cost ability
+            TokensX('Put1PersonalWorkshop-isSilent', "", selectedCard) # We add a Personal Workshop counter to be able to trigger the paying the cost ability
             announceText = TokensX('Put1Power-perProperty{Cost}', "{} to activate {} in order to ".format(actionCost,card), selectedCard)
             selectedCard.highlight = InactiveColor
             notify(announceText)
@@ -1643,7 +1653,7 @@ def CustomScript(card, action = 'PLAY'): # Scripts that are complex and fairly u
          if len(PWcards) == 0: return # No cards are hosted in the PW, we're doing nothing
          elif len(PWcards) == 1: selectedCard = PWcards[0] # If only one card is hosted in the PW, we remove a power from one of those.
          else: # Else we have to ask which one to remove.
-            selectTXT = 'The Shell Traders: Please select a target to remove a shell marker\n\n'
+            selectTXT = 'Personal Workshop: Please select one of your hosted cards from which to remove a power counter\n\n'
             iter = 0
             PWchoices = makeChoiceListfromCardList(PWcards)
             choice = SingleChoice("Choose one of the Personal Workshop hosted cards from which to remove a power counter", PWchoices, type = 'button', default = 0)
@@ -1651,14 +1661,24 @@ def CustomScript(card, action = 'PLAY'): # Scripts that are complex and fairly u
          TokensX('Remove1Power', "Personal Workshop:",selectedCard)
          notify("--> {}'s Personal Workshop removes 1 power marker from {}".format(me,selectedCard))
          if selectedCard.markers[mdict['Power']] == 0: # Empty of power markers means the card can be automatically installed
-            placeCard(selectedCard)
-            PWmarker = findMarker(selectedCard,'Personal Workshop')
-            selectedCard.markers[PWmarker] = 0
+            host = chkHostType(selectedCard, seek = 'DemiAutoTargeted') 
+            if host:
+               try:
+                  if host == 'ABORT': 
+                     selectedCard.markers[mdict['Power']] += 1
+                     delayed_whisper("-- Undoing Personal Workshop build")
+                     return
+               except:
+                  extraTXT = ' and hosted on {}'.format(host) # If the card requires a valid host and we found one, we will mention it later.
+            else: extraTXT = ''
+            clearAttachLinks(selectedCard) # We unhost it from Personal Workshop so that it's not trashed if PW is trashed
+            placeCard(selectedCard, hostCard = host)
+            selectedCard.markers[mdict['PersonalWorkshop']] = 0
             selectedCard.highlight = None
             executePlayScripts(selectedCard,'INSTALL')
             autoscriptOtherPlayers('CardInstall',selectedCard)
             MUtext = chkRAM(selectedCard)
-            notify("--> {} is Installed from their Personal Workshop{}".format(selectedCard,MUtext))         
+            notify("--> {} has been built{} from {}'s Personal Workshop{}".format(selectedCard,extraTXT,identName,MUtext))         
    elif action == 'USE': useCard(card)
    if debugVerbosity >= 3: notify("<<< CustomScript()") #Debug
 #------------------------------------------------------------------------------
@@ -1785,7 +1805,7 @@ def findTarget(Autoscript, fromHand = False, card = None): # Function for findin
             choiceType = re.search(r'-choose([0-9]+)',Autoscript)
             targetChoices = makeChoiceListfromCardList(foundTargets)
             if not card: choiceTitle = "Choose one of the valid targets for this effect"
-            else: choiceTitle = "Choose one of the valid targets for {}'s ability".format(fetchProperty(card, 'name'))
+            else: choiceTitle = "Choose one of the valid targets for {}".format(fetchProperty(card, 'name'))
             if debugVerbosity >= 2: notify("### Checking for SingleChoice")# Debug
             if choiceType.group(1) == '1':
                if len(foundTargets) == 1: choice = 0 # If we only have one valid target, autoselect it.
@@ -1921,7 +1941,7 @@ def makeChoiceListfromCardList(cardList):
    for T in cardList:
       if debugVerbosity >= 4: notify("### Checking {}".format(T))# Debug
       markers = 'Counters:'
-      if T.markers[mdict['Advance']] and T.markers[mdict['Advance']] >= 1: markers += " {} Advance,".format(T.markers[mdict['Advance']])
+      if T.markers[mdict['Advancement']] and T.markers[mdict['Advancement']] >= 1: markers += " {} Advancement,".format(T.markers[mdict['Advancement']])
       if T.markers[mdict['Credits']] and T.markers[mdict['Credits']] >= 1: markers += " {} Credits,".format(T.markers[mdict['Credits']])
       if T.markers[mdict['Power']] and T.markers[mdict['Power']] >= 1: markers += " {} Power.".format(T.markers[mdict['Power']])
       if T.markers[mdict['Virus']] and T.markers[mdict['Virus']] >= 1: markers += " {} Virus.".format(T.markers[mdict['Virus']])
@@ -1930,14 +1950,14 @@ def makeChoiceListfromCardList(cardList):
       else: markers = ''
       if debugVerbosity >= 4: notify("### Finished Adding Markers. Adding stats...")# Debug               
       stats = ''
-      stats += "Cost: {}. ".format(fetchProperty(card, 'Cost'))
-      cStat = fetchProperty(card, 'Stat')
-      cType = fetchProperty(card, 'Type')
+      stats += "Cost: {}. ".format(fetchProperty(T, 'Cost'))
+      cStat = fetchProperty(T, 'Stat')
+      cType = fetchProperty(T, 'Type')
       if cType == 'ICE': stats += "Strength: {}.".format(cStat)
       if cType == 'Agenda': stats += "Agenda Points: {}.".format(cStat)
       if cType == 'Asset' or cType == 'Upgrade': stats += "Trash Cost: {}.".format(cStat)
       if debugVerbosity >= 4: notify("### Finished Adding Stats. Going to choice...")# Debug               
-      choiceTXT = "{}\n{}\n{}{}".format(fetchProperty(card, 'name'),cType,markers,stats)
+      choiceTXT = "{}\n{}\n{}{}".format(fetchProperty(T, 'name'),cType,markers,stats)
       targetChoices.append(choiceTXT)
    return targetChoices
    if debugVerbosity >= 3: notify("<<< makeChoiceListfromCardList()")

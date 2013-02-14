@@ -29,6 +29,7 @@ mdict = dict( # A dictionary which holds all the hard coded markers (in the mark
              protectionVirus =         ("Virus protection","590322bd-83f0-43fa-9239-a2b723b08460"),
              BrainDMG =                ("Brain Damage","59810a63-2a6b-4ae2-a71c-348c8965d612"),
              DaemonMU =                ("Daemon MU", "17844835-3140-4555-b592-0f711048eabd"),
+             PersonalWorkshop =        ("Personal Workshop", "efbfabaa-384d-4139-8be1-7f1d706b3dd8"),
              BaseLink =                ("Base Link", "2fb5b6bb-31c5-409c-8aa6-2c46e971a8a5"))
 
              

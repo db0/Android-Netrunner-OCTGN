@@ -233,6 +233,22 @@ def chkRAM(card, action = 'INSTALL', silent = False):
    if debugVerbosity >= 3: notify("<<< chkRAM() by returning: {}".format(MUtext))
    return MUtext
 
+def chkHostType(card, seek = 'Targeted'):
+   if debugVerbosity >= 1: notify(">>> chkHostType(){}".format(extraASDebug())) #Debug
+   # Checks if the card needs to have a special host targeted before it can come in play.
+   hostType = re.search(r'Placement:([A-Za-z1-9:_ -]+)', fetchProperty(card, 'AutoScripts'))
+   if hostType:
+      if debugVerbosity >= 2: notify("### hostType: {}.".format(hostType.group(1))) #Debug
+      host = findTarget('{}-at{}-choose1'.format(seek,hostType.group(1)),card = card)
+      if len(host) == 0:
+         delayed_whisper("ABORTING!")
+         result = 'ABORT'
+      else: result = host[0] # If a propert host is targeted, then we return it to the calling function. We always return just the first result.
+   else: result = None
+   if debugVerbosity >= 3: notify("<<< chkHostType() with result {}".format(result))
+   return result
+   
+ 
 def scanTable(group = table, x=0,y=0):
    if debugVerbosity >= 1: notify(">>> scanTable(){}".format(extraASDebug())) #Debug
    global Stored_Type, Stored_Cost, Stored_Keywords, Stored_AutoActions, Stored_AutoScripts
@@ -681,9 +697,9 @@ def TrialError(group, x=0, y=0): # Debugging
       ds = "corp"
       notify("Corp Now")
    ###### End Testing Corner ######
-   testcards = ["bc0f047c-01b1-427f-a439-d451eda02039", #Corporate Retreat
-                "bc0f047c-01b1-427f-a439-d451eda01004", #Stimhack
-                "bc0f047c-01b1-427f-a439-d451eda02025", #Compromised Employee
+   testcards = ["bc0f047c-01b1-427f-a439-d451eda01012", #Parasite
+                "bc0f047c-01b1-427f-a439-d451eda02060", #Chimera
+                "bc0f047c-01b1-427f-a439-d451eda02049", #Personal Workshop
                 "bc0f047c-01b1-427f-a439-d451eda02032", #Fetal AI
                 "bc0f047c-01b1-427f-a439-d451eda02026", #Notoriety
                 "bc0f047c-01b1-427f-a439-d451eda02002", #Spinal Modem

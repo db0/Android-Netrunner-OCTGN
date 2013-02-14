@@ -59,24 +59,25 @@ SuccessfulRun = False # Set by the runner when a run is successful, in order to 
 # Card Placement
 #---------------------------------------------------------------------------
 
-def placeCard(card, action = 'INSTALL'):
+def placeCard(card, action = 'INSTALL', hostCard = None):
    if debugVerbosity >= 1: notify(">>> placeCard() with action: {}".format(action)) #Debug
    hostType = re.search(r'Placement:([A-Za-z1-9:_ -]+)', fetchProperty(card, 'AutoScripts'))
    if hostType:
       if debugVerbosity >= 2: notify("### hostType: {}.".format(hostType.group(1))) #Debug
-      host = findTarget('Targeted-at{}'.format(hostType.group(1)))
-      if len(host) == 0: delayed_whisper(":::ERROR::: No Valid Host Targeted! Aborting Placement.")
+      host = findTarget('Targeted-at{}'.format(hostType.group(1))) 
+      if len(host) == 0 and not hostCard: delayed_whisper(":::ERROR::: No Valid Host Targeted! Aborting Placement.") # We can pass a host from a previous function (e.g. see Personal Workshop)
       else:
+         if not hostCard: hostCard = host[0]
          if debugVerbosity >= 2: notify("### We have a host") #Debug
          hostCards = eval(getGlobalVariable('Host Cards'))
-         hostCards[card._id] = host[0]._id
+         hostCards[card._id] = hostCard._id
          setGlobalVariable('Host Cards',str(hostCards))
-         cardAttachementsNR = len([att_id for att_id in hostCards if hostCards[att_id] == host[0]._id])
+         cardAttachementsNR = len([att_id for att_id in hostCards if hostCards[att_id] == hostCard._id])
          if debugVerbosity >= 2: notify("### About to move into position") #Debug
-         x,y = host[0].position
-         if host[0].controller != me: xAxis = -1
+         x,y = hostCard.position
+         if hostCard.controller != me: xAxis = -1
          else: xAxis = 1
-         if host[0].Type == 'Objective': card.moveToTable(x + (playerside * xAxis * cwidth(card,0) / 2 * cardAttachementsNR), y)
+         if hostCard.Type == 'Objective': card.moveToTable(x + (playerside * xAxis * cwidth(card,0) / 2 * cardAttachementsNR), y)
          else: card.moveToTable(x, y - ((cwidth(card) / 4 * playerside) * cardAttachementsNR))
          card.sendToBack()
    else:
@@ -1736,18 +1737,18 @@ def possess(daemonCard, programCard, silent = False, force = False):
    if debugVerbosity >= 2: notify("Looking for custom hosting marker")
    customHostMarker = findMarker(daemonCard, '{} Hosted'.format(daemonCard.name)) # We check if the card has a custom hosting marker which we use when the hosting is forced
    if debugVerbosity >= 2: notify("Custom hosting marker: {}".format(customHostMarker))
+   hostCards = eval(getGlobalVariable('Host Cards'))
    if not force and count > daemonCard.markers[mdict['DaemonMU']]:
-      delayed_whisper("{} does not have enough free MUs to possess {}.".format(daemonCard, programCard))
+      delayed_whisper(":::ERROR::: {} does not have enough free MUs to possess {}.".format(daemonCard, programCard))
       return 'ABORT'
    elif force and not (customHostMarker and daemonCard.markers[customHostMarker] > 0): # .get didn't work on card.markers[] :-(
-      delayed_whisper("{} has already hosted the maximum amount of programs it can hold.".format(daemonCard))
+      delayed_whisper(":::ERROR::: {} has already hosted the maximum amount of programs it can hold.".format(daemonCard))
       return 'ABORT'
-   elif programCard.markers[mdict['DaemonMU']]:
-      delayed_whisper("{} is already possessed by another daemon.".format(programCard))
+   elif hostCards.has_key(programCard._id):
+      delayed_whisper(":::ERROR::: {} is already hosted in {}.".format(programCard,Card(hostCards[programCard._id])))
       return 'ABORT'
    else: 
       if debugVerbosity >= 2: notify("### We have a valid daemon host") #Debug
-      hostCards = eval(getGlobalVariable('Host Cards'))
       hostCards[programCard._id] = daemonCard._id
       setGlobalVariable('Host Cards',str(hostCards))
       if not force:
@@ -1760,6 +1761,7 @@ def possess(daemonCard, programCard, silent = False, force = False):
          programCard.markers[customHostMarker] += 1 # ...that we move to the hosted program to signify it's hosted
       programCard.owner.MU += count # We return the MUs the card would be otherwise using.
       if not silent: notify("{} installs {} into {}".format(me,programCard,daemonCard))
+   if debugVerbosity >= 3: notify("<<< possess(){}") #Debug
 
       
 def useCard(card,x=0,y=0):
@@ -1875,15 +1877,20 @@ def intPlay(card, cost = 'not free'):
    if (card.Type == 'Operation' or card.Type == 'Event') and chkTargeting(card) == 'ABORT': 
       me.Clicks += NbReq # We return any used clicks in case of aborting due to missing target
       return # If it's an Operation or Event and has targeting requirements, check with the user first.
-   hostType = re.search(r'Placement:([A-Za-z1-9:_ -]+)', fetchProperty(card, 'AutoScripts'))
-   if hostType:
-      if debugVerbosity >= 2: notify("### hostType: {}.".format(hostType.group(1))) #Debug
-      host = findTarget('Targeted-at{}'.format(hostType.group(1)))
-      if len(host) == 0:
-         whisper("ABORTING!")
-         me.Clicks += NbReq # We return any used clicks in case of aborting due to missing target
-         return
-      else: extraTXT = ' on {}'.format(host[0])
+   host = chkHostType(card) 
+   if debugVerbosity >= 4: notify("### host received: {}".format(host))
+   if host:
+      try:
+         if host == 'ABORT': 
+            me.Clicks += NbReq
+            return
+      except: # If there's an exception, it means that the host is a card object which cannot be compared to a string
+         if debugVerbosity >= 2: notify("### Found Host")
+         hostTXT = ' on {}'.format(host) # If the card requires a valid host and we found one, we will mention it later.
+   else: 
+      if debugVerbosity >= 2: notify("### No Host Requirement")
+      hostTXT = ''
+   if debugVerbosity >= 2: notify("### Finished Checking Host Requirements")
    if card.Type == 'Event' or card.Type == 'Operation': action = 'PLAY'
    else: action = 'INSTALL'
    MUtext = ''
@@ -1919,10 +1926,10 @@ def intPlay(card, cost = 'not free'):
             if targetLookup.targetedBy and targetLookup.targetedBy == me and re.search(r'Daemon',getKeywords(targetLookup)) and possess(targetLookup, card, silent = True) != 'ABORT':
                MUtext = ", installing it into {}".format(targetLookup)
                break         
-         notify("{}{} to install {}{}{}.".format(ClickCost, rc, card, extraText,MUtext))
+         notify("{}{} to install {}{}{}{}.".format(ClickCost, rc, card, hostTXT, extraText,MUtext))
       elif card.Type == 'Event': notify("{}{} to prep with {}{}.".format(ClickCost, rc, card, extraText))
-      elif card.Type == 'Hardware': notify("{}{} to purchase {}{}{}.".format(ClickCost, rc, card, extraText,MUtext))
-      elif card.Type == 'Resource' and hiddenresource == 'no': notify("{}{} to acquire {}{}{}.".format(ClickCost, rc, card, extraText,MUtext))
+      elif card.Type == 'Hardware': notify("{}{} to setup {}{}{}{}.".format(ClickCost, rc, card, hostTXT, extraText,MUtext))
+      elif card.Type == 'Resource' and hiddenresource == 'no': notify("{}{} to acquire {}{}{}{}.".format(ClickCost, rc, card, hostTXT, extraText,MUtext))
       else: notify("{}{} to play {}{}{}.".format(ClickCost, rc, card, extraText,MUtext))
    else:
       reduction = reduceCost(card, action, num(card.Cost)) #Checking to see if the cost is going to be reduced by cards we have in play.
