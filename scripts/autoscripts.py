@@ -1652,7 +1652,7 @@ def CustomScript(card, action = 'PLAY'): # Scripts that are complex and fairly u
          else: 
             whisper(":::ERROR::: You need to target a program or hardware in your hand, with a cost of 1 or more, before using this action")  
             return
-      elif action == 'Start':
+      elif action == 'Start' and card.controller == me:
          hostCards = eval(getGlobalVariable('Host Cards'))
          PWcards = [Card(att_id) for att_id in hostCards if hostCards[att_id] == card._id]
          if len(PWcards) == 0: return # No cards are hosted in the PW, we're doing nothing
