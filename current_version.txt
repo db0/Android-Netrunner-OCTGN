@@ -1,13 +1,16 @@
-2.1.11||
+2.2.0||
 ======New Version Information======
 
-This version adds some nice efficiency improvements. Now all your face-down cards will come in automatically peeked-at.
+v2.2.0 is now rezzed. A Cyber Exodus of updates! 
 
-Also turn end will also trigger the OCTGN-built-in turn change, which should make it more obvious who's turn it is.
+Due to the extensive rework of the code required to work with cards like Dinosaurus and Personal Workshop, this set will require once more a complete set update.
 
-Finally, fixed some minor bugs.
+As always, a patch file has been provided. Make sure you patch all your sets to 2.2.0!
 
+You will also require to download the markers file again so that you bring it to 2.2.0 as well.
+
+Enjoy the new goodies!
 ===============================
 ||
-Latest Sets: 2.1.0
-Latest Markers Set: 2.1.0
+Latest Sets: 2.2.0
+Latest Markers Set: 2.2.0

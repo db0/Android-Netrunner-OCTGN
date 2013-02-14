@@ -54,6 +54,21 @@ Shaper running on a heavily fortifield Haas-Bioroid server.
 Changelog
 ---------
 
+### 2.2.0
+
+* New game definition for Cyber Exodus! Almost all cards in the data pack scripted
+  * Personal Workshop: 
+    To use PW target a program or hardware from your hand and double click it.
+    At the start of each turn it will either automatically take from a single card, or ask you for which to work on
+    To manually spend money on a card, simply double-click the PW-hosted card you want.
+  * Dinosaurus:
+    Dinosaurus cannot at the moment host cards automatically if you target it and play the program
+    Rather, play your program, and then target it and double-click Dinosaurus
+* Changed the counters to fit the new colour scheme
+* Player summary tab now also displays clicks and MUs. Summary tab has been squeezed a bit as well
+* HQ Access will now ask how many cards to access (to work with Nerve Agent). The cards will be chosen randomly and placed altogether on the table temporarily while the runner accesses them.
+
+
 ### 2.1.11
 
 * Installed corp cards will be autopeeked at

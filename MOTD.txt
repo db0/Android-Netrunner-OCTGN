@@ -1,12 +1,15 @@
 =====Message of the Day======
 
-I have just finished creating a brand new Android:Netrunner OCTGN use tutorial video
+Some Instructions on how to use the Personal Workshop's automations:
 
-I have gone  into depth and explained the best ways to use the game definition efficiently in a way that I hope it easy for new players to follow.
+To install a card in it, target the card while it's in your hand, and then double click the Personal Workshop card. 
+The program/hardware will be hosted in the PW.
 
-Please share this to anyone interested in online play of A:NR.
+At the start of each of your turn, it will ask you which program to work on (if you have more than one) and automatically install any that runs out of power counters.
 
-Would you like to open a browser page to the tutorial video?
+To pay credits to remove power counters from a card, simply double-click on the relevant card you want to work on.
+
+Easy-Peasy!
 =============================
 &&
 http://www.youtube.com/watch?v=nGGECL7nom0
