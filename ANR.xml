@@ -127,7 +127,7 @@
         
       
    </table>
-   <player summary="{#Credits} Credits/ {#HQ/Grip} Cards/ {#Agenda Points} APs/ {#Tags} Tags/ {#Base Link} Base Link/ {#Bad Publicity} BP">
+   <player summary="{#Clicks} Cl/ {#Credits} Cr/ {#MU} MU/ {#Base Link} BL/ {#Agenda Points} AP/ {#Bad Publicity} BP/ {#HQ/Grip} Ca/ {#Tags} Tg/ ">
       <globalvariable name="ds" value="" /> 
       <globalvariable name="specialCards" value="{}" /> 
       <globalvariable name="wasNoisy" value="0" /> 
