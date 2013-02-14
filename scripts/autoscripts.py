@@ -736,56 +736,56 @@ def executeTraceEffects(card,Autoscript):
    for autoS in Autoscripts:
       selectedAutoscripts = autoS.split('++')
       if debugVerbosity >= 2: notify ('### selectedAutoscripts: {}'.format(selectedAutoscripts)) # Debug
-      for passedScript in selectedAutoscripts: X = redirect(passedScript, card, 'Quick', X)
+      for passedScript in selectedAutoscripts: X = redirect(passedScript, card, "{}'s trace succeeds to".format(card), 'Quick', X)
       if failedRequirement: break # If one of the Autoscripts was a cost that couldn't be paid, stop everything else.
             
-def redirect(Autoscript, card, notificationType = 'Quick', X = 0):
+def redirect(Autoscript, card, announceText = None, notificationType = 'Quick', X = 0):
    if debugVerbosity >= 1: notify(">>> redirect(){}".format(extraASDebug(Autoscript))) #Debug
    if re.search(r':Pass\b', Autoscript): return # Pass is a simple command of doing nothing ^_^
    targetC = findTarget(Autoscript)
    targetPL = ofwhom(Autoscript,card.controller) # So that we know to announce the right person the effect, affects.
-   announceText = "{} uses {}'s ability to".format(targetPL,card) 
+   if not announceText: announceText = "{} uses {}'s ability to".format(targetPL,card) 
    if debugVerbosity >= 3: notify("#### targetC: {}. Notification Type = {}".format(targetC,notificationType)) # Debug
    if regexHooks['GainX'].search(Autoscript):
-      gainTuple = GainX(Autoscript, announceText, card, notificationType, n = X)
+      gainTuple = GainX(Autoscript, announceText, card, notification = notificationType, n = X)
       if gainTuple == 'ABORT': return
       X = gainTuple[1] 
    elif regexHooks['CreateDummy'].search(Autoscript): 
-      if CreateDummy(Autoscript, announceText, card, targetC, notificationType, n = X) == 'ABORT': return
+      if CreateDummy(Autoscript, announceText, card, targetC, notification = notificationType, n = X) == 'ABORT': return
    elif regexHooks['DrawX'].search(Autoscript): 
-      if DrawX(Autoscript, announceText, card, targetC, notificationType, n = X) == 'ABORT': return
+      if DrawX(Autoscript, announceText, card, targetC, notification = notificationType, n = X) == 'ABORT': return
    elif regexHooks['TokensX'].search(Autoscript): 
-      if TokensX(Autoscript, announceText, card, targetC, notificationType, n = X) == 'ABORT': return
+      if TokensX(Autoscript, announceText, card, targetC, notification = notificationType, n = X) == 'ABORT': return
    elif regexHooks['RollX'].search(Autoscript): 
-      rollTuple = RollX(Autoscript, announceText, card, targetC, notificationType, n = X)
+      rollTuple = RollX(Autoscript, announceText, card, targetC, notification = notificationType, n = X)
       if rollTuple == 'ABORT': return
       X = rollTuple[1] 
    elif regexHooks['RequestInt'].search(Autoscript): 
-      numberTuple = RequestInt(Autoscript, announceText, card, targetC, notificationType, n = X)
+      numberTuple = RequestInt(Autoscript, announceText, card, targetC, notification = notificationType, n = X)
       if numberTuple == 'ABORT': return
       X = numberTuple[1] 
    elif regexHooks['DiscardX'].search(Autoscript): 
-      discardTuple = DiscardX(Autoscript, announceText, card, targetC, notificationType, n = X)
+      discardTuple = DiscardX(Autoscript, announceText, card, targetC, notification = notificationType, n = X)
       if discardTuple == 'ABORT': return
       X = discardTuple[1] 
    elif regexHooks['RunX'].search(Autoscript): 
-      if RunX(Autoscript, announceText, card, targetC, notificationType, n = X) == 'ABORT': return
+      if RunX(Autoscript, announceText, card, targetC, notification = notificationType, n = X) == 'ABORT': return
    elif regexHooks['TraceX'].search(Autoscript): 
-      if TraceX(Autoscript, announceText, card, targetC, notificationType, n = X) == 'ABORT': return
+      if TraceX(Autoscript, announceText, card, targetC, notification = notificationType, n = X) == 'ABORT': return
    elif regexHooks['ReshuffleX'].search(Autoscript): 
-      reshuffleTuple = ReshuffleX(Autoscript, announceText, card, targetC, notificationType, n = X)
+      reshuffleTuple = ReshuffleX(Autoscript, announceText, card, targetC, notification = notificationType, n = X)
       if reshuffleTuple == 'ABORT': return
       X = reshuffleTuple[1]
    elif regexHooks['ShuffleX'].search(Autoscript): 
-      if ShuffleX(Autoscript, announceText, card, targetC, notificationType, n = X) == 'ABORT': return
+      if ShuffleX(Autoscript, announceText, card, targetC, notification = notificationType, n = X) == 'ABORT': return
    elif regexHooks['ChooseKeyword'].search(Autoscript): 
-      if ChooseKeyword(Autoscript, announceText, card, targetC, notificationType, n = X) == 'ABORT': return
+      if ChooseKeyword(Autoscript, announceText, card, targetC, notification = notificationType, n = X) == 'ABORT': return
    elif regexHooks['InflictX'].search(Autoscript): 
-      if InflictX(Autoscript, announceText, card, targetC, notificationType, n = X) == 'ABORT': return
+      if InflictX(Autoscript, announceText, card, targetC, notification = notificationType, n = X) == 'ABORT': return
    elif regexHooks['ModifyStatus'].search(Autoscript): 
-      if ModifyStatus(Autoscript, announceText, card, targetC, notificationType, n = X) == 'ABORT': return
+      if ModifyStatus(Autoscript, announceText, card, targetC, notification = notificationType, n = X) == 'ABORT': return
    elif regexHooks['SimplyAnnounce'].search(Autoscript):
-      SimplyAnnounce(Autoscript, announceText, card, targetC, notificationType, n = X)
+      SimplyAnnounce(Autoscript, announceText, card, targetC, notification = notificationType, n = X)
    elif debugVerbosity >= 1: notify("#### No regexhook match! :(") # Debug
    if debugVerbosity >= 2: notify("### Loop for scipt {} finished".format(Autoscript))
    return X
@@ -796,6 +796,7 @@ def redirect(Autoscript, card, notificationType = 'Quick', X = 0):
    
 def GainX(Autoscript, announceText, card, targetCards = None, notification = None, n = 0, actionType = 'USE'): # Core Command for modifying counters or global variables
    if debugVerbosity >= 1: notify(">>> GainX(){}".format(extraASDebug(Autoscript))) #Debug
+   if debugVerbosity >= 3: notify("### notification = {}".format(notification))
    if targetCards is None: targetCards = []
    global maxClicks, lastKnownNrClicks
    gain = 0
@@ -1253,7 +1254,7 @@ def RunX(Autoscript, announceText, card, targetCards = None, notification = None
       else: notify("!!! No Regex match :(")
    if action.group(1) == 'End':
       jackOut(silent = True)
-      if notification == 'Quick': announceString = "{} ends the run".format(announceText)
+      if notification == 'Quick': announceString = "{} end the run".format(announceText)
       else: announceString = "{} end the run".format(announceText)
    else:
       if action.group(1) == 'Generic':
