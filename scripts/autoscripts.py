@@ -483,7 +483,7 @@ def autoscriptOtherPlayers(lookup, origin_card = Identity, count = 1): # Functio
          if not re.search(r'{}'.format(lookup), AutoS): continue # Search if in the script of the card, the string that was sent to us exists. The sent string is decided by the function calling us, so for example the ProdX() function knows it only needs to send the 'GeneratedSpice' string.
          if chkPlayer(AutoS, card.controller,False) == 0: continue # Check that the effect's origninator is valid.
          if re.search(r'onlyOnce',autoS) and oncePerTurn(card, silent = True, act = 'automatic') == 'ABORT': continue # If the card's ability is only once per turn, use it or silently abort if it's already been used
-         if not checkCardRestrictions(gatherCardProperties(origin_card), prepareRestrictions(autoS, 'seek')): continue #If we have the '-type' modulator in the script, then need ot check what type of property it's looking for
+         if not checkCardRestrictions(gatherCardProperties(origin_card), prepareRestrictions(autoS, 'type')): continue #If we have the '-type' modulator in the script, then need ot check what type of property it's looking for
          if re.search(r'onTriggerCard',autoS): targetCard = [origin_card] # if we have the "-onTriggerCard" modulator, then the target of the script will be the original card (e.g. see Grimoire)
          else: targetCard = None
          if debugVerbosity >= 2: notify("### Automatic Autoscripts: {}".format(AutoS)) # Debug
