@@ -832,13 +832,14 @@ def GainX(Autoscript, announceText, card, targetCards = None, notification = Non
       if action.group(1) == 'SetTo': targetPL.counters['Credits'].value = 0 # If we're setting to a specific value, we wipe what it's currently.
       if gain == -999: targetPL.counters['Credits'].value = 0
       else: 
+         if debugVerbosity >= 2: notify("#### Checking Cost Reduction")
          if re.search(r'isCost', Autoscript) and action.group(1) == 'Lose':
-            if debugVerbosity >= 2: notify("#### Checking Cost Reduction")
             reduction = reduceCost(card, actionType, gain * multiplier)
-            targetPL.counters['Credits'].value += (gain * multiplier) + reduction
-            if reduction > 0: extraText = ' (Reduced by {})'.format(uniCredit(reduction))
-            elif reduction < 0: extraText = " (increased by {})".format(uniCredit(abs(reduction)))
-         else: targetPL.counters['Credits'].value += (gain * multiplier) - gainReduce
+         else:
+            reduction = reduceCost(card, 'None', gain * multiplier) # If the loss is not a cost, we still check for generic reductions such as BP
+         targetPL.counters['Credits'].value += (gain * multiplier) + reduction
+         if reduction > 0: extraText = ' (Reduced by {})'.format(uniCredit(reduction))
+         elif reduction < 0: extraText = " (increased by {})".format(uniCredit(abs(reduction)))
       if targetPL.counters['Credits'].value < 0: 
          if re.search(r'isCost', Autoscript): notify(":::Warning:::{} did not have enough {} to pay the cost of this action".format(targetPL,action.group(3)))
          elif re.search(r'isPenalty', Autoscript): pass #If an action is marked as penalty, it means that the value can go negative and the player will have to recover that amount.
