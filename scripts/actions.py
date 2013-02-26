@@ -264,7 +264,7 @@ def createStartingCards():
       else:
          if debugVerbosity >= 5: information("Creating Trace Card")
          traceCard = table.create("eb7e719e-007b-4fab-973c-3fe228c6ce20", 566, -323, 1, True) #The Trace card
-         traceCard.moveToTable(566, -323) # Otherwise it's bugging out
+         traceCard.moveToTable(345, -345) # Otherwise it's bugging out
          storeSpecial(traceCard)
          #TC = table.create("71a89203-94cd-42cd-b9a8-15377caf4437", 471, -325, 1, True) # The Technical Difficulties card.
          #TC.moveToTable(471, -325) # It's never creating them in the right place. Move is accurate.
