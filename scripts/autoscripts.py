@@ -624,8 +624,10 @@ def atTimedEffects(Time = 'Start'): # Function which triggers card effects at th
                                              \nAuthenticating secure credentials...OK\
                                              \nDecrypting Home Folder...OK\
                                            \n\nAccess to HQ Granted!\
-                                             \nWelcome back Err:::[Segmentation Fault]. Would you like to see today's priority item? Y/N:\
-                                          \n\n(If you select 'No', you'll be able to continue with this action later by pressing [Ctrl]+[Q].)"):
+                                             \nWelcome back Err:::[Segmentation Fault]. Would you like to see today's priority item? \
+                                           \n\n============================\
+                                             \n(Access HQ? Y/N:)\
+                                             \n(If you select 'No', you'll be able to continue with this action later by pressing [Ctrl]+[Q].)"):
          HQaccess(silent = True)
       if currentRunTarget == 'R&D' and confirm("Processing Sec. Token...OK. Access to R&D files authorized for user {}.\nProceed? Y/N:\
                                             \n\n(If you select 'No', you'll be able to continue with this action later by pressing [Ctrl]+[A].)".format(me.name)):
