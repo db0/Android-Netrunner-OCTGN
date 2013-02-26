@@ -252,6 +252,12 @@ def createStartingCards():
          AV = table.create("23473bd3-f7a5-40be-8c66-7d35796b6031", 0, 0, 1, True) # The Virus Scan card.
          AV.moveToTable(510, 127)
          storeSpecial(AV)
+         BTN = table.create("fb146e53-714b-4b29-861a-d58ca9840c00", 0, 0, 1, True) # The No Rez Button
+         BTN.moveToTable(-652, 150)
+         BTN = table.create("e904542b-83db-4022-9e8e-9369fe7bc761", 0, 0, 1, True) # The OK Button
+         BTN.moveToTable(-652, 220)
+         BTN = table.create("0887f64f-4fe8-4a5b-9d41-77408fe0224b", 0, 0, 1, True) # The Wait Button
+         BTN.moveToTable(-652, 290)
       else:
          if debugVerbosity >= 5: information("Creating Trace Card")
          traceCard = table.create("eb7e719e-007b-4fab-973c-3fe228c6ce20", 566, -323, 1, True) #The Trace card
@@ -260,6 +266,12 @@ def createStartingCards():
          #TC = table.create("71a89203-94cd-42cd-b9a8-15377caf4437", 471, -325, 1, True) # The Technical Difficulties card.
          #TC.moveToTable(471, -325) # It's never creating them in the right place. Move is accurate.
          #storeSpecial(TC)   
+         BTN = table.create("33ac6951-93ec-4034-9578-0d7dcc77c3f8", 0, 0, 1, True) # The Access Imminent Button
+         BTN.moveToTable(-641, -230)
+         BTN = table.create("e904542b-83db-4022-9e8e-9369fe7bc761", 0, 0, 1, True) # The OK Button
+         BTN.moveToTable(-641, -300)
+         BTN = table.create("0887f64f-4fe8-4a5b-9d41-77408fe0224b", 0, 0, 1, True) # The Wait Button
+         BTN.moveToTable(-641, -370)
    except: notify("!!!ERROR!!! In createStartingCards()")
 
  
@@ -682,6 +694,12 @@ def inputTraceValue (card, x=0,y=0, limit = 0, silent = False):
    #card.markers[mdict['Credits']] = TraceValue
    if ds == 'corp': 
       if not silent: notify("{} strengthens their Trace by {}{}.".format(me,TraceValue,extraText))
+      OpponentTrace = getSpecial('Tracing',ofwhom('ofOpponent'))
+      OpponentTrace.highlight = EmergencyColor
+      rnd(1,100000)
+      OpponentTrace.highlight = None
+      rnd(1,100000)
+      OpponentTrace.highlight = EmergencyColor # Just a small blinking effect to make sure the runner notices.
    else: 
       if not silent: notify("{} reinforces their {} by {} for a total of {}{}.".format(me,uniLink(),TraceValue, TraceValue + me.counters['Base Link'].value,extraText))
       CorpTraceValue = num(getGlobalVariable('CorpTraceValue'))
@@ -703,6 +721,7 @@ def inputTraceValue (card, x=0,y=0, limit = 0, silent = False):
          autoscriptOtherPlayers('EludedTrace', card)
       setGlobalVariable('CurrentTraceEffect','None') # Once we're done with the current effects of the trace, we clear the CurrentTraceEffect global variable
       setGlobalVariable('CorpTraceValue','None') # And the corp's trace value
+      card.highlight = None
    return TraceValue
 	
 #def revealTraceValue (card, x=0,y=0): # Obsolete in ANR

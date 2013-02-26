@@ -54,6 +54,11 @@ Shaper running on a heavily fortifield Haas-Bioroid server.
 Changelog
 ---------
 
+### 2.2.2
+
+* Femme Fatale will now use BP credits for her bypass ability
+* New Button Cards
+
 ### 2.2.1
 
 * Fix for PW taking power counters on the corp's turn

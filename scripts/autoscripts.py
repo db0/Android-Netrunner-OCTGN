@@ -173,6 +173,12 @@ def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
    storeProperties(card) # Just in case
    failedRequirement = False # We set it to false when we start a new autoscript.
    if debugVerbosity >= 5: notify("+++ Checking if Tracing card...")
+   if card.Type == 'Button': # The Special button cards.
+      if card.name == 'Access Imminent': BUTTON_Access()
+      elif card.name == 'No Rez': BUTTON_NoRez()
+      elif card.name == 'Wait!': BUTTON_Wait()
+      else: BUTTON_OK()
+      return
    if (card._id in Stored_Type and fetchProperty(card, 'Type') == 'Tracing') or card.model == 'eb7e719e-007b-4fab-973c-3fe228c6ce20': # If the player double clicks on the Tracing card...
       if debugVerbosity >= 5: notify("+++ Confirmed tacting card. Checking Status...")
       if card.isFaceUp and not card.markers[mdict['Credits']]: inputTraceValue(card, limit = 0)

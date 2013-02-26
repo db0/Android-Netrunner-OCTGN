@@ -19,6 +19,7 @@
 # * [Generic Netrunner] functions are not doing something in the game by themselves but called often by the functions that do.
 # * In the [Switches] section are the scripts which controls what automations are active.
 # * [Help] functions spawn tokens on the table with succint information on how to play the game.
+# * [Button] functions are trigered either from the menu or from the button cards on the table, and announce a specific message each.
 # * [Debug] if for helping the developers fix bugs
 # * [Online Functions] is everything which connects to online files for some purpose, such as checking the game version or displaying a message of the day
 ###=================================================================================================================###
@@ -415,6 +416,27 @@ def HELP_RunAnatomy(group,x=0,y=0):
 def HELP_RunStructure(group,x=0,y=0):
    table.create('51c3a293-3923-49ee-8c6f-b8c41aaba5f3', x, y, 1)
 
+
+#------------------------------------------------------------------------------
+# Button functions
+#------------------------------------------------------------------------------
+
+def BUTTON_Access(group = None,x=0,y=0):
+   AccessMsgs = ["--- Alert: Unauthorized Access Imminent!",
+                 "--- Alert: Runner entry detected!",
+                 "--- Alert: Firewalls breached!",
+                 "--- Alert: Intrusion in progress!"]
+   AccessTXT = AccessMsgs[rnd(0,len(AccessMsgs) - 1)]
+   notify(AccessTXT)
+
+def BUTTON_NoRez(group = None,x=0,y=0):  
+   notify("--- {} does not rez approached ICE".format(me))
+
+def BUTTON_OK(group = None,x=0,y=0):
+   notify("--- {} has no further reactions.".format(me))
+
+def BUTTON_Wait(group = None,x=0,y=0):  
+   notify("--- Wait! {} wants to react.".format(me))
 #------------------------------------------------------------------------------
 #  Online Functions
 #------------------------------------------------------------------------------

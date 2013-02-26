@@ -123,7 +123,13 @@
          <groupaction menu="The Anatomy of a Run" default="false" execute="HELP_RunAnatomy" />
          <groupaction menu="The Timing Structure of a Run" default="false" execute="HELP_RunStructure" />
       </groupactions>
-   <!-- <cardaction menu="Show Card Position" default="false" shortcut="Ctrl+Shift+X" execute="ShowPosC" />  -->
+      <groupactions menu="Announcements">
+         <groupaction menu="Announce Imminent Access" default="false" execute="BUTTON_Access" shortcut="Ctrl+1"/>
+         <groupaction menu="Announce No Rez" default="false" execute="BUTTON_NoRez"  shortcut="Ctrl+2"/>
+         <groupaction menu="OK" default="false" execute="BUTTON_OK"  shortcut="Ctrl+3"/>
+         <groupaction menu="Wait!" default="false" execute="BUTTON_Wait" shortcut="Ctrl+4"/>
+      </groupactions>
+    <!-- <cardaction menu="Show Card Position" default="false" shortcut="Ctrl+Shift+X" execute="ShowPosC" />  -->
         
       
    </table>
