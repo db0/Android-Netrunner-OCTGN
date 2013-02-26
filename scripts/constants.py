@@ -62,6 +62,7 @@ place = dict( # A table holding tuples with the original location various card t
             Program =               (-7, -220, 10, 10, -1), # 4th value is Loop Limit (i.e. at how many cards after the first do we loop back to the first position. Loop is always slightly offset, so as not to hide the previous ones completely)
             Resource =              (-6, -345, 10, 10, -1), # Last value is wether the cards will be placed towards the right or left. -1 means to the left.
             Event =                 (480, -190, 20, 2, 1),
+            Console =               (225, -345, 0, 1, 1),
             scoredAgenda =          (495, 8, -45, 6, 1),
             liberatedAgenda =       (336, -206, -45, 6, 1),
             Server =                (-10, 188, 80, 6, -1),

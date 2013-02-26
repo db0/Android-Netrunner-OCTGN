@@ -86,6 +86,7 @@ def placeCard(card, action = 'INSTALL', hostCard = None):
       if action != 'INSTALL' and type == 'Agenda':
          if ds == 'corp': type = 'scoredAgenda'
          else: type = 'liberatedAgenda'
+      if action == 'INSTALL' and re.search(r'Console',card.Keywords): type = 'Console'
       if action == 'INSTALL' and type in CorporationCardTypes: CfaceDown = True
       else: CfaceDown = False
       if debugVerbosity >= 3: notify("### Setting installedCount. Type is: {}, CfaceDown: {}".format(type, str(CfaceDown))) #Debug
@@ -1836,6 +1837,7 @@ def inspectCard(card, x = 0, y = 0): # This function shows the player the card t
    if re.search(r'onPlay', Stored_AutoScripts.get(card._id,'')): ASText += '\n * It will have an effect when coming into play from your hand.'
    if re.search(r'onScore', Stored_AutoScripts.get(card._id,'')): ASText += '\n * It will have an effect when being scored.'
    if re.search(r'onRez', Stored_AutoScripts.get(card._id,'')): ASText += '\n * It will have an effect when its being rezzed.'
+   if re.search(r'onInstall', Stored_AutoScripts.get(card._id,'')): ASText += '\n * It will have an effect when its being installed.'
    if re.search(r'whileRezzed', Stored_AutoScripts.get(card._id,'')): ASText += '\n * It will has a continous effect while in play.'
    if re.search(r'whileScored', Stored_AutoScripts.get(card._id,'')): ASText += '\n * It will has a continous effect while scored.'
    if re.search(r'whileRunning', Stored_AutoScripts.get(card._id,'')): ASText += '\n * It will has a continous effect while running.'
@@ -1859,6 +1861,13 @@ def inspectCard(card, x = 0, y = 0): # This function shows the player the card t
                                           \n\nIf you're playing a corp, Bad Publicity, viruses and other such tokens may be put here as well. By double clicking this card, you'll use three clicks to clean all viruses from your cards.\
                                           \nIf you're playing a runner, brain damage markers, tags and any other tokens the corp gives you will be put here. by double clicking this card, you'll be able to select one of the markers to remove by paying its cost.\
                                         \n\nTo remove any token manually, simply drag & drop it out of this card.")
+   elif card.type == 'Button': information("This is a button to help you quickly shout announcements to your opponent.\
+                                          \nTo use a card button just double click on it.\
+                                          \nThe Various buttons are: \
+                                          \n'Access Imminent': Use this before you press F3 for a successful run, if you want to give the corporation an opportunity to rez upgrades/assets or use paid abilities\
+                                          \n'No Rez': Use this as a corp to inform the runner you're not rezzing the currently approached ICE.\
+                                          \n'Wait': Use this if you want to stop the opponent while you play reactions.\
+                                          \n'OK': Use this to inform your opponent you have no more reactions to play.")
    else:
       if debugVerbosity > 0: finalTXT = 'AutoScript: {}\n\n AutoAction: {}'.format(CardsAS.get(card.model,''),CardsAA.get(card.model,''))
       else: finalTXT = "Card Text: {}\n\n{}\n\nWould you like to see the card's details online?".format(card.Rules,ASText)
