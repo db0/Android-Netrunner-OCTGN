@@ -1575,6 +1575,7 @@ def clearAll(markersOnly = False, allPlayers = False): # Just clears all the pla
    if debugVerbosity >= 1: notify(">>> clearAll()") #Debug
    for card in table:
       if allPlayers: clear(card,silent = True)
+      if card.name == 'Trace': card.highlight = None # We clear the card in case a tracing is pending that was not done.
       elif card.controller == me: clear(card,silent = True)
       if not markersOnly:
          if card.isFaceUp and (card.Type == 'Operation' or card.Type == 'Event') and card.highlight != DummyColor and card.highlight != RevealedColor and card.highlight != InactiveColor and not card.markers[mdict['Scored']]: # We do not trash "scored" events (e.g. see Notoriety)
