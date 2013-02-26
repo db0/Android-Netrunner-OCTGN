@@ -31,6 +31,7 @@ secretCred = None # Used to allow the player to spend credits in secret for some
 failedRequirement = True # A Global boolean that we set in case an Autoscript cost cannot be paid, so that we know to abort the rest of the script.
 reversePlayerChk = False
 
+
 #------------------------------------------------------------------------------
 # Play/Score/Rez/Trash trigger
 #------------------------------------------------------------------------------
@@ -718,16 +719,19 @@ def markerScripts(card, action = 'USE'):
                   return foundSpecial
             except: extraTXT = ' on {}'.format(host) # If the card requires a valid host and we found one, we will mention it later.
          else: extraTXT = ''
-         reduction = reduceCost(card, 'USE', count, dryRun = True)
+         hostCards = eval(getGlobalVariable('Host Cards'))
+         hostCard = Card(hostCards[card._id])
+         reduction = reduceCost(hostCard, 'USE', count, dryRun = True)
          rc = payCost(count - reduction, "not free")
          if rc == 'ABORT': return foundSpecial # If the cost couldn't be paid, we don't proceed.
-         reduceCost(card, 'USE', count) # If the cost could be paid, we finally take the credits out from cost reducing cards.
+         reduceCost(hostCard, 'USE', count) # If the cost could be paid, we finally take the credits out from cost reducing cards.
          card.markers[mdict['Power']] -= count
          if reduction: reduceTXT = ' (reduced by {})'.format(reduction)
          else: reduceTXT = ''
          if card.markers[mdict['Power']] == 0: 
             clearAttachLinks(card) # We unhost it from Personal Workshop so that it's not trashed if PW is trashed
             placeCard(card)
+            orgAttachments(hostCard)
             card.markers[mdict['PersonalWorkshop']] = 0
             card.highlight = None
             executePlayScripts(card,'INSTALL')
@@ -1656,10 +1660,8 @@ def CustomScript(card, action = 'PLAY'): # Scripts that are complex and fairly u
             setGlobalVariable('Host Cards',str(hostCards))
             cardAttachementsNR = len([att_id for att_id in hostCards if hostCards[att_id] == card._id])
             if debugVerbosity >= 2: notify("### About to move into position") #Debug
-            x,y = card.position
             storeProperties(selectedCard)
-            selectedCard.moveToTable(x - (cwidth(card,0) / 2 * cardAttachementsNR), y)
-            selectedCard.sendToBack()
+            orgAttachments(card)
             TokensX('Put1PersonalWorkshop-isSilent', "", selectedCard) # We add a Personal Workshop counter to be able to trigger the paying the cost ability
             announceText = TokensX('Put1Power-perProperty{Cost}', "{} to activate {} in order to ".format(actionCost,card), selectedCard)
             selectedCard.highlight = InactiveColor
@@ -1693,6 +1695,7 @@ def CustomScript(card, action = 'PLAY'): # Scripts that are complex and fairly u
             else: extraTXT = ''
             clearAttachLinks(selectedCard) # We unhost it from Personal Workshop so that it's not trashed if PW is trashed
             placeCard(selectedCard, hostCard = host)
+            orgAttachments(card)
             selectedCard.markers[mdict['PersonalWorkshop']] = 0
             selectedCard.highlight = None
             executePlayScripts(selectedCard,'INSTALL')

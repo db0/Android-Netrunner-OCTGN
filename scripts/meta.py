@@ -58,6 +58,7 @@ turn = 0 # used during game reporting to report how many turns the game lasted
 CardsAA = {} # Dictionary holding all the AutoAction scripts for all cards
 CardsAS = {} # Dictionary holding all the AutoScript scripts for all cards
 
+
 #---------------------------------------------------------------------------
 # Generic Netrunner functions
 #---------------------------------------------------------------------------
@@ -311,9 +312,41 @@ def clearAttachLinks(card):
       if customMU and hostCard.group == table: # If the card has a custom hosting marker (e.g. Dinosaurus)
          hostCard.markers[customMU] += 1 # Then we return the custom hosting marker to its original card to signifiy it's free to host another program.
       del hostCards[card._id] # If the card was an attachment, delete the link
+      if not re.search(r'Daemon',getKeywords(hostCard)) and not customMU: 
+         orgAttachments(hostCard) # Reorganize the attachments if the parent is not a daemon-type card.
    setGlobalVariable('Host Cards',str(hostCards))
    if debugVerbosity >= 3: notify("<<< clearAttachLinks()") #Debug   
- 
+
+def orgAttachments(card):
+# This function takes all the cards attached to the current card and re-places them so that they are all visible
+# xAlg, yAlg are the algorithsm which decide how the card is placed relative to its host and the other hosted cards. They are always multiplied by attNR
+   if debugVerbosity >= 1: notify(">>> orgAttachments()") #Debug
+   attNR = 1
+   if debugVerbosity >= 4: notify("#### Card Name : {}".format(card.name))
+   if specialHostPlacementAlgs.has_key(card.name):
+      if debugVerbosity >= 3: notify("### Found specialHostPlacementAlgs")
+      xAlg = specialHostPlacementAlgs[card.name][0]
+      yAlg = specialHostPlacementAlgs[card.name][1]
+      if debugVerbosity >= 2: notify("Found Special Placement Algs. xAlg = {}, yAlg = {}".format(xAlg,yAlg))
+   else: 
+      if debugVerbosity >= 3: notify("### No specialHostPlacementAlgs")
+      xAlg = 0 # The Default placement on the X axis, is to place the attachments at the same X as their parent
+      yAlg =  -(cwidth(card) / 4 * playerside) # Defaults
+   hostCards = eval(getGlobalVariable('Host Cards'))
+   cardAttachements = [Card(att_id) for att_id in hostCards if hostCards[att_id] == card._id]
+   x,y = card.position
+   for attachment in cardAttachements:
+      attachment.moveToTable(x + (xAlg * attNR), y + (yAlg * attNR))
+      attachment.setIndex(len(cardAttachements) - attNR) # This whole thing has become unnecessary complicated because sendToBack() does not work reliably
+      if debugVerbosity >= 4: notify("### {} index = {}".format(attachment,attachment.getIndex)) # Debug
+      attNR += 1
+      if debugVerbosity >= 4: notify("### Moving {}, Iter = {}".format(attachment,attNR))
+   card.sendToFront() # Because things don't work as they should :(
+   if debugVerbosity >= 4: # Checking Final Indices
+      for attachment in cardAttachements: notify("### {} index = {}".format(attachment,attachment.getIndex)) # Debug
+   if debugVerbosity >= 3: notify("<<< orgAttachments()") #Debug      
+     
+
 def resetAll(): # Clears all the global variables in order to start a new game.
    if debugVerbosity >= 1: notify(">>> resetAll(){}".format(extraASDebug())) #Debug
    global Stored_Type, Stored_Cost, Stored_Keywords, Stored_AutoActions, Stored_AutoScripts

@@ -68,7 +68,7 @@ def placeCard(card, action = 'INSTALL', hostCard = None):
          host = findTarget('Targeted-at{}'.format(hostType.group(1))) 
          if len(host) == 0: 
             delayed_whisper(":::ERROR::: No Valid Host Targeted! Aborting Placement.") # We can pass a host from a previous function (e.g. see Personal Workshop)
-            return
+            return 'ABORT'
          else: hostCard = host[0]
       if debugVerbosity >= 2: notify("### We have a host") #Debug
       hostCards = eval(getGlobalVariable('Host Cards'))
@@ -1178,7 +1178,7 @@ def accessTarget(group = table, x = 0, y = 0):
          card.isFaceUp = True
          rnd(1,100)
          cFaceD = True
-      card.highlight = InactiveColor
+         card.highlight = InactiveColor
       storeProperties(card)
       accessRegex = re.search(r'onAccess:([^|]+)',CardsAS.get(card.model,''))
       if accessRegex:

@@ -55,6 +55,10 @@ regexHooks = dict( # A dictionary which holds the regex that then trigger each c
                   CustomScript =       re.compile(r'(?<![<,+-])CustomScript'),
                   UseCustomAbility =   re.compile(r'(?<![<,+-])UseCustomAbility'))
 
+specialHostPlacementAlgs = { # A Dictionary which holds tuples of X and Y placement offsets, for cards which place their hosted cards differently to normal, such as Personal Workshop
+                              'Personal Workshop' :            (-32,0)}
+                           
+                  
 automatedMarkers = [] #Used in the Inspect() command to let the player know if the card has automations based on the markers it puts out.
 
 place = dict( # A table holding tuples with the original location various card types are expected to start their setup
