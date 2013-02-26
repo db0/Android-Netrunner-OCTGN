@@ -64,21 +64,23 @@ def placeCard(card, action = 'INSTALL', hostCard = None):
    hostType = re.search(r'Placement:([A-Za-z1-9:_ -]+)', fetchProperty(card, 'AutoScripts'))
    if hostType:
       if debugVerbosity >= 2: notify("### hostType: {}.".format(hostType.group(1))) #Debug
-      host = findTarget('Targeted-at{}'.format(hostType.group(1))) 
-      if len(host) == 0 and not hostCard: delayed_whisper(":::ERROR::: No Valid Host Targeted! Aborting Placement.") # We can pass a host from a previous function (e.g. see Personal Workshop)
-      else:
-         if not hostCard: hostCard = host[0]
-         if debugVerbosity >= 2: notify("### We have a host") #Debug
-         hostCards = eval(getGlobalVariable('Host Cards'))
-         hostCards[card._id] = hostCard._id
-         setGlobalVariable('Host Cards',str(hostCards))
-         cardAttachementsNR = len([att_id for att_id in hostCards if hostCards[att_id] == hostCard._id])
-         if debugVerbosity >= 2: notify("### About to move into position") #Debug
-         x,y = hostCard.position
-         if hostCard.controller != me: xAxis = -1
-         else: xAxis = 1
-         if hostCard.Type == 'Objective': card.moveToTable(x + (playerside * xAxis * cwidth(card,0) / 2 * cardAttachementsNR), y)
-         else: card.moveToTable(x, y - ((cwidth(card) / 4 * playerside) * cardAttachementsNR))
+      if not hostCard:
+         host = findTarget('Targeted-at{}'.format(hostType.group(1))) 
+         if len(host) == 0: 
+            delayed_whisper(":::ERROR::: No Valid Host Targeted! Aborting Placement.") # We can pass a host from a previous function (e.g. see Personal Workshop)
+            return
+         else: hostCard = host[0]
+      if debugVerbosity >= 2: notify("### We have a host") #Debug
+      hostCards = eval(getGlobalVariable('Host Cards'))
+      hostCards[card._id] = hostCard._id
+      setGlobalVariable('Host Cards',str(hostCards))
+      cardAttachementsNR = len([att_id for att_id in hostCards if hostCards[att_id] == hostCard._id])
+      if debugVerbosity >= 2: notify("### About to move into position") #Debug
+      x,y = hostCard.position
+      if hostCard.controller != me: xAxis = -1
+      else: xAxis = 1
+      card.moveToTable(x, y - ((cwidth(card) / 4 * playerside) * cardAttachementsNR))
+      if card.name != 'Parasite': # Parasites we want on top of the host ICE, so that the counters can be seen
          card.sendToBack()
    else:
       global installedCount

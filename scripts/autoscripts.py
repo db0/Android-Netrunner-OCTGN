@@ -522,9 +522,14 @@ def atTimedEffects(Time = 'Start'): # Function which triggers card effects at th
    TitleDone = False
    AlternativeRunResultUsed = False # Used for SuccessfulRun effects which replace the normal effect of running a server. If set to True, then no more effects on that server will be processed (to avoid 2 bank jobs triggering at the same time for example).
    X = 0
-   for card in table:
+   tableCards = [card for card in table if card.highlight != InactiveColor and card.highlight != RevealedColor]
+   inactiveCards = [card for card in table if card.highlight == InactiveColor or card.highlight == RevealedColor]
+   tableCards.extend(inactiveCards) # We merge these two lists, so that inactive cards are checked last, in case their status changes in the middle of processing (e.g. Parasite coming out of Personal Workshop)
+   for card in tableCards:
       #if card.controller != me: continue # Obsoleted. Using the chkPlayer() function below
-      if card.highlight == InactiveColor or card.highlight == RevealedColor: continue
+      if card.highlight == InactiveColor or card.highlight == RevealedColor: 
+         if debugVerbosity >= 4: notify("### Rejecting {} Because highlight == {}".format(card, card.highlight))
+         continue
       if not card.isFaceUp: continue
       Autoscripts = CardsAS.get(card.model,'').split('||')
       for autoS in Autoscripts:
@@ -1652,7 +1657,8 @@ def CustomScript(card, action = 'PLAY'): # Scripts that are complex and fairly u
             cardAttachementsNR = len([att_id for att_id in hostCards if hostCards[att_id] == card._id])
             if debugVerbosity >= 2: notify("### About to move into position") #Debug
             x,y = card.position
-            selectedCard.moveToTable(x, y - ((cwidth(card) / 4 * playerside) * cardAttachementsNR))
+            storeProperties(selectedCard)
+            selectedCard.moveToTable(x - (cwidth(card,0) / 2 * cardAttachementsNR), y)
             selectedCard.sendToBack()
             TokensX('Put1PersonalWorkshop-isSilent', "", selectedCard) # We add a Personal Workshop counter to be able to trigger the paying the cost ability
             announceText = TokensX('Put1Power-perProperty{Cost}', "{} to activate {} in order to ".format(actionCost,card), selectedCard)
