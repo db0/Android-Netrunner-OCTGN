@@ -255,12 +255,14 @@ def createStartingCards():
          AV = table.create("23473bd3-f7a5-40be-8c66-7d35796b6031", 0, 0, 1, True) # The Virus Scan card.
          AV.moveToTable(510, 127)
          storeSpecial(AV)
-         BTN = table.create("fb146e53-714b-4b29-861a-d58ca9840c00", 0, 0, 1, True) # The No Rez Button
-         BTN.moveToTable(-652, 150)
-         BTN = table.create("e904542b-83db-4022-9e8e-9369fe7bc761", 0, 0, 1, True) # The OK Button
-         BTN.moveToTable(-652, 220)
-         BTN = table.create("0887f64f-4fe8-4a5b-9d41-77408fe0224b", 0, 0, 1, True) # The Wait Button
-         BTN.moveToTable(-652, 290)
+         try:
+            BTN = table.create("fb146e53-714b-4b29-861a-d58ca9840c00", 0, 0, 1, True) # The No Rez Button
+            BTN.moveToTable(-652, 150)
+            BTN = table.create("e904542b-83db-4022-9e8e-9369fe7bc761", 0, 0, 1, True) # The OK Button
+            BTN.moveToTable(-652, 220)
+            BTN = table.create("0887f64f-4fe8-4a5b-9d41-77408fe0224b", 0, 0, 1, True) # The Wait Button
+            BTN.moveToTable(-652, 290)
+         except: delayed_whisper("!!!ERROR!!! In createStartingCards()\n!!! Please Install Markers Set v2.2.1+ !!!")
       else:
          if debugVerbosity >= 5: information("Creating Trace Card")
          traceCard = table.create("eb7e719e-007b-4fab-973c-3fe228c6ce20", 566, -323, 1, True) #The Trace card
@@ -269,13 +271,15 @@ def createStartingCards():
          #TC = table.create("71a89203-94cd-42cd-b9a8-15377caf4437", 471, -325, 1, True) # The Technical Difficulties card.
          #TC.moveToTable(471, -325) # It's never creating them in the right place. Move is accurate.
          #storeSpecial(TC)   
-         BTN = table.create("33ac6951-93ec-4034-9578-0d7dcc77c3f8", 0, 0, 1, True) # The Access Imminent Button
-         BTN.moveToTable(-641, -230)
-         BTN = table.create("e904542b-83db-4022-9e8e-9369fe7bc761", 0, 0, 1, True) # The OK Button
-         BTN.moveToTable(-641, -300)
-         BTN = table.create("0887f64f-4fe8-4a5b-9d41-77408fe0224b", 0, 0, 1, True) # The Wait Button
-         BTN.moveToTable(-641, -370)
-   except: notify("!!!ERROR!!! In createStartingCards()\n!!! PLEASE INSTALL MARKERS SET FILE !!!")
+         try:
+            BTN = table.create("33ac6951-93ec-4034-9578-0d7dcc77c3f8", 0, 0, 1, True) # The Access Imminent Button
+            BTN.moveToTable(-641, -230)
+            BTN = table.create("e904542b-83db-4022-9e8e-9369fe7bc761", 0, 0, 1, True) # The OK Button
+            BTN.moveToTable(-641, -300)
+            BTN = table.create("0887f64f-4fe8-4a5b-9d41-77408fe0224b", 0, 0, 1, True) # The Wait Button
+            BTN.moveToTable(-641, -370)
+         except: delayed_whisper("!!!ERROR!!! In createStartingCards()\n!!! Please Install Markers Set v2.2.1+ !!!")
+   except: notify("!!!ERROR!!! {} - In createStartingCards()\n!!! PLEASE INSTALL MARKERS SET FILE !!!".format(me))
 
  
 def intJackin(group, x = 0, y = 0):
