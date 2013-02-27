@@ -463,6 +463,7 @@ def storeProperties(card, forced = False): # Function that grabs a cards importa
       global Stored_Cost, Stored_Type, Stored_Keywords, Stored_AutoActions, Stored_AutoScripts, identName
       if (card.name == 'Card' and Stored_Type.get(card._id,'?') == '?') or forced:
          if not card.isFaceUp and card.group == table:
+            if debugVerbosity >= 2: notify("### Adding Cover")
             x,y = card.position
             cover = table.create("ac3a3d5d-7e3a-4742-b9b2-7f72596d9c1b",x,y,1,False)
             cover.moveToTable(x,y,False)
@@ -471,6 +472,7 @@ def storeProperties(card, forced = False): # Function that grabs a cards importa
             card.isFaceUp = True
             loopcount = 0
             while card.name == 'Card':
+               if debugVerbosity >= 4: notify("### Loop {} while searching for properties".format(loopcount))
                rnd(1,10)
                loopcount += 1
                if loopcount == 5:
@@ -484,7 +486,8 @@ def storeProperties(card, forced = False): # Function that grabs a cards importa
          Stored_AutoActions[card._id] = CardsAA.get(card.model,'')
          Stored_AutoScripts[card._id] = CardsAS.get(card.model,'')
          if card.Type == 'Identity' and card.owner == me: identName = card.name
-      if coverExists: 
+      if coverExists:
+         if debugVerbosity >= 2: notify("### Removing Cover")
          card.isFaceUp = False
          rnd(1,10) # To give time to the card facedown automation to complete.
          cover.moveTo(shared.exile) # now destorying cover card

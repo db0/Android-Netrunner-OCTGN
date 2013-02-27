@@ -278,8 +278,9 @@ def checkUnique (card):
    if not re.search(r'Unique', getKeywords(card)): 
       if debugVerbosity >= 3: notify("<<< checkUnique() - Not a unique card") #Debug
       return True #If the played card isn't unique do nothing.
+   cName = fetchProperty(card, 'name')
    ExistingUniques = [ c for c in table
-         if c.owner == me and c.isFaceUp and fetchProperty(c, 'name') == fetchProperty(card, 'name') and re.search(r'Unique', getKeywords(c)) ]
+         if c.owner == me and c.isFaceUp and c.name == cName ]
    if len(ExistingUniques) != 0 and not confirm("This unique card is already in play. Are you sure you want to play {}?\n\n(If you do, your existing unique card will be Trashed at no cost)".format(fetchProperty(card, 'name'))) : return False
    else:
       for uniqueC in ExistingUniques: trashForFree(uniqueC)
