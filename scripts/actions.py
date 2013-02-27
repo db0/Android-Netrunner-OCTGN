@@ -275,7 +275,7 @@ def createStartingCards():
          BTN.moveToTable(-641, -300)
          BTN = table.create("0887f64f-4fe8-4a5b-9d41-77408fe0224b", 0, 0, 1, True) # The Wait Button
          BTN.moveToTable(-641, -370)
-   except: notify("!!!ERROR!!! In createStartingCards()")
+   except: notify("!!!ERROR!!! In createStartingCards()\n!!! PLEASE INSTALL MARKERS SET FILE !!!")
 
  
 def intJackin(group, x = 0, y = 0):
