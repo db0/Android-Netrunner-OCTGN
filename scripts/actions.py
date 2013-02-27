@@ -111,7 +111,7 @@ def placeCard(card, action = 'INSTALL', hostCard = None):
          installedCount['Agenda'] = installedCount[type]
          installedCount['Asset'] = installedCount[type]
          installedCount['Upgrade'] = installedCount[type]
-      if CfaceDown: card.peek() # Added in octgn 3.0.5.47
+      if not card.isFaceUp: card.peek() # Added in octgn 3.0.5.47
    if debugVerbosity >= 3: notify("<<< placeCard()") #Debug
    
 #---------------------------------------------------------------------------
