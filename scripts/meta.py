@@ -456,12 +456,12 @@ def HELP_RunStructure(group,x=0,y=0):
 #------------------------------------------------------------------------------
 
 def BUTTON_Access(group = None,x=0,y=0):
-   AccessMsgs = ["--- Alert: Unauthorized Access Imminent!",
+   AccessMsgs = ["--- Alert: Unauthorized Access Imminent!", 
                  "--- Alert: Runner entry detected!",
                  "--- Alert: Firewalls breached!",
                  "--- Alert: Intrusion in progress!"]
    AccessTXT = AccessMsgs[rnd(0,len(AccessMsgs) - 1)]
-   notify(AccessTXT)
+   notify(AccessTXT + "\n-- {} is about to gain access. Corporate React?".format(me))
 
 def BUTTON_NoRez(group = None,x=0,y=0):  
    notify("--- {} does not rez approached ICE".format(me))

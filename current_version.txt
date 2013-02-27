@@ -1,18 +1,14 @@
-2.2.1||
+2.2.2||
 ======New Version Information======
 
-(Update: Please download 2.2.1 to fix a PW bug)
+We now have shiny new buttons available. Simply double click on them to put out the appropriate announcement. 
+(You can inspect them if you need more details.)
 
-v2.2.1 is now rezzed. A Cyber Exodus of updates! 
+To use them you'll have to update your markers set file to 2.2.1 as well. Don't forget!
+Many thanks go to susuexp of boardgamegeek for the design.
 
-Due to the extensive rework of the code required to work with cards like Dinosaurus and Personal Workshop, this set will require once more a complete set update.
-
-As always, a patch file has been provided. Make sure you patch all your sets to 2.2.0!
-
-You will also require to download the markers file again so that you bring it to 2.2.0 as well.
-
-Enjoy the new goodies!
+Other than than that, this version bring about a significant number of bugfixes. Upgrade ASAP.
 ===============================
 ||
-Latest Sets: 2.2.0
-Latest Markers Set: 2.2.0
+Latest Sets: 2.2.x
+Latest Markers Set: 2.2.1

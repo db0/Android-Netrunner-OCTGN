@@ -632,14 +632,17 @@ def atTimedEffects(Time = 'Start'): # Function which triggers card effects at th
                                            \n\nAccess to HQ Granted!\
                                              \nWelcome back Err:::[Segmentation Fault]. Would you like to see today's priority item? \
                                            \n\n============================\
-                                             \n(Access HQ? Y/N:)\
-                                             \n(If you select 'No', you'll be able to continue with this action later by pressing [Ctrl]+[Q].)"):
+                                             \nAccess HQ? Y/n:"):
          HQaccess(silent = True)
-      if currentRunTarget == 'R&D' and confirm("Processing Sec. Token...OK. Access to R&D files authorized for user {}.\nProceed? Y/N:\
-                                            \n\n(If you select 'No', you'll be able to continue with this action later by pressing [Ctrl]+[A].)".format(me.name)):
+      if currentRunTarget == 'R&D' and confirm("Processing Security Token...OK.\
+                                              \nAccess to R&D files authorized for user {}.\
+                                            \n\n============================\
+                                              \nProceed to R&D files? Y/n:".format(me.name)):
          RDaccessX()
-      if currentRunTarget == 'Archives' and confirm("Authorization for user {} processed. Decrypting Archive Store...OK.\nProceed? Y/N:\
-                                                \n\n(If you select 'No', you'll be able to continue with this action later by pressing [Ctrl]+[H].)".format(me.name)):
+      if currentRunTarget == 'Archives' and confirm("Authorization for user {} processed.\
+                                                   \nDecrypting Archive Store...OK.\
+                                                \n\n============================\
+                                                  \nRetrieve Archives? Y/n:"):
          ARCscore()
    if TitleDone: notify(":::{:=^30}:::".format('='))   
    if debugVerbosity >= 3: notify("<<< atTimedEffects()") # Debug

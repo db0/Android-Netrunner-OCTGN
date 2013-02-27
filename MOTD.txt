@@ -1,15 +1,7 @@
 =====Message of the Day======
 
-Some Instructions on how to use the Personal Workshop's automations:
+We now have shiny new buttons available. Simply double click on them to put out the appropriate announcement. 
+(You can inspect them if you need more details.)
 
-To install a card in it, target the card while it's in your hand, and then double click the Personal Workshop card. 
-The program/hardware will be hosted in the PW.
-
-At the start of each of your turn, it will ask you which program to work on (if you have more than one) and automatically install any that runs out of power counters.
-
-To pay credits to remove power counters from a card, simply double-click on the relevant card you want to work on.
-
-Easy-Peasy!
-
-PS: If you have the cyber exodus 2.2.0, update to 2.2.1 to fix private contract's trash cost
+Remember to download the latest markers file to get this functionality!
 =============================

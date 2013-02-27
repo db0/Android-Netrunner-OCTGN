@@ -56,8 +56,21 @@ Changelog
 
 ### 2.2.2
 
+* New Button Cards to help players quickly shout announcements to their opponent.
+  The Various buttons are: 
+  * 'Access Imminent': Use this before you press F3 for a successful run, if you want to give the corporation an opportunity to rez upgrades/assets or use paid abilities
+  * 'No Rez': Use this as a corp to inform the runner you're not rezzing the currently approached ICE.
+  * 'Wait': Use this if you want to stop the opponent while you play reactions.
+  * 'OK': Use this to inform your opponent you have no more reactions to play.
 * Femme Fatale will now use BP credits for her bypass ability
-* New Button Cards
+* Unique cards now won't take forever to rez
+* Added a new error message to make sure players realize when their markers are missing
+* Cyberfeeder won't pay for cards in Personal Workshop anymore
+* Trace card placed more visibly for the runner
+* Console now placed next to the runner and distinct from the other hardware
+* Parasites on Personal Workshop should now properly install on hosts at turn start
+* Parasites on PW should now get a virus if installed at start of turn
+* Made warning messages about HQ, R&D and Archive access clearer.
 
 ### 2.2.1
 

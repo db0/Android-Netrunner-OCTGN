@@ -1869,11 +1869,11 @@ def inspectCard(card, x = 0, y = 0): # This function shows the player the card t
                                         \n\nTo remove any token manually, simply drag & drop it out of this card.")
    elif card.type == 'Button': information("This is a button to help you quickly shout announcements to your opponent.\
                                           \nTo use a card button just double click on it.\
-                                          \nThe Various buttons are: \
-                                          \n'Access Imminent': Use this before you press F3 for a successful run, if you want to give the corporation an opportunity to rez upgrades/assets or use paid abilities\
-                                          \n'No Rez': Use this as a corp to inform the runner you're not rezzing the currently approached ICE.\
-                                          \n'Wait': Use this if you want to stop the opponent while you play reactions.\
-                                          \n'OK': Use this to inform your opponent you have no more reactions to play.")
+                                        \n\nThe Various buttons are: \
+                                        \n\n* 'Access Imminent': Use this before you press F3 for a successful run, if you want to give the corporation an opportunity to rez upgrades/assets or use paid abilities\
+                                        \n\n* 'No Rez': Use this as a corp to inform the runner you're not rezzing the currently approached ICE.\
+                                        \n\n* 'Wait': Use this if you want to stop the opponent while you play reactions.\
+                                        \n\n* 'OK': Use this to inform your opponent you have no more reactions to play.")
    else:
       if debugVerbosity > 0: finalTXT = 'AutoScript: {}\n\n AutoAction: {}'.format(CardsAS.get(card.model,''),CardsAA.get(card.model,''))
       else: finalTXT = "Card Text: {}\n\n{}\n\nWould you like to see the card's details online?".format(card.Rules,ASText)
