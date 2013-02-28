@@ -855,7 +855,7 @@ def GainX(Autoscript, announceText, card, targetCards = None, notification = Non
          if debugVerbosity >= 2: notify("#### Checking Cost Reduction")
          if re.search(r'isCost', Autoscript) and action.group(1) == 'Lose':
             reduction = reduceCost(card, actionType, gain * multiplier)
-         else:
+         elif action.group(1) == 'Lose':
             reduction = reduceCost(card, 'None', gain * multiplier) # If the loss is not a cost, we still check for generic reductions such as BP
          targetPL.counters['Credits'].value += (gain * multiplier) + reduction
          if reduction > 0: extraText = ' (Reduced by {})'.format(uniCredit(reduction))

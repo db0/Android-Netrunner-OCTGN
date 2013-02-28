@@ -54,6 +54,10 @@ Shaper running on a heavily fortifield Haas-Bioroid server.
 Changelog
 ---------
 
+### 2.2.3
+
+* **Important** bug fix about bad publicity.
+
 ### 2.2.2
 
 * New Button Cards to help players quickly shout announcements to their opponent.
