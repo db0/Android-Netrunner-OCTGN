@@ -1,7 +1,7 @@
 2.2.3||
 ======New Version Information======
 
-IMPORTANT: Significatn bug introduced in v2.2.2 about Bad Publicity. Plase update to 2.2.3 ASAP!
+VERY IMPORTANT: Significant bug introduced in v2.2.2 about Bad Publicity. Plase update to 2.2.3 ASAP!
 
 We now have shiny new buttons available. Simply double click on them to put out the appropriate announcement. 
 (You can inspect them if you need more details.)
