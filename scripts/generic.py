@@ -534,7 +534,11 @@ def clearCovers(): # Functions which goes through the table and clears any cover
    if debugVerbosity >= 1: notify(">>> clearCovers()") #Debug
    for cover in table:
       if cover.model == 'ac3a3d5d-7e3a-4742-b9b2-7f72596d9c1b': cover.moveTo(shared.exile)
-         
+
+def findOpponent():
+   # Just a quick function to make the code more readable
+   return ofwhom('ofOpponent')
+   
 def loopChk(card,property = 'Type'):
    if debugVerbosity >= 1: notify(">>> loopChk(){}".format(extraASDebug())) #Debug
    loopcount = 0

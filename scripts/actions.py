@@ -242,15 +242,18 @@ def createStartingCards():
          if debugVerbosity >= 5: information("Creating HQ")
          HQ = table.create("81cba950-9703-424f-9a6f-af02e0203762", 0, 0, 1, True)
          HQ.moveToTable(125, 185) # MoveToTable is accurate. Table.create isn't.
-         storeSpecial(HQ)
+         storeSpecial(HQ) # We pass control of the centrals to the runner, so that they can double click them to start runs
+         HQ.setController(findOpponent())
          if debugVerbosity >= 5: information("Creating R&D")
          RD = table.create("fbb865c9-fccc-4372-9618-ae83a47101a2", 0, 0, 1, True)
          RD.moveToTable(245, 185)
          storeSpecial(RD)
+         RD.setController(findOpponent())
          if debugVerbosity >= 5: information("Creating Archives")
          ARC = table.create("47597fa5-cc0c-4451-943b-9a14417c2007", 0, 0, 1, True)
          ARC.moveToTable(363, 185)
          storeSpecial(ARC)
+         ARC.setController(findOpponent())
          if debugVerbosity >= 5: information("Creating Virus Scan")
          AV = table.create("23473bd3-f7a5-40be-8c66-7d35796b6031", 0, 0, 1, True) # The Virus Scan card.
          AV.moveToTable(510, 127)
