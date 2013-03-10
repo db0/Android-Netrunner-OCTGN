@@ -38,7 +38,7 @@ Archives
 +++++
 A1B0G0T0:RunArchives
 .....
-Remote
+Remote Server
 -----
 d59fc50c-c727-4b69-83eb-36c475d60dcb
 -----
@@ -858,7 +858,7 @@ The Personal Touch
 -----
 bc0f047c-01b1-427f-a439-d451eda01040
 -----
-onInstall:Put1PlusOnePerm-Targeted-atIcebreaker||Placement:Icebreaker
+onInstall:Put1PlusOnePerm-Targeted-atIcebreaker||Placement:Icebreaker-targetMine
 +++++
 	
 .....
