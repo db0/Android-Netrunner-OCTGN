@@ -635,6 +635,7 @@ def reportGame(result = 'AgendaVictory'): # This submits the game results online
    if debugVerbosity < 1: # We only submit stats if we're not debugging
       (EreportTXT, EreportCode) = webRead('http://84.205.248.92/slaghund/game.slag?g={}&u={}&id={}&r={}&s={}&i={}&t={}&cnr={}&anr={}&v={}&w={}&lid={}&gname={}'.format(GUID,ENEMY,E_IDENTITY,E_RESULT,E_SCORE,E_INFLUENCE,E_TURNS,E_CARDSNR,E_AGENDASNR,E_VERSION,E_WIN,LEAGUE,GNAME),10000)
    setGlobalVariable('gameEnded','True')
+   notify("Thanks for playing. Please submit any bugs or feature requests on github.\n-- https://github.com/db0/Android-Netrunner-OCTGN/issues")
    if debugVerbosity >= 3: notify("<<< reportGame()") #Debug
 
 def fetchLeagues():
