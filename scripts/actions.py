@@ -1549,6 +1549,7 @@ def derez(card, x = 0, y = 0, silent = False):
          if not silent: notify("{} derezzed {}".format(me, card))
          card.markers[mdict['Credits']] = 0
          card.isFaceUp = False
+         if card.controller == me: card.peek()
          executePlayScripts(card,'DEREZ')
    else:
       notify ( "you can't derez a unrezzed card")
@@ -1565,6 +1566,7 @@ def expose(card, x = 0, y = 0, silent = False):
          if not silent: notify("{} exposed {}".format(me, card))
    else:
       card.isFaceUp = False
+      card.peek()
       if card.highlight == RevealedColor: card.highlight = None
       if not silent: notify("{} hides {} once more again".format(me, card))
 
