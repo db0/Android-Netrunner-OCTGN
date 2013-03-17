@@ -100,7 +100,7 @@ bc0f047c-01b1-427f-a439-d451eda01057
 -----
 onAccess:Reveal-ifInstalled
 +++++
-A0B2G0T0:Remove1Advancement-perTargetAny-isCost-onAccess$$TrashMulti-Targeted-atProgram
+A0B2G0T0:TrashMulti-Targeted-atProgram-onAccess
 .....
 Akamatsu Mem Chip
 -----
