@@ -95,14 +95,15 @@ def executePlayScripts(card, action):
       for activeAutoscript in selectedAutoscripts:
          if debugVerbosity >= 2: notify("### Second Processing: {}".format(activeAutoscript)) # Debug
          if chkWarn(card, activeAutoscript) == 'ABORT': return
-         if re.search(r':Pass\b', activeAutoscript): return # Pass is a simple command of doing nothing ^_^
+         if not ifHave(activeAutoscript): continue # If the script requires the playet to have a specific counter value and they don't, do nothing.
+         if re.search(r':Pass\b', activeAutoscript): continue # Pass is a simple command of doing nothing ^_^
          effect = re.search(r'\b([A-Z][A-Za-z]+)([0-9]*)([A-Za-z& ]*)\b([^:]?[A-Za-z0-9_&{}\|:,<> -]*)', activeAutoscript)
          if debugVerbosity >= 2: notify('### effects: {}'.format(effect.groups())) #Debug
          if effectType.group(1) == 'whileRezzed' or effectType.group(1) == 'whileScored':
             if effect.group(1) != 'Gain' and effect.group(1) != 'Lose': continue # The only things that whileRezzed and whileScored affect in execute Automations is GainX scripts (for now). All else is onTrash, onPlay etc
             if action == 'DEREZ' or ((action == 'TRASH' or action == 'UNINSTALL') and card.isFaceUp): Removal = True
             else: Removal = False
-         elif action == 'DEREZ' or action == 'TRASH': return # If it's just a one-off event, and we're trashing it, then do nothing.
+         elif action == 'DEREZ' or action == 'TRASH': continue # If it's just a one-off event, and we're trashing it, then do nothing.
          else: Removal = False
          targetC = findTarget(activeAutoscript)
          targetPL = ofwhom(activeAutoscript,card.controller) # So that we know to announce the right person the effect, affects.
@@ -311,6 +312,7 @@ def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
       X = 0 # Variable for special costs.
       if card.highlight == DummyColor: lingering = ' the lingering effect of' # A text that we append to point out when a player is using a lingering effect in the form of a dummy card.
       else: lingering = ''
+      if not ifHave(activeAutoscript): continue # If the script requires the playet to have a specific counter value and they don't, do nothing.
       for activeAutoscript in selectedAutoscripts:
          #confirm("Active Autoscript: {}".format(activeAutoscript)) #Debug
          ### Checking if any of the card's effects requires one or more targets first
@@ -489,6 +491,7 @@ def autoscriptOtherPlayers(lookup, origin_card = Identity, count = 1): # Functio
          if debugVerbosity >= 2: notify('Checking AutoS: {}'.format(AutoS)) # Debug
          if not re.search(r'{}'.format(lookup), AutoS): continue # Search if in the script of the card, the string that was sent to us exists. The sent string is decided by the function calling us, so for example the ProdX() function knows it only needs to send the 'GeneratedSpice' string.
          if chkPlayer(AutoS, card.controller,False) == 0: continue # Check that the effect's origninator is valid.
+         if not ifHave(AutoS,card.controller,silent = True): continue # If the script requires the playet to have a specific counter value and they don't, do nothing.
          if re.search(r'onlyOnce',autoS) and oncePerTurn(card, silent = True, act = 'automatic') == 'ABORT': continue # If the card's ability is only once per turn, use it or silently abort if it's already been used
          if not checkCardRestrictions(gatherCardProperties(origin_card), prepareRestrictions(autoS, 'type')): continue #If we have the '-type' modulator in the script, then need ot check what type of property it's looking for
          if re.search(r'onTriggerCard',autoS): targetCard = [origin_card] # if we have the "-onTriggerCard" modulator, then the target of the script will be the original card (e.g. see Grimoire)
@@ -557,6 +560,7 @@ def atTimedEffects(Time = 'Start'): # Function which triggers card effects at th
                if debugVerbosity >= 3: notify("### All checked OK")
             else: continue
          if chkPlayer(effect.group(2), card.controller,False) == 0: continue # Check that the effect's origninator is valid. 
+         if not ifHave(autoS,card.controller,silent = True): continue # If the script requires the playet to have a specific counter value and they don't, do nothing.
          if effect.group(1) != Time: continue # If the effect trigger we're checking (e.g. start-of-run) does not match the period trigger we're in (e.g. end-of-turn)
          if debugVerbosity >= 3: notify("### split Autoscript: {}".format(autoS))
          if debugVerbosity >= 2 and effect: notify("!!! effects: {}".format(effect.groups()))
@@ -2128,6 +2132,32 @@ def per(Autoscript, card = None, count = 0, targetCards = None, notification = N
    if debugVerbosity >= 2: notify("<<< per() with Multiplier: {}".format((multiplier - ignore) / div)) # Debug
    return (multiplier - ignore) / div
 
+def ifHave(Autoscript,controller = me,silent = False):
+# A functions that checks if a player has a specific property at a particular level or not and returns True/False appropriately
+   if debugVerbosity >= 1: notify(">>> ifHave(){}".format(extraASDebug(Autoscript))) #Debug
+   Result = True
+   ifHave = re.search(r"\bif(I|Opponent)(Have|Hasn't)([0-9]+)([A-Za-z ]+)",Autoscript)
+   if ifHave:
+      if ifHave.group(1) == 'I':
+         if controller == me: player = me
+         else: player = findOpponent()
+      else: 
+         if controller == me: player = findOpponent()
+         else: player = me
+      count = ifHave.group(3)
+      property = ifHave.group(4)
+      if ifHave.group(2) == 'Have': # 'Have' means that we're looking for a counter value that is equal or higher than the count
+         if not player.counters[property].value >= count: 
+            Result = False # If we're looking for the player having their counter at a specific level and they do not, then we return false
+            if not silent: delayed_whisper(":::ERROR::: You need at least {} {} to use this effect".format(property,count))
+      else: # Having a 'Hasn't' means that we're looking for a counter value that is lower than the count.
+         if not player.counters[property].value < count: 
+            Result = False
+            if not silent: delayed_whisper(":::ERROR::: You need at least {} {} to use this effect".format(property,count))
+   if debugVerbosity >= 3: notify("<<< ifHave() with Result: {}".format(Result) # Debug
+   return Result # If we don't have an ifHave clause, then the result is always True      
+      
+   
 def chkPlayer(Autoscript, controller, manual, targetChk = False): # Function for figuring out if an autoscript is supposed to target an opponent's cards or ours.
 # Function returns 1 if the card is not only for rivals, or if it is for rivals and the card being activated it not ours.
 # This is then multiplied by the multiplier, which means that if the card activated only works for Rival's cards, our cards will have a 0 gain.

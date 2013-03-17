@@ -250,7 +250,7 @@ Crash Space
 -----
 bc0f047c-01b1-427f-a439-d451eda01030
 -----
-onInstall:Put2Credits||whileRezzed:Reduce#CostDeltag-forAll-excludeDummy-forMe||atTurnStart:Refill2Credits-excludeDummy-byMe||onDamage:Put3protectionMeatDMG-trashCost-excludeDummy
+onInstall:Put2Credits||whileRezzed:Reduce#CostDeltag-forAll-excludeDummy-forMe||atTurnStart:Refill2Credits-excludeDummy-duringMyTurn||onDamage:Put3protectionMeatDMG-trashCost-excludeDummy
 +++++
 A0B0G0T1:CreateDummy-with3protectionMeatDMG-trashCost
 .....
@@ -266,7 +266,7 @@ Cyberfeeder
 -----
 bc0f047c-01b1-427f-a439-d451eda01005
 -----
-onInstall:Put1Credits-isSilent||whileRezzed:Reduce#CostUse-forIcebreaker-forMe||whileRezzed:Reduce#CostInstall-forVirus-forMe||atTurnStart:Refill1Credits-byMe
+onInstall:Put1Credits-isSilent||whileRezzed:Reduce#CostUse-forIcebreaker-forMe||whileRezzed:Reduce#CostInstall-forVirus-forMe||atTurnStart:Refill1Credits-duringMyTurn
 +++++
 	
 .....
@@ -586,7 +586,7 @@ NBN
 -----
 bc0f047c-01b1-427f-a439-d451eda01080
 -----
-atTurnStart:Refill2Credits-byMe||whileRezzed:Reduce#CostTrace-forAll-forMe
+atTurnStart:Refill2Credits-duringMyTurn||whileRezzed:Reduce#CostTrace-forAll-forMe
 +++++
 	
 .....
@@ -642,7 +642,7 @@ PAD Campaign
 -----
 bc0f047c-01b1-427f-a439-d451eda01109
 -----
-atTurnStart:Gain1Credits-byMe
+atTurnStart:Gain1Credits-duringMyTurn
 +++++
 	
 .....
@@ -650,7 +650,7 @@ Parasite
 -----
 bc0f047c-01b1-427f-a439-d451eda01012
 -----
-atTurnStart:Put1Virus-byMe||Placement:ICE-isRezzed
+atTurnStart:Put1Virus-duringMyTurn||Placement:ICE-isRezzed
 +++++
 	
 .....
@@ -866,7 +866,7 @@ The Toolbox
 -----
 bc0f047c-01b1-427f-a439-d451eda01041
 -----
-whileRezzed:Gain2MU$$Gain2Base Link||onInstall:Put2Credits||atTurnStart:Refill2Credits-byMe||whileRezzed:Reduce#CostUse-forIcebreaker-forMe
+whileRezzed:Gain2MU$$Gain2Base Link||onInstall:Put2Credits-isSilent||atTurnStart:Refill2Credits-duringMyTurn||whileRezzed:Reduce#CostUse-forIcebreaker-forMe
 +++++
 	
 .....
@@ -922,7 +922,7 @@ Wyldside
 -----
 bc0f047c-01b1-427f-a439-d451eda01016
 -----
-atTurnStart:Draw2Cards-byMe$$Lose1Clicks
+atTurnStart:Draw2Cards-duringMyTurn$$Lose1Clicks
 +++++
 	
 .....
@@ -1066,7 +1066,7 @@ Spinal Modem
 -----
 bc0f047c-01b1-427f-a439-d451eda02002
 -----
-onInstall:Put2Credits-isSilent||whileInstalled:Gain1MU||atTurnStart:Refill2Credits-byMe||whileRezzed:Reduce#CostUse-forIcebreaker-forMe||whileRunning:Inflict1BrainDamage-afterUnavoidedTrace-byMe
+onInstall:Put2Credits-isSilent||whileInstalled:Gain1MU||atTurnStart:Refill2Credits-duringMyTurn||whileRezzed:Reduce#CostUse-forIcebreaker-forMe||whileRunning:Inflict1BrainDamage-afterUnavoidedTrace-byMe
 +++++
 
 .....
@@ -1090,7 +1090,7 @@ Whizzard
 -----
 bc0f047c-01b1-427f-a439-d451eda02001
 -----
-atTurnStart:Refill3Credits-byMe||Reduce#CostTrash-forAll-forMe
+atTurnStart:Refill3Credits-duringMyTurn||Reduce#CostTrash-forAll-forMe
 +++++
 
 .....
@@ -1130,7 +1130,7 @@ Compromised Employee
 -----
 bc0f047c-01b1-427f-a439-d451eda02025
 -----
-onInstall:Put1Credits-isSilent||atTurnStart:Refill1Credits-byMe||whileRezzed:Reduce#CostTrace-forAll-forMe||whileRezzed:Gain1Credits-perCardRezzed-typeICE
+onInstall:Put1Credits-isSilent||atTurnStart:Refill1Credits-duringMyTurn||whileRezzed:Reduce#CostTrace-forAll-forMe||whileRezzed:Gain1Credits-perCardRezzed-typeICE
 +++++
 
 .....
@@ -1346,7 +1346,7 @@ Marked Accounts
 -----
 bc0f047c-01b1-427f-a439-d451eda02055
 -----
-atTurnStart:Transfer1Credits-byMe
+atTurnStart:Transfer1Credits-duringMyTurn
 +++++
 A1B0G0T0:Put3Credits
 .....
@@ -1413,6 +1413,166 @@ bc0f047c-01b1-427f-a439-d451eda02046
 onStartup:Gain1MU-isSilent
 +++++
 
+.....
+Disrupter
+-----
+
+-----
+
++++++
+A0B0G0T1:SimplyAnnounce{Prevent the Trace and initiate it again with a base strength of 0}
+.....
+Force of Nature
+-----
+
+-----
+A0B2G0T0:SimplyAnnounce{break up to 2 code gate subroutines}||A0B1G0T0:Put1PlusOne	
++++++
+A0B2G0T0:
+.....
+Scrubber
+-----
+
+-----
+onInstall:Put2Credits-isSilent||atTurnStart:Refill2Credits-duringMyTurn||whileRezzed:Reduce#CostTrash-forAll-forMe
++++++
+
+.....
+Doppelganger
+-----
+
+-----
+whileRezzed:Gain1MU
++++++
+A0B0G0T2:RunGeneric
+.....
+Crescentus
+-----
+
+-----
+
++++++
+A0B0G0T1:DerezTarget-Targeted-atICE-isRezzed
+.....
+Deus X
+-----
+
+-----
+
++++++
+A0B0G0T1:SimplyAnnounce{break any number of AP subroutines}||A0B0G0T1:CreateDummy-with100protectionNetDMG-trashCost
+.....
+All Nighter
+-----
+
+-----
+
++++++
+A1B0G0T1:Gain2Clicks
+.....
+Inside Man
+-----
+
+-----
+
++++++
+onInstall:Put2Credits-isSilent||atTurnStart:Refill2Credits-duringMyTurn||whileRezzed:Reduce#CostInstall-forHardware-forMe
+.....
+Underworld Contact
+-----
+
+-----
+
++++++
+atTurnStart:Gain1Credits-ifIHave2Base Link-duringMyTurn
+.....
+Green Level Clearance
+-----
+
+-----
+
++++++
+A0B0G0T1:SimplyAnnounce{Prevent the Trace and initiate it again with a base strength of 0}
+.....
+Hourglass
+-----
+
+-----
+
++++++
+A0B0G0T1:SimplyAnnounce{Prevent the Trace and initiate it again with a base strength of 0}
+.....
+Dedicated Server
+-----
+
+-----
+
++++++
+A0B0G0T1:SimplyAnnounce{Prevent the Trace and initiate it again with a base strength of 0}
+.....
+Bullfrog
+-----
+
+-----
+
++++++
+A0B0G0T1:SimplyAnnounce{Prevent the Trace and initiate it again with a base strength of 0}
+.....
+Uroboros
+-----
+
+-----
+
++++++
+A0B0G0T1:SimplyAnnounce{Prevent the Trace and initiate it again with a base strength of 0}
+.....
+Net Police
+-----
+
+-----
+
++++++
+A0B0G0T1:SimplyAnnounce{Prevent the Trace and initiate it again with a base strength of 0}
+.....
+Weyland Consortium: Because we Build it
+-----
+
+-----
+
++++++
+A0B0G0T1:SimplyAnnounce{Prevent the Trace and initiate it again with a base strength of 0}
+.....
+Government Contracts
+-----
+
+-----
+
++++++
+A0B0G0T1:SimplyAnnounce{Prevent the Trace and initiate it again with a base strength of 0}
+.....
+Tyrant
+-----
+
+-----
+
++++++
+A0B0G0T1:SimplyAnnounce{Prevent the Trace and initiate it again with a base strength of 0}
+.....
+Oversight AI
+-----
+
+-----
+
++++++
+A0B0G0T1:SimplyAnnounce{Prevent the Trace and initiate it again with a base strength of 0}
+.....
+False Lead
+-----
+
+-----
+
++++++
+A0B0G0T1:SimplyAnnounce{Prevent the Trace and initiate it again with a base strength of 0}
 .....
 
 ENDSCRIPTS
