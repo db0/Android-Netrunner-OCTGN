@@ -287,6 +287,21 @@ def checkUnique (card):
    if debugVerbosity >= 3: notify("<<< checkUnique() - Returning True") #Debug
    return True   
    
+def chkTags():
+# A function which checks if the runner has any tags and puts a tag marker on the runner ID in that case.
+   if ds == 'runner': 
+      ID = Identity
+      player = me
+   else: 
+      player = findOpponent()
+      ID = getSpecial('Identity',player)
+   if player.Tags:
+      ID.markers[mdict['Tag']] = player.Tags
+      return True
+   else:
+      ID.markers[mdict['Tag']] = 0
+      return False
+   
 def clearAttachLinks(card):
 # This function takes care to discard any attachments of a card that left play
 # It also clear the card from the host dictionary, if it was itself attached to another card

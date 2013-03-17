@@ -220,7 +220,9 @@ def goToSot (group, x=0,y=0):
    turn += 1
    atTimedEffects('Start') # Check all our cards to see if there's any Start of Turn effects active.
    if ds == "corp": notify("=> The offices of {} ({}) are now open for business. They have {} and {} {} for this turn{}.".format(identName,me,uniCredit(me.Credits),me.Clicks,uniClick(),extraTXT))
-   else: notify ("=> {} ({}) has woken up. They have {} and {} {} for this turn{}.".format(identName,me,uniCredit(me.Credits),me.Clicks,uniClick(),extraTXT))
+   else: 
+      notify ("=> {} ({}) has woken up. They have {} and {} {} for this turn{}.".format(identName,me,uniCredit(me.Credits),me.Clicks,uniClick(),extraTXT))
+      if chkTags(): notify(":::Reminder::: {} is Tagged!".format(identName))
    opponent = ofwhom('onOpponent')
    if turn == 1:
       if opponent.getGlobalVariable('gameVersion') == '': 
@@ -541,6 +543,7 @@ def pay2andDelTag(group, x = 0, y = 0):
       me.Clicks += 1 # If the player didn't notice they didn't have enough credits, we give them back their click
       return # If the player didn't have enough money to pay and aborted the function, then do nothing.
    me.counters['Tags'].value -= 1
+   chkTags() # We also update the tag markers on the runner.
    notify ("{} and pays {}{} to lose a tag.".format(ClickCost,uniCredit(2 - reduction),extraText))
 
 #------------------------------------------------------------------------------
