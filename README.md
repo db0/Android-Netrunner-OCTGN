@@ -54,9 +54,22 @@ Shaper running on a heavily fortifield Haas-Bioroid server.
 Changelog
 ---------
 
+### 2.3.0
+
+* New game definition for **A Study In Static**. All cards are scripted.
+* Aggressive Secretary will now not clear her advancement markers when used.
+* Corp Trace will now reset the current trace base strength to 0. Use this after the runner uses a card like Disrupter.
+* Tag Markers will now be added to the runner ID when they're tagged. This won't automatically happen if you manually modify your tags counter though, but it will update at the next turn start.
+* Game will remind the runner if they are tagged at the start of their turn.
+* Trace/Elusion effects now occur before the actual trace effects.
+* Central Servers are now controller by the runner. Runners are now able to double click on a central server to start a run on it.
+* HQ Access will now not reveal all cards at the same time.
+* Scored Agendas are placed slightly further apart, to allow you to see their markers better.
+* Parasite won't trigger anymore at the start of the turn if it's just came off PW. (See http://boardgamegeek.com/article/11686680#11686680)
+
 ### 2.2.3
 
-* **Important** bug fix about bad publicity.
+* **IMPORTANT** bug fix about bad publicity.
 
 ### 2.2.2
 
@@ -82,7 +95,7 @@ Changelog
 
 ### 2.2.0
 
-* New game definition for Cyber Exodus! Almost all cards in the data pack scripted
+* New game definition for **Cyber Exodus**! Almost all cards in the data pack scripted
   * Personal Workshop: 
     To use PW target a program or hardware from your hand and double click it.
     At the start of each turn it will either automatically take from a single card, or ask you for which to work on

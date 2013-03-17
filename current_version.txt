@@ -1,16 +1,14 @@
-2.2.3||
+2.3.0||
 ======New Version Information======
 
-VERY IMPORTANT: Significant bug introduced in v2.2.2 about Bad Publicity. Plase update to 2.2.3 ASAP!
+A study in static is now rezzed!
 
-We now have shiny new buttons available. Simply double click on them to put out the appropriate announcement. 
-(You can inspect them if you need more details.)
+Grab the latest version of the plugin in order to be able to install A Study in Static set. 
 
-To use them you'll have to update your markers set file to 2.2.1 as well. Don't forget!
-Many thanks go to susuexp of boardgamegeek for the design.
+A significant version change was required to make sure that people use the new set with the updated scripts. 
 
-Other than than that, this version bring about a significant number of bugfixes. Upgrade ASAP.
+Patch to bring all your sets up to date, provided in the usual location.
 ===============================
 ||
-Latest Sets: 2.2.x
-Latest Markers Set: 2.2.1
+Latest Sets: 2.3.x
+Latest Markers Set: 2.3.0
