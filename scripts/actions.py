@@ -706,7 +706,8 @@ def inputTraceValue (card, x=0,y=0, limit = 0, silent = False):
    if payCost(TraceValue - reduction)  == 'ABORT': return
    #card.markers[mdict['Credits']] = TraceValue
    if ds == 'corp': 
-      if not silent: notify("{} strengthens their Trace by {}{}.".format(me,TraceValue,extraText))
+      if not silent: notify("{} strengthens their Trace to a total of {}{}.".format(me,TraceValue,extraText))
+      setGlobalVariable('CorpTraceValue',str(TraceValue))
       OpponentTrace = getSpecial('Tracing',ofwhom('ofOpponent'))
       OpponentTrace.highlight = EmergencyColor
    else: 
