@@ -1490,9 +1490,9 @@ Green Level Clearance
 -----
 
 -----
-
+onPlay:Gain3Credits$$Draw1Cards
 +++++
-A0B0G0T1:SimplyAnnounce{Prevent the Trace and initiate it again with a base strength of 0}
+
 .....
 Hourglass
 -----
@@ -1500,7 +1500,7 @@ Hourglass
 -----
 
 +++++
-A0B0G0T1:SimplyAnnounce{Prevent the Trace and initiate it again with a base strength of 0}
+A0B0G0T0:Lose1Clicks-onOpponent-isSubroutine
 .....
 Dedicated Server
 -----
@@ -1508,7 +1508,7 @@ Dedicated Server
 -----
 
 +++++
-A0B0G0T1:SimplyAnnounce{Prevent the Trace and initiate it again with a base strength of 0}
+onRez:Put2Credits-isSilent||atTurnStart:Refill2Credits-duringMyTurn||whileRezzed:Reduce#CostRez-forICE-forMe
 .....
 Bullfrog
 -----

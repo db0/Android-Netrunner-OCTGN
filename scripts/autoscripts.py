@@ -1652,6 +1652,35 @@ def CustomScript(card, action = 'PLAY'): # Scripts that are complex and fairly u
          notify("{} has spent {} in secret for {}'s subroutine".format(me,uniCredit(secretCred),card))
          me.Credits -= secretCred
          secretCred = None
+   elif fetchProperty(card, 'name') == 'Bullfrog' and action == 'USE':
+      choice = SingleChoice('Select Ability to use', ['Spend/Reveal 0-2 Credits','Move Bullfrog and runner to another server and continue run from there'], type = 'button')
+      if choice == 0:
+         global secretCred
+         if secretCred == None:
+            secretCred = askInteger("How many credits do you want to secretly spend?\n\nOnce you have selected your total, ask your opponent to spend their own amount visibly, then re-use this card.",0)
+            while secretCred and (secretCred > me.Credits) or (secretCred > 2):
+               if secretCred > me.Credits and confirm("You do not have that many credits to spend. Bypass?"): break
+               if secretCred > 2: warn = ":::ERROR::: You cannot spend more than 2 credits!\n"
+               else: warn = ''
+               secretCred = askInteger("{}How many credits do you want to secretly spend?".format(warn),0)
+            if secretCred != None: notify("{} has spent a hidden amount of credits for {}. Runner must now declare how many credits to spend".format(me,card))
+         else: 
+            notify("{} has spent {} in secret for {}'s subroutine".format(me,uniCredit(secretCred),card))
+            me.Credits -= secretCred
+            secretCred = None
+      else:
+         choice = SingleChoice("Which server are you going to redirect the run at?", ['Remote Server','HQ','R&D','Archives'])
+         if choice != None: # Just in case the player didn't just close the askInteger window.
+            if choice == 0: targetServer = 'Remote'
+            elif choice == 1: targetServer = 'HQ'
+            elif choice == 2: targetServer = 'R&D'
+            elif choice == 3: targetServer = 'Archives'
+            else: return 'ABORT'
+         else: return 'ABORT'
+         setGlobalVariable('status','running{}'.format(targetServer)) # We change the global variable which holds on which server the runner is currently running on
+         if targetServer == 'Remote': announceText = 'a remote server'
+         else: announceText = 'the ' + targetServer
+         notify("Bullfrog's Ability triggers and redirects the runner to {}.".format(announceText))
    elif fetchProperty(card, 'name') == 'Personal Workshop':
       if action == 'USE':
          targetList = [c for c in me.hand  # First we see if they've targeted a card from their hand
@@ -2154,7 +2183,7 @@ def ifHave(Autoscript,controller = me,silent = False):
          if not player.counters[property].value < count: 
             Result = False
             if not silent: delayed_whisper(":::ERROR::: You need at least {} {} to use this effect".format(property,count))
-   if debugVerbosity >= 3: notify("<<< ifHave() with Result: {}".format(Result) # Debug
+   if debugVerbosity >= 3: notify("<<< ifHave() with Result: {}".format(Result)) # Debug
    return Result # If we don't have an ifHave clause, then the result is always True      
       
    
