@@ -525,7 +525,7 @@ def atTimedEffects(Time = 'Start'): # Function which triggers card effects at th
    X = 0
    tableCards = [card for card in table if card.highlight != InactiveColor and card.highlight != RevealedColor]
    inactiveCards = [card for card in table if card.highlight == InactiveColor or card.highlight == RevealedColor]
-   tableCards.extend(inactiveCards) # We merge these two lists, so that inactive cards are checked last, in case their status changes in the middle of processing (e.g. Parasite coming out of Personal Workshop)
+   # tableCards.extend(inactiveCards) # Nope, we don't check inactive cards anymore. If they were inactive at the start of the turn, they won't trigger (See http://boardgamegeek.com/article/11686680#11686680)
    for card in tableCards:
       #if card.controller != me: continue # Obsoleted. Using the chkPlayer() function below
       if card.highlight == InactiveColor or card.highlight == RevealedColor: 
