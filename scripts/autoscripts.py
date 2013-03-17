@@ -2151,6 +2151,16 @@ def per(Autoscript, card = None, count = 0, targetCards = None, notification = N
          elif re.search(r'Property',per.group(3)):
             property = re.search(r'Property{([\w ]+)}',per.group(3))
             multiplier = num(card.properties[property.group(1)])
+         elif re.search(r'Counter',per.group(3)):
+            if debugVerbosity >= 2: notify("### Checking perCounter") # Debug.   
+            counter = re.search(r'Counter{([\w ]+)}',per.group(3))
+            if re.search(r'MyCounter',per.group(3)): 
+               if card.controller == me: player = me
+               else: player = findOpponent()
+            else:
+               if card.controller == me: player = findOpponent()
+               else: player = me
+            multiplier = player.counters[counter.group(1)].value
       if debugVerbosity >= 2: notify("### Checking ignore") # Debug.            
       ignS = re.search(r'-ignore([0-9]+)',Autoscript)
       if ignS: ignore = num(ignS.group(1))

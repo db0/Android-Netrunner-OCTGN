@@ -1516,7 +1516,7 @@ Bullfrog
 -----
 
 +++++
-A0B0G0T1:SimplyAnnounce{Prevent the Trace and initiate it again with a base strength of 0}
+A0B0G0T0:CustomScript
 .....
 Uroboros
 -----
@@ -1524,15 +1524,15 @@ Uroboros
 -----
 
 +++++
-A0B0G0T1:SimplyAnnounce{Prevent the Trace and initiate it again with a base strength of 0}
+A0B0G0T0:Trace4-isSubroutine-traceEffects<SimplyAnnounce{stop the runner from making any more runs this turn},None>||A0B0G0T0:Trace4-isSubroutine-traceEffects<RunEnd,None>
 .....
 Net Police
 -----
 
 -----
-
+onRez:Put1Credits-perOpponentCounter{Base Link}||atTurnStart:Refill1Credits-perOpponentCounter{Base Link}-duringMyTurn||whileRezzed:Reduce#CostTrace-forAll-forMe
 +++++
-A0B0G0T1:SimplyAnnounce{Prevent the Trace and initiate it again with a base strength of 0}
+
 .....
 Weyland Consortium: Because we Build it
 -----
