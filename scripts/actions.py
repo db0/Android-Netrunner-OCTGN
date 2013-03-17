@@ -1590,7 +1590,7 @@ def clearAll(markersOnly = False, allPlayers = False): # Just clears all the pla
       if card.name == 'Trace': card.highlight = None # We clear the card in case a tracing is pending that was not done.
       elif card.controller == me: clear(card,silent = True)
       if not markersOnly:
-         if card.isFaceUp and (card.Type == 'Operation' or card.Type == 'Event') and card.highlight != DummyColor and card.highlight != RevealedColor and card.highlight != InactiveColor and not card.markers[mdict['Scored']]: # We do not trash "scored" events (e.g. see Notoriety)
+         if card.isFaceUp and (card.Type == 'Operation' or card.Type == 'Event') and card.highlight != DummyColor and card.highlight != RevealedColor and card.highlight != InactiveColor and not card.markers[mdict['Scored']] and not hostCards.has_key(card._id): # We do not trash "scored" events (e.g. see Notoriety) or cards hosted on others card (e.g. see Oversight AI)
             intTrashCard(card,0,"free") # Clearing all Events and operations for players who keep forgeting to clear them.
       if card.owner == me and card.Type == 'Identity' and Stored_Type.get(card._id,'NULL') == 'NULL':
          delayed_whisper(":::DEBUG::: Identity was NULL. Re-storing as an attempt to fix")

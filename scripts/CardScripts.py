@@ -1540,7 +1540,7 @@ Weyland Consortium: Because we Build it
 -----
 
 +++++
-A0B0G0T1:SimplyAnnounce{Prevent the Trace and initiate it again with a base strength of 0}
+atTurnStart:Refill1Credits-duringMyTurn||whileRezzed:Reduce#CostAdvancement-forICE-forMe
 .....
 Government Contracts
 -----
@@ -1548,7 +1548,7 @@ Government Contracts
 -----
 
 +++++
-A0B0G0T1:SimplyAnnounce{Prevent the Trace and initiate it again with a base strength of 0}
+A2B0G0T0:Gain4Credits
 .....
 Tyrant
 -----
@@ -1556,15 +1556,15 @@ Tyrant
 -----
 
 +++++
-A0B0G0T1:SimplyAnnounce{Prevent the Trace and initiate it again with a base strength of 0}
+A0B0G0T0:RunEnd-isSubroutine	
 .....
 Oversight AI
 -----
 
 -----
-
+Placement:ICE-isUnrezzed||onPlay:RezTarget-Targeted-atICE-isUnrezzed
 +++++
-A0B0G0T1:SimplyAnnounce{Prevent the Trace and initiate it again with a base strength of 0}
+
 .....
 False Lead
 -----
@@ -1572,7 +1572,7 @@ False Lead
 -----
 
 +++++
-A0B0G0T1:SimplyAnnounce{Prevent the Trace and initiate it again with a base strength of 0}
+A0B0G0T0:Lose2Credits-ofOpponent&&ExileMyself
 .....
 
 ENDSCRIPTS
