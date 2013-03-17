@@ -1017,7 +1017,9 @@ def findDMGProtection(DMGdone, DMGtype, targetPL): # Find out if the player has 
                protectionFound += 1 
                DMGdone -= 1
                card.markers[mdict['protectionAllDMG']] -= 1 
-         if re.search(r'trashCost',CardsAS.get(card.model,'')): ModifyStatus('TrashMyself', targetPL.name, card, notification = 'Quick') # If the modulator -trashCost is there, the card trashes itself in order to use it's damage prevention ability
+         if re.search(r'trashCost',CardsAS.get(card.model,'')): 
+            if debugVerbosity >= 3: notify("### {} has with trashCost".format(card))
+            ModifyStatus('TrashMyself', targetPL.name, card, notification = 'Quick') # If the modulator -trashCost is there, the card trashes itself in order to use it's damage prevention ability
          if DMGdone == 0: break
    for card in cardList:
       if card.markers[mdict[protectionType]]:
@@ -1507,7 +1509,8 @@ def intRez (card, x=0, y=0, cost = 'not free', silent = False):
    if chkTargeting(card) == 'ABORT': 
       notify("{} cancels their action".format(me))
       return
-   reduction = reduceCost(card, 'REZ', num(fetchProperty(card, 'Cost')))
+   if cost != 'free': reduction = reduceCost(card, 'REZ', num(fetchProperty(card, 'Cost')))
+   else: reduction = 0
    if reduction > 0: extraText = " (reduced by {})".format(uniCredit(reduction))
    elif reduction < 0: extraText = " (increased by {})".format(uniCredit(abs(reduction)))
    else: extraText = ''
@@ -1590,6 +1593,7 @@ def clearAll(markersOnly = False, allPlayers = False): # Just clears all the pla
       if card.name == 'Trace': card.highlight = None # We clear the card in case a tracing is pending that was not done.
       elif card.controller == me: clear(card,silent = True)
       if not markersOnly:
+         hostCards = eval(getGlobalVariable('Host Cards'))
          if card.isFaceUp and (card.Type == 'Operation' or card.Type == 'Event') and card.highlight != DummyColor and card.highlight != RevealedColor and card.highlight != InactiveColor and not card.markers[mdict['Scored']] and not hostCards.has_key(card._id): # We do not trash "scored" events (e.g. see Notoriety) or cards hosted on others card (e.g. see Oversight AI)
             intTrashCard(card,0,"free") # Clearing all Events and operations for players who keep forgeting to clear them.
       if card.owner == me and card.Type == 'Identity' and Stored_Type.get(card._id,'NULL') == 'NULL':
@@ -1626,7 +1630,8 @@ def intTrashCard(card, stat, cost = "not free",  ClickCost = '', silent = False)
       DummyTrashWarn = False
       return
    else: DummyTrashWarn = False
-   reduction = reduceCost(card, 'TRASH', num(stat)) # So as not to waste time.
+   if cost != 'free': reduction = reduceCost(card, 'TRASH', num(stat)) # So as not to waste time.
+   else: reduction = 0
    if reduction > 0: extraText = " (reduced by {})".format(uniCredit(reduction))    
    elif reduction < 0: extraText = " (increased by {})".format(uniCredit(abs(reduction)))
    else: extraText = ''

@@ -312,12 +312,13 @@ def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
       X = 0 # Variable for special costs.
       if card.highlight == DummyColor: lingering = ' the lingering effect of' # A text that we append to point out when a player is using a lingering effect in the form of a dummy card.
       else: lingering = ''
-      if not ifHave(activeAutoscript): continue # If the script requires the playet to have a specific counter value and they don't, do nothing.
       for activeAutoscript in selectedAutoscripts:
          #confirm("Active Autoscript: {}".format(activeAutoscript)) #Debug
          ### Checking if any of the card's effects requires one or more targets first
          if re.search(r'Targeted', activeAutoscript) and findTarget(activeAutoscript) == []: return
       for activeAutoscript in selectedAutoscripts:
+         if debugVerbosity >= 3: notify("### Reached ifHave chk")
+         if not ifHave(activeAutoscript): continue # If the script requires the playet to have a specific counter value and they don't, do nothing.
          targetC = findTarget(activeAutoscript)
          ### Warning the player in case we need to
          if chkWarn(card, activeAutoscript) == 'ABORT': return
@@ -1047,7 +1048,7 @@ def TokensX(Autoscript, announceText, card, targetCards = None, notification = N
    multiplier = per(Autoscript, card, n, targetCards, notification)
    for targetCard in targetCards:
       if action.group(1) == 'Put': modtokens = count * multiplier
-      elif action.group(1) == 'Refill': modtokens = count - targetCard.markers[token]
+      elif action.group(1) == 'Refill': modtokens = (count * multiplier) - targetCard.markers[token]
       elif action.group(1) == 'Infect':
          targetCardlist = '' #We don't want to mention the target card for infections. It's always the same.
          victim = ofwhom(Autoscript, card.controller)
@@ -2177,13 +2178,14 @@ def ifHave(Autoscript,controller = me,silent = False):
    Result = True
    ifHave = re.search(r"\bif(I|Opponent)(Have|Hasn't)([0-9]+)([A-Za-z ]+)",Autoscript)
    if ifHave:
+      if debugVerbosity >= 3: notify("### ifHave groups: {}".format(ifHave.groups()))
       if ifHave.group(1) == 'I':
          if controller == me: player = me
          else: player = findOpponent()
       else: 
          if controller == me: player = findOpponent()
          else: player = me
-      count = ifHave.group(3)
+      count = num(ifHave.group(3))
       property = ifHave.group(4)
       if ifHave.group(2) == 'Have': # 'Have' means that we're looking for a counter value that is equal or higher than the count
          if not player.counters[property].value >= count: 

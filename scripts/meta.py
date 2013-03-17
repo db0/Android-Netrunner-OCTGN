@@ -769,15 +769,26 @@ def TrialError(group, x=0, y=0): # Debugging
       ds = "corp"
       notify("Corp Now")
    ###### End Testing Corner ######
-   testcards = ["bc0f047c-01b1-427f-a439-d451eda01012", #Parasite
-                "bc0f047c-01b1-427f-a439-d451eda02060", #Chimera
-                "bc0f047c-01b1-427f-a439-d451eda02049", #Personal Workshop
-                "bc0f047c-01b1-427f-a439-d451eda02032", #Fetal AI
-                "bc0f047c-01b1-427f-a439-d451eda02026", #Notoriety
-                "bc0f047c-01b1-427f-a439-d451eda02002", #Spinal Modem
-                "bc0f047c-01b1-427f-a439-d451eda02021", #Vamp
-                "bc0f047c-01b1-427f-a439-d451eda02033", #Trick of Light
-                "bc0f047c-01b1-427f-a439-d451eda02030"] #Sherlock
+   testcards = ["bc0f047c-01b1-427f-a439-d451eda02061", # A Study in Static Cards
+                "bc0f047c-01b1-427f-a439-d451eda02062", 
+                "bc0f047c-01b1-427f-a439-d451eda02063", 
+                "bc0f047c-01b1-427f-a439-d451eda02064", 
+                "bc0f047c-01b1-427f-a439-d451eda02065", 
+                "bc0f047c-01b1-427f-a439-d451eda02066", 
+                "bc0f047c-01b1-427f-a439-d451eda02067", 
+                "bc0f047c-01b1-427f-a439-d451eda02068", 
+                "bc0f047c-01b1-427f-a439-d451eda02069", 
+                "bc0f047c-01b1-427f-a439-d451eda02070", 
+                "bc0f047c-01b1-427f-a439-d451eda02071", 
+                "bc0f047c-01b1-427f-a439-d451eda02072", 
+                "bc0f047c-01b1-427f-a439-d451eda02073", 
+                "bc0f047c-01b1-427f-a439-d451eda02074", 
+                "bc0f047c-01b1-427f-a439-d451eda02075", 
+                "bc0f047c-01b1-427f-a439-d451eda02076", 
+                "bc0f047c-01b1-427f-a439-d451eda02077", 
+                "bc0f047c-01b1-427f-a439-d451eda02078", 
+                "bc0f047c-01b1-427f-a439-d451eda02079", 
+                "bc0f047c-01b1-427f-a439-d451eda02080"] #Sherlock
    if not ds: 
       if confirm("corp?"): ds = "corp"
       else: ds = "runner"

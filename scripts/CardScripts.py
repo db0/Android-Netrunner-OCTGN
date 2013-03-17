@@ -1416,7 +1416,7 @@ onStartup:Gain1MU-isSilent
 .....
 Disrupter
 -----
-
+bc0f047c-01b1-427f-a439-d451eda02061
 -----
 
 +++++
@@ -1424,15 +1424,15 @@ A0B0G0T1:SimplyAnnounce{Prevent the Trace and initiate it again with a base stre
 .....
 Force of Nature
 -----
-
+bc0f047c-01b1-427f-a439-d451eda02062
 -----
-A0B2G0T0:SimplyAnnounce{break up to 2 code gate subroutines}||A0B1G0T0:Put1PlusOne	
+
 +++++
-A0B2G0T0:
+A0B2G0T0:SimplyAnnounce{break up to 2 code gate subroutines}||A0B1G0T0:Put1PlusOne	
 .....
 Scrubber
 -----
-
+bc0f047c-01b1-427f-a439-d451eda02063
 -----
 onInstall:Put2Credits-isSilent||atTurnStart:Refill2Credits-duringMyTurn||whileRezzed:Reduce#CostTrash-forAll-forMe
 +++++
@@ -1440,7 +1440,7 @@ onInstall:Put2Credits-isSilent||atTurnStart:Refill2Credits-duringMyTurn||whileRe
 .....
 Doppelganger
 -----
-
+bc0f047c-01b1-427f-a439-d451eda02064
 -----
 whileRezzed:Gain1MU
 +++++
@@ -1448,7 +1448,7 @@ A0B0G0T2:RunGeneric
 .....
 Crescentus
 -----
-
+bc0f047c-01b1-427f-a439-d451eda02065
 -----
 
 +++++
@@ -1456,15 +1456,15 @@ A0B0G0T1:DerezTarget-Targeted-atICE-isRezzed
 .....
 Deus X
 -----
-
+bc0f047c-01b1-427f-a439-d451eda02066
 -----
-
+onDamage:Put100protectionNetDMG-trashCost-excludeDummy
 +++++
-A0B0G0T1:SimplyAnnounce{break any number of AP subroutines}||A0B0G0T1:CreateDummy-with100protectionNetDMG-trashCost
+A0B0G0T1:SimplyAnnounce{break any number of AP subroutines}-excludeDummy||A0B0G0T1:CreateDummy-with100protectionNetDMG-trashCost
 .....
 All Nighter
 -----
-
+bc0f047c-01b1-427f-a439-d451eda02067
 -----
 
 +++++
@@ -1472,23 +1472,23 @@ A1B0G0T1:Gain2Clicks
 .....
 Inside Man
 -----
-
+bc0f047c-01b1-427f-a439-d451eda02068
 -----
-
-+++++
 onInstall:Put2Credits-isSilent||atTurnStart:Refill2Credits-duringMyTurn||whileRezzed:Reduce#CostInstall-forHardware-forMe
++++++
+
 .....
 Underworld Contact
 -----
-
+bc0f047c-01b1-427f-a439-d451eda02069
 -----
-
-+++++
 atTurnStart:Gain1Credits-ifIHave2Base Link-duringMyTurn
++++++
+
 .....
 Green Level Clearance
 -----
-
+bc0f047c-01b1-427f-a439-d451eda02070
 -----
 onPlay:Gain3Credits$$Draw1Cards
 +++++
@@ -1496,7 +1496,7 @@ onPlay:Gain3Credits$$Draw1Cards
 .....
 Hourglass
 -----
-
+bc0f047c-01b1-427f-a439-d451eda02071
 -----
 
 +++++
@@ -1504,15 +1504,15 @@ A0B0G0T0:Lose1Clicks-onOpponent-isSubroutine
 .....
 Dedicated Server
 -----
-
+bc0f047c-01b1-427f-a439-d451eda02072
 -----
-
-+++++
 onRez:Put2Credits-isSilent||atTurnStart:Refill2Credits-duringMyTurn||whileRezzed:Reduce#CostRez-forICE-forMe
++++++
+
 .....
 Bullfrog
 -----
-
+bc0f047c-01b1-427f-a439-d451eda02073
 -----
 
 +++++
@@ -1520,7 +1520,7 @@ A0B0G0T0:CustomScript
 .....
 Uroboros
 -----
-
+bc0f047c-01b1-427f-a439-d451eda02074
 -----
 
 +++++
@@ -1528,7 +1528,7 @@ A0B0G0T0:Trace4-isSubroutine-traceEffects<SimplyAnnounce{stop the runner from ma
 .....
 Net Police
 -----
-
+bc0f047c-01b1-427f-a439-d451eda02075
 -----
 onRez:Put1Credits-perOpponentCounter{Base Link}||atTurnStart:Refill1Credits-perOpponentCounter{Base Link}-duringMyTurn||whileRezzed:Reduce#CostTrace-forAll-forMe
 +++++
@@ -1536,15 +1536,15 @@ onRez:Put1Credits-perOpponentCounter{Base Link}||atTurnStart:Refill1Credits-perO
 .....
 Weyland Consortium: Because we Build it
 -----
-
+bc0f047c-01b1-427f-a439-d451eda02076
 -----
-
-+++++
 atTurnStart:Refill1Credits-duringMyTurn||whileRezzed:Reduce#CostAdvancement-forICE-forMe
++++++
+
 .....
 Government Contracts
 -----
-
+bc0f047c-01b1-427f-a439-d451eda02077
 -----
 
 +++++
@@ -1552,7 +1552,7 @@ A2B0G0T0:Gain4Credits
 .....
 Tyrant
 -----
-
+bc0f047c-01b1-427f-a439-d451eda02078
 -----
 
 +++++
@@ -1560,7 +1560,7 @@ A0B0G0T0:RunEnd-isSubroutine
 .....
 Oversight AI
 -----
-
+bc0f047c-01b1-427f-a439-d451eda02079
 -----
 Placement:ICE-isUnrezzed||onPlay:RezTarget-Targeted-atICE-isUnrezzed
 +++++
@@ -1568,11 +1568,11 @@ Placement:ICE-isUnrezzed||onPlay:RezTarget-Targeted-atICE-isUnrezzed
 .....
 False Lead
 -----
-
+bc0f047c-01b1-427f-a439-d451eda02080
 -----
 
 +++++
-A0B0G0T0:Lose2Credits-ofOpponent&&ExileMyself
+A0B0G0T1:Lose2Clicks-ofOpponent&&ExileMyself
 .....
 
 ENDSCRIPTS
