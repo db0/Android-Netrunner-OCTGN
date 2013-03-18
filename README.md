@@ -54,6 +54,10 @@ Shaper running on a heavily fortifield Haas-Bioroid server.
 Changelog
 ---------
 
+### 2.3.1
+
+* Fix for bug where bad publicity would reduce the amount of credits Account Siphon stole.
+
 ### 2.3.0
 
 * New game definition for **A Study In Static**. All cards are scripted.

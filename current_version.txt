@@ -1,5 +1,7 @@
-2.3.0||
+2.3.1||
 ======New Version Information======
+
+IMPORTANT: 2.3.1 contains a fix for Account Siphon + Bad Publicity bug. Please update ASAP.
 
 A study in static is now rezzed!
 
