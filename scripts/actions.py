@@ -822,7 +822,7 @@ def reduceCost(card, action = 'REZ', fullCost = 0, dryRun = False):
    elif debugVerbosity >= 2: notify("### No self-reducing autoscripts found!")
    ### Now we check if we're in a run and we have bad publicity credits to spend
    if re.search(r'running',status) and fullCost > 0:
-      if ds == 'corp' and type == 'Force': myIdent = getSpecial('Identity',ofwhom('-ofOpponent'))
+      if type == 'Force': myIdent = getSpecial('Identity',ofwhom('-ofOpponent'))
       else: myIdent = getSpecial('Identity',me)
       if myIdent.markers[mdict['BadPublicity']]:
          usedBP = 0

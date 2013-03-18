@@ -835,7 +835,9 @@ def GainX(Autoscript, announceText, card, targetCards = None, notification = Non
    if debugVerbosity >= 2: notify("### action groups: {}. Autoscript: {}".format(action.groups(0),Autoscript)) # Debug
    gain += num(action.group(2))
    targetPL = ofwhom(Autoscript, card.controller)
-   if targetPL != me: otherTXT = ' force {} to'.format(targetPL)
+   if targetPL != me: 
+      otherTXT = ' force {} to'.format(targetPL)
+      if action.group(1) == 'Lose': actionType = 'Force'
    else: otherTXT = ''
    if re.search(r'ifTagged', Autoscript) and targetPL.Tags == 0:
       whisper("Your opponent needs to be tagged to use this action")
@@ -861,7 +863,8 @@ def GainX(Autoscript, announceText, card, targetCards = None, notification = Non
          if re.search(r'isCost', Autoscript) and action.group(1) == 'Lose':
             reduction = reduceCost(card, actionType, gain * multiplier)
          elif action.group(1) == 'Lose':
-            reduction = reduceCost(card, 'None', gain * multiplier) # If the loss is not a cost, we still check for generic reductions such as BP
+            if targetPL == me: actionType = 'None' # If we're losing money from a card effect that's not a cost, we considered a 'use' cost.
+            reduction = reduceCost(card, actionType, gain * multiplier) # If the loss is not a cost, we still check for generic reductions such as BP
          targetPL.counters['Credits'].value += (gain * multiplier) + reduction
          if reduction > 0: extraText = ' (Reduced by {})'.format(uniCredit(reduction))
          elif reduction < 0: extraText = " (increased by {})".format(uniCredit(abs(reduction)))
