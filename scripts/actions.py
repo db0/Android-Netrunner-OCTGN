@@ -817,8 +817,12 @@ def reduceCost(card, action = 'REZ', fullCost = 0, dryRun = False):
          if re.search(r'ifNoisyOpponent', autoS) and oppponent.getGlobalVariable('wasNoisy') != '1': 
             if debugVerbosity >= 2: notify("### No required noisy bit found!")
             continue
-         reduction += num(reductionSearch.group(1))
-         fullCost -= 1
+         count = num(reductionSearch.group(1))
+         targetCards = findTarget(autoS,card = card)
+         multiplier = per(autoS, card, 0, targetCards)
+         reduction += (count * multiplier)
+         fullCost -= (count * multiplier)
+         if count * multiplier > 0 and not dryRun: notify("-- {}'s full cost is reduced by {}".format(card,count * multiplier))
    elif debugVerbosity >= 2: notify("### No self-reducing autoscripts found!")
    ### Now we check if we're in a run and we have bad publicity credits to spend
    if re.search(r'running',status) and fullCost > 0:
