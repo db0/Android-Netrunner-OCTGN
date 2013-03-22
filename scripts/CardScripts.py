@@ -1340,7 +1340,7 @@ bc0f047c-01b1-427f-a439-d451eda02053
 -----
 onAccess:Reveal-ifInstalled
 +++++
-A0B3G0T0:RequestInt-Msg{How many ICE are installed on this server?}-onAccess-ifInstalled$$A0B0G0T0:Inflict1BrainDamage-onOpponent-perX
+A0B3G0T0:RequestInt-Msg{How many ICE are installed on this server?}-onAccess-ifInstalled$$Inflict1BrainDamage-onOpponent-perX
 .....
 Marked Accounts
 -----
