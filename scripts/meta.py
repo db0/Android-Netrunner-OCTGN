@@ -202,7 +202,7 @@ def getSpecial(cardType,player = me):
    card = Card(specialCards[cardType])
    if debugVerbosity >= 2: notify("### Stored_Type = {}".format(Stored_Type.get(card._id,'NULL')))
    if Stored_Type.get(card._id,'NULL') == 'NULL':
-      if card.owner == me: delayed_whisper(":::DEBUG::: {} was NULL. Re-storing as an attempt to fix".format(cardType))
+      #if card.owner == me: delayed_whisper(":::DEBUG::: {} was NULL. Re-storing as an attempt to fix".format(cardType)) # Debug
       if debugVerbosity >= 1: notify("### card ID = {}".format(card._id))
       if debugVerbosity >= 1: notify("### Stored Type = {}".format(Stored_Type.get(card._id,'NULL')))
       storeProperties(card, True)
