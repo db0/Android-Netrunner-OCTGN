@@ -37,6 +37,7 @@ installedCount = {} # A dictionary which keeps track how many of each card type 
 
 MemoryRequirements = {}
 InstallationCosts = {}
+autoRezFlags = {} # A dictionary which holds cards that the corp has set to Auto Rez at the start of their turn.
 maxClicks = 3
 scoredAgendas = 0
 currClicks = 0
@@ -1533,9 +1534,20 @@ def intRez (card, x=0, y=0, cost = 'not free', silent = False):
    executePlayScripts(card,'REZ')
    autoscriptOtherPlayers('CardRezzed',card)
     
-def rezForFree (card, x = 0, y = 0):
+def rezForFree(card, x = 0, y = 0):
    if debugVerbosity >= 1: notify(">>> rezForFree(){}".format(extraASDebug())) #Debug
    intRez(card, cost = 'free')
+
+def flagAutoRez(card, x = 0, y = 0):
+   global autoRezFlags
+   storeProperties(card)
+   if card.isFaceUp: 
+      whisper("you can't rez a rezzed card")
+      return 'ABORT'
+   if not isRezzable(card): 
+      whisper("Not a rezzable card")
+      return 'ABORT'
+   
 
 def derez(card, x = 0, y = 0, silent = False):
    if debugVerbosity >= 1: notify(">>> derez(){}".format(extraASDebug())) #Debug

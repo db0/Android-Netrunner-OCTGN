@@ -98,6 +98,7 @@
          <cardaction menu="Pay and Rez" default="false" execute="intRez" />
          <cardaction menu="Rez at no Cost" default="false" execute="rezForFree" />
          <cardaction menu="Derez" default="false" execute="derez" />	
+         <cardaction menu="(Un)Flag for Automatic Rez" default="false" shortcut="Ctrl+Shift+R" execute="flagAutoRez" />	
       </cardactions>
       <cardaction menu="Reinforce Trace/Base Link" default="false" execute="inputTraceValue" />
    <!-- <cardaction menu="Reveal" default="false" execute="revealTraceValue" /> -->
