@@ -57,6 +57,10 @@ Changelog
 ### 2.3.2
 
 * Added a new function under the "Rez" menu, where the corporation can secretly flag a card to be rezzed automatically at the start of their turn.
+  Cards which cannot be rezzed at the start of your turn (say because you run out of money during the runner's turn), will just be ignored and inform you about it.
+* Hopefully made card access stop reporting occasionally '?' due to network lag
+* Trace/Link Boosting now announces that the player is in the middle of doing that, so that the opponent knows to wait.
+* Programs which trash themselves as part of their use cost, now properly restore their used MUs (e.g. see Crescentus)
 
 ### 2.3.1
 

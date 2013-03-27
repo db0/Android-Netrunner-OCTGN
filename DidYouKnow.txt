@@ -385,3 +385,10 @@ It contains everything you need to know and were always afraid to ask, about pla
 Would you like to learn more?
 &&
 http://www.youtube.com/watch?v=nGGECL7nom0
+||
+You can secretly flag one of your cards to be rezzed automatically at the start of your turn. 
+
+The game will attempt to rez it just after you press F1 but before the scripts take effect.
+
+Find the option under the "Rez" group in the card's context manu or use Ctrl+Shift+R.
+If you change your mind, use it again to unset the auto rez flag.

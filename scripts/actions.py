@@ -1147,7 +1147,7 @@ def accessTarget(group = table, x = 0, y = 0):
       cFaceD = False
       if not card.isFaceUp:
          card.isFaceUp = True
-         rnd(1,100)
+         rnd(1,100) # Bigger delay, in case the lag makes the card take too long to read.
          cFaceD = True
          card.highlight = InactiveColor
       storeProperties(card)
@@ -1180,7 +1180,7 @@ def accessTarget(group = table, x = 0, y = 0):
              \nKeywords: {}.\
              \nCost: {}.\
                {}\n\nCard Text: {}\
-           \n\nWhat do you want to do with this card?".format(card.name,card.Type,card.Keywords,card.Cost,cStatTXT,card.Rules)
+           \n\nWhat do you want to do with this card?".format(fetchProperty(card, 'name'),fetchProperty(card, 'Type'),fetchProperty(card, 'Keywords'),fetchProperty(card, 'Cost'),cStatTXT,fetchProperty(card, 'Rules'))
       if card.Type == 'Agenda' or card.Type == 'Asset' or card.Type == 'Upgrade':
          if card.Type == 'Agenda': action1TXT = 'Liberate for {} Agenda Points.'.format(card.Stat)
          else: 

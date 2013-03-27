@@ -1,15 +1,13 @@
-2.3.1||
+2.3.2||
 ======New Version Information======
 
-IMPORTANT: 2.3.1 contains a fix for Account Siphon + Bad Publicity bug. Please update ASAP.
+Now you can secretly flag one of your cards to be rezzed automatically at the start of your turn. 
+The game will attempt to rez it just after you press F1 but before the scripts take effect.
 
-A study in static is now rezzed!
+This should hopefully help people who serially forget to rez their PAD/Adonis Campaigns before pressing F1 ;)
 
-Grab the latest version of the plugin in order to be able to install A Study in Static set. 
-
-A significant version change was required to make sure that people use the new set with the updated scripts. 
-
-Patch to bring all your sets up to date, provided in the usual location.
+Find the new option under the "Rez" group in the card's context manu or use Ctrl+Shift+R.
+If you change your mind, use it again to unset the auto rez flag.
 ===============================
 ||
 Latest Sets: 2.3.x
