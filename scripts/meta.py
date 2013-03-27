@@ -253,11 +253,12 @@ def chkHostType(card, seek = 'Targeted'):
  
 def scanTable(group = table, x=0,y=0):
    if debugVerbosity >= 1: notify(">>> scanTable(){}".format(extraASDebug())) #Debug
-   global Stored_Type, Stored_Cost, Stored_Keywords, Stored_AutoActions, Stored_AutoScripts
+   global Stored_Name, Stored_Type, Stored_Cost, Stored_Keywords, Stored_AutoActions, Stored_AutoScripts
    if not confirm("This action will clear the internal variables and re-scan all cards in the table to fix them.\
                  \nThis action should only be used as a last-ditch effort to fix some weird behaviour in the game (e.g. treating an Ice like Agenda, or something silly like that)\
                \n\nHowever this may take some time, depending on your PC power.\
                  \nAre you sure you want to proceed?"): return
+   Stored_Name.clear()
    Stored_Type.clear()
    Stored_Cost.clear()
    Stored_Keywords.clear()
@@ -335,7 +336,7 @@ def clearAttachLinks(card):
 
 def resetAll(): # Clears all the global variables in order to start a new game.
    if debugVerbosity >= 1: notify(">>> resetAll(){}".format(extraASDebug())) #Debug
-   global Stored_Type, Stored_Cost, Stored_Keywords, Stored_AutoActions, Stored_AutoScripts
+   global Stored_Name, Stored_Type, Stored_Cost, Stored_Keywords, Stored_AutoActions, Stored_AutoScripts
    global installedCount, debugVerbosity,newturn,endofturn, currClicks, turn, autoRezFlags
    mute()
    me.counters['Credits'].value = 5
@@ -343,6 +344,7 @@ def resetAll(): # Clears all the global variables in order to start a new game.
    me.counters['Tags'].value = 0
    me.counters['Agenda Points'].value = 0
    me.counters['Bad Publicity'].value = 0
+   Stored_Name.clear()
    Stored_Type.clear()
    Stored_Cost.clear()
    Stored_Keywords.clear()
@@ -875,6 +877,7 @@ def TrialError(group, x=0, y=0): # Debugging
 
 def ShowDicts():
    if debugVerbosity < 0: return
+   notify("Stored_Names:\n {}".format(str(Stored_Name)))
    notify("Stored_Types:\n {}".format(str(Stored_Type)))
    notify("Stored_Costs:\n {}".format(str(Stored_Cost)))
    notify("Stored_Keywords: {}".format(str(Stored_Keywords)))
@@ -885,12 +888,13 @@ def ShowDicts():
 def DebugCard(card, x=0, y=0):
    whisper("Stored Card Properties\
           \n----------------------\
+          \nName: {}\
           \nType: {}\
           \nKeywords: {}\
           \nCost: {}\
           \nCard ID: {}\
           \n----------------------\
-          ".format(Stored_Type.get(card._id,'NULL'), Stored_Keywords.get(card._id,'NULL'), Stored_Cost.get(card._id,'NULL'),card._id))
+          ".format(Stored_Name.get(card._id,'NULL'), Stored_Type.get(card._id,'NULL'), Stored_Keywords.get(card._id,'NULL'), Stored_Cost.get(card._id,'NULL'),card._id))
    if debugVerbosity >= 4: 
       #notify("Stored_AS: {}".format(str(Stored_AutoScripts)))
       notify("Downloaded AA: {}".format(str(CardsAA)))

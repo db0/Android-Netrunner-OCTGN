@@ -1337,7 +1337,7 @@ def CreateDummy(Autoscript, announceText, card, targetCards = None, notification
    if debugVerbosity >= 1: notify(">>> CreateDummy(){}".format(extraASDebug(Autoscript))) #Debug
    if targetCards is None: targetCards = []
    global Dummywarn
-   global Stored_Type, Stored_Cost, Stored_Keywords, Stored_AutoActions, Stored_AutoScripts
+   global Stored_Name, Stored_Type, Stored_Cost, Stored_Keywords, Stored_AutoActions, Stored_AutoScripts
    dummyCard = None
    action = re.search(r'\bCreateDummy[A-Za-z0-9_ -]*(-with)(?!onOpponent|-doNotTrash|-nonUnique)([A-Za-z0-9_ -]*)', Autoscript)
    if debugVerbosity >= 3 and action: notify('clicks regex: {}'.format(action.groups())) # debug

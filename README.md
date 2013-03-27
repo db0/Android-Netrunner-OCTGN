@@ -54,6 +54,10 @@ Shaper running on a heavily fortifield Haas-Bioroid server.
 Changelog
 ---------
 
+### 2.3.2
+
+* Added a new function under the "Rez" menu, where the corporation can secretly flag a card to be rezzed automatically at the start of their turn.
+
 ### 2.3.1
 
 * Fix for bug where bad publicity would reduce the amount of credits Account Siphon stole.

@@ -35,6 +35,7 @@ playerside = None # Variable to keep track on which side each player is
 playeraxis = None # Variable to keep track on which axis the player is
 
 ### Variables that hold the properties of a card.
+Stored_Name = {}
 Stored_Type = {}
 Stored_Keywords = {}
 Stored_Cost = {}
@@ -460,7 +461,7 @@ def storeProperties(card, forced = False): # Function that grabs a cards importa
    try:
       coverExists = False
       if debugVerbosity >= 1: notify(">>> storeProperties(){}".format(extraASDebug())) #Debug
-      global Stored_Cost, Stored_Type, Stored_Keywords, Stored_AutoActions, Stored_AutoScripts, identName
+      global Stored_Name, Stored_Cost, Stored_Type, Stored_Keywords, Stored_AutoActions, Stored_AutoScripts, identName
       if (card.name == 'Card' and Stored_Type.get(card._id,'?') == '?') or forced:
          if not card.isFaceUp and card.group == table:
             if debugVerbosity >= 2: notify("### Adding Cover")
@@ -480,6 +481,7 @@ def storeProperties(card, forced = False): # Function that grabs a cards importa
                   break
       if Stored_Type.get(card._id,'?') == '?' or (Stored_Type.get(card._id,'?') != card.Type and card.Type != '?') or forced:
          if debugVerbosity >= 3: notify("### {} not stored. Storing...".format(card))
+         Stored_Name[card._id] = card.name
          Stored_Cost[card._id] = card.Cost
          Stored_Type[card._id] = card.Type
          getKeywords(card)
@@ -498,7 +500,7 @@ def fetchProperty(card, property):
    mute()
    coverExists = False
    if debugVerbosity >= 1: notify(">>> fetchProperty(){}".format(extraASDebug())) #Debug
-   if property == 'name': currentValue = card.name
+   if property == 'name' or property == 'Name': currentValue = Stored_Name.get(card._id,'Card')
    elif property == 'Cost': currentValue = Stored_Cost.get(card._id,'?')
    elif property == 'Type': currentValue = Stored_Type.get(card._id,'?')
    elif property == 'Keywords': currentValue = Stored_Keywords.get(card._id,'?')

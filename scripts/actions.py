@@ -180,8 +180,8 @@ def autoRez():
    global autoRezFlags
    for cID in autoRezFlags:
       card = Card(cID)
-      delayed_whisper("--- Attempting to Auto Rez {}".format(card))
-      intRez(card)
+      delayed_whisper("--- Attempting to Auto Rez {}".format(fetchProperty(card, 'Name')))
+      if intRez(card, silentCost = True) == 'ABORT': delayed_whisper(":::WARNING::: Could not rez {} automatically. Ignoring".format(fetchProperty(card, 'Name')))
    del autoRezFlags[:]
    if debugVerbosity >= 3: notify("<<< autoRez()") #Debug
 #------------------------------------------------------------------------------
@@ -724,14 +724,16 @@ def cancelTrace ( card, x=0,y=0):
 # Counter & Damage Functions
 #-----------------------------------------------------------------------------
 
-def payCost(count = 1, cost = 'not free', counter = 'BP'): # A function that removed the cost provided from our credit pool, after checking that we have enough.
+def payCost(count = 1, cost = 'not free', counter = 'BP', silentCost = False): # A function that removed the cost provided from our credit pool, after checking that we have enough.
    if debugVerbosity >= 1: notify(">>> payCost(){}".format(extraASDebug())) #Debug
    if cost != 'not free': return 'free'
    count = num(count)
    if count <= 0 : return 0# If the card has 0 cost, there's nothing to do.
    if counter == 'BP':
-      if me.counters['Credits'].value < count and not confirm("You do not seem to have enough Credits in your pool to take this action. Are you sure you want to proceed? \
-         \n(If you do, your Credit Pool will go to the negative. You will need to increase it manually as required.)"): return 'ABORT' # If we don't have enough Credits in the pool, we assume card effects or mistake and notify the player that they need to do things manually.
+      if me.counters['Credits'].value < count:
+         if silentCost: return 'ABORT'
+         if not confirm("You do not seem to have enough Credits in your pool to take this action. Are you sure you want to proceed? \
+                      \n(If you do, your Credit Pool will go to the negative. You will need to increase it manually as required.)"): return 'ABORT' # If we don't have enough Credits in the pool, we assume card effects or mistake and notify the player that they need to do things manually.
       me.counters['Credits'].value -= count
    elif counter == 'AP': # We can also take costs from other counters with this action.
       if me.counters['Agenda Points'].value < count and not confirm("You do not seem to have enough Agenda Points to take this action. Are you sure you want to proceed? \
@@ -1454,7 +1456,7 @@ def isRezzable (card):
    if Type == "ICE" or Type == "Asset" or Type == "Upgrade": return True
    else: return False
 
-def intRez (card, x=0, y=0, cost = 'not free', silent = False):
+def intRez (card, x=0, y=0, cost = 'not free', silent = False, silentCost = False):
    if debugVerbosity >= 1: notify(">>> intRez(){}".format(extraASDebug())) #Debug
    mute()
    rc = ''
@@ -1475,7 +1477,7 @@ def intRez (card, x=0, y=0, cost = 'not free', silent = False):
    elif reduction < 0: extraText = " (increased by {})".format(uniCredit(abs(reduction)))
    else: extraText = ''
    increase = findExtraCosts(card, 'REZ')
-   rc = payCost(num(fetchProperty(card, 'Cost')) - reduction + increase, cost)
+   rc = payCost(num(fetchProperty(card, 'Cost')) - reduction + increase, cost, silentCost = silentCost)
    if rc == "ABORT": return 'ABORT' # If the player didn't have enough money to pay and aborted the function, then do nothing.
    elif rc == "free": extraText = " at no cost"
    elif rc != 0: rc = "for {}".format(rc)
@@ -1504,10 +1506,10 @@ def flagAutoRez(card, x = 0, y = 0):
       return 'ABORT'
    if card._id in autoRezFlags:
       autoRezFlags.remove(card._id)
-      whisper("--- {} will not attempt to rez at the start of your turn".format(card))
+      whisper("--- {} will not attempt to rez at the start of your turn".format(fetchProperty(card, 'Name')))
    else:
       autoRezFlags.append(card._id)
-      whisper("--- {} has been flagged to automatically rez at the start of your turn".format(card))
+      whisper("--- {} has been flagged to automatically rez at the start of your turn".format(fetchProperty(card, 'Name')))
 
 def derez(card, x = 0, y = 0, silent = False):
    if debugVerbosity >= 1: notify(">>> derez(){}".format(extraASDebug())) #Debug
