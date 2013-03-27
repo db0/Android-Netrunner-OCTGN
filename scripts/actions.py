@@ -639,6 +639,8 @@ def inputTraceValue (card, x=0,y=0, limit = 0, silent = False):
    if limit > 0: limitText = '\n\n(Max Trace Power: {})'.format(limit)
    if ds == 'corp': traceTXT = 'Trace'
    else: traceTXT = 'Link'
+   if ds == 'corp': notify("-- {} is initiating a trace...".format(me))
+   else: notify("-- {} is working on their base link".format(me))
    TraceValue = askInteger("Increase {} Strength by how much?{}".format(traceTXT,limitText), 0)
    if TraceValue == None: 
       whisper(":::Warning::: Trace attempt aborted by player.")
