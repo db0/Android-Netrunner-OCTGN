@@ -333,6 +333,92 @@ def clearAttachLinks(card):
    setGlobalVariable('Host Cards',str(hostCards))
    if debugVerbosity >= 3: notify("<<< clearAttachLinks()") #Debug   
 
+def resetAll(): # Clears all the global variables in order to start a new game.
+   if debugVerbosity >= 1: notify(">>> resetAll(){}".format(extraASDebug())) #Debug
+   global Stored_Type, Stored_Cost, Stored_Keywords, Stored_AutoActions, Stored_AutoScripts
+   global installedCount, debugVerbosity,newturn,endofturn, currClicks, turn, autoRezFlags
+   mute()
+   me.counters['Credits'].value = 5
+   me.counters['Hand Size'].value = 5
+   me.counters['Tags'].value = 0
+   me.counters['Agenda Points'].value = 0
+   me.counters['Bad Publicity'].value = 0
+   Stored_Type.clear()
+   Stored_Cost.clear()
+   Stored_Keywords.clear()
+   Stored_AutoActions.clear()
+   Stored_AutoScripts.clear()
+   installedCount.clear()
+   setGlobalVariable('CurrentTraceEffect','None')
+   setGlobalVariable('CorpTraceValue','None')
+   newturn = False 
+   endofturn = False
+   currClicks = 0
+   turn = 0
+   del autoRezFlags[:]
+   ShowDicts()
+   if len(players) > 1: debugVerbosity = -1 # Reset means normal game.
+   elif debugVerbosity != -1 and confirm("Reset Debug Verbosity?"): debugVerbosity = -1    
+   if debugVerbosity >= 1: notify("<<< resetAll()") #Debug   
+#---------------------------------------------------------------------------
+# Card Placement
+#---------------------------------------------------------------------------
+
+def placeCard(card, action = 'INSTALL', hostCard = None):
+   if debugVerbosity >= 1: notify(">>> placeCard() with action: {}".format(action)) #Debug
+   hostType = re.search(r'Placement:([A-Za-z1-9:_ -]+)', fetchProperty(card, 'AutoScripts'))
+   if hostType:
+      if debugVerbosity >= 2: notify("### hostType: {}.".format(hostType.group(1))) #Debug
+      if not hostCard:
+         host = findTarget('Targeted-at{}'.format(hostType.group(1))) 
+         if len(host) == 0: 
+            delayed_whisper(":::ERROR::: No Valid Host Targeted! Aborting Placement.") # We can pass a host from a previous function (e.g. see Personal Workshop)
+            return 'ABORT'
+         else: hostCard = host[0]
+      if debugVerbosity >= 2: notify("### We have a host") #Debug
+      hostCards = eval(getGlobalVariable('Host Cards'))
+      hostCards[card._id] = hostCard._id
+      setGlobalVariable('Host Cards',str(hostCards))
+      cardAttachementsNR = len([att_id for att_id in hostCards if hostCards[att_id] == hostCard._id])
+      if debugVerbosity >= 2: notify("### About to move into position") #Debug
+      x,y = hostCard.position
+      if hostCard.controller != me: xAxis = -1
+      else: xAxis = 1
+      card.moveToTable(x, y - ((cwidth(card) / 4 * playerside) * cardAttachementsNR))
+      if card.name != 'Parasite': # Parasites we want on top of the host ICE, so that the counters can be seen
+         card.sendToBack()
+   else:
+      global installedCount
+      type = fetchProperty(card, 'Type')
+      if action != 'INSTALL' and type == 'Agenda':
+         if ds == 'corp': type = 'scoredAgenda'
+         else: type = 'liberatedAgenda'
+      if action == 'INSTALL' and re.search(r'Console',card.Keywords): type = 'Console'
+      if action == 'INSTALL' and type in CorporationCardTypes: CfaceDown = True
+      else: CfaceDown = False
+      if debugVerbosity >= 3: notify("### Setting installedCount. Type is: {}, CfaceDown: {}".format(type, str(CfaceDown))) #Debug
+      if installedCount.get(type,None) == None: installedCount[type] = 0
+      else: installedCount[type] += 1
+      if debugVerbosity >= 2: notify("### installedCount is: {}. Setting loops...".format(installedCount[type])) #Debug
+      loopsNR = installedCount[type] / (place[type][3]) 
+      loopback = place[type][3] * loopsNR 
+      if loopsNR and place[type][3] != 1: offset = 15 * (loopsNR % 3) # This means that in one loop the offset is going to be 0 and in another 15.
+      else: offset = 0
+      if debugVerbosity >= 3: notify("### installedCount[type] is: {}.\nLoopsNR is: {}.\nLoopback is: {}\nOffset is: {}".format(installedCount[type],offset, loopback, offset)) #Debug
+      card.moveToTable(place[type][0] + (((cwidth(card,0) + place[type][2]) * (installedCount[type] - loopback)) + offset) * place[type][4],place[type][1],CfaceDown) 
+      # To explain the above, we place the card at: Its original location
+      #                                             + the width of the card
+      #                                             + a predefined distance from each other times the number of other cards of the same type
+      #                                             + the special offset in case we've done one or more loops
+      #                                             And all of the above, multiplied by +1/-1 (place[type][4]) in order to direct the cards towards the left or the right
+      #                                             And finally, the Y axis is always the same in ANR.
+      if type == 'Agenda' or type == 'Upgrade' or type == 'Asset': # camouflage until I create function to install them on specific Server, via targeting.
+         installedCount['Agenda'] = installedCount[type]
+         installedCount['Asset'] = installedCount[type]
+         installedCount['Upgrade'] = installedCount[type]
+      if not card.isFaceUp: card.peek() # Added in octgn 3.0.5.47
+   if debugVerbosity >= 3: notify("<<< placeCard()") #Debug
+   
 def orgAttachments(card):
 # This function takes all the cards attached to the current card and re-places them so that they are all visible
 # xAlg, yAlg are the algorithsm which decide how the card is placed relative to its host and the other hosted cards. They are always multiplied by attNR
@@ -363,32 +449,6 @@ def orgAttachments(card):
    if debugVerbosity >= 3: notify("<<< orgAttachments()") #Debug      
      
 
-def resetAll(): # Clears all the global variables in order to start a new game.
-   if debugVerbosity >= 1: notify(">>> resetAll(){}".format(extraASDebug())) #Debug
-   global Stored_Type, Stored_Cost, Stored_Keywords, Stored_AutoActions, Stored_AutoScripts
-   global installedCount, debugVerbosity,newturn,endofturn, currClicks, turn
-   mute()
-   me.counters['Credits'].value = 5
-   me.counters['Hand Size'].value = 5
-   me.counters['Tags'].value = 0
-   me.counters['Agenda Points'].value = 0
-   me.counters['Bad Publicity'].value = 0
-   Stored_Type.clear()
-   Stored_Cost.clear()
-   Stored_Keywords.clear()
-   Stored_AutoActions.clear()
-   Stored_AutoScripts.clear()
-   installedCount.clear()
-   setGlobalVariable('CurrentTraceEffect','None')
-   setGlobalVariable('CorpTraceValue','None')
-   newturn = False 
-   endofturn = False
-   currClicks = 0
-   turn = 0
-   ShowDicts()
-   if len(players) > 1: debugVerbosity = -1 # Reset means normal game.
-   elif debugVerbosity != -1 and confirm("Reset Debug Verbosity?"): debugVerbosity = -1    
-   if debugVerbosity >= 1: notify("<<< resetAll()") #Debug
 #------------------------------------------------------------------------------
 # Switches
 #------------------------------------------------------------------------------

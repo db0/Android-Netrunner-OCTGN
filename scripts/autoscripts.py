@@ -435,9 +435,7 @@ def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
       elif announceText.endswith(' and'):
          announceText = announceText[:-len(' and')] # If for some reason we end with " and" (say because the last action did nothing), we remove it.
       else: # If we did something and everything finished as expected, then take the costs.
-         if re.search(r"T1:", selectedAutoscripts[0]): 
-            executePlayScripts(card,'trash')
-            card.moveTo(card.owner.piles['Heap/Archives(Face-up)'])
+         if re.search(r"T1:", selectedAutoscripts[0]): intTrashCard(card, fetchProperty(card,'Stat'), "free", silent = True)
       if iter == len(AutoscriptsList) - 1: # If this is the last script in the list, then we always announce the script we're running (We reduce by 1 because iterators always start as '0')
          if debugVerbosity >= 2: notify("### Entering last notification")
          if prev_announceText == 'NULL': # If it's NULL it's the only  script we run in this loop, so we just announce.
