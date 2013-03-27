@@ -61,6 +61,7 @@ Changelog
 * Hopefully made card access stop reporting occasionally '?' due to network lag
 * Trace/Link Boosting now announces that the player is in the middle of doing that, so that the opponent knows to wait.
 * Programs which trash themselves as part of their use cost, now properly restore their used MUs (e.g. see Crescentus)
+* Cards should be auto-peeked at on derezz and unexpose as well.
 
 ### 2.3.1
 
