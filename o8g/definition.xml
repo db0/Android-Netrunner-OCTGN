@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <game xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="Android:Netrunner" id="0f38e453-26df-4c04-9d67-6d43de939c77" octgnVersion="3.0.11.56" version="2.3.2" markersize="20">
    <scripts>
-      <script src="r3" />
-      <script src="r17" />
-      <script src="r18" />
-      <script src="r19" />
-      <script src="r20" />
-      <script src="r21" />
+      <script src="Scripts/actions.py" />
+      <script src="Scripts/constants.py" />
+      <script src="Scripts/autoscripts.py" />
+      <script src="Scripts/generic.py" />
+      <script src="Scripts/meta.py" />
+      <script src="Scripts/CardScripts.py" />
    </scripts>
    <fonts>
-       <font src="r40" size="11" target="context"/> <!--menu-->
-       <font src="r41" size="12" target="chat"/> <!--chat-->
+       <font src="Fonts/CyberpunkIsNotDead_ANR.ttf" size="11" target="context"/> <!--menu-->
+       <font src="Fonts/ANR_symbols_only-enlarged.ttf" size="12" target="chat"/> <!--chat-->
    </fonts>   
    <globalvariables> 
      <globalvariable name="status" value="" /> 
@@ -22,7 +22,7 @@
      <globalvariable name="CorpTraceValue" value="None" />
      <globalvariable name="Host Cards" value="{}" />
    </globalvariables>
-   <card back="r4" front="r5" width="63" height="88" cornerRadius="2">
+   <card back="Card/corp-back.jpg" front="Card/front.jpg" width="63" height="88" cornerRadius="2">
       <property name="Subtitle" type="String" hidden="false" ignoreText="False"/>
       <property name="Faction" type="String" hidden="false" ignoreText="False" />
       <property name="Type" type="String" hidden="false" ignoreText="False" textKind="Enum" />
@@ -40,7 +40,7 @@
       <property name="AutoAction" type="String" hidden="True" ignoreText="True" />
 
    </card>
-   <table name="Table" visibility="undefined" ordered="false" width="1300" height="808" board="r35" boardPosition="-650,-370,1300,808" background="r1" backgroundStyle="uniformToFill">
+   <table name="Table" visibility="undefined" ordered="false" width="1300" height="808" board="Table/Tabletop.jpg" boardPosition="-650,-370,1300,808" background="Table/background.jpg" backgroundStyle="uniformToFill">
       <cardaction menu="Use Card Ability/Clear" default="true" execute="useAbility" />
       <cardaction menu="Clear Card" default="false" execute="clear" />
       <groupactions menu="Game...">
@@ -140,7 +140,7 @@
       <globalvariable name="wasNoisy" value="0" /> 
       <globalvariable name="Deck Stats" value="" /> 
       <globalvariable name="gameVersion" value="" /> 
-      <hand name="HQ/Grip" visibility="me" ordered="false" width="63" height="88" icon="r11">
+      <hand name="HQ/Grip" visibility="me" ordered="false" width="63" height="88" icon="Groups/Hand.png">
          <cardaction menu="&#8986; Pay and Install Card" default="true" shortcut="enter" execute="intPlay" />
          <cardaction menu="Install Card at no cost" default="false" execute="playForFree" />
          <cardactions menu="Move ...">
@@ -156,7 +156,7 @@
          <groupaction menu="Mulligan" default="false" execute="mulligan"/>
       </hand>
 
-      <group name="R&amp;D/Stack" visibility="none" ordered="false" width="63" height="88" icon="r12" collapsed="false">
+      <group name="R&amp;D/Stack" visibility="none" ordered="false" width="63" height="88" icon="Groups/Library.png" collapsed="false">
          <groupaction menu="&#8986; Draw" default="true" shortcut="Ctrl+D" execute="draw" />
          <groupaction menu="Shuffle" default="false" execute="shuffle" />
          <groupaction menu="Draw X" default="false" execute="drawMany" />
@@ -164,25 +164,25 @@
          <groupaction menu="Move Top X card to Bottom" default="false" execute="moveXtopCardtoBottomStack" />
       </group>
 
-      <group name="Heap/Archives(Face-up)" visibility="all" ordered="false" width="63" height="88" icon="r14" collapsed="false">
+      <group name="Heap/Archives(Face-up)" visibility="all" ordered="false" width="63" height="88" icon="Groups/Trash.png" collapsed="false">
          <groupaction menu="Move all to R&amp;D/Stack" default="false" execute="archivestoStack" />
       </group>
 
-      <group name="Archives(Hidden)" visibility="me" ordered="false" width="63" height="88" icon="r15" collapsed="false">
+      <group name="Archives(Hidden)" visibility="me" ordered="false" width="63" height="88" icon="Groups/Archives_H.png" collapsed="false">
          <groupaction menu="Move all to Archives" default="false" execute="toarchives" />
          <groupaction menu="Move all to R&amp;D/Stack" default="false" execute="archivestoStack" />
       </group>
-      <counter name="Clicks" default="0" reset="true" icon="r10" />
-      <counter name="Credits" default="0" reset="true" icon="r9" />
-      <counter name="MU" default="0" reset="true" icon="r8" />
-      <counter name="Base Link" default="0" reset="true" icon="r16" />
-      <counter name="Agenda Points" default="0" reset="true" icon="r7" />
-      <counter name="Bad Publicity" default="0" reset="true" icon="r2" />
-      <counter name="Hand Size" default="0" reset="true" icon="r6" />
-      <counter name="Tags" default="0" reset="true" icon="r26" />
+      <counter name="Clicks" default="0" reset="true" icon="Counters/Click.png" />
+      <counter name="Credits" default="0" reset="true" icon="Counters/Credit.jpg" />
+      <counter name="MU" default="0" reset="true" icon="Counters/MU.jpg" />
+      <counter name="Base Link" default="0" reset="true" icon="Counters/Link.jpg" />
+      <counter name="Agenda Points" default="0" reset="true" icon="Counters/Agenda_Points.jpg" />
+      <counter name="Bad Publicity" default="0" reset="true" icon="Counters/Bad_Publicity.jpg" />
+      <counter name="Hand Size" default="0" reset="true" icon="Counters/Hand_Size.jpg" />
+      <counter name="Tags" default="0" reset="true" icon="Counters/Tags.jpg" />
    </player>
    <shared>
-      <group name="Exile" visibility="all" ordered="false" width="63" height="88" icon="r13" collapsed="false" />
+      <group name="Exile" visibility="all" ordered="false" width="63" height="88" icon="Groups/Exile.png" collapsed="false" />
    </shared>
    <deck>
       <section name="Identity" group="HQ/Grip" />
