@@ -2,10 +2,7 @@
 
 Important Announcement: OCTGN is getting a significant update in 1 week which will break all existing game definitions, including this one.
 
-Unfortunately the OCTGN developers have not provided adequate time, tools or information for me to perform the required conversion in time. 
-So it's very likely that you won't be able to play after the 5th of April. 
-
-If that happens to be the case, please be patient while I'm working on the convertion...
+In case the this game defintition is not yet available, please be patient while I'm working on the convertion...
 
 =============================
 
