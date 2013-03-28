@@ -1,0 +1,287 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<set xmlns:noNamespaceSchemaLocation="CardSet.xsd" name="Markers" id="21bf9e05-fb23-4b1d-b89a-398f671f5999" gameId="0f38e453-26df-4c04-9d67-6d43de939c77" gameVersion="2.3.0" version="2.3.0">
+	<markers>
+		<marker id="7ae6b4f2-afee-423a-bc18-70a236b41292" name="Bad Publicity" />
+		<marker id="38c5b2a0-caa2-40e4-b5b2-0f1cc7202782" name="Agenda" />
+		<marker id="815b944d-d7db-4846-8be2-20852a1c9530" name="Power" />
+		<marker id="7cbe3738-5c50-4a32-97e7-8cb43bf51afa" name="Virus" />
+		<marker id="3000e9c5-311b-4d0f-a9e9-75afc96a2bfd" name="Yellow" />
+		<marker id="678335f8-9feb-4004-8e6e-d972923ccaab" name="White" />
+		<marker id="1c873bd4-007f-46f9-9b17-3d8780dabfc4" name="Click" />
+		<marker id="feb0e161-da94-4705-8d56-b48f17d74a99" name="5 Credits" />
+		<marker id="bda3ae36-c312-4bf7-a288-7ee7760c26f7" name="Credit" />
+		<marker id="1d1e7dd2-c60a-4770-82b7-d2d9232b3be8" name="Tag" />
+		<marker id="f8372e2c-c5df-42d9-9d54-f5d9890e9821" name="Advancement" />
+		<marker id="4911f1ad-abf9-4b75-b4c5-86df3f9098ee" name="Scored" />
+		<marker id="1bd5cc9f-3528-45d2-a8fc-e7d7bd6865d5" name="Permanent +1" />
+		<marker id="e8d0b72e-0384-4762-b983-31137d4b4625" name="Temporary +1" />
+		<marker id="d5466468-e05c-4ad8-8bc0-02fbfe4a2ec6" name="Temporary -1" />
+		<marker id="2bcb7e73-125d-4cea-8874-d67b7532cbd5" name="Meat damage protection" />
+		<marker id="6ac8bd15-ac1d-4d0c-81e3-990124333a19" name="Net damage protection" />
+		<marker id="99fa1d76-5361-4213-8300-e4c173bc0143" name="Brain damage protection" />
+		<marker id="de733be8-8aaf-4580-91ce-5fcaa1183865" name="Net &amp; Brain damage protection" />
+		<marker id="13890548-8f1e-4c02-a422-0d93332777b2" name="Complete damage protection" />
+		<marker id="590322bd-83f0-43fa-9239-a2b723b08460" name="Virus Protection" />
+		<marker id="59810a63-2a6b-4ae2-a71c-348c8965d612" name="Brain Damage" />
+		<marker id="17844835-3140-4555-b592-0f711048eabd" name="Daemon MU" />
+		<marker id="2fb5b6bb-31c5-409c-8aa6-2c46e971a8a5" name="Base Link" />
+		<marker id="efbfabaa-384d-4139-8be1-7f1d706b3dd8" name="Personal Workshop" />
+	</markers>
+	<cards>
+		<card id="eb7e719e-007b-4fab-973c-3fe228c6ce20" name="Trace">
+         <property name="Subtitle" value="" />
+         <property name="Type" value="Tracing" />
+         <property name="Keywords" value="" />
+         <property name="Cost" value="" />
+         <property name="Requirement" value="" />	
+         <property name="Stat" value="" />	
+         <property name="Rules" value="" />
+         <property name="Flavor" value="" />
+         <property name="Instructions" value="" />
+         <property name="Faction" value="" />
+         <property name="Influence" value="" />
+         <property name="AutoScript" value="" />
+         <property name="AutoAction" value="" />	
+		</card>
+		<card id="81cba950-9703-424f-9a6f-af02e0203762" name="HQ">
+         <property name="Subtitle" value="" />
+         <property name="Type" value="Server" />
+         <property name="Keywords" value="" />
+         <property name="Cost" value="" />
+         <property name="Requirement" value="" />	
+         <property name="Stat" value="" />	
+         <property name="Rules" value="" />
+         <property name="Flavor" value="" />
+         <property name="Instructions" value="" />
+         <property name="Faction" value="" />
+         <property name="Influence" value="" />
+         <property name="AutoScript" value="" />
+         <property name="AutoAction" value="" />	
+		</card>
+		<card id="fbb865c9-fccc-4372-9618-ae83a47101a2" name="R&amp;D">
+         <property name="Subtitle" value="" />
+         <property name="Type" value="Server" />
+         <property name="Keywords" value="" />
+         <property name="Cost" value="" />
+         <property name="Requirement" value="" />	
+         <property name="Stat" value="" />	
+         <property name="Rules" value="" />
+         <property name="Flavor" value="" />
+         <property name="Instructions" value="" />
+         <property name="Faction" value="" />
+         <property name="Influence" value="" />
+         <property name="AutoScript" value="" />
+         <property name="AutoAction" value="" />	
+		</card>
+		<card id="47597fa5-cc0c-4451-943b-9a14417c2007" name="Archives">
+         <property name="Subtitle" value="" />
+         <property name="Type" value="Server" />
+         <property name="Keywords" value="" />
+         <property name="Cost" value="" />
+         <property name="Requirement" value="" />	
+         <property name="Stat" value="" />	
+         <property name="Rules" value="" />
+         <property name="Flavor" value="" />
+         <property name="Instructions" value="" />
+         <property name="Faction" value="" />
+         <property name="Influence" value="" />
+         <property name="AutoScript" value="" />
+         <property name="AutoAction" value="" />	
+		</card>
+		<card id="23473bd3-f7a5-40be-8c66-7d35796b6031" name="Virus Scan">
+         <property name="Subtitle" value="Corporate OpSec" />
+         <property name="Type" value="Counter Hold" />
+         <property name="Keywords" value="" />
+         <property name="Cost" value="" />
+         <property name="Requirement" value="" />	
+         <property name="Stat" value="" />	
+         <property name="Rules" value="" />
+         <property name="Flavor" value="" />
+         <property name="Instructions" value="" />
+         <property name="Faction" value="" />
+         <property name="Influence" value="" />
+         <property name="AutoScript" value="" />
+         <property name="AutoAction" value="A3B0G0T0:CustomScript" />
+		</card>
+		<card id="71a89203-94cd-42cd-b9a8-15377caf4437" name="&quot;Technical Difficulties&quot;">
+         <property name="Subtitle" value="Perils of the Trade" />
+         <property name="Type" value="Counter Hold" />
+         <property name="Keywords" value="" />
+         <property name="Cost" value="" />
+         <property name="Requirement" value="" />	
+         <property name="Stat" value="" />	
+         <property name="Rules" value="" />
+         <property name="Flavor" value="" />
+         <property name="Instructions" value="" />
+         <property name="Faction" value="" />
+         <property name="Influence" value="" />
+         <property name="AutoScript" value="" />
+         <property name="AutoAction" value="A0B0G0T0:CustomScript" />
+		</card>
+		<card id="d59fc50c-c727-4b69-83eb-36c475d60dcb" name="Remote Server">
+         <property name="Subtitle" value="" />
+         <property name="Type" value="Server" />
+         <property name="Keywords" value="" />
+         <property name="Cost" value="" />
+         <property name="Requirement" value="" />	
+         <property name="Stat" value="" />	
+         <property name="Rules" value="" />
+         <property name="Flavor" value="" />
+         <property name="Instructions" value="" />
+         <property name="Faction" value="" />
+         <property name="Influence" value="" />
+         <property name="AutoScript" value="" />
+         <property name="AutoAction" value="" />	
+		</card>
+		<card id="8b4f0c4d-4e4a-4d7f-890d-936ef37c8600" name="Timing Structure of a Turn">
+         <property name="Subtitle" value="" />
+         <property name="Type" value="Help" />
+         <property name="Keywords" value="" />
+         <property name="Cost" value="" />
+         <property name="Requirement" value="" />	
+         <property name="Stat" value="" />	
+         <property name="Rules" value="" />
+         <property name="Flavor" value="" />
+         <property name="Instructions" value="" />
+         <property name="Faction" value="" />
+         <property name="Influence" value="" />
+         <property name="AutoScript" value="" />
+         <property name="AutoAction" value="" />	
+		</card>
+		<card id="881ccfad-0da9-4ca8-82e6-29c524f15a7c" name="Corp Actions">
+         <property name="Subtitle" value="" />
+         <property name="Type" value="Help" />
+         <property name="Keywords" value="" />
+         <property name="Cost" value="" />
+         <property name="Requirement" value="" />	
+         <property name="Stat" value="" />	
+         <property name="Rules" value="" />
+         <property name="Flavor" value="" />
+         <property name="Instructions" value="" />
+         <property name="Faction" value="" />
+         <property name="Influence" value="" />
+         <property name="AutoScript" value="" />
+         <property name="AutoAction" value="" />	
+		</card>
+		<card id="6b3c394a-411f-4a1c-b529-9a8772a96db9" name="Runner Actions">
+         <property name="Subtitle" value="" />
+         <property name="Type" value="Help" />
+         <property name="Keywords" value="" />
+         <property name="Cost" value="" />
+         <property name="Requirement" value="" />	
+         <property name="Stat" value="" />	
+         <property name="Rules" value="" />
+         <property name="Flavor" value="" />
+         <property name="Instructions" value="" />
+         <property name="Faction" value="" />
+         <property name="Influence" value="" />
+         <property name="AutoScript" value="" />
+         <property name="AutoAction" value="" />	
+		</card>
+		<card id="db60308d-0d0e-4891-9954-7c600a7389e1" name="Anatomy of a Run">
+         <property name="Subtitle" value="" />
+         <property name="Type" value="Help" />
+         <property name="Keywords" value="" />
+         <property name="Cost" value="" />
+         <property name="Requirement" value="" />	
+         <property name="Stat" value="" />	
+         <property name="Rules" value="" />
+         <property name="Flavor" value="" />
+         <property name="Instructions" value="" />
+         <property name="Faction" value="" />
+         <property name="Influence" value="" />
+         <property name="AutoScript" value="" />
+         <property name="AutoAction" value="" />	
+		</card>
+		<card id="51c3a293-3923-49ee-8c6f-b8c41aaba5f3" name="Timing Structure of a Run">
+         <property name="Subtitle" value="" />
+         <property name="Type" value="Help" />
+         <property name="Keywords" value="" />
+         <property name="Cost" value="" />
+         <property name="Requirement" value="" />	
+         <property name="Stat" value="" />	
+         <property name="Rules" value="" />
+         <property name="Flavor" value="" />
+         <property name="Instructions" value="" />
+         <property name="Faction" value="" />
+         <property name="Influence" value="" />
+         <property name="AutoScript" value="" />
+         <property name="AutoAction" value="" />	
+		</card>
+		<card id="ac3a3d5d-7e3a-4742-b9b2-7f72596d9c1b" name="Access cover">
+         <property name="Subtitle" value="" />
+         <property name="Type" value="Token" />
+         <property name="Keywords" value="" />
+         <property name="Cost" value="" />
+         <property name="Requirement" value="" />	
+         <property name="Stat" value="" />	
+         <property name="Rules" value="" />
+         <property name="Flavor" value="" />
+         <property name="Instructions" value="" />
+         <property name="Faction" value="" />
+         <property name="Influence" value="" />
+         <property name="AutoScript" value="" />
+         <property name="AutoAction" value="" />	
+		</card>
+		<card id="33ac6951-93ec-4034-9578-0d7dcc77c3f8" name="Access Imminent">
+         <property name="Subtitle" value="" />
+         <property name="Type" value="Button" />
+         <property name="Keywords" value="" />
+         <property name="Cost" value="" />
+         <property name="Requirement" value="" />	
+         <property name="Stat" value="" />	
+         <property name="Rules" value="" />
+         <property name="Flavor" value="" />
+         <property name="Instructions" value="" />
+         <property name="Faction" value="" />
+         <property name="Influence" value="" />
+         <property name="AutoScript" value="" />
+         <property name="AutoAction" value="" />	
+		</card>
+		<card id="e904542b-83db-4022-9e8e-9369fe7bc761" name="OK">
+         <property name="Subtitle" value="" />
+         <property name="Type" value="Button" />
+         <property name="Keywords" value="" />
+         <property name="Cost" value="" />
+         <property name="Requirement" value="" />	
+         <property name="Stat" value="" />	
+         <property name="Rules" value="" />
+         <property name="Flavor" value="" />
+         <property name="Instructions" value="" />
+         <property name="Faction" value="" />
+         <property name="Influence" value="" />
+         <property name="AutoScript" value="" />
+         <property name="AutoAction" value="" />	
+		</card>
+		<card id="0887f64f-4fe8-4a5b-9d41-77408fe0224b" name="Wait!">
+         <property name="Subtitle" value="" />
+         <property name="Type" value="Button" />
+         <property name="Keywords" value="" />
+         <property name="Cost" value="" />
+         <property name="Requirement" value="" />	
+         <property name="Stat" value="" />	
+         <property name="Rules" value="" />
+         <property name="Flavor" value="" />
+         <property name="Instructions" value="" />
+         <property name="Faction" value="" />
+         <property name="Influence" value="" />
+         <property name="AutoScript" value="" />
+         <property name="AutoAction" value="" />	
+		</card>
+		<card id="fb146e53-714b-4b29-861a-d58ca9840c00" name="No Rez">
+         <property name="Subtitle" value="" />
+         <property name="Type" value="Button" />
+         <property name="Keywords" value="" />
+         <property name="Cost" value="" />
+         <property name="Requirement" value="" />	
+         <property name="Stat" value="" />	
+         <property name="Rules" value="" />
+         <property name="Flavor" value="" />
+         <property name="Instructions" value="" />
+         <property name="Faction" value="" />
+         <property name="Influence" value="" />
+         <property name="AutoScript" value="" />
+         <property name="AutoAction" value="" />	
+		</card>
+	</cards>
+</set>
