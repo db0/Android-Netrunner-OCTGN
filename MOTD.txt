@@ -1,10 +1,11 @@
 =====Message of the Day======
 
-The creator of this plugin has been posting videos of his more interesting games on Youtube. 
+Important Announcement: OCTGN is getting a significant update in 1 week which will break all existing game definitions, including this one.
 
-If you're interested in this kind of thing, head over and check it out.
+Unfortunately the OCTGN developers have not provided adequate time, tools or information for me to perform the required conversion in time. 
+So it's very likely that you won't be able to play after the 5th of April. 
 
-Soon I'll be posting game casts of the BGG Tournament 2 as well, so if you'd like to watch those susbcribe to be notified ;)
+If that happens to be the case, please be patient while I'm working on the convertion...
+
 =============================
-&&
-http://www.youtube.com/user/db0
+
