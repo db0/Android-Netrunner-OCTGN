@@ -23,114 +23,114 @@
      <globalvariable name="Host Cards" value="{}" />
    </globalvariables>
    <card back="Card/corp-back.jpg" front="Card/front.jpg" width="63" height="88" cornerRadius="2">
-      <property name="Subtitle" type="String" hidden="false" ignoreText="False"/>
-      <property name="Faction" type="String" hidden="false" ignoreText="False" />
-      <property name="Type" type="String" hidden="false" ignoreText="False" textKind="Enum" />
-      <property name="Keywords" type="String" hidden="false" ignoreText="False" />
-      <property name="Cost" type="String" hidden="false" />
-      <property name="Requirement" type="String" hidden="false" />
-      <property name="Stat" type="String" hidden="false" ignoreText="False" />
-      <property name="Rules" type="String" hidden="false" ignoreText="False" />
-      <property name="Flavor" type="String" hidden="false" ignoreText="True" />
-      <property name="Instructions" type="String" hidden="false" ignoreText="False" />
-      <property name="Influence" type="String" hidden="false" ignoreText="False" />
-      <property name="Side" type="String" hidden="false" ignoreText="False" textKind="Enum" />
+      <property name="Subtitle" type="String" hidden="False" ignoreText="False"/>
+      <property name="Faction" type="String" hidden="False" ignoreText="False" />
+      <property name="Type" type="String" hidden="False" ignoreText="False" textKind="Enum" />
+      <property name="Keywords" type="String" hidden="False" ignoreText="False" />
+      <property name="Cost" type="String" hidden="False" />
+      <property name="Requirement" type="String" hidden="False" />
+      <property name="Stat" type="String" hidden="False" ignoreText="False" />
+      <property name="Rules" type="String" hidden="False" ignoreText="False" />
+      <property name="Flavor" type="String" hidden="False" ignoreText="True" />
+      <property name="Instructions" type="String" hidden="False" ignoreText="False" />
+      <property name="Influence" type="String" hidden="False" ignoreText="False" />
+      <property name="Side" type="String" hidden="False" ignoreText="False" textKind="Enum" />
       
       <property name="AutoScript" type="String" hidden="True" ignoreText="True" />
       <property name="AutoAction" type="String" hidden="True" ignoreText="True" />
 
    </card>
-   <table name="Table" visibility="undefined" ordered="false" width="1300" height="808" board="Table/Tabletop.jpg" boardPosition="-650,-370,1300,808" background="Table/background.jpg" backgroundStyle="uniformToFill">
-      <cardaction menu="Use Card Ability/Clear" default="true" execute="useAbility" />
-      <cardaction menu="Clear Card" default="false" execute="clear" />
+   <table name="Table" visibility="undefined" ordered="False" width="1300" height="808" board="Table/Tabletop.jpg" boardPosition="-650,-370,1300,808" background="Table/background.jpg" backgroundStyle="uniformToFill">
+      <cardaction menu="Use Card Ability/Clear" default="True" execute="useAbility" />
+      <cardaction menu="Clear Card" default="False" execute="clear" />
       <groupactions menu="Game...">
-         <groupaction menu="Set up" default="false" shortcut="Ctrl+Shift+S" execute="intJackin" />
-         <groupaction menu="Concede" default="false" shortcut="Ctrl+Shift+C" execute="concede" />
-         <groupaction menu="Switch Unicode ON/OFF" default="false" execute="switchUniCode" />
-         <groupaction menu="Switch Play, Score and Rez Automation ON/OFF" default="false" execute="switchPlayAutomation" />  
-         <groupaction menu="Switch Start/End-of-Turn Automation ON/OFF" default="false" execute="switchStartEndAutomation" />  
-         <groupaction menu="Switch Damage Automation ON/OFF" default="false" execute="switchDMGAutomation" />  
-         <groupaction menu="Switch Automatic Damage Prevention ON/OFF" default="false" execute="switchPreventDMGAutomation" />  
-         <groupaction menu="Switch Automatic Triggers ON/OFF" default="false" execute="switchTriggersAutomation" />  
-         <groupaction menu="Switch Custom Forms ON/OFF" default="false" execute="switchWinForms" />  
-         <groupaction menu="Disable all &quot;Newbie&quot; Warnings" default="false" shortcut="Ctrl+Shift+N" execute="ImAProAtThis" />  
-         <groupaction menu="Re-Scan table" default="false" execute="scanTable" />
-         <groupaction menu="Re-Download all card automations" default="false" execute="fetchCardScripts" />
-         <groupaction menu="Debug" default="false" shortcut="Ctrl+Shift+D" execute="TrialError" /> 
+         <groupaction menu="Set up" default="False" shortcut="Ctrl+Shift+S" execute="intJackin" />
+         <groupaction menu="Concede" default="False" shortcut="Ctrl+Shift+C" execute="concede" />
+         <groupaction menu="Switch Unicode ON/OFF" default="False" execute="switchUniCode" />
+         <groupaction menu="Switch Play, Score and Rez Automation ON/OFF" default="False" execute="switchPlayAutomation" />  
+         <groupaction menu="Switch Start/End-of-Turn Automation ON/OFF" default="False" execute="switchStartEndAutomation" />  
+         <groupaction menu="Switch Damage Automation ON/OFF" default="False" execute="switchDMGAutomation" />  
+         <groupaction menu="Switch Automatic Damage Prevention ON/OFF" default="False" execute="switchPreventDMGAutomation" />  
+         <groupaction menu="Switch Automatic Triggers ON/OFF" default="False" execute="switchTriggersAutomation" />  
+         <groupaction menu="Switch Custom Forms ON/OFF" default="False" execute="switchWinForms" />  
+         <groupaction menu="Disable all &quot;Newbie&quot; Warnings" default="False" shortcut="Ctrl+Shift+N" execute="ImAProAtThis" />  
+         <groupaction menu="Re-Scan table" default="False" execute="scanTable" />
+         <groupaction menu="Re-Download all card automations" default="False" execute="fetchCardScripts" />
+         <groupaction menu="Debug" default="False" shortcut="Ctrl+Shift+D" execute="TrialError" /> 
       </groupactions>
-      <cardaction menu="Debug Card" default="false" execute="DebugCard" /> 
+      <cardaction menu="Debug Card" default="False" execute="DebugCard" /> 
       <groupactions menu="Turns/Clicks...">
-         <groupaction menu="Declare Start of Turn" default="false" shortcut="F1" execute="goToSot" />
-         <groupaction menu="&#8986; Declare Click" default="false" shortcut="Enter" execute="useClick" />
-         <groupaction menu="Declare End of Turn" default="false" shortcut="F12" execute="goToEndTurn" />
+         <groupaction menu="Declare Start of Turn" default="False" shortcut="F1" execute="goToSot" />
+         <groupaction menu="&#8986; Declare Click" default="False" shortcut="Enter" execute="useClick" />
+         <groupaction menu="Declare End of Turn" default="False" shortcut="F12" execute="goToEndTurn" />
       </groupactions>
       <groupactions menu="Runner Actions...">
-         <groupaction menu="&#8986; Pay 2 ¥ and remove a Tag" default="false" shortcut="Ctrl+R" execute="pay2andDelTag" />
-         <groupaction menu="&#8986; Run on a Remote Server" default="false" shortcut="F5" execute="runServer" />
-         <groupaction menu="&#8986; Run on HQ" default="false" shortcut="F6" execute="runHQ" />
-         <groupaction menu="&#8986; Run on R&amp;D" default="false" shortcut="F7" execute="runRD" />
-         <groupaction menu="&#8986; Run on Archives" default="false" shortcut="F8" execute="runArchives" />
-         <groupaction menu="Jack Out" default="false" shortcut="Esc" execute="jackOut" />
-         <groupaction menu="Finish the Run succesfully" default="false" shortcut="F3" execute="runSuccess" />
-         <groupaction menu="Score Target Agenda" default="false" shortcut="Ctrl+G" execute="scrTargetAgenda" />
-         <groupaction menu="Access a random card form corp HQ" default="false" shortcut="Ctrl+Q" execute="HQaccess" />
-         <groupaction menu="Access top X cards from corp R&amp;D" default="false" shortcut="Ctrl+A" execute="RDaccessX" />
-         <groupaction menu="Score all Agendas in the Archives" default="false" shortcut="Ctrl+H" execute="ARCscore" />
-         <groupaction menu="Suffer 1 Meat Damage" default="false" execute="addMeatDmg" />
-         <groupaction menu="Suffer 1 Net Damage" default="false" execute="addNetDmg" />
-         <groupaction menu="Suffer 1 Brain Damage" default="false" execute="addBrainDmg" />
+         <groupaction menu="&#8986; Pay 2 ¥ and remove a Tag" default="False" shortcut="Ctrl+R" execute="pay2andDelTag" />
+         <groupaction menu="&#8986; Run on a Remote Server" default="False" shortcut="F5" execute="runServer" />
+         <groupaction menu="&#8986; Run on HQ" default="False" shortcut="F6" execute="runHQ" />
+         <groupaction menu="&#8986; Run on R&amp;D" default="False" shortcut="F7" execute="runRD" />
+         <groupaction menu="&#8986; Run on Archives" default="False" shortcut="F8" execute="runArchives" />
+         <groupaction menu="Jack Out" default="False" shortcut="Esc" execute="jackOut" />
+         <groupaction menu="Finish the Run succesfully" default="False" shortcut="F3" execute="runSuccess" />
+         <groupaction menu="Score Target Agenda" default="False" shortcut="Ctrl+G" execute="scrTargetAgenda" />
+         <groupaction menu="Access a random card form corp HQ" default="False" shortcut="Ctrl+Q" execute="HQaccess" />
+         <groupaction menu="Access top X cards from corp R&amp;D" default="False" shortcut="Ctrl+A" execute="RDaccessX" />
+         <groupaction menu="Score all Agendas in the Archives" default="False" shortcut="Ctrl+H" execute="ARCscore" />
+         <groupaction menu="Suffer 1 Meat Damage" default="False" execute="addMeatDmg" />
+         <groupaction menu="Suffer 1 Net Damage" default="False" execute="addNetDmg" />
+         <groupaction menu="Suffer 1 Brain Damage" default="False" execute="addBrainDmg" />
       </groupactions>
       <cardactions menu="Add/Remove Markers...">
-         <cardaction menu="&#8986; Pay 1 ¥ and advance card" default="false" shortcut="Alt+A" execute="advanceCardP" />
-         <cardaction menu="Add X advancement counter" default="false" execute="addXadvancementCounter" />
-         <cardaction menu="Add Virus Counter" default="false" shortcut="Alt+V" execute="addVirusCounter" />
-         <cardaction menu="Add Power Counter" default="false" shortcut="Alt+P" execute="addPowerCounter" />
-         <cardaction menu="Add Agenda Counter" default="false" shortcut="Alt+G" execute="addAgendaCounter" />
-         <cardaction menu="Mark with +1" default="false" shortcut="Alt+1" execute="addPlusOne" />
-         <cardaction menu="Mark with -1" default="false" shortcut="Alt+Shift+1" execute="addMinusOne" />
-         <cardaction menu="Mark with Permanent +1" default="false" execute="addPlusOnePerm" />
-         <cardaction menu="Put X Credits from the Bank" default="false" shortcut="Alt+B" execute="addCredits" />
-         <cardaction menu="Remove X Credits" default="false" execute="remCredits" />
-         <cardaction menu="Take X Credits to your Pool" default="false" shortcut="Alt+Shift+B" execute="remXCredits" />
-         <cardaction menu="Add Markers" default="false" shortcut="Alt+M" batchExecute="addMarker" />
+         <cardaction menu="&#8986; Pay 1 ¥ and advance card" default="False" shortcut="Alt+A" execute="advanceCardP" />
+         <cardaction menu="Add X advancement counter" default="False" execute="addXadvancementCounter" />
+         <cardaction menu="Add Virus Counter" default="False" shortcut="Alt+V" execute="addVirusCounter" />
+         <cardaction menu="Add Power Counter" default="False" shortcut="Alt+P" execute="addPowerCounter" />
+         <cardaction menu="Add Agenda Counter" default="False" shortcut="Alt+G" execute="addAgendaCounter" />
+         <cardaction menu="Mark with +1" default="False" shortcut="Alt+1" execute="addPlusOne" />
+         <cardaction menu="Mark with -1" default="False" shortcut="Alt+Shift+1" execute="addMinusOne" />
+         <cardaction menu="Mark with Permanent +1" default="False" execute="addPlusOnePerm" />
+         <cardaction menu="Put X Credits from the Bank" default="False" shortcut="Alt+B" execute="addCredits" />
+         <cardaction menu="Remove X Credits" default="False" execute="remCredits" />
+         <cardaction menu="Take X Credits to your Pool" default="False" shortcut="Alt+Shift+B" execute="remXCredits" />
+         <cardaction menu="Add Markers" default="False" shortcut="Alt+M" batchExecute="addMarker" />
       </cardactions>
       <cardactions menu="Rez...">
-         <cardaction menu="Pay and Rez" default="false" execute="intRez" />
-         <cardaction menu="Rez at no Cost" default="false" execute="rezForFree" />
-         <cardaction menu="Derez" default="false" execute="derez" />	
-         <cardaction menu="(Un)Flag for Automatic Rez" default="false" shortcut="Ctrl+Shift+R" execute="flagAutoRez" />	
+         <cardaction menu="Pay and Rez" default="False" execute="intRez" />
+         <cardaction menu="Rez at no Cost" default="False" execute="rezForFree" />
+         <cardaction menu="Derez" default="False" execute="derez" />	
+         <cardaction menu="(Un)Flag for Automatic Rez" default="False" shortcut="Ctrl+Shift+R" execute="flagAutoRez" />	
       </cardactions>
-      <cardaction menu="Reinforce Trace/Base Link" default="false" execute="inputTraceValue" />
-   <!-- <cardaction menu="Reveal" default="false" execute="revealTraceValue" /> -->
-      <groupaction menu="Modify your max actions per turn" default="false" execute="modClicks" />
-      <cardaction menu="Inspect" default="false" shortcut="Ctrl+I" execute="inspectCard" />
-      <groupaction menu="Inspect Target" default="false" shortcut="Ctrl+I" execute="inspectTargetCard" />
-      <cardaction menu="(Un)Expose" default="false" shortcut="Ctrl+E" execute="expose" />
-      <cardaction menu="Prioritize" default="false" shortcut="Ctrl+P" execute="prioritize" />
-      <cardaction menu="Uninstall" default="false" shortcut="Ctrl+U" execute="uninstall" />
-      <cardaction menu="Score Agenda" default="false" shortcut="Ctrl+G" execute="scrAgenda" />
-      <cardaction menu="Pay and &#9167;" default="false" shortcut="Ctrl+del" execute="trashCard" />
-      <cardaction menu="&#9167; at No Cost" default="false" shortcut="del" execute="trashForFree" />
-      <groupaction menu="Access Target" default="false" shortcut="Ctrl+Enter" execute="accessTarget" />
-      <groupaction menu="Pay and &#9167; Target (Resource, Asset or Upgrade)" default="false" shortcut="Ctrl+del" execute="trashTargetPaid" />
-      <groupaction menu="&#9167; Target for free" default="false" shortcut="del" execute="trashTargetFree" />
-      <groupaction menu="Create new Remote Server" default="false" shortcut="Ctrl+S" execute="createRemoteServer" />
-   <!-- <groupaction menu="Roll d6" default="false" shortcut="Ctrl+6" execute="rolld6" /> -->
-      <groupaction menu="&#8986; Receive 1 ¥" default="false" shortcut="Ctrl+C" execute="getCredit" />
+      <cardaction menu="Reinforce Trace/Base Link" default="False" execute="inputTraceValue" />
+   <!-- <cardaction menu="Reveal" default="False" execute="revealTraceValue" /> -->
+      <groupaction menu="Modify your max actions per turn" default="False" execute="modClicks" />
+      <cardaction menu="Inspect" default="False" shortcut="Ctrl+I" execute="inspectCard" />
+      <groupaction menu="Inspect Target" default="False" shortcut="Ctrl+I" execute="inspectTargetCard" />
+      <cardaction menu="(Un)Expose" default="False" shortcut="Ctrl+E" execute="expose" />
+      <cardaction menu="Prioritize" default="False" shortcut="Ctrl+P" execute="prioritize" />
+      <cardaction menu="Uninstall" default="False" shortcut="Ctrl+U" execute="uninstall" />
+      <cardaction menu="Score Agenda" default="False" shortcut="Ctrl+G" execute="scrAgenda" />
+      <cardaction menu="Pay and &#9167;" default="False" shortcut="Ctrl+del" execute="trashCard" />
+      <cardaction menu="&#9167; at No Cost" default="False" shortcut="del" execute="trashForFree" />
+      <groupaction menu="Access Target" default="False" shortcut="Ctrl+Enter" execute="accessTarget" />
+      <groupaction menu="Pay and &#9167; Target (Resource, Asset or Upgrade)" default="False" shortcut="Ctrl+del" execute="trashTargetPaid" />
+      <groupaction menu="&#9167; Target for free" default="False" shortcut="del" execute="trashTargetFree" />
+      <groupaction menu="Create new Remote Server" default="False" shortcut="Ctrl+S" execute="createRemoteServer" />
+   <!-- <groupaction menu="Roll d6" default="False" shortcut="Ctrl+6" execute="rolld6" /> -->
+      <groupaction menu="&#8986; Receive 1 ¥" default="False" shortcut="Ctrl+C" execute="getCredit" />
       <groupactions menu="Help &amp; References">
-         <groupaction menu="The Timing Structure of a Turn" default="false" execute="HELP_TurnStructure" />
-         <groupaction menu="Corp Actions Reminder" default="false" execute="HELP_CorpActions" />
-         <groupaction menu="Runner Actions Reminder" default="false" execute="HELP_RunnerActions" />
-         <groupaction menu="The Anatomy of a Run" default="false" execute="HELP_RunAnatomy" />
-         <groupaction menu="The Timing Structure of a Run" default="false" execute="HELP_RunStructure" />
+         <groupaction menu="The Timing Structure of a Turn" default="False" execute="HELP_TurnStructure" />
+         <groupaction menu="Corp Actions Reminder" default="False" execute="HELP_CorpActions" />
+         <groupaction menu="Runner Actions Reminder" default="False" execute="HELP_RunnerActions" />
+         <groupaction menu="The Anatomy of a Run" default="False" execute="HELP_RunAnatomy" />
+         <groupaction menu="The Timing Structure of a Run" default="False" execute="HELP_RunStructure" />
       </groupactions>
       <groupactions menu="Announcements">
-         <groupaction menu="Announce Imminent Access" default="false" execute="BUTTON_Access" shortcut="Ctrl+1"/>
-         <groupaction menu="Announce No Rez" default="false" execute="BUTTON_NoRez"  shortcut="Ctrl+2"/>
-         <groupaction menu="OK" default="false" execute="BUTTON_OK"  shortcut="Ctrl+3"/>
-         <groupaction menu="Wait!" default="false" execute="BUTTON_Wait" shortcut="Ctrl+4"/>
+         <groupaction menu="Announce Imminent Access" default="False" execute="BUTTON_Access" shortcut="Ctrl+1"/>
+         <groupaction menu="Announce No Rez" default="False" execute="BUTTON_NoRez"  shortcut="Ctrl+2"/>
+         <groupaction menu="OK" default="False" execute="BUTTON_OK"  shortcut="Ctrl+3"/>
+         <groupaction menu="Wait!" default="False" execute="BUTTON_Wait" shortcut="Ctrl+4"/>
       </groupactions>
-    <!-- <cardaction menu="Show Card Position" default="false" shortcut="Ctrl+Shift+X" execute="ShowPosC" />  -->
+    <!-- <cardaction menu="Show Card Position" default="False" shortcut="Ctrl+Shift+X" execute="ShowPosC" />  -->
         
       
    </table>
@@ -140,49 +140,49 @@
       <globalvariable name="wasNoisy" value="0" /> 
       <globalvariable name="Deck Stats" value="" /> 
       <globalvariable name="gameVersion" value="" /> 
-      <hand name="HQ/Grip" visibility="me" ordered="false" width="63" height="88" icon="Groups/Hand.png">
-         <cardaction menu="&#8986; Pay and Install Card" default="true" shortcut="enter" execute="intPlay" />
-         <cardaction menu="Install Card at no cost" default="false" execute="playForFree" />
+      <hand name="HQ/Grip" visibility="me" ordered="False" width="63" height="88" icon="Groups/Hand.png">
+         <cardaction menu="&#8986; Pay and Install Card" default="True" shortcut="enter" execute="intPlay" />
+         <cardaction menu="Install Card at no cost" default="False" execute="playForFree" />
          <cardactions menu="Move ...">
-            <cardaction menu ="To Top of R&amp;D/Stack" default="false" execute="movetoTopOfStack" />
-            <cardaction menu ="To Bottom of R&amp;D/Stack" default="false" execute="movetoBottomOfStack" />
-            <cardaction menu ="To Face-up Archives" default="false" execute="handtoArchives" />
+            <cardaction menu ="To Top of R&amp;D/Stack" default="False" execute="movetoTopOfStack" />
+            <cardaction menu ="To Bottom of R&amp;D/Stack" default="False" execute="movetoBottomOfStack" />
+            <cardaction menu ="To Face-up Archives" default="False" execute="handtoArchives" />
          </cardactions>
-         <cardaction menu="Inspect" default="false" shortcut="Ctrl+I" execute="inspectCard" />
-         <cardaction menu="Trash/Archive" default="false" shortcut="del" execute="handDiscard" />           
-         <groupaction menu="Trash/Archive a Card at Random" default="false" execute="handRandomDiscard" />
-         <groupaction menu="Show a Card at Random" default="false" execute="showatrandom"/>
-         <groupaction menu="Move to R&amp;D/Stack" default="false" execute="groupToDeck"/>
-         <groupaction menu="Mulligan" default="false" execute="mulligan"/>
+         <cardaction menu="Inspect" default="False" shortcut="Ctrl+I" execute="inspectCard" />
+         <cardaction menu="Trash/Archive" default="False" shortcut="del" execute="handDiscard" />           
+         <groupaction menu="Trash/Archive a Card at Random" default="False" execute="handRandomDiscard" />
+         <groupaction menu="Show a Card at Random" default="False" execute="showatrandom"/>
+         <groupaction menu="Move to R&amp;D/Stack" default="False" execute="groupToDeck"/>
+         <groupaction menu="Mulligan" default="False" execute="mulligan"/>
       </hand>
 
-      <group name="R&amp;D/Stack" visibility="none" ordered="false" width="63" height="88" icon="Groups/Library.png" collapsed="false">
-         <groupaction menu="&#8986; Draw" default="true" shortcut="Ctrl+D" execute="draw" />
-         <groupaction menu="Shuffle" default="false" execute="shuffle" />
-         <groupaction menu="Draw X" default="false" execute="drawMany" />
-         <groupaction menu="Discard X" default="false" execute="mill" />
-         <groupaction menu="Move Top X card to Bottom" default="false" execute="moveXtopCardtoBottomStack" />
+      <group name="R&amp;D/Stack" visibility="none" ordered="False" width="63" height="88" icon="Groups/Library.png" collapsed="False">
+         <groupaction menu="&#8986; Draw" default="True" shortcut="Ctrl+D" execute="draw" />
+         <groupaction menu="Shuffle" default="False" execute="shuffle" />
+         <groupaction menu="Draw X" default="False" execute="drawMany" />
+         <groupaction menu="Discard X" default="False" execute="mill" />
+         <groupaction menu="Move Top X card to Bottom" default="False" execute="moveXtopCardtoBottomStack" />
       </group>
 
-      <group name="Heap/Archives(Face-up)" visibility="all" ordered="false" width="63" height="88" icon="Groups/Trash.png" collapsed="false">
-         <groupaction menu="Move all to R&amp;D/Stack" default="false" execute="archivestoStack" />
+      <group name="Heap/Archives(Face-up)" visibility="all" ordered="False" width="63" height="88" icon="Groups/Trash.png" collapsed="False">
+         <groupaction menu="Move all to R&amp;D/Stack" default="False" execute="archivestoStack" />
       </group>
 
-      <group name="Archives(Hidden)" visibility="me" ordered="false" width="63" height="88" icon="Groups/Archives_H.png" collapsed="false">
-         <groupaction menu="Move all to Archives" default="false" execute="toarchives" />
-         <groupaction menu="Move all to R&amp;D/Stack" default="false" execute="archivestoStack" />
+      <group name="Archives(Hidden)" visibility="me" ordered="False" width="63" height="88" icon="Groups/Archives_H.png" collapsed="False">
+         <groupaction menu="Move all to Archives" default="False" execute="toarchives" />
+         <groupaction menu="Move all to R&amp;D/Stack" default="False" execute="archivestoStack" />
       </group>
-      <counter name="Clicks" default="0" reset="true" icon="Counters/Click.png" />
-      <counter name="Credits" default="0" reset="true" icon="Counters/Credit.jpg" />
-      <counter name="MU" default="0" reset="true" icon="Counters/MU.jpg" />
-      <counter name="Base Link" default="0" reset="true" icon="Counters/Link.jpg" />
-      <counter name="Agenda Points" default="0" reset="true" icon="Counters/Agenda_Points.jpg" />
-      <counter name="Bad Publicity" default="0" reset="true" icon="Counters/Bad_Publicity.jpg" />
-      <counter name="Hand Size" default="0" reset="true" icon="Counters/Hand_Size.jpg" />
-      <counter name="Tags" default="0" reset="true" icon="Counters/Tags.jpg" />
+      <counter name="Clicks" default="0" reset="True" icon="Counters/Click.png" />
+      <counter name="Credits" default="0" reset="True" icon="Counters/Credit.jpg" />
+      <counter name="MU" default="0" reset="True" icon="Counters/MU.jpg" />
+      <counter name="Base Link" default="0" reset="True" icon="Counters/Link.jpg" />
+      <counter name="Agenda Points" default="0" reset="True" icon="Counters/Agenda_Points.jpg" />
+      <counter name="Bad Publicity" default="0" reset="True" icon="Counters/Bad_Publicity.jpg" />
+      <counter name="Hand Size" default="0" reset="True" icon="Counters/Hand_Size.jpg" />
+      <counter name="Tags" default="0" reset="True" icon="Counters/Tags.jpg" />
    </player>
    <shared>
-      <group name="Exile" visibility="all" ordered="false" width="63" height="88" icon="Groups/Exile.png" collapsed="false" />
+      <group name="Exile" visibility="all" ordered="False" width="63" height="88" icon="Groups/Exile.png" collapsed="False" />
    </shared>
    <deck>
       <section name="Identity" group="HQ/Grip" />
