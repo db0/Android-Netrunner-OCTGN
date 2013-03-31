@@ -24,6 +24,8 @@
        <font src="Fonts/CyberpunkIsNotDead_ANR.ttf" size="11" target="context"/> <!--menu-->
        <font src="Fonts/ANR_symbols_only-enlarged.ttf" size="12" target="chat"/> <!--chat-->
    </fonts>   
+   <proxygen definitionsrc="Proxy/proxydef.xml">
+   </proxygen>   
    <globalvariables> 
      <globalvariable name="status" value="" /> 
      <globalvariable name="gameEnded" value="False" /> 
