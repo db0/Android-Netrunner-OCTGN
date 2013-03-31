@@ -3,13 +3,13 @@
       xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
       name="Android-Netrunner" 
       id="0f38e453-26df-4c04-9d67-6d43de939c77" 
-      octgnVersion="3.0.11.56" 
-      version="3.0.0" 
+      octgnVersion="3.1.0.0" 
+      version="2.3.2" 
       markersize="20"
-      tags="ANR"
-      description="An asymmetric cyberpunk card game. Play as either the corporation or the runner."
+      tags="asymmetric cyberpunk LCG bluff duel"
+      description="Android: Netrunner is an asymmetrical Living Card Game for two players. Set in the cyberpunk future of Android and Infiltration, the game pits a megacorporation and its massive resources against the subversive talents of lone runners."
       setsurl="http://octgn.gamersjudgement.com/viewtopic.php?f=52&amp;t=508"
-      gameurl="http://octgn.gamersjudgement.com/viewtopic.php?f=52&amp;t=494"
+      gameurl="https://github.com/db0/Android-Netrunner-OCTGN"
       authors="Db0"
       iconurl="https://raw.github.com/db0/Android-Netrunner-OCTGN/master/ANR_box.jpg">
    <scripts>
