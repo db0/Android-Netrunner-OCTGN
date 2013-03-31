@@ -335,9 +335,9 @@ def clearAttachLinks(card):
    if debugVerbosity >= 3: notify("<<< clearAttachLinks()") #Debug   
 
 def resetAll(): # Clears all the global variables in order to start a new game.
-   if debugVerbosity >= 1: notify(">>> resetAll(){}".format(extraASDebug())) #Debug
    global Stored_Name, Stored_Type, Stored_Cost, Stored_Keywords, Stored_AutoActions, Stored_AutoScripts
-   global installedCount, debugVerbosity,newturn,endofturn, currClicks, turn, autoRezFlags
+   global installedCount, debugVerbosity, newturn,endofturn, currClicks, turn, autoRezFlags
+   if debugVerbosity >= 1: notify(">>> resetAll(){}".format(extraASDebug())) #Debug
    mute()
    me.counters['Credits'].value = 5
    me.counters['Hand Size'].value = 5

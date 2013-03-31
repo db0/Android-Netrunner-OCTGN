@@ -703,7 +703,7 @@ def markerEffects(Time = 'Start'):
          if re.search(r'Cortez Chip',marker[0]) and Time == 'End':
             TokensX('Remove1Cortez Chip-isSilent', "Cortez Chip:", card)
             notify("--> {} removes Cortez Chip effect from {}".format(me,card))
-         if re.search(r'Joshua Enhancement',marker[0]) and Time == 'End': # We put Joshua's effect here, in case the runner trashes the card with Æsop's after using it
+         if re.search(r'Joshua Enhancement',marker[0]) and Time == 'End': # We put Joshua's effect here, in case the runner trashes the card with Aesop's after using it
             TokensX('Remove1Joshua Enhancement-isSilent', "Joshua Enhancement:", card)
             GainX('Gain1Tags', "Joshua's Enhancements:".format(me), card)
             notify("--> Joshua's Enhancements give {} a tag".format(identName))
@@ -1544,8 +1544,8 @@ def UseCustomAbility(Autoscript, announceText, card, targetCards = None, notific
    return announceString
    
 def CustomScript(card, action = 'PLAY'): # Scripts that are complex and fairly unique to specific cards, not worth making a whole generic function for them.
+   global ModifyDraw, secretCred
    if debugVerbosity >= 1: notify(">>> CustomScript() with action: {}".format(action)) #Debug
-   global ModifyDraw
    trash = me.piles['Heap/Archives(Face-up)']
    arcH = me.piles['Archives(Hidden)']
    deck = me.piles['R&D/Stack']
@@ -1641,7 +1641,6 @@ def CustomScript(card, action = 'PLAY'): # Scripts that are complex and fairly u
          notify("{} has extended the Rabbit Hole by {} {} by paying {}{}".format(me,rabbits,uniLink(),uniCredit(totalCost),extraText))
       else: notify("{} does not find enough rabbits.".format(me))
    elif fetchProperty(card, 'name') == 'Snowflake' and action == 'USE':
-      global secretCred
       if secretCred == None:
          secretCred = askInteger("How many credits do you want to secretly spend?\n\nOnce you have selected your total, ask your opponent to spend their own amount visibly, then re-use this card.",0)
          while secretCred and (secretCred > me.Credits) or (secretCred > 2):
@@ -1657,7 +1656,6 @@ def CustomScript(card, action = 'PLAY'): # Scripts that are complex and fairly u
    elif fetchProperty(card, 'name') == 'Bullfrog' and action == 'USE':
       choice = SingleChoice('Select Ability to use', ['Spend/Reveal 0-2 Credits','Move Bullfrog and runner to another server and continue run from there'], type = 'button')
       if choice == 0:
-         global secretCred
          if secretCred == None:
             secretCred = askInteger("How many credits do you want to secretly spend?\n\nOnce you have selected your total, ask your opponent to spend their own amount visibly, then re-use this card.",0)
             while secretCred and (secretCred > me.Credits) or (secretCred > 2):
