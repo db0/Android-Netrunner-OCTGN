@@ -4,12 +4,16 @@
       name="Android-Netrunner" 
       id="0f38e453-26df-4c04-9d67-6d43de939c77" 
       octgnVersion="3.1.0.0" 
+<<<<<<< HEAD
       version="3.0.0" 
+=======
+      version="2.3.2" 
+>>>>>>> d557b62683aaaa072179cf87bd9c729d8c416dc8
       markersize="20"
-      tags="ANR"
-      description="An asymmetric cyberpunk card game. Play as either the corporation or the runner."
-      setsurl="http://octgn.gamersjudgement.com/viewtopic.php?f=52&t=508"
-      gameurl="http://octgn.gamersjudgement.com/viewtopic.php?f=52&t=494"
+      tags="asymmetric cyberpunk LCG bluff duel"
+      description="Android: Netrunner is an asymmetrical Living Card Game for two players. Set in the cyberpunk future of Android and Infiltration, the game pits a megacorporation and its massive resources against the subversive talents of lone runners."
+      setsurl="http://octgn.gamersjudgement.com/viewtopic.php?f=52&amp;t=508"
+      gameurl="https://github.com/db0/Android-Netrunner-OCTGN"
       authors="Db0"
       iconurl="https://raw.github.com/db0/Android-Netrunner-OCTGN/master/ANR_box.jpg">
    <scripts>
@@ -185,13 +189,13 @@
          <groupaction menu="Move all to R&amp;D/Stack" default="False" execute="archivestoStack" />
       </group>
       <counter name="Clicks" default="0" reset="True" icon="Counters/Click.png" />
-      <counter name="Credits" default="0" reset="True" icon="Counters/Credit.jpg" />
-      <counter name="MU" default="0" reset="True" icon="Counters/MU.jpg" />
-      <counter name="Base Link" default="0" reset="True" icon="Counters/Link.jpg" />
-      <counter name="Agenda Points" default="0" reset="True" icon="Counters/Agenda_Points.jpg" />
-      <counter name="Bad Publicity" default="0" reset="True" icon="Counters/Bad_Publicity.jpg" />
-      <counter name="Hand Size" default="0" reset="True" icon="Counters/Hand_Size.jpg" />
-      <counter name="Tags" default="0" reset="True" icon="Counters/Tags.jpg" />
+      <counter name="Credits" default="0" reset="True" icon="Counters/Credit.png" />
+      <counter name="MU" default="0" reset="True" icon="Counters/MU.png" />
+      <counter name="Base Link" default="0" reset="True" icon="Counters/Link.png" />
+      <counter name="Agenda Points" default="0" reset="True" icon="Counters/Agenda_Points.png" />
+      <counter name="Bad Publicity" default="0" reset="True" icon="Counters/Bad_Publicity.png" />
+      <counter name="Hand Size" default="0" reset="True" icon="Counters/Hand_Size.png" />
+      <counter name="Tags" default="0" reset="True" icon="Counters/Tags.png" />
    </player>
    <shared>
       <group name="Exile" visibility="all" ordered="False" width="63" height="88" icon="Groups/Exile.png" collapsed="False" />
