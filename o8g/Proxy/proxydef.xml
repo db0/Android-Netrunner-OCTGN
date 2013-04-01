@@ -1,18 +1,15 @@
 <?xml version="1.0" encoding="utf-8" ?>
    <templates>
       <blocks>
-        <!--<block type="overlay" id="overlay1" src="relative/path/to/image.ext">
-          <location x="0" y="0" />
-        </block>-->
          <block type="text" id="name">
-            <location x="100" y="100" />
-            <text color="#FFFFFF" size="12" />
-            <border color="#000000" size="2" />
+            <location x="85" y="100" />
+            <text color="#000000" size="25" />
+            <border color="#440044" size="1" />
          </block>
       </blocks>
       <template src="Proxy/White_Card_Template.png" default="True">
          <matches>
-            <match name="Name" value="Everything works here" /><!-- match a template to a specified property and value-->
+            <match name="Name" value="Whetever" />
          </matches>
          <textblocks>
             <link block="name" separator=" ">
