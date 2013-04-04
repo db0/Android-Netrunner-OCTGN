@@ -2,9 +2,23 @@
    <templates>
       <blocks>
          <block type="text" id="name">
-            <location x="85" y="100" />
-            <text color="#000000" size="25" />
-            <border color="#440044" size="1" />
+           <location x="81" y="20" />
+           <text color="#000000" size="19" />
+           <wordwrap height="20" width="230" />
+         </block>
+         <block type="text" id="cost">
+           <location x="31" y="38" />
+           <text color="#FFFFFF" size="20" />
+           <border color="#FFFFFF" size="2" />
+         </block>
+         <block type="text" id="keywords">
+           <location x="120" y="265" />
+           <text color="#000000" size="16" />
+         </block>
+         <block type="text" id="rules">
+           <location x="40" y="300" />
+           <text color="#000000" size="13" />
+           <wordwrap height="107" width="250" />
          </block>
       </blocks>
       <template src="Proxy/White_Card_Template.png" default="True">
@@ -14,6 +28,26 @@
          <textblocks>
             <link block="name" separator=" ">
                <property name="Name"  />
+            </link>
+         </textblocks>
+      </template>
+      <template src="Proxy/Operations/Operation-Weyland.png">
+         <matches>
+            <match name="Faction" value="The Weyland Consortium" />
+            <match name="Type" value="Operation" />
+         </matches>
+         <textblocks>
+            <link block="name" separator=" ">
+               <property name="Name"  />
+            </link>
+            <link block="cost" separator=" ">
+               <property name="Cost"  />
+            </link>
+            <link block="keywords" separator=" ">
+               <property name="Keywords"  />
+            </link>
+            <link block="rules" separator=" ">
+               <property name="Rules"  />
             </link>
          </textblocks>
       </template>
