@@ -461,4 +461,27 @@
             </link>
          </textblocks>
       </template>
+      <template src="Proxy/Assets/Asset_NBN.jpg">
+         <matches>
+            <match name="Faction" value="NBN" />
+            <match name="Type" value="Asset" />
+         </matches>
+         <textblocks>
+            <link block="asset_name" separator=" ">
+               <property name="Name"  />
+            </link>
+            <link block="asset_cost" separator=" ">
+               <property name="Cost"  />
+            </link>
+            <link block="asset_trash" separator=" ">
+               <property name="Stat"  />
+            </link>
+            <link block="asset_keywords" separator=" ">
+               <property name="Keywords"  />
+            </link>
+            <link block="asset_rules" separator=" ">
+               <property name="Rules"  />
+            </link>
+         </textblocks>
+      </template>
    </templates>
