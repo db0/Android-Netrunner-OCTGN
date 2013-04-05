@@ -1,8 +1,13 @@
 =====Message of the Day======
 
-Important Announcement: OCTGN is getting a significant update in 1 week which will break all existing game definitions, including this one.
+Are you any good with Photoshop or GIMP and have some time to spare?
 
-In case the this game defintition is not yet available, please be patient while I'm working on the convertion...
+If so, I could use your help to prepare this plugin for the new OCTGN version.
+
+If you'd like to help, please visit the thread linked in this MOTD.
+
+Open browser page to check later?
 
 =============================
-
+&&
+http://boardgamegeek.com/article/11903032
