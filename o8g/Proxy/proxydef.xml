@@ -1,25 +1,55 @@
 <?xml version="1.0" encoding="utf-8" ?>
    <templates>
       <blocks>
-         <block type="text" id="name">
+         <!-- Operation Blocks-->
+         <block type="text" id="operation_name">
            <location x="81" y="20" />
            <text color="#000000" size="19" />
            <wordwrap height="20" width="230" />
          </block>
-         <block type="text" id="cost">
+         <block type="text" id="operation_cost">
            <location x="31" y="38" />
            <text color="#FFFFFF" size="20" />
            <border color="#FFFFFF" size="2" />
          </block>
-         <block type="text" id="keywords">
+         <block type="text" id="operation_keywords">
            <location x="120" y="265" />
            <text color="#000000" size="16" />
          </block>
-         <block type="text" id="rules">
+         <block type="text" id="operation_rules">
            <location x="40" y="300" />
            <text color="#000000" size="13" />
            <wordwrap height="107" width="250" />
          </block>
+         <!-- ICE Blocks-->
+         <block type="text" id="ICE_name">
+           <location x="79" y="18" />
+           <text color="#000000" size="19" />
+           <wordwrap height="20" width="230" />
+         </block>
+         <block type="text" id="ICE_cost">
+           <location x="24" y="32"/>
+           <text color="#FFFFFF" size="20" />
+           <border color="#FFFFFF" size="1" />
+         </block>
+         <block type="text" id="ICE_strength">
+           <location x="16" y="407" rotate="270" />
+           <text color="#000000" size="21" />
+         </block>
+         <block type="text" id="ICE_type">
+           <location x="22" y="313" rotate="270" />
+           <text color="#000000" size="16" />
+         </block>
+         <block type="text" id="ICE_keywords">
+           <location x="22" y="313" rotate="270" />
+           <text color="#000000" size="14" />
+         </block>
+         <block type="text" id="ICE_rules">
+           <location x="68" y="68" />
+           <text color="#000000" size="13" />
+           <wordwrap height="250" width="207" />
+         </block>
+         <!-- Agenda Blocks-->
          <block type="text" id="agenda_name">
            <location x="23" y="21" />
            <text color="#000000" size="17" />
@@ -55,26 +85,125 @@
             </link>
          </textblocks>
       </template>
+      <!-- Operation Templates -->
       <template src="Proxy/Operations/Operation-Weyland.jpg">
          <matches>
             <match name="Faction" value="The Weyland Consortium" />
             <match name="Type" value="Operation" />
          </matches>
          <textblocks>
-            <link block="name" separator=" ">
+            <link block="operation_name" separator=" ">
                <property name="Name"  />
             </link>
-            <link block="cost" separator=" ">
+            <link block="operation_cost" separator=" ">
                <property name="Cost"  />
             </link>
-            <link block="keywords" separator=" ">
+            <link block="operation_keywords" separator=" ">
                <property name="Keywords"  />
             </link>
-            <link block="rules" separator=" ">
+            <link block="operation_rules" separator=" ">
                <property name="Rules"  />
             </link>
          </textblocks>
       </template>
+      <!-- ICE Templates -->
+      <template src="Proxy/ICE/ICE_Weyland.jpg">
+         <matches>
+            <match name="Faction" value="The Weyland Consortium" />
+            <match name="Type" value="ICE" />
+         </matches>
+         <textblocks>
+            <link block="ICE_name" separator=" ">
+               <property name="Name"  />
+            </link>
+            <link block="ICE_cost" separator=" ">
+               <property name="Cost"  />
+            </link>
+            <link block="ICE_strength" separator=" ">
+               <property name="Stat"  />
+            </link>
+            <link block="ICE_keywords" separator=": ">
+               <property name="Type"  />
+               <property name="Keywords"  />
+            </link>
+            <link block="ICE_rules" separator=" ">
+               <property name="Rules"  />
+            </link>
+         </textblocks>
+      </template>
+      <template src="Proxy/ICE/ICE_Hasbro.jpg">
+         <matches>
+            <match name="Faction" value="Haas-Bioroid" />
+            <match name="Type" value="ICE" />
+         </matches>
+         <textblocks>
+            <link block="ICE_name" separator=" ">
+               <property name="Name"  />
+            </link>
+            <link block="ICE_cost" separator=" ">
+               <property name="Cost"  />
+            </link>
+            <link block="ICE_strength" separator=" ">
+               <property name="Stat"  />
+            </link>
+            <link block="ICE_keywords" separator=": ">
+               <property name="Type"  />
+               <property name="Keywords"  />
+            </link>
+            <link block="ICE_rules" separator=" ">
+               <property name="Rules"  />
+            </link>
+         </textblocks>
+      </template>
+      <template src="Proxy/ICE/ICE_Jinteki.jpg">
+         <matches>
+            <match name="Faction" value="Jinteki" />
+            <match name="Type" value="ICE" />
+         </matches>
+         <textblocks>
+            <link block="ICE_name" separator=" ">
+               <property name="Name"  />
+            </link>
+            <link block="ICE_cost" separator=" ">
+               <property name="Cost"  />
+            </link>
+            <link block="ICE_strength" separator=" ">
+               <property name="Stat"  />
+            </link>
+            <link block="ICE_keywords" separator=": ">
+               <property name="Type"  />
+               <property name="Keywords"  />
+            </link>
+            <link block="ICE_rules" separator=" ">
+               <property name="Rules"  />
+            </link>
+         </textblocks>
+      </template>
+      <template src="Proxy/ICE/ICE_Neutral.jpg">
+         <matches>
+            <match name="Faction" value="Neutral" />
+            <match name="Type" value="ICE" />
+         </matches>
+         <textblocks>
+            <link block="ICE_name" separator=" ">
+               <property name="Name"  />
+            </link>
+            <link block="ICE_cost" separator=" ">
+               <property name="Cost"  />
+            </link>
+            <link block="ICE_strength" separator=" ">
+               <property name="Stat"  />
+            </link>
+            <link block="ICE_keywords" separator=": ">
+               <property name="Type"  />
+               <property name="Keywords"  />
+            </link>
+            <link block="ICE_rules" separator=" ">
+               <property name="Rules"  />
+            </link>
+         </textblocks>
+      </template>
+      <!-- Agenda Templates -->
       <template src="Proxy/Agendas/Agenda_Weyland.jpg">
          <matches>
             <match name="Faction" value="The Weyland Consortium" />
