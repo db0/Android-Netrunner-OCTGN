@@ -20,6 +20,30 @@
            <text color="#000000" size="13" />
            <wordwrap height="107" width="250" />
          </block>
+         <block type="text" id="agenda_name">
+           <location x="23" y="21" />
+           <text color="#000000" size="17" />
+           <wordwrap height="19" width="230" />
+         </block>
+         <block type="text" id="agenda_cost">
+           <location x="270" y="18" />
+           <text color="#e7e5ea" size="25" />
+           <border color="#000000" size="3" /> 
+         </block>
+         <block type="text" id="agenda_points">
+           <location x="25" y="227" />
+           <text color="#d2d9df" size="23" />
+           <border color="#000000" size="3" />
+         </block>
+         <block type="text" id="agenda_keywords">
+           <location x="95" y="280" />
+           <text color="#000000" size="16" />
+         </block>
+         <block type="text" id="agenda_rules">
+           <location x="40" y="310" />
+           <text color="#000000" size="13" />
+           <wordwrap height="107" width="250" />
+         </block>
       </blocks>
       <template src="Proxy/White_Card_Template.png" default="True">
          <matches>
@@ -31,7 +55,7 @@
             </link>
          </textblocks>
       </template>
-      <template src="Proxy/Operations/Operation-Weyland.png">
+      <template src="Proxy/Operations/Operation-Weyland.jpg">
          <matches>
             <match name="Faction" value="The Weyland Consortium" />
             <match name="Type" value="Operation" />
@@ -47,6 +71,121 @@
                <property name="Keywords"  />
             </link>
             <link block="rules" separator=" ">
+               <property name="Rules"  />
+            </link>
+         </textblocks>
+      </template>
+      <template src="Proxy/Agendas/Agenda_Weyland.jpg">
+         <matches>
+            <match name="Faction" value="The Weyland Consortium" />
+            <match name="Type" value="Agenda" />
+         </matches>
+         <textblocks>
+            <link block="agenda_name" separator=" ">
+               <property name="Name"  />
+            </link>
+            <link block="agenda_cost" separator=" ">
+               <property name="Cost"  />
+            </link>
+            <link block="agenda_points" separator=" ">
+               <property name="Stat"  />
+            </link>
+            <link block="agenda_keywords" separator=" ">
+               <property name="Keywords"  />
+            </link>
+            <link block="agenda_rules" separator=" ">
+               <property name="Rules"  />
+            </link>
+         </textblocks>
+      </template>
+      <template src="Proxy/Agendas/Agenda_Hasbro.jpg">
+         <matches>
+            <match name="Faction" value="Haas-Bioroid" />
+            <match name="Type" value="Agenda" />
+         </matches>
+         <textblocks>
+            <link block="agenda_name" separator=" ">
+               <property name="Name"  />
+            </link>
+            <link block="agenda_cost" separator=" ">
+               <property name="Cost"  />
+            </link>
+            <link block="agenda_points" separator=" ">
+               <property name="Stat"  />
+            </link>
+            <link block="agenda_keywords" separator=" ">
+               <property name="Keywords"  />
+            </link>
+            <link block="agenda_rules" separator=" ">
+               <property name="Rules"  />
+            </link>
+         </textblocks>
+      </template>
+      <template src="Proxy/Agendas/Agenda_Jinteki.jpg">
+         <matches>
+            <match name="Faction" value="Jinteki" />
+            <match name="Type" value="Agenda" />
+         </matches>
+         <textblocks>
+            <link block="agenda_name" separator=" ">
+               <property name="Name"  />
+            </link>
+            <link block="agenda_cost" separator=" ">
+               <property name="Cost"  />
+            </link>
+            <link block="agenda_points" separator=" ">
+               <property name="Stat"  />
+            </link>
+            <link block="agenda_keywords" separator=" ">
+               <property name="Keywords"  />
+            </link>
+            <link block="agenda_rules" separator=" ">
+               <property name="Rules"  />
+            </link>
+         </textblocks>
+      </template>
+      <template src="Proxy/Agendas/Agenda_NBN.jpg">
+         <matches>
+            <match name="Faction" value="NBN" />
+            <match name="Type" value="Agenda" />
+         </matches>
+         <textblocks>
+            <link block="agenda_name" separator=" ">
+               <property name="Name"  />
+            </link>
+            <link block="agenda_cost" separator=" ">
+               <property name="Cost"  />
+            </link>
+            <link block="agenda_points" separator=" ">
+               <property name="Stat"  />
+            </link>
+            <link block="agenda_keywords" separator=" ">
+               <property name="Keywords"  />
+            </link>
+            <link block="agenda_rules" separator=" ">
+               <property name="Rules"  />
+            </link>
+         </textblocks>
+      </template>
+      <template src="Proxy/Agendas/Agenda_Neutral.jpg">
+         <matches>
+            <match name="Faction" value="Neutral" />
+            <match name="Type" value="Agenda" />
+         </matches>
+         <textblocks>
+            <link block="agenda_name" separator=" ">
+               <property name="Name"  />
+            </link>
+            <link block="agenda_cost" separator=" ">
+               <property name="Cost"  />
+            </link>
+            <link block="agenda_points" separator=" ">
+               <property name="Stat"  />
+            </link>
+            <link block="agenda_keywords" separator=" ">
+               <property name="Keywords"  />
+            </link>
+            <link block="agenda_rules" separator=" ">
                <property name="Rules"  />
             </link>
          </textblocks>
