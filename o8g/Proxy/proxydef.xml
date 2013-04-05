@@ -56,7 +56,7 @@
            <wordwrap height="19" width="230" />
          </block>
          <block type="text" id="agenda_cost">
-           <location x="24" y="32"/>
+           <location x="270" y="18"/>
            <text color="#e7e5ea" size="25" />
            <border color="#000000" size="3" /> 
          </block>
@@ -96,6 +96,31 @@
          </block>
          <block type="text" id="asset_rules">
            <location x="40" y="287" />
+           <text color="#000000" size="13" />
+           <wordwrap height="114" width="244" />
+         </block>
+         <!-- Upgrade Blocks-->
+         <block type="text" id="upgrade_name">
+           <location x="30" y="227" />
+           <text color="#000000" size="17" />
+           <wordwrap height="19" width="230" />
+         </block>
+         <block type="text" id="upgrade_cost">
+           <location x="27" y="35"/>
+           <text color="#FFFFFF" size="20" />
+           <border color="#FFFFFF" size="1" />
+         </block>
+         <block type="text" id="upgrade_trash">
+           <location x="274" y="376" />
+           <text color="#8e7c4b" size="18" />
+           <border color="#8e7c4b" size="1" />
+         </block>
+         <block type="text" id="upgrade_keywords">
+           <location x="106" y="258" />
+           <text color="#000000" size="13" />
+         </block>
+         <block type="text" id="upgrade_rules">
+           <location x="40" y="288" />
            <text color="#000000" size="13" />
            <wordwrap height="114" width="244" />
          </block>
@@ -480,6 +505,99 @@
                <property name="Keywords"  />
             </link>
             <link block="asset_rules" separator=" ">
+               <property name="Rules"  />
+            </link>
+         </textblocks>
+      </template>
+      <!-- Upgrade Templates -->
+      <template src="Proxy/Upgrades/Upgrade_Weyland.png">
+         <matches>
+            <match name="Faction" value="The Weyland Consortium" />
+            <match name="Type" value="Upgrade" />
+         </matches>
+         <textblocks>
+            <link block="upgrade_name" separator=" ">
+               <property name="Name"  />
+            </link>
+            <link block="upgrade_cost" separator=" ">
+               <property name="Cost"  />
+            </link>
+            <link block="upgrade_trash" separator=" ">
+               <property name="Stat"  />
+            </link>
+            <link block="upgrade_keywords" separator=" ">
+               <property name="Keywords"  />
+            </link>
+            <link block="upgrade_rules" separator=" ">
+               <property name="Rules"  />
+            </link>
+         </textblocks>
+      </template>
+      <template src="Proxy/Upgrades/Upgrade_Hasbro.png">
+         <matches>
+            <match name="Faction" value="Haas-Bioroid" />
+            <match name="Type" value="Upgrade" />
+         </matches>
+         <textblocks>
+            <link block="upgrade_name" separator=" ">
+               <property name="Name"  />
+            </link>
+            <link block="upgrade_cost" separator=" ">
+               <property name="Cost"  />
+            </link>
+            <link block="upgrade_trash" separator=" ">
+               <property name="Stat"  />
+            </link>
+            <link block="upgrade_keywords" separator=" ">
+               <property name="Keywords"  />
+            </link>
+            <link block="upgrade_rules" separator=" ">
+               <property name="Rules"  />
+            </link>
+         </textblocks>
+      </template>
+      <template src="Proxy/Upgrades/Upgrade_Jinteki.png">
+         <matches>
+            <match name="Faction" value="Jinteki" />
+            <match name="Type" value="Upgrade" />
+         </matches>
+         <textblocks>
+            <link block="upgrade_name" separator=" ">
+               <property name="Name"  />
+            </link>
+            <link block="upgrade_cost" separator=" ">
+               <property name="Cost"  />
+            </link>
+            <link block="upgrade_trash" separator=" ">
+               <property name="Stat"  />
+            </link>
+            <link block="upgrade_keywords" separator=" ">
+               <property name="Keywords"  />
+            </link>
+            <link block="upgrade_rules" separator=" ">
+               <property name="Rules"  />
+            </link>
+         </textblocks>
+      </template>
+      <template src="Proxy/Upgrades/Upgrade_NBN.png">
+         <matches>
+            <match name="Faction" value="NBN" />
+            <match name="Type" value="Upgrade" />
+         </matches>
+         <textblocks>
+            <link block="upgrade_name" separator=" ">
+               <property name="Name"  />
+            </link>
+            <link block="upgrade_cost" separator=" ">
+               <property name="Cost"  />
+            </link>
+            <link block="upgrade_trash" separator=" ">
+               <property name="Stat"  />
+            </link>
+            <link block="upgrade_keywords" separator=" ">
+               <property name="Keywords"  />
+            </link>
+            <link block="upgrade_rules" separator=" ">
                <property name="Rules"  />
             </link>
          </textblocks>
