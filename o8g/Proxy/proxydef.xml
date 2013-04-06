@@ -18,7 +18,7 @@
          </block>
          <block type="text" id="operation_rules">
            <location x="40" y="300" />
-           <text color="#000000" size="13" />
+           <text color="#000000" size="12" />
            <wordwrap height="107" width="250" />
          </block>
    <!-- ICE Blocks-->
@@ -46,7 +46,7 @@
          </block>
          <block type="text" id="ICE_rules">
            <location x="68" y="68" />
-           <text color="#000000" size="13" />
+           <text color="#000000" size="12" />
            <wordwrap height="250" width="207" />
          </block>
    <!-- Agenda Blocks-->
@@ -71,7 +71,7 @@
          </block>
          <block type="text" id="agenda_rules">
            <location x="40" y="310" />
-           <text color="#000000" size="13" />
+           <text color="#000000" size="12" />
            <wordwrap height="107" width="250" />
          </block>
    <!-- Asset Blocks-->
@@ -96,7 +96,7 @@
          </block>
          <block type="text" id="asset_rules">
            <location x="40" y="287" />
-           <text color="#000000" size="13" />
+           <text color="#000000" size="12" />
            <wordwrap height="114" width="244" />
          </block>
    <!-- Upgrade Blocks-->
@@ -121,7 +121,7 @@
          </block>
          <block type="text" id="upgrade_rules">
            <location x="40" y="288" />
-           <text color="#000000" size="13" />
+           <text color="#000000" size="12" />
            <wordwrap height="114" width="244" />
          </block>
    <!-- Runner Identity Blocks-->
@@ -174,7 +174,7 @@
          </block>
          <block type="text" id="event_rules">
            <location x="40" y="308" />
-           <text color="#000000" size="13" />
+           <text color="#000000" size="12" />
            <wordwrap height="105" width="241" />
          </block>
    <!-- Resource Blocks-->
@@ -194,7 +194,7 @@
          </block>
          <block type="text" id="resource_rules">
            <location x="22" y="248" />
-           <text color="#000000" size="13" />
+           <text color="#000000" size="12" />
            <wordwrap height="150" width="235" />
          </block>
    <!-- Hardware Blocks-->
@@ -214,7 +214,7 @@
          </block>
          <block type="text" id="hardware_rules">
            <location x="45" y="290" />
-           <text color="#000000" size="13" />
+           <text color="#000000" size="12" />
            <wordwrap height="114" width="235" />
          </block>
    <!-- Program Blocks-->
@@ -239,7 +239,7 @@
          </block>
          <block type="text" id="program_rules">
            <location x="34" y="267" />
-           <text color="#000000" size="13" />
+           <text color="#000000" size="12" />
            <wordwrap height="143" width="246" />
          </block>
          <block type="text" id="program_strength">
