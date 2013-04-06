@@ -124,6 +124,26 @@
            <text color="#000000" size="13" />
            <wordwrap height="114" width="244" />
          </block>
+         <!-- Event Blocks-->
+         <block type="text" id="event_name">
+           <location x="79" y="15" />
+           <text color="#000000" size="17" />
+           <wordwrap height="19" width="230" />
+         </block>
+         <block type="text" id="event_cost">
+           <location x="27" y="33"/>
+           <text color="#FFFFFF" size="20" />
+           <border color="#FFFFFF" size="1" />
+         </block>
+         <block type="text" id="event_keywords">
+           <location x="90" y="276" />
+           <text color="#000000" size="13" />
+         </block>
+         <block type="text" id="event_rules">
+           <location x="40" y="308" />
+           <text color="#000000" size="13" />
+           <wordwrap height="105" width="241" />
+         </block>
       </blocks>
       <template src="Proxy/White_Card_Template.png" default="True">
          <matches>
@@ -598,6 +618,87 @@
                <property name="Keywords"  />
             </link>
             <link block="upgrade_rules" separator=" ">
+               <property name="Rules"  />
+            </link>
+         </textblocks>
+      </template>
+      <!-- Event Templates -->
+      <template src="Proxy/Events/Event_Anarch.jpg">
+         <matches>
+            <match name="Faction" value="Anarchs" />
+            <match name="Type" value="Event" />
+         </matches>
+         <textblocks>
+            <link block="event_name" separator=" ">
+               <property name="Name"  />
+            </link>
+            <link block="event_cost" separator=" ">
+               <property name="Cost"  />
+            </link>
+            <link block="event_keywords" separator=" ">
+               <property name="Keywords"  />
+            </link>
+            <link block="event_rules" separator=" ">
+               <property name="Rules"  />
+            </link>
+         </textblocks>
+      </template>
+      <template src="Proxy/Events/Event_Criminal.jpg">
+         <matches>
+            <match name="Faction" value="Criminals" />
+            <match name="Type" value="Event" />
+         </matches>
+         <textblocks>
+            <link block="event_name" separator=" ">
+               <property name="Name"  />
+            </link>
+            <link block="event_cost" separator=" ">
+               <property name="Cost"  />
+            </link>
+            <link block="event_keywords" separator=" ">
+               <property name="Keywords"  />
+            </link>
+            <link block="event_rules" separator=" ">
+               <property name="Rules"  />
+            </link>
+         </textblocks>
+      </template>
+      <template src="Proxy/Events/Event_Shaper.jpg">
+         <matches>
+            <match name="Faction" value="Shapers" />
+            <match name="Type" value="Event" />
+         </matches>
+         <textblocks>
+            <link block="event_name" separator=" ">
+               <property name="Name"  />
+            </link>
+            <link block="event_cost" separator=" ">
+               <property name="Cost"  />
+            </link>
+            <link block="event_keywords" separator=" ">
+               <property name="Keywords"  />
+            </link>
+            <link block="event_rules" separator=" ">
+               <property name="Rules"  />
+            </link>
+         </textblocks>
+      </template>
+      <template src="Proxy/Events/Event_Neutral.jpg">
+         <matches>
+            <match name="Faction" value="Neutral" />
+            <match name="Type" value="Event" />
+         </matches>
+         <textblocks>
+            <link block="event_name" separator=" ">
+               <property name="Name"  />
+            </link>
+            <link block="event_cost" separator=" ">
+               <property name="Cost"  />
+            </link>
+            <link block="event_keywords" separator=" ">
+               <property name="Keywords"  />
+            </link>
+            <link block="event_rules" separator=" ">
                <property name="Rules"  />
             </link>
          </textblocks>
