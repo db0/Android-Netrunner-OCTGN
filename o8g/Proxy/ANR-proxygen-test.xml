@@ -1,0 +1,38 @@
+<root>
+  <propertyset>
+    <name>Faction</name>
+    <value>Neutral</value>
+  </propertyset>
+  <propertyset>
+    <name>Type</name>
+    <value>Program</value>
+  </propertyset>
+  <propertyset>
+    <name>Rules</name>
+    <value>Place 1 agenda counter on AstroScript Pilot Program when you score it.&amp;#xD;&amp;#xD;Hosted agenda counter: Place 1 advancement token on a card that can be advanced.</value>
+  </propertyset>
+  <propertyset>
+    <name>Keywords</name>
+    <value>Initiative</value>
+  </propertyset>
+  <propertyset>
+    <name>Cost</name>
+    <value>3</value>
+  </propertyset>
+  <propertyset>
+    <name>Stat</name>
+    <value>15</value>
+  </propertyset>
+  <propertyset>
+    <name>Name</name>
+    <value>Project Virtuvius</value>
+  </propertyset>
+  <propertyset>
+    <name>Requirement</name>
+    <value>1</value>
+  </propertyset>
+  <propertyset>
+    <name>Subtitle</name>
+    <value>Master Gamer</value>
+  </propertyset>
+</root>
