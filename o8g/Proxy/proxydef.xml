@@ -124,6 +124,39 @@
            <text color="#000000" size="13" />
            <wordwrap height="114" width="244" />
          </block>
+   <!-- Runner Identity Blocks-->
+         <block type="text" id="runIdent_name">
+           <location x="111" y="16" />
+           <text color="#000000" size="17" />
+           <wordwrap height="19" width="230" />
+         </block>
+         <block type="text" id="runIdent_subtitle">
+           <location x="147" y="39" />
+           <text color="#000000" size="12" />
+         </block>
+         <block type="text" id="runIdent_link">
+           <location x="20" y="31"/>
+           <text color="#FFFFFF" size="22" />
+           <border color="#FFFFFF" size="1" />
+         </block>
+         <block type="text" id="runIdent_keywords">
+           <location x="119" y="326" />
+           <text color="#000000" size="13" />
+         </block>
+         <block type="text" id="runIdent_rules">
+           <location x="49" y="358" />
+           <text color="#000000" size="12" />
+           <wordwrap height="86" width="209" />
+         </block>
+         <block type="text" id="runIdent_influence">
+           <location x="269" y="384"/>
+           <text color="#000000" size="17" />
+         </block>
+         <block type="text" id="runIdent_deck">
+           <location x="269" y="409"/>
+           <text color="#FFFFFF" size="17" />
+           <border color="#000000" size="1" />
+         </block>
    <!-- Event Blocks-->
          <block type="text" id="event_name">
            <location x="79" y="15" />
@@ -859,6 +892,94 @@
             </link>
             <link block="program_strength" separator=" ">
                <property name="Stat"  />
+            </link>
+         </textblocks>
+      </template>
+   <!-- Runner Identity Templates -->
+      <template src="Proxy/Identities/Identity_Anarch.jpg">
+         <matches>
+            <match name="Faction" value="Anarchs" />
+            <match name="Type" value="Identity" />
+         </matches>
+         <textblocks>
+            <link block="runIdent_name" separator=" ">
+               <property name="Name"  />
+            </link>
+            <link block="runIdent_subtitle" separator=" ">
+               <property name="Subtitle"  />
+            </link>
+            <link block="runIdent_link" separator=" ">
+               <property name="Cost"  />
+            </link>
+            <link block="runIdent_keywords" separator=" ">
+               <property name="Keywords"  />
+            </link>
+            <link block="runIdent_rules" separator=" ">
+               <property name="Rules"  />
+            </link>
+            <link block="runIdent_influence" separator=" ">
+               <property name="Stat"  />
+            </link>
+            <link block="runIdent_deck" separator=" ">
+               <property name="Requirement"  />
+            </link>
+         </textblocks>
+      </template>
+      <template src="Proxy/Identities/Identity_Shaper.jpg">
+         <matches>
+            <match name="Faction" value="Shapers" />
+            <match name="Type" value="Identity" />
+         </matches>
+         <textblocks>
+            <link block="runIdent_name" separator=" ">
+               <property name="Name"  />
+            </link>
+            <link block="runIdent_subtitle" separator=" ">
+               <property name="Subtitle"  />
+            </link>
+            <link block="runIdent_link" separator=" ">
+               <property name="Cost"  />
+            </link>
+            <link block="runIdent_keywords" separator=" ">
+               <property name="Keywords"  />
+            </link>
+            <link block="runIdent_rules" separator=" ">
+               <property name="Rules"  />
+            </link>
+            <link block="runIdent_influence" separator=" ">
+               <property name="Stat"  />
+            </link>
+            <link block="runIdent_deck" separator=" ">
+               <property name="Requirement"  />
+            </link>
+         </textblocks>
+      </template>
+      <template src="Proxy/Identities/Identity_Criminal.jpg">
+         <matches>
+            <match name="Faction" value="Criminals" />
+            <match name="Type" value="Identity" />
+         </matches>
+         <textblocks>
+            <link block="runIdent_name" separator=" ">
+               <property name="Name"  />
+            </link>
+            <link block="runIdent_subtitle" separator=" ">
+               <property name="Subtitle"  />
+            </link>
+            <link block="runIdent_link" separator=" ">
+               <property name="Cost"  />
+            </link>
+            <link block="runIdent_keywords" separator=" ">
+               <property name="Keywords"  />
+            </link>
+            <link block="runIdent_rules" separator=" ">
+               <property name="Rules"  />
+            </link>
+            <link block="runIdent_influence" separator=" ">
+               <property name="Stat"  />
+            </link>
+            <link block="runIdent_deck" separator=" ">
+               <property name="Requirement"  />
             </link>
          </textblocks>
       </template>
