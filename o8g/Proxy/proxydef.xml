@@ -1,19 +1,47 @@
 <?xml version="1.0" encoding="utf-8" ?>
    <templates>
       <blocks>
+   <!-- Corp Identity Blocks-->
+         <block type="text" id="corpIdent_name">
+           <location x="63" y="23" />
+           <text color="#000000" size="17" />
+           <wordwrap height="19" width="230" />
+         </block>
+         <block type="text" id="corpIdent_subtitle">
+           <location x="17" y="51" />
+           <text color="#000000" size="12" />
+         </block>
+         <block type="text" id="corpIdent_keywords">
+           <location x="105" y="330" />
+           <text color="#000000" size="13" />
+         </block>
+         <block type="text" id="corpIdent_rules">
+           <location x="63" y="358" />
+           <text color="#000000" size="12" />
+           <wordwrap height="86" width="209" />
+         </block>
+         <block type="text" id="corpIdent_influence">
+           <location x="19" y="386"/>
+           <text color="#000000" size="17" />
+         </block>
+         <block type="text" id="corpIdent_deck">
+           <location x="19" y="411"/>
+           <text color="#FFFFFF" size="17" />
+           <border color="#000000" size="1" />
+         </block>
    <!-- Operation Blocks-->
          <block type="text" id="operation_name">
-           <location x="81" y="20" />
+           <location x="81" y="18" />
            <text color="#000000" size="19" />
            <wordwrap height="20" width="230" />
          </block>
          <block type="text" id="operation_cost">
-           <location x="31" y="38" />
+           <location x="27" y="34" />
            <text color="#FFFFFF" size="20" />
            <border color="#FFFFFF" size="2" />
          </block>
          <block type="text" id="operation_keywords">
-           <location x="120" y="265" />
+           <location x="116" y="262" />
            <text color="#000000" size="16" />
          </block>
          <block type="text" id="operation_rules">
@@ -259,9 +287,29 @@
          </textblocks>
       </template>
    <!-- Operation Templates -->
-      <template src="Proxy/Operations/Operation-Weyland.jpg">
+      <template src="Proxy/Operations/Operation_Weyland.jpg">
          <matches>
             <match name="Faction" value="The Weyland Consortium" />
+            <match name="Type" value="Operation" />
+         </matches>
+         <textblocks>
+            <link block="operation_name" separator=" ">
+               <property name="Name"  />
+            </link>
+            <link block="operation_cost" separator=" ">
+               <property name="Cost"  />
+            </link>
+            <link block="operation_keywords" separator=" ">
+               <property name="Keywords"  />
+            </link>
+            <link block="operation_rules" separator=" ">
+               <property name="Rules"  />
+            </link>
+         </textblocks>
+      </template>
+      <template src="Proxy/Operations/Operation_Hasbro.jpg">
+         <matches>
+            <match name="Faction" value="Haas-Bioroid" />
             <match name="Type" value="Operation" />
          </matches>
          <textblocks>
@@ -725,6 +773,111 @@
             </link>
          </textblocks>
       </template>
+   <!-- Corp Identity Templates -->
+      <template src="Proxy/Identities/Identity_Hasbro.png">
+         <matches>
+            <match name="Faction" value="Haas-Bioroid" />
+            <match name="Type" value="Identity" />
+         </matches>
+         <textblocks>
+            <link block="corpIdent_name" separator=" ">
+               <property name="Name"  />
+            </link>
+            <link block="corpIdent_subtitle" separator=" ">
+               <property name="Subtitle"  />
+            </link>
+            <link block="corpIdent_keywords" separator=" ">
+               <property name="Keywords"  />
+            </link>
+            <link block="corpIdent_rules" separator=" ">
+               <property name="Rules"  />
+            </link>
+            <link block="corpIdent_influence" separator=" ">
+               <property name="Stat"  />
+            </link>
+            <link block="corpIdent_deck" separator=" ">
+               <property name="Requirement"  />
+            </link>
+         </textblocks>
+      </template>
+      <template src="Proxy/Identities/Identity_Weyland.png">
+         <matches>
+            <match name="Faction" value="The Weyland Consortium" />
+            <match name="Type" value="Identity" />
+         </matches>
+         <textblocks>
+            <link block="corpIdent_name" separator=" ">
+               <property name="Name"  />
+            </link>
+            <link block="corpIdent_subtitle" separator=" ">
+               <property name="Subtitle"  />
+            </link>
+            <link block="corpIdent_keywords" separator=" ">
+               <property name="Keywords"  />
+            </link>
+            <link block="corpIdent_rules" separator=" ">
+               <property name="Rules"  />
+            </link>
+            <link block="corpIdent_influence" separator=" ">
+               <property name="Stat"  />
+            </link>
+            <link block="corpIdent_deck" separator=" ">
+               <property name="Requirement"  />
+            </link>
+         </textblocks>
+      </template>
+      <template src="Proxy/Identities/Identity_Jinteki.png">
+         <matches>
+            <match name="Faction" value="Jinteki" />
+            <match name="Type" value="Identity" />
+         </matches>
+         <textblocks>
+            <link block="corpIdent_name" separator=" ">
+               <property name="Name"  />
+            </link>
+            <link block="corpIdent_subtitle" separator=" ">
+               <property name="Subtitle"  />
+            </link>
+            <link block="corpIdent_keywords" separator=" ">
+               <property name="Keywords"  />
+            </link>
+            <link block="corpIdent_rules" separator=" ">
+               <property name="Rules"  />
+            </link>
+            <link block="corpIdent_influence" separator=" ">
+               <property name="Stat"  />
+            </link>
+            <link block="corpIdent_deck" separator=" ">
+               <property name="Requirement"  />
+            </link>
+         </textblocks>
+      </template>
+      <template src="Proxy/Identities/Identity_NBN.png">
+         <matches>
+            <match name="Faction" value="NBN" />
+            <match name="Type" value="Identity" />
+         </matches>
+         <textblocks>
+            <link block="corpIdent_name" separator=" ">
+               <property name="Name"  />
+            </link>
+            <link block="corpIdent_subtitle" separator=" ">
+               <property name="Subtitle"  />
+            </link>
+            <link block="corpIdent_keywords" separator=" ">
+               <property name="Keywords"  />
+            </link>
+            <link block="corpIdent_rules" separator=" ">
+               <property name="Rules"  />
+            </link>
+            <link block="corpIdent_influence" separator=" ">
+               <property name="Stat"  />
+            </link>
+            <link block="corpIdent_deck" separator=" ">
+               <property name="Requirement"  />
+            </link>
+         </textblocks>
+      </template>
    <!-- Event Templates -->
       <template src="Proxy/Events/Event_Anarch.jpg">
          <matches>
@@ -851,6 +1004,66 @@
       <template src="Proxy/Hardware/Hardware_Anarch.jpg">
          <matches>
             <match name="Faction" value="Anarchs" />
+            <match name="Type" value="Hardware" />
+         </matches>
+         <textblocks>
+            <link block="hardware_name" separator=" ">
+               <property name="Name"  />
+            </link>
+            <link block="hardware_cost" separator=" ">
+               <property name="Cost"  />
+            </link>
+            <link block="hardware_keywords" separator=" ">
+               <property name="Keywords"  />
+            </link>
+            <link block="hardware_rules" separator=" ">
+               <property name="Rules"  />
+            </link>
+         </textblocks>
+      </template>
+      <template src="Proxy/Hardware/Hardware_Criminal.jpg">
+         <matches>
+            <match name="Faction" value="Criminals" />
+            <match name="Type" value="Hardware" />
+         </matches>
+         <textblocks>
+            <link block="hardware_name" separator=" ">
+               <property name="Name"  />
+            </link>
+            <link block="hardware_cost" separator=" ">
+               <property name="Cost"  />
+            </link>
+            <link block="hardware_keywords" separator=" ">
+               <property name="Keywords"  />
+            </link>
+            <link block="hardware_rules" separator=" ">
+               <property name="Rules"  />
+            </link>
+         </textblocks>
+      </template>
+      <template src="Proxy/Hardware/Hardware_Shaper.jpg">
+         <matches>
+            <match name="Faction" value="Shapers" />
+            <match name="Type" value="Hardware" />
+         </matches>
+         <textblocks>
+            <link block="hardware_name" separator=" ">
+               <property name="Name"  />
+            </link>
+            <link block="hardware_cost" separator=" ">
+               <property name="Cost"  />
+            </link>
+            <link block="hardware_keywords" separator=" ">
+               <property name="Keywords"  />
+            </link>
+            <link block="hardware_rules" separator=" ">
+               <property name="Rules"  />
+            </link>
+         </textblocks>
+      </template>
+      <template src="Proxy/Hardware/Hardware_Neutral.jpg">
+         <matches>
+            <match name="Faction" value="Neutral" />
             <match name="Type" value="Hardware" />
          </matches>
          <textblocks>
