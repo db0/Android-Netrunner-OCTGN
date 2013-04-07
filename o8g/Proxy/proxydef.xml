@@ -1065,6 +1065,26 @@
             </link>
          </textblocks>
       </template>
+      <template src="Proxy/Resources/Resource_Anarch.png">
+         <matches>
+            <match name="Faction" value="Anarch" />
+            <match name="Type" value="Resource" />
+         </matches>
+         <textblocks>
+            <link block="resource_name" separator=" ">
+               <property name="Name"  />
+            </link>
+            <link block="resource_cost" separator=" ">
+               <property name="Cost"  />
+            </link>
+            <link block="resource_keywords" separator=" ">
+               <property name="Keywords"  />
+            </link>
+            <link block="resource_rules" separator=" ">
+               <property name="Rules"  />
+            </link>
+         </textblocks>
+      </template>
       <template src="Proxy/Resources/Resource_Neutral.jpg">
          <matches>
             <match name="Faction" value="Neutral" />
@@ -1196,6 +1216,32 @@
       <template src="Proxy/Programs/Program_Criminal.jpg">
          <matches>
             <match name="Faction" value="Criminal" />
+            <match name="Type" value="Program" />
+         </matches>
+         <textblocks>
+            <link block="program_name" separator=" ">
+               <property name="Name"  />
+            </link>
+            <link block="program_cost" separator=" ">
+               <property name="Cost"  />
+            </link>
+            <link block="program_MU" separator=" ">
+               <property name="Requirement"  />
+            </link>
+            <link block="program_keywords" separator=" ">
+               <property name="Keywords"  />
+            </link>
+            <link block="program_rules" separator=" ">
+               <property name="Rules"  />
+            </link>
+            <link block="program_strength" separator=" ">
+               <property name="Stat"  />
+            </link>
+         </textblocks>
+      </template>
+      <template src="Proxy/Programs/Program_Anarch.png">
+         <matches>
+            <match name="Faction" value="Anarch" />
             <match name="Type" value="Program" />
          </matches>
          <textblocks>
