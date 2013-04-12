@@ -24,7 +24,7 @@
 		<property name="Cost" value="5" />
 		<property name="Requirement" value="1" />	
 		<property name="Stat" value="10" />	
-		<property name="Rules" value="2 [Credits]: Break up to 2 code gate subroutines.&#xD;1 [Credits]: +1 strength." />
+		<property name="Rules" value="2 [Credits]: Break up to 2 code gate subroutines.&#xD;&#xA;1 [Credits]: +1 strength." />
 		<property name="Flavor" value="It always strikes twice." />
 		<property name="Instructions" value="2 [Credits]: Break up to 2 code gate subroutines.||1 [Credits]: +1 strength." />
 		<property name="Faction" value="Anarch" />
@@ -40,7 +40,7 @@
 		<property name="Cost" value="2" />
 		<property name="Requirement" value="" />	
 		<property name="Stat" value="" />	
-		<property name="Rules" value="2 [Recurring Credits]&#xD;Use these credits to trash cards." />
+		<property name="Rules" value="2 [Recurring Credits]&#xD;&#xA;Use these credits to trash cards." />
 		<property name="Flavor" value="&quot;They&#39;re mindless tools of destruction, good for little else. Nice guys, though. Some of my best friends are scrubbers.&quot; - Ji &quot;Noise&quot; Reilly" />
 		<property name="Instructions" value="" />
 		<property name="Faction" value="Anarch" />
@@ -56,7 +56,7 @@
 		<property name="Cost" value="3" />
 		<property name="Requirement" value="" />	
 		<property name="Stat" value="" />	
-		<property name="Rules" value="+1 [Memory Unit]&#xD;Once per turn, you may immediately make another run when a successful run ends.&#xD;Limit 1 console per player." />
+		<property name="Rules" value="+1 [Memory Unit]&#xD;&#xA;Once per turn, you may immediately make another run when a successful run ends.&#xD;&#xA;Limit 1 console per player." />
 		<property name="Flavor" value="Twice the fun." />
 		<property name="Instructions" value="" />
 		<property name="Faction" value="Criminal" />
@@ -88,7 +88,7 @@
 		<property name="Cost" value="3" />
 		<property name="Requirement" value="1" />	
 		<property name="Stat" value="10" />	
-		<property name="Rules" value="[Trash]: Break any number of AP subroutines.&#xD;[Trash]: Prevent any amount of net damage." />
+		<property name="Rules" value="[Trash]: Break any number of AP subroutines.&#xD;&#xA;[Trash]: Prevent any amount of net damage." />
 		<property name="Flavor" value="Didn&#39;t see that coming." />
 		<property name="Instructions" value="[Trash]: Break any number of AP subroutines||[Trash]: Prevent any amount of net damage." />
 		<property name="Faction" value="Shaper" />
@@ -120,7 +120,7 @@
 		<property name="Cost" value="3" />
 		<property name="Requirement" value="" />	
 		<property name="Stat" value="" />	
-		<property name="Rules" value="2 [Recurring Credits]&#xD;Use these credits to install hardware." />
+		<property name="Rules" value="2 [Recurring Credits]&#xD;&#xA;Use these credits to install hardware." />
 		<property name="Flavor" value="Few corporate employees have such wide-sweeping security clearance as the janitorial staff. Most corps foolishly think they&#39;re too dim-witted to take advantage of it." />
 		<property name="Instructions" value="" />
 		<property name="Faction" value="Neutral" />
@@ -168,7 +168,7 @@
 		<property name="Cost" value="5" />
 		<property name="Requirement" value="" />	
 		<property name="Stat" value="4" />	
-		<property name="Rules" value="[Subroutine] The Runner loses [Click], if able.&#xD;[Subroutine] The Runner loses [Click], if able.&#xD;[Subroutine] The Runner loses [Click], if able." />
+		<property name="Rules" value="[Subroutine] The Runner loses [Click], if able.&#xD;&#xA;[Subroutine] The Runner loses [Click], if able.&#xD;&#xA;[Subroutine] The Runner loses [Click], if able." />
 		<property name="Flavor" value="Time just slips away." />
 		<property name="Instructions" value="" />
 		<property name="Faction" value="Haas-Bioroid" />
@@ -184,8 +184,8 @@
 		<property name="Cost" value="3" />
 		<property name="Requirement" value="" />	
 		<property name="Stat" value="3" />	
-		<property name="Rules" value="2 [Recurring Credits]&#xD;Use these credits to rez ice." />
-		<property name="Flavor" value="so very still, even&#xD;cherry blossoms are not stirred&#xD;by the temple bell&#xD;-Fuhaku" />
+		<property name="Rules" value="2 [Recurring Credits]&#xD;&#xA;Use these credits to rez ice." />
+		<property name="Flavor" value="so very still, even&#xD;&#xA;cherry blossoms are not stirred&#xD;&#xA;by the temple bell&#xD;&#xA;-Fuhaku" />
 		<property name="Instructions" value="" />
 		<property name="Faction" value="Jinteki" />
 		<property name="Influence" value="2" />
@@ -216,7 +216,7 @@
 		<property name="Cost" value="6" />
 		<property name="Requirement" value="" />	
 		<property name="Stat" value="4" />	
-		<property name="Rules" value="[Subroutine] Trace4 - If successful, the Runner cannot make another run this turn.&#xD;[Subroutine] Trace4 - If successful, end the run." />
+		<property name="Rules" value="[Subroutine] Trace4 - If successful, the Runner cannot make another run this turn.&#xD;&#xA;[Subroutine] Trace4 - If successful, end the run." />
 		<property name="Flavor" value="Where one thing ends, another begins." />
 		<property name="Instructions" value="[Subroutine] Trace 4. If successful, the Runner cannot make another run this turn.||[Subroutine] Trace 4. If successful, end the run." />
 		<property name="Faction" value="NBN" />
@@ -232,7 +232,7 @@
 		<property name="Cost" value="1" />
 		<property name="Requirement" value="" />	
 		<property name="Stat" value="1" />	
-		<property name="Rules" value="X [Recurring Credits]&#xD;Use these credits during traces. X is the number of links the runner has." />
+		<property name="Rules" value="X [Recurring Credits]&#xD;&#xA;Use these credits during traces. X is the number of links the runner has." />
 		<property name="Flavor" value="This is the net. We work here. We&#39;re cops." />
 		<property name="Instructions" value="" />
 		<property name="Faction" value="NBN" />
@@ -248,7 +248,7 @@
 		<property name="Cost" value="0" />
 		<property name="Requirement" value="45" />	
 		<property name="Stat" value="15" />	
-		<property name="Rules" value="1 [Recurring Credits]&#xD;Use this credit to advance ice." />
+		<property name="Rules" value="1 [Recurring Credits]&#xD;&#xA;Use this credit to advance ice." />
 		<property name="Flavor" value="Constructing Cyberspace." />
 		<property name="Instructions" value="" />
 		<property name="Faction" value="The Weyland Consortium" />

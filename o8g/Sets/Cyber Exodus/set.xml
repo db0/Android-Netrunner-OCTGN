@@ -24,7 +24,7 @@
 		<property name="Cost" value="2" />
 		<property name="Requirement" value="" />	
 		<property name="Stat" value="0" />	
-		<property name="Rules" value="When you rez Chimera, choose sentry, code gate, or barrier. Chimera gains that subtype until derezzed.&#xD;When a turn ends, derez Chimera.&#xD;[Subroutine] End the run." />
+		<property name="Rules" value="When you rez Chimera, choose sentry, code gate, or barrier. Chimera gains that subtype until derezzed.&#xD;&#xA;When a turn ends, derez Chimera.&#xD;&#xA;[Subroutine] End the run." />
 		<property name="Flavor" value="Three heads. One big headache." />
 		<property name="Instructions" value="" />
 		<property name="Faction" value="Neutral" />
@@ -56,7 +56,7 @@
 		<property name="Cost" value="5" />
 		<property name="Requirement" value="" />	
 		<property name="Stat" value="" />	
-		<property name="Rules" value="Dinosaurus can host a single non-AI icebreaker. The memory cost of the hosted icebreaker does not count against your memory limit.&#xD;Hosted icebreaker has +2 strength.&#xD;Limit 1 console per player." />
+		<property name="Rules" value="Dinosaurus can host a single non-AI icebreaker. The memory cost of the hosted icebreaker does not count against your memory limit.&#xD;&#xA;Hosted icebreaker has +2 strength.&#xD;&#xA;Limit 1 console per player." />
 		<property name="Flavor" value="" />
 		<property name="Instructions" value="" />
 		<property name="Faction" value="Shaper" />
@@ -88,7 +88,7 @@
 		<property name="Cost" value="0" />
 		<property name="Requirement" value="" />	
 		<property name="Stat" value="" />	
-		<property name="Rules" value="Play only if you made a successful run on HQ this turn.&#xD;Derez a piece of ice." />
+		<property name="Rules" value="Play only if you made a successful run on HQ this turn.&#xD;&#xA;Derez a piece of ice." />
 		<property name="Flavor" value="&quot;Think of it as a virtual shock collar for punishing corporate pets.&quot; - Andromeda" />
 		<property name="Instructions" value="" />
 		<property name="Faction" value="Criminal" />
@@ -120,7 +120,7 @@
 		<property name="Cost" value="0" />
 		<property name="Requirement" value="" />	
 		<property name="Stat" value="5" />	
-		<property name="Rules" value="When your turn begins, take 1 [Credits] from Marked Accounts, if able.&#xD;[Click]: Place 3 [Credits] from the bank on Marked Accounts." />
+		<property name="Rules" value="When your turn begins, take 1 [Credits] from Marked Accounts, if able.&#xD;&#xA;[Click]: Place 3 [Credits] from the bank on Marked Accounts." />
 		<property name="Flavor" value="" />
 		<property name="Instructions" value="" />
 		<property name="Faction" value="NBN" />
@@ -152,7 +152,7 @@
 		<property name="Cost" value="3" />
 		<property name="Requirement" value="1" />	
 		<property name="Stat" value="-" />	
-		<property name="Rules" value="Whenever you make a successful run on HQ, place 1 virus counter on Nerve Agent.&#xD;Each virus counter after the first on Nerve Agent allows you to access 1 additional card from HQ whenever you access cards from HQ." />
+		<property name="Rules" value="Whenever you make a successful run on HQ, place 1 virus counter on Nerve Agent.&#xD;&#xA;Each virus counter after the first on Nerve Agent allows you to access 1 additional card from HQ whenever you access cards from HQ." />
 		<property name="Flavor" value="" />
 		<property name="Instructions" value="" />
 		<property name="Faction" value="Anarch" />
@@ -168,7 +168,7 @@
 		<property name="Cost" value="1" />
 		<property name="Requirement" value="" />	
 		<property name="Stat" value="" />	
-		<property name="Rules" value="[Click]: Host a program or piece of hardware from your grip on Personal Workshop and place power counters on it equal to its install cost.&#xD;1 [Credits]: Remove 1 power counter from a hosted card.&#xD;When your turn begins, remove 1 power counter from a hosted card.&#xD;When there are no power counters left on a hosted card, install it, ignoring all costs." />
+		<property name="Rules" value="[Click]: Host a program or piece of hardware from your grip on Personal Workshop and place power counters on it equal to its install cost.&#xD;&#xA;1 [Credits]: Remove 1 power counter from a hosted card.&#xD;&#xA;When your turn begins, remove 1 power counter from a hosted card.&#xD;&#xA;When there are no power counters left on a hosted card, install it, ignoring all costs." />
 		<property name="Flavor" value="" />
 		<property name="Instructions" value="" />
 		<property name="Faction" value="Shaper" />
@@ -184,7 +184,7 @@
 		<property name="Cost" value="0" />
 		<property name="Requirement" value="" />	
 		<property name="Stat" value="0" />	
-		<property name="Rules" value="When the Runner encounters Pop-up Window, you gain 1 [Credits].&#xD;[Subroutine] End the run unless the Runner pays 1 [Credits]." />
+		<property name="Rules" value="When the Runner encounters Pop-up Window, you gain 1 [Credits].&#xD;&#xA;[Subroutine] End the run unless the Runner pays 1 [Credits]." />
 		<property name="Flavor" value="&quot;Try to close it. Go on. See what it does.&quot; - Chaos Theory" />
 		<property name="Instructions" value="[On ICE Encounter] Gain 1 Credits||[Subroutine] Runner pays 1 credit||[Subroutine] End the Run" />
 		<property name="Faction" value="NBN" />
@@ -200,7 +200,7 @@
 		<property name="Cost" value="3" />
 		<property name="Requirement" value="" />	
 		<property name="Stat" value="5" />	
-		<property name="Rules" value="Place 14 [Credits] from the bank on Private Contracts when it is rezzed. When there are no credits left on Private Contracts, trash it.&#xD;[Click]: Take 2 [Credits] from Private Contracts." />
+		<property name="Rules" value="Place 14 [Credits] from the bank on Private Contracts when it is rezzed. When there are no credits left on Private Contracts, trash it.&#xD;&#xA;[Click]: Take 2 [Credits] from Private Contracts." />
 		<property name="Flavor" value="" />
 		<property name="Instructions" value="" />
 		<property name="Faction" value="Neutral" />
@@ -216,7 +216,7 @@
 		<property name="Cost" value="3" />
 		<property name="Requirement" value="" />	
 		<property name="Stat" value="2" />	
-		<property name="Rules" value="When you score Project Vitruvius, place 1 agenda counter on it for each advancement token on it over 3.&#xD;Hosted agenda counter: Add 1 card from Archives to HQ." />
+		<property name="Rules" value="When you score Project Vitruvius, place 1 agenda counter on it for each advancement token on it over 3.&#xD;&#xA;Hosted agenda counter: Add 1 card from Archives to HQ." />
 		<property name="Flavor" value="" />
 		<property name="Instructions" value="" />
 		<property name="Faction" value="Haas-Bioroid" />
@@ -296,7 +296,7 @@
 		<property name="Cost" value="3" />
 		<property name="Requirement" value="" />	
 		<property name="Stat" value="4" />	
-		<property name="Rules" value="[Subroutine] Trace3 - If successful, the Runner loses [Click], if able.&#xD;[Subroutine] Trace3 - If successful, end the run." />
+		<property name="Rules" value="[Subroutine] Trace3 - If successful, the Runner loses [Click], if able.&#xD;&#xA;[Subroutine] Trace3 - If successful, end the run." />
 		<property name="Flavor" value="Dont Tread On Me" />
 		<property name="Instructions" value="[Subroutine] Trace 3. If successful, runner loses 1 [Click].||[Subroutine] Trace 3. If successful, end the run." />
 		<property name="Faction" value="Haas-Bioroid" />

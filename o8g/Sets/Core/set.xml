@@ -56,7 +56,7 @@
 		<property name="Cost" value="4" />
 		<property name="Requirement" value="" />	
 		<property name="Stat" value="3" />	
-		<property name="Rules" value="Put 12 [Credits] from the bank on Adonis Campaign when rezzed. When there are no credits left on this card, trash it.&#xD;Take 3 [Credits] from Adonis Campaign when your turn begins." />
+		<property name="Rules" value="Put 12 [Credits] from the bank on Adonis Campaign when rezzed. When there are no credits left on this card, trash it.&#xD;&#xA;Take 3 [Credits] from Adonis Campaign when your turn begins." />
 		<property name="Flavor" value="" />
 		<property name="Instructions" value="" />
 		<property name="Faction" value="Haas-Bioroid" />
@@ -88,7 +88,7 @@
 		<property name="Cost" value="1" />
 		<property name="Requirement" value="" />	
 		<property name="Stat" value="" />	
-		<property name="Rules" value="Play only if you scored an agenda this turn.&#xD;Search R&amp;D for 1 card and add it to HQ.&#xD;Shuffle R&amp;D." />
+		<property name="Rules" value="Play only if you scored an agenda this turn.&#xD;&#xA;Search R&amp;D for 1 card and add it to HQ.&#xD;&#xA;Shuffle R&amp;D." />
 		<property name="Flavor" value="&quot;I believe you&#39;ll find the terms are quite favorable.&quot;" />
 		<property name="Instructions" value="" />
 		<property name="Faction" value="The Weyland Consortium" />
@@ -104,7 +104,7 @@
 		<property name="Cost" value="0" />
 		<property name="Requirement" value="" />	
 		<property name="Stat" value="0" />	
-		<property name="Rules" value="Aggressive Secretary can be advanced.&#xD;If you pay 2 [Credits] when the Runner accesses Aggressive Secretary, trash 1 program for each advancement token on Aggressive Secretary." />
+		<property name="Rules" value="Aggressive Secretary can be advanced.&#xD;&#xA;If you pay 2 [Credits] when the Runner accesses Aggressive Secretary, trash 1 program for each advancement token on Aggressive Secretary." />
 		<property name="Flavor" value="" />
 		<property name="Instructions" value="" />
 		<property name="Faction" value="Haas-Bioroid" />
@@ -168,7 +168,7 @@
 		<property name="Cost" value="4" />
 		<property name="Requirement" value="" />	
 		<property name="Stat" value="6" />	
-		<property name="Rules" value="As an additional cost to rez Archer, the Corp must forfeit an agenda.&#xD;⏎ The Corp gains 2 [Credits].&#xD;[Subroutine] Trash 1 program.&#xD;⏎ Trash 1 program.&#xD;⏎ End the run." />
+		<property name="Rules" value="As an additional cost to rez Archer, the Corp must forfeit an agenda.&#xD;&#xA;⏎ The Corp gains 2 [Credits].&#xD;&#xA;[Subroutine] Trash 1 program.&#xD;&#xA;⏎ Trash 1 program.&#xD;&#xA;⏎ End the run." />
 		<property name="Flavor" value="Next time, read the Terms of Service more carefully. Or you might find yourself in the danger zone." />
 		<property name="Instructions" value="[Subroutine] Gain 2 Credits||[Subroutine] Trash Target Program||[Subroutine] End the Run" />
 		<property name="Faction" value="The Weyland Consortium" />
@@ -200,7 +200,7 @@
 		<property name="Cost" value="1" />
 		<property name="Requirement" value="" />	
 		<property name="Stat" value="" />	
-		<property name="Rules" value="Place 12 [Credits] from the bank on Armitage Codebusting when it is installed. When there are no credits left on Armitage Codebusting, trash it.&#xD;&#xD;[Click]: Take 2 [Credits] from Armitage Codebusting." />
+		<property name="Rules" value="Place 12 [Credits] from the bank on Armitage Codebusting when it is installed. When there are no credits left on Armitage Codebusting, trash it.&#xD;&#xA;&#xD;&#xA;[Click]: Take 2 [Credits] from Armitage Codebusting." />
 		<property name="Flavor" value="Drudge work, but it pays the bills." />
 		<property name="Instructions" value="" />
 		<property name="Faction" value="Neutral" />
@@ -216,7 +216,7 @@
 		<property name="Cost" value="3" />
 		<property name="Requirement" value="" />	
 		<property name="Stat" value="2" />	
-		<property name="Rules" value="Place 1 agenda counter on AstroScript Pilot Program when you score it.&#xD;&#xD;Hosted agenda counter: Place 1 advancement token on a card that can be advanced." />
+		<property name="Rules" value="Place 1 agenda counter on AstroScript Pilot Program when you score it.&#xD;&#xA;&#xD;&#xA;Hosted agenda counter: Place 1 advancement token on a card that can be advanced." />
 		<property name="Flavor" value="" />
 		<property name="Instructions" value="" />
 		<property name="Faction" value="NBN" />
@@ -232,7 +232,7 @@
 		<property name="Cost" value="3" />
 		<property name="Requirement" value="1" />	
 		<property name="Stat" value="1" />	
-		<property name="Rules" value="2 [Credits]: Break barrier subroutine.&#xD;2 [Credits]: +3 strength." />
+		<property name="Rules" value="2 [Credits]: Break barrier subroutine.&#xD;&#xA;2 [Credits]: +3 strength." />
 		<property name="Flavor" value="" />
 		<property name="Instructions" value="2 [Credits]: Break barrier subroutine.||2 [Credits]: +3 strength." />
 		<property name="Faction" value="Criminal" />
@@ -248,7 +248,7 @@
 		<property name="Cost" value="1" />
 		<property name="Requirement" value="" />	
 		<property name="Stat" value="" />	
-		<property name="Rules" value="Place 8 [Credits] from the bank on Bank Job when it is installed. When there are no credits left on Bank Job, trash it.&#xD;Whenever you make a successful run on a remote server, instead of accessing cards you may take any number of credits from Bank Job." />
+		<property name="Rules" value="Place 8 [Credits] from the bank on Bank Job when it is installed. When there are no credits left on Bank Job, trash it.&#xD;&#xA;Whenever you make a successful run on a remote server, instead of accessing cards you may take any number of credits from Bank Job." />
 		<property name="Flavor" value="" />
 		<property name="Instructions" value="" />
 		<property name="Faction" value="Criminal" />
@@ -264,7 +264,7 @@
 		<property name="Cost" value="5" />
 		<property name="Requirement" value="2" />	
 		<property name="Stat" value="3" />	
-		<property name="Rules" value="2 [Credits]: Break up to 2 barrier subroutines.&#xD;1 [Credits]: +1 strength for the remainder of this run." />
+		<property name="Rules" value="2 [Credits]: Break up to 2 barrier subroutines.&#xD;&#xA;1 [Credits]: +1 strength for the remainder of this run." />
 		<property name="Flavor" value="&quot;It&#39;s called &#39;brute-forcing&#39; and it&#39;s just as effective today as it was a hundred years ago.&quot; - Kate &quot;Mac&quot; McCaffrey" />
 		<property name="Instructions" value="2 [Credits]: Break up to 2 barrier subroutines.||1 [Credits]: +1 strength for the remainder of this run." />
 		<property name="Faction" value="Shaper" />
@@ -312,7 +312,7 @@
 		<property name="Cost" value="2" />
 		<property name="Requirement" value="" />	
 		<property name="Stat" value="1" />	
-		<property name="Rules" value="When you score Breaking News, give the Runner 2 tags.&#xD;&#xD;When the turn on which you scored Breaking News ends, the Runner loses 2 tags." />
+		<property name="Rules" value="When you score Breaking News, give the Runner 2 tags.&#xD;&#xA;&#xD;&#xA;When the turn on which you scored Breaking News ends, the Runner loses 2 tags." />
 		<property name="Flavor" value="" />
 		<property name="Instructions" value="" />
 		<property name="Faction" value="NBN" />
@@ -360,7 +360,7 @@
 		<property name="Cost" value="1" />
 		<property name="Requirement" value="" />	
 		<property name="Stat" value="" />	
-		<property name="Rules" value="Play only if the Runner is tagged.&#xD;The Runner loses all credits in his or her credit pool." />
+		<property name="Rules" value="Play only if the Runner is tagged.&#xD;&#xA;The Runner loses all credits in his or her credit pool." />
 		<property name="Flavor" value="" />
 		<property name="Instructions" value="" />
 		<property name="Faction" value="NBN" />
@@ -392,7 +392,7 @@
 		<property name="Cost" value="2" />
 		<property name="Requirement" value="1" />	
 		<property name="Stat" value="2" />	
-		<property name="Rules" value="1 [Credits]: Break barrier subroutine.&#xD;1 [Credits]: +1 strength." />
+		<property name="Rules" value="1 [Credits]: Break barrier subroutine.&#xD;&#xA;1 [Credits]: +1 strength." />
 		<property name="Flavor" value="&quot;If at first you don&#39;t succeed, boost its strength and try again.&quot; - g00ru" />
 		<property name="Instructions" value="1 [Credits]: Break barrier subroutine.||1 [Credits]: +1 strength." />
 		<property name="Faction" value="Anarch" />
@@ -408,7 +408,7 @@
 		<property name="Cost" value="2" />
 		<property name="Requirement" value="" />	
 		<property name="Stat" value="" />	
-		<property name="Rules" value="2 [Generate Credits]&#xD;Use these credits to pay for removing tags.&#xD;[Trash]: Prevent up to 3 meat damage." />
+		<property name="Rules" value="2 [Generate Credits]&#xD;&#xA;Use these credits to pay for removing tags.&#xD;&#xA;[Trash]: Prevent up to 3 meat damage." />
 		<property name="Flavor" value="&quot;My roomie, he had a cousin with a college girlfriend whose brother&#39;s best friend was an addict, and the addict&#39;s mother used to live here. So yeah, there&#39;s a connection.&quot;" />
 		<property name="Instructions" value="" />
 		<property name="Faction" value="Criminal" />
@@ -424,7 +424,7 @@
 		<property name="Cost" value="5" />
 		<property name="Requirement" value="1" />	
 		<property name="Stat" value="0" />	
-		<property name="Rules" value="1 [Credits]: Break ice subroutine.&#xD;1 [Credits]: +1 strength.&#xD;[Click]: Place 1 virus counter on Crypsis.&#xD;When an encounter with a piece of ice in which you used Crypsis to break a subroutine ends, remove 1 hosted virus counter or trash Crypsis." />
+		<property name="Rules" value="1 [Credits]: Break ice subroutine.&#xD;&#xA;1 [Credits]: +1 strength.&#xD;&#xA;[Click]: Place 1 virus counter on Crypsis.&#xD;&#xA;When an encounter with a piece of ice in which you used Crypsis to break a subroutine ends, remove 1 hosted virus counter or trash Crypsis." />
 		<property name="Flavor" value="" />
 		<property name="Instructions" value="1 [Credits]: Break ice subroutine.||1 [Credits]: +1 strength.||Remove 1 Virus (use only once per ice)||[Click]: Place 1 Virus counter on Crypsis" />
 		<property name="Faction" value="Neutral" />
@@ -440,7 +440,7 @@
 		<property name="Cost" value="2" />
 		<property name="Requirement" value="" />	
 		<property name="Stat" value="" />	
-		<property name="Rules" value="1 [Generate Credits]&#xD;Use this credit to pay for using icebreakers or for installing virus programs" />
+		<property name="Rules" value="1 [Generate Credits]&#xD;&#xA;Use this credit to pay for using icebreakers or for installing virus programs" />
 		<property name="Flavor" value="I feel almost naked without it" />
 		<property name="Instructions" value="" />
 		<property name="Faction" value="Anarch" />
@@ -488,7 +488,7 @@
 		<property name="Cost" value="4" />
 		<property name="Requirement" value="" />	
 		<property name="Stat" value="4" />	
-		<property name="Rules" value="When the Runner encounters Data Raven, he or she must either take 1 tag or end the run.&#xD;&#xD;Hosted power counter: Give the Runner 1 tag.&#xD;[Subroutine] Trace3 - If successful, place 1 power counter on Data Raven." />
+		<property name="Rules" value="When the Runner encounters Data Raven, he or she must either take 1 tag or end the run.&#xD;&#xA;&#xD;&#xA;Hosted power counter: Give the Runner 1 tag.&#xD;&#xA;[Subroutine] Trace3 - If successful, place 1 power counter on Data Raven." />
 		<property name="Flavor" value="" />
 		<property name="Instructions" value="[Subroutine] Trace 3. Place 1 Power Counter if succesful||Remove 1 hosted Power counter to give the Runner 1 Tag." />
 		<property name="Faction" value="NBN" />
@@ -504,7 +504,7 @@
 		<property name="Cost" value="1" />
 		<property name="Requirement" value="1" />	
 		<property name="Stat" value="-" />	
-		<property name="Rules" value="Whenever you make a successful run on a central server, place 1 virus counter on Datasucker.&#xD;&#xD;Hosted virus counter: Rezzed piece of ice currently being encountered has -1 strength until the end of the encounter." />
+		<property name="Rules" value="Whenever you make a successful run on a central server, place 1 virus counter on Datasucker.&#xD;&#xA;&#xD;&#xA;Hosted virus counter: Rezzed piece of ice currently being encountered has -1 strength until the end of the encounter." />
 		<property name="Flavor" value="" />
 		<property name="Instructions" value="" />
 		<property name="Faction" value="Anarch" />
@@ -521,7 +521,7 @@
 		<property name="Requirement" value="" />	
 		<property name="Stat" value="" />	
 		<property name="Rules" value="[Trash]: Avoid receiving 1 tag." />
-		<property name="Flavor" value="&quot;I get the feeling that this is the wrong place, Frank.&quot;&#xD;&quot;What makes you say that D?&quot;&#xD;&quot;The curlers.&quot;" />
+		<property name="Flavor" value="&quot;I get the feeling that this is the wrong place, Frank.&quot;&#xD;&#xA;&quot;What makes you say that D?&quot;&#xD;&#xA;&quot;The curlers.&quot;" />
 		<property name="Instructions" value="" />
 		<property name="Faction" value="Criminal" />
 		<property name="Influence" value="2" />
@@ -568,7 +568,7 @@
 		<property name="Cost" value="3" />
 		<property name="Requirement" value="" />	
 		<property name="Stat" value="" />	
-		<property name="Rules" value="+1 [Memory Unit]&#xD;&#xD;Gain 1 [Credits] whenever you make a successful run.&#xD;&#xD;Limit 1 console per player." />
+		<property name="Rules" value="+1 [Memory Unit]&#xD;&#xA;&#xD;&#xA;Gain 1 [Credits] whenever you make a successful run.&#xD;&#xA;&#xD;&#xA;Limit 1 console per player." />
 		<property name="Flavor" value="" />
 		<property name="Instructions" value="" />
 		<property name="Faction" value="Criminal" />
@@ -600,7 +600,7 @@
 		<property name="Cost" value="2" />
 		<property name="Requirement" value="1" />	
 		<property name="Stat" value="" />	
-		<property name="Rules" value="Djinn can host up to  3 [Memory Units] of non-icebreaker programs.&#xD;The memory costs of hosted programs do not count against your memory limit.&#xD;[Click], 1 [Credits]: Search your stack for a virus program, reveal it, and add it to your grip. Shuffle your stack." />
+		<property name="Rules" value="Djinn can host up to  3 [Memory Units] of non-icebreaker programs.&#xD;&#xA;The memory costs of hosted programs do not count against your memory limit.&#xD;&#xA;[Click], 1 [Credits]: Search your stack for a virus program, reveal it, and add it to your grip. Shuffle your stack." />
 		<property name="Flavor" value="" />
 		<property name="Instructions" value="Host Target Program (Must be used only immediately after you play a program)||[Manual Ability] Search for Virus in your Stack." />
 		<property name="Faction" value="Anarch" />
@@ -632,8 +632,8 @@
 		<property name="Cost" value="3" />
 		<property name="Requirement" value="" />	
 		<property name="Stat" value="2" />	
-		<property name="Rules" value="[Subroutine] The Runner loses [Click], if able.&#xD;[Subroutine] End the run." />
-		<property name="Flavor" value="&quot;Hey, hey&#33; Wake up man. You were under a long time. What&#39;d you see?&quot;&#xD;&quot;I... don&#39;t remember.&quot;" />
+		<property name="Rules" value="[Subroutine] The Runner loses [Click], if able.&#xD;&#xA;[Subroutine] End the run." />
+		<property name="Flavor" value="&quot;Hey, hey&#33; Wake up man. You were under a long time. What&#39;d you see?&quot;&#xD;&#xA;&quot;I... don&#39;t remember.&quot;" />
 		<property name="Instructions" value="[Subroutine] The Runner loses [Click]||[Subroutine] End the run." />
 		<property name="Faction" value="Neutral" />
 		<property name="Influence" value="0" />
@@ -664,7 +664,7 @@
 		<property name="Cost" value="9" />
 		<property name="Requirement" value="1" />	
 		<property name="Stat" value="2" />	
-		<property name="Rules" value="1 [Credits]: Break sentry subroutine.&#xD;2 [Credits]: +1 strength.&#xD;When you install Femme Fatale, choose an installed piece of ice. When you encounter that ice, you may spend 1 [Credits] per subroutine on that ice to bypass it." />
+		<property name="Rules" value="1 [Credits]: Break sentry subroutine.&#xD;&#xA;2 [Credits]: +1 strength.&#xD;&#xA;When you install Femme Fatale, choose an installed piece of ice. When you encounter that ice, you may spend 1 [Credits] per subroutine on that ice to bypass it." />
 		<property name="Flavor" value="" />
 		<property name="Instructions" value="1 [Credits]: Break sentry subroutine.||2 [Credits]: +1 strength.||Pay 1 [Credits] per target ice subroutine to bypass it." />
 		<property name="Faction" value="Criminal" />
@@ -712,7 +712,7 @@
 		<property name="Cost" value="0" />
 		<property name="Requirement" value="" />	
 		<property name="Stat" value="0" />	
-		<property name="Rules" value="Ghost Branch can be advanced.&#xD;When the Runner accesses Ghost Branch, you may give the Runner 1 tag for each advancement token on Ghost Branch." />
+		<property name="Rules" value="Ghost Branch can be advanced.&#xD;&#xA;When the Runner accesses Ghost Branch, you may give the Runner 1 tag for each advancement token on Ghost Branch." />
 		<property name="Flavor" value="" />
 		<property name="Instructions" value="" />
 		<property name="Faction" value="NBN" />
@@ -728,7 +728,7 @@
 		<property name="Cost" value="4" />
 		<property name="Requirement" value="1" />	
 		<property name="Stat" value="2" />	
-		<property name="Rules" value="1 [Credits]: Break code gate subroutine.&#xD;1 [Credits]: +1 strength for the remainder of this run." />
+		<property name="Rules" value="1 [Credits]: Break code gate subroutine.&#xD;&#xA;1 [Credits]: +1 strength for the remainder of this run." />
 		<property name="Flavor" value="It can slice through the thickest knots of data." />
 		<property name="Instructions" value="1 [Credits]: Break code gate subroutine.||1 [Credits]: +1 strength" />
 		<property name="Faction" value="Shaper" />
@@ -744,7 +744,7 @@
 		<property name="Cost" value="3" />
 		<property name="Requirement" value="" />	
 		<property name="Stat" value="" />	
-		<property name="Rules" value="+2 [Memory Units]&#xD;Whenever you install a virus program, place 1 virus counter on that program.&#xD;Limit 1 console per player." />
+		<property name="Rules" value="+2 [Memory Units]&#xD;&#xA;Whenever you install a virus program, place 1 virus counter on that program.&#xD;&#xA;Limit 1 console per player." />
 		<property name="Flavor" value="" />
 		<property name="Instructions" value="" />
 		<property name="Faction" value="Anarch" />
@@ -776,7 +776,7 @@
 		<property name="Cost" value="10" />
 		<property name="Requirement" value="" />	
 		<property name="Stat" value="7" />	
-		<property name="Rules" value="Hadrian&#39;s Wall may be advanced and has +1 strength for each advancement counter on it.&#xD;[Subroutine] End the run.&#xD;[Subroutine] End the run." />
+		<property name="Rules" value="Hadrian&#39;s Wall may be advanced and has +1 strength for each advancement counter on it.&#xD;&#xA;[Subroutine] End the run.&#xD;&#xA;[Subroutine] End the run." />
 		<property name="Flavor" value="&quot;He had a bit of an ego, ol&#39; Hadrian. his constructs live up to it though.&quot;" />
 		<property name="Instructions" value="" />
 		<property name="Faction" value="The Weyland Consortium" />
@@ -793,7 +793,7 @@
 		<property name="Requirement" value="" />	
 		<property name="Stat" value="" />	
 		<property name="Rules" value="Gain 9 [Credits]." />
-		<property name="Flavor" value="Hedge Fund. Noun. An ingenious device by which the rich get richer even while every other poor SOB is losing his shirt.&#xD;- The Anarch&#39;s Dictionary, Volume Who&#39;s Counting?" />
+		<property name="Flavor" value="Hedge Fund. Noun. An ingenious device by which the rich get richer even while every other poor SOB is losing his shirt.&#xD;&#xA;- The Anarch&#39;s Dictionary, Volume Who&#39;s Counting?" />
 		<property name="Instructions" value="" />
 		<property name="Faction" value="Neutral" />
 		<property name="Influence" value="0" />
@@ -808,7 +808,7 @@
 		<property name="Cost" value="8" />
 		<property name="Requirement" value="" />	
 		<property name="Stat" value="6" />	
-		<property name="Rules" value="The Runner can spend [Click] to break any subroutine on Heimdall 1.0.&#xD;[Subroutine] Do 1 brain damage.&#xD;[Subroutine] End the run.&#xD;[Subroutine] End the run." />
+		<property name="Rules" value="The Runner can spend [Click] to break any subroutine on Heimdall 1.0.&#xD;&#xA;[Subroutine] Do 1 brain damage.&#xD;&#xA;[Subroutine] End the run.&#xD;&#xA;[Subroutine] End the run." />
 		<property name="Flavor" value="I hear the shift of every bit amid the flow of the datastream. I hear the whispers of my mothers, and their commands are law. The realm beyond is forbidden" />
 		<property name="Instructions" value="[Subroutine] Do 1 brain damage.||[Subroutine] End the run." />
 		<property name="Faction" value="Haas-Bioroid" />
@@ -841,7 +841,7 @@
 		<property name="Requirement" value="" />	
 		<property name="Stat" value="4" />	
 		<property name="Rules" value="[Subroutine] Trace3 - If successful, give the Runner 1 tag." />
-		<property name="Flavor" value=".//run/hunter-tr/return=true&#xD;client/sec256IPv7-&gt;confirm? /y&#xD;3926:0HB7:1001:2NB1:1601:7784:ERROR" />
+		<property name="Flavor" value=".//run/hunter-tr/return=true&#xD;&#xA;client/sec256IPv7-&gt;confirm? /y&#xD;&#xA;3926:0HB7:1001:2NB1:1601:7784:ERROR" />
 		<property name="Instructions" value="[Subroutine] Trace 3. If successful, give the Runner 1 Tag." />
 		<property name="Faction" value="Neutral" />
 		<property name="Influence" value="0" />
@@ -872,7 +872,7 @@
 		<property name="Cost" value="1" />
 		<property name="Requirement" value="" />	
 		<property name="Stat" value="1" />	
-		<property name="Rules" value="Ice Wall can be advanced and has +1 strength for each advancement token on it.&#xD;[Subroutine] End the run." />
+		<property name="Rules" value="Ice Wall can be advanced and has +1 strength for each advancement token on it.&#xD;&#xA;[Subroutine] End the run." />
 		<property name="Flavor" value="" />
 		<property name="Instructions" value="" />
 		<property name="Faction" value="The Weyland Consortium" />
@@ -888,7 +888,7 @@
 		<property name="Cost" value="5" />
 		<property name="Requirement" value="" />	
 		<property name="Stat" value="4" />	
-		<property name="Rules" value="The Runner can spend [Click] to break any subroutine on Ichi 1.0.&#xD;[Subroutine] Trash 1 program.&#xD;[Subroutine] Trash 1 program.&#xD;[Subroutine] Trace 1 - if successful, give the Runner 1 tag and do 1 brain damage." />
+		<property name="Rules" value="The Runner can spend [Click] to break any subroutine on Ichi 1.0.&#xD;&#xA;[Subroutine] Trash 1 program.&#xD;&#xA;[Subroutine] Trash 1 program.&#xD;&#xA;[Subroutine] Trace 1 - if successful, give the Runner 1 tag and do 1 brain damage." />
 		<property name="Flavor" value="My reputation would precede me, if any could speak of it." />
 		<property name="Instructions" value="[Subroutine] Trash target program.||[Subroutine] Trace 1. If successful give the Runner 1 Tag and inflict 1 brain damage." />
 		<property name="Faction" value="Haas-Bioroid" />
@@ -1000,7 +1000,7 @@
 		<property name="Cost" value="1" />
 		<property name="Requirement" value="" />	
 		<property name="Stat" value="3" />	
-		<property name="Rules" value="When the Runner encounters Matrix Analyzer, you may pay 1 [Credits] to place 1 advancement token on a card that can be advanced.&#xD;[Subroutine] Trace 2 - if successful, give the Runner 1 tag." />
+		<property name="Rules" value="When the Runner encounters Matrix Analyzer, you may pay 1 [Credits] to place 1 advancement token on a card that can be advanced.&#xD;&#xA;[Subroutine] Trace 2 - if successful, give the Runner 1 tag." />
 		<property name="Flavor" value="Analyzing was great. Delegating commands turned out to be even better." />
 		<property name="Instructions" value="1 [Credits]: Place 1 Advancement token on Target card||[Subroutine] Trace 2. If successful give the Runner 1 Tag." />
 		<property name="Faction" value="NBN" />
@@ -1016,7 +1016,7 @@
 		<property name="Cost" value="3" />
 		<property name="Requirement" value="1" />	
 		<property name="Stat" value="-" />	
-		<property name="Rules" value="Whenever you make a successful run on R&amp;D, place 1 virus counter on Medium.&#xD;Each virus counter after the first on Medium allows you to access 1 additional card from R&amp;D whenever you access cards from R&amp;D." />
+		<property name="Rules" value="Whenever you make a successful run on R&amp;D, place 1 virus counter on Medium.&#xD;&#xA;Each virus counter after the first on Medium allows you to access 1 additional card from R&amp;D whenever you access cards from R&amp;D." />
 		<property name="Flavor" value="" />
 		<property name="Instructions" value="" />
 		<property name="Faction" value="Anarch" />
@@ -1080,7 +1080,7 @@
 		<property name="Cost" value="0" />
 		<property name="Requirement" value="45" />	
 		<property name="Stat" value="15" />	
-		<property name="Rules" value="2 [Generate Credits]&#xD;Use these credits during trace attempts." />
+		<property name="Rules" value="2 [Generate Credits]&#xD;&#xA;Use these credits during trace attempts." />
 		<property name="Flavor" value="Someone is Always Watching." />
 		<property name="Instructions" value="" />
 		<property name="Faction" value="NBN" />
@@ -1112,7 +1112,7 @@
 		<property name="Cost" value="2" />
 		<property name="Requirement" value="" />	
 		<property name="Stat" value="" />	
-		<property name="Rules" value="Play only if the Runner made a run during his or her last turn.&#xD;Do 1 net damage." />
+		<property name="Rules" value="Play only if the Runner made a run during his or her last turn.&#xD;&#xA;Do 1 net damage." />
 		<property name="Flavor" value="The trick isn&#39;t hitting the person you were aiming at. It&#39;s hitting only the person you were aiming at." />
 		<property name="Instructions" value="" />
 		<property name="Faction" value="Jinteki" />
@@ -1129,7 +1129,7 @@
 		<property name="Requirement" value="" />	
 		<property name="Stat" value="3" />	
 		<property name="Rules" value="[Subroutine] Do 3 net damage." />
-		<property name="Flavor" value="Forged by Ak.wa on 23.11.79-23. Filed 23.11.79-23.2 with #34k-lw3-21HH-4i.&#xD;//Samurai included." />
+		<property name="Flavor" value="Forged by Ak.wa on 23.11.79-23. Filed 23.11.79-23.2 with #34k-lw3-21HH-4i.&#xD;&#xA;//Samurai included." />
 		<property name="Instructions" value="" />
 		<property name="Faction" value="Jinteki" />
 		<property name="Influence" value="2" />
@@ -1144,7 +1144,7 @@
 		<property name="Cost" value="4" />
 		<property name="Requirement" value="1" />	
 		<property name="Stat" value="0" />	
-		<property name="Rules" value="1 [Credits]: Break sentry subroutine.&#xD;3 [Credits]: +5 strength." />
+		<property name="Rules" value="1 [Credits]: Break sentry subroutine.&#xD;&#xA;3 [Credits]: +5 strength." />
 		<property name="Flavor" value="You feel Ninja before you see Ninja, if you see Ninja at all." />
 		<property name="Instructions" value="1 [Credits]: Break sentry subroutine.||3 [Credits]: +5 strength." />
 		<property name="Faction" value="Criminal" />
@@ -1160,7 +1160,7 @@
 		<property name="Cost" value="4" />
 		<property name="Requirement" value="" />	
 		<property name="Stat" value="2" />	
-		<property name="Rules" value="Place 1 agenda counter on Nisei MK II when you score it.&#xD;Hosted agenda counter: End the run." />
+		<property name="Rules" value="Place 1 agenda counter on Nisei MK II when you score it.&#xD;&#xA;Hosted agenda counter: End the run." />
 		<property name="Flavor" value="" />
 		<property name="Instructions" value="" />
 		<property name="Faction" value="Jinteki" />
@@ -1208,7 +1208,7 @@
 		<property name="Cost" value="2" />
 		<property name="Requirement" value="1" />	
 		<property name="Stat" value="" />	
-		<property name="Rules" value="Install Parasite only on a rezzed piece  of ice.&#xD;Host ice has -1 strength for each virus counter on Parasite and is trashed if its strength is 0 or less.&#xD;When your turn begins, place 1 virus counter on Parasite." />
+		<property name="Rules" value="Install Parasite only on a rezzed piece  of ice.&#xD;&#xA;Host ice has -1 strength for each virus counter on Parasite and is trashed if its strength is 0 or less.&#xD;&#xA;When your turn begins, place 1 virus counter on Parasite." />
 		<property name="Flavor" value="" />
 		<property name="Instructions" value="" />
 		<property name="Faction" value="Anarch" />
@@ -1224,7 +1224,7 @@
 		<property name="Cost" value="3" />
 		<property name="Requirement" value="1" />	
 		<property name="Stat" value="1" />	
-		<property name="Rules" value="1 [Credits]: Break sentry subroutine.&#xD;2 [Credits]: +1 strength for the remainder of this run." />
+		<property name="Rules" value="1 [Credits]: Break sentry subroutine.&#xD;&#xA;2 [Credits]: +1 strength for the remainder of this run." />
 		<property name="Flavor" value="" />
 		<property name="Instructions" value="1 [Credits]: Break sentry subroutine.||2 [Credits]: +1 strength for the remainder of this run." />
 		<property name="Faction" value="Shaper" />
@@ -1304,7 +1304,7 @@
 		<property name="Cost" value="0" />
 		<property name="Requirement" value="" />	
 		<property name="Stat" value="0" />	
-		<property name="Rules" value="Project Junebug can be advanced.&#xD;If you pay 1 [Credits] when the Runner accesses Project Junebug, do 2 net damage for each advancement token on Project Junebug." />
+		<property name="Rules" value="Project Junebug can be advanced.&#xD;&#xA;If you pay 1 [Credits] when the Runner accesses Project Junebug, do 2 net damage for each advancement token on Project Junebug." />
 		<property name="Flavor" value="" />
 		<property name="Instructions" value="" />
 		<property name="Faction" value="Jinteki" />
@@ -1320,7 +1320,7 @@
 		<property name="Cost" value="X" />
 		<property name="Requirement" value="" />	
 		<property name="Stat" value="" />	
-		<property name="Rules" value="X is equal to or less than the number of tags the Runner has.&#xD;Place X advancement tokens on a card that can be advanced." />
+		<property name="Rules" value="X is equal to or less than the number of tags the Runner has.&#xD;&#xA;Place X advancement tokens on a card that can be advanced." />
 		<property name="Flavor" value="Access to the largest consumer database in the galaxy has its advantages." />
 		<property name="Instructions" value="" />
 		<property name="Faction" value="NBN" />
@@ -1336,7 +1336,7 @@
 		<property name="Cost" value="2" />
 		<property name="Requirement" value="" />	
 		<property name="Stat" value="" />	
-		<property name="Rules" value="+1 [Link]&#xD;When Rabbit Hole is installed, you may search your stack for another copy of Rabbit Hole and install it by paying its install cost. Shuffle your stack." />
+		<property name="Rules" value="+1 [Link]&#xD;&#xA;When Rabbit Hole is installed, you may search your stack for another copy of Rabbit Hole and install it by paying its install cost. Shuffle your stack." />
 		<property name="Flavor" value="It&#39;s not endless, it just feels that way." />
 		<property name="Instructions" value="" />
 		<property name="Faction" value="Shaper" />
@@ -1368,7 +1368,7 @@
 		<property name="Cost" value="2" />
 		<property name="Requirement" value="" />	
 		<property name="Stat" value="3" />	
-		<property name="Rules" value="Install only in the root of HQ.&#xD;Your maximum hand size is +2." />
+		<property name="Rules" value="Install only in the root of HQ.&#xD;&#xA;Your maximum hand size is +2." />
 		<property name="Flavor" value="&quot;Jack Weyland built the Beanstalk and transformed the human race forever. I can&#39;t wait to see what we&#39;re going to do next.&quot;" />
 		<property name="Instructions" value="" />
 		<property name="Faction" value="The Weyland Consortium" />
@@ -1384,7 +1384,7 @@
 		<property name="Cost" value="4" />
 		<property name="Requirement" value="" />	
 		<property name="Stat" value="0" />	
-		<property name="Rules" value="[Subroutine] Trash 1 program.&#xD;[Subroutine] End the run." />
+		<property name="Rules" value="[Subroutine] Trash 1 program.&#xD;&#xA;[Subroutine] End the run." />
 		<property name="Flavor" value="Whrrrrr&#33;" />
 		<property name="Instructions" value="[Subroutine] Trash 1 program.||[Subroutine] End the run." />
 		<property name="Faction" value="Haas-Bioroid" />
@@ -1416,8 +1416,8 @@
 		<property name="Cost" value="6" />
 		<property name="Requirement" value="" />	
 		<property name="Stat" value="5" />	
-		<property name="Rules" value="The advancement requirement of agendas installed in this server is lowered by 1.&#xD;Limit 1 region per server." />
-		<property name="Flavor" value="&quot;I hear the coast is nice this time of year.&quot;&#xD;&quot;If you&#39;re in the right business, it&#39;s nice all the year.&quot;" />
+		<property name="Rules" value="The advancement requirement of agendas installed in this server is lowered by 1.&#xD;&#xA;Limit 1 region per server." />
+		<property name="Flavor" value="&quot;I hear the coast is nice this time of year.&quot;&#xD;&#xA;&quot;If you&#39;re in the right business, it&#39;s nice all the year.&quot;" />
 		<property name="Instructions" value="" />
 		<property name="Faction" value="NBN" />
 		<property name="Influence" value="3" />
@@ -1432,7 +1432,7 @@
 		<property name="Cost" value="3" />
 		<property name="Requirement" value="" />	
 		<property name="Stat" value="" />	
-		<property name="Rules" value="Play only if the runner is tagged.&#xD;Do 4 meat damage." />
+		<property name="Rules" value="Play only if the runner is tagged.&#xD;&#xA;Do 4 meat damage." />
 		<property name="Flavor" value="&quot;I&#39;d like to remind the ladies and gentlemen of the press that several of the buildings damaged in the blast were owned by Weyland Consortium subsidiaries...&quot;" />
 		<property name="Instructions" value="" />
 		<property name="Faction" value="The Weyland Consortium" />
@@ -1448,7 +1448,7 @@
 		<property name="Cost" value="2" />
 		<property name="Requirement" value="" />	
 		<property name="Stat" value="" />	
-		<property name="Rules" value="Play only if the Runner made a successful run during his or her last turn.&#xD;Trace3 - If successful, give the Runner 1 tag." />
+		<property name="Rules" value="Play only if the Runner made a successful run during his or her last turn.&#xD;&#xA;Trace3 - If successful, give the Runner 1 tag." />
 		<property name="Flavor" value="&quot;The SEA tipped us off to some suspicious data spikes up by the Castle.&quot; - Jerome Lock, on-duty tech" />
 		<property name="Instructions" value="" />
 		<property name="Faction" value="NBN" />
@@ -1480,8 +1480,8 @@
 		<property name="Cost" value="3" />
 		<property name="Requirement" value="" />	
 		<property name="Stat" value="1" />	
-		<property name="Rules" value="Shadow can be advanced and has +1 strength for each advancement token on it.&#xD;[Subroutine] The Corp gains 2 [Credits].&#xD;[Subroutine] Trace 3 - If successful, give the Runner 1 tag." />
-		<property name="Flavor" value="Who knows what evil lurks in the memory diamonds of men? Weyland knows.&#xD;-unsigned cyber-graffiti" />
+		<property name="Rules" value="Shadow can be advanced and has +1 strength for each advancement token on it.&#xD;&#xA;[Subroutine] The Corp gains 2 [Credits].&#xD;&#xA;[Subroutine] Trace 3 - If successful, give the Runner 1 tag." />
+		<property name="Flavor" value="Who knows what evil lurks in the memory diamonds of men? Weyland knows.&#xD;&#xA;-unsigned cyber-graffiti" />
 		<property name="Instructions" value="[Subroutine] Gain 2 [Credits].||[Subroutine] Trace 3. If successful, give the Runner 1 Tag." />
 		<property name="Faction" value="The Weyland Consortium" />
 		<property name="Influence" value="1" />
@@ -1497,7 +1497,7 @@
 		<property name="Requirement" value="" />	
 		<property name="Stat" value="" />	
 		<property name="Rules" value="Place 1 advancement token on each of up to 2 different installed cards that can be advanced." />
-		<property name="Flavor" value="&quot;And then there&#39;s these two crates. No eID.&quot;&#xD;&quot;Just leave those with me and forget you ever saw them.&quot;" />
+		<property name="Flavor" value="&quot;And then there&#39;s these two crates. No eID.&quot;&#xD;&#xA;&quot;Just leave those with me and forget you ever saw them.&quot;" />
 		<property name="Instructions" value="" />
 		<property name="Faction" value="The Weyland Consortium" />
 		<property name="Influence" value="1" />
@@ -1528,7 +1528,7 @@
 		<property name="Cost" value="0" />
 		<property name="Requirement" value="" />	
 		<property name="Stat" value="0" />	
-		<property name="Rules" value="If Snare&#33; is accessed from R&amp;D, the Runner must reveal it.&#xD;&#xD;If you pay 4 [Credits] when the Runner accesses Snare&#33;, do 3 net damage and give the Runner 1 tag. Ignore this effect if the Runner accesses Snare&#33; from Archives." />
+		<property name="Rules" value="If Snare&#33; is accessed from R&amp;D, the Runner must reveal it.&#xD;&#xA;&#xD;&#xA;If you pay 4 [Credits] when the Runner accesses Snare&#33;, do 3 net damage and give the Runner 1 tag. Ignore this effect if the Runner accesses Snare&#33; from Archives." />
 		<property name="Flavor" value="" />
 		<property name="Instructions" value="" />
 		<property name="Faction" value="Jinteki" />
@@ -1624,7 +1624,7 @@
 		<property name="Cost" value="2" />
 		<property name="Requirement" value="" />	
 		<property name="Stat" value="" />	
-		<property name="Rules" value="Install The Personal Touch only on an icebreaker.&#xD;Host icebreaker has +1 strength." />
+		<property name="Rules" value="Install The Personal Touch only on an icebreaker.&#xD;&#xA;Host icebreaker has +1 strength." />
 		<property name="Flavor" value="A z-loop here, a cortical wave there..." />
 		<property name="Instructions" value="" />
 		<property name="Faction" value="Shaper" />
@@ -1640,7 +1640,7 @@
 		<property name="Cost" value="9" />
 		<property name="Requirement" value="" />	
 		<property name="Stat" value="" />	
-		<property name="Rules" value="+2 [Memory Units] +2[Link]&#xD;2 [Generate Credits]&#xD;Use the credits to pay for using icebreakers.&#xD;Limit one console per player." />
+		<property name="Rules" value="+2 [Memory Units] +2[Link]&#xD;&#xA;2 [Generate Credits]&#xD;&#xA;Use the credits to pay for using icebreakers.&#xD;&#xA;Limit one console per player." />
 		<property name="Flavor" value="" />
 		<property name="Instructions" value="" />
 		<property name="Faction" value="Shaper" />
@@ -1672,8 +1672,8 @@
 		<property name="Cost" value="8" />
 		<property name="Requirement" value="" />	
 		<property name="Stat" value="5" />	
-		<property name="Rules" value="When the Runner encounters Tollbooth, he or she must pay 3 [Credits], if able. If the Runner cannot pay 3 [Credits], end the run.&#xD;[Subroutine] End the run." />
-		<property name="Flavor" value="&quot;Ever heard of a catch-22?&quot;&#xD;&quot;Remind me to forget it.&quot;" />
+		<property name="Rules" value="When the Runner encounters Tollbooth, he or she must pay 3 [Credits], if able. If the Runner cannot pay 3 [Credits], end the run.&#xD;&#xA;[Subroutine] End the run." />
+		<property name="Flavor" value="&quot;Ever heard of a catch-22?&quot;&#xD;&#xA;&quot;Remind me to forget it.&quot;" />
 		<property name="Instructions" value="Force the runner to lose exactly 3 [Credits] or end the run||[Subroutine] End the run." />
 		<property name="Faction" value="NBN" />
 		<property name="Influence" value="2" />
@@ -1688,7 +1688,7 @@
 		<property name="Cost" value="3" />
 		<property name="Requirement" value="" />	
 		<property name="Stat" value="3" />	
-		<property name="Rules" value="The Runner can spend [Click] to break any subroutine on Viktor 1.0.&#xD;[Subroutine] Do 1 brain damage.&#xD;[Subroutine] End the run." />
+		<property name="Rules" value="The Runner can spend [Click] to break any subroutine on Viktor 1.0.&#xD;&#xA;[Subroutine] Do 1 brain damage.&#xD;&#xA;[Subroutine] End the run." />
 		<property name="Flavor" value="My name is Viktor. Nice to meet you. Would you like to play a game?" />
 		<property name="Instructions" value="[Subroutine] Do 1 brain damage.||[Subroutine] End the run." />
 		<property name="Faction" value="Haas-Bioroid" />
@@ -1720,7 +1720,7 @@
 		<property name="Cost" value="8" />
 		<property name="Requirement" value="" />	
 		<property name="Stat" value="5" />	
-		<property name="Rules" value="[Subroutine] Do 2 net damage.&#xD;[Subroutine] End the run." />
+		<property name="Rules" value="[Subroutine] Do 2 net damage.&#xD;&#xA;[Subroutine] End the run." />
 		<property name="Flavor" value="Most runners do their business in full-sim, with their rigs wired directly into their brains. The setup has a large number of advantages, with the runner able to process data and input commands far faster than a traditional meat-bound system. But it also means greater risk." />
 		<property name="Instructions" value="[Subroutine] Do 2 net damage.||[Subroutine] End the run." />
 		<property name="Faction" value="Jinteki" />
@@ -1768,7 +1768,7 @@
 		<property name="Cost" value="1" />
 		<property name="Requirement" value="1" />	
 		<property name="Stat" value="1" />	
-		<property name="Rules" value="3 [Credits]: Break ice subroutine on a piece of ice with 0 or less strength.&#xD;1 [Credits]: Ice has -1 strength.&#xD;1 [Credits]: +1 strength." />
+		<property name="Rules" value="3 [Credits]: Break ice subroutine on a piece of ice with 0 or less strength.&#xD;&#xA;1 [Credits]: Ice has -1 strength.&#xD;&#xA;1 [Credits]: +1 strength." />
 		<property name="Flavor" value="Fire and ichor..." />
 		<property name="Instructions" value="3 [Credits]: Break ice subroutine.||1 [Credits]: -1 strength on target ice.||1 [Credits]: +1 strength." />
 		<property name="Faction" value="Anarch" />
@@ -1800,7 +1800,7 @@
 		<property name="Cost" value="0" />
 		<property name="Requirement" value="" />	
 		<property name="Stat" value="4" />	
-		<property name="Rules" value="If the Runner is about to expose a card, you may rez Zaibatsu Loyalty.&#xD;1 [Credits] or [Trash]: Prevent 1 card from being exposed." />
+		<property name="Rules" value="If the Runner is about to expose a card, you may rez Zaibatsu Loyalty.&#xD;&#xA;1 [Credits] or [Trash]: Prevent 1 card from being exposed." />
 		<property name="Flavor" value="" />
 		<property name="Instructions" value="" />
 		<property name="Faction" value="Jinteki" />

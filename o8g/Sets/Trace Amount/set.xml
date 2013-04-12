@@ -8,7 +8,7 @@
 		<property name="Cost" value="4" />
 		<property name="Requirement" value="" />	
 		<property name="Stat" value="2" />	
-		<property name="Rules" value="Whenever you install a piece of ice protecting this server, you may immediately rez it, lowering its rez cost by 3.&#xD;Limit 1 region per server." />
+		<property name="Rules" value="Whenever you install a piece of ice protecting this server, you may immediately rez it, lowering its rez cost by 3.&#xD;&#xA;Limit 1 region per server." />
 		<property name="Flavor" value="" />
 		<property name="Instructions" value="" />
 		<property name="Faction" value="The Weyland Consortium" />
@@ -24,7 +24,7 @@
 		<property name="Cost" value="0" />
 		<property name="Requirement" value="" />	
 		<property name="Stat" value="" />	
-		<property name="Rules" value="Play only if the Runner is tagged.&#xD;Give the Runner 2 tags." />
+		<property name="Rules" value="Play only if the Runner is tagged.&#xD;&#xA;Give the Runner 2 tags." />
 		<property name="Flavor" value="Looking out for your interests since 1984." />
 		<property name="Instructions" value="" />
 		<property name="Faction" value="NBN" />
@@ -40,7 +40,7 @@
 		<property name="Cost" value="3" />
 		<property name="Requirement" value="" />	
 		<property name="Stat" value="6" />	
-		<property name="Rules" value="Whenever there is a successful trace during a run on this server, give the Runner 1 tag.&#xD;Limit 1 region per server." />
+		<property name="Rules" value="Whenever there is a successful trace during a run on this server, give the Runner 1 tag.&#xD;&#xA;Limit 1 region per server." />
 		<property name="Flavor" value="Clones whisper of ChiLo as a promised land of freedom." />
 		<property name="Instructions" value="" />
 		<property name="Faction" value="NBN" />
@@ -56,7 +56,7 @@
 		<property name="Cost" value="2" />
 		<property name="Requirement" value="" />	
 		<property name="Stat" value="" />	
-		<property name="Rules" value="1 [Recurring Credits]&#xD;Use this credit during traces.&#xD;Gain 1 [Credits] whenever the Corp rezzes a piece of ice." />
+		<property name="Rules" value="1 [Recurring Credits]&#xD;&#xA;Use this credit during traces.&#xD;&#xA;Gain 1 [Credits] whenever the Corp rezzes a piece of ice." />
 		<property name="Flavor" value="" />
 		<property name="Instructions" value="" />
 		<property name="Faction" value="Criminal" />
@@ -120,7 +120,7 @@
 		<property name="Cost" value="5" />
 		<property name="Requirement" value="" />	
 		<property name="Stat" value="3" />	
-		<property name="Rules" value="When you score Executive Retreat, place 1 agenda counter on it and shuffle HQ into R&amp;D.&#xD;[Click], hosted agenda counter: Draw 5 cards." />
+		<property name="Rules" value="When you score Executive Retreat, place 1 agenda counter on it and shuffle HQ into R&amp;D.&#xD;&#xA;[Click], hosted agenda counter: Draw 5 cards." />
 		<property name="Flavor" value="" />
 		<property name="Instructions" value="" />
 		<property name="Faction" value="Neutral" />
@@ -136,7 +136,7 @@
 		<property name="Cost" value="5" />
 		<property name="Requirement" value="" />	
 		<property name="Stat" value="2" />	
-		<property name="Rules" value="If Fetal AI is accessed from R&amp;D, the Runner must reveal it.&#xD;When the Runner accesses Fetal AI, do 2 net damage. Ignore this ability if the Runner accesses Fetal AI from Archives.&#xD;As an additional cost to steal Fetal AI, the Runner must pay 2 [Credits]" />
+		<property name="Rules" value="If Fetal AI is accessed from R&amp;D, the Runner must reveal it.&#xD;&#xA;When the Runner accesses Fetal AI, do 2 net damage. Ignore this ability if the Runner accesses Fetal AI from Archives.&#xD;&#xA;As an additional cost to steal Fetal AI, the Runner must pay 2 [Credits]" />
 		<property name="Flavor" value="" />
 		<property name="Instructions" value="" />
 		<property name="Faction" value="Jinteki" />
@@ -152,7 +152,7 @@
 		<property name="Cost" value="0" />
 		<property name="Requirement" value="" />	
 		<property name="Stat" value="" />	
-		<property name="Rules" value="Play only if the Runner is tagged.&#xD;Trash up to 2 resources." />
+		<property name="Rules" value="Play only if the Runner is tagged.&#xD;&#xA;Trash up to 2 resources." />
 		<property name="Flavor" value="No contract. Just a handshake and a fistful of C-6 high explosives." />
 		<property name="Instructions" value="" />
 		<property name="Faction" value="Neutral" />
@@ -184,7 +184,7 @@
 		<property name="Cost" value="6" />
 		<property name="Requirement" value="" />	
 		<property name="Stat" value="" />	
-		<property name="Rules" value="Place 16 [Credits] from the bank on Liberated Account when it is installed. When there are no credits left on Liberated Account, trash it.&#xD;[Click]: Take 4 [Credits] from Liberated Account." />
+		<property name="Rules" value="Place 16 [Credits] from the bank on Liberated Account when it is installed. When there are no credits left on Liberated Account, trash it.&#xD;&#xA;[Click]: Take 4 [Credits] from Liberated Account." />
 		<property name="Flavor" value="It&#39;s easier to spend when it&#39;s not your money." />
 		<property name="Instructions" value="" />
 		<property name="Faction" value="Anarch" />
@@ -200,7 +200,7 @@
 		<property name="Cost" value="1" />
 		<property name="Requirement" value="" />	
 		<property name="Stat" value="" />	
-		<property name="Rules" value="Play only if you made a successful run on R&amp;D, HQ, and Archives this turn.&#xD;Add Notoriety to your score area as an agenda worth 1 agenda point." />
+		<property name="Rules" value="Play only if you made a successful run on R&amp;D, HQ, and Archives this turn.&#xD;&#xA;Add Notoriety to your score area as an agenda worth 1 agenda point." />
 		<property name="Flavor" value="When you&#39;re this good, it&#39;s hard not to grow a fan base." />
 		<property name="Instructions" value="" />
 		<property name="Faction" value="Shaper" />
@@ -216,7 +216,7 @@
 		<property name="Cost" value="1" />
 		<property name="Requirement" value="" />	
 		<property name="Stat" value="" />	
-		<property name="Rules" value="Play only if the Runner made a successful run during his or her last turn.&#xD;Trace2 - If successful, trash 1 piece of hardware with an install cost equal to or less than the amount by which your trace strength exceeded the Runner&#39;s link strength." />
+		<property name="Rules" value="Play only if the Runner made a successful run during his or her last turn.&#xD;&#xA;Trace2 - If successful, trash 1 piece of hardware with an install cost equal to or less than the amount by which your trace strength exceeded the Runner&#39;s link strength." />
 		<property name="Flavor" value="" />
 		<property name="Instructions" value="" />
 		<property name="Faction" value="The Weyland Consortium" />
@@ -264,7 +264,7 @@
 		<property name="Cost" value="6" />
 		<property name="Requirement" value="" />	
 		<property name="Stat" value="5" />	
-		<property name="Rules" value="The Runner may spend [Click] to break any subroutine on Sherlock 1.0.&#xD;[Subroutine] Trace4 - If successful, add 1 installed program to the top of the Runner&#39;s stack.&#xD;[Subroutine] Trace4 - If successful, add 1 installed program to the top of the Runner&#39;s stack." />
+		<property name="Rules" value="The Runner may spend [Click] to break any subroutine on Sherlock 1.0.&#xD;&#xA;[Subroutine] Trace4 - If successful, add 1 installed program to the top of the Runner&#39;s stack.&#xD;&#xA;[Subroutine] Trace4 - If successful, add 1 installed program to the top of the Runner&#39;s stack." />
 		<property name="Flavor" value="" />
 		<property name="Instructions" value="[Subroutine] Trace 4||Move Target Program to the top of its owner's Stack (Only use this ability if the previous trace succeeded)" />
 		<property name="Faction" value="Haas-Bioroid" />
@@ -280,7 +280,7 @@
 		<property name="Cost" value="4" />
 		<property name="Requirement" value="1" />	
 		<property name="Stat" value="1" />	
-		<property name="Rules" value="1 [Credits]: Break barrier subroutine.&#xD;1 [Credits]: +1 strength.&#xD;Whenever you use Snowball to break a subroutine, it has +1 strength for the remainder of the run." />
+		<property name="Rules" value="1 [Credits]: Break barrier subroutine.&#xD;&#xA;1 [Credits]: +1 strength.&#xD;&#xA;Whenever you use Snowball to break a subroutine, it has +1 strength for the remainder of the run." />
 		<property name="Flavor" value="&quot;If your snowball gets big enough, you can make it into a snowman&#33;&quot; - Chaos Theory" />
 		<property name="Instructions" value="1 [Credits]: Break barrier subroutine and gain +1 strength until the end of this run.||1 [Credits]: +1 strength" />
 		<property name="Faction" value="Shaper" />

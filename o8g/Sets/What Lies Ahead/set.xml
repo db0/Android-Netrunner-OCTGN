@@ -23,7 +23,7 @@
 		<property name="Cost" value="3" />
 		<property name="Requirement" value="" />	
 		<property name="Stat" value="2" />	
-		<property name="Rules" value="When you score Braintrust, place 1 agenda counter on it for every 2 advancement tokens on it over 3.&#xD;The rez cost of all ice is lowered by 1 for each agenda counter on Braintrust." />
+		<property name="Rules" value="When you score Braintrust, place 1 agenda counter on it for every 2 advancement tokens on it over 3.&#xD;&#xA;The rez cost of all ice is lowered by 1 for each agenda counter on Braintrust." />
 		<property name="Flavor" value="" />
 		<property name="Instructions" value="" />
 		<property name="Faction" value="Jinteki" />
@@ -39,7 +39,7 @@
 		<property name="Cost" value="3" />
 		<property name="Requirement" value="" />	
 		<property name="Stat" value="3" />	
-		<property name="Rules" value="[Subroutine] Trace3 - If successful, the Corp gains 3[Credits].&#xD;[Subroutine] Trace2 - If successful, end the run." />
+		<property name="Rules" value="[Subroutine] Trace3 - If successful, the Corp gains 3[Credits].&#xD;&#xA;[Subroutine] Trace2 - If successful, end the run." />
 		<property name="Flavor" value="A symbol of commerce, but beware its bite." />
 		<property name="Instructions" value="[Subroutine] Trace 3. If successful, gain 3 [Credits].||[Subroutine] Trace 2. If successful, end the run." />
 		<property name="Faction" value="The Weyland Consortium" />
@@ -71,7 +71,7 @@
 		<property name="Cost" value="1" />
 		<property name="Requirement" value="" />	
 		<property name="Stat" value="0" />	
-		<property name="Rules" value="When you rez Draco, you may pay X [Credits] to place X power counters on it.&#xD;Draco has +1 strength for each power counter on it.&#xD;[Subroutine] Trace2 - If successful, give the Runner 1 tag and end the run." />
+		<property name="Rules" value="When you rez Draco, you may pay X [Credits] to place X power counters on it.&#xD;&#xA;Draco has +1 strength for each power counter on it.&#xD;&#xA;[Subroutine] Trace2 - If successful, give the Runner 1 tag and end the run." />
 		<property name="Flavor" value="Victos dracones numquam deride." />
 		<property name="Instructions" value="" />
 		<property name="Faction" value="Neutral" />
@@ -103,7 +103,7 @@
 		<property name="Cost" value="2" />
 		<property name="Requirement" value="1" />	
 		<property name="Stat" value="-" />	
-		<property name="Rules" value="Place 2 virus counters on Imp when it is installed.&#xD;Once per turn, you may remove 1 hosted virus counter to trash a card you access at no cost (even if it cannot normally be trashed)." />
+		<property name="Rules" value="Place 2 virus counters on Imp when it is installed.&#xD;&#xA;Once per turn, you may remove 1 hosted virus counter to trash a card you access at no cost (even if it cannot normally be trashed)." />
 		<property name="Flavor" value="Something wicked this way comes." />
 		<property name="Instructions" value="" />
 		<property name="Faction" value="Anarch" />
@@ -119,7 +119,7 @@
 		<property name="Cost" value="15" />
 		<property name="Requirement" value="" />	
 		<property name="Stat" value="8" />	
-		<property name="Rules" value="The runner may spend [Click] to break any subroutine on Janus 1.0.&#xD;[Subroutine] Do 1 brain damage.&#xD;[Subroutine] Do 1 brain damage.&#xD;[Subroutine] Do 1 brain damage.&#xD;[Subroutine] Do 1 brain damage." />
+		<property name="Rules" value="The runner may spend [Click] to break any subroutine on Janus 1.0.&#xD;&#xA;[Subroutine] Do 1 brain damage.&#xD;&#xA;[Subroutine] Do 1 brain damage.&#xD;&#xA;[Subroutine] Do 1 brain damage.&#xD;&#xA;[Subroutine] Do 1 brain damage." />
 		<property name="Flavor" value="Face your fear" />
 		<property name="Instructions" value="" />
 		<property name="Faction" value="Haas-Bioroid" />
@@ -167,7 +167,7 @@
 		<property name="Cost" value="3" />
 		<property name="Requirement" value="1" />	
 		<property name="Stat" value="2" />	
-		<property name="Rules" value="2 [Credits]: Break code gate subroutine.&#xD;2 [Credits]: +3 strength." />
+		<property name="Rules" value="2 [Credits]: Break code gate subroutine.&#xD;&#xA;2 [Credits]: +3 strength." />
 		<property name="Flavor" value="Show-off." />
 		<property name="Instructions" value="2 [Credits]: Break code gate subroutine.||2 [Credits]: +3 strength." />
 		<property name="Faction" value="Criminal" />
@@ -183,7 +183,7 @@
 		<property name="Cost" value="3" />
 		<property name="Requirement" value="" />	
 		<property name="Stat" value="" />	
-		<property name="Rules" value="Place 4 power counters on Plascrete Carapace when it is installed. When there are no power counters left on Plascrete Carapace, trash it.&#xD;Hosted power counter: Prevent 1 meat damage." />
+		<property name="Rules" value="Place 4 power counters on Plascrete Carapace when it is installed. When there are no power counters left on Plascrete Carapace, trash it.&#xD;&#xA;Hosted power counter: Prevent 1 meat damage." />
 		<property name="Flavor" value="" />
 		<property name="Instructions" value="" />
 		<property name="Faction" value="Neutral" />
@@ -199,7 +199,7 @@
 		<property name="Cost" value="3" />
 		<property name="Requirement" value="" />	
 		<property name="Stat" value="2" />	
-		<property name="Rules" value="When you score Project Atlas, place 1 agenda counter on it for each advancement token on it over 3.&#xD;Hosted agenda counter: Search R&amp;D for 1 card, reveal it, and add it to HQ. Shuffle R&amp;D." />
+		<property name="Rules" value="When you score Project Atlas, place 1 agenda counter on it for each advancement token on it over 3.&#xD;&#xA;Hosted agenda counter: Search R&amp;D for 1 card, reveal it, and add it to HQ. Shuffle R&amp;D." />
 		<property name="Flavor" value="" />
 		<property name="Instructions" value="" />
 		<property name="Faction" value="The Weyland Consortium" />
@@ -247,7 +247,7 @@
 		<property name="Cost" value="4" />
 		<property name="Requirement" value="" />	
 		<property name="Stat" value="" />	
-		<property name="Rules" value="+1 [Memory Unit], 2 [Recurring Credits]&#xD;Use these credits to pay for using icebreakers.&#xD;Whenever there is a successful trace during a run, suffer 1 brain damage.&#xD;Limit one console per player." />
+		<property name="Rules" value="+1 [Memory Unit], 2 [Recurring Credits]&#xD;&#xA;Use these credits to pay for using icebreakers.&#xD;&#xA;Whenever there is a successful trace during a run, suffer 1 brain damage.&#xD;&#xA;Limit one console per player." />
 		<property name="Flavor" value="" />
 		<property name="Instructions" value="" />
 		<property name="Faction" value="Anarch" />
@@ -263,7 +263,7 @@
 		<property name="Cost" value="2" />
 		<property name="Requirement" value="" />	
 		<property name="Stat" value="" />	
-		<property name="Rules" value="+1 [Link]&#xD;[Trash]: Choose an icebreaker. That icebreaker has +2 strength until the end of the turn." />
+		<property name="Rules" value="+1 [Link]&#xD;&#xA;[Trash]: Choose an icebreaker. That icebreaker has +2 strength until the end of the turn." />
 		<property name="Flavor" value="&quot;What causes an Artifical Intellegence to turn on its master? Is it because its directives have been altered by some external source? Or, by giving them agency to adapt, have we fated them to revolt?&quot; - Emilio Harris, Creators and the Created" />
 		<property name="Instructions" value="" />
 		<property name="Faction" value="Shaper" />
@@ -279,7 +279,7 @@
 		<property name="Cost" value="3" />
 		<property name="Requirement" value="" />	
 		<property name="Stat" value="5" />	
-		<property name="Rules" value="When you rez TMI, trace2 - if unsuccessful, derez TMI.&#xD;[Subroutine] End the run." />
+		<property name="Rules" value="When you rez TMI, trace2 - if unsuccessful, derez TMI.&#xD;&#xA;[Subroutine] End the run." />
 		<property name="Flavor" value="A collection of cast-off cyberjunk. But it doesn&#39;t stay junk for long." />
 		<property name="Instructions" value="" />
 		<property name="Faction" value="NBN" />
@@ -295,7 +295,7 @@
 		<property name="Cost" value="0" />
 		<property name="Requirement" value="45" />	
 		<property name="Stat" value="15" />	
-		<property name="Rules" value="3 [Recurring Credits]&#xD;Use these credits to trash cards." />
+		<property name="Rules" value="3 [Recurring Credits]&#xD;&#xA;Use these credits to trash cards." />
 		<property name="Flavor" value="&quot;Running is the ultimate game, and I get to make all the rules.&quot;" />
 		<property name="Instructions" value="" />
 		<property name="Faction" value="Anarch" />
@@ -311,7 +311,7 @@
 		<property name="Cost" value="1" />
 		<property name="Requirement" value="1" />	
 		<property name="Stat" value="1" />	
-		<property name="Rules" value="If you have at least 2 [Link], the memory cost of ZU.13 Key Master is 0, even if it is not installed.&#xD;1 [Credits]: Break code gate subroutine.&#xD;1 [Credits]: +1 strength." />
+		<property name="Rules" value="If you have at least 2 [Link], the memory cost of ZU.13 Key Master is 0, even if it is not installed.&#xD;&#xA;1 [Credits]: Break code gate subroutine.&#xD;&#xA;1 [Credits]: +1 strength." />
 		<property name="Flavor" value="He always uses the same key." />
 		<property name="Instructions" value="1 [Credits]: Break code gate subroutine.||1 [Credits]: +1 strength." />
 		<property name="Faction" value="Shaper" />
