@@ -556,33 +556,34 @@ def versionCheck():
    if debugVerbosity >= 1: notify(">>> versionCheck()") #Debug
    global startupMsg
    me.setGlobalVariable('gameVersion',gameVersion)
-   if not startupMsg:
-      (url, code) = webRead('https://raw.github.com/db0/Android-Netrunner-OCTGN/master/current_version.txt')
-      if debugVerbosity >= 2: notify("### url:{}, code: {}".format(url,code)) #Debug
-      if code != 200 or not url:
-         whisper(":::WARNING::: Cannot check version at the moment.")
-         return
-      detailsplit = url.split('||')
-      currentVers = detailsplit[0].split('.')
-      installedVers = gameVersion.split('.')
-      if debugVerbosity >= 2: notify("### Finished version split. About to check") #Debug
-      if len(installedVers) < 3:
-         whisper("Your game definition does not follow the correct version conventions. It is most likely outdated or modified from its official release.")
-         startupMsg = True
-      elif (num(currentVers[0]) > num(installedVers[0]) or 
-           (num(currentVers[0]) == num(installedVers[0]) and num(currentVers[1]) > num(installedVers[1])) or 
-           (num(currentVers[0]) == num(installedVers[0]) and num(currentVers[1]) == num(installedVers[1]) and num(currentVers[2]) > num(installedVers[2]))):
-         notify("{}'s game definition ({}) is out-of-date!".format(me, gameVersion))
-         if confirm("There is a new game definition available!\nYour version: {}.\nCurrent version: {}\n{}\
-                     {}\
-                 \n\nDo you want to be redirected to download the latest version?.\
-                   \n(You'll have to download the game definition, any patch for the current version and the markers if they're newer than what you have installed)\
-                     ".format(gameVersion, detailsplit[0],detailsplit[2],detailsplit[1])):
-            openUrl('http://octgn.gamersjudgement.com/viewtopic.php?f=52&t=494')
-         startupMsg = True
-      if debugVerbosity >= 2: notify("### Finished version check. Seeing if I should MOTD.") #Debug
-      if not startupMsg: MOTD() # If we didn't give out any other message , we give out the MOTD instead.
-      startupMsg = True
+   if not startupMsg: MOTD() # If we didn't give out any other message , we give out the MOTD instead.
+   startupMsg = True
+   ### Below code Not needed anymore in 3.1.x
+   # if not startupMsg:
+      # (url, code) = webRead('https://raw.github.com/db0/Android-Netrunner-OCTGN/master/current_version.txt')
+      # if debugVerbosity >= 2: notify("### url:{}, code: {}".format(url,code)) #Debug
+      # if code != 200 or not url:
+         # whisper(":::WARNING::: Cannot check version at the moment.")
+         # return
+      # detailsplit = url.split('||')
+      # currentVers = detailsplit[0].split('.')
+      # installedVers = gameVersion.split('.')
+      # if debugVerbosity >= 2: notify("### Finished version split. About to check") #Debug
+      # if len(installedVers) < 3:
+         # whisper("Your game definition does not follow the correct version conventions. It is most likely outdated or modified from its official release.")
+         # startupMsg = True
+      # elif (num(currentVers[0]) > num(installedVers[0]) or 
+           # (num(currentVers[0]) == num(installedVers[0]) and num(currentVers[1]) > num(installedVers[1])) or 
+           # (num(currentVers[0]) == num(installedVers[0]) and num(currentVers[1]) == num(installedVers[1]) and num(currentVers[2]) > num(installedVers[2]))):
+         # notify("{}'s game definition ({}) is out-of-date!".format(me, gameVersion))
+         # if confirm("There is a new game definition available!\nYour version: {}.\nCurrent version: {}\n{}\
+                     # {}\
+                 # \n\nDo you want to be redirected to download the latest version?.\
+                   # \n(You'll have to download the game definition, any patch for the current version and the markers if they're newer than what you have installed)\
+                     # ".format(gameVersion, detailsplit[0],detailsplit[2],detailsplit[1])):
+            # openUrl('http://octgn.gamersjudgement.com/viewtopic.php?f=52&t=494')
+         # startupMsg = True
+      # if debugVerbosity >= 2: notify("### Finished version check. Seeing if I should MOTD.") #Debug
    if debugVerbosity >= 3: notify("<<< versionCheck()") #Debug
       
       

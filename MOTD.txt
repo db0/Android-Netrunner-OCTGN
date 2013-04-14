@@ -1,8 +1,6 @@
 =====Message of the Day======
 
-Important Announcement: OCTGN is getting a significant update in 1 week which will break all existing game definitions, including this one.
-
-In case the this game defintition is not yet available, please be patient while I'm working on the convertion...
+Welcome to OCTGN 3.1!
 
 =============================
 
