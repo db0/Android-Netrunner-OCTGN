@@ -274,6 +274,7 @@
            <location x="22" y="410" />
            <text color="#000000" size="21" />
          </block>
+   <!-- Default Blocks-->
          <block type="text" id="default_name">
             <location x="85" y="100" />
             <text color="#000000" size="25" />
