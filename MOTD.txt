@@ -1,9 +1,7 @@
 =====Message of the Day======
 
-The BGG Tournament 2 has concluded!
+BGG is starting an OCTGN League!
 
-The final four matches, between the 4 top players in the world will be broadcast live this Sunday at 6pm CEST
-
-Do you want to learn more?
+Would you like to learn more?
 =============================
-http://boardgamegeek.com/thread/964599/octgn-tournament-2-finals-world-premiere
+http://boardgamegeek.com/thread/962471/octgn-android-netrunner-league-alpha-run
