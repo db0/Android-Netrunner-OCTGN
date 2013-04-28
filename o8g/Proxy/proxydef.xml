@@ -61,7 +61,7 @@
            <border color="#FFFFFF" size="1" />
          </block>
          <block type="text" id="ICE_strength">
-           <location x="15" y="407" rotate="270" />
+           <location x="15" y="423" rotate="270" />
            <text color="#000000" size="23" />
          </block>
          <block type="text" id="ICE_type">
@@ -69,7 +69,7 @@
            <text color="#000000" size="16" />
          </block>
          <block type="text" id="ICE_keywords">
-           <location x="22" y="313" rotate="270" />
+           <location x="17" y="313" rotate="270" />
            <text color="#000000" size="14" />
          </block>
          <block type="text" id="ICE_rules">
