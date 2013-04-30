@@ -37,6 +37,7 @@ Other Links
 * [Plugin Forum](http://octgn.gamersjudgement.com/viewforum.php?f=52)
 * [OCTGN Game Definition Changelog](changelog.md)
 * [Online League](http://www.challengeboards.net/boards/details/4)
+  
   [![](https://dl.dropboxusercontent.com/u/11028/anr-3.png)](http://www.challengeboards.net/boards/details/4) 
 
 Screenshots

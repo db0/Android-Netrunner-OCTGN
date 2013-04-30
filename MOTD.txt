@@ -1,7 +1,14 @@
 =====Message of the Day======
 
-BGG is starting an OCTGN League!
+Welcome to OCTGN 3.1!
 
-Would you like to learn more?
+This new version now uses a proxy generator to create image-less cards on-the-fly. 
+
+This means that you will be able to play the game without downloading any sets, but you will not see any images.
+
+If you prefer to go back to the images, you can download the new .o8c files which contained the censored versions.
+
+Do you want to open a browser page to the .o8c card pack downloads?
 =============================
-http://boardgamegeek.com/thread/962471/octgn-android-netrunner-league-alpha-run
+&&
+https://github.com/db0/Android-Netrunner-OCTGN/tree/OCTGN-3.1.x#available-sets-and-data-packs
