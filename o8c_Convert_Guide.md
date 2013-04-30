@@ -8,6 +8,7 @@ This guide will show you some simple steps to achieve this in MS Windows (In oth
 1. Put all your .o8s set files **except markers** into a folder somewhere. Say ```C:\Sets```
 2. Press **Win+R** (i.e. press and hold the windows key and press R) (On WinXP, just go Start -> Run). A new window will pop-up.
 3. In there copy-paste the following (note that the below command assumes your installation directory and sets directory are the ones presented here. If your "Documents" directory is elsewhere, you need to modity the command to point to it, say ```F:\Documents\Octgn\Octgn```. If you put your sets folder in a different location, you need to put that directory in between the "double quotes"
+  
   ```C:\Documents\Octgn\OCTGN\o8build.exe -d "C:\Sets" -c```
 4. If you did everything correctly, you should see a window open up, run for a bit and close again. If you see red letters before it closes, you did something wrong. Double check the directory paths you put in your command.
 5. Go to the directory you put your .o8s files. Inside you will see a "Conversion" folder. Open it.
