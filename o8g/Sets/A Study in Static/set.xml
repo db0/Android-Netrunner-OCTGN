@@ -23,7 +23,7 @@
 		<property name="Keywords" value="Icebreaker-Decoder" />
 		<property name="Cost" value="5" />
 		<property name="Requirement" value="1" />	
-		<property name="Stat" value="10" />	
+		<property name="Stat" value="1" />	
 		<property name="Rules" value="2 [Credits]: Break up to 2 code gate subroutines.&#xD;&#xA;1 [Credits]: +1 strength." />
 		<property name="Flavor" value="It always strikes twice." />
 		<property name="Instructions" value="2 [Credits]: Break up to 2 code gate subroutines.||1 [Credits]: +1 strength." />

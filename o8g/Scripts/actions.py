@@ -2155,6 +2155,7 @@ def mulligan(group):
       rnd(1,10)
       whisper("Shuffling...")
    drawMany(me.piles['R&D/Stack'], 5)   
+   executePlayScripts(Identity,'MULLIGAN')   
    if debugVerbosity >= 3: notify("<<< mulligan()") #Debug
    
 #------------------------------------------------------------------------------

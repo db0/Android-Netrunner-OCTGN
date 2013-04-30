@@ -79,6 +79,7 @@ def executePlayScripts(card, action):
           (effectType.group(1) == 'onInstall' and action != 'INSTALL') or
           (effectType.group(1) == 'onScore' and action != 'SCORE') or
           (effectType.group(1) == 'onStartup' and action != 'STARTUP') or
+          (effectType.group(1) == 'onMulligan' and action != 'MULLIGAN') or
           (effectType.group(1) == 'whileScored' and ds != 'corp') or
           (effectType.group(1) == 'whileLiberated' and ds != 'runner') or
           (effectType.group(1) == 'onDamage' and action != 'DAMAGE') or
@@ -1172,7 +1173,7 @@ def DiscardX(Autoscript, announceText, card, targetCards = None, notification = 
    if debugVerbosity >= 3: notify("<<< DiscardX()")
    return (announceString,count)
          
-def ReshuffleX(Autoscript, announceText, card, targetCards = None, notification = None, n = 0): # A Core Command for reshuffling a pile into the R&D/Stack
+def ReshuffleX(Autoscript, announceText, card, targetCards = None, notification = None, n = 0): # A Core Command for reshuffling a pile into the R&D/Stack and replenishing the pile with the same number of cards.
    if debugVerbosity >= 1: notify(">>> ReshuffleX(){}".format(extraASDebug(Autoscript))) #Debug
    if targetCards is None: targetCards = []
    mute()
@@ -1196,7 +1197,7 @@ def ReshuffleX(Autoscript, announceText, card, targetCards = None, notification 
    if debugVerbosity >= 3: notify("<<< ReshuffleX() return with X = {}".format(X))
    return (announceString, X)
 
-def ShuffleX(Autoscript, announceText, card, targetCards = None, notification = None, n = 0): # A Core Command for reshuffling a pile into the R&D/Stack
+def ShuffleX(Autoscript, announceText, card, targetCards = None, notification = None, n = 0): # A Core Command for shuffling a pile into the R&D/Stack
    if debugVerbosity >= 1: notify(">>> ShuffleX(){}".format(extraASDebug())) #Debug
    if targetCards is None: targetCards = []
    mute()
@@ -1214,7 +1215,7 @@ def ShuffleX(Autoscript, announceText, card, targetCards = None, notification = 
    if debugVerbosity >= 3: notify("<<< ShuffleX()")
    return announceString
    
-def RollX(Autoscript, announceText, card, targetCards = None, notification = None, n = 0): # Core Command for drawing X Cards from the house deck to your hand.
+def RollX(Autoscript, announceText, card, targetCards = None, notification = None, n = 0): # Core Command for rolling a Die
    if debugVerbosity >= 1: notify(">>> RollX(){}".format(extraASDebug())) #Debug
    if targetCards is None: targetCards = []
    d6 = 0
@@ -1432,7 +1433,7 @@ def ModifyStatus(Autoscript, announceText, card, targetCards = None, notificatio
    if targetCards is None: targetCards = []
    targetCardlist = '' # A text field holding which cards are going to get tokens.
    extraText = ''
-   action = re.search(r'\b(Rez|Derez|Expose|Trash|Uninstall|Possess|Exile)(Target|Parent|Multi|Myself)[-to]*([A-Z][A-Za-z&_ ]+)?', Autoscript)
+   action = re.search(r'\b(Rez|Derez|Expose|Trash|Uninstall|Possess|Exile|Rework)(Target|Parent|Multi|Myself)[-to]*([A-Z][A-Za-z&_ ]+)?', Autoscript)
    if action.group(2) == 'Myself': 
       del targetCards[:] # Empty the list, just in case.
       targetCards.append(card)
@@ -1463,6 +1464,8 @@ def ModifyStatus(Autoscript, announceText, card, targetCards = None, notificatio
          if trashResult == 'ABORT': return 'ABORT'
          elif trashResult == 'COUNTERED': extraText = " (Countered!)"
       elif action.group(1) == 'Exile' and exileCard(targetCard, silent = True) != 'ABORT': pass
+      elif action.group(1) == 'Rework': # Rework puts a card on top of R&D (usually shuffling afterwards)
+         targetCard.moveTo(targetCard.controller.piles['R&D/Stack'])
       else: return 'ABORT'
       if action.group(2) != 'Multi': break # If we're not doing a multi-targeting, abort after the first run.
    if notification == 'Quick': announceString = "{} {}es {}{}".format(announceText, action.group(1), targetCardlist,extraText)
@@ -1791,7 +1794,7 @@ def autoscriptCostUndo(card, Autoscript): # Function for undoing the cost of an 
 def findTarget(Autoscript, fromHand = False, card = None): # Function for finding the target of an autoscript
    if debugVerbosity >= 1: notify(">>> findTarget(){}".format(extraASDebug(Autoscript))) #Debug
    try:
-      if fromHand == True: group = me.hand
+      if fromHand == True or re.search(r'-fromHand',Autoscript): group = me.hand
       else: group = table
       foundTargets = []
       if re.search(r'Targeted', Autoscript):

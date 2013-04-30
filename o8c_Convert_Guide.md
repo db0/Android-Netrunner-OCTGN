@@ -5,7 +5,7 @@ You should use this guide if you've already downloaded sets before the 3.1 versi
 
 This guide will show you some simple steps to achieve this in MS Windows (In other OS' the steps are the same, but you need to run the o8build in some kind of win emulator or wine.)
 
-1. Put all your .o8s set files into a folder somewhere. Say ```C:\Sets```
+1. Put all your .o8s set files **except markers** into a folder somewhere. Say ```C:\Sets```
 2. Press **Win+R** (i.e. press and hold the windows hey and press R) (On WinXP, just go Start -> Run). A new window will pop-up.
 3. In there copy-paste the following (not the below command assumes your installation directory and sets directory are the ones presented here. If your "Documents" directory is elsewhere, you need to modity the command to point to it, say ```F:\Documents\Octgn\Octgn```. If you put your sets folder in a different location, you need to put that directory in between the "double quotes"
   ```C:\Documents\Octgn\OCTGN\o8build.exe -d "C:\Sets" -c```
