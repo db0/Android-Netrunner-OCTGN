@@ -524,8 +524,8 @@ def autoscriptOtherPlayers(lookup, origin_card = Identity, count = 1): # Functio
          if not re.search(r'{}'.format(lookup), AutoS): continue # Search if in the script of the card, the string that was sent to us exists. The sent string is decided by the function calling us, so for example the ProdX() function knows it only needs to send the 'GeneratedSpice' string.
          if chkPlayer(AutoS, card.controller,False) == 0: continue # Check that the effect's origninator is valid.
          if not ifHave(AutoS,card.controller,silent = True): continue # If the script requires the playet to have a specific counter value and they don't, do nothing.
-         if re.search(r'onlyOnce',autoS) and oncePerTurn(card, silent = True, act = 'automatic') == 'ABORT': continue # If the card's ability is only once per turn, use it or silently abort if it's already been used
          if not checkCardRestrictions(gatherCardProperties(origin_card), prepareRestrictions(autoS, 'type')): continue #If we have the '-type' modulator in the script, then need ot check what type of property it's looking for
+         if re.search(r'onlyOnce',autoS) and oncePerTurn(card, silent = True, act = 'automatic') == 'ABORT': continue # If the card's ability is only once per turn, use it or silently abort if it's already been used
          if re.search(r'onTriggerCard',autoS): targetCard = [origin_card] # if we have the "-onTriggerCard" modulator, then the target of the script will be the original card (e.g. see Grimoire)
          else: targetCard = None
          if debugVerbosity >= 2: notify("### Automatic Autoscripts: {}".format(AutoS)) # Debug
@@ -1637,7 +1637,8 @@ def RetrieveX(Autoscript, announceText, card, targetCards = None, notification =
             for targetLookup in table: # We check if we're targeting a daemon to install the program in.
                if targetLookup.targetedBy and targetLookup.targetedBy == me and re.search(r'Daemon',getKeywords(targetLookup)) and possess(targetLookup, c, silent = True) != 'ABORT':
                   MUtext = ", installing it into {}".format(targetLookup)
-                  break         
+                  break  
+         autoscriptOtherPlayers('CardInstall',c)
       else: c.moveTo(destination)
       tokensRegex = re.search(r'-with([A-Za-z0-9: ]+)', Autoscript) # If we have a -with in our autoscript, this is meant to put some tokens on the retrieved card.
       if tokensRegex: TokensX('Put{}'.format(tokensRegex.group(1)), announceText,c, n = n) 
@@ -1710,7 +1711,7 @@ def UseCustomAbility(Autoscript, announceText, card, targetCards = None, notific
       rnd(1,100) # Delay to be able to announce names.
       for c in targetPL.piles['R&D/Stack']: c.isFaceUp = False # We hide again the source pile cards.
       cover.moveTo(shared.exile) # we cannot delete cards so we just hide it.
-      announceString = ':=> Sniff.'
+      announceString = ':=> Sniff'
          #      __
          # (___()'`;   *Sniff*
          # /,    /`
