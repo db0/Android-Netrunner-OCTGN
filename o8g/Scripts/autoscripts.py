@@ -1534,6 +1534,7 @@ def InflictX(Autoscript, announceText, card, targetCards = None, notification = 
 def RetrieveX(Autoscript, announceText, card, targetCards = None, notification = None, n = 0): # Core Command for finding a specific card from a pile and putting it in hand or trash pile
    if debugVerbosity >= 1: notify(">>> RetrieveX(){}".format(extraASDebug(Autoscript))) #Debug
    if targetCards is None: targetCards = []
+   MUtext = ''
    action = re.search(r'\bRetrieve([0-9]+)Card', Autoscript)
    targetPL = ofwhom(Autoscript, card.controller)
    if debugVerbosity >= 2: notify("### Setting Source")
@@ -1596,15 +1597,24 @@ def RetrieveX(Autoscript, announceText, card, targetCards = None, notification =
    else: chosenCList = cardList
    if debugVerbosity >= 2: notify("### chosenCList: {}".format(chosenCList))
    for c in chosenCList:
-      if destination == table: placeCard(c)
+      if destination == table: 
+         placeCard(c)
+         if c.Type == 'Program':
+            MUtext = chkRAM(c)
+            for targetLookup in table: # We check if we're targeting a daemon to install the program in.
+               if targetLookup.targetedBy and targetLookup.targetedBy == me and re.search(r'Daemon',getKeywords(targetLookup)) and possess(targetLookup, c, silent = True) != 'ABORT':
+                  MUtext = ", installing it into {}".format(targetLookup)
+                  break         
       else: c.moveTo(destination)
+      tokensRegex = re.search(r'-with([A-Za-z0-9: ]+)', Autoscript) # If we have a -with in our autoscript, this is meant to put some tokens on the retrieved card.
+      if tokensRegex: TokensX('Put{}'.format(tokensRegex.group(1)), announceText,c, n = n) 
    if source != targetPL.piles['Heap/Archives(Face-up)']:
       if debugVerbosity >= 2: notify("### Turning Pile Face Down")
       for c in source: c.isFaceUp = False # We hide again the source pile cards.
       cover.moveTo(me.ScriptingPile) # we cannot delete cards so we just hide it.
    if debugVerbosity >= 2: notify("### About to announce.")
    if len(chosenCList) == 0: announceString = "{} attempts to {} a card {}, but there were no valid targets.".format(announceText, destiVerb, sourcePath)
-   else: announceString = "{} {} {} {}.".format(announceText, destiVerb, [c.name for c in chosenCList], sourcePath)
+   else: announceString = "{} {} {} {}{}.".format(announceText, destiVerb, [c.name for c in chosenCList], sourcePath,MUtext)
    if notification and multiplier > 0: notify(':> {}.'.format(announceString))
    if debugVerbosity >= 3: notify("<<< RetrieveX()")
    return announceString

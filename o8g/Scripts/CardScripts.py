@@ -1386,9 +1386,9 @@ Test Run
 -----
 bc0f047c-01b1-427f-a439-d451eda02047
 -----
-atTurnEnd:SimplyAnnounce{Expire test run return installed program to the top of the stack}
+onPlay:Retrieve1Card-typeProgram-toTable-with1Test Run$$ShuffleStack||atTurnEnd:UninstallTarget-AutoTargeted-atProgram-hasMarker{Test Run}-toStack
 +++++
-A0B0G0T0:UninstallTarget-toStack-Targeted-atProgram$$TrashMyself
+A0B0G0T0:UninstallTarget-toStack-AutoTargeted-atProgram-hasMarker{Test Run}$$TrashMyself
 .....
 Viper
 -----
