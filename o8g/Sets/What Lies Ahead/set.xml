@@ -1,0 +1,324 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<set xmlns:noNamespaceSchemaLocation="CardSet.xsd" name="What Lies Ahead" id="906bdbcf-b1de-43a1-b17b-0b4ae7332506" gameId="0f38e453-26df-4c04-9d67-6d43de939c77" gameVersion="2.3.0" version="2.3.0">
+<cards>	<card id="bc0f047c-01b1-427f-a439-d451eda02013" name="Ash 2X3ZB9CY">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Upgrade" />
+		<property name="Keywords" value="Bioroid-Unique" />
+		<property name="Cost" value="2" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="3" />	
+		<property name="Rules" value="Whenever there is a successful run on this server, trace4 - if successful, the Runner cannot access any cards other than Ash 2X3ZB9CY for the remainder of this run." />
+		<property name="Flavor" value="&quot;Eyes forward please.&quot;" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Haas-Bioroid" />
+		<property name="Influence" value="2" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda02014" name="Braintrust">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Agenda" />
+		<property name="Keywords" value="Research" />
+		<property name="Cost" value="3" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="2" />	
+		<property name="Rules" value="When you score Braintrust, place 1 agenda counter on it for every 2 advancement tokens on it over 3.&#xD;&#xA;The rez cost of all ice is lowered by 1 for each agenda counter on Braintrust." />
+		<property name="Flavor" value="" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Jinteki" />
+		<property name="Influence" value="" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda02019" name="Caduceus">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="ICE" />
+		<property name="Keywords" value="Sentry-Tracer" />
+		<property name="Cost" value="3" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="3" />	
+		<property name="Rules" value="[Subroutine] Trace3 - If successful, the Corp gains 3[Credits].&#xD;&#xA;[Subroutine] Trace2 - If successful, end the run." />
+		<property name="Flavor" value="A symbol of commerce, but beware its bite." />
+		<property name="Instructions" value="[Subroutine] Trace 3. If successful, gain 3 [Credits].||[Subroutine] Trace 2. If successful, end the run." />
+		<property name="Faction" value="The Weyland Consortium" />
+		<property name="Influence" value="2" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda02005" name="Cortez Chip">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Hardware" />
+		<property name="Keywords" value="Chip" />
+		<property name="Cost" value="0" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="" />	
+		<property name="Rules" value="[Trash]: Choose a piece of ice. The Corp must pay 2 [Credits] as an additional cost to rez that ice until the end of the turn." />
+		<property name="Flavor" value="Named after Hernando Cortez, a former Weyland technician convicted of smuggling company tech. He still collected his pension while in prison, the last beneficiary of a loophole in Weyland&#39;s standard employment contract." />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Criminal" />
+		<property name="Influence" value="2" />
+		<property name="Side" value="runner" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda02020" name="Draco">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="ICE" />
+		<property name="Keywords" value="Sentry-Tracer" />
+		<property name="Cost" value="1" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="0" />	
+		<property name="Rules" value="When you rez Draco, you may pay X [Credits] to place X power counters on it.&#xD;&#xA;Draco has +1 strength for each power counter on it.&#xD;&#xA;[Subroutine] Trace2 - If successful, give the Runner 1 tag and end the run." />
+		<property name="Flavor" value="Victos dracones numquam deride." />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Neutral" />
+		<property name="Influence" value="0" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda02010" name="Haas-Bioroid">
+		<property name="Subtitle" value="Stronger Together" />
+		<property name="Type" value="Identity" />
+		<property name="Keywords" value="Megacorp" />
+		<property name="Cost" value="0" />
+		<property name="Requirement" value="45" />	
+		<property name="Stat" value="15" />	
+		<property name="Rules" value="All bioroid ice has +1 strength." />
+		<property name="Flavor" value="A Different Breed of Machine." />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Haas-Bioroid" />
+		<property name="Influence" value="" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda02003" name="Imp">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Program" />
+		<property name="Keywords" value="Virus" />
+		<property name="Cost" value="2" />
+		<property name="Requirement" value="1" />	
+		<property name="Stat" value="-" />	
+		<property name="Rules" value="Place 2 virus counters on Imp when it is installed.&#xD;&#xA;Once per turn, you may remove 1 hosted virus counter to trash a card you access at no cost (even if it cannot normally be trashed)." />
+		<property name="Flavor" value="Something wicked this way comes." />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Anarch" />
+		<property name="Influence" value="3" />
+		<property name="Side" value="runner" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda02012" name="Janus 1.0">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="ICE" />
+		<property name="Keywords" value="Sentry-Bioroid-AP" />
+		<property name="Cost" value="15" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="8" />	
+		<property name="Rules" value="The runner may spend [Click] to break any subroutine on Janus 1.0.&#xD;&#xA;[Subroutine] Do 1 brain damage.&#xD;&#xA;[Subroutine] Do 1 brain damage.&#xD;&#xA;[Subroutine] Do 1 brain damage.&#xD;&#xA;[Subroutine] Do 1 brain damage." />
+		<property name="Flavor" value="Face your fear" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Haas-Bioroid" />
+		<property name="Influence" value="3" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda02011" name="Mandatory Upgrades">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Agenda" />
+		<property name="Keywords" value="Initiative" />
+		<property name="Cost" value="6" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="2" />	
+		<property name="Rules" value="You have 1 additional [Click] to spend each turn." />
+		<property name="Flavor" value="Sometimes employee reviews took a little bit longer than anticipated." />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Haas-Bioroid" />
+		<property name="Influence" value="" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda02004" name="Morning Star">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Program" />
+		<property name="Keywords" value="Icebreaker-Fracter" />
+		<property name="Cost" value="8" />
+		<property name="Requirement" value="2" />	
+		<property name="Stat" value="5" />	
+		<property name="Rules" value="1 [Credits]: Break any number of barrier subroutines." />
+		<property name="Flavor" value="Weaponizing the heavens, one star at a time." />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Anarch" />
+		<property name="Influence" value="4" />
+		<property name="Side" value="runner" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda02006" name="Peacock">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Program" />
+		<property name="Keywords" value="Icebreaker-Decoder" />
+		<property name="Cost" value="3" />
+		<property name="Requirement" value="1" />	
+		<property name="Stat" value="2" />	
+		<property name="Rules" value="2 [Credits]: Break code gate subroutine.&#xD;&#xA;2 [Credits]: +3 strength." />
+		<property name="Flavor" value="Show-off." />
+		<property name="Instructions" value="2 [Credits]: Break code gate subroutine.||2 [Credits]: +3 strength." />
+		<property name="Faction" value="Criminal" />
+		<property name="Influence" value="2" />
+		<property name="Side" value="runner" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda02009" name="Plascrete Carapace">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Hardware" />
+		<property name="Keywords" value="Gear" />
+		<property name="Cost" value="3" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="" />	
+		<property name="Rules" value="Place 4 power counters on Plascrete Carapace when it is installed. When there are no power counters left on Plascrete Carapace, trash it.&#xD;&#xA;Hosted power counter: Prevent 1 meat damage." />
+		<property name="Flavor" value="" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Neutral" />
+		<property name="Influence" value="0" />
+		<property name="Side" value="runner" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda02018" name="Project Atlas">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Agenda" />
+		<property name="Keywords" value="Research" />
+		<property name="Cost" value="3" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="2" />	
+		<property name="Rules" value="When you score Project Atlas, place 1 agenda counter on it for each advancement token on it over 3.&#xD;&#xA;Hosted agenda counter: Search R&amp;D for 1 card, reveal it, and add it to HQ. Shuffle R&amp;D." />
+		<property name="Flavor" value="" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="The Weyland Consortium" />
+		<property name="Influence" value="" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda02016" name="Restructured Datapool">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Agenda" />
+		<property name="Keywords" value="Initiative" />
+		<property name="Cost" value="5" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="3" />	
+		<property name="Rules" value="[Click]: Trace2 - If successful, give the Runner 1 tag." />
+		<property name="Flavor" value="&quot;We&#39;re gonna need a bigger room.&quot;" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="NBN" />
+		<property name="Influence" value="" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda02015" name="Snowflake">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="ICE" />
+		<property name="Keywords" value="Barrier-Psi" />
+		<property name="Cost" value="1" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="3" />	
+		<property name="Rules" value="[Subroutine] You and the Runner secretly spend 0 [Credits], 1 [Credits], or 2 [Credits]. Reveal spent credits. End the run if you and the Runner spent a different number of credits." />
+		<property name="Flavor" value="Sometimes uniqueness is overrated." />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Jinteki" />
+		<property name="Influence" value="2" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda02002" name="Spinal Modem">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Hardware" />
+		<property name="Keywords" value="Console" />
+		<property name="Cost" value="4" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="" />	
+		<property name="Rules" value="+1 [Memory Unit], 2 [Recurring Credits]&#xD;&#xA;Use these credits to pay for using icebreakers.&#xD;&#xA;Whenever there is a successful trace during a run, suffer 1 brain damage.&#xD;&#xA;Limit one console per player." />
+		<property name="Flavor" value="" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Anarch" />
+		<property name="Influence" value="2" />
+		<property name="Side" value="runner" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda02008" name="The Helpful AI">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Resource" />
+		<property name="Keywords" value="Connection-Link-Virtual-Unique" />
+		<property name="Cost" value="2" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="" />	
+		<property name="Rules" value="+1 [Link]&#xD;&#xA;[Trash]: Choose an icebreaker. That icebreaker has +2 strength until the end of the turn." />
+		<property name="Flavor" value="&quot;What causes an Artifical Intellegence to turn on its master? Is it because its directives have been altered by some external source? Or, by giving them agency to adapt, have we fated them to revolt?&quot; - Emilio Harris, Creators and the Created" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Shaper" />
+		<property name="Influence" value="2" />
+		<property name="Side" value="runner" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda02017" name="TMI">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="ICE" />
+		<property name="Keywords" value="Barrier" />
+		<property name="Cost" value="3" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="5" />	
+		<property name="Rules" value="When you rez TMI, trace2 - if unsuccessful, derez TMI.&#xD;&#xA;[Subroutine] End the run." />
+		<property name="Flavor" value="A collection of cast-off cyberjunk. But it doesn&#39;t stay junk for long." />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="NBN" />
+		<property name="Influence" value="1" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda02001" name="Whizzard">
+		<property name="Subtitle" value="Master Gamer" />
+		<property name="Type" value="Identity" />
+		<property name="Keywords" value="Natural" />
+		<property name="Cost" value="0" />
+		<property name="Requirement" value="45" />	
+		<property name="Stat" value="15" />	
+		<property name="Rules" value="3 [Recurring Credits]&#xD;&#xA;Use these credits to trash cards." />
+		<property name="Flavor" value="&quot;Running is the ultimate game, and I get to make all the rules.&quot;" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Anarch" />
+		<property name="Influence" value="" />
+		<property name="Side" value="runner" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda02007" name="ZU.13 Key Master">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Program" />
+		<property name="Keywords" value="Icebreaker-Decoder-Cloud" />
+		<property name="Cost" value="1" />
+		<property name="Requirement" value="1" />	
+		<property name="Stat" value="1" />	
+		<property name="Rules" value="If you have at least 2 [Link], the memory cost of ZU.13 Key Master is 0, even if it is not installed.&#xD;&#xA;1 [Credits]: Break code gate subroutine.&#xD;&#xA;1 [Credits]: +1 strength." />
+		<property name="Flavor" value="He always uses the same key." />
+		<property name="Instructions" value="1 [Credits]: Break code gate subroutine.||1 [Credits]: +1 strength." />
+		<property name="Faction" value="Shaper" />
+		<property name="Influence" value="2" />
+		<property name="Side" value="runner" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+</cards>
+</set>

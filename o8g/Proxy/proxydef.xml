@@ -1,0 +1,1383 @@
+<?xml version="1.0" encoding="utf-8" ?>
+   <templates>
+      <blocks>
+   <!-- Corp Identity Blocks-->
+         <block type="text" id="corpIdent_name">
+           <location x="63" y="23" />
+           <text color="#000000" size="17" />
+           <wordwrap height="19" width="230" />
+         </block>
+         <block type="text" id="corpIdent_subtitle">
+           <location x="17" y="51" />
+           <text color="#000000" size="12" />
+         </block>
+         <block type="text" id="corpIdent_keywords">
+           <location x="105" y="330" />
+           <text color="#000000" size="13" />
+         </block>
+         <block type="text" id="corpIdent_rules">
+           <location x="63" y="358" />
+           <text color="#000000" size="12" />
+           <wordwrap height="86" width="209" />
+         </block>
+         <block type="text" id="corpIdent_influence">
+           <location x="19" y="386"/>
+           <text color="#000000" size="17" />
+         </block>
+         <block type="text" id="corpIdent_deck">
+           <location x="19" y="411"/>
+           <text color="#FFFFFF" size="17" />
+           <border color="#000000" size="1" />
+         </block>
+   <!-- Operation Blocks-->
+         <block type="text" id="operation_name">
+           <location x="81" y="15" />
+           <text color="#000000" size="19" />
+           <wordwrap height="20" width="230" />
+         </block>
+         <block type="text" id="operation_cost">
+           <location x="27" y="34" />
+           <text color="#FFFFFF" size="20" />
+           <border color="#FFFFFF" size="2" />
+         </block>
+         <block type="text" id="operation_keywords">
+           <location x="116" y="262" />
+           <text color="#000000" size="14" />
+         </block>
+         <block type="text" id="operation_rules">
+           <location x="40" y="300" />
+           <text color="#000000" size="12" />
+           <wordwrap height="107" width="250" />
+         </block>
+   <!-- ICE Blocks-->
+         <block type="text" id="ICE_name">
+           <location x="79" y="18" />
+           <text color="#000000" size="19" />
+           <wordwrap height="20" width="230" />
+         </block>
+         <block type="text" id="ICE_cost">
+           <location x="25" y="30"/>
+           <text color="#FFFFFF" size="20" />
+           <border color="#FFFFFF" size="1" />
+         </block>
+         <block type="text" id="ICE_strength">
+           <location x="15" y="423" rotate="270" />
+           <text color="#000000" size="23" />
+         </block>
+         <block type="text" id="ICE_type">
+           <location x="22" y="313" rotate="270" />
+           <text color="#000000" size="16" />
+         </block>
+         <block type="text" id="ICE_keywords">
+           <location x="17" y="313" rotate="270" />
+           <text color="#000000" size="14" />
+         </block>
+         <block type="text" id="ICE_rules">
+           <location x="68" y="68" />
+           <text color="#000000" size="12" />
+           <wordwrap height="250" width="207" />
+         </block>
+   <!-- Agenda Blocks-->
+         <block type="text" id="agenda_name">
+           <location x="23" y="21" />
+           <text color="#000000" size="17" />
+           <wordwrap height="19" width="230" />
+         </block>
+         <block type="text" id="agenda_cost">
+           <location x="270" y="18"/>
+           <text color="#e7e5ea" size="25" />
+           <border color="#000000" size="3" /> 
+         </block>
+         <block type="text" id="agenda_points">
+           <location x="25" y="227" />
+           <text color="#d2d9df" size="23" />
+           <border color="#000000" size="3" />
+         </block>
+         <block type="text" id="agenda_keywords">
+           <location x="95" y="280" />
+           <text color="#000000" size="14" />
+         </block>
+         <block type="text" id="agenda_rules">
+           <location x="40" y="310" />
+           <text color="#000000" size="12" />
+           <wordwrap height="107" width="250" />
+         </block>
+   <!-- Asset Blocks-->
+         <block type="text" id="asset_name">
+           <location x="30" y="223" />
+           <text color="#000000" size="17" />
+           <wordwrap height="19" width="230" />
+         </block>
+         <block type="text" id="asset_cost">
+           <location x="26" y="30"/>
+           <text color="#FFFFFF" size="20" />
+           <border color="#FFFFFF" size="1" />
+         </block>
+         <block type="text" id="asset_trash">
+           <location x="272" y="373" />
+           <text color="#8e7c4b" size="18" />
+           <border color="#8e7c4b" size="1" />
+         </block>
+         <block type="text" id="asset_keywords">
+           <location x="86" y="255" />
+           <text color="#000000" size="13" />
+         </block>
+         <block type="text" id="asset_rules">
+           <location x="40" y="287" />
+           <text color="#000000" size="12" />
+           <wordwrap height="114" width="244" />
+         </block>
+   <!-- Upgrade Blocks-->
+         <block type="text" id="upgrade_name">
+           <location x="30" y="227" />
+           <text color="#000000" size="17" />
+           <wordwrap height="19" width="230" />
+         </block>
+         <block type="text" id="upgrade_cost">
+           <location x="27" y="35"/>
+           <text color="#FFFFFF" size="20" />
+           <border color="#FFFFFF" size="1" />
+         </block>
+         <block type="text" id="upgrade_trash">
+           <location x="274" y="376" />
+           <text color="#8e7c4b" size="18" />
+           <border color="#8e7c4b" size="1" />
+         </block>
+         <block type="text" id="upgrade_keywords">
+           <location x="106" y="258" />
+           <text color="#000000" size="13" />
+         </block>
+         <block type="text" id="upgrade_rules">
+           <location x="40" y="288" />
+           <text color="#000000" size="12" />
+           <wordwrap height="114" width="244" />
+         </block>
+   <!-- Runner Identity Blocks-->
+         <block type="text" id="runIdent_name">
+           <location x="111" y="16" />
+           <text color="#000000" size="17" />
+           <wordwrap height="19" width="230" />
+         </block>
+         <block type="text" id="runIdent_subtitle">
+           <location x="147" y="39" />
+           <text color="#000000" size="12" />
+         </block>
+         <block type="text" id="runIdent_link">
+           <location x="20" y="31"/>
+           <text color="#FFFFFF" size="22" />
+           <border color="#FFFFFF" size="1" />
+         </block>
+         <block type="text" id="runIdent_keywords">
+           <location x="119" y="326" />
+           <text color="#000000" size="13" />
+         </block>
+         <block type="text" id="runIdent_rules">
+           <location x="49" y="358" />
+           <text color="#000000" size="12" />
+           <wordwrap height="86" width="209" />
+         </block>
+         <block type="text" id="runIdent_influence">
+           <location x="269" y="384"/>
+           <text color="#000000" size="17" />
+         </block>
+         <block type="text" id="runIdent_deck">
+           <location x="269" y="409"/>
+           <text color="#FFFFFF" size="17" />
+           <border color="#000000" size="1" />
+         </block>
+   <!-- Event Blocks-->
+         <block type="text" id="event_name">
+           <location x="79" y="15" />
+           <text color="#000000" size="17" />
+           <wordwrap height="19" width="230" />
+         </block>
+         <block type="text" id="event_cost">
+           <location x="27" y="33"/>
+           <text color="#FFFFFF" size="20" />
+           <border color="#FFFFFF" size="1" />
+         </block>
+         <block type="text" id="event_keywords">
+           <location x="90" y="276" />
+           <text color="#000000" size="13" />
+         </block>
+         <block type="text" id="event_rules">
+           <location x="40" y="308" />
+           <text color="#000000" size="12" />
+           <wordwrap height="105" width="241" />
+         </block>
+   <!-- Resource Blocks-->
+         <block type="text" id="resource_name">
+           <location x="79" y="15" />
+           <text color="#000000" size="17" />
+           <wordwrap height="19" width="230" />
+         </block>
+         <block type="text" id="resource_cost">
+           <location x="27" y="33"/>
+           <text color="#FFFFFF" size="20" />
+           <border color="#FFFFFF" size="1" />
+         </block>
+         <block type="text" id="resource_keywords">
+           <location x="95" y="217" />
+           <text color="#000000" size="13" />
+         </block>
+         <block type="text" id="resource_rules">
+           <location x="22" y="248" />
+           <text color="#000000" size="12" />
+           <wordwrap height="150" width="235" />
+         </block>
+   <!-- Hardware Blocks-->
+         <block type="text" id="hardware_name">
+           <location x="67" y="224" />
+           <text color="#000000" size="17" />
+           <wordwrap height="19" width="230" />
+         </block>
+         <block type="text" id="hardware_cost">
+           <location x="27" y="33"/>
+           <text color="#FFFFFF" size="20" />
+           <border color="#FFFFFF" size="1" />
+         </block>
+         <block type="text" id="hardware_keywords">
+           <location x="130" y="262" />
+           <text color="#000000" size="13" />
+         </block>
+         <block type="text" id="hardware_rules">
+           <location x="45" y="290" />
+           <text color="#000000" size="12" />
+           <wordwrap height="114" width="235" />
+         </block>
+   <!-- Program Blocks-->
+         <block type="text" id="program_name">
+           <location x="12" y="207" />
+           <text color="#000000" size="14" />
+           <wordwrap height="19" width="230" />
+         </block>
+         <block type="text" id="program_cost">
+           <location x="27" y="33"/>
+           <text color="#FFFFFF" size="20" />
+           <border color="#FFFFFF" size="1" />
+         </block>
+         <block type="text" id="program_MU">
+           <location x="82" y="22" />
+           <text color="#FFFFFF" size="11" />
+           <border color="#000000" size="2" />
+         </block>
+         <block type="text" id="program_keywords">
+           <location x="110" y="238" />
+           <text color="#000000" size="13" />
+         </block>
+         <block type="text" id="program_rules">
+           <location x="34" y="267" />
+           <text color="#000000" size="12" />
+           <wordwrap height="143" width="246" />
+         </block>
+         <block type="text" id="program_strength">
+           <location x="22" y="410" />
+           <text color="#000000" size="21" />
+         </block>
+   <!-- Default Blocks-->
+         <block type="text" id="default_name">
+            <location x="85" y="100" />
+            <text color="#000000" size="25" />
+            <border color="#440044" size="1" />
+         </block>
+      </blocks>
+<!-- TEMPLATES -->
+      <template src="Proxy/White_Card_Template.png" default="True">
+         <matches>
+            <match name="Name" value="Whatever" />
+         </matches>
+         <textblocks>
+            <link block="default_name" separator=" ">
+               <property name="Name"  />
+            </link>
+         </textblocks>
+      </template>
+   <!-- Operation Templates -->
+      <template src="Proxy/Operations/Operation_Weyland.jpg">
+         <matches>
+            <match name="Faction" value="The Weyland Consortium" />
+            <match name="Type" value="Operation" />
+         </matches>
+         <textblocks>
+            <link block="operation_name" separator=" ">
+               <property name="Name"  />
+            </link>
+            <link block="operation_cost" separator=" ">
+               <property name="Cost"  />
+            </link>
+            <link block="operation_keywords" separator=" ">
+               <property name="Keywords"  />
+            </link>
+            <link block="operation_rules" separator=" ">
+               <property name="Rules"  />
+            </link>
+         </textblocks>
+      </template>
+      <template src="Proxy/Operations/Operation_NBN.jpg">
+         <matches>
+            <match name="Faction" value="NBN" />
+            <match name="Type" value="Operation" />
+         </matches>
+         <textblocks>
+            <link block="operation_name" separator=" ">
+               <property name="Name"  />
+            </link>
+            <link block="operation_cost" separator=" ">
+               <property name="Cost"  />
+            </link>
+            <link block="operation_keywords" separator=" ">
+               <property name="Keywords"  />
+            </link>
+            <link block="operation_rules" separator=" ">
+               <property name="Rules"  />
+            </link>
+         </textblocks>
+      </template>
+      <template src="Proxy/Operations/Operation_Jinteki.jpg">
+         <matches>
+            <match name="Faction" value="Jinteki" />
+            <match name="Type" value="Operation" />
+         </matches>
+         <textblocks>
+            <link block="operation_name" separator=" ">
+               <property name="Name"  />
+            </link>
+            <link block="operation_cost" separator=" ">
+               <property name="Cost"  />
+            </link>
+            <link block="operation_keywords" separator=" ">
+               <property name="Keywords"  />
+            </link>
+            <link block="operation_rules" separator=" ">
+               <property name="Rules"  />
+            </link>
+         </textblocks>
+      </template>
+      <template src="Proxy/Operations/Operation_Neutral.png">
+         <matches>
+            <match name="Faction" value="Neutral" />
+            <match name="Type" value="Operation" />
+         </matches>
+         <textblocks>
+            <link block="operation_name" separator=" ">
+               <property name="Name"  />
+            </link>
+            <link block="operation_cost" separator=" ">
+               <property name="Cost"  />
+            </link>
+            <link block="operation_keywords" separator=" ">
+               <property name="Keywords"  />
+            </link>
+            <link block="operation_rules" separator=" ">
+               <property name="Rules"  />
+            </link>
+         </textblocks>
+      </template>
+      <template src="Proxy/Operations/Operation_Hasbro.jpg">
+         <matches>
+            <match name="Faction" value="Haas-Bioroid" />
+            <match name="Type" value="Operation" />
+         </matches>
+         <textblocks>
+            <link block="operation_name" separator=" ">
+               <property name="Name"  />
+            </link>
+            <link block="operation_cost" separator=" ">
+               <property name="Cost"  />
+            </link>
+            <link block="operation_keywords" separator=" ">
+               <property name="Keywords"  />
+            </link>
+            <link block="operation_rules" separator=" ">
+               <property name="Rules"  />
+            </link>
+         </textblocks>
+      </template>
+   <!-- ICE Templates -->
+      <template src="Proxy/ICE/ICE_Weyland.jpg">
+         <matches>
+            <match name="Faction" value="The Weyland Consortium" />
+            <match name="Type" value="ICE" />
+         </matches>
+         <textblocks>
+            <link block="ICE_name" separator=" ">
+               <property name="Name"  />
+            </link>
+            <link block="ICE_cost" separator=" ">
+               <property name="Cost"  />
+            </link>
+            <link block="ICE_strength" separator=" ">
+               <property name="Stat"  />
+            </link>
+            <link block="ICE_keywords" separator=": ">
+               <property name="Type"  />
+               <property name="Keywords"  />
+            </link>
+            <link block="ICE_rules" separator=" ">
+               <property name="Rules"  />
+            </link>
+         </textblocks>
+      </template>
+      <template src="Proxy/ICE/ICE_Hasbro.jpg">
+         <matches>
+            <match name="Faction" value="Haas-Bioroid" />
+            <match name="Type" value="ICE" />
+         </matches>
+         <textblocks>
+            <link block="ICE_name" separator=" ">
+               <property name="Name"  />
+            </link>
+            <link block="ICE_cost" separator=" ">
+               <property name="Cost"  />
+            </link>
+            <link block="ICE_strength" separator=" ">
+               <property name="Stat"  />
+            </link>
+            <link block="ICE_keywords" separator=": ">
+               <property name="Type"  />
+               <property name="Keywords"  />
+            </link>
+            <link block="ICE_rules" separator=" ">
+               <property name="Rules"  />
+            </link>
+         </textblocks>
+      </template>
+      <template src="Proxy/ICE/ICE_Jinteki.jpg">
+         <matches>
+            <match name="Faction" value="Jinteki" />
+            <match name="Type" value="ICE" />
+         </matches>
+         <textblocks>
+            <link block="ICE_name" separator=" ">
+               <property name="Name"  />
+            </link>
+            <link block="ICE_cost" separator=" ">
+               <property name="Cost"  />
+            </link>
+            <link block="ICE_strength" separator=" ">
+               <property name="Stat"  />
+            </link>
+            <link block="ICE_keywords" separator=": ">
+               <property name="Type"  />
+               <property name="Keywords"  />
+            </link>
+            <link block="ICE_rules" separator=" ">
+               <property name="Rules"  />
+            </link>
+         </textblocks>
+      </template>
+      <template src="Proxy/ICE/ICE_NBN.jpg">
+         <matches>
+            <match name="Faction" value="NBN" />
+            <match name="Type" value="ICE" />
+         </matches>
+         <textblocks>
+            <link block="ICE_name" separator=" ">
+               <property name="Name"  />
+            </link>
+            <link block="ICE_cost" separator=" ">
+               <property name="Cost"  />
+            </link>
+            <link block="ICE_strength" separator=" ">
+               <property name="Stat"  />
+            </link>
+            <link block="ICE_keywords" separator=": ">
+               <property name="Type"  />
+               <property name="Keywords"  />
+            </link>
+            <link block="ICE_rules" separator=" ">
+               <property name="Rules"  />
+            </link>
+         </textblocks>
+      </template>
+      <template src="Proxy/ICE/ICE_Neutral.jpg">
+         <matches>
+            <match name="Faction" value="Neutral" />
+            <match name="Type" value="ICE" />
+         </matches>
+         <textblocks>
+            <link block="ICE_name" separator=" ">
+               <property name="Name"  />
+            </link>
+            <link block="ICE_cost" separator=" ">
+               <property name="Cost"  />
+            </link>
+            <link block="ICE_strength" separator=" ">
+               <property name="Stat"  />
+            </link>
+            <link block="ICE_keywords" separator=": ">
+               <property name="Type"  />
+               <property name="Keywords"  />
+            </link>
+            <link block="ICE_rules" separator=" ">
+               <property name="Rules"  />
+            </link>
+         </textblocks>
+      </template>
+   <!-- Agenda Templates -->
+      <template src="Proxy/Agendas/Agenda_Weyland.jpg">
+         <matches>
+            <match name="Faction" value="The Weyland Consortium" />
+            <match name="Type" value="Agenda" />
+         </matches>
+         <textblocks>
+            <link block="agenda_name" separator=" ">
+               <property name="Name"  />
+            </link>
+            <link block="agenda_cost" separator=" ">
+               <property name="Cost"  />
+            </link>
+            <link block="agenda_points" separator=" ">
+               <property name="Stat"  />
+            </link>
+            <link block="agenda_keywords" separator=" ">
+               <property name="Keywords"  />
+            </link>
+            <link block="agenda_rules" separator=" ">
+               <property name="Rules"  />
+            </link>
+         </textblocks>
+      </template>
+      <template src="Proxy/Agendas/Agenda_Hasbro.jpg">
+         <matches>
+            <match name="Faction" value="Haas-Bioroid" />
+            <match name="Type" value="Agenda" />
+         </matches>
+         <textblocks>
+            <link block="agenda_name" separator=" ">
+               <property name="Name"  />
+            </link>
+            <link block="agenda_cost" separator=" ">
+               <property name="Cost"  />
+            </link>
+            <link block="agenda_points" separator=" ">
+               <property name="Stat"  />
+            </link>
+            <link block="agenda_keywords" separator=" ">
+               <property name="Keywords"  />
+            </link>
+            <link block="agenda_rules" separator=" ">
+               <property name="Rules"  />
+            </link>
+         </textblocks>
+      </template>
+      <template src="Proxy/Agendas/Agenda_Jinteki.jpg">
+         <matches>
+            <match name="Faction" value="Jinteki" />
+            <match name="Type" value="Agenda" />
+         </matches>
+         <textblocks>
+            <link block="agenda_name" separator=" ">
+               <property name="Name"  />
+            </link>
+            <link block="agenda_cost" separator=" ">
+               <property name="Cost"  />
+            </link>
+            <link block="agenda_points" separator=" ">
+               <property name="Stat"  />
+            </link>
+            <link block="agenda_keywords" separator=" ">
+               <property name="Keywords"  />
+            </link>
+            <link block="agenda_rules" separator=" ">
+               <property name="Rules"  />
+            </link>
+         </textblocks>
+      </template>
+      <template src="Proxy/Agendas/Agenda_NBN.jpg">
+         <matches>
+            <match name="Faction" value="NBN" />
+            <match name="Type" value="Agenda" />
+         </matches>
+         <textblocks>
+            <link block="agenda_name" separator=" ">
+               <property name="Name"  />
+            </link>
+            <link block="agenda_cost" separator=" ">
+               <property name="Cost"  />
+            </link>
+            <link block="agenda_points" separator=" ">
+               <property name="Stat"  />
+            </link>
+            <link block="agenda_keywords" separator=" ">
+               <property name="Keywords"  />
+            </link>
+            <link block="agenda_rules" separator=" ">
+               <property name="Rules"  />
+            </link>
+         </textblocks>
+      </template>
+      <template src="Proxy/Agendas/Agenda_Neutral.jpg">
+         <matches>
+            <match name="Faction" value="Neutral" />
+            <match name="Type" value="Agenda" />
+         </matches>
+         <textblocks>
+            <link block="agenda_name" separator=" ">
+               <property name="Name"  />
+            </link>
+            <link block="agenda_cost" separator=" ">
+               <property name="Cost"  />
+            </link>
+            <link block="agenda_points" separator=" ">
+               <property name="Stat"  />
+            </link>
+            <link block="agenda_keywords" separator=" ">
+               <property name="Keywords"  />
+            </link>
+            <link block="agenda_rules" separator=" ">
+               <property name="Rules"  />
+            </link>
+         </textblocks>
+      </template>
+   <!-- Asset Templates -->
+      <template src="Proxy/Assets/Asset_Neutral.jpg">
+         <matches>
+            <match name="Faction" value="Neutral" />
+            <match name="Type" value="Asset" />
+         </matches>
+         <textblocks>
+            <link block="asset_name" separator=" ">
+               <property name="Name"  />
+            </link>
+            <link block="asset_cost" separator=" ">
+               <property name="Cost"  />
+            </link>
+            <link block="asset_trash" separator=" ">
+               <property name="Stat"  />
+            </link>
+            <link block="asset_keywords" separator=" ">
+               <property name="Keywords"  />
+            </link>
+            <link block="asset_rules" separator=" ">
+               <property name="Rules"  />
+            </link>
+         </textblocks>
+      </template>
+      <template src="Proxy/Assets/Asset_Weyland.jpg">
+         <matches>
+            <match name="Faction" value="The Weyland Consortium" />
+            <match name="Type" value="Asset" />
+         </matches>
+         <textblocks>
+            <link block="asset_name" separator=" ">
+               <property name="Name"  />
+            </link>
+            <link block="asset_cost" separator=" ">
+               <property name="Cost"  />
+            </link>
+            <link block="asset_trash" separator=" ">
+               <property name="Stat"  />
+            </link>
+            <link block="asset_keywords" separator=" ">
+               <property name="Keywords"  />
+            </link>
+            <link block="asset_rules" separator=" ">
+               <property name="Rules"  />
+            </link>
+         </textblocks>
+      </template>
+      <template src="Proxy/Assets/Asset_Hasbro.jpg">
+         <matches>
+            <match name="Faction" value="Haas-Bioroid" />
+            <match name="Type" value="Asset" />
+         </matches>
+         <textblocks>
+            <link block="asset_name" separator=" ">
+               <property name="Name"  />
+            </link>
+            <link block="asset_cost" separator=" ">
+               <property name="Cost"  />
+            </link>
+            <link block="asset_trash" separator=" ">
+               <property name="Stat"  />
+            </link>
+            <link block="asset_keywords" separator=" ">
+               <property name="Keywords"  />
+            </link>
+            <link block="asset_rules" separator=" ">
+               <property name="Rules"  />
+            </link>
+         </textblocks>
+      </template>
+      <template src="Proxy/Assets/Asset_Jinteki.jpg">
+         <matches>
+            <match name="Faction" value="Jinteki" />
+            <match name="Type" value="Asset" />
+         </matches>
+         <textblocks>
+            <link block="asset_name" separator=" ">
+               <property name="Name"  />
+            </link>
+            <link block="asset_cost" separator=" ">
+               <property name="Cost"  />
+            </link>
+            <link block="asset_trash" separator=" ">
+               <property name="Stat"  />
+            </link>
+            <link block="asset_keywords" separator=" ">
+               <property name="Keywords"  />
+            </link>
+            <link block="asset_rules" separator=" ">
+               <property name="Rules"  />
+            </link>
+         </textblocks>
+      </template>
+      <template src="Proxy/Assets/Asset_NBN.jpg">
+         <matches>
+            <match name="Faction" value="NBN" />
+            <match name="Type" value="Asset" />
+         </matches>
+         <textblocks>
+            <link block="asset_name" separator=" ">
+               <property name="Name"  />
+            </link>
+            <link block="asset_cost" separator=" ">
+               <property name="Cost"  />
+            </link>
+            <link block="asset_trash" separator=" ">
+               <property name="Stat"  />
+            </link>
+            <link block="asset_keywords" separator=" ">
+               <property name="Keywords"  />
+            </link>
+            <link block="asset_rules" separator=" ">
+               <property name="Rules"  />
+            </link>
+         </textblocks>
+      </template>
+   <!-- Upgrade Templates -->
+      <template src="Proxy/Upgrades/Upgrade_Weyland.png">
+         <matches>
+            <match name="Faction" value="The Weyland Consortium" />
+            <match name="Type" value="Upgrade" />
+         </matches>
+         <textblocks>
+            <link block="upgrade_name" separator=" ">
+               <property name="Name"  />
+            </link>
+            <link block="upgrade_cost" separator=" ">
+               <property name="Cost"  />
+            </link>
+            <link block="upgrade_trash" separator=" ">
+               <property name="Stat"  />
+            </link>
+            <link block="upgrade_keywords" separator=" ">
+               <property name="Keywords"  />
+            </link>
+            <link block="upgrade_rules" separator=" ">
+               <property name="Rules"  />
+            </link>
+         </textblocks>
+      </template>
+      <template src="Proxy/Upgrades/Upgrade_Hasbro.png">
+         <matches>
+            <match name="Faction" value="Haas-Bioroid" />
+            <match name="Type" value="Upgrade" />
+         </matches>
+         <textblocks>
+            <link block="upgrade_name" separator=" ">
+               <property name="Name"  />
+            </link>
+            <link block="upgrade_cost" separator=" ">
+               <property name="Cost"  />
+            </link>
+            <link block="upgrade_trash" separator=" ">
+               <property name="Stat"  />
+            </link>
+            <link block="upgrade_keywords" separator=" ">
+               <property name="Keywords"  />
+            </link>
+            <link block="upgrade_rules" separator=" ">
+               <property name="Rules"  />
+            </link>
+         </textblocks>
+      </template>
+      <template src="Proxy/Upgrades/Upgrade_Jinteki.png">
+         <matches>
+            <match name="Faction" value="Jinteki" />
+            <match name="Type" value="Upgrade" />
+         </matches>
+         <textblocks>
+            <link block="upgrade_name" separator=" ">
+               <property name="Name"  />
+            </link>
+            <link block="upgrade_cost" separator=" ">
+               <property name="Cost"  />
+            </link>
+            <link block="upgrade_trash" separator=" ">
+               <property name="Stat"  />
+            </link>
+            <link block="upgrade_keywords" separator=" ">
+               <property name="Keywords"  />
+            </link>
+            <link block="upgrade_rules" separator=" ">
+               <property name="Rules"  />
+            </link>
+         </textblocks>
+      </template>
+      <template src="Proxy/Upgrades/Upgrade_NBN.png">
+         <matches>
+            <match name="Faction" value="NBN" />
+            <match name="Type" value="Upgrade" />
+         </matches>
+         <textblocks>
+            <link block="upgrade_name" separator=" ">
+               <property name="Name"  />
+            </link>
+            <link block="upgrade_cost" separator=" ">
+               <property name="Cost"  />
+            </link>
+            <link block="upgrade_trash" separator=" ">
+               <property name="Stat"  />
+            </link>
+            <link block="upgrade_keywords" separator=" ">
+               <property name="Keywords"  />
+            </link>
+            <link block="upgrade_rules" separator=" ">
+               <property name="Rules"  />
+            </link>
+         </textblocks>
+      </template>
+   <!-- Corp Identity Templates -->
+      <template src="Proxy/Identities/Identity_Hasbro.png">
+         <matches>
+            <match name="Faction" value="Haas-Bioroid" />
+            <match name="Type" value="Identity" />
+         </matches>
+         <textblocks>
+            <link block="corpIdent_name" separator=" ">
+               <property name="Name"  />
+            </link>
+            <link block="corpIdent_subtitle" separator=" ">
+               <property name="Subtitle"  />
+            </link>
+            <link block="corpIdent_keywords" separator=" ">
+               <property name="Keywords"  />
+            </link>
+            <link block="corpIdent_rules" separator=" ">
+               <property name="Rules"  />
+            </link>
+            <link block="corpIdent_influence" separator=" ">
+               <property name="Stat"  />
+            </link>
+            <link block="corpIdent_deck" separator=" ">
+               <property name="Requirement"  />
+            </link>
+         </textblocks>
+      </template>
+      <template src="Proxy/Identities/Identity_Weyland.png">
+         <matches>
+            <match name="Faction" value="The Weyland Consortium" />
+            <match name="Type" value="Identity" />
+         </matches>
+         <textblocks>
+            <link block="corpIdent_name" separator=" ">
+               <property name="Name"  />
+            </link>
+            <link block="corpIdent_subtitle" separator=" ">
+               <property name="Subtitle"  />
+            </link>
+            <link block="corpIdent_keywords" separator=" ">
+               <property name="Keywords"  />
+            </link>
+            <link block="corpIdent_rules" separator=" ">
+               <property name="Rules"  />
+            </link>
+            <link block="corpIdent_influence" separator=" ">
+               <property name="Stat"  />
+            </link>
+            <link block="corpIdent_deck" separator=" ">
+               <property name="Requirement"  />
+            </link>
+         </textblocks>
+      </template>
+      <template src="Proxy/Identities/Identity_Jinteki.png">
+         <matches>
+            <match name="Faction" value="Jinteki" />
+            <match name="Type" value="Identity" />
+         </matches>
+         <textblocks>
+            <link block="corpIdent_name" separator=" ">
+               <property name="Name"  />
+            </link>
+            <link block="corpIdent_subtitle" separator=" ">
+               <property name="Subtitle"  />
+            </link>
+            <link block="corpIdent_keywords" separator=" ">
+               <property name="Keywords"  />
+            </link>
+            <link block="corpIdent_rules" separator=" ">
+               <property name="Rules"  />
+            </link>
+            <link block="corpIdent_influence" separator=" ">
+               <property name="Stat"  />
+            </link>
+            <link block="corpIdent_deck" separator=" ">
+               <property name="Requirement"  />
+            </link>
+         </textblocks>
+      </template>
+      <template src="Proxy/Identities/Identity_NBN.png">
+         <matches>
+            <match name="Faction" value="NBN" />
+            <match name="Type" value="Identity" />
+         </matches>
+         <textblocks>
+            <link block="corpIdent_name" separator=" ">
+               <property name="Name"  />
+            </link>
+            <link block="corpIdent_subtitle" separator=" ">
+               <property name="Subtitle"  />
+            </link>
+            <link block="corpIdent_keywords" separator=" ">
+               <property name="Keywords"  />
+            </link>
+            <link block="corpIdent_rules" separator=" ">
+               <property name="Rules"  />
+            </link>
+            <link block="corpIdent_influence" separator=" ">
+               <property name="Stat"  />
+            </link>
+            <link block="corpIdent_deck" separator=" ">
+               <property name="Requirement"  />
+            </link>
+         </textblocks>
+      </template>
+   <!-- Event Templates -->
+      <template src="Proxy/Events/Event_Anarch.jpg">
+         <matches>
+            <match name="Faction" value="Anarch" />
+            <match name="Type" value="Event" />
+         </matches>
+         <textblocks>
+            <link block="event_name" separator=" ">
+               <property name="Name"  />
+            </link>
+            <link block="event_cost" separator=" ">
+               <property name="Cost"  />
+            </link>
+            <link block="event_keywords" separator=" ">
+               <property name="Keywords"  />
+            </link>
+            <link block="event_rules" separator=" ">
+               <property name="Rules"  />
+            </link>
+         </textblocks>
+      </template>
+      <template src="Proxy/Events/Event_Criminal.jpg">
+         <matches>
+            <match name="Faction" value="Criminal" />
+            <match name="Type" value="Event" />
+         </matches>
+         <textblocks>
+            <link block="event_name" separator=" ">
+               <property name="Name"  />
+            </link>
+            <link block="event_cost" separator=" ">
+               <property name="Cost"  />
+            </link>
+            <link block="event_keywords" separator=" ">
+               <property name="Keywords"  />
+            </link>
+            <link block="event_rules" separator=" ">
+               <property name="Rules"  />
+            </link>
+         </textblocks>
+      </template>
+      <template src="Proxy/Events/Event_Shaper.jpg">
+         <matches>
+            <match name="Faction" value="Shaper" />
+            <match name="Type" value="Event" />
+         </matches>
+         <textblocks>
+            <link block="event_name" separator=" ">
+               <property name="Name"  />
+            </link>
+            <link block="event_cost" separator=" ">
+               <property name="Cost"  />
+            </link>
+            <link block="event_keywords" separator=" ">
+               <property name="Keywords"  />
+            </link>
+            <link block="event_rules" separator=" ">
+               <property name="Rules"  />
+            </link>
+         </textblocks>
+      </template>
+      <template src="Proxy/Events/Event_Neutral.jpg">
+         <matches>
+            <match name="Faction" value="Neutral" />
+            <match name="Type" value="Event" />
+         </matches>
+         <textblocks>
+            <link block="event_name" separator=" ">
+               <property name="Name"  />
+            </link>
+            <link block="event_cost" separator=" ">
+               <property name="Cost"  />
+            </link>
+            <link block="event_keywords" separator=" ">
+               <property name="Keywords"  />
+            </link>
+            <link block="event_rules" separator=" ">
+               <property name="Rules"  />
+            </link>
+         </textblocks>
+      </template>
+   <!-- Resource Templates -->
+      <template src="Proxy/Resources/Resource_Criminal.jpg">
+         <matches>
+            <match name="Faction" value="Criminal" />
+            <match name="Type" value="Resource" />
+         </matches>
+         <textblocks>
+            <link block="resource_name" separator=" ">
+               <property name="Name"  />
+            </link>
+            <link block="resource_cost" separator=" ">
+               <property name="Cost"  />
+            </link>
+            <link block="resource_keywords" separator=" ">
+               <property name="Keywords"  />
+            </link>
+            <link block="resource_rules" separator=" ">
+               <property name="Rules"  />
+            </link>
+         </textblocks>
+      </template>
+      <template src="Proxy/Resources/Resource_Shaper.jpg">
+         <matches>
+            <match name="Faction" value="Shaper" />
+            <match name="Type" value="Resource" />
+         </matches>
+         <textblocks>
+            <link block="resource_name" separator=" ">
+               <property name="Name"  />
+            </link>
+            <link block="resource_cost" separator=" ">
+               <property name="Cost"  />
+            </link>
+            <link block="resource_keywords" separator=" ">
+               <property name="Keywords"  />
+            </link>
+            <link block="resource_rules" separator=" ">
+               <property name="Rules"  />
+            </link>
+         </textblocks>
+      </template>
+      <template src="Proxy/Resources/Resource_Anarch.png">
+         <matches>
+            <match name="Faction" value="Anarch" />
+            <match name="Type" value="Resource" />
+         </matches>
+         <textblocks>
+            <link block="resource_name" separator=" ">
+               <property name="Name"  />
+            </link>
+            <link block="resource_cost" separator=" ">
+               <property name="Cost"  />
+            </link>
+            <link block="resource_keywords" separator=" ">
+               <property name="Keywords"  />
+            </link>
+            <link block="resource_rules" separator=" ">
+               <property name="Rules"  />
+            </link>
+         </textblocks>
+      </template>
+      <template src="Proxy/Resources/Resource_Neutral.jpg">
+         <matches>
+            <match name="Faction" value="Neutral" />
+            <match name="Type" value="Resource" />
+         </matches>
+         <textblocks>
+            <link block="resource_name" separator=" ">
+               <property name="Name"  />
+            </link>
+            <link block="resource_cost" separator=" ">
+               <property name="Cost"  />
+            </link>
+            <link block="resource_keywords" separator=" ">
+               <property name="Keywords"  />
+            </link>
+            <link block="resource_rules" separator=" ">
+               <property name="Rules"  />
+            </link>
+         </textblocks>
+      </template>
+   <!-- Hardware Templates -->
+      <template src="Proxy/Hardware/Hardware_Anarch.jpg">
+         <matches>
+            <match name="Faction" value="Anarch" />
+            <match name="Type" value="Hardware" />
+         </matches>
+         <textblocks>
+            <link block="hardware_name" separator=" ">
+               <property name="Name"  />
+            </link>
+            <link block="hardware_cost" separator=" ">
+               <property name="Cost"  />
+            </link>
+            <link block="hardware_keywords" separator=" ">
+               <property name="Keywords"  />
+            </link>
+            <link block="hardware_rules" separator=" ">
+               <property name="Rules"  />
+            </link>
+         </textblocks>
+      </template>
+      <template src="Proxy/Hardware/Hardware_Criminal.jpg">
+         <matches>
+            <match name="Faction" value="Criminal" />
+            <match name="Type" value="Hardware" />
+         </matches>
+         <textblocks>
+            <link block="hardware_name" separator=" ">
+               <property name="Name"  />
+            </link>
+            <link block="hardware_cost" separator=" ">
+               <property name="Cost"  />
+            </link>
+            <link block="hardware_keywords" separator=" ">
+               <property name="Keywords"  />
+            </link>
+            <link block="hardware_rules" separator=" ">
+               <property name="Rules"  />
+            </link>
+         </textblocks>
+      </template>
+      <template src="Proxy/Hardware/Hardware_Shaper.jpg">
+         <matches>
+            <match name="Faction" value="Shaper" />
+            <match name="Type" value="Hardware" />
+         </matches>
+         <textblocks>
+            <link block="hardware_name" separator=" ">
+               <property name="Name"  />
+            </link>
+            <link block="hardware_cost" separator=" ">
+               <property name="Cost"  />
+            </link>
+            <link block="hardware_keywords" separator=" ">
+               <property name="Keywords"  />
+            </link>
+            <link block="hardware_rules" separator=" ">
+               <property name="Rules"  />
+            </link>
+         </textblocks>
+      </template>
+      <template src="Proxy/Hardware/Hardware_Neutral.jpg">
+         <matches>
+            <match name="Faction" value="Neutral" />
+            <match name="Type" value="Hardware" />
+         </matches>
+         <textblocks>
+            <link block="hardware_name" separator=" ">
+               <property name="Name"  />
+            </link>
+            <link block="hardware_cost" separator=" ">
+               <property name="Cost"  />
+            </link>
+            <link block="hardware_keywords" separator=" ">
+               <property name="Keywords"  />
+            </link>
+            <link block="hardware_rules" separator=" ">
+               <property name="Rules"  />
+            </link>
+         </textblocks>
+      </template>
+   <!-- Program Templates -->
+      <template src="Proxy/Programs/Program_Shaper.jpg">
+         <matches>
+            <match name="Faction" value="Shaper" />
+            <match name="Type" value="Program" />
+         </matches>
+         <textblocks>
+            <link block="program_name" separator=" ">
+               <property name="Name"  />
+            </link>
+            <link block="program_cost" separator=" ">
+               <property name="Cost"  />
+            </link>
+            <link block="program_MU" separator=" ">
+               <property name="Requirement"  />
+            </link>
+            <link block="program_keywords" separator=" ">
+               <property name="Keywords"  />
+            </link>
+            <link block="program_rules" separator=" ">
+               <property name="Rules"  />
+            </link>
+            <link block="program_strength" separator=" ">
+               <property name="Stat"  />
+            </link>
+         </textblocks>
+      </template>
+      <template src="Proxy/Programs/Program_Criminal.jpg">
+         <matches>
+            <match name="Faction" value="Criminal" />
+            <match name="Type" value="Program" />
+         </matches>
+         <textblocks>
+            <link block="program_name" separator=" ">
+               <property name="Name"  />
+            </link>
+            <link block="program_cost" separator=" ">
+               <property name="Cost"  />
+            </link>
+            <link block="program_MU" separator=" ">
+               <property name="Requirement"  />
+            </link>
+            <link block="program_keywords" separator=" ">
+               <property name="Keywords"  />
+            </link>
+            <link block="program_rules" separator=" ">
+               <property name="Rules"  />
+            </link>
+            <link block="program_strength" separator=" ">
+               <property name="Stat"  />
+            </link>
+         </textblocks>
+      </template>
+      <template src="Proxy/Programs/Program_Anarch.png">
+         <matches>
+            <match name="Faction" value="Anarch" />
+            <match name="Type" value="Program" />
+         </matches>
+         <textblocks>
+            <link block="program_name" separator=" ">
+               <property name="Name"  />
+            </link>
+            <link block="program_cost" separator=" ">
+               <property name="Cost"  />
+            </link>
+            <link block="program_MU" separator=" ">
+               <property name="Requirement"  />
+            </link>
+            <link block="program_keywords" separator=" ">
+               <property name="Keywords"  />
+            </link>
+            <link block="program_rules" separator=" ">
+               <property name="Rules"  />
+            </link>
+            <link block="program_strength" separator=" ">
+               <property name="Stat"  />
+            </link>
+         </textblocks>
+      </template>
+      <template src="Proxy/Programs/Program_Neutral.jpg">
+         <matches>
+            <match name="Faction" value="Neutral" />
+            <match name="Type" value="Program" />
+         </matches>
+         <textblocks>
+            <link block="program_name" separator=" ">
+               <property name="Name"  />
+            </link>
+            <link block="program_cost" separator=" ">
+               <property name="Cost"  />
+            </link>
+            <link block="program_MU" separator=" ">
+               <property name="Requirement"  />
+            </link>
+            <link block="program_keywords" separator=" ">
+               <property name="Keywords"  />
+            </link>
+            <link block="program_rules" separator=" ">
+               <property name="Rules"  />
+            </link>
+            <link block="program_strength" separator=" ">
+               <property name="Stat"  />
+            </link>
+         </textblocks>
+      </template>
+   <!-- Runner Identity Templates -->
+      <template src="Proxy/Identities/Identity_Anarch.jpg">
+         <matches>
+            <match name="Faction" value="Anarch" />
+            <match name="Type" value="Identity" />
+         </matches>
+         <textblocks>
+            <link block="runIdent_name" separator=" ">
+               <property name="Name"  />
+            </link>
+            <link block="runIdent_subtitle" separator=" ">
+               <property name="Subtitle"  />
+            </link>
+            <link block="runIdent_link" separator=" ">
+               <property name="Cost"  />
+            </link>
+            <link block="runIdent_keywords" separator=" ">
+               <property name="Keywords"  />
+            </link>
+            <link block="runIdent_rules" separator=" ">
+               <property name="Rules"  />
+            </link>
+            <link block="runIdent_influence" separator=" ">
+               <property name="Stat"  />
+            </link>
+            <link block="runIdent_deck" separator=" ">
+               <property name="Requirement"  />
+            </link>
+         </textblocks>
+      </template>
+      <template src="Proxy/Identities/Identity_Shaper.jpg">
+         <matches>
+            <match name="Faction" value="Shaper" />
+            <match name="Type" value="Identity" />
+         </matches>
+         <textblocks>
+            <link block="runIdent_name" separator=" ">
+               <property name="Name"  />
+            </link>
+            <link block="runIdent_subtitle" separator=" ">
+               <property name="Subtitle"  />
+            </link>
+            <link block="runIdent_link" separator=" ">
+               <property name="Cost"  />
+            </link>
+            <link block="runIdent_keywords" separator=" ">
+               <property name="Keywords"  />
+            </link>
+            <link block="runIdent_rules" separator=" ">
+               <property name="Rules"  />
+            </link>
+            <link block="runIdent_influence" separator=" ">
+               <property name="Stat"  />
+            </link>
+            <link block="runIdent_deck" separator=" ">
+               <property name="Requirement"  />
+            </link>
+         </textblocks>
+      </template>
+      <template src="Proxy/Identities/Identity_Criminal.jpg">
+         <matches>
+            <match name="Faction" value="Criminal" />
+            <match name="Type" value="Identity" />
+         </matches>
+         <textblocks>
+            <link block="runIdent_name" separator=" ">
+               <property name="Name"  />
+            </link>
+            <link block="runIdent_subtitle" separator=" ">
+               <property name="Subtitle"  />
+            </link>
+            <link block="runIdent_link" separator=" ">
+               <property name="Cost"  />
+            </link>
+            <link block="runIdent_keywords" separator=" ">
+               <property name="Keywords"  />
+            </link>
+            <link block="runIdent_rules" separator=" ">
+               <property name="Rules"  />
+            </link>
+            <link block="runIdent_influence" separator=" ">
+               <property name="Stat"  />
+            </link>
+            <link block="runIdent_deck" separator=" ">
+               <property name="Requirement"  />
+            </link>
+         </textblocks>
+      </template>
+   </templates>
