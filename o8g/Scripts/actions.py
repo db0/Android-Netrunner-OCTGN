@@ -1985,7 +1985,7 @@ def intPlay(card, cost = 'not free'):
 def chkTargeting(card):
    if debugVerbosity >= 1: notify(">>> chkTargeting(){}".format(extraASDebug())) #Debug
    global ExposeTargetsWarn, RevealandShuffleWarn
-   if (re.search(r'Targeted', CardsAS.get(card.model,''))
+   if (re.search(r'on(Rez|Play|Install)[^|]+(?<!Auto)Targeted', CardsAS.get(card.model,''))
          and len(findTarget(CardsAS.get(card.model,''))) == 0
          and not re.search(r'isOptional', CardsAS.get(card.model,''))
          and not confirm("This card requires a valid target for it to work correctly.\

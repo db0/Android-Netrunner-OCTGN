@@ -71,6 +71,34 @@ def executePlayScripts(card, action):
          CustomScript(card,action)
          Autoscripts.remove(autoS)
    if len(Autoscripts) == 0: return
+   if debugVerbosity >= 2: notify ('### Looking for multiple choice options') # Debug
+   if action == 'PLAY': trigger = 'onPlay' # We figure out what can be the possible multiple choice trigger
+   elif action == 'REZ': trigger = 'onRez'
+   elif action == 'INSTALL': trigger = 'onInstall'
+   elif action == 'SCORE': trigger = 'onScore'
+   elif action == 'TRASH': trigger = 'onTrash'
+   else: trigger = 'N/A'
+   if debugVerbosity >= 2: notify ('### trigger = {}'.format(trigger)) # Debug
+   if trigger != 'N/A': # If there's a possibility of a multiple choice trigger, we do the check
+      TriggersFound = [] # A List which will hold any valid abilities for this trigger
+      for AutoS in Autoscripts:
+         if re.search(r'{}:'.format(trigger),AutoS): # If the script has the appropriate trigger, we put it into the list.
+            TriggersFound.append(AutoS)
+      if debugVerbosity >= 2: notify ('### TriggersFound = {}'.format(TriggersFound)) # Debug
+      if len(TriggersFound) > 1: # If we have more than one option for this trigger, we need to ask the player for which to use.
+         if Automations['WinForms']: ChoiceTXT = "This card has multiple abilities that can trigger at this point.\nSelect the ones you would like to use."
+         else: ChoiceTXT = "This card has multiple abilities that can trigger at this point.\nType the number of the one you would like to use."
+         triggerInstructions = re.search(r'{}\[(.*?)\]'.format(trigger),card.Instructions) # If the card has multiple options, it should also have some card instructions to have nice menu options.
+         if not triggerInstructions and debugVerbosity >= 1: notify("## Oops! No multiple choice instructions found and I expected some. Will crash prolly.") # Debug
+         cardInstructions = triggerInstructions.group(1).split('|-|') # We instructions for trigger have a slightly different split, so as not to conflict with the instructions from AutoActions.
+         choices = cardInstructions
+         abilChoice = SingleChoice(ChoiceTXT, choices, type = 'button')
+         if abilChoice == 'ABORT' or abilChoice == None: return # If the player closed the window, or pressed Cancel, abort.
+         TriggersFound.pop(abilChoice) # What we do now, is we remove the choice we made, from the list of possible choices. We remove it because then we will remove all the other options from the main list "Autoscripts"
+         for unchosenOption in TriggersFound:
+            if debugVerbosity >= 4: notify ('#### Removing unused option: {}'.format(unchosenOption)) # Debug
+            Autoscripts.remove(unchosenOption)
+         if debugVerbosity >= 2: notify ('### Final Autoscripts after choices: {}'.format(Autoscripts)) # Debug
    for AutoS in Autoscripts:
       if debugVerbosity >= 2: notify("### First Processing: {}".format(AutoS)) # Debug
       effectType = re.search(r'(on[A-Za-z]+|while[A-Za-z]+):', AutoS) 
@@ -578,6 +606,8 @@ def atTimedEffects(Time = 'Start'): # Function which triggers card effects at th
             if not confirm("{} can have its optional ability take effect at this point. Do you want to activate it?{}".format(fetchProperty(card, 'name'),extraCountersTXT)): continue         
          if re.search(r'isAlternativeRunResult', effect.group(2)): AlternativeRunResultUsed = True # If the card has an alternative result to the normal access for a run, mark that we've used it.         
          if re.search(r'onlyOnce',autoS) and oncePerTurn(card, silent = True, act = 'automatic') == 'ABORT': continue
+         targetC = findTarget(effect.group(2))
+         if re.search(r'Targeted', effect.group(2)) and findTarget(effect.group(2)) == []: continue # If our script requires a target and we can't find any, do nothing.
          splitAutoscripts = effect.group(2).split('$$')
          for passedScript in splitAutoscripts:
             if not TitleDone: 
@@ -591,27 +621,27 @@ def atTimedEffects(Time = 'Start'): # Function which triggers card effects at th
             if card.highlight == DummyColor: announceText = "{}'s lingering effects:".format(card)
             else: announceText = "{} triggers to".format(card)
             if regexHooks['GainX'].search(passedScript):
-               gainTuple = GainX(passedScript, announceText, card, notification = 'Automatic', n = X)
+               gainTuple = GainX(passedScript, announceText, card, targetC, notification = 'Automatic', n = X)
                if gainTuple == 'ABORT': break
                X = gainTuple[1] 
             elif regexHooks['TransferX'].search(passedScript):
-               if TransferX(passedScript, announceText, card, notification = 'Automatic', n = X) == 'ABORT': break
+               if TransferX(passedScript, announceText, card, targetC, notification = 'Automatic', n = X) == 'ABORT': break
             elif regexHooks['DrawX'].search(passedScript):
-               if DrawX(passedScript, announceText, card, notification = 'Automatic', n = X) == 'ABORT': break
+               if DrawX(passedScript, announceText, card, targetC, notification = 'Automatic', n = X) == 'ABORT': break
             elif regexHooks['RollX'].search(passedScript):
-               rollTuple = RollX(passedScript, announceText, card, notification = 'Automatic', n = X)
+               rollTuple = RollX(passedScript, announceText, card, targetC, notification = 'Automatic', n = X)
                if rollTuple == 'ABORT': break
                X = rollTuple[1] 
             elif regexHooks['TokensX'].search(passedScript):
-               if TokensX(passedScript, announceText, card, notification = 'Automatic', n = X) == 'ABORT': break
+               if TokensX(passedScript, announceText, card, targetC, notification = 'Automatic', n = X) == 'ABORT': break
             elif regexHooks['InflictX'].search(passedScript):
-               if InflictX(passedScript, announceText, card, notification = 'Automatic', n = X) == 'ABORT': break
+               if InflictX(passedScript, announceText, card, targetC, notification = 'Automatic', n = X) == 'ABORT': break
             elif regexHooks['RetrieveX'].search(passedScript):
-               if RetrieveX(passedScript, announceText, card, notification = 'Automatic', n = X) == 'ABORT': break
+               if RetrieveX(passedScript, announceText, card, targetC, notification = 'Automatic', n = X) == 'ABORT': break
             elif regexHooks['ModifyStatus'].search(passedScript):
-               if ModifyStatus(passedScript, announceText, card, notification = 'Automatic', n = X) == 'ABORT': break
+               if ModifyStatus(passedScript, announceText, card, targetC, notification = 'Automatic', n = X) == 'ABORT': break
             elif regexHooks['DiscardX'].search(passedScript): 
-               discardTuple = DiscardX(passedScript, announceText, card, notification = 'Automatic', n = X)
+               discardTuple = DiscardX(passedScript, announceText, card, targetC, notification = 'Automatic', n = X)
                if discardTuple == 'ABORT': break
                X = discardTuple[1] 
             elif regexHooks['RequestInt'].search(passedScript): 
@@ -1538,7 +1568,7 @@ def RetrieveX(Autoscript, announceText, card, targetCards = None, notification =
    action = re.search(r'\bRetrieve([0-9]+)Card', Autoscript)
    targetPL = ofwhom(Autoscript, card.controller)
    if debugVerbosity >= 2: notify("### Setting Source")
-   if re.search(r'-fromTrash', Autoscript) or re.search(r'-fromArchives', Autoscript):
+   if re.search(r'-fromTrash', Autoscript) or re.search(r'-fromArchives', Autoscript) or re.search(r'-fromHeap', Autoscript):
       source = targetPL.piles['Heap/Archives(Face-up)']
    else: 
       source = targetPL.piles['R&D/Stack']
@@ -1577,7 +1607,7 @@ def RetrieveX(Autoscript, announceText, card, targetCards = None, notification =
          if checkCardRestrictions(gatherCardProperties(c), restrictions):
             cardList.append(c)
             if re.search(r'-isTopmost', Autoscript) and len(cardList) == count: break # If we're selecting only the topmost cards, we select only the first matches we get.         
-   if debugVerbosity >= 3: notify("### cardList: {}".format(cardList))
+   if debugVerbosity >= 3: notify("### cardList: {}".format([c.name for c in cardList]))
    chosenCList = []
    if len(cardList) > count:
       cardChoices = []
@@ -1587,10 +1617,10 @@ def RetrieveX(Autoscript, announceText, card, targetCards = None, notification =
          del cardChoices[:]
          del cardTexts[:]
          for c in cardList:
-            if c.Text not in cardTexts: # we don't want to provide the player with a the same card as a choice twice.
+            if c.Rules not in cardTexts: # we don't want to provide the player with a the same card as a choice twice.
                if debugVerbosity >= 4: notify("### Appending card")
                cardChoices.append(c)
-               cardTexts.append(c.Text) # We check the card text because there are cards with the same name in different sets (e.g. Darth Vader)            
+               cardTexts.append(c.Rules) 
          choice = SingleChoice("Choose card to retrieve{}".format({1:''}.get(count,' {} {}'.format(iter + 1,count))), makeChoiceListfromCardList(cardChoices), type = 'button')
          chosenCList.append(cardChoices[choice])
          cardList.remove(cardChoices[choice])
@@ -1611,7 +1641,7 @@ def RetrieveX(Autoscript, announceText, card, targetCards = None, notification =
    if source != targetPL.piles['Heap/Archives(Face-up)']:
       if debugVerbosity >= 2: notify("### Turning Pile Face Down")
       for c in source: c.isFaceUp = False # We hide again the source pile cards.
-      cover.moveTo(me.ScriptingPile) # we cannot delete cards so we just hide it.
+      cover.moveTo(shared.exile) # we cannot delete cards so we just hide it.
    if debugVerbosity >= 2: notify("### About to announce.")
    if len(chosenCList) == 0: announceString = "{} attempts to {} a card {}, but there were no valid targets.".format(announceText, destiVerb, sourcePath)
    else: announceString = "{} {} {} {}{}.".format(announceText, destiVerb, [c.name for c in chosenCList], sourcePath,MUtext)
@@ -2111,6 +2141,7 @@ def makeChoiceListfromCardList(cardList):
       cStat = fetchProperty(T, 'Stat')
       cType = fetchProperty(T, 'Type')
       if cType == 'ICE': stats += "Strength: {}.".format(cStat)
+      if cType == 'Program': stats += "MU: {}.".format(fetchProperty(T, 'Requirement'))
       if cType == 'Agenda': stats += "Agenda Points: {}.".format(cStat)
       if cType == 'Asset' or cType == 'Upgrade': stats += "Trash Cost: {}.".format(cStat)
       if debugVerbosity >= 4: notify("### Finished Adding Stats. Going to choice...")# Debug               

@@ -282,7 +282,7 @@
 		<property name="Stat" value="" />	
 		<property name="Rules" value="Search your stack or heap for a program. Install that program, ignoring all costs. Shuffle your stack if you searched it. When this turn ends, add the program to the top of your stack if it is still installed." />
 		<property name="Flavor" value="" />
-		<property name="Instructions" value="" />
+		<property name="Instructions" value="onPlay[Search your stack for a program. Install that program, ignoring all costs and shuffle your stack|-|Search your heap for a program. Install that program, ignoring all costs.]" />
 		<property name="Faction" value="Shaper" />
 		<property name="Influence" value="3" />
 		<property name="Side" value="Runner" />

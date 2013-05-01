@@ -522,7 +522,7 @@ Kate "Mac" McCaffrey
 -----
 bc0f047c-01b1-427f-a439-d451eda01033
 -----
-whileRezzed:Reduce1CostInstall-forHardware-onlyOnce-forMe||whileRezzed:Reduce1CostInstall-forProgram-onlyOnce-forMe
+whileRezzed:Reduce1CostInstall-forHardware-onlyOnce-forMe||whileRezzed:Reduce1CostInstall-forProgram-onlyOnce-forMe||whileRezzed:Pass-perCardInstall-typeProgram_or_Hardware-byMe-onlyOnce
 +++++
 	
 .....
@@ -1386,7 +1386,7 @@ Test Run
 -----
 bc0f047c-01b1-427f-a439-d451eda02047
 -----
-onPlay:Retrieve1Card-typeProgram-toTable-with1Test Run$$ShuffleStack||atTurnEnd:UninstallTarget-AutoTargeted-atProgram-hasMarker{Test Run}-toStack
+onPlay:Retrieve1Card-typeProgram-toTable-with1Test Run$$ShuffleStack||onPlay:Retrieve1Card-fromHeap-typeProgram-toTable-with1Test Run||atTurnEnd:UninstallTarget-toStack-AutoTargeted-atProgram-hasMarker{Test Run}
 +++++
 A0B0G0T0:UninstallTarget-toStack-AutoTargeted-atProgram-hasMarker{Test Run}$$TrashMyself
 .....
