@@ -1346,7 +1346,9 @@ def RunX(Autoscript, announceText, card, targetCards = None, notification = None
             if debugVerbosity >= 3: notify("### Targeted Server found!")
             if targets[0].name == 'Remote Server': targetServer = 'Remote'
             else: targetServer = targets[0].name
-      else: targetServer = action.group(1)
+      else: 
+         targetServer = action.group(1)
+         if targetServer == 'Remote' and card.name == 'Remote Server': card.target(True) # If the player double clicked the remote server to start a run, then we target it, in order to allow an arrow to be painted.
       feint = re.search(r'-feintTo([A-Za-z&]+)', Autoscript)
       if feint:
          setGlobalVariable('feintTarget',feint.group(1)) # If the card script is feinting to a different fort, set a shared variable so that the corp knows it.
@@ -1553,7 +1555,7 @@ def InflictX(Autoscript, announceText, card, targetCards = None, notification = 
             DMGcard = targetPL.hand.random() # Pick a random card from their hand
             if targetPL.getGlobalVariable('ds') == 'corp': DMGcard.moveTo(targetPL.piles['Archives(Hidden)']) # If they're a corp, move it to the hidden archive
             else: DMGcard.moveTo(targetPL.piles['Heap/Archives(Face-up)']) #If they're a runner, move it to trash.
-            notify("-- {} discarded".format(DMGcard))
+            notify("--DMG: {} discarded".format(DMGcard))
             if action.group(3) == 'Brain':  
                #targetPL.counters['Hand Size'].value -= 1 # If it's brain damage, also reduce the player's maximum handsize.               
                applyBrainDmg(targetPL)

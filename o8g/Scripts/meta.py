@@ -191,7 +191,9 @@ def storeSpecial(card):
       if debugVerbosity >= 1: notify(">>> storeSpecial(){}".format(extraASDebug())) #Debug
       storeProperties(card, True)
       specialCards = eval(me.getGlobalVariable('specialCards'))
-      specialCards[card.Type] = card._id
+      if card.name == 'HQ' or card.name == 'R&D' or card.name == 'Archives':
+         specialCards[card.name] = card._id # The central servers we find via name
+      else: specialCards[card.Type] = card._id
       me.setGlobalVariable('specialCards', str(specialCards))
    except: notify("!!!ERROR!!! In storeSpecial()")
 

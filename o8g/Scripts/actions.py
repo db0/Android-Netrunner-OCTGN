@@ -403,14 +403,27 @@ def intRun(aCost = 1, Name = 'R&D', silent = False):
       elif Name == 'Remote': announceTXT = 'a remote server'
       else: announceTXT = Name
       notify ("{} to start a run on {}.".format(ClickCost,announceTXT))
-   targetPL = ofwhom('-ofOpponent')
    if debugVerbosity >= 2: notify("Setting bad publicity")
+   targetPL = ofwhom('-ofOpponent')
    BadPub = targetPL.counters['Bad Publicity'].value
    enemyIdent = getSpecial('Identity',targetPL)
    myIdent = getSpecial('Identity',me)
+   abortArrow = False
    if BadPub > 0:
          myIdent.markers[mdict['BadPublicity']] += BadPub
          notify("--> The Bad Publicity of {} allows {} to secure {} for this run".format(enemyIdent,myIdent,uniCredit(BadPub)))
+   if debugVerbosity >= 2: notify("Painting run Arrow")
+   if Name != 'Remote': targetServer = getSpecial(Name,enemyIdent.controller)      
+   else: 
+      targetRemote = findTarget("Targeted-atRemote Server") # We try to see if the player had a remote targeted, if so we make it the target.
+      if len(targetRemote) == 0:  # If there's no remote targeted, we check to see if there's only one remote server in the game. If so, that must be the target.
+         targetRemote = findTarget("AutoTargeted-atRemote Server")
+         if len(targetRemote) == 1: targetServer = targetRemote[0]
+         else: abortArrow = True # If we cannot figure out which remote the runner is running on, we paint no arrow.
+      else: targetServer = targetRemote[0]
+   if not abortArrow: 
+      targetServer.target(False)
+      myIdent.arrow(targetServer, True)
    setGlobalVariable('status','running{}'.format(Name))
    atTimedEffects('Run')
 
