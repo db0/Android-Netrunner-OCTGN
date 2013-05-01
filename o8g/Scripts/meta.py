@@ -832,8 +832,8 @@ def TrialError(group, x=0, y=0): # Debugging
       ds = "corp"
       notify("Corp Now")
    ###### End Testing Corner ######
-   testcards = ["bc0f047c-01b1-427f-a439-d451eda02081", # Humanity's Shadow Cards
-                "bc0f047c-01b1-427f-a439-d451eda02082", 
+   testcards = ["bc0f047c-01b1-427f-a439-d451eda01022", # Humanity's Shadow Cards
+                "bc0f047c-01b1-427f-a439-d451eda02064", 
                 "bc0f047c-01b1-427f-a439-d451eda02083", 
                 "bc0f047c-01b1-427f-a439-d451eda02084", 
                 "bc0f047c-01b1-427f-a439-d451eda02085", 
