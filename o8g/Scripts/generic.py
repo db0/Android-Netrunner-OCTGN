@@ -70,7 +70,7 @@ def calcStringButtonHeight(STRING):
    newlines = 0
    for char in STRING:
       if char == '\n': newlines += 1
-   STRINGheight = 30 + (8 * newlines) + (7 * (len(STRING) / 35))
+   STRINGheight = 30 + (8 * newlines) + (7 * (len(STRING) / 30))
    return STRINGheight
    
 def formStringEscape(STRING): # A function to escape some characters that are not otherwise displayed by WinForms, like amperasands '&'
@@ -154,7 +154,7 @@ def information(Message):
    
 class SingleChoiceWindow(Form):
  
-   def __init__(self, BoxTitle, BoxOptions, type, defaultOption):
+   def __init__(self, BoxTitle, BoxOptions, type, defaultOption, pages = 0):
       self.Text = "Select an Option"
       self.index = 0
       self.confirmValue = None
@@ -206,7 +206,7 @@ class SingleChoiceWindow(Form):
       bufferPanel.Left = (self.ClientSize.Width - bufferPanel.Width) / 2
       bufferPanel.AutoSize = True
       choicePanel.Controls.Add(bufferPanel)
-      
+            
       for option in BoxOptions:
          if type == 'radio':
             btn = RadioButton()
@@ -231,7 +231,19 @@ class SingleChoiceWindow(Form):
       button.Click += self.buttonPressed
       if type == 'radio': self.Controls.Add(button) # We only add the "Confirm" button on a radio menu.
  
+      buttonNext = Button()
+      buttonNext.Text = "Next Page"
+      buttonNext.Width = 100
+      buttonNext.Dock = DockStyle.Bottom
+      buttonNext.Click += self.nextPage
+      if pages > 1: self.Controls.Add(buttonNext) # We only add the "Confirm" button on a radio menu.
+ 
    def buttonPressed(self, sender, args):
+      self.timer.Stop()
+      self.Close()
+
+   def nextPage(self, sender, args):
+      self.confirmValue = "Next Page"
       self.timer.Stop()
       self.Close()
  
@@ -257,11 +269,23 @@ class SingleChoiceWindow(Form):
 def SingleChoice(title, options, type = 'radio', default = 0):
    if debugVerbosity >= 1: notify(">>> SingleChoice()".format(title))
    if Automations['WinForms']:
-      Application.EnableVisualStyles()
-      form = SingleChoiceWindow(title, options, type, default)
-      form.BringToFront()
-      form.ShowDialog()
-      choice = num(form.getIndex())
+      optChunks=[options[x:x+8] for x in xrange(0, len(options), 8)]
+      optCurrent = 0
+      choice = "New"
+      while choice == "New" or choice == "Next Page":
+         Application.EnableVisualStyles()
+         form = SingleChoiceWindow(title, optChunks[optCurrent], type, default, pages = len(optChunks))
+         form.BringToFront()
+         form.ShowDialog()
+         choice = form.getIndex()
+         if debugVerbosity >= 2: notify("### choice is: {}".format(choice))
+         if choice == "Next Page": 
+            if debugVerbosity >= 3: notify("### Going to next page")
+            optCurrent += 1
+            if optCurrent >= len(optChunks): optCurrent = 0
+         else: 
+            choice = num(form.getIndex()) + (optCurrent * 8) # if the choice is not a next page, then we convert it to an integer and give that back, adding 8 per number of page passed
+            
    else:
       concatTXT = title + '\n\n'
       for iter in range(len(options)):
