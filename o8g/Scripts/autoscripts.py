@@ -870,6 +870,8 @@ def GainX(Autoscript, announceText, card, targetCards = None, notification = Non
    reduction = 0
    action = re.search(r'\b(Gain|Lose|SetTo)([0-9]+)([A-Z][A-Za-z &]+)-?', Autoscript)
    if debugVerbosity >= 2: notify("### action groups: {}. Autoscript: {}".format(action.groups(0),Autoscript)) # Debug
+   actiontypeRegex = re.search(r'actiontype([A-Z]+)',Autoscript) # This is used by some scripts so that they do not use the triggered action as the type of action that triggers the effect. For example, Draco's ability is not a "Rez" action and thus its cost is not affected by card that affect ICE rez costs, like Project Braintrust
+   if actiontypeRegex: actionType = actiontypeRegex.group(1)
    gain += num(action.group(2))
    targetPL = ofwhom(Autoscript, card.controller)
    if targetPL != me: 

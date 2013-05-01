@@ -986,7 +986,7 @@ Draco
 -----
 bc0f047c-01b1-427f-a439-d451eda02020
 -----
-onRez:RequestInt-Msg{How many Power counters do you want to add on Draco?}$$Lose1Credits-perX-isCost$$Put1PlusOnePerm-perX
+onRez:RequestInt-Msg{How many Power counters do you want to add on Draco?}$$Lose1Credits-perX-isCost-actiontypeUSE$$Put1PlusOnePerm-perX
 +++++
 A0B0G0T0:Trace2-isSubroutine-traceEffects<Gain1Tags-onOpponent++RunEnd,None>
 .....
