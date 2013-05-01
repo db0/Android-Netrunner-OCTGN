@@ -1,14 +1,10 @@
 =====Message of the Day======
 
-Welcome to OCTGN 3.1!
+Humanity's Shadow will be available in OCTGN 3.1 coming out very soon!
 
-This new version now uses a proxy generator to create image-less cards on-the-fly. 
+If you're eager to try it out, please check and download the OCTGN 3.1 test version
 
-This means that you will be able to play the game without downloading any sets, but you will not see any images.
-
-If you prefer to go back to the images, you can download the new .o8c files which contained the censored versions.
-
-Do you want to open a browser page to the .o8c card pack downloads?
+Would you like to learn more?
 =============================
 &&
-https://github.com/db0/Android-Netrunner-OCTGN#available-sets-and-data-packs
+http://boardgamegeek.com/thread/970239/get-ready-for-octgn-3-1
