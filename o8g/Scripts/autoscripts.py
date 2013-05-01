@@ -350,7 +350,7 @@ def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
       for activeAutoscript in selectedAutoscripts:
          if debugVerbosity >= 3: notify("### Reached ifHave chk")
          if not ifHave(activeAutoscript): continue # If the script requires the playet to have a specific counter value and they don't, do nothing.
-         if re.search(r'onlyOnce',activeAutoscript) and oncePerTurn(card, silent = True) == 'ABORT': continue
+         if re.search(r'onlyOnce',activeAutoscript) and oncePerTurn(card, silent = True) == 'ABORT': return
          targetC = findTarget(activeAutoscript)
          ### Warning the player in case we need to
          if chkWarn(card, activeAutoscript) == 'ABORT': return
@@ -450,7 +450,7 @@ def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
          elif regexHooks['RunX'].search(activeAutoscript):              announceText = RunX(activeAutoscript, announceText, card, targetC, n = X)
          elif regexHooks['TraceX'].search(activeAutoscript):            announceText = TraceX(activeAutoscript, announceText, card, targetC, n = X)
          elif regexHooks['InflictX'].search(activeAutoscript):          announceText = InflictX(activeAutoscript, announceText, card, targetC, n = X)
-         elif regexHooks['RetrieveX'].search(activeAutoscript):        announceText = RetrieveX(activeAutoscript, announceText, card, targetC, n = X)
+         elif regexHooks['RetrieveX'].search(activeAutoscript):         announceText = RetrieveX(activeAutoscript, announceText, card, targetC, n = X)
          elif regexHooks['ModifyStatus'].search(activeAutoscript):      announceText = ModifyStatus(activeAutoscript, announceText, card, targetC, n = X)
          elif regexHooks['SimplyAnnounce'].search(activeAutoscript):    announceText = SimplyAnnounce(activeAutoscript, announceText, card, targetC, n = X)
          elif regexHooks['ChooseKeyword'].search(activeAutoscript):     announceText = ChooseKeyword(activeAutoscript, announceText, card, targetC, n = X)
@@ -543,6 +543,8 @@ def autoscriptOtherPlayers(lookup, origin_card = Identity, count = 1): # Functio
             if InflictX(AutoS, costText, card, targetCard, notification = 'Automatic', n = count) == 'ABORT': break
          elif regexHooks['DrawX'].search(AutoS):
             if DrawX(AutoS, costText, card, targetCard, notification = 'Automatic', n = count) == 'ABORT': break
+         elif regexHooks['UseCustomAbility'].search(AutoS):
+            if UseCustomAbility(AutoS, costText, card, targetCard, notification = 'Automatic', n = count) == 'ABORT': break
    if debugVerbosity >= 3: notify("<<< autoscriptOtherPlayers()") # Debug
 
 #------------------------------------------------------------------------------
@@ -1652,9 +1654,9 @@ def RetrieveX(Autoscript, announceText, card, targetCards = None, notification =
       
 def UseCustomAbility(Autoscript, announceText, card, targetCards = None, notification = None, n = 0):
    if fetchProperty(card, 'name') == "Tollbooth":
-      targetPL = ofwhom('ofOpponent')
+      targetPL = findOpponent()
       global reversePlayerChk
-      reversePlayerChk = True
+      reversePlayerChk = True # We reverse for which player the reduce effects work, because we want cards which pay for the opponent's credit cost to take effect now.
       reduction = reduceCost(card, 'FORCE', 3, True) # We use a dry-run to see if they have a card which card reduce the tollbooth cost such as stimhack
       reversePlayerChk = False
       if reduction > 0: extraText = " (reduced by {})".format(uniCredit(reduction))  
@@ -1668,6 +1670,52 @@ def UseCustomAbility(Autoscript, announceText, card, targetCards = None, notific
       else: 
          jackOut(silent = True)
          announceString = announceText + ' end the run'.format(targetPL,uniCredit(3))   
+   if fetchProperty(card, 'name') == "Replicator":
+      targetC = targetCards[0] # For this to be triggered a program has to have been installed, which was passed to us in an array.
+      if oncePerTurn(card, silent = True, act = 'dryRun') == 'ABORT': return 'ABORT'# If the replicator has already been used, we do nothing.
+      if not confirm("Would you like to replicate the {}?".format(targetC.name)):
+         return 'ABORT'
+      oncePerTurn(card, silent = True, act = 'automatic') # If the user chose to use the replicator, we set it to used.
+      retrieveResult = RetrieveX('Retrieve1Card-type{}-isTopmost'.format(targetC.name), announceText, card)
+      shuffle(me.piles['R&D/Stack'])
+      if re.search(r'no valid targets',retrieveResult): announceString = "{} tries to use their replicator to create a copy of {}, but they run out of juice.".format(me,targetC.name) # If we couldn't find a copy of the played card to replicate, we inform of this
+      else: announceString = "{} uses their replicator to create a copy of {}".format(me,targetC.name)
+      notify(announceString)
+   if fetchProperty(card, 'name') == "Data Hound":
+      count = askInteger("By which amount of trace strength did you exceeded the runner's link strength?",1)
+      if not count: return 'ABORT'
+      if count > 5 and confirm("If you are sniffing at more than 5 cards from the opponent's deck, we suggest you take this action manually, by right clicking on their Stack, taking control and then looking at the top X cards.\n\bTrying to use the Data Hound automatically with a large number of cards can be very unwiedly.\n\nAbort Now?"): return 'ABORT'      
+      targetPL = findOpponent()
+      cardList = list(targetPL.piles['R&D/Stack'].top(count)) # We make a list of the top cards the corp can look at.
+      if debugVerbosity >= 2: notify("### Turning Runner's Stack Face Up")
+      cover = table.create("ac3a3d5d-7e3a-4742-b9b2-7f72596d9c1b",0,0,1,True) 
+      cover.moveTo(targetPL.piles['R&D/Stack']) 
+      for c in targetPL.piles['R&D/Stack']: c.isFaceUp = True 
+      if len(cardList) > 1:
+         choice = SingleChoice("Choose card to trash", makeChoiceListfromCardList(cardList), type = 'button')
+         trashedC = cardList.pop(choice)
+      else: trashedC = cardList.pop(0)
+      if debugVerbosity >= 2: notify("### Trashing {}".format(trashedC))
+      trashedC.moveTo(targetPL.piles['Heap/Archives(Face-up)'])
+      if len(cardList) > 1: notify("{}'s Data Hound has sniffed out and trashed {} and is now reorganizing {}'s Stack".format(me,trashedC,targetPL))
+      else: notify("{} has sniffed out and trashed {}".format(me,trashedC))
+      idx = 0 # The index where we're going to be placing each card.
+      while len(cardList) > 0:
+         if len(cardList) == 1: choice = 0
+         else: choice = SingleChoice("Choose card put on the {} position of the Stack".format(numOrder(idx)), makeChoiceListfromCardList(cardList), type = 'button')
+         movedC = cardList.pop(choice)
+         movedC.moveTo(targetPL.piles['R&D/Stack'],idx + 1) # If there's only one card left, we put it in the last available index location in the Stack. We always put the card one index position deeper, because the first card is the cover.
+         idx += 1
+      if debugVerbosity >= 2: notify("### Turning Pile Face Down")
+      rnd(1,100) # Delay to be able to announce names.
+      for c in targetPL.piles['R&D/Stack']: c.isFaceUp = False # We hide again the source pile cards.
+      cover.moveTo(shared.exile) # we cannot delete cards so we just hide it.
+      announceString = ':=> Sniff.'
+         #      __
+         # (___()'`;   *Sniff*
+         # /,    /`
+         # \\"--\\      
+         # Pity the chatbox does not support formatting :(
    return announceString
    
 def CustomScript(card, action = 'PLAY'): # Scripts that are complex and fairly unique to specific cards, not worth making a whole generic function for them.

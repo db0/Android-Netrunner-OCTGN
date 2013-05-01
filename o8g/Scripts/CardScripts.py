@@ -292,7 +292,7 @@ bc0f047c-01b1-427f-a439-d451eda01088
 -----
 
 +++++
-A0B0G0T0:Trace3-isSubroutine-traceEffects<Put1Power,None>||A0B0G0T0:Remove1Power-isCost$$Gain1Tags-onOpponent	
+A0B0G0T0:Gain1Tags-onOpponent||A0B0G0T0:Trace3-isSubroutine-traceEffects<Put1Power,None>||A0B0G0T0:Remove1Power-isCost$$Gain1Tags-onOpponent	
 .....
 Datasucker
 -----
@@ -1602,7 +1602,7 @@ Networking
 -----
 bc0f047c-01b1-427f-a439-d451eda02084
 -----
-onPlay:Remove1Tags
+onPlay:Lose1Tags
 +++++
 A0B1G0T0:UninstallMyself-isSilent$$SimplyAnnounce{take networking back into their grip}
 .....
@@ -1634,7 +1634,7 @@ Replicator
 -----
 bc0f047c-01b1-427f-a439-d451eda02088
 -----
-whileRezzed:UseCustomAbility-perCardInstall-typeHardware-byMe
+whileRezzed:UseCustomAbility-perCardInstall-onTriggerCard-typeHardware-byMe
 +++++
 
 .....
@@ -1700,6 +1700,7 @@ bc0f047c-01b1-427f-a439-d451eda02096
 -----
 
 +++++
+A0B0G0T0:Trace2-isSubroutine-traceEffects<SimplyAnnounce{sniff the runner's stack},None>||A0B0G0T0:UseCustomAbility
 
 .....
 Bernice Mai
@@ -1724,7 +1725,7 @@ bc0f047c-01b1-427f-a439-d451eda02099
 -----
 onRez:Put2Credits-isSilent||atTurnStart:Refill2Credits-duringMyTurn
 +++++
-A1B0G0T0:Remove1Credits-isCost$$Put1Advance-Targeted
+A1B0G0T0:Remove1Credits-isCost$$Put1Advancement-Targeted
 .....
 Foxfire
 -----

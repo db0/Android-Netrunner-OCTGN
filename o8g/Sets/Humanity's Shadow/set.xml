@@ -250,7 +250,7 @@
 		<property name="Stat" value="2" />	
 		<property name="Rules" value="[Subroutine] Trace2 - If successful, look at a number of cards from the top of the Runner&#39;s stack equal to the amount by which your trace strength exceeded his or her link strength. Trash 1 of those cards, and arrange the rest in any order." />
 		<property name="Flavor" value="Sniff." />
-		<property name="Instructions" value="" />
+		<property name="Instructions" value="[Subroutine] Trace 2.||(If Trace Successful) Look at the top X cards from the runner's deck, trash one and re-arrange the rest." />
 		<property name="Faction" value="NBN" />
 		<property name="Influence" value="1" />
 		<property name="Side" value="Corp" />

@@ -490,7 +490,7 @@
 		<property name="Stat" value="4" />	
 		<property name="Rules" value="When the Runner encounters Data Raven, he or she must either take 1 tag or end the run.&#xD;&#xA;&#xD;&#xA;Hosted power counter: Give the Runner 1 tag.&#xD;&#xA;[Subroutine] Trace3 - If successful, place 1 power counter on Data Raven." />
 		<property name="Flavor" value="" />
-		<property name="Instructions" value="[Subroutine] Trace 3. Place 1 Power Counter if succesful||Remove 1 hosted Power counter to give the Runner 1 Tag." />
+		<property name="Instructions" value="Give the runner a Tag||[Subroutine] Trace 3. Place 1 Power Counter if succesful||Remove 1 hosted Power counter to give the Runner 1 Tag." />
 		<property name="Faction" value="NBN" />
 		<property name="Influence" value="2" />
 		<property name="Side" value="corp" />
