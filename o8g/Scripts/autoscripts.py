@@ -350,6 +350,7 @@ def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
       for activeAutoscript in selectedAutoscripts:
          if debugVerbosity >= 3: notify("### Reached ifHave chk")
          if not ifHave(activeAutoscript): continue # If the script requires the playet to have a specific counter value and they don't, do nothing.
+         if re.search(r'onlyOnce',activeAutoscript) and oncePerTurn(card, silent = True) == 'ABORT': continue
          targetC = findTarget(activeAutoscript)
          ### Warning the player in case we need to
          if chkWarn(card, activeAutoscript) == 'ABORT': return

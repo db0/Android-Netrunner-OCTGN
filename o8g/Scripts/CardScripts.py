@@ -1590,21 +1590,21 @@ whileRezzed:Increase1CostRez-forICE-forOpponent
 +++++
 
 .....
-Networking
------
-bc0f047c-01b1-427f-a439-d451eda02083
------
-onPlay:Remove1Tags
-+++++
-A0B1G0T0:UninstallMyself-isSilent$$SimplyAnnounce{take networking back into their grip}
-.....
 Andromeda
 -----
-bc0f047c-01b1-427f-a439-d451eda02084
+bc0f047c-01b1-427f-a439-d451eda02083
 -----
 onStartup:Draw4Cards-isSilent||onMulligan:Draw4Cards-isSilent
 +++++
 
+.....
+Networking
+-----
+bc0f047c-01b1-427f-a439-d451eda02084
+-----
+onPlay:Remove1Tags
++++++
+A0B1G0T0:UninstallMyself-isSilent$$SimplyAnnounce{take networking back into their grip}
 .....
 HQ Interface
 -----
@@ -1724,7 +1724,7 @@ bc0f047c-01b1-427f-a439-d451eda02099
 -----
 onRez:Put2Credits-isSilent||atTurnStart:Refill2Credits-duringMyTurn
 +++++
-A1B0G0T0:Remove1Credits-isCost$$AdvanceTarget-Targeted
+A1B0G0T0:Remove1Credits-isCost$$Put1Advance-Targeted
 .....
 Foxfire
 -----
