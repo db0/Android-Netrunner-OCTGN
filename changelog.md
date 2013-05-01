@@ -10,7 +10,7 @@ Changelog - Android:Netrunner LCG OCTGN Game Definition
 * **Significant:** Tutoring effects are now automated. This means that cards like Special Order and Test Run are also automated and can be used more fluidly. 
 * Test Run's ability will now adjust memory for the programs it installs and automatically unistall them to the top of the Stack at the end of the turn or when double clicked.
 * **Significant:** Implemented Cloud Computing. What this means is that cards like ZU and Creeper automatically adjust the player's ram according to how much Link they have as per their rules. No more forgetting how many MUs you're using.
-* Braintrust should reduce the cost of Draco's ability anymore
+* Braintrust should not reduce the cost of Draco's ability anymore
 * Doppelgänger now ends the previous run before starting a new one. Shouldn't the game to be confused on where the runner is on anymore.
 * Kate's ability will now be wasted for a turn if cards are installed via the Personal Workshop or Test Run first, as it should be.
 
