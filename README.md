@@ -19,6 +19,7 @@ Sets will be uncensored after 6 months.
 * [Trace Amount](http://dbzer0.com/pub/ANR/Sets/ANR-Trace-Amount.o8c) *(Censored)*
 * [Cyber Exodus](http://dbzer0.com/pub/ANR/Sets/ANR-Cyber-Exodus.o8c) *(Censored)*
 * [A Study In Static](http://dbzer0.com/pub/ANR/Sets/ANR-A-Study-In-Static.o8c) *(Censored)*
+* [Humanity's Shadow](http://dbzer0.com/pub/ANR/Sets/ANR-Humanitys-Shadow.o8c) *(Censored)*
  
 
 If you have the sets already from OCTGN 3.0 and you want to convert them to 3.1 without redownloading, [check this guide](o8c_Convert_Guide.md).
