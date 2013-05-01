@@ -1,0 +1,325 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<set xmlns:noNamespaceSchemaLocation="CardSet.xsd" name="Humanity's Shadow" id="54e6b622-c596-4216-ba49-c728e6003525" gameId="0f38e453-26df-4c04-9d67-6d43de939c77" gameVersion="3.0.0.0" version="3.0.0.0">
+<cards>
+	<card id="bc0f047c-01b1-427f-a439-d451eda02081" name="Surge">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Event" />
+		<property name="Keywords" value="" />
+		<property name="Cost" value="0" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="" />	
+		<property name="Rules" value="Play only if you placed at least 1 virus counter on a program this turn.&#xD;&#xA;Place 2 virus counters on that program." />
+		<property name="Flavor" value="You must yell &quot;surge&quot; to get the full effect." />
+		<property name="Instructions" value="How to use the card in OCTGN" />
+		<property name="Faction" value="Anarch" />
+		<property name="Influence" value="1" />
+		<property name="Side" value="Runner" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda02082" name="Xanadu">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Resource" />
+		<property name="Keywords" value="Virtual-Unique" />
+		<property name="Cost" value="3" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="" />	
+		<property name="Rules" value="The rez cost of all ice is increased by 1." />
+		<property name="Flavor" value="And all should cry, Beware&#33; Beware&#33;&#xD;&#xA;His flashing eyes, his floating hair&#33;&#xD;&#xA;Weave a circle around him thrice, &#xD;&#xA;And close your eyes with holy dread,&#xD;&#xA;For he on honey-dew hath fed,&#xD;&#xA;And drunk the milk of Paradise.&#xD;&#xA;-Samuel Taylor Coleridge" />
+		<property name="Instructions" value="How to use the card in OCTGN" />
+		<property name="Faction" value="Anarch" />
+		<property name="Influence" value="2" />
+		<property name="Side" value="Runner" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda02083" name="Andromeda">
+		<property name="Subtitle" value="Dispossessed Ristie" />
+		<property name="Type" value="Identity" />
+		<property name="Keywords" value="Natural" />
+		<property name="Cost" value="1" />
+		<property name="Requirement" value="45" />	
+		<property name="Stat" value="15" />	
+		<property name="Rules" value="You draw a starting hand of 9 cards." />
+		<property name="Flavor" value="&quot;I run with the best.&quot;" />
+		<property name="Instructions" value="How to use the card in OCTGN" />
+		<property name="Faction" value="Criminal" />
+		<property name="Influence" value="" />
+		<property name="Side" value="Runner" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda02084" name="Networking">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Event" />
+		<property name="Keywords" value="" />
+		<property name="Cost" value="0" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="" />	
+		<property name="Rules" value="Remove 1 tag. You may pay 1 [Credits] to add Networking to your grip instead of trashing it." />
+		<property name="Flavor" value="She preferred to do business in a club. Something about the lights and dancers clouded the judgement of the corporate simpletons she met there." />
+		<property name="Instructions" value="How to use the card in OCTGN" />
+		<property name="Faction" value="Criminal" />
+		<property name="Influence" value="1" />
+		<property name="Side" value="Runner" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda02085" name="HQ Interface">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Hardware" />
+		<property name="Keywords" value="" />
+		<property name="Cost" value="4" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="" />	
+		<property name="Rules" value="Whenever you access cards from HQ, access 1 additional card from HQ." />
+		<property name="Flavor" value="If you don&#39;t have someone on the inside, find someone on the inside who&#39;s fond of desk ornaments." />
+		<property name="Instructions" value="How to use the card in OCTGN" />
+		<property name="Faction" value="Criminal" />
+		<property name="Influence" value="2" />
+		<property name="Side" value="Runner" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda02086" name="Pheromones">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Program" />
+		<property name="Keywords" value="Virus" />
+		<property name="Cost" value="2" />
+		<property name="Requirement" value="1" />	
+		<property name="Stat" value="-" />	
+		<property name="Rules" value="X [Recurring Credits]&#xD;&#xA;Use these credits during runs on HQ. X is the number of virus counters on Pheromones.&#xD;&#xA;Whenever you make a successful run on HQ, place 1 virus counter on Pheromones." />
+		<property name="Flavor" value="" />
+		<property name="Instructions" value="How to use the card in OCTGN" />
+		<property name="Faction" value="Criminal" />
+		<property name="Influence" value="2" />
+		<property name="Side" value="Runner" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda02087" name="Quality Time">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Event" />
+		<property name="Keywords" value="" />
+		<property name="Cost" value="3" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="" />	
+		<property name="Rules" value="Draw 5 cards." />
+		<property name="Flavor" value="She at her PAD. I at my rig. Low lights. Smooth jazz. Love blooms." />
+		<property name="Instructions" value="How to use the card in OCTGN" />
+		<property name="Faction" value="Shaper" />
+		<property name="Influence" value="1" />
+		<property name="Side" value="Runner" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda02088" name="Replicator">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Hardware" />
+		<property name="Keywords" value="" />
+		<property name="Cost" value="2" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="" />	
+		<property name="Rules" value="Whenever you install a piece of hardware (including Replicator), you may search your stack for another copy of that hardware, reveal it, and add it to your grip. Shuffle your stack." />
+		<property name="Flavor" value="Do you really need another one?" />
+		<property name="Instructions" value="How to use the card in OCTGN" />
+		<property name="Faction" value="Shaper" />
+		<property name="Influence" value="" />
+		<property name="Side" value="Runner" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda02089" name="Creeper">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Program" />
+		<property name="Keywords" value="Icebreaker-Killer-Cloud" />
+		<property name="Cost" value="5" />
+		<property name="Requirement" value="1" />	
+		<property name="Stat" value="2" />	
+		<property name="Rules" value="If you have at least 2 [Link], the memory cost of Creeper is 0, even if it is not installed.&#xD;&#xA;2 [Credits]: Break sentry subroutine.&#xD;&#xA;1 [Credits]: + strength." />
+		<property name="Flavor" value="&quot;The itsy bitsy spider went up the data spout...&quot; - Chaos Theory" />
+		<property name="Instructions" value="How to use the card in OCTGN" />
+		<property name="Faction" value="Shaper" />
+		<property name="Influence" value="1" />
+		<property name="Side" value="Runner" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda02090" name="Kraken">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Event" />
+		<property name="Keywords" value="" />
+		<property name="Cost" value="3" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="" />	
+		<property name="Rules" value="Play only if you stole an agenda this turn.&#xD;&#xA;Choose a server. The Corp trashes 1 piece of ice protecting that server." />
+		<property name="Flavor" value="Early permutations of the kraken proved to be insatiable, ice-devouring marauders. Not much has changed." />
+		<property name="Instructions" value="How to use the card in OCTGN" />
+		<property name="Faction" value="Neutral" />
+		<property name="Influence" value="0" />
+		<property name="Side" value="Runner" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda02091" name="Kati Jones">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Resource" />
+		<property name="Keywords" value="Connection-Unique" />
+		<property name="Cost" value="2" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="" />	
+		<property name="Rules" value="You cannot use Kati Jones more than once per turn.&#xD;&#xA;[Click]: Place 3 [Credits] from the bank on Kati Jones.&#xD;&#xA;[Click]: Take all credits from Kati Jones." />
+		<property name="Flavor" value="&quot;You aren&#39;t the only type of runner in New Angeles.&quot;" />
+		<property name="Instructions" value="How to use the card in OCTGN" />
+		<property name="Faction" value="Neutral" />
+		<property name="Influence" value="0" />
+		<property name="Side" value="Runner" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda02092" name="Eve Campaign">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Asset" />
+		<property name="Keywords" value="Advertisement" />
+		<property name="Cost" value="5" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="5" />	
+		<property name="Rules" value="Place 16 [Credits] from the bank on Eve Campaign when it is rezzed. When there are no credits left on Eve Campaign, trash it.&#xD;&#xA;When your turn begins, take 2 [Credits] from Eve Campaign." />
+		<property name="Flavor" value="" />
+		<property name="Instructions" value="How to use the card in OCTGN" />
+		<property name="Faction" value="Haas-Bioroid" />
+		<property name="Influence" value="3" />
+		<property name="Side" value="Corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda02093" name="Rework">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Operation" />
+		<property name="Keywords" value="" />
+		<property name="Cost" value="0" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="" />	
+		<property name="Rules" value="Shuffle 1 card from HQ into R&amp;D." />
+		<property name="Flavor" value="Also known as &quot;development hell.&quot;" />
+		<property name="Instructions" value="How to use the card in OCTGN" />
+		<property name="Faction" value="Haas-Bioroid" />
+		<property name="Influence" value="1" />
+		<property name="Side" value="Corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda02094" name="Whirlpool">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="ICE" />
+		<property name="Keywords" value="Trap" />
+		<property name="Cost" value="0" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="1" />	
+		<property name="Rules" value="[Subroutine] The Runner cannot jack out for the remainder of this run. Trash Whirlpool." />
+		<property name="Flavor" value="&quot;This ice sucks.&quot; - g00ru" />
+		<property name="Instructions" value="How to use the card in OCTGN" />
+		<property name="Faction" value="Jinteki" />
+		<property name="Influence" value="2" />
+		<property name="Side" value="Corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda02095" name="Hokusai Grid">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Upgrade" />
+		<property name="Keywords" value="Region" />
+		<property name="Cost" value="2" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="4" />	
+		<property name="Rules" value="Whenever there is a successful run on this server, do 1 net damage.&#xD;&#xA;Limit 1 region per server." />
+		<property name="Flavor" value="Despite its appearance, the Hokusai Grid is the most notorious research facility at Jinteki." />
+		<property name="Instructions" value="How to use the card in OCTGN" />
+		<property name="Faction" value="Jinteki" />
+		<property name="Influence" value="2" />
+		<property name="Side" value="Corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda02096" name="Data Hound">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="ICE" />
+		<property name="Keywords" value="Sentry-Tracer-Observer" />
+		<property name="Cost" value="1" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="2" />	
+		<property name="Rules" value="[Subroutine] Trace2 - If successful, look at a number of cards from the top of the Runner&#39;s stack equal to the amount by which your trace strength exceeded his or her link strength. Trash 1 of those cards, and arrange the rest in any order." />
+		<property name="Flavor" value="Sniff." />
+		<property name="Instructions" value="How to use the card in OCTGN" />
+		<property name="Faction" value="NBN" />
+		<property name="Influence" value="1" />
+		<property name="Side" value="Corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda02097" name="Bernice Mai">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Upgrade" />
+		<property name="Keywords" value="Sysop-Unique" />
+		<property name="Cost" value="0" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="3" />	
+		<property name="Rules" value="Whenever there is a successful run on this server, trace5 - if successful, give the Runner 1 tag. If unsuccessful, trash Bernice Mai." />
+		<property name="Flavor" value="Keeping tabs on the world, one screen at a time." />
+		<property name="Instructions" value="How to use the card in OCTGN" />
+		<property name="Faction" value="NBN" />
+		<property name="Influence" value="2" />
+		<property name="Side" value="Corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda02098" name="Salvage">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="ICE" />
+		<property name="Keywords" value="Code Gate-Tracer" />
+		<property name="Cost" value="2" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="0" />	
+		<property name="Rules" value="Salvage can be advanced only while rezzed and gains &quot;[Subroutine] Trace2 - If successful, give the Runner 1 tag.&quot; for each advancement token on it." />
+		<property name="Flavor" value="You&#39;re not in Kansas anymore." />
+		<property name="Instructions" value="How to use the card in OCTGN" />
+		<property name="Faction" value="The Weyland Consortium" />
+		<property name="Influence" value="2" />
+		<property name="Side" value="Corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda02099" name="Simone Diego">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Upgrade" />
+		<property name="Keywords" value="Sysop-Unique" />
+		<property name="Cost" value="4" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="3" />	
+		<property name="Rules" value="2 [Recurring Credits]&#xD;&#xA;Use these credits to advance cards in or protecting this server." />
+		<property name="Flavor" value="&quot;A job done once is a job done right.&quot;" />
+		<property name="Instructions" value="How to use the card in OCTGN" />
+		<property name="Faction" value="The Weyland Consortium" />
+		<property name="Influence" value="2" />
+		<property name="Side" value="Corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda02100" name="Foxfire">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Operation" />
+		<property name="Keywords" value="" />
+		<property name="Cost" value="0" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="" />	
+		<property name="Rules" value="Trace7 - If successful, trash 1 virtual resource or 1 link." />
+		<property name="Flavor" value="&quot;It&#39;s kind of like an anagram.&quot; - designer Phoenix" />
+		<property name="Instructions" value="How to use the card in OCTGN" />
+		<property name="Faction" value="Neutral" />
+		<property name="Influence" value="0" />
+		<property name="Side" value="Corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+</cards>
+</set>

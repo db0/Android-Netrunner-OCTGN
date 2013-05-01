@@ -1728,7 +1728,7 @@ A1B0G0T0:Remove1Credits-isCost$$AdvanceTarget-Targeted
 .....
 Foxfire
 -----
-bc0f047c-01b1-427f-a439-d451eda02080
+bc0f047c-01b1-427f-a439-d451eda02100
 -----
 onPlay:Trace7-traceEffects<SimplyAnnounce{trash 1 virtual resource, or 1 link},None>
 +++++
