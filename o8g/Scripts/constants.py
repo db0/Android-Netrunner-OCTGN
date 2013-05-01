@@ -30,6 +30,7 @@ mdict = dict( # A dictionary which holds all the hard coded markers (in the mark
              BrainDMG =                ("Brain Damage","59810a63-2a6b-4ae2-a71c-348c8965d612"),
              DaemonMU =                ("Daemon MU", "17844835-3140-4555-b592-0f711048eabd"),
              PersonalWorkshop =        ("Personal Workshop", "efbfabaa-384d-4139-8be1-7f1d706b3dd8"),
+             Cloud =                   ("Cloud", "5f58fb37-e44d-4620-8093-3b7378fb5f57"),
              BaseLink =                ("Base Link", "2fb5b6bb-31c5-409c-8aa6-2c46e971a8a5"))
 
              

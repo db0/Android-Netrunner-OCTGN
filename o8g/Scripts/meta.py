@@ -220,23 +220,50 @@ def chkRAM(card, action = 'INSTALL', silent = False):
    if (MUreq > 0
          and not (card.markers[mdict['DaemonMU']] and not re.search(r'Daemon',getKeywords(card)))
          and not findMarker(card,'Daemon Hosted MU')
+         and not (card.markers[mdict['Cloud']] and card.markers[mdict['Cloud']] >= 1) # If the card is already in the cloud, we do not want to modify the player's MUs
          and not (hostC and findMarker(card, '{} Hosted'.format(hostC.name))) # No idea if this will work.
          and card.highlight != InactiveColor 
          and card.highlight != RevealedColor):
       if action == 'INSTALL':
          card.owner.MU -= MUreq
-         MUtext = ", using up  {}".format(uniMU(MUreq))
+         chkCloud(card)
+         if not card.markers[mdict['Cloud']]:
+            MUtext = ", using up  {}".format(uniMU(MUreq))
+         else: MUtext = ''
       elif action == 'UNINSTALL':
          card.owner.MU += MUreq
          MUtext = ", freeing up  {}".format(uniMU(MUreq))
    else: MUtext = ''
    if card.owner.MU < 0 and not silent: 
-      notify(":::Warning:::{}'s programs require more memory than he has available. They must trash enough programs to bring their available Memory to at least 0".format(card.controller))
+      notify(":::Warning:::{}'s programs require more memory than they have available. They must trash enough programs to bring their available Memory to at least 0".format(card.controller))
       information(":::ATTENTION:::\n\nYou are now using more MUs than you have available memory!\
                   \nYou need to trash enough programs to bring your Memory to 0 or higher")
    if debugVerbosity >= 3: notify("<<< chkRAM() by returning: {}".format(MUtext))
    return MUtext
 
+def chkCloud(cloudCard = None): # A function which checks the table for cards which can be put in the cloud and thus return their used MUs
+   if debugVerbosity >= 1: notify(">>> chkCloud(){}".format(extraASDebug())) #Debug
+   if not cloudCard: cards = [c for c in table if c.Type == 'Program']
+   else: cards = [cloudCard] # If we passed a card as a variable, we just check the cloud status of that card
+   for card in cards:
+      if debugVerbosity >= 2: notify("### Cloud Checking {} with AS = {}".format(card,fetchProperty(card, 'AutoScripts'))) #Debug
+      cloudRegex = re.search(r'Cloud([0-9]+)Link',fetchProperty(card, 'AutoScripts'))
+      if cloudRegex:
+         linkRequired = num(cloudRegex.group(1))
+         if debugVerbosity >= 2: notify("### Found Cloud Regex. linkRequired = {}".format(linkRequired)) #Debug
+         if linkRequired <= card.controller.counters['Base Link'].value and not card.markers[mdict['Cloud']]:
+            card.markers[mdict['Cloud']] = 1
+            card.controller.MU += num(card.Requirement)
+            notify("-- {}'s {} has been enabled for cloud computing".format(me,card))            
+         if linkRequired > card.controller.counters['Base Link'].value and card.markers[mdict['Cloud']] and card.markers[mdict['Cloud']] >= 1:
+            card.markers[mdict['Cloud']] = 0
+            card.controller.MU -= num(card.Requirement)
+            notify("-- {}'s {} has lost connection to the cloud.".format(me,card))
+            if card.controller.MU < 0: 
+               notify(":::Warning:::{}'s loss of cloud connection means that their programs require more memory than they have available. They must trash enough programs to bring their available Memory to at least 0".format(card.controller))
+   if debugVerbosity >= 3: notify("<<< chkCloud()")
+            
+   
 def chkHostType(card, seek = 'Targeted'):
    if debugVerbosity >= 1: notify(">>> chkHostType(){}".format(extraASDebug())) #Debug
    # Checks if the card needs to have a special host targeted before it can come in play.

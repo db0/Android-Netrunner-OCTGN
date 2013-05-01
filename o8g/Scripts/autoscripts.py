@@ -62,6 +62,7 @@ def executePlayScripts(card, action):
           re.search(r'atSuccessfulRun', autoS) or 
           re.search(r'onAccess', autoS) or 
           re.search(r'Placement', autoS) or 
+          re.search(r'constantAbility', autoS) or 
           re.search(r'onPay', autoS) or # onPay effects are only useful before we go to the autoscripts, for the cost reduction.
           re.search(r'triggerNoisy', autoS) or # Trigger Noisy are used automatically during action use.
           re.search(r'-isTrigger', autoS)): Autoscripts.remove(autoS)
@@ -946,6 +947,7 @@ def GainX(Autoscript, announceText, card, targetCards = None, notification = Non
          if re.search(r'isCost', Autoscript): notify(":::Warning:::{} did not have enough {} to pay the cost of this action".format(targetPL,action.group(3)))
          elif re.search(r'isPenalty', Autoscript): pass #If an action is marked as penalty, it means that the value can go negative and the player will have to recover that amount.
          else: targetPL.counters['Base Link'].value = 0
+      chkCloud() # After we modify player link, we check for enabled cloud connections.
    elif re.match(r'Bad Publicity', action.group(3)): 
       if action.group(1) == 'SetTo': targetPL.counters['Bad Publicity'].value = 0 # If we're setting to a specific value, we wipe what it's currently.
       if gain == -999: targetPL.counters['Bad Publicity'].value = 0

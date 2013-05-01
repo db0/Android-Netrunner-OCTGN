@@ -1098,7 +1098,7 @@ ZU.13 Key Master
 -----
 bc0f047c-01b1-427f-a439-d451eda02007
 -----
-
+constantAbility:Cloud2Link
 +++++
 A0B1G0T0:SimplyAnnounce{break code gate subroutine}||A0B1G0T0:Put1PlusOne
 .....
@@ -1642,9 +1642,9 @@ Creeper
 -----
 bc0f047c-01b1-427f-a439-d451eda02089
 -----
-
+constantAbility:Cloud2Link
 +++++
-A0B2G0T0:SimplyAnnounce{break sentry subroutine}||A0B1G0T0:Put1PlusOne	
+A0B2G0T0:SimplyAnnounce{break sentry subroutine}||A0B1G0T0:Put1PlusOne
 .....
 Kraken
 -----

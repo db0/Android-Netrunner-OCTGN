@@ -26,6 +26,7 @@
 		<marker id="17844835-3140-4555-b592-0f711048eabd" name="Daemon MU" />
 		<marker id="2fb5b6bb-31c5-409c-8aa6-2c46e971a8a5" name="Base Link" />
 		<marker id="efbfabaa-384d-4139-8be1-7f1d706b3dd8" name="Personal Workshop" />
+		<marker id="5f58fb37-e44d-4620-8093-3b7378fb5f57" name="Cloud" />
 	</markers>
 	<cards>
 		<card id="eb7e719e-007b-4fab-973c-3fe228c6ce20" name="Trace">
