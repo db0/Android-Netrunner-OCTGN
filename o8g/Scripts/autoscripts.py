@@ -159,6 +159,8 @@ def executePlayScripts(card, action):
                if ChooseKeyword(passedScript, announceText, card, targetC, notification = 'Quick', n = X) == 'ABORT': return
             elif regexHooks['InflictX'].search(passedScript): 
                if InflictX(passedScript, announceText, card, targetC, notification = 'Quick', n = X) == 'ABORT': return
+            elif regexHooks['RetrieveX'].search(passedScript): 
+               if RetrieveX(passedScript, announceText, card, targetC, notification = 'Quick', n = X) == 'ABORT': return
             elif regexHooks['ModifyStatus'].search(passedScript): 
                if ModifyStatus(passedScript, announceText, card, targetC, notification = 'Quick', n = X) == 'ABORT': return
          if failedRequirement: break # If one of the Autoscripts was a cost that couldn't be paid, stop everything else.
@@ -419,6 +421,7 @@ def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
          elif regexHooks['RunX'].search(activeAutoscript):              announceText = RunX(activeAutoscript, announceText, card, targetC, n = X)
          elif regexHooks['TraceX'].search(activeAutoscript):            announceText = TraceX(activeAutoscript, announceText, card, targetC, n = X)
          elif regexHooks['InflictX'].search(activeAutoscript):          announceText = InflictX(activeAutoscript, announceText, card, targetC, n = X)
+         elif regexHooks['RetrieveX'].search(activeAutoscript):        announceText = RetrieveX(activeAutoscript, announceText, card, targetC, n = X)
          elif regexHooks['ModifyStatus'].search(activeAutoscript):      announceText = ModifyStatus(activeAutoscript, announceText, card, targetC, n = X)
          elif regexHooks['SimplyAnnounce'].search(activeAutoscript):    announceText = SimplyAnnounce(activeAutoscript, announceText, card, targetC, n = X)
          elif regexHooks['ChooseKeyword'].search(activeAutoscript):     announceText = ChooseKeyword(activeAutoscript, announceText, card, targetC, n = X)
@@ -603,6 +606,8 @@ def atTimedEffects(Time = 'Start'): # Function which triggers card effects at th
                if TokensX(passedScript, announceText, card, notification = 'Automatic', n = X) == 'ABORT': break
             elif regexHooks['InflictX'].search(passedScript):
                if InflictX(passedScript, announceText, card, notification = 'Automatic', n = X) == 'ABORT': break
+            elif regexHooks['RetrieveX'].search(passedScript):
+               if RetrieveX(passedScript, announceText, card, notification = 'Automatic', n = X) == 'ABORT': break
             elif regexHooks['ModifyStatus'].search(passedScript):
                if ModifyStatus(passedScript, announceText, card, notification = 'Automatic', n = X) == 'ABORT': break
             elif regexHooks['DiscardX'].search(passedScript): 
@@ -1525,7 +1530,85 @@ def InflictX(Autoscript, announceText, card, targetCards = None, notification = 
    if notification and multiplier > 0: notify('--> {}.'.format(announceString))
    if debugVerbosity >= 3: notify("<<< InflictX()")
    return announceString
-   
+
+def RetrieveX(Autoscript, announceText, card, targetCards = None, notification = None, n = 0): # Core Command for finding a specific card from a pile and putting it in hand or trash pile
+   if debugVerbosity >= 1: notify(">>> RetrieveX(){}".format(extraASDebug(Autoscript))) #Debug
+   if targetCards is None: targetCards = []
+   action = re.search(r'\bRetrieve([0-9]+)Card', Autoscript)
+   targetPL = ofwhom(Autoscript, card.controller)
+   if debugVerbosity >= 2: notify("### Setting Source")
+   if re.search(r'-fromTrash', Autoscript) or re.search(r'-fromArchives', Autoscript):
+      source = targetPL.piles['Heap/Archives(Face-up)']
+   else: 
+      source = targetPL.piles['R&D/Stack']
+   sourcePath =  "from their {}".format(pileName(source))
+   if sourcePath == "from their Face-up Archives": sourcePath = "from their Archives"
+   if debugVerbosity >= 2: notify("### Setting Destination")
+   if re.search(r'-toTable', Autoscript):
+      destination = table
+      destiVerb = 'install'   
+   else: 
+      destination = targetPL.hand
+      destiVerb = 'retrieve'
+   if debugVerbosity >= 2: notify("### Fething Script Variables")
+   count = num(action.group(1))
+   multiplier = per(Autoscript, card, n, targetCards, notification)
+   if source != targetPL.piles['Heap/Archives(Face-up)']: # The discard pile is anyway visible.
+      if debugVerbosity >= 2: notify("### Turning Pile Face Up")
+      cover = table.create("ac3a3d5d-7e3a-4742-b9b2-7f72596d9c1b",0,0,1,True) # Creating a dummy card to cover that player's source pile
+      cover.moveTo(source) # Moving that dummy card on top of their source pile
+      for c in source: c.isFaceUp = True # We flip all cards in the player's deck face up so that we can grab their properties
+   elif source == targetPL.piles['Heap/Archives(Face-up)'] and re.search(r'-fromArchives', Autoscript): # If we're flipping the
+      if debugVerbosity >= 2: notify("### Turning Hidden Archives Face Up")
+      cover = table.create("ac3a3d5d-7e3a-4742-b9b2-7f72596d9c1b",0,0,1,True) 
+      cover.moveTo(targetPL.piles['Archives(Hidden)']) 
+      for c in targetPL.piles['Archives(Hidden)']: c.isFaceUp = True 
+   restrictions = prepareRestrictions(Autoscript, seek = 'type')
+   cardList = []
+   for c in source:
+      if debugVerbosity >= 4: notify("### Checking card: {}".format(c))
+      if checkCardRestrictions(gatherCardProperties(c), restrictions):
+         cardList.append(c)
+         if re.search(r'-isTopmost', Autoscript) and len(cardList) == count: break # If we're selecting only the topmost cards, we select only the first matches we get.         
+   if re.search(r'-fromArchives', Autoscript): # If the card is being retrieved from archives, we need to also check hidden archives.
+      for c in targetPL.piles['Archives(Hidden)']:
+         if debugVerbosity >= 4: notify("### Checking Hidden Arc card: {}".format(c))
+         if checkCardRestrictions(gatherCardProperties(c), restrictions):
+            cardList.append(c)
+            if re.search(r'-isTopmost', Autoscript) and len(cardList) == count: break # If we're selecting only the topmost cards, we select only the first matches we get.         
+   if debugVerbosity >= 3: notify("### cardList: {}".format(cardList))
+   chosenCList = []
+   if len(cardList) > count:
+      cardChoices = []
+      cardTexts = []
+      for iter in range(count):
+         if debugVerbosity >= 4: notify("#### iter: {}/{}".format(iter,count))
+         del cardChoices[:]
+         del cardTexts[:]
+         for c in cardList:
+            if c.Text not in cardTexts: # we don't want to provide the player with a the same card as a choice twice.
+               if debugVerbosity >= 4: notify("### Appending card")
+               cardChoices.append(c)
+               cardTexts.append(c.Text) # We check the card text because there are cards with the same name in different sets (e.g. Darth Vader)            
+         choice = SingleChoice("Choose card to retrieve{}".format({1:''}.get(count,' {} {}'.format(iter + 1,count))), makeChoiceListfromCardList(cardChoices), type = 'button')
+         chosenCList.append(cardChoices[choice])
+         cardList.remove(cardChoices[choice])
+   else: chosenCList = cardList
+   if debugVerbosity >= 2: notify("### chosenCList: {}".format(chosenCList))
+   for c in chosenCList:
+      if destination == table: placeCard(c)
+      else: c.moveTo(destination)
+   if source != targetPL.piles['Heap/Archives(Face-up)']:
+      if debugVerbosity >= 2: notify("### Turning Pile Face Down")
+      for c in source: c.isFaceUp = False # We hide again the source pile cards.
+      cover.moveTo(me.ScriptingPile) # we cannot delete cards so we just hide it.
+   if debugVerbosity >= 2: notify("### About to announce.")
+   if len(chosenCList) == 0: announceString = "{} attempts to {} a card {}, but there were no valid targets.".format(announceText, destiVerb, sourcePath)
+   else: announceString = "{} {} {} {}.".format(announceText, destiVerb, [c.name for c in chosenCList], sourcePath)
+   if notification and multiplier > 0: notify(':> {}.'.format(announceString))
+   if debugVerbosity >= 3: notify("<<< RetrieveX()")
+   return announceString
+      
 def UseCustomAbility(Autoscript, announceText, card, targetCards = None, notification = None, n = 0):
    if fetchProperty(card, 'name') == "Tollbooth":
       targetPL = ofwhom('ofOpponent')
