@@ -11,3 +11,4 @@ If you prefer to go back to the images, you can download the new .o8c files whic
 Do you want to open a browser page to the .o8c card pack downloads?
 =============================
 &&
+https://github.com/db0/Android-Netrunner-OCTGN#available-sets-and-data-packs
