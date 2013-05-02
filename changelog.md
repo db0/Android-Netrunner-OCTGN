@@ -1,6 +1,6 @@
 Changelog - Android:Netrunner LCG OCTGN Game Definition
 ===============================================
-### 3.0.1.0
+### 3.0.1.0 (Currently as .0.46 due to OCTGN bug)
 
 * Fixed game breaking when using tutoring effects (I hope)
 
