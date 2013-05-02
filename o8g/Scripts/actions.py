@@ -1133,6 +1133,7 @@ def scrAgenda(card, x = 0, y = 0,silent = False):
          reportGame()
       card.highlight = None # In case the card was highlighted as revealed, we remove that now.
       card.markers[mdict['Advancement']] = 0 # We only want to clear the advance counters after the automations, as they may still be used.
+      card.setController(me) # Taking control of the agenda for the one that scored it.
    else:
       whisper ("You can't score this card")
 
