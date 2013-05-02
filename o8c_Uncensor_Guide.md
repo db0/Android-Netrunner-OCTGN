@@ -5,12 +5,9 @@ How to uncensor an .o8c file with your own scans.
 2. Change the file name from ```ANR-Humanitys-Shadow.o8c``` to ```ANR-Humanitys-Shadow.zip```
 3. Extract the zip files and folders to a work folder.
 4. File structure in the work folder will look like this;
-    ```- 0f38e453-26df-4c04-9d67-6d43de939c77
-    
+    - 0f38e453-26df-4c04-9d67-6d43de939c77
     | -- Sets
-    
     || --- 54e6b622-c596-4216-ba49-c728e6003525
-    
     ||| ---- Cards```
 
 5. Replace the censored cards with uncensored scans. You must rename the uncensored cards exactly like the censored ones.
