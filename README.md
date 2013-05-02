@@ -24,6 +24,8 @@ Sets will be uncensored after 6 months.
 
 If you have the sets already from OCTGN 3.0 and you want to convert them to 3.1 without redownloading, [check this guide](o8c_Convert_Guide.md).
 
+If you have your own scans and want to use those instead of the censored card, you can [follow this guide to do so](o8c_Uncensor_Guide.md).
+
 Tutorials
 ---------
 
