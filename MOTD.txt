@@ -1,5 +1,7 @@
 =====Message of the Day======
 
+UPDATE: Bug with Replicator and Test Run has been fixed
+
 Welcome to OCTGN 3.1!
  
 This new version now uses a proxy generator to create image-less cards on-the-fly. 
