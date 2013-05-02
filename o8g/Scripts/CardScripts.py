@@ -1594,7 +1594,7 @@ Andromeda
 -----
 bc0f047c-01b1-427f-a439-d451eda02083
 -----
-onStartup:ShuffleR&D-isSilent$$Draw4Cards-isSilent||onMulligan:Draw4Cards-isSilent
+onStartup:Draw4Cards-isSilent||onMulligan:Draw4Cards-isSilent
 +++++
 
 .....

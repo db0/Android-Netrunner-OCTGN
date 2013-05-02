@@ -301,7 +301,6 @@ def intJackin(group, x = 0, y = 0):
       BL = num(Identity.Cost)
       me.counters['Base Link'].value = BL
       notify("{} is representing the Runner {}. They start with {} {}".format(me,Identity,BL,uniLink()))
-   executePlayScripts(Identity,'STARTUP')   
    if debugVerbosity >= 3: notify("### Creating Starting Cards")
    createStartingCards()
    if debugVerbosity >= 3: notify("### Shuffling Deck")
@@ -311,6 +310,7 @@ def intJackin(group, x = 0, y = 0):
    drawMany(me.piles['R&D/Stack'], 5)
    if debugVerbosity >= 3: notify("### Reshuffling Deck")
    shuffle(me.piles['R&D/Stack']) # And another one just to be sure
+   executePlayScripts(Identity,'STARTUP')   
    initGame()
 
 def checkDeckNoLimit(group):
