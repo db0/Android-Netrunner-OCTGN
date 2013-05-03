@@ -1,5 +1,11 @@
 Changelog - Android:Netrunner LCG OCTGN Game Definition
 ===============================================
+### 3.0.2.0 (Currently as .0.52 due to OCTGN bug)
+
+* Fixed Pheromones paying for runs on every server
+* No more "target missing" whine when simply pressing F5 to run a remote.
+* Double clicking on a server to start a run will silently end any previous runs currently ongoing.
+
 ### 3.0.1.0 (Currently as .0.46 due to OCTGN bug)
 
 * Fixed game breaking when using tutoring effects (I hope)
