@@ -518,7 +518,7 @@ def autoscriptOtherPlayers(lookup, origin_card = Identity, count = 1): # Functio
       AutoScriptSnapshot = list(Autoscripts)
       for autoS in AutoScriptSnapshot: # Checking and removing anything other than whileRezzed or whileScored.
          if not re.search(r'while(Rezzed|Scored|Running)', autoS): Autoscripts.remove(autoS)
-         elif re.search(r'whileRunning', autoS) and not re.search(r'running',getGlobalVariable('status')): Autoscripts.remove(autoS) # Some autoscripted abilities only work while a run is in progress (e.g. Spinal Modem.)
+         if not chkRunningStatus(autoS): Autoscripts.remove(autoS) # If the script only works while running a specific server, and we're not, then abort.
       if len(Autoscripts) == 0: continue
       for AutoS in Autoscripts:
          if debugVerbosity >= 2: notify('Checking AutoS: {}'.format(AutoS)) # Debug
@@ -1333,7 +1333,7 @@ def RunX(Autoscript, announceText, card, targetCards = None, notification = None
       else: announceString = "{} end the run".format(announceText)
    else:
       if action.group(1) == 'Generic':
-         targets = findTarget('Targeted-atServer')
+         targets = findTarget('Targeted-atServer-isMutedTarget')
          if targets == []: # If the player has not targeted a server, then we ask them what they're targeting.
             if debugVerbosity >= 3: notify("### No targets found. Asking")
             choice = SingleChoice("Which server are you going to run at?\
@@ -1360,9 +1360,10 @@ def RunX(Autoscript, announceText, card, targetCards = None, notification = None
       intRun(0,targetServer,True)
       if notification == 'Quick': announceString = "{} starts a run{}".format(announceText, runTarget)
       else: announceString = "{} start a run{}".format(announceText, runTarget)
-   if notification: notify('--> {}.'.format(announceString))
+   if notification and not re.search(r'isSilent', Autoscript): notify('--> {}.'.format(announceString))
    if debugVerbosity >= 3: notify("<<< RunX()")
-   return announceString
+   if re.search(r'isSilent', Autoscript): return announceText
+   else: return announceString
 
 def SimplyAnnounce(Autoscript, announceText, card, targetCards = None, notification = None, n = 0): # Core Command for drawing X Cards from the house deck to your hand.
    if debugVerbosity >= 1: notify(">>> SimplyAnnounce(){}".format(extraASDebug())) #Debug
@@ -2045,7 +2046,7 @@ def findTarget(Autoscript, fromHand = False, card = None): # Function for findin
             if len(requiredAllegiances) > 0: targetsText += "\n00 Valid Target Allegiance: {}.".format(requiredAllegiances)
             if re.search(r'isRezzed',Autoscript): targetsText += "\n -- Card Status: Rezzed"
             if re.search(r'isUnrezzed',Autoscript): targetsText += "\n -- Card Status: Unrezzed"
-            delayed_whisper(":::ERROR::: You need to target a valid card before using this action{}.".format(targetsText))
+            if not re.search(r'isMutedTarget', Autoscript): delayed_whisper(":::ERROR::: You need to target a valid card before using this action{}.".format(targetsText))
          elif len(foundTargets) >= 1 and re.search(r'-choose',Autoscript):
             if debugVerbosity >= 2: notify("### Going for a choice menu")# Debug
             choiceType = re.search(r'-choose([0-9]+)',Autoscript)
@@ -2384,6 +2385,19 @@ def ifHave(Autoscript,controller = me,silent = False):
    if debugVerbosity >= 3: notify("<<< ifHave() with Result: {}".format(Result)) # Debug
    return Result # If we don't have an ifHave clause, then the result is always True      
       
+def chkRunningStatus(autoS): # Checks a script to see if it requires a run to be in progress and returns True or False if it passes the check.
+   if debugVerbosity >= 1: notify(">>> chkRunningStatus() with autoS = {}".format(autoS)) #Debug
+   Result = True
+   runRegex = re.search(r'whileRunning([A-Za-z&]+)?', autoS)
+   if runRegex:
+      if debugVerbosity >= 2:
+         try: notify("### runRegex group(1) = {}".format(runRegex.group(1)))
+         except: notify(":::ERROR::: while checking runRegex.group(1)")
+      statusRegex = re.search(r'running([A-Za-z&]+)',getGlobalVariable('status')) # This global variable holds the status of the game. I.e. if there's a run ongoing or not.
+      if not statusRegex: Result = False # Some autoscripted abilities only work while a run is in progress (e.g. Spinal Modem.)
+      elif runRegex.group(1) and runRegex.group(1) != statusRegex.group(1): Result = False # If the script only works while running a specific server, and we're not, then abort.
+   if debugVerbosity >= 3: notify("<<< chkRunningStatus() with Result: {}".format(Result)) # Debug
+   return Result
    
 def chkPlayer(Autoscript, controller, manual, targetChk = False): # Function for figuring out if an autoscript is supposed to target an opponent's cards or ours.
 # Function returns 1 if the card is not only for rivals, or if it is for rivals and the card being activated it not ours.

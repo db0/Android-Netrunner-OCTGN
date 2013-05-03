@@ -20,7 +20,7 @@ HQ
 -----
 
 +++++
-A1B0G0T0:RunHQ
+A1B0G0T0:RunEnd-isSilent$$RunHQ
 .....
 R&D
 -----
@@ -28,7 +28,7 @@ fbb865c9-fccc-4372-9618-ae83a47101a2
 -----
 
 +++++
-A1B0G0T0:RunR&D
+A1B0G0T0:RunEnd-isSilent$$RunR&D
 .....
 Archives
 -----
@@ -36,7 +36,7 @@ Archives
 -----
 
 +++++
-A1B0G0T0:RunArchives
+A1B0G0T0:RunEnd-isSilent$$RunArchives
 .....
 Remote Server
 -----
@@ -44,7 +44,7 @@ d59fc50c-c727-4b69-83eb-36c475d60dcb
 -----
 
 +++++
-A1B0G0T0:RunRemote
+A1B0G0T0:RunEnd-isSilent$$RunRemote
 .....
 Accelerated Beta Test
 -----
@@ -1444,7 +1444,7 @@ bc0f047c-01b1-427f-a439-d451eda02064
 -----
 whileRezzed:Gain1MU
 +++++
-A0B0G0T2:RunEnd$$RunGeneric
+A0B0G0T2:RunEnd-isSilent$$RunGeneric
 .....
 Crescentus
 -----
@@ -1618,7 +1618,7 @@ Pheromones
 -----
 bc0f047c-01b1-427f-a439-d451eda02086
 -----
-atSuccessfulRun:Put1Virus-ifSuccessfulRunHQ||onRez:Put1Credits-perMarker{Virus}||atTurnStart:Refill1Credits-perMarker{Virus}-duringMyTurn||whileRunning:Reduce#CostAll-forAll-forMe
+atSuccessfulRun:Put1Virus-ifSuccessfulRunHQ||onRez:Put1Credits-perMarker{Virus}||atTurnStart:Refill1Credits-perMarker{Virus}-duringMyTurn||whileRunningHQ:Reduce#CostAll-forAll-forMe
 +++++
 
 .....

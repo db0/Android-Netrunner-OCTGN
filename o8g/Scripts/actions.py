@@ -415,7 +415,7 @@ def intRun(aCost = 1, Name = 'R&D', silent = False):
    if debugVerbosity >= 2: notify("Painting run Arrow")
    if Name != 'Remote': targetServer = getSpecial(Name,enemyIdent.controller)      
    else: 
-      targetRemote = findTarget("Targeted-atRemote Server") # We try to see if the player had a remote targeted, if so we make it the target.
+      targetRemote = findTarget("Targeted-atRemote Server-isMutedTarget") # We try to see if the player had a remote targeted, if so we make it the target.
       if len(targetRemote) == 0:  # If there's no remote targeted, we check to see if there's only one remote server in the game. If so, that must be the target.
          targetRemote = findTarget("AutoTargeted-atRemote Server")
          if len(targetRemote) == 1: targetServer = targetRemote[0]
@@ -828,7 +828,7 @@ def reduceCost(card, action = 'REZ', fullCost = 0, dryRun = False):
          if len(Autoscripts) == 0: continue
          for autoS in Autoscripts:
             if debugVerbosity >= 2: notify("### Checking {} with AS: {}".format(c, autoS)) #Debug
-            if re.search(r'whileRunning', autoS) and not re.search(r'running',status): continue # if the reduction is only during runs, and we're not in a run, bypass this effect
+            if not chkRunningStatus(autoS): continue # if the reduction is only during runs, and we're not in a run, bypass this effect
             if not chkPlayer(autoS, c.controller, False): continue
             reductionSearch = reductionRegex.search(autoS) 
             if debugVerbosity >= 2: #Debug
