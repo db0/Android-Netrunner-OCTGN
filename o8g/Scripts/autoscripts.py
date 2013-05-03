@@ -2068,9 +2068,7 @@ def findTarget(Autoscript, fromHand = False, card = None): # Function for findin
    
 def gatherCardProperties(card,Autoscript = ''):
    if debugVerbosity >= 1: notify(">>> gatherCardProperties()") #Debug
-   # This function can also sent an autoscript with it, which I then check to see that I'm not doing an autotargeted search of the table, 
-   # This will allow me to avoid looking up running storeProperties() on every card the opponent has.
-   if not re.search(r'AutoTargeted', Autoscript): storeProperties(card)
+   storeProperties(card) # We store the card properties so that we don't start flipping the cards over each time.
    cardProperties = []
    if debugVerbosity >= 4: notify("### Appending name") #Debug                
    cardProperties.append(card.name) # We are going to check its name
