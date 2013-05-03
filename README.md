@@ -22,9 +22,11 @@ Sets will be uncensored after 6 months.
 * [Humanity's Shadow](http://dbzer0.com/pub/ANR/Sets/ANR-Humanitys-Shadow.o8c) *(Censored)*
  
 
-**Converting:** If you have the sets already from OCTGN 3.0 and you want to convert them to 3.1 without redownloading, [check this guide](o8c_Convert_Guide.md).
+### Converting 
+If you have the sets already from OCTGN 3.0 and you want to convert them to 3.1 without redownloading, [check this guide](o8c_Convert_Guide.md).
 
-**Uncensoring:** If you have your own scans and want to use those instead of the censored card, you can [follow this guide to do so](o8c_Uncensor_Guide.md).
+### Uncensoring 
+If you have your own scans and want to use those instead of the censored card, you can [follow this guide to do so](o8c_Uncensor_Guide.md).
 
 Tutorials
 ---------
