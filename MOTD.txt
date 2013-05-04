@@ -1,6 +1,6 @@
 =====Message of the Day======
 
-UPDATE: Bug with Replicator and Test Run has been fixed
+3.0.0.62: Bug with card properties and scripts getting mixed up (hopefully fixed)
 
 Welcome to OCTGN 3.1!
  
