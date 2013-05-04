@@ -157,7 +157,7 @@ def goToSot (group, x=0,y=0):
    myCards = (card for card in table if card.controller == me and card.owner == me)
    for card in myCards: 
       if card._id in Stored_Type and fetchProperty(card, 'Type') != 'ICE': card.orientation &= ~Rot90 # Refresh all cards which can be used once a turn.
-   remoteServers = (card for card in table if card.name == 'Remote Server')
+   remoteServers = (card for card in table if card.Name == 'Remote Server')
    for card in remoteServers: card.setController(me) # At the start of each player's turn, we swap the ownership of all remote server, to allow them to double-click them (If they're a runner) or manipulate them (if they're a corp)
    newturn = True
    turn += 1

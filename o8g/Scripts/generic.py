@@ -486,7 +486,7 @@ def storeProperties(card, forced = False): # Function that grabs a cards importa
       coverExists = False
       if debugVerbosity >= 1: notify(">>> storeProperties(){}".format(extraASDebug())) #Debug
       global Stored_Name, Stored_Cost, Stored_Type, Stored_Keywords, Stored_AutoActions, Stored_AutoScripts, identName
-      if (card.name == 'Card' and Stored_Name.get(card._id,'?') == '?') or forced:
+      if (card.Name == '?' and Stored_Name.get(card._id,'?') == '?') or forced:
          if not card.isFaceUp and card.group == table:
             if debugVerbosity >= 2: notify("### Adding Cover")
             x,y = card.position
@@ -503,7 +503,7 @@ def storeProperties(card, forced = False): # Function that grabs a cards importa
                if loopcount == 5:
                   whisper(":::Error::: Card properties can't be grabbed. Aborting!")
                   break
-      if Stored_Type.get(card._id,'?') == '?' or (Stored_Name.get(card._id,'?') != card.Name and card.name != '?') or forced:
+      if Stored_Type.get(card._id,'?') == '?' or (Stored_Name.get(card._id,'?') != card.Name and card.Name != '?') or forced:
          if debugVerbosity >= 3: notify("### {} not stored. Storing...".format(card))
          Stored_Name[card._id] = card.Name
          Stored_Cost[card._id] = card.Cost
@@ -515,6 +515,7 @@ def storeProperties(card, forced = False): # Function that grabs a cards importa
       if coverExists:
          if debugVerbosity >= 2: notify("### Removing Cover")
          card.isFaceUp = False
+         if card.controller == me: card.peek()
          rnd(1,10) # To give time to the card facedown automation to complete.
          cover.moveTo(shared.exile) # now destorying cover card
       if debugVerbosity >= 3: notify("<<< storeProperties()")
@@ -524,7 +525,7 @@ def fetchProperty(card, property):
    mute()
    coverExists = False
    if debugVerbosity >= 1: notify(">>> fetchProperty(){}".format(extraASDebug())) #Debug
-   if property == 'name' or property == 'Name': currentValue = Stored_Name.get(card._id,'Card')
+   if property == 'name' or property == 'Name': currentValue = Stored_Name.get(card._id,'?')
    elif property == 'Cost': currentValue = Stored_Cost.get(card._id,'?')
    elif property == 'Type': currentValue = Stored_Type.get(card._id,'?')
    elif property == 'Keywords': currentValue = Stored_Keywords.get(card._id,'?')
@@ -532,7 +533,7 @@ def fetchProperty(card, property):
    elif property == 'AutoActions': currentValue = Stored_AutoActions.get(card._id,'?')
    else: currentValue = card.properties[property]
    if currentValue == '?' or currentValue == 'Card':
-      if debugVerbosity >= 4: notify("### Card properties unreadable") #Debug
+      if debugVerbosity >= 4: notify("### Card property: {} unreadable = {}".format(property,currentValue)) #Debug
       if not card.isFaceUp and card.group == table:
          if debugVerbosity >= 3: notify("### Need to flip card up to read its properties.") #Debug
          x,y = card.position
@@ -550,6 +551,7 @@ def fetchProperty(card, property):
          #storeProperties(card) # Commented out because putting it here can cause an infinite loop
    if coverExists: 
       card.isFaceUp = False
+      if card.controller == me: card.peek()
       rnd(1,10) # To give time to the card facedown automation to complete.
       cover.moveTo(shared.exile) # now destorying cover card
    if debugVerbosity >= 3: notify("<<< fetchProperty() by returning: {}".format(currentValue))
