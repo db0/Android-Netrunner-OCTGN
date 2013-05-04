@@ -1389,7 +1389,8 @@ def HQaccess(group=table, x=0,y=0, silent = False):
    if debugVerbosity >= 3: notify("### Found opponent.") #Debug
    revealedCards = showatrandom(count = count, targetPL = targetPL, covered = True)
    for revealedCard in revealedCards:
-      storeProperties(revealedCard) # So as not to crash reduceCost() later
+      loopChk(revealedCard)
+      #storeProperties(revealedCard) # So as not to crash reduceCost() later
       revealedCard.sendToFront() # We send our currently accessed card to the front, so that the corp can see it. The rest are covered up.
       accessRegex = re.search(r'onAccess:([^|]+)',CardsAS.get(revealedCard.model,''))
       if accessRegex:
@@ -1425,7 +1426,7 @@ def HQaccess(group=table, x=0,y=0, silent = False):
              \nKeywords: {}.\
              \nCost: {}.\
                {}\n\nCard Text: {}\
-           \n\nWhat do you want to do with this card?".format(revealedCard.name,revealedCard.Type,revealedCard.Keywords,revealedCard.Cost,cStatTXT,revealedCard.Rules)
+           \n\nWhat do you want to do with this card?".format(revealedCard.Name,revealedCard.Type,revealedCard.Keywords,revealedCard.Cost,cStatTXT,revealedCard.Rules)
       if revealedCard.Type == 'Agenda' or revealedCard.Type == 'Asset' or revealedCard.Type == 'Upgrade':
          if revealedCard.Type == 'Agenda': action1TXT = 'Liberate for {} Agenda Points.'.format(revealedCard.Stat)
          else: 
@@ -2135,6 +2136,9 @@ def showatrandom(group = None, count = 1, targetPL = None, silent = False, cover
    if targetPL != me: side = -1
    for iter in range(count):
       card = group.random()
+      if card.controller != me: # If we're revealing a card from another player's hand, we grab its properties before we put it on the table, as as not to give away if we're scanning it right now or not.
+         card.isFaceUp = True
+         storeProperties(card, forced = False)
       if card == None: 
          notify(":::Info:::{} has no more cards in their hand to reveal".format(targetPL))
          break
@@ -2144,7 +2148,7 @@ def showatrandom(group = None, count = 1, targetPL = None, silent = False, cover
       card.moveToTable(playerside * side * iter * cwidth(card) - (count * cwidth(card) / 2), 0 - yaxisMove(card) * side, False)
       card.highlight = RevealedColor
       card.sendToBack()
-      loopChk(card) # A small delay to make sure we grab the card's name to announce
+      if not covered: loopChk(card) # A small delay to make sure we grab the card's name to announce
       shownCards.append(card) # We put the revealed cards in a list to return to other functions that call us
    if not silent: notify("{} reveals {} at random from their hand.".format(targetPL,card))
    if debugVerbosity >= 2: notify("<<< showatrandom() with return {}".format(card)) #Debug

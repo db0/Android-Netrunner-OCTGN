@@ -2071,7 +2071,7 @@ def gatherCardProperties(card,Autoscript = ''):
    storeProperties(card) # We store the card properties so that we don't start flipping the cards over each time.
    cardProperties = []
    if debugVerbosity >= 4: notify("### Appending name") #Debug                
-   cardProperties.append(card.name) # We are going to check its name
+   cardProperties.append(card.Name) # We are going to check its name
    if debugVerbosity >= 4: notify("### Appending Type") #Debug                
    cardProperties.append(fetchProperty(card, 'Type')) # We are going to check its Type
    if debugVerbosity >= 4: notify("### Appending Keywords") #Debug                
