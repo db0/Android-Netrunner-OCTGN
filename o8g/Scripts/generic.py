@@ -486,7 +486,7 @@ def storeProperties(card, forced = False): # Function that grabs a cards importa
       coverExists = False
       if debugVerbosity >= 1: notify(">>> storeProperties(){}".format(extraASDebug())) #Debug
       global Stored_Name, Stored_Cost, Stored_Type, Stored_Keywords, Stored_AutoActions, Stored_AutoScripts, identName
-      if (card.name == 'Card' and Stored_Type.get(card._id,'?') == '?') or forced:
+      if (card.name == 'Card' and Stored_Name.get(card._id,'?') == '?') or forced:
          if not card.isFaceUp and card.group == table:
             if debugVerbosity >= 2: notify("### Adding Cover")
             x,y = card.position
@@ -503,15 +503,15 @@ def storeProperties(card, forced = False): # Function that grabs a cards importa
                if loopcount == 5:
                   whisper(":::Error::: Card properties can't be grabbed. Aborting!")
                   break
-      if Stored_Type.get(card._id,'?') == '?' or (Stored_Type.get(card._id,'?') != card.Type and card.Type != '?') or forced:
+      if Stored_Type.get(card._id,'?') == '?' or (Stored_Name.get(card._id,'?') != card.Name and card.name != '?') or forced:
          if debugVerbosity >= 3: notify("### {} not stored. Storing...".format(card))
-         Stored_Name[card._id] = card.name
+         Stored_Name[card._id] = card.Name
          Stored_Cost[card._id] = card.Cost
          Stored_Type[card._id] = card.Type
          getKeywords(card)
          Stored_AutoActions[card._id] = CardsAA.get(card.model,'')
          Stored_AutoScripts[card._id] = CardsAS.get(card.model,'')
-         if card.Type == 'Identity' and card.owner == me: identName = card.name
+         if card.Type == 'Identity' and card.owner == me: identName = card.Name
       if coverExists:
          if debugVerbosity >= 2: notify("### Removing Cover")
          card.isFaceUp = False

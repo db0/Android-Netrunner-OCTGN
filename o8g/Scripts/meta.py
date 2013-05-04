@@ -138,7 +138,8 @@ def getKeywords(card): # A function which combines the existing card keywords, w
    global Stored_Keywords
    #confirm("getKeywords") # Debug
    keywordsList = []
-   cKeywords = fetchProperty(card, 'Keywords')
+   cKeywords = card.Keywords # First we try a normal grab, if the card properties cannot be read, then we flip face up.
+   if cKeywords == '?': cKeywords = fetchProperty(card, 'Keywords')
    strippedKeywordsList = cKeywords.split('-')
    for cardKW in strippedKeywordsList:
       strippedKW = cardKW.strip() # Remove any leading/trailing spaces between traits. We need to use a new variable, because we can't modify the loop iterator.
@@ -918,13 +919,16 @@ def ShowDicts():
 def DebugCard(card, x=0, y=0):
    whisper("Stored Card Properties\
           \n----------------------\
-          \nName: {}\
-          \nType: {}\
-          \nKeywords: {}\
+          \nStored Name: {}\
+          \nPrinted Name: {}\
+          \nStored Type: {}\
+          \nPrinted Type: {}\
+          \nStored Keywords: {}\
+          \nPrinted Keywords: {}\
           \nCost: {}\
           \nCard ID: {}\
           \n----------------------\
-          ".format(Stored_Name.get(card._id,'NULL'), Stored_Type.get(card._id,'NULL'), Stored_Keywords.get(card._id,'NULL'), Stored_Cost.get(card._id,'NULL'),card._id))
+          ".format(Stored_Name.get(card._id,'NULL'), card.Name, Stored_Type.get(card._id,'NULL'), card.Type, Stored_Keywords.get(card._id,'NULL'), card.Keywords, Stored_Cost.get(card._id,'NULL'),card._id))
    if debugVerbosity >= 4: 
       #notify("Stored_AS: {}".format(str(Stored_AutoScripts)))
       notify("Downloaded AA: {}".format(str(CardsAA)))
