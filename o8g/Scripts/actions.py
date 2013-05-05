@@ -416,11 +416,8 @@ def intRun(aCost = 1, Name = 'R&D', silent = False):
    if Name != 'Remote': targetServer = getSpecial(Name,enemyIdent.controller)      
    else: 
       targetRemote = findTarget("Targeted-atRemote Server-isMutedTarget") # We try to see if the player had a remote targeted, if so we make it the target.
-      if len(targetRemote) == 0:  # If there's no remote targeted, we check to see if there's only one remote server in the game. If so, that must be the target.
-         targetRemote = findTarget("AutoTargeted-atRemote Server")
-         if len(targetRemote) == 1: targetServer = targetRemote[0]
-         else: abortArrow = True # If we cannot figure out which remote the runner is running on, we paint no arrow.
-      else: targetServer = targetRemote[0]
+      if len(targetRemote) > 0: targetServer = targetRemote[0] # If there's no remote targeted, we paint no arrow.
+      else: abortArrow = True # If we cannot figure out which remote the runner is running on,
    if not abortArrow: 
       targetServer.target(False)
       myIdent.arrow(targetServer, True)

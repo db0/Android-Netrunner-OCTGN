@@ -1,6 +1,7 @@
 =====Message of the Day======
 
 3.0.0.62: Bug with card properties and scripts getting mixed up (hopefully fixed)
+3.0.0.63: Fixed Data Hound not properly reading card properties when sniffing.
 
 Welcome to OCTGN 3.1!
  

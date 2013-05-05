@@ -1703,6 +1703,7 @@ def UseCustomAbility(Autoscript, announceText, card, targetCards = None, notific
       cover = table.create("ac3a3d5d-7e3a-4742-b9b2-7f72596d9c1b",0,0,1,True) 
       cover.moveTo(targetPL.piles['R&D/Stack']) 
       for c in targetPL.piles['R&D/Stack']: c.isFaceUp = True 
+      rnd(1,100) # Delay to be able to read card info
       if len(cardList) > 1:
          choice = SingleChoice("Choose card to trash", makeChoiceListfromCardList(cardList), type = 'button')
          trashedC = cardList.pop(choice)
