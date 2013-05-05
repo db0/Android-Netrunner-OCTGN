@@ -1,6 +1,10 @@
 Changelog - Android:Netrunner LCG OCTGN Game Definition
 ===============================================
 
+### 3.0.0.64
+
+* Fixed Pheromones reducing the amount your Account Siphon took
+
 ### 3.0.0.62
 
 * **Significant** (Hopefully) fixed bug where card properties were being mixes around
