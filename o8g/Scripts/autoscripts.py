@@ -865,7 +865,7 @@ def GainX(Autoscript, announceText, card, targetCards = None, notification = Non
    if debugVerbosity >= 1: notify(">>> GainX(){}".format(extraASDebug(Autoscript))) #Debug
    if debugVerbosity >= 3: notify("### notification = {}".format(notification))
    if targetCards is None: targetCards = []
-   global maxClicks, lastKnownNrClicks
+   global maxClicks, lastKnownNrClicks, reversePlayerChk
    gain = 0
    extraText = ''
    reduction = 0
@@ -900,11 +900,13 @@ def GainX(Autoscript, announceText, card, targetCards = None, notification = Non
       if gain == -999: targetPL.counters['Credits'].value = 0
       else: 
          if debugVerbosity >= 2: notify("#### Checking Cost Reduction")
+         if actionType == 'Force': reversePlayerChk = True # If the loss is forced on another player, we reverse the recude cost player checking effects, to check for their reduction effects and not ours
          if re.search(r'isCost', Autoscript) and action.group(1) == 'Lose':
             reduction = reduceCost(card, actionType, gain * multiplier)
          elif action.group(1) == 'Lose':
             if targetPL == me: actionType = 'None' # If we're losing money from a card effect that's not a cost, we considered a 'use' cost.
             reduction = reduceCost(card, actionType, gain * multiplier) # If the loss is not a cost, we still check for generic reductions such as BP
+         if reversePlayerChk == True: reversePlayerChk = False # Once we're done with the reduction effects, we return our global variable to its natural state of False.
          targetPL.counters['Credits'].value += (gain * multiplier) + reduction
          if reduction > 0: extraText = ' (Reduced by {})'.format(uniCredit(reduction))
          elif reduction < 0: extraText = " (increased by {})".format(uniCredit(abs(reduction)))
