@@ -1649,6 +1649,7 @@ def RetrieveX(Autoscript, announceText, card, targetCards = None, notification =
                if targetLookup.targetedBy and targetLookup.targetedBy == me and re.search(r'Daemon',getKeywords(targetLookup)) and possess(targetLookup, c, silent = True) != 'ABORT':
                   MUtext = ", installing it into {}".format(targetLookup)
                   break  
+         executePlayScripts(c,'INSTALL')
          autoscriptOtherPlayers('CardInstall',c)
       else: c.moveTo(destination)
       tokensRegex = re.search(r'-with([A-Za-z0-9: ]+)', Autoscript) # If we have a -with in our autoscript, this is meant to put some tokens on the retrieved card.
