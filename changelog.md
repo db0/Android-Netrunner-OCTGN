@@ -1,6 +1,10 @@
 Changelog - Android:Netrunner LCG OCTGN Game Definition
 ===============================================
 
+### 3.0.0.65
+
+* Programs fetched with Test Run should now use abilities that trigger when they're installed (e.g. Femme Fatale)
+
 ### 3.0.0.64
 
 * Fixed Pheromones reducing the amount your Account Siphon took
