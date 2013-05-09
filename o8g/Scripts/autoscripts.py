@@ -512,6 +512,7 @@ def autoscriptOtherPlayers(lookup, origin_card = Identity, count = 1): # Functio
    for card in table:
       if debugVerbosity >= 2: notify('Checking {}'.format(card)) # Debug
       if not card.isFaceUp: continue # Don't take into accounts cards that are not rezzed.
+      if card.highlight == InactiveColor: continue # We don't take into account inactive cards.
       costText = '{} activates {} to'.format(card.controller, card) 
       Autoscripts = CardsAS.get(card.model,'').split('||')
       if debugVerbosity >= 4: notify("### {}'s AS: {}".format(card,Autoscripts)) # Debug
