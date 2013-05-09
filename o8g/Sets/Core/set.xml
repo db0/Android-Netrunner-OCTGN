@@ -602,7 +602,7 @@
 		<property name="Stat" value="" />	
 		<property name="Rules" value="Djinn can host up to  3 [Memory Units] of non-icebreaker programs.&#xD;&#xA;The memory costs of hosted programs do not count against your memory limit.&#xD;&#xA;[Click], 1 [Credits]: Search your stack for a virus program, reveal it, and add it to your grip. Shuffle your stack." />
 		<property name="Flavor" value="" />
-		<property name="Instructions" value="Host Target Program (Must be used only immediately after you play a program)||[Manual Ability] Search for Virus in your Stack." />
+		<property name="Instructions" value="Host Target Program (Must be used only immediately after you play a program)||Search for Virus in your Stack and put it in your Grip." />
 		<property name="Faction" value="Anarch" />
 		<property name="Influence" value="2" />
 		<property name="Side" value="runner" />

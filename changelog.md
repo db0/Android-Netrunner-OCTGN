@@ -1,7 +1,7 @@
 Changelog - Android:Netrunner LCG OCTGN Game Definition
 ===============================================
 
-### 3.0.1.0 
+### 3.0.1.x 
 
 (Finally I can advance versions properly)
 
