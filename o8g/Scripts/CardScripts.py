@@ -348,7 +348,7 @@ bc0f047c-01b1-427f-a439-d451eda01009
 -----
 onInstall:Put3DaemonMU-isSilent
 +++++
-A0B0G0T0:PossessTarget-Targeted-atProgram_and_nonIcebreaker-targetMine||A1B1G0T0:SimplyAnnounce{look through his deck for a virus program}	
+A0B0G0T0:PossessTarget-Targeted-atProgram_and_nonIcebreaker-targetMine||A1B1G0T0:Retrieve1Card-typeVirus$$ShuffleStack
 .....
 Easy Mark
 -----
