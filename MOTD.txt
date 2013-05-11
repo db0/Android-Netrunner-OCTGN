@@ -4,6 +4,9 @@ Have you joined the Boardgamegeek.com league yet?
 
 It's open and it will run for 2 months, so you still have time!
 
+If you're already in the league, make sure your game title includes the tag: [BGG-L01]
+Please put that in __exactly__ as written above, incluging the [square brackets]! The '0' is a zero, not a capital 'o'.
+
 Would you like to learn more?
 =============================
 &&
