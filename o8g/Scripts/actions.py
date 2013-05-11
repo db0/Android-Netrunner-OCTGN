@@ -2131,6 +2131,12 @@ def showatrandom(group = None, count = 1, targetPL = None, silent = False, cover
    if not targetPL: targetPL = me
    if not group: group = targetPL.hand
    if targetPL != me: side = -1
+   if len(group) == 0:
+      whisper(":::WARNING::: {} had no cards in their hand!".format(targetPL))
+      return shownCards
+   elif count > len(group): 
+      whisper(":::WARNING::: {} has only {} cards in their hand.".format(targetPL,len(group)))
+      count = len(group)
    for iter in range(count):
       card = group.random()
       if card.controller != me: # If we're revealing a card from another player's hand, we grab its properties before we put it on the table, as as not to give away if we're scanning it right now or not.

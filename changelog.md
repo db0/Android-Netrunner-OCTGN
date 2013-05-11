@@ -1,6 +1,10 @@
 Changelog - Android:Netrunner LCG OCTGN Game Definition
 ===============================================
 
+### 3.0.2.x
+
+* Fixed error when accessing HQ and trying to look at more cards than there are in the corp's hand.
+
 ### 3.0.1.x 
 
 (Finally I can advance versions properly)
