@@ -1688,7 +1688,6 @@ def UseCustomAbility(Autoscript, announceText, card, targetCards = None, notific
          announceString = announceText + ' end the run'.format(targetPL,uniCredit(3))   
    if fetchProperty(card, 'name') == "Replicator":
       targetC = targetCards[0] # For this to be triggered a program has to have been installed, which was passed to us in an array.
-      if oncePerTurn(card, silent = True, act = 'dryRun') == 'ABORT': return 'ABORT'# If the replicator has already been used, we do nothing.
       if not confirm("Would you like to replicate the {}?".format(targetC.name)):
          return 'ABORT'
       oncePerTurn(card, silent = True, act = 'automatic') # If the user chose to use the replicator, we set it to used.
