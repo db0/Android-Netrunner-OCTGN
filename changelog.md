@@ -1,6 +1,10 @@
 Changelog - Android:Netrunner LCG OCTGN Game Definition
 ===============================================
 
+### 3.0.3.x
+
+* Replicator not once per turn anymore
+
 ### 3.0.2.x
 
 * Fixed error when accessing HQ and trying to look at more cards than there are in the corp's hand.
