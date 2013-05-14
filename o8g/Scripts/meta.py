@@ -63,7 +63,7 @@ CardsAS = {} # Dictionary holding all the AutoScript scripts for all cards
 # Generic Netrunner functions
 #---------------------------------------------------------------------------
 def uniCredit(count):
-   if debugVerbosity >= 1: notify(">>> uniCredit(){}".format(extraASDebug())) #Debug
+   debugNotify(">>> uniCredit(){}".format(extraASDebug())) #Debug
    count = num(count)
    if UniCode: return "{} ¥".format(count)
    else: 
@@ -72,7 +72,7 @@ def uniCredit(count):
       return "{} Credit{}".format(count,grammar)
  
 def uniRecurring(count):
-   if debugVerbosity >= 1: notify(">>> uniRecurring(){}".format(extraASDebug())) #Debug
+   debugNotify(">>> uniRecurring(){}".format(extraASDebug())) #Debug
    count = num(count)
    if UniCode: return "{} £".format(count)
    else: 
@@ -81,17 +81,17 @@ def uniRecurring(count):
       return "{} Recurring Credit{}".format(count,grammar)
  
 def uniClick():
-   if debugVerbosity >= 1: notify(">>> uniClick(){}".format(extraASDebug())) #Debug
+   debugNotify(">>> uniClick(){}".format(extraASDebug())) #Debug
    if UniCode: return ' ⌚'
    else: return '(/)'
 
 def uniTrash():
-   if debugVerbosity >= 1: notify(">>> uniTrash(){}".format(extraASDebug())) #Debug
+   debugNotify(">>> uniTrash(){}".format(extraASDebug())) #Debug
    if UniCode: return '⏏'
    else: return 'Trash'
 
 def uniMU(count = 1):
-   if debugVerbosity >= 1: notify(">>> uniMU(){}".format(extraASDebug())) #Debug
+   debugNotify(">>> uniMU(){}".format(extraASDebug())) #Debug
    if UniCode: 
       if num(count) == 1: return '⎗'
       elif num(count) == 2:  return '⎘'
@@ -99,17 +99,17 @@ def uniMU(count = 1):
    else: return '{} MU'.format(count)
    
 def uniLink():
-   if debugVerbosity >= 1: notify(">>> uniLink(){}".format(extraASDebug())) #Debug
+   debugNotify(">>> uniLink(){}".format(extraASDebug())) #Debug
    if UniCode: return '⎙'
    else: return 'Base Link'
 
 def uniSubroutine():
-   if debugVerbosity >= 1: notify(">>> uniLink(){}".format(extraASDebug())) #Debug
+   debugNotify(">>> uniLink(){}".format(extraASDebug())) #Debug
    if UniCode: return '⏎'
    else: return '[Subroutine]'
 
 def chooseWell(limit, choiceText, default = None):
-   if debugVerbosity >= 1: notify(">>> chooseWell(){}".format(extraASDebug())) #Debug
+   debugNotify(">>> chooseWell(){}".format(extraASDebug())) #Debug
    if default == None: default = 0# If the player has not provided a default value for askInteger, just assume it's the max.
    choice = limit # limit is the number of choices we have
    if limit > 1: # But since we use 0 as a valid choice, then we can't actually select the limit as a number
@@ -121,20 +121,20 @@ def chooseWell(limit, choiceText, default = None):
    return choice
 
 def findMarker(card, markerDesc): # Goes through the markers on the card and looks if one exist with a specific description
-   if debugVerbosity >= 1: notify(">>> findMarker(){}".format(extraASDebug())) #Debug
+   debugNotify(">>> findMarker(){}".format(extraASDebug())) #Debug
    foundKey = None
    if markerDesc in mdict: markerDesc = mdict[markerDesc][0] # If the marker description is the code of a known marker, then we need to grab the actual name of that.
    for key in card.markers:
-      if debugVerbosity >= 3: notify("### Key: {}\nmarkerDesc: {}".format(key[0],markerDesc)) # Debug
+      debugNotify("### Key: {}\nmarkerDesc: {}".format(key[0],markerDesc), 3) # Debug
       if re.search(r'{}'.format(markerDesc),key[0]) or markerDesc == key[0]:
          foundKey = key
-         if debugVerbosity >= 2: notify("### Found {} on {}".format(key[0],card))
+         debugNotify("### Found {} on {}".format(key[0],card), 2)
          break
-   if debugVerbosity >= 3: notify("<<< findMarker() by returning: {}".format(foundKey))
+   debugNotify("<<< findMarker() by returning: {}".format(foundKey), 3)
    return foundKey
    
 def getKeywords(card): # A function which combines the existing card keywords, with markers which give it extra ones.
-   if debugVerbosity >= 1: notify(">>> getKeywords(){}".format(extraASDebug())) #Debug
+   debugNotify(">>> getKeywords(){}".format(extraASDebug())) #Debug
    global Stored_Keywords
    #confirm("getKeywords") # Debug
    keywordsList = []
@@ -162,12 +162,12 @@ def getKeywords(card): # A function which combines the existing card keywords, w
    for KW in keywordsList:
       keywords += '{}-'.format(KW)
    Stored_Keywords[card._id] = keywords[:-1] # We also update the global variable for this card, which is used by many functions.
-   if debugVerbosity >= 3: notify("<<< getKeywords() by returning: {}.".format(keywords[:-1]))
+   debugNotify("<<< getKeywords() by returning: {}.".format(keywords[:-1]), 3)
    return keywords[:-1] # We need to remove the trailing dash '-'
    
 def pileName(group):
-   if debugVerbosity >= 1: notify(">>> pileName(){}".format(extraASDebug())) #Debug   
-   if debugVerbosity >= 2: notify(">>> pile player: {}".format(group.player)) #Debug   
+   debugNotify(">>> pileName(){}".format(extraASDebug())) #Debug   
+   debugNotify(">>> pile player: {}".format(group.player), 2) #Debug   
    if group.name == 'Heap/Archives(Face-up)':
       if group.player.getGlobalVariable('ds') == 'corp': name = 'Face-up Archives'
       else: name = 'Heap'
@@ -178,18 +178,18 @@ def pileName(group):
    else:
       if group.player.getGlobalVariable('ds') == 'corp': name = 'HQ'
       else: name = 'Grip'
-   if debugVerbosity >= 3: notify("<<< pileName() by returning: {}".format(name))
+   debugNotify("<<< pileName() by returning: {}".format(name), 3)
    return name
 
 def clearNoise(): # Clears all player's noisy bits. I.e. nobody is considered to have been noisy this turn.
-   if debugVerbosity >= 1: notify(">>> clearNoise()") #Debug
+   debugNotify(">>> clearNoise()") #Debug
    for player in players: player.setGlobalVariable('wasNoisy', '0') 
-   if debugVerbosity >= 3: notify("<<< clearNoise()") #Debug
+   debugNotify("<<< clearNoise()", 3) #Debug
 
 def storeSpecial(card): 
 # Function stores into a shared variable some special cards that other players might look up.
    try:
-      if debugVerbosity >= 1: notify(">>> storeSpecial(){}".format(extraASDebug())) #Debug
+      debugNotify(">>> storeSpecial(){}".format(extraASDebug())) #Debug
       storeProperties(card, True)
       specialCards = eval(me.getGlobalVariable('specialCards'))
       if card.name == 'HQ' or card.name == 'R&D' or card.name == 'Archives':
@@ -200,20 +200,20 @@ def storeSpecial(card):
 
 def getSpecial(cardType,player = me):
 # Functions takes as argument the name of a special card, and the player to whom it belongs, and returns the card object.
-   if debugVerbosity >= 1: notify(">>> getSpecial() for player: {}".format(me.name)) #Debug
+   debugNotify(">>> getSpecial() for player: {}".format(me.name)) #Debug
    specialCards = eval(player.getGlobalVariable('specialCards'))
    card = Card(specialCards[cardType])
-   if debugVerbosity >= 2: notify("### Stored_Type = {}".format(Stored_Type.get(card._id,'NULL')))
+   debugNotify("### Stored_Type = {}".format(Stored_Type.get(card._id,'NULL')), 2)
    if Stored_Type.get(card._id,'NULL') == 'NULL':
       #if card.owner == me: delayed_whisper(":::DEBUG::: {} was NULL. Re-storing as an attempt to fix".format(cardType)) # Debug
-      if debugVerbosity >= 1: notify("### card ID = {}".format(card._id))
-      if debugVerbosity >= 1: notify("### Stored Type = {}".format(Stored_Type.get(card._id,'NULL')))
+      debugNotify("### card ID = {}".format(card._id))
+      debugNotify("### Stored Type = {}".format(Stored_Type.get(card._id,'NULL')))
       storeProperties(card, True)
-   if debugVerbosity >= 3: notify("<<< getSpecial() by returning: {}".format(card))
+   debugNotify("<<< getSpecial() by returning: {}".format(card), 3)
    return card
 
 def chkRAM(card, action = 'INSTALL', silent = False):
-   if debugVerbosity >= 1: notify(">>> chkRAM(){}".format(extraASDebug())) #Debug
+   debugNotify(">>> chkRAM(){}".format(extraASDebug())) #Debug
    MUreq = num(fetchProperty(card,'Requirement'))
    hostCards = eval(getGlobalVariable('Host Cards'))
    if hostCards.has_key(card._id): hostC = Card(hostCards[card._id])
@@ -239,19 +239,19 @@ def chkRAM(card, action = 'INSTALL', silent = False):
       notify(":::Warning:::{}'s programs require more memory than they have available. They must trash enough programs to bring their available Memory to at least 0".format(card.controller))
       information(":::ATTENTION:::\n\nYou are now using more MUs than you have available memory!\
                   \nYou need to trash enough programs to bring your Memory to 0 or higher")
-   if debugVerbosity >= 3: notify("<<< chkRAM() by returning: {}".format(MUtext))
+   debugNotify("<<< chkRAM() by returning: {}".format(MUtext), 3)
    return MUtext
 
 def chkCloud(cloudCard = None): # A function which checks the table for cards which can be put in the cloud and thus return their used MUs
-   if debugVerbosity >= 1: notify(">>> chkCloud(){}".format(extraASDebug())) #Debug
+   debugNotify(">>> chkCloud(){}".format(extraASDebug())) #Debug
    if not cloudCard: cards = [c for c in table if c.Type == 'Program']
    else: cards = [cloudCard] # If we passed a card as a variable, we just check the cloud status of that card
    for card in cards:
-      if debugVerbosity >= 2: notify("### Cloud Checking {} with AS = {}".format(card,fetchProperty(card, 'AutoScripts'))) #Debug
+      debugNotify("### Cloud Checking {} with AS = {}".format(card,fetchProperty(card, 'AutoScripts')), 2) #Debug
       cloudRegex = re.search(r'Cloud([0-9]+)Link',fetchProperty(card, 'AutoScripts'))
       if cloudRegex:
          linkRequired = num(cloudRegex.group(1))
-         if debugVerbosity >= 2: notify("### Found Cloud Regex. linkRequired = {}".format(linkRequired)) #Debug
+         debugNotify("### Found Cloud Regex. linkRequired = {}".format(linkRequired), 2) #Debug
          if linkRequired <= card.controller.counters['Base Link'].value and not card.markers[mdict['Cloud']]:
             card.markers[mdict['Cloud']] = 1
             card.controller.MU += num(card.Requirement)
@@ -262,27 +262,27 @@ def chkCloud(cloudCard = None): # A function which checks the table for cards wh
             notify("-- {}'s {} has lost connection to the cloud.".format(me,card))
             if card.controller.MU < 0: 
                notify(":::Warning:::{}'s loss of cloud connection means that their programs require more memory than they have available. They must trash enough programs to bring their available Memory to at least 0".format(card.controller))
-   if debugVerbosity >= 3: notify("<<< chkCloud()")
+   debugNotify("<<< chkCloud()", 3)
             
    
 def chkHostType(card, seek = 'Targeted'):
-   if debugVerbosity >= 1: notify(">>> chkHostType(){}".format(extraASDebug())) #Debug
+   debugNotify(">>> chkHostType(){}".format(extraASDebug())) #Debug
    # Checks if the card needs to have a special host targeted before it can come in play.
    hostType = re.search(r'Placement:([A-Za-z1-9:_ -]+)', fetchProperty(card, 'AutoScripts'))
    if hostType:
-      if debugVerbosity >= 2: notify("### hostType: {}.".format(hostType.group(1))) #Debug
+      debugNotify("### hostType: {}.".format(hostType.group(1)), 2) #Debug
       host = findTarget('{}-at{}-choose1'.format(seek,hostType.group(1)),card = card)
       if len(host) == 0:
          delayed_whisper("ABORTING!")
          result = 'ABORT'
       else: result = host[0] # If a propert host is targeted, then we return it to the calling function. We always return just the first result.
    else: result = None
-   if debugVerbosity >= 3: notify("<<< chkHostType() with result {}".format(result))
+   debugNotify("<<< chkHostType() with result {}".format(result), 3)
    return result
    
  
 def scanTable(group = table, x=0,y=0):
-   if debugVerbosity >= 1: notify(">>> scanTable(){}".format(extraASDebug())) #Debug
+   debugNotify(">>> scanTable(){}".format(extraASDebug())) #Debug
    global Stored_Name, Stored_Type, Stored_Cost, Stored_Keywords, Stored_AutoActions, Stored_AutoScripts
    if not confirm("This action will clear the internal variables and re-scan all cards in the table to fix them.\
                  \nThis action should only be used as a last-ditch effort to fix some weird behaviour in the game (e.g. treating an Ice like Agenda, or something silly like that)\
@@ -304,10 +304,10 @@ def scanTable(group = table, x=0,y=0):
    notify("{} has re-scanned the table and refreshed their internal variables.".format(me))
  
 def checkUnique (card):
-   if debugVerbosity >= 1: notify(">>> checkUnique(){}".format(extraASDebug())) #Debug
+   debugNotify(">>> checkUnique(){}".format(extraASDebug())) #Debug
    mute()
    if not re.search(r'Unique', getKeywords(card)): 
-      if debugVerbosity >= 3: notify("<<< checkUnique() - Not a unique card") #Debug
+      debugNotify("<<< checkUnique() - Not a unique card", 3) #Debug
       return True #If the played card isn't unique do nothing.
    cName = fetchProperty(card, 'name')
    ExistingUniques = [ c for c in table
@@ -315,7 +315,7 @@ def checkUnique (card):
    if len(ExistingUniques) != 0 and not confirm("This unique card is already in play. Are you sure you want to play {}?\n\n(If you do, your existing unique card will be Trashed at no cost)".format(fetchProperty(card, 'name'))) : return False
    else:
       for uniqueC in ExistingUniques: trashForFree(uniqueC)
-   if debugVerbosity >= 3: notify("<<< checkUnique() - Returning True") #Debug
+   debugNotify("<<< checkUnique() - Returning True", 3) #Debug
    return True   
    
 def chkTags():
@@ -337,7 +337,7 @@ def clearAttachLinks(card):
 # This function takes care to discard any attachments of a card that left play
 # It also clear the card from the host dictionary, if it was itself attached to another card
 # If the card was hosted by a Daemon, it also returns the free MU token to that daemon
-   if debugVerbosity >= 1: notify(">>> clearAttachLinks()") #Debug
+   debugNotify(">>> clearAttachLinks()") #Debug
    hostCards = eval(getGlobalVariable('Host Cards'))
    cardAttachementsNR = len([att_id for att_id in hostCards if hostCards[att_id] == card._id])
    if cardAttachementsNR >= 1:
@@ -346,7 +346,7 @@ def clearAttachLinks(card):
          if hostCardSnapshot[attachment] == card._id:
             if Card(attachment) in table: intTrashCard(Card(attachment),0,cost = "host removed")
             del hostCards[attachment]
-   if debugVerbosity >= 2: notify("### Checking if the card is attached to unlink.")      
+   debugNotify("### Checking if the card is attached to unlink.", 2)      
    if hostCards.has_key(card._id):
       hostCard = Card(hostCards[card._id])
       if re.search(r'Daemon',getKeywords(hostCard)) and hostCard.group == table: 
@@ -362,12 +362,12 @@ def clearAttachLinks(card):
       if not re.search(r'Daemon',getKeywords(hostCard)) and not customMU: 
          orgAttachments(hostCard) # Reorganize the attachments if the parent is not a daemon-type card.
    setGlobalVariable('Host Cards',str(hostCards))
-   if debugVerbosity >= 3: notify("<<< clearAttachLinks()") #Debug   
+   debugNotify("<<< clearAttachLinks()", 3) #Debug   
 
 def resetAll(): # Clears all the global variables in order to start a new game.
    global Stored_Name, Stored_Type, Stored_Cost, Stored_Keywords, Stored_AutoActions, Stored_AutoScripts
    global installedCount, debugVerbosity, newturn,endofturn, currClicks, turn, autoRezFlags
-   if debugVerbosity >= 1: notify(">>> resetAll(){}".format(extraASDebug())) #Debug
+   debugNotify(">>> resetAll(){}".format(extraASDebug())) #Debug
    mute()
    me.counters['Credits'].value = 5
    me.counters['Hand Size'].value = 5
@@ -391,28 +391,28 @@ def resetAll(): # Clears all the global variables in order to start a new game.
    ShowDicts()
    if len(players) > 1: debugVerbosity = -1 # Reset means normal game.
    elif debugVerbosity != -1 and confirm("Reset Debug Verbosity?"): debugVerbosity = -1    
-   if debugVerbosity >= 1: notify("<<< resetAll()") #Debug   
+   debugNotify("<<< resetAll()") #Debug   
 #---------------------------------------------------------------------------
 # Card Placement
 #---------------------------------------------------------------------------
 
 def placeCard(card, action = 'INSTALL', hostCard = None):
-   if debugVerbosity >= 1: notify(">>> placeCard() with action: {}".format(action)) #Debug
+   debugNotify(">>> placeCard() with action: {}".format(action)) #Debug
    hostType = re.search(r'Placement:([A-Za-z1-9:_ -]+)', fetchProperty(card, 'AutoScripts'))
    if hostType:
-      if debugVerbosity >= 2: notify("### hostType: {}.".format(hostType.group(1))) #Debug
+      debugNotify("### hostType: {}.".format(hostType.group(1)), 2) #Debug
       if not hostCard:
          host = findTarget('Targeted-at{}'.format(hostType.group(1))) 
          if len(host) == 0: 
             delayed_whisper(":::ERROR::: No Valid Host Targeted! Aborting Placement.") # We can pass a host from a previous function (e.g. see Personal Workshop)
             return 'ABORT'
          else: hostCard = host[0]
-      if debugVerbosity >= 2: notify("### We have a host") #Debug
+      debugNotify("### We have a host", 2) #Debug
       hostCards = eval(getGlobalVariable('Host Cards'))
       hostCards[card._id] = hostCard._id
       setGlobalVariable('Host Cards',str(hostCards))
       cardAttachementsNR = len([att_id for att_id in hostCards if hostCards[att_id] == hostCard._id])
-      if debugVerbosity >= 2: notify("### About to move into position") #Debug
+      debugNotify("### About to move into position", 2) #Debug
       x,y = hostCard.position
       if hostCard.controller != me: xAxis = -1
       else: xAxis = 1
@@ -428,15 +428,15 @@ def placeCard(card, action = 'INSTALL', hostCard = None):
       if action == 'INSTALL' and re.search(r'Console',card.Keywords): type = 'Console'
       if action == 'INSTALL' and type in CorporationCardTypes: CfaceDown = True
       else: CfaceDown = False
-      if debugVerbosity >= 3: notify("### Setting installedCount. Type is: {}, CfaceDown: {}".format(type, str(CfaceDown))) #Debug
+      debugNotify("### Setting installedCount. Type is: {}, CfaceDown: {}".format(type, str(CfaceDown)), 3) #Debug
       if installedCount.get(type,None) == None: installedCount[type] = 0
       else: installedCount[type] += 1
-      if debugVerbosity >= 2: notify("### installedCount is: {}. Setting loops...".format(installedCount[type])) #Debug
+      debugNotify("### installedCount is: {}. Setting loops...".format(installedCount[type]), 2) #Debug
       loopsNR = installedCount[type] / (place[type][3]) 
       loopback = place[type][3] * loopsNR 
       if loopsNR and place[type][3] != 1: offset = 15 * (loopsNR % 3) # This means that in one loop the offset is going to be 0 and in another 15.
       else: offset = 0
-      if debugVerbosity >= 3: notify("### installedCount[type] is: {}.\nLoopsNR is: {}.\nLoopback is: {}\nOffset is: {}".format(installedCount[type],offset, loopback, offset)) #Debug
+      debugNotify("### installedCount[type] is: {}.\nLoopsNR is: {}.\nLoopback is: {}\nOffset is: {}".format(installedCount[type],offset, loopback, offset), 3) #Debug
       card.moveToTable(place[type][0] + (((cwidth(card,0) + place[type][2]) * (installedCount[type] - loopback)) + offset) * place[type][4],place[type][1],CfaceDown) 
       # To explain the above, we place the card at: Its original location
       #                                             + the width of the card
@@ -449,21 +449,21 @@ def placeCard(card, action = 'INSTALL', hostCard = None):
          installedCount['Asset'] = installedCount[type]
          installedCount['Upgrade'] = installedCount[type]
       if not card.isFaceUp: card.peek() # Added in octgn 3.0.5.47
-   if debugVerbosity >= 3: notify("<<< placeCard()") #Debug
+   debugNotify("<<< placeCard()", 3) #Debug
    
 def orgAttachments(card):
 # This function takes all the cards attached to the current card and re-places them so that they are all visible
 # xAlg, yAlg are the algorithsm which decide how the card is placed relative to its host and the other hosted cards. They are always multiplied by attNR
-   if debugVerbosity >= 1: notify(">>> orgAttachments()") #Debug
+   debugNotify(">>> orgAttachments()") #Debug
    attNR = 1
-   if debugVerbosity >= 4: notify("#### Card Name : {}".format(card.name))
+   debugNotify("#### Card Name : {}".format(card.name), 4)
    if specialHostPlacementAlgs.has_key(card.name):
-      if debugVerbosity >= 3: notify("### Found specialHostPlacementAlgs")
+      debugNotify("### Found specialHostPlacementAlgs", 3)
       xAlg = specialHostPlacementAlgs[card.name][0]
       yAlg = specialHostPlacementAlgs[card.name][1]
-      if debugVerbosity >= 2: notify("Found Special Placement Algs. xAlg = {}, yAlg = {}".format(xAlg,yAlg))
+      debugNotify("Found Special Placement Algs. xAlg = {}, yAlg = {}".format(xAlg,yAlg), 2)
    else: 
-      if debugVerbosity >= 3: notify("### No specialHostPlacementAlgs")
+      debugNotify("### No specialHostPlacementAlgs", 3)
       xAlg = 0 # The Default placement on the X axis, is to place the attachments at the same X as their parent
       yAlg =  -(cwidth(card) / 4 * playerside) # Defaults
    hostCards = eval(getGlobalVariable('Host Cards'))
@@ -472,13 +472,13 @@ def orgAttachments(card):
    for attachment in cardAttachements:
       attachment.moveToTable(x + (xAlg * attNR), y + (yAlg * attNR))
       attachment.setIndex(len(cardAttachements) - attNR) # This whole thing has become unnecessary complicated because sendToBack() does not work reliably
-      if debugVerbosity >= 4: notify("### {} index = {}".format(attachment,attachment.getIndex)) # Debug
+      debugNotify("### {} index = {}".format(attachment,attachment.getIndex), 4) # Debug
       attNR += 1
-      if debugVerbosity >= 4: notify("### Moving {}, Iter = {}".format(attachment,attNR))
+      debugNotify("### Moving {}, Iter = {}".format(attachment,attNR), 4)
    card.sendToFront() # Because things don't work as they should :(
    if debugVerbosity >= 4: # Checking Final Indices
       for attachment in cardAttachements: notify("### {} index = {}".format(attachment,attachment.getIndex)) # Debug
-   if debugVerbosity >= 3: notify("<<< orgAttachments()") #Debug      
+   debugNotify("<<< orgAttachments()", 3) #Debug      
      
 
 #------------------------------------------------------------------------------
@@ -486,7 +486,7 @@ def orgAttachments(card):
 #------------------------------------------------------------------------------
 
 def switchAutomation(type,command = 'Off'):
-   if debugVerbosity >= 1: notify(">>> switchAutomation(){}".format(extraASDebug())) #Debug
+   debugNotify(">>> switchAutomation(){}".format(extraASDebug())) #Debug
    global Automations
    if (Automations[type] and command == 'Off') or (not Automations[type] and command == 'Announce'):
       notify ("--> {}'s {} automations are OFF.".format(me,type))
@@ -496,31 +496,31 @@ def switchAutomation(type,command = 'Off'):
       if command != 'Announce': Automations[type] = True
    
 def switchPlayAutomation(group,x=0,y=0):
-   if debugVerbosity >= 1: notify(">>> switchPlayAutomation(){}".format(extraASDebug())) #Debug
+   debugNotify(">>> switchPlayAutomation(){}".format(extraASDebug())) #Debug
    switchAutomation('Play, Score and Rez')
    
 def switchStartEndAutomation(group,x=0,y=0):
-   if debugVerbosity >= 1: notify(">>> switchStartEndAutomation(){}".format(extraASDebug())) #Debug
+   debugNotify(">>> switchStartEndAutomation(){}".format(extraASDebug())) #Debug
    switchAutomation('Start/End-of-Turn')
 
 def switchDMGAutomation(group,x=0,y=0):
-   if debugVerbosity >= 1: notify(">>> switchDMGAutomation(){}".format(extraASDebug())) #Debug
+   debugNotify(">>> switchDMGAutomation(){}".format(extraASDebug())) #Debug
    switchAutomation('Damage')
 
 def switchPreventDMGAutomation(group,x=0,y=0):
-   if debugVerbosity >= 1: notify(">>> switchDMGAutomation(){}".format(extraASDebug())) #Debug
+   debugNotify(">>> switchDMGAutomation(){}".format(extraASDebug())) #Debug
    switchAutomation('Damage Prevention')
 
 def switchTriggersAutomation(group,x=0,y=0):
-   if debugVerbosity >= 1: notify(">>> switchTriggersAutomation(){}".format(extraASDebug())) #Debug
+   debugNotify(">>> switchTriggersAutomation(){}".format(extraASDebug())) #Debug
    switchAutomation('Triggers')
    
 def switchWinForms(group,x=0,y=0):
-   if debugVerbosity >= 1: notify(">>> switchWinForms(){}".format(extraASDebug())) #Debug
+   debugNotify(">>> switchWinForms(){}".format(extraASDebug())) #Debug
    switchAutomation('WinForms')
    
 def switchUniCode(group,x=0,y=0,command = 'Off'):
-   if debugVerbosity >= 1: notify(">>> switchUniCode(){}".format(extraASDebug())) #Debug
+   debugNotify(">>> switchUniCode(){}".format(extraASDebug())) #Debug
    global UniCode
    if UniCode and command != 'On':
       whisper("Credits and Clicks will now be displayed as normal ASCII.".format(me))
@@ -530,7 +530,7 @@ def switchUniCode(group,x=0,y=0,command = 'Off'):
       UniCode = True
 
 def ImAProAtThis(group = table, x=0, y=0):
-   if debugVerbosity >= 1: notify(">>> ImAProAtThis(){}".format(extraASDebug())) #Debug
+   debugNotify(">>> ImAProAtThis(){}".format(extraASDebug())) #Debug
    global DMGwarn, Dummywarn, DummyTrashWarn, ExposeTargetsWarn, RevealandShuffleWarn, PriorityInform, AfterRunInf, AfterTraceInf
    DMGwarn = False 
    Dummywarn = False 
@@ -583,7 +583,7 @@ def BUTTON_Wait(group = None,x=0,y=0):
 #------------------------------------------------------------------------------
 
 def versionCheck():
-   if debugVerbosity >= 1: notify(">>> versionCheck()") #Debug
+   debugNotify(">>> versionCheck()") #Debug
    global startupMsg
    me.setGlobalVariable('gameVersion',gameVersion)
    if not startupMsg: MOTD() # If we didn't give out any other message , we give out the MOTD instead.
@@ -591,14 +591,14 @@ def versionCheck():
    ### Below code Not needed anymore in 3.1.x
    # if not startupMsg:
       # (url, code) = webRead('https://raw.github.com/db0/Android-Netrunner-OCTGN/master/current_version.txt')
-      # if debugVerbosity >= 2: notify("### url:{}, code: {}".format(url,code)) #Debug
+      # debugNotify("### url:{}, code: {}".format(url,code), 2) #Debug
       # if code != 200 or not url:
          # whisper(":::WARNING::: Cannot check version at the moment.")
          # return
       # detailsplit = url.split('||')
       # currentVers = detailsplit[0].split('.')
       # installedVers = gameVersion.split('.')
-      # if debugVerbosity >= 2: notify("### Finished version split. About to check") #Debug
+      # debugNotify("### Finished version split. About to check", 2) #Debug
       # if len(installedVers) < 3:
          # whisper("Your game definition does not follow the correct version conventions. It is most likely outdated or modified from its official release.")
          # startupMsg = True
@@ -613,12 +613,12 @@ def versionCheck():
                      # ".format(gameVersion, detailsplit[0],detailsplit[2],detailsplit[1])):
             # openUrl('http://octgn.gamersjudgement.com/viewtopic.php?f=52&t=494')
          # startupMsg = True
-      # if debugVerbosity >= 2: notify("### Finished version check. Seeing if I should MOTD.") #Debug
-   if debugVerbosity >= 3: notify("<<< versionCheck()") #Debug
+      # debugNotify("### Finished version check. Seeing if I should MOTD.", 2) #Debug
+   debugNotify("<<< versionCheck()", 3) #Debug
       
       
 def MOTD():
-   if debugVerbosity >= 1: notify(">>> MOTD()") #Debug
+   debugNotify(">>> MOTD()") #Debug
    (MOTDurl, MOTDcode) = webRead('https://raw.github.com/db0/Android-Netrunner-OCTGN/master/MOTD.txt')
    (DYKurl, DYKcode) = webRead('https://raw.github.com/db0/Android-Netrunner-OCTGN/master/DidYouKnow.txt')
    if (MOTDcode != 200 or not MOTDurl) or (DYKcode !=200 or not DYKurl):
@@ -630,10 +630,10 @@ def MOTD():
       MOTDurl = '' # We don't want to spam the MOTD for the further notifications
       DYKrnd += 1
       if DYKrnd == len(DYKlist): DYKrnd = 0
-   if debugVerbosity >= 3: notify("<<< MOTD()") #Debug
+   debugNotify("<<< MOTD()", 3) #Debug
    
 def MOTDdisplay(MOTD,DYK):
-   if debugVerbosity >= 1: notify(">>> MOTDdisplay()") #Debug
+   debugNotify(">>> MOTDdisplay()") #Debug
    if re.search(r'http',MOTD): # If the MOTD has a link, then we do not sho DYKs, so that they have a chance to follow the URL
       MOTDweb = MOTD.split('&&')      
       if confirm("{}".format(MOTDweb[0])): openUrl(MOTDweb[1].strip())
@@ -653,22 +653,22 @@ def MOTDdisplay(MOTD,DYK):
    return 'STOP'
 
 def initGame(): # A function which prepares the game for online submition
-   if debugVerbosity >= 1: notify(">>> initGame()") #Debug
+   debugNotify(">>> initGame()") #Debug
    if getGlobalVariable('gameGUID') != 'None': return #If we've already grabbed a GUID, then just use that.
    (gameInit, initCode) = webRead('http://84.205.248.92/slaghund/init.slag')
    if initCode != 200:
       #whisper("Cannot grab GameGUID at the moment!") # Maybe no need to inform players yet.
       return
-   if debugVerbosity >= 2: notify("### {}".format(gameInit)) #Debug
+   debugNotify("### {}".format(gameInit), 2) #Debug
    GUIDregex = re.search(r'([0-9a-f-]{36}).*?',gameInit)
    if GUIDregex: setGlobalVariable('gameGUID',GUIDregex.group(1))
    else: setGlobalVariable('gameGUID','None') #If for some reason the page does not return a propert GUID, we won't record this game.
    setGlobalVariable('gameEnded','False')
-   if debugVerbosity >= 3: notify("<<< initGame()") #Debug
+   debugNotify("<<< initGame()", 3) #Debug
    
 def reportGame(result = 'AgendaVictory'): # This submits the game results online.
    delayed_whisper("Please wait. Submitting Game Stats...")     
-   if debugVerbosity >= 1: notify(">>> reportGame()") #Debug
+   debugNotify(">>> reportGame()") #Debug
    GUID = getGlobalVariable('gameGUID')
    if GUID == 'None' and debugVerbosity < 0: return # If we don't have a GUID, we can't submit. But if we're debugging, we go through.
    gameEnded = getGlobalVariable('gameEnded')
@@ -685,14 +685,14 @@ def reportGame(result = 'AgendaVictory'): # This submits the game results online
    else: WIN = 1
    SCORE = me.counters['Agenda Points'].value
    deckStats = eval(me.getGlobalVariable('Deck Stats'))
-   if debugVerbosity >= 2: notify("### Retrieved deckStats ") #Debug
-   if debugVerbosity >= 2: notify("### deckStats = {}".format(deckStats)) #Debug
+   debugNotify("### Retrieved deckStats ", 2) #Debug
+   debugNotify("### deckStats = {}".format(deckStats), 2) #Debug
    INFLUENCE = deckStats[0]
    CARDSNR = deckStats[1]
    AGENDASNR = deckStats[2]
    TURNS = turn
    VERSION = gameVersion
-   if debugVerbosity >= 2: notify("### About to report player results online.") #Debug
+   debugNotify("### About to report player results online.", 2) #Debug
    if (turn < 1 or len(players) == 1) and debugVerbosity < 1:
       notify(":::ATTENTION:::Game stats submit aborted due to number of players ( less than 2 ) or turns played (less than 1)")
       return # You can never win before the first turn is finished and we don't want to submit stats when there's only one player.
@@ -710,7 +710,7 @@ def reportGame(result = 'AgendaVictory'): # This submits the game results online
    ENEMY = enemyPL.name
    enemyIdent = getSpecial('Identity',enemyPL)
    E_IDENTITY = enemyIdent.Subtitle
-   if debugVerbosity >= 2: notify("### Enemy Identity Name: {}".format(E_IDENTITY)) #Debug
+   debugNotify("### Enemy Identity Name: {}".format(E_IDENTITY), 2) #Debug
    if result == 'FlatlineVictory': 
       E_RESULT = 'Flatlined'
       E_WIN = 0
@@ -730,24 +730,24 @@ def reportGame(result = 'AgendaVictory'): # This submits the game results online
       E_RESULT = 'Unknown'
       E_WIN = 0
    E_SCORE = enemyPL.counters['Agenda Points'].value
-   if debugVerbosity >= 2: notify("### About to retrieve E_deckStats") #Debug
+   debugNotify("### About to retrieve E_deckStats", 2) #Debug
    E_deckStats = eval(enemyPL.getGlobalVariable('Deck Stats'))
-   if debugVerbosity >= 2: notify("### E_deckStats = {}".format(E_deckStats)) #Debug
+   debugNotify("### E_deckStats = {}".format(E_deckStats), 2) #Debug
    E_INFLUENCE = E_deckStats[0]
    E_CARDSNR = E_deckStats[1]
    E_AGENDASNR = E_deckStats[2]
    if ds == 'corp': E_TURNS = turn - 1 # If we're a corp, the opponent has played one less turn than we have.
    else: E_TURNS = turn # If we're the runner, the opponent has played one more turn than we have.
    E_VERSION = enemyPL.getGlobalVariable('gameVersion')
-   if debugVerbosity >= 2: notify("### About to report enemy results online.") #Debug
+   debugNotify("### About to report enemy results online.", 2) #Debug
    if debugVerbosity < 1: # We only submit stats if we're not debugging
       (EreportTXT, EreportCode) = webRead('http://84.205.248.92/slaghund/game.slag?g={}&u={}&id={}&r={}&s={}&i={}&t={}&cnr={}&anr={}&v={}&w={}&lid={}&gname={}'.format(GUID,ENEMY,E_IDENTITY,E_RESULT,E_SCORE,E_INFLUENCE,E_TURNS,E_CARDSNR,E_AGENDASNR,E_VERSION,E_WIN,LEAGUE,GNAME),10000)
    setGlobalVariable('gameEnded','True')
    notify("Thanks for playing. Please submit any bugs or feature requests on github.\n-- https://github.com/db0/Android-Netrunner-OCTGN/issues")
-   if debugVerbosity >= 3: notify("<<< reportGame()") #Debug
+   debugNotify("<<< reportGame()", 3) #Debug
 
 def fetchLeagues():
-   if debugVerbosity >= 1: notify(">>> fetchLeagues()") #Debug
+   debugNotify(">>> fetchLeagues()") #Debug
    #return '' ### Code still WiP! Remove this at 1.1.16
    (LeagueTXT, LeagueCode) = webRead('https://raw.github.com/db0/Android-Netrunner-OCTGN/master/Leagues.txt')
    if LeagueCode != 200 or not LeagueTXT:
@@ -758,33 +758,33 @@ def fetchLeagues():
    opponent = ofwhom('onOpponent')
    for league in leaguesSplit:
       leagueMatches = league.split('\n')
-      if debugVerbosity >= 4: notify("### League Linebreak Splits: {}".format(leagueMatches))
+      debugNotify("### League Linebreak Splits: {}".format(leagueMatches), 4)
       for matchup in leagueMatches:
          if re.search(r'{}'.format(me.name),matchup, re.IGNORECASE) and re.search(r'{}'.format(opponent.name),matchup, re.IGNORECASE): #Check if the player's name exists in the league
             leagueDetails = league.split('=====') # Five equals separate the league name from its participants
             timeDetails = leagueDetails[1].strip() # We grab the time after which the matchup are not valid anymore.
             endTimes = timeDetails.split('.')
             currenttime = time.gmtime(time.time())
-            if debugVerbosity >= 2: notify("### Current Time:{}\n### End Times:{}".format(currenttime,endTimes)) #Debug
+            debugNotify("### Current Time:{}\n### End Times:{}".format(currenttime,endTimes), 2) #Debug
             if endTimes[0] >= currenttime[0] and endTimes[1] >= currenttime[1] and endTimes[2] >= currenttime[2] and endTimes[3] >= currenttime[3] and endTimes[4] >= currenttime[4]:          
                if confirm("Was this a match for the {} League?".format(leagueDetails[0])):
                   return leagueDetails[0] # If we matched a league, the return the first entry in the list, which is the league name.
    return '' # If we still haven't found a league name, it means the player is not listed as taking part in a league.
    
 def fetchCardScripts(group = table, x=0, y=0): # Creates 2 dictionaries with all scripts for all cards stored, based on a web URL or the local version if that doesn't exist.
-   if debugVerbosity >= 1: notify(">>> fetchCardScripts()") #Debug
+   debugNotify(">>> fetchCardScripts()") #Debug
    global CardsAA, CardsAS # Global dictionaries holding Card AutoActions and Card AutoScripts for all cards.
    whisper("+++ Fetching fresh scripts. Please Wait...")
    if (len(players) > 1 or debugVerbosity == 0) and me.name != 'dbzer0': # I put my debug account to always use local scripts.
       try: (ScriptsDownload, code) = webRead('https://raw.github.com/db0/Android-Netrunner-OCTGN/master/o8g/Scripts/CardScripts.py',5000)
       except: 
-         if debugVerbosity >= 0: notify("Timeout Error when trying to download scripts")
+         debugNotify("Timeout Error when trying to download scripts", 0)
          code = ScriptsDownload = None
    else: # If we have only one player, we assume it's a debug game and load scripts from local to save time.
-      if debugVerbosity >= 0: notify("Skipping Scripts Download for faster debug")
+      debugNotify("Skipping Scripts Download for faster debug", 0)
       code = 0
       ScriptsDownload = None
-   if debugVerbosity >= 4: notify("### code:{}, text: {}".format(code, ScriptsDownload)) #Debug
+   debugNotify("### code:{}, text: {}".format(code, ScriptsDownload), 4) #Debug
    if code != 200 or not ScriptsDownload or (ScriptsDownload and not re.search(r'ANR CARD SCRIPTS', ScriptsDownload)) or debugVerbosity >= 0: 
       whisper(":::WARNING::: Cannot download card scripts at the moment. Will use localy stored ones.")
       Split_Main = ScriptsLocal.split('=====') # Split_Main is separating the file description from the rest of the code
@@ -807,7 +807,7 @@ def fetchCardScripts(group = table, x=0, y=0): # Creates 2 dictionaries with all
          notify(Split_Details[0])
          notify('-----')
       # A split from the Full_Card_String always should result in a list with 2 entries.
-      if debugVerbosity >= 2: notify(Split_Details[0].strip()) # If it's the card name, notify us of it.
+      debugNotify(Split_Details[0].strip(), 2) # If it's the card name, notify us of it.
       Split_Scripts = Split_Details[2].split('+++++') # List item [1] always holds the two scripts. AutoScripts and AutoActions.
       CardsAS[Split_Details[1].strip()] = Split_Scripts[0].strip()
       CardsAA[Split_Details[1].strip()] = Split_Scripts[1].strip()
@@ -815,7 +815,7 @@ def fetchCardScripts(group = table, x=0, y=0): # Creates 2 dictionaries with all
    if debugVerbosity >= 4: # Debug
       notify("CardsAS Dict:\n{}".format(str(CardsAS)))
       notify("CardsAA Dict:\n{}".format(str(CardsAA))) 
-   if debugVerbosity >= 3: notify("<<< fetchCardScripts()") #Debug
+   debugNotify("<<< fetchCardScripts()", 3) #Debug
 
 def concede(group=table,x=0,y=0):
    mute()
@@ -912,8 +912,8 @@ def ShowDicts():
    notify("Stored_Types:\n {}".format(str(Stored_Type)))
    notify("Stored_Costs:\n {}".format(str(Stored_Cost)))
    notify("Stored_Keywords: {}".format(str(Stored_Keywords)))
-   if debugVerbosity >= 4: notify("Stored_AA: {}".format(str(Stored_AutoActions)))
-   if debugVerbosity >= 4: notify("Stored_AS: {}".format(str(Stored_AutoScripts)))
+   debugNotify("Stored_AA: {}".format(str(Stored_AutoActions)), 4)
+   debugNotify("Stored_AS: {}".format(str(Stored_AutoScripts)), 4)
    notify("installedCounts: {}".format(str(installedCount)))
 
 def DebugCard(card, x=0, y=0):

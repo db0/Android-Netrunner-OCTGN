@@ -142,7 +142,7 @@ class OKWindow(Form): # This is a WinForm which creates a simple window, with so
          self.timer_tries += 1
             
 def information(Message):
-   if debugVerbosity >= 1: notify(">>> information() with message: {}".format(Message))
+   debugNotify(">>> information() with message: {}".format(Message))
    if Automations['WinForms']:
       Application.EnableVisualStyles()
       form = OKWindow(Message)
@@ -267,7 +267,7 @@ class SingleChoiceWindow(Form):
          self.timer_tries += 1
 
 def SingleChoice(title, options, type = 'radio', default = 0):
-   if debugVerbosity >= 1: notify(">>> SingleChoice()".format(title))
+   debugNotify(">>> SingleChoice()".format(title))
    if Automations['WinForms']:
       optChunks=[options[x:x+8] for x in xrange(0, len(options), 8)]
       optCurrent = 0
@@ -278,9 +278,9 @@ def SingleChoice(title, options, type = 'radio', default = 0):
          form.BringToFront()
          form.ShowDialog()
          choice = form.getIndex()
-         if debugVerbosity >= 2: notify("### choice is: {}".format(choice))
+         debugNotify("### choice is: {}".format(choice), 2)
          if choice == "Next Page": 
-            if debugVerbosity >= 3: notify("### Going to next page")
+            debugNotify("### Going to next page", 3)
             optCurrent += 1
             if optCurrent >= len(optChunks): optCurrent = 0
          else: 
@@ -291,7 +291,7 @@ def SingleChoice(title, options, type = 'radio', default = 0):
       for iter in range(len(options)):
          concatTXT += '{}:--> {}\n'.format(iter,options[iter])
       choice = askInteger(concatTXT,0)
-   if debugVerbosity >= 3: notify("<<< SingleChoice() with return {}".format(choice))
+   debugNotify("<<< SingleChoice() with return {}".format(choice), 3)
    return choice
  
    
@@ -411,7 +411,7 @@ class MultiChoiceWindow(Form):
          self.timer_tries += 1 # Increment this counter to stop after 3 tries.
       
 def multiChoice(title, options,card): # This displays a choice where the player can select more than one ability to trigger serially one after the other
-   if debugVerbosity >= 1: notify(">>> multiChoice()".format(title))
+   debugNotify(">>> multiChoice()".format(title))
    if Automations['WinForms']: # If the player has not disabled the custom WinForms, we use those
       Application.EnableVisualStyles() # To make the window look like all other windows in the user's system
       if card.Type == 'ICE': CPType = 'Intrusion Countermeasures Electronics'  # Just some nice fluff
@@ -430,15 +430,18 @@ def multiChoice(title, options,card): # This displays a choice where the player 
       else: 
          choices = list(str(choicesInteger)) # We convert our number into a list of numeric chars
          for iter in range(len(choices)): choices[iter] = int(choices[iter]) # we convert our list of chars into a list of integers      
-   if debugVerbosity >= 3: notify("<<< multiChoice() with list: {}".format(choices))
+   debugNotify("<<< multiChoice() with list: {}".format(choices), 3)
    return choices # We finally return a list of integers to the previous function. Those will in turn be iterated one-by-one serially.
       
 #---------------------------------------------------------------------------
 # Generic
 #---------------------------------------------------------------------------
 
+def debugNotify(msg, level = 1):
+   if debugVerbosity >= level: notify(msg)
+
 def num (s):
-   #if debugVerbosity >= 1: notify(">>> num(){}".format(extraASDebug())) #Debug
+   #debugNotify(">>> num(){}".format(extraASDebug())) #Debug
    if not s: return 0
    try:
       return int(s)
@@ -463,7 +466,7 @@ def numOrder(num):
     return int_to_ordinal(num + 1)
 
 def chooseSide(): # Called from many functions to check if the player has chosen a side for this game.
-   if debugVerbosity >= 1: notify(">>> chooseSide(){}".format(extraASDebug())) #Debug
+   debugNotify(">>> chooseSide(){}".format(extraASDebug())) #Debug
    mute()
    global playerside, playeraxis
    if playerside == None:  # Has the player selected a side yet? If not, then...
@@ -473,7 +476,7 @@ def chooseSide(): # Called from many functions to check if the player has chosen
      else:
         playeraxis = Yaxis
         playerside = 1
-   if debugVerbosity >= 4: notify("<<< chooseSide(){}".format(extraASDebug())) #Debug
+   debugNotify("<<< chooseSide(){}".format(extraASDebug()), 4) #Debug
 
 def displaymatch(match):
    if match is None:
@@ -484,11 +487,11 @@ def storeProperties(card, forced = False): # Function that grabs a cards importa
    mute()
    try:
       coverExists = False
-      if debugVerbosity >= 1: notify(">>> storeProperties(){}".format(extraASDebug())) #Debug
+      debugNotify(">>> storeProperties(){}".format(extraASDebug())) #Debug
       global Stored_Name, Stored_Cost, Stored_Type, Stored_Keywords, Stored_AutoActions, Stored_AutoScripts, identName
       if (card.Name == '?' and Stored_Name.get(card._id,'?') == '?') or forced:
          if not card.isFaceUp and card.group == table:
-            if debugVerbosity >= 2: notify("### Adding Cover")
+            debugNotify("### Adding Cover", 2)
             x,y = card.position
             cover = table.create("ac3a3d5d-7e3a-4742-b9b2-7f72596d9c1b",x,y,1,False)
             cover.moveToTable(x,y,False)
@@ -497,14 +500,14 @@ def storeProperties(card, forced = False): # Function that grabs a cards importa
             card.isFaceUp = True
             loopcount = 0
             while card.name == 'Card':
-               if debugVerbosity >= 4: notify("### Loop {} while searching for properties".format(loopcount))
+               debugNotify("### Loop {} while searching for properties".format(loopcount), 4)
                rnd(1,10)
                loopcount += 1
                if loopcount == 5:
                   whisper(":::Error::: Card properties can't be grabbed. Aborting!")
                   break
       if Stored_Type.get(card._id,'?') == '?' or (Stored_Name.get(card._id,'?') != card.Name and card.Name != '?') or forced:
-         if debugVerbosity >= 3: notify("### {} not stored. Storing...".format(card))
+         debugNotify("### {} not stored. Storing...".format(card), 3)
          Stored_Name[card._id] = card.Name
          Stored_Cost[card._id] = card.Cost
          Stored_Type[card._id] = card.Type
@@ -513,18 +516,18 @@ def storeProperties(card, forced = False): # Function that grabs a cards importa
          Stored_AutoScripts[card._id] = CardsAS.get(card.model,'')
          if card.Type == 'Identity' and card.owner == me: identName = card.Name
       if coverExists:
-         if debugVerbosity >= 2: notify("### Removing Cover")
+         debugNotify("### Removing Cover", 2)
          card.isFaceUp = False
          if card.controller == me: card.peek()
          rnd(1,10) # To give time to the card facedown automation to complete.
          cover.moveTo(shared.exile) # now destorying cover card
-      if debugVerbosity >= 3: notify("<<< storeProperties()")
+      debugNotify("<<< storeProperties()", 3)
    except: notify("!!!ERROR!!! In storeProperties()")
 
 def fetchProperty(card, property): 
    mute()
    coverExists = False
-   if debugVerbosity >= 1: notify(">>> fetchProperty(){}".format(extraASDebug())) #Debug
+   debugNotify(">>> fetchProperty(){}".format(extraASDebug())) #Debug
    if property == 'name' or property == 'Name': currentValue = Stored_Name.get(card._id,'?')
    elif property == 'Cost': currentValue = Stored_Cost.get(card._id,'?')
    elif property == 'Type': currentValue = Stored_Type.get(card._id,'?')
@@ -533,9 +536,9 @@ def fetchProperty(card, property):
    elif property == 'AutoActions': currentValue = Stored_AutoActions.get(card._id,'?')
    else: currentValue = card.properties[property]
    if currentValue == '?' or currentValue == 'Card':
-      if debugVerbosity >= 4: notify("### Card property: {} unreadable = {}".format(property,currentValue)) #Debug
+      debugNotify("### Card property: {} unreadable = {}".format(property,currentValue), 4) #Debug
       if not card.isFaceUp and card.group == table:
-         if debugVerbosity >= 3: notify("### Need to flip card up to read its properties.") #Debug
+         debugNotify("### Need to flip card up to read its properties.", 3) #Debug
          x,y = card.position
          cover = table.create("ac3a3d5d-7e3a-4742-b9b2-7f72596d9c1b",x,y,1,False)
          cover.moveToTable(x,y,False)
@@ -543,23 +546,23 @@ def fetchProperty(card, property):
          coverExists = True
          card.isFaceUp = True
          loopChk(card)
-      if debugVerbosity >= 3: notify("### Ready to grab real properties.") #Debug
+      debugNotify("### Ready to grab real properties.", 3) #Debug
       if property == 'name': currentValue = card.name # Now that we had a chance to flip the card face up temporarily, we grab its property again.
       else: 
          currentValue = card.properties[property]
-         if debugVerbosity >= 3: notify("### Grabbing {}'s {} manually: {}.".format(card,property,card.properties[property]))
+         debugNotify("### Grabbing {}'s {} manually: {}.".format(card,property,card.properties[property]), 3)
          #storeProperties(card) # Commented out because putting it here can cause an infinite loop
    if coverExists: 
       card.isFaceUp = False
       if card.controller == me: card.peek()
       rnd(1,10) # To give time to the card facedown automation to complete.
       cover.moveTo(shared.exile) # now destorying cover card
-   if debugVerbosity >= 3: notify("<<< fetchProperty() by returning: {}".format(currentValue))
+   debugNotify("<<< fetchProperty() by returning: {}".format(currentValue), 3)
    if not currentValue: currentValue = ''
    return currentValue
 
 def clearCovers(): # Functions which goes through the table and clears any cover cards
-   if debugVerbosity >= 1: notify(">>> clearCovers()") #Debug
+   debugNotify(">>> clearCovers()") #Debug
    for cover in table:
       if cover.model == 'ac3a3d5d-7e3a-4742-b9b2-7f72596d9c1b': cover.moveTo(shared.exile)
 
@@ -568,7 +571,7 @@ def findOpponent():
    return ofwhom('ofOpponent')
    
 def loopChk(card,property = 'Type'):
-   if debugVerbosity >= 1: notify(">>> loopChk(){}".format(extraASDebug())) #Debug
+   debugNotify(">>> loopChk(){}".format(extraASDebug())) #Debug
    loopcount = 0
    while card.properties[property] == '?':
       rnd(1,10)
@@ -576,11 +579,11 @@ def loopChk(card,property = 'Type'):
       if loopcount == 5:
          whisper(":::Error::: Card property can't be grabbed. Aborting!")
          return 'ABORT'
-   if debugVerbosity >= 4: notify("<<< loopChk()") #Debug
+   debugNotify("<<< loopChk()", 4) #Debug
    return 'OK'         
    
 def sortPriority(cardList):
-   if debugVerbosity >= 1: notify(">>> sortPriority()") #Debug
+   debugNotify(">>> sortPriority()") #Debug
    priority1 = []
    priority2 = []
    priority3 = []
@@ -602,7 +605,7 @@ def sortPriority(cardList):
    return sortedList
    
 def oncePerTurn(card, x = 0, y = 0, silent = False, act = 'manual'):
-   if debugVerbosity >= 1: notify(">>> oncePerTurn(){}".format(extraASDebug())) #Debug
+   debugNotify(">>> oncePerTurn(){}".format(extraASDebug())) #Debug
    mute()
    if card.orientation == Rot90:
       if act != 'manual': return 'ABORT' # If the player is not activating an effect manually, we always fail silently. So as not to spam the confirm.
@@ -612,7 +615,7 @@ def oncePerTurn(card, x = 0, y = 0, silent = False, act = 'manual'):
    else:
       if not silent and act != 'dryRun': notify('{} activates the once-per-turn ability of {}'.format(me, card))
    if act != 'dryRun': card.orientation = Rot90
-   if debugVerbosity >= 3: notify("<<< oncePerTurn() exit OK") #Debug
+   debugNotify("<<< oncePerTurn() exit OK", 3) #Debug
 
 def delayed_whisper(text): # Because whispers for some reason execute before notifys
    rnd(1,10)
@@ -622,7 +625,7 @@ def delayed_whisper(text): # Because whispers for some reason execute before not
 #---------------------------------------------------------------------------
 
 def cwidth(card, divisor = 10):
-   #if debugVerbosity >= 1: notify(">>> cwidth(){}".format(extraASDebug())) #Debug
+   #debugNotify(">>> cwidth(){}".format(extraASDebug())) #Debug
 # This function is used to always return the width of the card plus an offset that is based on the percentage of the width of the card used.
 # The smaller the number given, the less the card is divided into pieces and thus the larger the offset added.
 # For example if a card is 80px wide, a divisor of 4 will means that we will offset the card's size by 80/4 = 20.
@@ -634,13 +637,13 @@ def cwidth(card, divisor = 10):
    return (card.width() + offset)
 
 def cheight(card, divisor = 10):
-   #if debugVerbosity >= 1: notify(">>> cheight(){}".format(extraASDebug())) #Debug
+   #debugNotify(">>> cheight(){}".format(extraASDebug())) #Debug
    if divisor == 0: offset = 0
    else: offset = card.height() / divisor
    return (card.height() + offset)
 
 def yaxisMove(card):
-   #if debugVerbosity >= 1: notify(">>> yaxisMove(){}".format(extraASDebug())) #Debug
+   #debugNotify(">>> yaxisMove(){}".format(extraASDebug())) #Debug
 # Variable to move the cards played by player 2 on a 2-sided table, more towards their own side. 
 # Player's 2 axis will fall one extra card length towards their side.
 # This is because of bug #146 (https://github.com/kellyelton/OCTGN/issues/146)
