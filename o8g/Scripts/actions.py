@@ -1208,9 +1208,9 @@ def accessTarget(group = table, x = 0, y = 0):
                extraText = ''
                extraText2 = '' # I only set this here, even though it's used in line 1190 later, because to reach that part, it will have to pass through this if clause always.
             action1TXT = 'Pay {}{} to Trash.'.format(num(card.Stat) - reduction,extraText)
-         options = ["Leave where it is.","Force trash at no cost.",action1TXT]
+         options = ["Leave where it is.","Force trash at no cost.\n(Only through card effects)",action1TXT]
       else:                    
-         options = ["Leave where it is.","Force trash at no cost."]
+         options = ["Leave where it is.","Force trash at no cost.\n(Only through card effects)"]
       choice = SingleChoice(title, options, 'button')
       if choice == None: choice = 0
       if choice == 1: 
@@ -1316,9 +1316,9 @@ def RDaccessX(group = table, x = 0, y = 0): # A function which looks at the top 
                extraText = ''
                extraText2 = ''            
             action1TXT = 'Pay {}{} to Trash.'.format(num(cStat) - reduction,extraText)
-         options = ["Leave where it is.","Force trash at no cost.",action1TXT]
+         options = ["Leave where it is.","Force trash at no cost.\n(Only through card effects)",action1TXT]
       else:                    
-         options = ["Leave where it is.","Force trash at no cost."]
+         options = ["Leave where it is.","Force trash at no cost.\n(Only through card effects)"]
       choice = SingleChoice(title, options, 'button')
       if choice == None: choice = 0
       if choice == 1: 
@@ -1438,9 +1438,9 @@ def HQaccess(group=table, x=0,y=0, silent = False):
                extraText = ''
                extraText2 = ''
             action1TXT = 'Pay {}{} to Trash.'.format(num(revealedCard.Stat) - reduction,extraText)
-         options = ["Leave where it is.","Force trash at no cost.",action1TXT]
+         options = ["Leave where it is.","Force trash at no cost.\n(Only through card effects)",action1TXT]
       else:                    
-         options = ["Leave where it is.","Force trash at no cost."]
+         options = ["Leave where it is.","Force trash at no cost.\n(Only through card effects)"]
       if debugVerbosity >= 2: notify("### Opening Choice Window") #Debug
       choice = SingleChoice(title, options, 'button')
       if choice == None: choice = 0

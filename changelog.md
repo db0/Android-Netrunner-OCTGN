@@ -1,6 +1,10 @@
 Changelog - Android:Netrunner LCG OCTGN Game Definition
 ===============================================
 
+### 3.0.4.x
+
+* Force Trashing a bit more newbie friendly now
+
 ### 3.0.3.x
 
 * Replicator not once per turn anymore
