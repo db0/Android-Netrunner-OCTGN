@@ -141,7 +141,7 @@
 		<property name="Cost" value="5" />
 		<property name="Requirement" value="1" />	
 		<property name="Stat" value="2" />	
-		<property name="Rules" value="If you have at least 2 [Link], the memory cost of Creeper is 0, even if it is not installed.&#xD;&#xA;2 [Credits]: Break sentry subroutine.&#xD;&#xA;1 [Credits]: + strength." />
+		<property name="Rules" value="If you have at least 2 [Link], the memory cost of Creeper is 0, even if it is not installed.&#xD;&#xA;2 [Credits]: Break sentry subroutine.&#xD;&#xA;1 [Credits]: +1 strength." />
 		<property name="Flavor" value="&quot;The itsy bitsy spider went up the data spout...&quot; - Chaos Theory" />
 		<property name="Instructions" value="2 [Credits]: Break sentry subroutine.||1 [Credits]: +1 strength" />
 		<property name="Faction" value="Shaper" />
