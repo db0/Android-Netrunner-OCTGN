@@ -1640,7 +1640,7 @@
 		<property name="Cost" value="9" />
 		<property name="Requirement" value="" />	
 		<property name="Stat" value="" />	
-		<property name="Rules" value="+2 [Memory Units] +2[Link]&#xD;&#xA;2 [Generate Credits]&#xD;&#xA;Use the credits to pay for using icebreakers.&#xD;&#xA;Limit one console per player." />
+		<property name="Rules" value="+2 [Memory Units] +2[Link]&#xD;&#xA;2 [Generate Credits]&#xD;&#xA;Use the credits to pay for using icebreakers.&#xD;&#xA;Limit 1 console per player." />
 		<property name="Flavor" value="" />
 		<property name="Instructions" value="" />
 		<property name="Faction" value="Shaper" />
