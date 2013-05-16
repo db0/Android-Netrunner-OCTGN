@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<set xmlns:noNamespaceSchemaLocation="CardSet.xsd" name="Markers" id="21bf9e05-fb23-4b1d-b89a-398f671f5999" gameId="0f38e453-26df-4c04-9d67-6d43de939c77" gameVersion="2.3.0" version="2.3.0">
+<set xmlns:noNamespaceSchemaLocation="CardSet.xsd" 
+     name="Markers" 
+     id="21bf9e05-fb23-4b1d-b89a-398f671f5999" 
+     gameId="0f38e453-26df-4c04-9d67-6d43de939c77" 
+     gameVersion="3.0.0.0" 
+     version="3.0.0.0">
 	<markers>
 		<marker id="7ae6b4f2-afee-423a-bc18-70a236b41292" name="Bad Publicity" />
 		<marker id="38c5b2a0-caa2-40e4-b5b2-0f1cc7202782" name="Agenda" />

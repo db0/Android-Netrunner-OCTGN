@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<set xmlns:noNamespaceSchemaLocation="CardSet.xsd" name="Humanity's Shadow" id="54e6b622-c596-4216-ba49-c728e6003525" gameId="0f38e453-26df-4c04-9d67-6d43de939c77" gameVersion="3.0.0.0" version="3.0.0.0">
+<set xmlns:noNamespaceSchemaLocation="CardSet.xsd" 
+     name="Humanity's Shadow" 
+     id="54e6b622-c596-4216-ba49-c728e6003525" 
+     gameId="0f38e453-26df-4c04-9d67-6d43de939c77" 
+     gameVersion="3.0.0.0" 
+     version="3.0.0.0">
 <cards>
 	<card id="bc0f047c-01b1-427f-a439-d451eda02081" name="Surge">
 		<property name="Subtitle" value="" />

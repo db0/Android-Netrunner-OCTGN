@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<set xmlns:noNamespaceSchemaLocation="CardSet.xsd" name="Trace Amount" id="36787cac-674a-459c-b11c-ef23a5d78045" gameId="0f38e453-26df-4c04-9d67-6d43de939c77" gameVersion="2.3.0" version="2.3.0">
+<set xmlns:noNamespaceSchemaLocation="CardSet.xsd" 
+     name="Trace Amount" 
+     id="36787cac-674a-459c-b11c-ef23a5d78045" 
+     gameId="0f38e453-26df-4c04-9d67-6d43de939c77" 
+     gameVersion="3.0.0.0" 
+     version="3.0.0.0">
 <cards>
 	<card id="bc0f047c-01b1-427f-a439-d451eda02038" name="Amazon Industrial Zone">
 		<property name="Subtitle" value="" />
