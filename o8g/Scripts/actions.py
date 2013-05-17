@@ -1033,7 +1033,7 @@ def findEnhancements(Autoscript): #Find out if the player has any cards increasi
    DMGtype = re.search(r'\bInflict[0-9]+(Meat|Net|Brain)Damage', Autoscript)
    if DMGtype:
       enhancerMarker = 'enhanceDamage:{}'.format(DMGtype.group(1))
-      debugNotify('#### encancerMarker: {}'.format(enhancerMarker), 3)
+      debugNotify(' encancerMarker: {}'.format(enhancerMarker), 3)
       for card in table:
          debugNotify("### Checking {}".format(card), 2) #Debug
          cardENH = re.search(r'Enhance([0-9]+){}Damage'.format(DMGtype.group(1)), CardsAS.get(card.model,''))
@@ -1167,7 +1167,7 @@ def accessTarget(group = table, x = 0, y = 0):
       storeProperties(card)
       accessRegex = re.search(r'onAccess:([^|]+)',CardsAS.get(card.model,''))
       if accessRegex:
-         debugNotify("#### accessRegex found! {}".format(accessRegex.group(1)), 2)
+         debugNotify(" accessRegex found! {}".format(accessRegex.group(1)), 2)
          notify("{} has just accessed a {}!".format(me,card))
          Autoscripts = accessRegex.group(1).split('$$')
          X = 0
@@ -1248,7 +1248,7 @@ def RDaccessX(group = table, x = 0, y = 0): # A function which looks at the top 
       whisper("Corp's R&D is empty. You cannot take this action")
       return
    if debugVerbosity >= 4:
-      for card in RDtop: notify("#### Card: {}".format(card))
+      for card in RDtop: notify(" Card: {}".format(card))
    notify("{} is accessing the top {} cards of {}'s R&D".format(me,count,targetPL))
    cover = table.create("ac3a3d5d-7e3a-4742-b9b2-7f72596d9c1b",0,0,1,True) # Creating a dummy card to cover that player's archives in case they're empty
    cover.moveTo(targetPL.piles['Heap/Archives(Face-up)']) # Moving that dummy card on top of their archives
@@ -1256,11 +1256,11 @@ def RDaccessX(group = table, x = 0, y = 0): # A function which looks at the top 
       debugNotify("### Moving card {}".format(iter), 3) #Debug
       notify(" -- {} is now accessing the {} card".format(me,numOrder(iter)))
       RDtop[iter].moveToBottom(targetPL.piles['Heap/Archives(Face-up)'])
-      debugNotify("#### Looping...", 4)
+      debugNotify(" Looping...", 4)
       loopChk(RDtop[iter],'Type')
       accessRegex = re.search(r'onAccess:([^|]+)',CardsAS.get(RDtop[iter].model,''))
       if accessRegex:
-         debugNotify("#### accessRegex found! {}".format(accessRegex.group(1)), 2)
+         debugNotify(" accessRegex found! {}".format(accessRegex.group(1)), 2)
          if not re.search(r'ifInstalled',accessRegex.group(1)): notify("{} has just accessed a {}!".format(me,RDtop[iter]))
          Autoscripts = accessRegex.group(1).split('$$')
          X = 0
@@ -1278,7 +1278,7 @@ def RDaccessX(group = table, x = 0, y = 0): # A function which looks at the top 
                      rnd(1,1000)
                      notify(":::NOTICE::: {} is still waiting for {} to decide whether to use {} or not".format(me,RDtop[iter].owner,RDtop[iter]))
             else: X = redirect(autoS, RDtop[iter], 'Quick', X)
-      debugNotify("#### Storing...", 4)
+      debugNotify(" Storing...", 4)
       storeProperties(RDtop[iter]) # Otherwise trying to trash the card will crash because of reduceCost()
       cType = RDtop[iter].Type
       cKeywords = RDtop[iter].Keywords
@@ -1286,7 +1286,7 @@ def RDaccessX(group = table, x = 0, y = 0): # A function which looks at the top 
       cCost = RDtop[iter].Cost
       cName = RDtop[iter].name
       cRules = RDtop[iter].Rules
-      debugNotify("#### Finished Storing. About to move back...", 4)
+      debugNotify(" Finished Storing. About to move back...", 4)
       RDtop[iter].moveTo(targetPL.piles['R&D/Stack'],iter - removedCards)
       debugNotify("### Stored properties. Checking type...", 3) #Debug
       if cType == 'ICE':
@@ -1392,7 +1392,7 @@ def HQaccess(group=table, x=0,y=0, silent = False):
       revealedCard.sendToFront() # We send our currently accessed card to the front, so that the corp can see it. The rest are covered up.
       accessRegex = re.search(r'onAccess:([^|]+)',CardsAS.get(revealedCard.model,''))
       if accessRegex:
-         debugNotify("#### accessRegex found! {}".format(accessRegex.group(1)), 2)
+         debugNotify(" accessRegex found! {}".format(accessRegex.group(1)), 2)
          notify("{} has just accessed a {}!".format(me,revealedCard))
          Autoscripts = accessRegex.group(1).split('$$')
          X = 0
@@ -2116,7 +2116,7 @@ def handRandomDiscard(group, count = None, player = None, destination = None, si
       count = SSize
       whisper("You do not have enough cards in your hand to complete this action. Will discard as many as possible")
    for iter in range(count):
-      debugNotify("#### : handRandomDiscard() iter: {}".format(iter + 1), 3) # Debug
+      debugNotify(" : handRandomDiscard() iter: {}".format(iter + 1), 3) # Debug
       card = group.random()
       if card == None: return iter + 1 # If we have no more cards, then return how many we managed to discard.
       card.moveTo(destination)

@@ -97,7 +97,7 @@ def executePlayScripts(card, action):
          if abilChoice == 'ABORT' or abilChoice == None: return # If the player closed the window, or pressed Cancel, abort.
          TriggersFound.pop(abilChoice) # What we do now, is we remove the choice we made, from the list of possible choices. We remove it because then we will remove all the other options from the main list "Autoscripts"
          for unchosenOption in TriggersFound:
-            if debugVerbosity >= 4: notify ('#### Removing unused option: {}'.format(unchosenOption)) # Debug
+            if debugVerbosity >= 4: notify (' Removing unused option: {}'.format(unchosenOption)) # Debug
             Autoscripts.remove(unchosenOption)
          if debugVerbosity >= 2: notify ('### Final Autoscripts after choices: {}'.format(Autoscripts)) # Debug
    for AutoS in Autoscripts:
@@ -138,7 +138,7 @@ def executePlayScripts(card, action):
          targetC = findTarget(activeAutoscript)
          targetPL = ofwhom(activeAutoscript,card.controller) # So that we know to announce the right person the effect, affects.
          announceText = "{} uses {}'s ability to".format(targetPL,card)
-         debugNotify("#### targetC: {}".format(targetC), 3) # Debug
+         debugNotify(" targetC: {}".format(targetC), 3) # Debug
          if effect.group(1) == 'Gain' or effect.group(1) == 'Lose':
             if Removal: 
                if effect.group(1) == 'Gain': passedScript = "Lose{}{}".format(effect.group(2),effect.group(3))
@@ -317,12 +317,12 @@ def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
             if abilRegex.group(8): # If the autoscript has an 8th group, then it means it has subconditions. Such as "per Marker" or "is Subroutine"
                subconditions = abilRegex.group(8).split('$$') # These subconditions are always separated by dashes "-", so we use them to split the string
                for idx2 in range(len(subconditions)):
-                  debugNotify("#### Checking subcondition {}:{}".format(idx2,subconditions[idx2]), 4)
+                  debugNotify(" Checking subcondition {}:{}".format(idx2,subconditions[idx2]), 4)
                   if re.search(r'isCost', Autoscripts[idx]) and idx2 == 1: choices[idx] += ' to' # The extra costs of an action are always at the first part (i.e. before the $$)
                   elif idx2 > 0: choices[idx] += ' and'
                   subadditions = subconditions[idx2].split('-')
                   for idx3 in range(len(subadditions)):
-                     debugNotify("#### Checking subaddition {}-{}:{}".format(idx2,idx3,subadditions[idx3]), 4)
+                     debugNotify(" Checking subaddition {}-{}:{}".format(idx2,idx3,subadditions[idx3]), 4)
                      if re.search(r'warn[A-Z][A-Za-z0-9 ]+', subadditions[idx3]): continue # Don't mention warnings.
                      if subadditions[idx3] in IgnoredModulators: continue # We ignore modulators which are internal to the engine.
                      choices[idx] += ' {}'.format(subadditions[idx3]) #  Then we iterate through each distinct subcondition and display it without the dashes between them. (In the future I may also add whitespaces between the distinct words)
@@ -813,7 +813,7 @@ def redirect(Autoscript, card, announceText = None, notificationType = 'Quick', 
    targetC = findTarget(Autoscript)
    targetPL = ofwhom(Autoscript,card.controller) # So that we know to announce the right person the effect, affects.
    if not announceText: announceText = "{} uses {}'s ability to".format(targetPL,card) 
-   debugNotify("#### targetC: {}. Notification Type = {}".format(targetC,notificationType), 3) # Debug
+   debugNotify(" targetC: {}. Notification Type = {}".format(targetC,notificationType), 3) # Debug
    if regexHooks['GainX'].search(Autoscript):
       gainTuple = GainX(Autoscript, announceText, card, notification = notificationType, n = X)
       if gainTuple == 'ABORT': return
@@ -854,7 +854,7 @@ def redirect(Autoscript, card, announceText = None, notificationType = 'Quick', 
       if ModifyStatus(Autoscript, announceText, card, targetC, notification = notificationType, n = X) == 'ABORT': return
    elif regexHooks['SimplyAnnounce'].search(Autoscript):
       SimplyAnnounce(Autoscript, announceText, card, targetC, notification = notificationType, n = X)
-   eldebugNotify("#### No regexhook match! :(") # Debug
+   eldebugNotify(" No regexhook match! :(") # Debug
    debugNotify("### Loop for scipt {} finished".format(Autoscript), 2)
    return X
 
@@ -888,11 +888,11 @@ def GainX(Autoscript, announceText, card, targetCards = None, notification = Non
    if action.group(1) == 'Lose': 
       if action.group(3) == 'Credits' or action.group(3) == 'Agenda Points' or action.group(3) == 'Clicks' or action.group(3) == 'MU' or action.group(3) == 'Base Link' or action.group(3) == 'Bad Publicity' or action.group(3) == 'Tags' or action.group(3) == 'Hand Size':
          overcharge = (gain * multiplier) - targetPL.counters[action.group(3)].value  # we use this to calculate how much of the requested LoseX was used.
-         debugNotify("#### We have an overcharge of {}".format(overcharge), 4)
+         debugNotify(" We have an overcharge of {}".format(overcharge), 4)
          if overcharge < 0: overcharge = 0 # But if the overcharge is 0 or less, it means that all the loss could be taken out.
       else: overcharge = 0
       gain *= -1
-      debugNotify("#### overcharge = {}\n#### Gain = {}.\n #### Multiplier = {}.\n#### Counter = {}".format(overcharge,gain,multiplier,targetPL.counters[action.group(3)].value), 2)
+      debugNotify(" overcharge = {}\n#### Gain = {}.\n #### Multiplier = {}.\n#### Counter = {}".format(overcharge,gain,multiplier,targetPL.counters[action.group(3)].value), 2)
    if re.search(r'ifNoisyOpponent', Autoscript) and targetPL.getGlobalVariable('wasNoisy') != '1': return announceText # If our effect only takes place when our opponent has been noisy, and they haven't been, don't do anything. We return the announcement so that we don't crash the parent function expecting it
    gainReduce = findCounterPrevention(gain * multiplier, action.group(3), targetPL) # If we're going to gain counter, then we check to see if we have any markers which might reduce the cost.
    #confirm("multiplier: {}, gain: {}, reduction: {}".format(multiplier, gain, gainReduce)) # Debug
@@ -900,7 +900,7 @@ def GainX(Autoscript, announceText, card, targetCards = None, notification = Non
       if action.group(1) == 'SetTo': targetPL.counters['Credits'].value = 0 # If we're setting to a specific value, we wipe what it's currently.
       if gain == -999: targetPL.counters['Credits'].value = 0
       else: 
-         debugNotify("#### Checking Cost Reduction", 2)
+         debugNotify(" Checking Cost Reduction", 2)
          if actionType == 'Force': reversePlayerChk = True # If the loss is forced on another player, we reverse the recude cost player checking effects, to check for their reduction effects and not ours
          if re.search(r'isCost', Autoscript) and action.group(1) == 'Lose':
             reduction = reduceCost(card, actionType, gain * multiplier)
@@ -1628,7 +1628,7 @@ def RetrieveX(Autoscript, announceText, card, targetCards = None, notification =
       cardChoices = []
       cardTexts = []
       for iter in range(count):
-         debugNotify("#### iter: {}/{}".format(iter,count), 4)
+         debugNotify(" iter: {}/{}".format(iter,count), 4)
          del cardChoices[:]
          del cardTexts[:]
          for c in cardList:

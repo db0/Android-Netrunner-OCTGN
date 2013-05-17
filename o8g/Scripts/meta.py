@@ -456,7 +456,7 @@ def orgAttachments(card):
 # xAlg, yAlg are the algorithsm which decide how the card is placed relative to its host and the other hosted cards. They are always multiplied by attNR
    debugNotify(">>> orgAttachments()") #Debug
    attNR = 1
-   debugNotify("#### Card Name : {}".format(card.name), 4)
+   debugNotify(" Card Name : {}".format(card.name), 4)
    if specialHostPlacementAlgs.has_key(card.name):
       debugNotify("### Found specialHostPlacementAlgs", 3)
       xAlg = specialHostPlacementAlgs[card.name][0]
