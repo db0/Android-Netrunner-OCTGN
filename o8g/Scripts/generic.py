@@ -278,9 +278,9 @@ def SingleChoice(title, options, type = 'radio', default = 0):
          form.BringToFront()
          form.ShowDialog()
          choice = form.getIndex()
-         debugNotify("### choice is: {}".format(choice), 2)
+         debugNotify("choice is: {}".format(choice), 2)
          if choice == "Next Page": 
-            debugNotify("### Going to next page", 3)
+            debugNotify("Going to next page", 3)
             optCurrent += 1
             if optCurrent >= len(optChunks): optCurrent = 0
          else: 
@@ -437,11 +437,11 @@ def multiChoice(title, options,card): # This displays a choice where the player 
 # Generic
 #---------------------------------------------------------------------------
 
-def debugNotify(msg, level = 1):
+def debugNotify(msg = 'Debug Ping!', level = 1):
    if not re.search(r'<<<',msg) and not re.search(r'>>>',msg):
       hashes = '#' 
       for iter in range(level): hashes += '#' # We add extra hashes at the start of debug messages equal to the level of the debug+1, to make them stand out more
-      msg = hashes + msg
+      msg = hashes + ' ' +  msg
    if debugVerbosity >= level: notify(msg)
 
 def num (s):
@@ -495,7 +495,7 @@ def storeProperties(card, forced = False): # Function that grabs a cards importa
       global Stored_Name, Stored_Cost, Stored_Type, Stored_Keywords, Stored_AutoActions, Stored_AutoScripts, identName
       if (card.Name == '?' and Stored_Name.get(card._id,'?') == '?') or forced:
          if not card.isFaceUp and card.group == table:
-            debugNotify("### Adding Cover", 2)
+            debugNotify("Adding Cover", 2)
             x,y = card.position
             cover = table.create("ac3a3d5d-7e3a-4742-b9b2-7f72596d9c1b",x,y,1,False)
             cover.moveToTable(x,y,False)
@@ -504,14 +504,14 @@ def storeProperties(card, forced = False): # Function that grabs a cards importa
             card.isFaceUp = True
             loopcount = 0
             while card.name == 'Card':
-               debugNotify("### Loop {} while searching for properties".format(loopcount), 4)
+               debugNotify("Loop {} while searching for properties".format(loopcount), 4)
                rnd(1,10)
                loopcount += 1
                if loopcount == 5:
                   whisper(":::Error::: Card properties can't be grabbed. Aborting!")
                   break
       if Stored_Type.get(card._id,'?') == '?' or (Stored_Name.get(card._id,'?') != card.Name and card.Name != '?') or forced:
-         debugNotify("### {} not stored. Storing...".format(card), 3)
+         debugNotify("{} not stored. Storing...".format(card), 3)
          Stored_Name[card._id] = card.Name
          Stored_Cost[card._id] = card.Cost
          Stored_Type[card._id] = card.Type
@@ -520,7 +520,7 @@ def storeProperties(card, forced = False): # Function that grabs a cards importa
          Stored_AutoScripts[card._id] = CardsAS.get(card.model,'')
          if card.Type == 'Identity' and card.owner == me: identName = card.Name
       if coverExists:
-         debugNotify("### Removing Cover", 2)
+         debugNotify("Removing Cover", 2)
          card.isFaceUp = False
          if card.controller == me: card.peek()
          rnd(1,10) # To give time to the card facedown automation to complete.
@@ -540,9 +540,9 @@ def fetchProperty(card, property):
    elif property == 'AutoActions': currentValue = Stored_AutoActions.get(card._id,'?')
    else: currentValue = card.properties[property]
    if currentValue == '?' or currentValue == 'Card':
-      debugNotify("### Card property: {} unreadable = {}".format(property,currentValue), 4) #Debug
+      debugNotify("Card property: {} unreadable = {}".format(property,currentValue), 4) #Debug
       if not card.isFaceUp and card.group == table:
-         debugNotify("### Need to flip card up to read its properties.", 3) #Debug
+         debugNotify("Need to flip card up to read its properties.", 3) #Debug
          x,y = card.position
          cover = table.create("ac3a3d5d-7e3a-4742-b9b2-7f72596d9c1b",x,y,1,False)
          cover.moveToTable(x,y,False)
@@ -550,11 +550,11 @@ def fetchProperty(card, property):
          coverExists = True
          card.isFaceUp = True
          loopChk(card)
-      debugNotify("### Ready to grab real properties.", 3) #Debug
+      debugNotify("Ready to grab real properties.", 3) #Debug
       if property == 'name': currentValue = card.name # Now that we had a chance to flip the card face up temporarily, we grab its property again.
       else: 
          currentValue = card.properties[property]
-         debugNotify("### Grabbing {}'s {} manually: {}.".format(card,property,card.properties[property]), 3)
+         debugNotify("Grabbing {}'s {} manually: {}.".format(card,property,card.properties[property]), 3)
          #storeProperties(card) # Commented out because putting it here can cause an infinite loop
    if coverExists: 
       card.isFaceUp = False

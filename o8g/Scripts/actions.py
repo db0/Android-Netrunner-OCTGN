@@ -255,13 +255,13 @@ def intJackin(group, x = 0, y = 0):
    chooseSide()
    #for type in Automations: switchAutomation(type,'Announce') # Too much spam.
    deck = me.piles['R&D/Stack']
-   debugNotify("### Checking Deck", 3)
+   debugNotify("Checking Deck", 3)
    if len(deck) == 0:
       whisper ("Please load a deck first!")
       return
-   debugNotify("### Reseting Variables", 3)
+   debugNotify("Reseting Variables", 3)
    resetAll()
-   debugNotify("### Placing Identity", 3)
+   debugNotify("Placing Identity", 3)
    for card in me.hand:
       if card.Type != 'Identity':
          whisper(":::Warning::: You are not supposed to have any non-Identity cards in your hand when you start the game")
@@ -274,10 +274,10 @@ def intJackin(group, x = 0, y = 0):
    if not ds:
       confirm("You need to have your identity card in your hand when you try to setup the game. If you have it in your deck, please look for it and put it in your hand before running this function again")
       return
-   debugNotify("### Giving Possible Warning", 3)
+   debugNotify("Giving Possible Warning", 3)
    if (ds == 'corp' and me.hasInvertedTable()) or (ds == 'runner' and not me.hasInvertedTable()):
       if not confirm(":::ERROR::: Due to engine limitations, the corp player must always be player [A] in order to properly utilize the board. Please start a new game and make sure you've set the corp to be player [A] in the lobby. Are you sure you want to continue?"): return
-   debugNotify("### Checking Illegality", 3)
+   debugNotify("Checking Illegality", 3)
    deckStatus = checkDeckNoLimit(deck)
    if not deckStatus[0]:
       if not confirm("We have found illegal cards in your deck. Bypass?"): return
@@ -285,8 +285,8 @@ def intJackin(group, x = 0, y = 0):
          notify("{} has chosen to proceed with an illegal deck.".format(me))
          Identity = deckStatus[1]
    else: Identity = deckStatus[1] # For code readability
-   debugNotify("### Placing Identity", 3)
-   debugNotify("### Identity is: {}".format(Identity), 3)
+   debugNotify("Placing Identity", 3)
+   debugNotify("Identity is: {}".format(Identity), 3)
    if ds == "corp":
       Identity.moveToTable(125, 240)
       rnd(1,10) # Allow time for the ident to be recognised
@@ -301,14 +301,14 @@ def intJackin(group, x = 0, y = 0):
       BL = num(Identity.Cost)
       me.counters['Base Link'].value = BL
       notify("{} is representing the Runner {}. They start with {} {}".format(me,Identity,BL,uniLink()))
-   debugNotify("### Creating Starting Cards", 3)
+   debugNotify("Creating Starting Cards", 3)
    createStartingCards()
-   debugNotify("### Shuffling Deck", 3)
+   debugNotify("Shuffling Deck", 3)
    shuffle(me.piles['R&D/Stack'])
-   debugNotify("### Drawing 5 Cards", 3)
+   debugNotify("Drawing 5 Cards", 3)
    notify("{}'s {} is shuffled ".format(me,pileName(me.piles['R&D/Stack'])))
    drawMany(me.piles['R&D/Stack'], 5)
-   debugNotify("### Reshuffling Deck", 3)
+   debugNotify("Reshuffling Deck", 3)
    shuffle(me.piles['R&D/Stack']) # And another one just to be sure
    executePlayScripts(Identity,'STARTUP')
    initGame()
@@ -321,10 +321,10 @@ def checkDeckNoLimit(group):
       return
    notify (" -> Checking deck of {} ...".format(me))
    ok = True
-   debugNotify("### About to fetch identity card", 5) #Debug
+   debugNotify("About to fetch identity card", 5) #Debug
    identity = getSpecial('Identity')
    loDeckCount = len(group)
-   debugNotify("### About to check identity min deck size.", 5) #Debug
+   debugNotify("About to check identity min deck size.", 5) #Debug
    if loDeckCount < num(identity.Requirement): # For identities, .Requirement is the card minimum they have.
       ok = False
       notify ( ":::ERROR::: Only {} cards in {}'s Deck. {} Needed!".format(loDeckCount,me,num(identity.Requirement)))
@@ -334,10 +334,10 @@ def checkDeckNoLimit(group):
    loRunner = False
    agendasCount = 0
    trash = me.piles['Archives(Hidden)'] # We use the hidden archives so that the opponent can't see the cards as we check them
-   debugNotify("### About to move cards into trash", 5) #Debug
+   debugNotify("About to move cards into trash", 5) #Debug
    for card in group: card.moveTo(trash)
    if len(players) > 1: random = rnd(1,100) # Fix for multiplayer only. Makes Singleplayer setup very slow otherwise.
-   debugNotify("### About to check each card in the deck", 5) #Debug
+   debugNotify("About to check each card in the deck", 5) #Debug
    for card in trash:
       #if ok == False: continue # If we've already found illegal cards, no sense in checking anymore. Will activate this after checking
       if card.Type == 'Agenda':
@@ -371,7 +371,7 @@ def checkDeckNoLimit(group):
       ok = False
    deckStats = (loInf,loDeckCount,agendasCount) # The deck stats is a tuple that we stored shared, and stores how much influence is in the player's deck, how many cards it has and how many agendas
    me.setGlobalVariable('Deck Stats',str(deckStats))
-   debugNotify("### Total Influence used: {} (Influence string stored is: {}".format(loInf, me.getGlobalVariable('Influence')), 2) #Debug
+   debugNotify("Total Influence used: {} (Influence string stored is: {}".format(loInf, me.getGlobalVariable('Influence')), 2) #Debug
    if ok: notify("-> Deck of {} is OK!".format(me))
    debugNotify("<<< checkDeckNoLimit() with return: {},{}.".format(ok,identity), 3) #Debug
    return (ok,identity)
@@ -460,7 +460,7 @@ def jackOut(group=table,x=0,y=0, silent = False):
       setGlobalVariable('status','idle') # Clear the run variable
       setGlobalVariable('feintTarget','None') # Clear any feinted targets
       setGlobalVariable('SuccessfulRun','False') # Set the variable which tells the code if the run was successful or not, to false.
-      debugNotify("### About to announce end of Run", 2) #Debug
+      debugNotify("About to announce end of Run", 2) #Debug
       if not silent: # Announce the end of run from the perspective of each player.
          if targetPL != me: notify("{} has kicked {} out of their corporate grid".format(myIdent,enemyIdent))
          else: notify("{} has jacked out of their run on the {} server".format(myIdent,runTarget))
@@ -647,7 +647,7 @@ def inputTraceValue (card, x=0,y=0, limit = 0, silent = False):
    limitText = ''
    card = getSpecial('Tracing')
    limit = num(limit) # Just in case
-   debugNotify("### Trace Limit: {}".format(limit), 2)
+   debugNotify("Trace Limit: {}".format(limit), 2)
    if limit > 0: limitText = '\n\n(Max Trace Power: {})'.format(limit)
    if ds == 'corp': traceTXT = 'Trace'
    else: traceTXT = 'Link'
@@ -771,13 +771,13 @@ def reduceCost(card, action = 'REZ', fullCost = 0, dryRun = False):
    reduction = 0
    status = getGlobalVariable('status')
    costReducers = []
-   debugNotify("### Status: {}".format(status), 3)
+   debugNotify("Status: {}".format(status), 3)
    ### First we check if the card has an innate reduction.
    Autoscripts = fetchProperty(card, 'AutoScripts').split('||')
    if len(Autoscripts):
       for autoS in Autoscripts:
          if not re.search(r'onPay', autoS):
-            debugNotify("### No onPay trigger found in {}!".format(autoS), 2)
+            debugNotify("No onPay trigger found in {}!".format(autoS), 2)
             continue
          reductionSearch = re.search(r'Reduce([0-9]+)Cost({}|All)'.format(type), autoS)
          if debugVerbosity >= 2: #Debug
@@ -785,7 +785,7 @@ def reduceCost(card, action = 'REZ', fullCost = 0, dryRun = False):
             else: notify("!!! No self-reduce regex Match!")
          oppponent = ofwhom('-ofOpponent')
          if re.search(r'ifNoisyOpponent', autoS) and oppponent.getGlobalVariable('wasNoisy') != '1':
-            debugNotify("### No required noisy bit found!", 2)
+            debugNotify("No required noisy bit found!", 2)
             continue
          count = num(reductionSearch.group(1))
          targetCards = findTarget(autoS,card = card)
@@ -794,7 +794,7 @@ def reduceCost(card, action = 'REZ', fullCost = 0, dryRun = False):
          fullCost -= (count * multiplier)
          if count * multiplier > 0 and not dryRun: notify("-- {}'s full cost is reduced by {}".format(card,count * multiplier))
    else:
-      debugNotify("### No self-reducing autoscripts found!", 2)
+      debugNotify("No self-reducing autoscripts found!", 2)
    ### Now we check if we're in a run and we have bad publicity credits to spend
    if re.search(r'running',status) and fullCost > 0:
       if type == 'Force': myIdent = getSpecial('Identity',ofwhom('-ofOpponent'))
@@ -802,7 +802,7 @@ def reduceCost(card, action = 'REZ', fullCost = 0, dryRun = False):
       if myIdent.markers[mdict['BadPublicity']]:
          usedBP = 0
          BPcount = myIdent.markers[mdict['BadPublicity']]
-         debugNotify("### BPcount = {}".format(BPcount), 2)
+         debugNotify("BPcount = {}".format(BPcount), 2)
          while fullCost > 0 and BPcount > 0:
             reduction += 1
             fullCost -= 1
@@ -825,7 +825,7 @@ def reduceCost(card, action = 'REZ', fullCost = 0, dryRun = False):
          Autoscripts = CardsAS.get(c.model,'').split('||')
          if len(Autoscripts) == 0: continue
          for autoS in Autoscripts:
-            debugNotify("### Checking {} with AS: {}".format(c, autoS), 2) #Debug
+            debugNotify("Checking {} with AS: {}".format(c, autoS), 2) #Debug
             if not chkRunningStatus(autoS): continue # if the reduction is only during runs, and we're not in a run, bypass this effect
             if not chkPlayer(autoS, c.controller, False): continue
             reductionSearch = reductionRegex.search(autoS)
@@ -835,10 +835,10 @@ def reduceCost(card, action = 'REZ', fullCost = 0, dryRun = False):
             if re.search(r'excludeDummy', autoS) and c.highlight == DummyColor: continue
             if re.search(r'ifInstalled',autoS) and (card.group != table or card.highlight == RevealedColor): continue
             if reductionSearch: # If the above search matches (i.e. we have a card with reduction for Rez and a condition we continue to check if our card matches the condition)
-               debugNotify("### Possible Match found in {}".format(c), 3) # Debug
+               debugNotify("Possible Match found in {}".format(c), 3) # Debug
                if reductionSearch.group(1) == 'Reduce':
                   if fullCost == 0:
-                     debugNotify("### No more cost to reduce with {}. Aborting".format(c), 2)
+                     debugNotify("No more cost to reduce with {}. Aborting".format(c), 2)
                      continue # If we don't have any more reduction to do, just break out.
                   else:
                      costReducers.append((c,reductionSearch,autoS)) # We put the costReducers in a different list, as we want it to be checked after all the increasers are checked
@@ -847,12 +847,12 @@ def reduceCost(card, action = 'REZ', fullCost = 0, dryRun = False):
                                                             # In each entry we store a tuple of the card object and the search result for its cost modifying abilities, so that we don't regex again later.
       if len(costReducers): costModifiers.extend(costReducers)
    for cTuple in costModifiers: # Now we check what kind of cost modification each card provides. First we check for cost increasers and then for cost reducers
-      debugNotify("### Checking next cTuple", 4) #Debug
+      debugNotify("Checking next cTuple", 4) #Debug
       c = cTuple[0]
       reductionSearch = cTuple[1]
       autoS = cTuple[2]
-      debugNotify("### cTuple[0] (i.e. card) is: {}".format(c), 2) #Debug
-      debugNotify("### cTuple[2] (i.e. autoS) is: {}".format(autoS), 4) #Debug
+      debugNotify("cTuple[0] (i.e. card) is: {}".format(c), 2) #Debug
+      debugNotify("cTuple[2] (i.e. autoS) is: {}".format(autoS), 4) #Debug
       if reductionSearch.group(4) == 'All' or checkCardRestrictions(gatherCardProperties(card), prepareRestrictions(autoS)):
          debugNotify(" ### Search match! Reduction Value is {}".format(reductionSearch.group(2)), 3) # Debug
          if re.search(r'onlyOnce',autoS):
@@ -864,7 +864,7 @@ def reduceCost(card, action = 'REZ', fullCost = 0, dryRun = False):
             markersCount = c.markers[mdict['Credits']]
             markersRemoved = 0
             while markersCount > 0:
-               debugNotify("### Reducing Cost with and Markers from {}".format(c), 2) # Debug
+               debugNotify("Reducing Cost with and Markers from {}".format(c), 2) # Debug
                if reductionSearch.group(1) == 'Reduce':
                   if fullCost > 0:
                      reduction += 1
@@ -993,7 +993,7 @@ def findDMGProtection(DMGdone, DMGtype, targetPL): # Find out if the player has 
                DMGdone -= 1
                card.markers[mdict['protectionAllDMG']] -= 1
          if re.search(r'trashCost',CardsAS.get(card.model,'')):
-            debugNotify("### {} has with trashCost".format(card), 3)
+            debugNotify("{} has with trashCost".format(card), 3)
             ModifyStatus('TrashMyself', targetPL.name, card, notification = 'Quick') # If the modulator -trashCost is there, the card trashes itself in order to use it's damage prevention ability
          if DMGdone == 0: break
    for card in cardList:
@@ -1035,7 +1035,7 @@ def findEnhancements(Autoscript): #Find out if the player has any cards increasi
       enhancerMarker = 'enhanceDamage:{}'.format(DMGtype.group(1))
       debugNotify(' encancerMarker: {}'.format(enhancerMarker), 3)
       for card in table:
-         debugNotify("### Checking {}".format(card), 2) #Debug
+         debugNotify("Checking {}".format(card), 2) #Debug
          cardENH = re.search(r'Enhance([0-9]+){}Damage'.format(DMGtype.group(1)), CardsAS.get(card.model,''))
          if card.controller == me and card.isFaceUp and cardENH: enhancer += num(cardENH.group(1))
          if card.controller == me and card.isFaceUp:
@@ -1116,7 +1116,7 @@ def scrAgenda(card, x = 0, y = 0,silent = False):
       apReduce = findCounterPrevention(ap, 'Agenda Points', me)
       if apReduce: extraTXT = " ({} forfeited)".format(apReduce)
       else: extraTXT = ''
-      debugNotify("### About to Score", 2)
+      debugNotify("About to Score", 2)
       me.counters['Agenda Points'].value += ap - apReduce
       placeCard(card, action = 'SCORE')
       #if ds == 'corp': card.moveToTable(495 + (scoredAgendas * 15), 8, False) # Location of the Agenda Scoring point for the Corp.
@@ -1242,7 +1242,7 @@ def RDaccessX(group = table, x = 0, y = 0): # A function which looks at the top 
    count = askInteger("How many files are you able to access from the corporation's R&D?",1)
    if count == None: return
    targetPL = ofwhom('-ofOpponent')
-   debugNotify("### Found opponent. Storing the top {} as a list".format(count), 3) #Debug
+   debugNotify("Found opponent. Storing the top {} as a list".format(count), 3) #Debug
    RDtop = list(targetPL.piles['R&D/Stack'].top(count))
    if len(RDtop) == 0:
       whisper("Corp's R&D is empty. You cannot take this action")
@@ -1253,7 +1253,7 @@ def RDaccessX(group = table, x = 0, y = 0): # A function which looks at the top 
    cover = table.create("ac3a3d5d-7e3a-4742-b9b2-7f72596d9c1b",0,0,1,True) # Creating a dummy card to cover that player's archives in case they're empty
    cover.moveTo(targetPL.piles['Heap/Archives(Face-up)']) # Moving that dummy card on top of their archives
    for iter in range(len(RDtop)):
-      debugNotify("### Moving card {}".format(iter), 3) #Debug
+      debugNotify("Moving card {}".format(iter), 3) #Debug
       notify(" -- {} is now accessing the {} card".format(me,numOrder(iter)))
       RDtop[iter].moveToBottom(targetPL.piles['Heap/Archives(Face-up)'])
       debugNotify(" Looping...", 4)
@@ -1288,7 +1288,7 @@ def RDaccessX(group = table, x = 0, y = 0): # A function which looks at the top 
       cRules = RDtop[iter].Rules
       debugNotify(" Finished Storing. About to move back...", 4)
       RDtop[iter].moveTo(targetPL.piles['R&D/Stack'],iter - removedCards)
-      debugNotify("### Stored properties. Checking type...", 3) #Debug
+      debugNotify("Stored properties. Checking type...", 3) #Debug
       if cType == 'ICE':
          cStatTXT = '\nStrength: {}.'.format(cStat)
       elif cType == 'Asset' or cType == 'Upgrade':
@@ -1356,7 +1356,7 @@ def ARCscore(group=table, x=0,y=0):
       whisper("This action is only for the use of the runner.")
       return
    targetPL = ofwhom('-ofOpponent')
-   debugNotify("### Found opponent.", 3) #Debug
+   debugNotify("Found opponent.", 3) #Debug
    ARC = targetPL.piles['Heap/Archives(Face-up)']
    for card in targetPL.piles['Archives(Hidden)']: card.moveTo(ARC) # When the runner accesses the archives, all  cards of the face up archives.
    if len(ARC) == 0:
@@ -1364,7 +1364,7 @@ def ARCscore(group=table, x=0,y=0):
       return
    rnd(10,100) # A small pause
    for card in ARC:
-      debugNotify("### Checking: {}.".format(card), 3) #Debug
+      debugNotify("Checking: {}.".format(card), 3) #Debug
       if card.Type == 'Agenda':
          card.moveToTable(0,0)
          card.highlight = RevealedColor
@@ -1384,7 +1384,7 @@ def HQaccess(group=table, x=0,y=0, silent = False):
    count = askInteger("How many files are you able to access from the corporation's HQ?",1)
    if count == None: return
    targetPL = ofwhom('-ofOpponent')
-   debugNotify("### Found opponent.", 3) #Debug
+   debugNotify("Found opponent.", 3) #Debug
    revealedCards = showatrandom(count = count, targetPL = targetPL, covered = True)
    for revealedCard in revealedCards:
       loopChk(revealedCard)
@@ -1410,7 +1410,7 @@ def HQaccess(group=table, x=0,y=0, silent = False):
                      rnd(1,1000) # We put a hacky delay if the player presses 'No'
                      notify(":::NOTICE::: {} is still waiting for {} to decide whether to use {} or not".format(me,revealedCard.owner,revealedCard))
             else: X = redirect(autoS, revealedCard, 'Quick', X)
-      debugNotify("### Not a Trap.", 2) #Debug
+      debugNotify("Not a Trap.", 2) #Debug
       if revealedCard.Type == 'ICE':
          cStatTXT = '\nStrength: {}.'.format(revealedCard.Stat)
       elif revealedCard.Type == 'Asset' or revealedCard.Type == 'Upgrade':
@@ -1418,7 +1418,7 @@ def HQaccess(group=table, x=0,y=0, silent = False):
       elif revealedCard.Type == 'Agenda':
          cStatTXT = '\nAgenda Points: {}.'.format(revealedCard.Stat)
       else: cStatTXT = ''
-      debugNotify("### Crafting Title", 2) #Debug
+      debugNotify("Crafting Title", 2) #Debug
       title = "Card: {}.\
              \nType: {}.\
              \nKeywords: {}.\
@@ -1442,7 +1442,7 @@ def HQaccess(group=table, x=0,y=0, silent = False):
          options = ["Leave where it is.","Force trash at no cost.\n(Only through card effects)",action1TXT]
       else:                    
          options = ["Leave where it is.","Force trash at no cost.\n(Only through card effects)"]
-      debugNotify("### Opening Choice Window", 2) #Debug
+      debugNotify("Opening Choice Window", 2) #Debug
       choice = SingleChoice(title, options, 'button')
       if choice == None: choice = 0
       revealedCard.highlight = None
@@ -1780,7 +1780,7 @@ def possess(daemonCard, programCard, silent = False, force = False):
       delayed_whisper(":::ERROR::: {} is already hosted in {}.".format(programCard,Card(hostCards[programCard._id])))
       return 'ABORT'
    else:
-      debugNotify("### We have a valid daemon host", 2) #Debug
+      debugNotify("We have a valid daemon host", 2) #Debug
       hostCards[programCard._id] = daemonCard._id
       setGlobalVariable('Host Cards',str(hostCards))
       if not force:
@@ -1858,7 +1858,7 @@ def inspectCard(card, x = 0, y = 0): # This function shows the player the card t
    if re.search(r'atJackOut', Stored_AutoScripts.get(card._id,'')): ASText += '\n * It will perform an automation at the end of a run.'
    if re.search(r'onAccess', Stored_AutoScripts.get(card._id,'')): ASText += '\n * It will perform an automation when the runner accesses it.'
    if CardsAA.get(card.model,'') != '' or Stored_AutoActions.get(card._id,'') != '':
-      debugNotify("### We have AutoActions", 2) #Debug
+      debugNotify("We have AutoActions", 2) #Debug
       if ASText == 'This card has the following automations:': ASText = '\nThis card will perform one or more automated actions when you double click on it.'
       else: ASText += '\n\nThis card will also perform one or more automated actions when you double click on it.'
    if ASText == 'This card has the following automations:': ASText = '\nThis card has no automations.'
@@ -1918,19 +1918,19 @@ def intPlay(card, cost = 'not free'):
       me.Clicks += NbReq # We return any used clicks in case of aborting due to missing target
       return # If it's an Operation or Event and has targeting requirements, check with the user first.
    host = chkHostType(card)
-   debugNotify("### host received: {}".format(host), 4)
+   debugNotify("host received: {}".format(host), 4)
    if host:
       try:
          if host == 'ABORT':
             me.Clicks += NbReq
             return
       except: # If there's an exception, it means that the host is a card object which cannot be compared to a string
-         debugNotify("### Found Host", 2)
+         debugNotify("Found Host", 2)
          hostTXT = ' on {}'.format(host) # If the card requires a valid host and we found one, we will mention it later.
    else:
-      debugNotify("### No Host Requirement", 2)
+      debugNotify("No Host Requirement", 2)
       hostTXT = ''
-   debugNotify("### Finished Checking Host Requirements", 2)
+   debugNotify("Finished Checking Host Requirements", 2)
    if card.Type == 'Event' or card.Type == 'Operation': action = 'PLAY'
    else: action = 'INSTALL'
    MUtext = ''

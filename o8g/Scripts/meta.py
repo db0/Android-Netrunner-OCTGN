@@ -125,10 +125,10 @@ def findMarker(card, markerDesc): # Goes through the markers on the card and loo
    foundKey = None
    if markerDesc in mdict: markerDesc = mdict[markerDesc][0] # If the marker description is the code of a known marker, then we need to grab the actual name of that.
    for key in card.markers:
-      debugNotify("### Key: {}\nmarkerDesc: {}".format(key[0],markerDesc), 3) # Debug
+      debugNotify("Key: {}\nmarkerDesc: {}".format(key[0],markerDesc), 3) # Debug
       if re.search(r'{}'.format(markerDesc),key[0]) or markerDesc == key[0]:
          foundKey = key
-         debugNotify("### Found {} on {}".format(key[0],card), 2)
+         debugNotify("Found {} on {}".format(key[0],card), 2)
          break
    debugNotify("<<< findMarker() by returning: {}".format(foundKey), 3)
    return foundKey
@@ -203,11 +203,11 @@ def getSpecial(cardType,player = me):
    debugNotify(">>> getSpecial() for player: {}".format(me.name)) #Debug
    specialCards = eval(player.getGlobalVariable('specialCards'))
    card = Card(specialCards[cardType])
-   debugNotify("### Stored_Type = {}".format(Stored_Type.get(card._id,'NULL')), 2)
+   debugNotify("Stored_Type = {}".format(Stored_Type.get(card._id,'NULL')), 2)
    if Stored_Type.get(card._id,'NULL') == 'NULL':
       #if card.owner == me: delayed_whisper(":::DEBUG::: {} was NULL. Re-storing as an attempt to fix".format(cardType)) # Debug
-      debugNotify("### card ID = {}".format(card._id))
-      debugNotify("### Stored Type = {}".format(Stored_Type.get(card._id,'NULL')))
+      debugNotify("card ID = {}".format(card._id))
+      debugNotify("Stored Type = {}".format(Stored_Type.get(card._id,'NULL')))
       storeProperties(card, True)
    debugNotify("<<< getSpecial() by returning: {}".format(card), 3)
    return card
@@ -247,11 +247,11 @@ def chkCloud(cloudCard = None): # A function which checks the table for cards wh
    if not cloudCard: cards = [c for c in table if c.Type == 'Program']
    else: cards = [cloudCard] # If we passed a card as a variable, we just check the cloud status of that card
    for card in cards:
-      debugNotify("### Cloud Checking {} with AS = {}".format(card,fetchProperty(card, 'AutoScripts')), 2) #Debug
+      debugNotify("Cloud Checking {} with AS = {}".format(card,fetchProperty(card, 'AutoScripts')), 2) #Debug
       cloudRegex = re.search(r'Cloud([0-9]+)Link',fetchProperty(card, 'AutoScripts'))
       if cloudRegex:
          linkRequired = num(cloudRegex.group(1))
-         debugNotify("### Found Cloud Regex. linkRequired = {}".format(linkRequired), 2) #Debug
+         debugNotify("Found Cloud Regex. linkRequired = {}".format(linkRequired), 2) #Debug
          if linkRequired <= card.controller.counters['Base Link'].value and not card.markers[mdict['Cloud']]:
             card.markers[mdict['Cloud']] = 1
             card.controller.MU += num(card.Requirement)
@@ -270,7 +270,7 @@ def chkHostType(card, seek = 'Targeted'):
    # Checks if the card needs to have a special host targeted before it can come in play.
    hostType = re.search(r'Placement:([A-Za-z1-9:_ -]+)', fetchProperty(card, 'AutoScripts'))
    if hostType:
-      debugNotify("### hostType: {}.".format(hostType.group(1)), 2) #Debug
+      debugNotify("hostType: {}.".format(hostType.group(1)), 2) #Debug
       host = findTarget('{}-at{}-choose1'.format(seek,hostType.group(1)),card = card)
       if len(host) == 0:
          delayed_whisper("ABORTING!")
@@ -346,7 +346,7 @@ def clearAttachLinks(card):
          if hostCardSnapshot[attachment] == card._id:
             if Card(attachment) in table: intTrashCard(Card(attachment),0,cost = "host removed")
             del hostCards[attachment]
-   debugNotify("### Checking if the card is attached to unlink.", 2)      
+   debugNotify("Checking if the card is attached to unlink.", 2)      
    if hostCards.has_key(card._id):
       hostCard = Card(hostCards[card._id])
       if re.search(r'Daemon',getKeywords(hostCard)) and hostCard.group == table: 
@@ -400,19 +400,19 @@ def placeCard(card, action = 'INSTALL', hostCard = None):
    debugNotify(">>> placeCard() with action: {}".format(action)) #Debug
    hostType = re.search(r'Placement:([A-Za-z1-9:_ -]+)', fetchProperty(card, 'AutoScripts'))
    if hostType:
-      debugNotify("### hostType: {}.".format(hostType.group(1)), 2) #Debug
+      debugNotify("hostType: {}.".format(hostType.group(1)), 2) #Debug
       if not hostCard:
          host = findTarget('Targeted-at{}'.format(hostType.group(1))) 
          if len(host) == 0: 
             delayed_whisper(":::ERROR::: No Valid Host Targeted! Aborting Placement.") # We can pass a host from a previous function (e.g. see Personal Workshop)
             return 'ABORT'
          else: hostCard = host[0]
-      debugNotify("### We have a host", 2) #Debug
+      debugNotify("We have a host", 2) #Debug
       hostCards = eval(getGlobalVariable('Host Cards'))
       hostCards[card._id] = hostCard._id
       setGlobalVariable('Host Cards',str(hostCards))
       cardAttachementsNR = len([att_id for att_id in hostCards if hostCards[att_id] == hostCard._id])
-      debugNotify("### About to move into position", 2) #Debug
+      debugNotify("About to move into position", 2) #Debug
       x,y = hostCard.position
       if hostCard.controller != me: xAxis = -1
       else: xAxis = 1
@@ -428,15 +428,15 @@ def placeCard(card, action = 'INSTALL', hostCard = None):
       if action == 'INSTALL' and re.search(r'Console',card.Keywords): type = 'Console'
       if action == 'INSTALL' and type in CorporationCardTypes: CfaceDown = True
       else: CfaceDown = False
-      debugNotify("### Setting installedCount. Type is: {}, CfaceDown: {}".format(type, str(CfaceDown)), 3) #Debug
+      debugNotify("Setting installedCount. Type is: {}, CfaceDown: {}".format(type, str(CfaceDown)), 3) #Debug
       if installedCount.get(type,None) == None: installedCount[type] = 0
       else: installedCount[type] += 1
-      debugNotify("### installedCount is: {}. Setting loops...".format(installedCount[type]), 2) #Debug
+      debugNotify("installedCount is: {}. Setting loops...".format(installedCount[type]), 2) #Debug
       loopsNR = installedCount[type] / (place[type][3]) 
       loopback = place[type][3] * loopsNR 
       if loopsNR and place[type][3] != 1: offset = 15 * (loopsNR % 3) # This means that in one loop the offset is going to be 0 and in another 15.
       else: offset = 0
-      debugNotify("### installedCount[type] is: {}.\nLoopsNR is: {}.\nLoopback is: {}\nOffset is: {}".format(installedCount[type],offset, loopback, offset), 3) #Debug
+      debugNotify("installedCount[type] is: {}.\nLoopsNR is: {}.\nLoopback is: {}\nOffset is: {}".format(installedCount[type],offset, loopback, offset), 3) #Debug
       card.moveToTable(place[type][0] + (((cwidth(card,0) + place[type][2]) * (installedCount[type] - loopback)) + offset) * place[type][4],place[type][1],CfaceDown) 
       # To explain the above, we place the card at: Its original location
       #                                             + the width of the card
@@ -458,12 +458,12 @@ def orgAttachments(card):
    attNR = 1
    debugNotify(" Card Name : {}".format(card.name), 4)
    if specialHostPlacementAlgs.has_key(card.name):
-      debugNotify("### Found specialHostPlacementAlgs", 3)
+      debugNotify("Found specialHostPlacementAlgs", 3)
       xAlg = specialHostPlacementAlgs[card.name][0]
       yAlg = specialHostPlacementAlgs[card.name][1]
       debugNotify("Found Special Placement Algs. xAlg = {}, yAlg = {}".format(xAlg,yAlg), 2)
    else: 
-      debugNotify("### No specialHostPlacementAlgs", 3)
+      debugNotify("No specialHostPlacementAlgs", 3)
       xAlg = 0 # The Default placement on the X axis, is to place the attachments at the same X as their parent
       yAlg =  -(cwidth(card) / 4 * playerside) # Defaults
    hostCards = eval(getGlobalVariable('Host Cards'))
@@ -472,12 +472,12 @@ def orgAttachments(card):
    for attachment in cardAttachements:
       attachment.moveToTable(x + (xAlg * attNR), y + (yAlg * attNR))
       attachment.setIndex(len(cardAttachements) - attNR) # This whole thing has become unnecessary complicated because sendToBack() does not work reliably
-      debugNotify("### {} index = {}".format(attachment,attachment.getIndex), 4) # Debug
+      debugNotify("{} index = {}".format(attachment,attachment.getIndex), 4) # Debug
       attNR += 1
-      debugNotify("### Moving {}, Iter = {}".format(attachment,attNR), 4)
+      debugNotify("Moving {}, Iter = {}".format(attachment,attNR), 4)
    card.sendToFront() # Because things don't work as they should :(
    if debugVerbosity >= 4: # Checking Final Indices
-      for attachment in cardAttachements: notify("### {} index = {}".format(attachment,attachment.getIndex)) # Debug
+      for attachment in cardAttachements: notify("{} index = {}".format(attachment,attachment.getIndex)) # Debug
    debugNotify("<<< orgAttachments()", 3) #Debug      
      
 
@@ -591,14 +591,14 @@ def versionCheck():
    ### Below code Not needed anymore in 3.1.x
    # if not startupMsg:
       # (url, code) = webRead('https://raw.github.com/db0/Android-Netrunner-OCTGN/master/current_version.txt')
-      # debugNotify("### url:{}, code: {}".format(url,code), 2) #Debug
+      # debugNotify("url:{}, code: {}".format(url,code), 2) #Debug
       # if code != 200 or not url:
          # whisper(":::WARNING::: Cannot check version at the moment.")
          # return
       # detailsplit = url.split('||')
       # currentVers = detailsplit[0].split('.')
       # installedVers = gameVersion.split('.')
-      # debugNotify("### Finished version split. About to check", 2) #Debug
+      # debugNotify("Finished version split. About to check", 2) #Debug
       # if len(installedVers) < 3:
          # whisper("Your game definition does not follow the correct version conventions. It is most likely outdated or modified from its official release.")
          # startupMsg = True
@@ -613,7 +613,7 @@ def versionCheck():
                      # ".format(gameVersion, detailsplit[0],detailsplit[2],detailsplit[1])):
             # openUrl('http://octgn.gamersjudgement.com/viewtopic.php?f=52&t=494')
          # startupMsg = True
-      # debugNotify("### Finished version check. Seeing if I should MOTD.", 2) #Debug
+      # debugNotify("Finished version check. Seeing if I should MOTD.", 2) #Debug
    debugNotify("<<< versionCheck()", 3) #Debug
       
       
@@ -659,7 +659,7 @@ def initGame(): # A function which prepares the game for online submition
    if initCode != 200:
       #whisper("Cannot grab GameGUID at the moment!") # Maybe no need to inform players yet.
       return
-   debugNotify("### {}".format(gameInit), 2) #Debug
+   debugNotify("{}".format(gameInit), 2) #Debug
    GUIDregex = re.search(r'([0-9a-f-]{36}).*?',gameInit)
    if GUIDregex: setGlobalVariable('gameGUID',GUIDregex.group(1))
    else: setGlobalVariable('gameGUID','None') #If for some reason the page does not return a propert GUID, we won't record this game.
@@ -685,14 +685,14 @@ def reportGame(result = 'AgendaVictory'): # This submits the game results online
    else: WIN = 1
    SCORE = me.counters['Agenda Points'].value
    deckStats = eval(me.getGlobalVariable('Deck Stats'))
-   debugNotify("### Retrieved deckStats ", 2) #Debug
-   debugNotify("### deckStats = {}".format(deckStats), 2) #Debug
+   debugNotify("Retrieved deckStats ", 2) #Debug
+   debugNotify("deckStats = {}".format(deckStats), 2) #Debug
    INFLUENCE = deckStats[0]
    CARDSNR = deckStats[1]
    AGENDASNR = deckStats[2]
    TURNS = turn
    VERSION = gameVersion
-   debugNotify("### About to report player results online.", 2) #Debug
+   debugNotify("About to report player results online.", 2) #Debug
    if (turn < 1 or len(players) == 1) and debugVerbosity < 1:
       notify(":::ATTENTION:::Game stats submit aborted due to number of players ( less than 2 ) or turns played (less than 1)")
       return # You can never win before the first turn is finished and we don't want to submit stats when there's only one player.
@@ -710,7 +710,7 @@ def reportGame(result = 'AgendaVictory'): # This submits the game results online
    ENEMY = enemyPL.name
    enemyIdent = getSpecial('Identity',enemyPL)
    E_IDENTITY = enemyIdent.Subtitle
-   debugNotify("### Enemy Identity Name: {}".format(E_IDENTITY), 2) #Debug
+   debugNotify("Enemy Identity Name: {}".format(E_IDENTITY), 2) #Debug
    if result == 'FlatlineVictory': 
       E_RESULT = 'Flatlined'
       E_WIN = 0
@@ -730,16 +730,16 @@ def reportGame(result = 'AgendaVictory'): # This submits the game results online
       E_RESULT = 'Unknown'
       E_WIN = 0
    E_SCORE = enemyPL.counters['Agenda Points'].value
-   debugNotify("### About to retrieve E_deckStats", 2) #Debug
+   debugNotify("About to retrieve E_deckStats", 2) #Debug
    E_deckStats = eval(enemyPL.getGlobalVariable('Deck Stats'))
-   debugNotify("### E_deckStats = {}".format(E_deckStats), 2) #Debug
+   debugNotify("E_deckStats = {}".format(E_deckStats), 2) #Debug
    E_INFLUENCE = E_deckStats[0]
    E_CARDSNR = E_deckStats[1]
    E_AGENDASNR = E_deckStats[2]
    if ds == 'corp': E_TURNS = turn - 1 # If we're a corp, the opponent has played one less turn than we have.
    else: E_TURNS = turn # If we're the runner, the opponent has played one more turn than we have.
    E_VERSION = enemyPL.getGlobalVariable('gameVersion')
-   debugNotify("### About to report enemy results online.", 2) #Debug
+   debugNotify("About to report enemy results online.", 2) #Debug
    if debugVerbosity < 1: # We only submit stats if we're not debugging
       (EreportTXT, EreportCode) = webRead('http://84.205.248.92/slaghund/game.slag?g={}&u={}&id={}&r={}&s={}&i={}&t={}&cnr={}&anr={}&v={}&w={}&lid={}&gname={}'.format(GUID,ENEMY,E_IDENTITY,E_RESULT,E_SCORE,E_INFLUENCE,E_TURNS,E_CARDSNR,E_AGENDASNR,E_VERSION,E_WIN,LEAGUE,GNAME),10000)
    setGlobalVariable('gameEnded','True')
@@ -758,14 +758,14 @@ def fetchLeagues():
    opponent = ofwhom('onOpponent')
    for league in leaguesSplit:
       leagueMatches = league.split('\n')
-      debugNotify("### League Linebreak Splits: {}".format(leagueMatches), 4)
+      debugNotify("League Linebreak Splits: {}".format(leagueMatches), 4)
       for matchup in leagueMatches:
          if re.search(r'{}'.format(me.name),matchup, re.IGNORECASE) and re.search(r'{}'.format(opponent.name),matchup, re.IGNORECASE): #Check if the player's name exists in the league
             leagueDetails = league.split('=====') # Five equals separate the league name from its participants
             timeDetails = leagueDetails[1].strip() # We grab the time after which the matchup are not valid anymore.
             endTimes = timeDetails.split('.')
             currenttime = time.gmtime(time.time())
-            debugNotify("### Current Time:{}\n### End Times:{}".format(currenttime,endTimes), 2) #Debug
+            debugNotify("Current Time:{}\n### End Times:{}".format(currenttime,endTimes), 2) #Debug
             if endTimes[0] >= currenttime[0] and endTimes[1] >= currenttime[1] and endTimes[2] >= currenttime[2] and endTimes[3] >= currenttime[3] and endTimes[4] >= currenttime[4]:          
                if confirm("Was this a match for the {} League?".format(leagueDetails[0])):
                   return leagueDetails[0] # If we matched a league, the return the first entry in the list, which is the league name.
@@ -784,7 +784,7 @@ def fetchCardScripts(group = table, x=0, y=0): # Creates 2 dictionaries with all
       debugNotify("Skipping Scripts Download for faster debug", 0)
       code = 0
       ScriptsDownload = None
-   debugNotify("### code:{}, text: {}".format(code, ScriptsDownload), 4) #Debug
+   debugNotify("code:{}, text: {}".format(code, ScriptsDownload), 4) #Debug
    if code != 200 or not ScriptsDownload or (ScriptsDownload and not re.search(r'ANR CARD SCRIPTS', ScriptsDownload)) or debugVerbosity >= 0: 
       whisper(":::WARNING::: Cannot download card scripts at the moment. Will use localy stored ones.")
       Split_Main = ScriptsLocal.split('=====') # Split_Main is separating the file description from the rest of the code
@@ -892,11 +892,11 @@ def TrialError(group, x=0, y=0): # Debugging
    me.counters['Agenda Points'].value = 0
    me.counters['Bad Publicity'].value = 10
    me.Clicks = 15
-   notify("### Variables Reset") #Debug   
+   notify("Variables Reset") #Debug   
    if not playerside:  # If we've already run this command once, don't recreate the cards.
-      notify("### Playerside not chosen yet. Doing now") #Debug   
+      notify("Playerside not chosen yet. Doing now") #Debug   
       chooseSide()
-      notify("### About to create starting cards.") #Debug   
+      notify("About to create starting cards.") #Debug   
       createStartingCards()
    notify("<<< TrialError()") #Debug
    if confirm("Spawn Test Cards?"):
