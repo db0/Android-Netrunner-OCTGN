@@ -1599,16 +1599,9 @@ def RetrieveX(Autoscript, announceText, card, targetCards = None, notification =
    count = num(action.group(1))
    multiplier = per(Autoscript, card, n, targetCards, notification)
    if source != targetPL.piles['Heap/Archives(Face-up)']: # The discard pile is anyway visible.
-      debugNotify("Turning Pile Face Up", 2)
-      cover = table.create("ac3a3d5d-7e3a-4742-b9b2-7f72596d9c1b",0,0,1,True) # Creating a dummy card to cover that player's source pile
-      cover.moveTo(source) # Moving that dummy card on top of their source pile
-      for c in source: c.isFaceUp = True # We flip all cards in the player's deck face up so that we can grab their properties
-      rnd(1,100) # Small delay to allow OCTGN to read properties
+      prepPile(source)
    elif source == targetPL.piles['Heap/Archives(Face-up)'] and re.search(r'-fromArchives', Autoscript): # If we're flipping the
-      debugNotify("Turning Hidden Archives Face Up", 2)
-      cover = table.create("ac3a3d5d-7e3a-4742-b9b2-7f72596d9c1b",0,0,1,True) 
-      cover.moveTo(targetPL.piles['Archives(Hidden)']) 
-      for c in targetPL.piles['Archives(Hidden)']: c.isFaceUp = True 
+      cover = prepPile(targetPL.piles['Archives(Hidden)'])
    restrictions = prepareRestrictions(Autoscript, seek = 'type')
    cardList = []
    for c in source:
@@ -1657,10 +1650,9 @@ def RetrieveX(Autoscript, announceText, card, targetCards = None, notification =
       if tokensRegex: TokensX('Put{}'.format(tokensRegex.group(1)), announceText,c, n = n) 
    debugNotify("About to hide pile.", 2)
    if source != targetPL.piles['Heap/Archives(Face-up)']:
-      debugNotify("Turning Pile Face Down", 2)
-      for c in source: c.isFaceUp = False # We hide again the source pile cards.
-      rnd(1,100) # Small delay to allow OCTGN to finish 
-      cover.moveTo(shared.exile) # we cannot delete cards so we just hide it.
+      restorePile(source, cover)
+   elif re.search(r'-fromArchives', Autoscript):
+      restorePile(targetPL.piles['Archives(Hidden)'], cover)   
    debugNotify("About to announce.", 2)
    if len(chosenCList) == 0: announceString = "{} attempts to {} a card {}, but there were no valid targets.".format(announceText, destiVerb, sourcePath)
    else: announceString = "{} {} {} {}{}.".format(announceText, destiVerb, [c.name for c in chosenCList], sourcePath,MUtext)
