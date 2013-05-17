@@ -1599,7 +1599,7 @@ def RetrieveX(Autoscript, announceText, card, targetCards = None, notification =
    count = num(action.group(1))
    multiplier = per(Autoscript, card, n, targetCards, notification)
    if source != targetPL.piles['Heap/Archives(Face-up)']: # The discard pile is anyway visible.
-      prepPile(source)
+      cover = prepPile(source)
    elif source == targetPL.piles['Heap/Archives(Face-up)'] and re.search(r'-fromArchives', Autoscript): # If we're flipping the
       cover = prepPile(targetPL.piles['Archives(Hidden)'])
    restrictions = prepareRestrictions(Autoscript, seek = 'type')

@@ -627,7 +627,7 @@ def delayed_whisper(text): # Because whispers for some reason execute before not
    
 def prepPile(group): # This function prepares a pile for scripting by turning all cards face up so that they can be read by python
    debugNotify(">>> prepPile()") #Debug
-   cover = table.create("91f77ea1-93ed-4375-83bd-d1ee0a1419fe",0,0,1,True) # Creating a dummy card to cover that player's source pile
+   cover = table.create("ac3a3d5d-7e3a-4742-b9b2-7f72596d9c1b",0,0,1,True) # Creating a dummy card to cover that player's source pile
    cover.moveTo(group) # Moving that dummy card on top of their source pile
    debugNotify("Turning {} Face Up".format(group.name), 2)
    for c in group: c.isFaceUp = True # We flip all cards in the player's deck face up so that we can grab their properties
