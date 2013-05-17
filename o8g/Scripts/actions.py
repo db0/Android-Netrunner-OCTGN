@@ -1231,7 +1231,7 @@ def accessTarget(group = table, x = 0, y = 0):
       card.highlight = None
 
 def RDaccessX(group = table, x = 0, y = 0): # A function which looks at the top X cards of the corp's deck and then asks the runner what to do with each one.
-   debugNotify(">>> RDaccessX(){}".format(extraASDebug())) #Debug
+   debugNotify(">>> RDaccessX()") #Debug
    mute()
    global gatheredCardList
    RDtop = []

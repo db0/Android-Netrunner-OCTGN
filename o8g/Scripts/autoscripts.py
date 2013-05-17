@@ -41,13 +41,13 @@ def executePlayScripts(card, action):
    debugNotify(">>> executePlayScripts() with action: {}".format(action)) #Debug
    global failedRequirement
    if not Automations['Play, Score and Rez']: 
-      debugNotify("Exiting because automations are off", 2)
+      debugNotify("### Exiting because automations are off", 2)
       return
    if not card.isFaceUp: 
-      debugNotify("Exiting because card is face down", 2)
+      debugNotify("### Exiting because card is face down", 2)
       return
    if CardsAS.get(card.model,'') == '': 
-      debugNotify("Exiting because card has no autoscripts", 2)
+      debugNotify("### Exiting because card has no autoscripts", 2)
       return
    failedRequirement = False
    X = 0

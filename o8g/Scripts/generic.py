@@ -438,6 +438,10 @@ def multiChoice(title, options,card): # This displays a choice where the player 
 #---------------------------------------------------------------------------
 
 def debugNotify(msg, level = 1):
+   if not re.search(r'<<<',msg) and not re.search(r'>>>',msg):
+      hashes = '#' 
+      for iter in range(level): hashes += '#' # We add extra hashes at the start of debug messages equal to the level of the debug+1, to make them stand out more
+      msg = hashes + msg
    if debugVerbosity >= level: notify(msg)
 
 def num (s):
