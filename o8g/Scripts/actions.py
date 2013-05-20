@@ -1844,7 +1844,7 @@ def rulings(card, x = 0, y = 0):
    #openUrl('http://www.netrunneronline.com/cards/{}/'.format(card.Errata))
    if card.Subtitle != '': subTXT = ':' + card.Subtitle
    else: subTXT = ''
-   openUrl('http://netrunnercards.info/find/?q={}{}'.format(fetchProperty(card, 'name'),subTXT)) # Errata is not filled in most card so this works better until then
+   openUrl('http://netrunnercards.info/find/?q={}{}&mode=embed'.format(fetchProperty(card, 'name'),subTXT)) # Errata is not filled in most card so this works better until then
 
 def inspectCard(card, x = 0, y = 0): # This function shows the player the card text, to allow for easy reading until High Quality scans are procured.
    debugNotify(">>> inspectCard(){}".format(extraASDebug())) #Debug
