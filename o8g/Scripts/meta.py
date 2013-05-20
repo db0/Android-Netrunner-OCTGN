@@ -845,7 +845,7 @@ def TrialError(group, x=0, y=0): # Debugging
       elif debugVerbosity == 2: debugVerbosity = 3
       elif debugVerbosity == 3: debugVerbosity = 4
       else: debugVerbosity = 0
-      notify("Debug verbosity is now: {}".format(debugVerbosity))
+      whisper("Debug verbosity is now: {}".format(debugVerbosity))
       if ds == "corp": 
          notify("Runner now")
          ds = "runner"
