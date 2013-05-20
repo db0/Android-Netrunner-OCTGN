@@ -1840,7 +1840,9 @@ def rulings(card, x = 0, y = 0):
    mute()
    #if not card.isFaceUp: return
    #openUrl('http://www.netrunneronline.com/cards/{}/'.format(card.Errata))
-   openUrl('http://www.cardgamedb.com/index.php/netrunner/android-netrunner-card-search?text={}&fTS=0'.format(fetchProperty(card, 'name'))) # Errata is not filled in most card so this works better until then
+   if card.Subtitle != '': subTXT = ':' + card.Subtitle
+   else: subTXT = ''
+   openUrl('http://netrunnercards.info/find/?q={}{}'.format(fetchProperty(card, 'name'),subTXT)) # Errata is not filled in most card so this works better until then
 
 def inspectCard(card, x = 0, y = 0): # This function shows the player the card text, to allow for easy reading until High Quality scans are procured.
    debugNotify(">>> inspectCard(){}".format(extraASDebug())) #Debug
