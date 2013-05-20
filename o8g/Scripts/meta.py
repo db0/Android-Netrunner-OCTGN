@@ -202,13 +202,18 @@ def getSpecial(cardType,player = me):
 # Functions takes as argument the name of a special card, and the player to whom it belongs, and returns the card object.
    debugNotify(">>> getSpecial() for player: {}".format(me.name)) #Debug
    specialCards = eval(player.getGlobalVariable('specialCards'))
-   card = Card(specialCards[cardType])
-   debugNotify("Stored_Type = {}".format(Stored_Type.get(card._id,'NULL')), 2)
-   if Stored_Type.get(card._id,'NULL') == 'NULL':
-      #if card.owner == me: delayed_whisper(":::DEBUG::: {} was NULL. Re-storing as an attempt to fix".format(cardType)) # Debug
-      debugNotify("card ID = {}".format(card._id))
-      debugNotify("Stored Type = {}".format(Stored_Type.get(card._id,'NULL')))
-      storeProperties(card, True)
+   cardID = specialCards.get(cardType,None)
+   if not cardID: 
+      debugNotify("No special card of type {} found".format(cardType),2)
+      card = None
+   else:
+      card = Card(specialCards[cardType])
+      debugNotify("Stored_Type = {}".format(Stored_Type.get(card._id,'NULL')), 2)
+      if Stored_Type.get(card._id,'NULL') == 'NULL':
+         #if card.owner == me: delayed_whisper(":::DEBUG::: {} was NULL. Re-storing as an attempt to fix".format(cardType)) # Debug
+         debugNotify("card ID = {}".format(card._id))
+         debugNotify("Stored Type = {}".format(Stored_Type.get(card._id,'NULL')))
+         storeProperties(card, True)
    debugNotify("<<< getSpecial() by returning: {}".format(card), 3)
    return card
 

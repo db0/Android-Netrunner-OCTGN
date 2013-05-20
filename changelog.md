@@ -1,6 +1,11 @@
 Changelog - Android:Netrunner LCG OCTGN Game Definition
 ===============================================
 
+### 3.0.5.x
+
+* Changed card information lookup (via inspect function) to netrunnercards.info
+* Added debug code to help me trace down the pheromones recurr. creds bug
+
 ### 3.0.4.x
 
 * Force Trashing a bit more newbie friendly now

@@ -413,7 +413,9 @@ def intRun(aCost = 1, Name = 'R&D', silent = False):
          myIdent.markers[mdict['BadPublicity']] += BadPub
          notify("--> The Bad Publicity of {} allows {} to secure {} for this run".format(enemyIdent,myIdent,uniCredit(BadPub)))
    debugNotify("Painting run Arrow", 2)
-   if Name != 'Remote': targetServer = getSpecial(Name,enemyIdent.controller)
+   if Name != 'Remote': 
+      targetServer = getSpecial(Name,enemyIdent.controller)
+      if not targetServer: abortArrow = True # If for some reason we can't find the relevant central server card (e.g. during debug), we abort gracefully
    else:
       targetRemote = findTarget("Targeted-atRemote Server-isMutedTarget") # We try to see if the player had a remote targeted, if so we make it the target.
       if len(targetRemote) > 0: targetServer = targetRemote[0] # If there's no remote targeted, we paint no arrow.

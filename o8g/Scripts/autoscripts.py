@@ -1137,9 +1137,9 @@ def TokensX(Autoscript, announceText, card, targetCards = None, notification = N
    if re.search(r'isPriority', Autoscript): card.highlight = PriorityColor
    if action.group(1) == 'Refill': 
       if token[0] == 'Credit': 
-         announceString = "{} {} to {}".format(announceText, action.group(1), uniRecurring(count)) # We need a special announcement for refill, since it always needs to point out the max.
+         announceString = "{} {} to {}".format(announceText, action.group(1), uniRecurring(count * multiplier)) # We need a special announcement for refill, since it always needs to point out the max.
       else: 
-         announceString = "{} {} to {} {}".format(announceText, action.group(1), count, token[0]) # We need a special announcement for refill, since it always needs to point out the max.
+         announceString = "{} {} to {} {}".format(announceText, action.group(1), count * multiplier, token[0]) # We need a special announcement for refill, since it always needs to point out the max.
    elif re.search(r'forfeitCounter:',action.group(3)):
       counter = re.search(r'forfeitCounter:(\w+)',action.group(3))
       if not victim or victim == me: announceString = '{} forfeit their next {} {}'.format(announceText,total,counter.group(1)) # If we're putting on forfeit counters, we don't announce it as an infection.
@@ -2288,13 +2288,14 @@ def ofwhom(Autoscript, controller = me):
    
 def per(Autoscript, card = None, count = 0, targetCards = None, notification = None): # This function goes through the autoscript and looks for the words "per<Something>". Then figures out what the card multiplies its effect with, and returns the appropriate multiplier.
    debugNotify(">>> per(){}".format(extraASDebug(Autoscript))) #Debug
+   debugNotify("per() passwd vars: card = {}. count = {}".format(card,count),4)
    if targetCards is None: targetCards = []
    div = 1
    ignore = 0
    per = re.search(r'\b(per|upto)(Target|Host|Every)?([A-Z][^-]*)-?', Autoscript) # We're searching for the word per, and grabbing all after that, until the first dash "-" as the variable.   
+   debugNotify("per Regex groups: {}".format(per.groups()),3)
    if per: # If the  search was successful...
       multiplier = 0
-      debugNotify("Groups: {}. Count: {}".format(per.groups(),count), 2) #Debug
       if per.group(2) and (per.group(2) == 'Target' or per.group(2) == 'Every'): # If we're looking for a target or any specific type of card, we need to scour the requested group for targets.
          debugNotify("Checking for Targeted per", 2)
          if per.group(2) == 'Target' and len(targetCards) == 0: 
@@ -2326,9 +2327,14 @@ def per(Autoscript, card = None, count = 0, targetCards = None, notification = N
                                                                                               # and some cards may only work when a rival owns or does something.
          elif re.search(r'Marker',per.group(3)):
             markerName = re.search(r'Marker{([\w ]+)}',per.group(3)) # I don't understand why I had to make the curly brackets optional, but it seens atTurnStart/End completely eats them when it parses the CardsAS.get(card.model,'')
+            debugNotify("found per Marker requirement: {}".format(markerName.group(1)),4)
             marker = findMarker(card, markerName.group(1))
-            if marker: multiplier = card.markers[marker]
-            else: multiplier = 0
+            if marker:
+               debugNotify("found {} Marker(s)".format(card.markers[marker]),4)
+               multiplier = card.markers[marker]
+            else: 
+               debugNotify("Didn't find any relevant Markers",4)
+               multiplier = 0
          elif re.search(r'Property',per.group(3)):
             property = re.search(r'Property{([\w ]+)}',per.group(3))
             multiplier = num(card.properties[property.group(1)])
