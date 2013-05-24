@@ -1933,8 +1933,8 @@ def CustomScript(card, action = 'PLAY'): # Scripts that are complex and fairly u
       StackTop[returnChoice].moveToBottom(me.piles['R&D/Stack'])
       catchwords = ["Excellent.","Don't leave town.","We'll be in touch...","We'll be seeing you soon.","Always a pleasure.","We'll be waiting..."]
       goodbye = catchwords.pop(rnd(0, len(catchwords)))
-      notify("{} procures 1 card for {}. {}".format(card,me,goodbye))
-   if fetchProperty(card, 'name') == "Indexing" and action == 'SuccessfulRun':
+      notify('{} procures 1 card for {}.\n- "{}"'.format(card,me,goodbye))
+   elif fetchProperty(card, 'name') == "Indexing" and action == 'SuccessfulRun':
       targetPL = findOpponent()
       if len(targetPL.piles['R&D/Stack']) < 5: count = len(targetPL.piles['R&D/Stack'])
       else: count = 5
@@ -1956,21 +1956,20 @@ def CustomScript(card, action = 'PLAY'): # Scripts that are complex and fairly u
       for c in targetPL.piles['R&D/Stack']: c.isFaceUp = False # We hide again the source pile cards.
       cover.moveTo(shared.exile) # we cannot delete cards so we just hide it.
       notify("{} has successfully indexed {}'s R&D".format(me,targetPL))
-   if fetchProperty(card, 'name') == "Deep Thought" and action == 'Start':
+   elif fetchProperty(card, 'name') == "Deep Thought" and action == 'Start':
       if card.markers[mdict['Virus']] and card.markers[mdict['Virus']] == 3:
          targetPL = findOpponent()
          debugNotify("Turning Corp's Top card Face Up", 2)
          cover = table.create("ac3a3d5d-7e3a-4742-b9b2-7f72596d9c1b",0,0,1,True) 
          cover.moveTo(targetPL.piles['R&D/Stack'])
-         cardView = targetPL.piles['R&D/Stack'].top()
+         cardView = targetPL.piles['R&D/Stack'][1]
          cardView.isFaceUp = True
          rnd(1,10)
          delayed_whisper(":> Deep Thought: {} is upcoming! Ommm...".format(cardView))
          rnd(1,10)
          cardView.isFaceUp = False
          cover.moveTo(shared.exile) # we cannot delete cards so we just hide it.
-   if fetchProperty(card, 'name') == "Midori" and action == 'USE':
-      if oncePerTurn(card) == 'ABORT': return 'ABORT'
+   elif fetchProperty(card, 'name') == "Midori" and action == 'USE':
       targetCards = findTarget('Targeted-atICE-isMutedTarget')
       if not len(targetCards):
          delayed_whisper(":::ERROR::: You need to target an installed to use this ability")
@@ -1980,12 +1979,13 @@ def CustomScript(card, action = 'PLAY'): # Scripts that are complex and fairly u
       if not len(targetCards):
          delayed_whisper(":::ERROR::: You need to also target an ICE in your hand to use this ability")
          return 'ABORT'
+      if oncePerTurn(card) == 'ABORT': return 'ABORT'
       handICE = targetCards[0]
       x,y = tableICE.position
       handICE.moveToTable(x,y,True)
       handICE.orientation = Rot90
       tableICE.moveTo(me.hand)
-      notify("{} activates Midori to re-arrange the approached {}, with an ICE from the HQ. Naughty Naughty...".format(me,tableICE.name))
+      notify('{} activates Midori to replace the approached {}, with an ICE from the HQ.\n- "Naughty Naughty..."'.format(me,tableICE.name))
    elif action == 'USE': useCard(card)
    debugNotify("<<< CustomScript()", 3) #Debug
 #------------------------------------------------------------------------------
@@ -2431,7 +2431,7 @@ def ifHave(Autoscript,controller = me,silent = False):
 # A functions that checks if a player has a specific property at a particular level or not and returns True/False appropriately
    debugNotify(">>> ifHave(){}".format(extraASDebug(Autoscript))) #Debug
    Result = True
-   ifHave = re.search(r"\bif(I|Opponent)(Have|Hasn't)([0-9]+)([A-Za-z ]+)",Autoscript)
+   ifHave = re.search(r"\bif(I|Opponent)(Have|Hasnt)([0-9]+)([A-Za-z ]+)",Autoscript)
    if ifHave:
       debugNotify("ifHave groups: {}".format(ifHave.groups()), 3)
       if ifHave.group(1) == 'I':

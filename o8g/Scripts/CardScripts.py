@@ -1911,7 +1911,7 @@ Corporate War
 -----
 bc0f047c-01b1-427f-a439-d451eda02120
 -----
-onScore:Gain7Credits-ifIHave7Credits||onScore:Lose999Credits-ifIHasn't7Credits
+onScore:Gain7Credits-ifIHave7Credits$$Lose999Credits-ifIHasnt7Credits
 +++++
 
 .....
