@@ -62,7 +62,7 @@ def calcStringLabelSize(STRING):
    for char in STRING:
       if char == '\n': newlines += 1
    STRINGwidth = 200 + (len(STRING) / 4)
-   STRINGheight = 30 + ((20 - newlines) * newlines) + (30 * (STRINGwidth / 100))
+   STRINGheight = 30 + ((20 - newlines) * newlines) + (30 * (STRINGwidth / 85))
    return (STRINGwidth, STRINGheight)
 
 def calcStringButtonHeight(STRING): 
