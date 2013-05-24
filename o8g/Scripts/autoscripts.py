@@ -1922,6 +1922,23 @@ def CustomScript(card, action = 'PLAY'): # Scripts that are complex and fairly u
             autoscriptOtherPlayers('CardInstall',selectedCard)
             MUtext = chkRAM(selectedCard)
             notify("--> {} has been built{} from {}'s Personal Workshop{}".format(selectedCard,extraTXT,identName,MUtext))         
+   elif fetchProperty(card, 'name') == 'Mr. Li' and action == 'USE':
+      actionCost = useClick(count = 1)
+      if actionCost == 'ABORT': return
+      StackTop = list(me.piles['R&D/Stack'].top(2))
+      if len(StackTop) < 2:
+         whisper("Your Stack is does not have enough cards. You cannot take this action")
+         return
+      for c in StackTop:
+         debugNotify("Pulling cards to hand", 3) #Debug
+         c.moveTo(me.hand)
+         debugNotify(" Looping...", 4)
+         loopChk(c,'Type')
+      returnChoice = SingleChoice('Select a card to put to the botton of your Stack', makeChoiceListfromCardList(StackTop, True), type = 'button', default = 0)
+      StackTop[returnChoice].moveToBottom(me.piles['R&D/Stack'])
+      catchwords = ["Excellent.","Don't leave town.","We'll be in touch...","We'll be seeing you soon.","Always a pleasure.","We'll be waiting..."]
+      goodbye = catchwords.pop(rnd(0, len(catchwords)))
+      notify("{} procures 1 card for {}. {}".format(card,me,goodbye))
    elif action == 'USE': useCard(card)
    debugNotify("<<< CustomScript()", 3) #Debug
 #------------------------------------------------------------------------------
@@ -2174,7 +2191,7 @@ def checkSpecialRestrictions(Autoscript,card):
    debugNotify("<<< checkSpecialRestrictions() with return {}".format(validCard)) #Debug
    return validCard
 
-def makeChoiceListfromCardList(cardList):
+def makeChoiceListfromCardList(cardList,includeText = False):
 # A function that returns a list of strings suitable for a choice menu, out of a list of cards
 # Each member of the list includes a card's name, traits, resources, markers and, if applicable, combat icons
    debugNotify(">>> makeChoiceListfromCardList()")
@@ -2199,8 +2216,10 @@ def makeChoiceListfromCardList(cardList):
       if cType == 'Program': stats += "MU: {}.".format(fetchProperty(T, 'Requirement'))
       if cType == 'Agenda': stats += "Agenda Points: {}.".format(cStat)
       if cType == 'Asset' or cType == 'Upgrade': stats += "Trash Cost: {}.".format(cStat)
+      if includeText: cText = '\n' + fetchProperty(T, 'Rules')
+      else: cText = ''
       debugNotify("Finished Adding Stats. Going to choice...", 4)# Debug               
-      choiceTXT = "{}\n{}\n{}{}".format(fetchProperty(T, 'name'),cType,markers,stats)
+      choiceTXT = "{}\n{}\n{}{}{}".format(fetchProperty(T, 'name'),cType,markers,stats,cText)
       targetChoices.append(choiceTXT)
    return targetChoices
    debugNotify("<<< makeChoiceListfromCardList()", 3)

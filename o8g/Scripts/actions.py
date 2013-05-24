@@ -1606,6 +1606,8 @@ def intTrashCard(card, stat, cost = "not free",  ClickCost = '', silent = False)
    MUtext = ""
    rc = ''
    storeProperties(card)
+   if card.group.name == 'Heap/Archives(Face-up)' or card.group.name == 'Archives(Hidden)': # If the card is already trashed (say from a previous script), we don't want to try and trash it again
+      return # We don't return abort, otherwise scripts will stop executing (e.g. see using Fairy to break two subroutines)
    if ClickCost == '':
       ClickCost = '{} '.format(me) # If not clicks were used, then just announce our name.
       goodGrammar = 'es' # LOL Grammar Nazi
@@ -1622,7 +1624,7 @@ def intTrashCard(card, stat, cost = "not free",  ClickCost = '', silent = False)
       elif trashEasterEggIDX == 7:
          card.moveToBottom(cardowner.piles['Heap/Archives(Face-up)'])
          trashEasterEggIDX = 0
-         return
+         return 'ABORT'
    if card.highlight == DummyColor and DummyTrashWarn and not silent and not confirm(":::Warning!:::\n\nYou are about to trash a dummy card. You will not be able to restore it without using the effect that created it originally.\n\nAre you sure you want to proceed? (This message will not appear again)"):
       DummyTrashWarn = False
       return

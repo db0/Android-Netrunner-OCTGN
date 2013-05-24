@@ -1758,7 +1758,7 @@ Data Leak Reversal
 -----
 bc0f047c-01b1-427f-a439-d451eda02103
 -----
-AutoScript
+
 +++++
 A1B0G0T0:Draw1Card-toTrash-ofOpponent-ifTagged1
 .....
@@ -1767,18 +1767,18 @@ Faerie
 -----
 bc0f047c-01b1-427f-a439-d451eda02104
 -----
-AutoScript
+
 +++++
-A0B0G0T0:Autoaction
+A0B0G0T0:SimplyAnnounce{break sentry subroutine}$$TrashMyself||A0B1G0T0:Put1PlusOne
 .....
 
 Mr. Li
 -----
 bc0f047c-01b1-427f-a439-d451eda02105
 -----
-AutoScript
+
 +++++
-A0B0G0T0:Autoaction
+A1B0G0T0:CustomScript
 .....
 
 Indexing
