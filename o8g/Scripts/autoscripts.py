@@ -1961,7 +1961,7 @@ def CustomScript(card, action = 'PLAY'): # Scripts that are complex and fairly u
       cover.moveTo(shared.exile) # we cannot delete cards so we just hide it.
       notify("{} has successfully indexed {}'s R&D".format(me,targetPL))
    elif fetchProperty(card, 'name') == "Deep Thought" and action == 'Start':
-      if card.markers[mdict['Virus']] and card.markers[mdict['Virus']] == 3:
+      if card.markers[mdict['Virus']] and card.markers[mdict['Virus']] >= 3:
          targetPL = findOpponent()
          debugNotify("Turning Corp's Top card Face Up", 2)
          cover = table.create("ac3a3d5d-7e3a-4742-b9b2-7f72596d9c1b",0,0,1,True) 
