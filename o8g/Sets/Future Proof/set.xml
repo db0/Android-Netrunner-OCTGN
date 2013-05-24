@@ -172,7 +172,7 @@
 		<property name="Keywords" value="Region" />
 		<property name="Cost" value="6" />
 		<property name="Requirement" value="" />
-		<property name="Stat" value="" />
+		<property name="Stat" value="4" />
 		<property name="Rules" value="As an additional cost to make a run on this server, the Runner must spend [Click].&#xD;&#xA;Limit 1 region per server." />
 		<property name="Flavor" value="Known for luxury hoppers and a delectable sauerkraut." />
 		<property name="Instructions" value="" />
@@ -188,7 +188,7 @@
 		<property name="Keywords" value="Hostile" />
 		<property name="Cost" value="0" />
 		<property name="Requirement" value="" />
-		<property name="Stat" value="" />
+		<property name="Stat" value="2" />
 		<property name="Rules" value="Ronin can be advanced.&#xD;&#xA;If there are at least 4 advancement tokens on Ronin, it gains &quot;[Click], [Trash]: Do 3 net damage.&quot;" />
 		<property name="Flavor" value="I will serve you...for a time." />
 		<property name="Instructions" value="" />
@@ -204,7 +204,7 @@
 		<property name="Keywords" value="Sysop-Unique" />
 		<property name="Cost" value="0" />
 		<property name="Requirement" value="" />
-		<property name="Stat" value="" />
+		<property name="Stat" value="3" />
 		<property name="Rules" value="Once per run, when the Runner approaches a piece of ice protecting this server, you may swap that ice with a piece of ice from HQ. The new ice is installed unrezzed." />
 		<property name="Flavor" value="&quot;Looks like someone is being naughty...&quot;" />
 		<property name="Instructions" value="" />
@@ -284,7 +284,7 @@
 		<property name="Keywords" value="Hostile" />
 		<property name="Cost" value="2" />
 		<property name="Requirement" value="" />
-		<property name="Stat" value="" />
+		<property name="Stat" value="3" />
 		<property name="Rules" value="If the Runner is tagged, Dedicated Response Team gains &quot;Whenever a successful run ends, do 2 meat damage.&quot;" />
 		<property name="Flavor" value="They don't call them dedicated for nothing" />
 		<property name="Instructions" value="" />

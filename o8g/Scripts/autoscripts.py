@@ -1985,7 +1985,8 @@ def CustomScript(card, action = 'PLAY'): # Scripts that are complex and fairly u
       handICE.moveToTable(x,y,True)
       handICE.orientation = Rot90
       tableICE.moveTo(me.hand)
-      notify('{} activates Midori to replace the approached {}, with an ICE from the HQ.\n- "Naughty Naughty..."'.format(me,tableICE.name))
+      notify('{} activates Midori to replace the approached {}, with an ICE from the HQ.'.format(me,tableICE.name))
+      notify('\n- "Naughty Naughty..."')
    elif action == 'USE': useCard(card)
    debugNotify("<<< CustomScript()", 3) #Debug
 #------------------------------------------------------------------------------
@@ -2431,6 +2432,7 @@ def ifHave(Autoscript,controller = me,silent = False):
 # A functions that checks if a player has a specific property at a particular level or not and returns True/False appropriately
    debugNotify(">>> ifHave(){}".format(extraASDebug(Autoscript))) #Debug
    Result = True
+   if re.search(r'isSilentHaveChk',Autoscript): silent = True
    ifHave = re.search(r"\bif(I|Opponent)(Have|Hasnt)([0-9]+)([A-Za-z ]+)",Autoscript)
    if ifHave:
       debugNotify("ifHave groups: {}".format(ifHave.groups()), 3)
@@ -2509,6 +2511,7 @@ def chkTagged(Autoscript, silent = False):
 ### Check if the action needs the player or his opponent to be targeted
    if ds == 'corp': runnerPL = findOpponent()
    else: runnerPL = me
+
    regexTag = re.search(r'ifTagged([0-9]+)', Autoscript)
    if regexTag and runnerPL.Tags < num(regexTag.group(1)): #See if the target needs to be tagged a specific number of times.
       if not silent:
