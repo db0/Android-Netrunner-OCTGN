@@ -356,11 +356,12 @@ def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
          ### Warning the player in case we need to
          if chkWarn(card, activeAutoscript) == 'ABORT': return
          ### Check if the action needs the player or his opponent to be targeted
-         targetPL = ofwhom(activeAutoscript)
+         if ds == 'corp': runnerPL = findOpponent()
+         else: runnerPL = me
          regexTag = re.search(r'ifTagged([0-9]+)', activeAutoscript)
-         if regexTag and targetPL.Tags < num(regexTag.group(1)): #See if the target needs to be tagged a specific number of times.
-            if regexTag.group(1) == '1': whisper("Your opponent needs to be tagged for you to use this action")
-            else: whisper("Your opponent needs to be tagged {} times for you to to use this action".format(regexTag.group(1)))
+         if regexTag and runnerPL.Tags < num(regexTag.group(1)): #See if the target needs to be tagged a specific number of times.
+            if regexTag.group(1) == '1': whisper("The runner needs to be tagged for you to use this action")
+            else: whisper("The Runner needs to be tagged {} times for you to to use this action".format(regexTag.group(1)))
             return 'ABORT'
          ### Checking the activation cost and preparing a relevant string for the announcement
          actionCost = re.match(r"A([0-9]+)B([0-9]+)G([0-9]+)T([0-9]+):", activeAutoscript) 

@@ -2011,9 +2011,10 @@ def chkTargeting(card):
                         \nIf you proceed without a target, strange things might happen.\
                       \n\nProceed anyway?")):
       return 'ABORT'
-   targetPL = ofwhom(CardsAS.get(card.model,''))
-   if re.search(r'ifTagged', CardsAS.get(card.model,'')) and targetPL.Tags == 0 and not re.search(r'isOptional', CardsAS.get(card.model,'')):
-      whisper("{} must be tagged in order to use this card".format(targetPL))
+   if ds == 'corp': runnerPL = findOpponent()
+   else: runnerPL = me
+   if re.search(r'ifTagged', CardsAS.get(card.model,'')) and runnerPL.Tags == 0 and not re.search(r'isOptional', CardsAS.get(card.model,'')):
+      whisper("{} must be tagged in order to use this card".format(runnerPL))
       return 'ABORT'
    if re.search(r'isExposeTarget', CardsAS.get(card.model,'')) and ExposeTargetsWarn:
       if confirm("This card will automatically provide a bonus depending on how many non-exposed derezzed cards you've selected.\
