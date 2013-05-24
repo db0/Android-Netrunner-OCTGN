@@ -271,7 +271,7 @@
 		<property name="Stat" value="6" />
 		<property name="Rules" value="[Subroutine]Trace6&amp;ndash; If successful, trash 1 piece of hardware, do 2 meat damage (cannot be prevented), and end the run." />
 		<property name="Flavor" value="A bright light blossomed, and then the console went dark. That's when she smelled smoke." />
-		<property name="Instructions" value="" />
+		<property name="Instructions" value="[Subroutine] Trace 6. If successful, do 2 unpreventable meat damage, and end the run.||(If Trace Successful) Trash 1 targeted piece of hardware." />
 		<property name="Faction" value="NBN" />
 		<property name="Influence" value="3" />
 		<property name="Side" value="corp" />
@@ -288,7 +288,7 @@
 		<property name="Rules" value="If the Runner is tagged, Dedicated Response Team gains &quot;Whenever a successful run ends, do 2 meat damage.&quot;" />
 		<property name="Flavor" value="They don't call them dedicated for nothing" />
 		<property name="Instructions" value="" />
-		<property name="Faction" value="Weyland Consortium" />
+		<property name="Faction" value="The Weyland Consortium" />
 		<property name="Influence" value="3" />
 		<property name="Side" value="corp" />
 		<property name="AutoScript" value="" />
@@ -304,7 +304,7 @@
 		<property name="Rules" value="[Subroutine] Trace0&amp;ndash; If successful, the Runner trashes 1 program." />
 		<property name="Flavor" value="&quot;If I had to describe the bugs in one word, it would be '****ing annoying.'&quot; -Whizzard" />
 		<property name="Instructions" value="" />
-		<property name="Faction" value="Weyland Consortium" />
+		<property name="Faction" value="The Weyland Consortium" />
 		<property name="Influence" value="1" />
 		<property name="Side" value="corp" />
 		<property name="AutoScript" value="" />

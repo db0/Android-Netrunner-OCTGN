@@ -837,6 +837,7 @@ def TrialError(group, x=0, y=0): # Debugging
    global ds, debugVerbosity
    mute()
    #test()
+   delayed_whisper("## Checking Debug Verbosity")
    if debugVerbosity >=0: 
       if debugVerbosity == 0: 
          debugVerbosity = 1
@@ -853,13 +854,16 @@ def TrialError(group, x=0, y=0): # Debugging
          ds = "corp"
          notify("Corp Now")
       return
+   delayed_whisper("## Checking my Name")
    if me.name == 'db0' or me.name == 'dbzer0': 
       debugVerbosity = 0
       fetchCardScripts()
+   delayed_whisper("## Checking players array size")
    if not (len(players) == 1 or debugVerbosity >= 0): 
       whisper("This function is only for development purposes")
       return
    ######## Testing Corner ########
+   delayed_whisper("## Changing side")
    if ds == "corp": 
       notify("Runner now")
       ds = "runner"
@@ -867,6 +871,7 @@ def TrialError(group, x=0, y=0): # Debugging
       ds = "corp"
       notify("Corp Now")
    ###### End Testing Corner ######
+   delayed_whisper("## Defining Test Cards")
    testcards = ["bc0f047c-01b1-427f-a439-d451eda02101", # Future Proof Cards
                 "bc0f047c-01b1-427f-a439-d451eda02102", 
                 "bc0f047c-01b1-427f-a439-d451eda02103", 

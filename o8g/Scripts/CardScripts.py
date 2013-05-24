@@ -308,7 +308,7 @@ bc0f047c-01b1-427f-a439-d451eda01032
 -----
 
 +++++
-A0B0G0T1:Lose1Tags-isPenalty	
+A0B0G0T1:Lose1Tags-isPenalty
 .....
 Deja Vu
 -----
@@ -900,7 +900,7 @@ bc0f047c-01b1-427f-a439-d451eda01113
 -----
 
 +++++
-A0B0G0T0:RunEnd-isSubroutine	
+A0B0G0T0:RunEnd-isSubroutine
 .....
 Wall of Thorns
 -----
@@ -1785,9 +1785,9 @@ Indexing
 -----
 bc0f047c-01b1-427f-a439-d451eda02106
 -----
-
+onPlay:RunR&D||atSuccessfulRun:CustomScript-isAlternativeRunResult-isOptional-ifSuccessfulRunR&D$$TrashMyself-ifSuccessfulRunR&D-isSilent
 +++++
-A0B0G0T0:Autoaction
+atTurnStart:CustomScript
 .....
 
 R&D Interface
@@ -1796,25 +1796,25 @@ bc0f047c-01b1-427f-a439-d451eda02107
 -----
 
 +++++
-A0B0G0T0:Autoaction
+
 .....
 
 Deep Thought
 -----
 bc0f047c-01b1-427f-a439-d451eda02108
 -----
-
+atSuccessfulRun:Put1Virus-ifSuccessfulRunR&D||atTurnStart:CustomScript-duringMyTurn
 +++++
-A0B0G0T0:Autoaction
+
 .....
 
 New Angeles City Hall
 -----
 bc0f047c-01b1-427f-a439-d451eda02109
 -----
-
+onLiberation:TrashMyself
 +++++
-A0B0G0T0:Autoaction
+A0B2G0T0:Lose1Tags
 .....
 
 Eli 1.0
@@ -1823,7 +1823,7 @@ bc0f047c-01b1-427f-a439-d451eda02110
 -----
 
 +++++
-A0B0G0T0:Autoaction
+A0B0G0T0:RunEnd-isSubroutine
 .....
 
 Ruhr Valley
@@ -1841,7 +1841,7 @@ bc0f047c-01b1-427f-a439-d451eda02112
 -----
 
 +++++
-A0B0G0T0:Autoaction
+A0B0G0T1:Remove4Advancement-isCost$$Inflict3NetDamage-onOpponent
 .....
 
 Midori
@@ -1850,34 +1850,34 @@ bc0f047c-01b1-427f-a439-d451eda02113
 -----
 
 +++++
-A0B0G0T0:Autoaction
+A0B0G0T0:CustomScript
 .....
 
 NBN: The World is Yours
 -----
 bc0f047c-01b1-427f-a439-d451eda02114
 -----
-
+onStartup:Gain1Hand Size-isSilent
 +++++
-A0B0G0T0:Autoaction
+
 .....
 
 Project Beale
 -----
 bc0f047c-01b1-427f-a439-d451eda02115
 -----
-
+onScore:Put1Agenda-perMarker{Advancement}-ignore3-div2||whileScored:Gain1Agenda Points-perMarker{Agenda}
 +++++
-A0B0G0T0:Autoaction
+
 .....
 
 Midseason Replacements
 -----
 bc0f047c-01b1-427f-a439-d451eda02116
 -----
-
+onPlay:Trace6-traceEffects<Gain1Tags-perX-onOpponent,None>
 +++++
-A0B0G0T0:Autoaction
+
 .....
 
 Flare
@@ -1886,16 +1886,16 @@ bc0f047c-01b1-427f-a439-d451eda02117
 -----
 
 +++++
-A0B0G0T0:Autoaction
+A0B0G0T0:Trace6-isSubroutine-traceEffects<Inflict2MeatDamage-nonPreventable-onOpponent++RunEnd,None>||A0B0G0T0:TrashTarget-Targeted-atHardware
 .....
 
 Dedicated Response Team
 -----
 bc0f047c-01b1-427f-a439-d451eda02118
 -----
-
+atJackOut:Inflict2MeatDamage-onOpponent-ifTagged1-ifSuccessfulRunAny
 +++++
-A0B0G0T0:Autoaction
+
 .....
 
 Burke Bugs
@@ -1904,16 +1904,16 @@ bc0f047c-01b1-427f-a439-d451eda02119
 -----
 
 +++++
-A0B0G0T0:Autoaction
+A0B0G0T0:Trace0-isSubroutine-traceEffects<SimplyAnnounce{force the runner to trash a program},None>
 .....
 
 Corporate War
 -----
 bc0f047c-01b1-427f-a439-d451eda02120
 -----
-
+onScore:Gain7Credits-ifIHave7Credits||onScore:Lose999Credits-ifIHasn't7Credits
 +++++
-A0B0G0T0:Autoaction
+
 .....
 
 ENDSCRIPTS

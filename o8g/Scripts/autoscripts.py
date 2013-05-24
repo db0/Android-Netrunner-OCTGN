@@ -129,7 +129,7 @@ def executePlayScripts(card, action):
          if re.search(r':Pass\b', activeAutoscript): continue # Pass is a simple command of doing nothing ^_^
          effect = re.search(r'\b([A-Z][A-Za-z]+)([0-9]*)([A-Za-z& ]*)\b([^:]?[A-Za-z0-9_&{}\|:,<> -]*)', activeAutoscript)
          debugNotify('effects: {}'.format(effect.groups()), 2) #Debug
-         if effectType.group(1) == 'whileRezzed' or effectType.group(1) == 'whileScored':
+         if effectType.group(1) == 'whileRezzed' or effectType.group(1) == 'whileScored' or effectType.group(1) == 'whileLiberated':
             if effect.group(1) != 'Gain' and effect.group(1) != 'Lose': continue # The only things that whileRezzed and whileScored affect in execute Automations is GainX scripts (for now). All else is onTrash, onPlay etc
             if action == 'DEREZ' or ((action == 'TRASH' or action == 'UNINSTALL') and card.isFaceUp): Removal = True
             else: Removal = False
@@ -355,14 +355,7 @@ def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
          targetC = findTarget(activeAutoscript)
          ### Warning the player in case we need to
          if chkWarn(card, activeAutoscript) == 'ABORT': return
-         ### Check if the action needs the player or his opponent to be targeted
-         if ds == 'corp': runnerPL = findOpponent()
-         else: runnerPL = me
-         regexTag = re.search(r'ifTagged([0-9]+)', activeAutoscript)
-         if regexTag and runnerPL.Tags < num(regexTag.group(1)): #See if the target needs to be tagged a specific number of times.
-            if regexTag.group(1) == '1': whisper("The runner needs to be tagged for you to use this action")
-            else: whisper("The Runner needs to be tagged {} times for you to to use this action".format(regexTag.group(1)))
-            return 'ABORT'
+         if chkTagged(activeAutoscript) == 'ABORT': return
          ### Checking the activation cost and preparing a relevant string for the announcement
          actionCost = re.match(r"A([0-9]+)B([0-9]+)G([0-9]+)T([0-9]+):", activeAutoscript) 
          # This is the cost of the card.  It starts with A which is the amount of Clicks needed to activate
@@ -527,6 +520,7 @@ def autoscriptOtherPlayers(lookup, origin_card = Identity, count = 1): # Functio
          if not re.search(r'{}'.format(lookup), AutoS): continue # Search if in the script of the card, the string that was sent to us exists. The sent string is decided by the function calling us, so for example the ProdX() function knows it only needs to send the 'GeneratedSpice' string.
          if chkPlayer(AutoS, card.controller,False) == 0: continue # Check that the effect's origninator is valid.
          if not ifHave(AutoS,card.controller,silent = True): continue # If the script requires the playet to have a specific counter value and they don't, do nothing.
+         if chkTagged(AutoS, True) == 'ABORT': continue
          if not checkCardRestrictions(gatherCardProperties(origin_card), prepareRestrictions(autoS, 'type')): continue #If we have the '-type' modulator in the script, then need ot check what type of property it's looking for
          if re.search(r'onlyOnce',autoS) and oncePerTurn(card, silent = True, act = 'automatic') == 'ABORT': continue # If the card's ability is only once per turn, use it or silently abort if it's already been used
          if re.search(r'onTriggerCard',autoS): targetCard = [origin_card] # if we have the "-onTriggerCard" modulator, then the target of the script will be the original card (e.g. see Grimoire)
@@ -582,7 +576,7 @@ def atTimedEffects(Time = 'Start'): # Function which triggers card effects at th
          if not effect: continue
          debugNotify("Time maches. Script triggers on: {}".format(effect.group(1)), 3)
          if re.search(r'-ifSuccessfulRun', autoS):
-            if Time == 'SuccessfulRun': #If we're looking only for successful runs, we need the Time to be a successful run.
+            if Time == 'SuccessfulRun' or Time == 'JackOut': #If we're looking only for successful runs, we need the Time to be a successful run or jackout period.
                requiredTarget = re.search(r'-ifSuccessfulRun([A-Za-z&]+)', autoS) # We check what the script requires to be the successful target
                if getGlobalVariable('feintTarget') != 'None': currentRunTarget = getGlobalVariable('feintTarget')
                else: 
@@ -598,6 +592,7 @@ def atTimedEffects(Time = 'Start'): # Function which triggers card effects at th
             else: continue
          if chkPlayer(effect.group(2), card.controller,False) == 0: continue # Check that the effect's origninator is valid. 
          if not ifHave(autoS,card.controller,silent = True): continue # If the script requires the playet to have a specific counter value and they don't, do nothing.
+         if chkTagged(autoS, True) == 'ABORT': continue
          if effect.group(1) != Time: continue # If the effect trigger we're checking (e.g. start-of-run) does not match the period trigger we're in (e.g. end-of-turn)
          debugNotify("split Autoscript: {}".format(autoS), 3)
          if debugVerbosity >= 2 and effect: notify("!!! effects: {}".format(effect.groups()))
@@ -796,11 +791,11 @@ def markerScripts(card, action = 'USE'):
 # Post-Trace Trigger
 #------------------------------------------------------------------------------
 
-def executeTraceEffects(card,Autoscript):
+def executeTraceEffects(card,Autoscript,count = 0):
    debugNotify(">>> executeTraceEffects(){}".format(extraASDebug(Autoscript))) #Debug
    global failedRequirement
    failedRequirement = False
-   X = 0
+   X = count # The X Starts as the "count" passed variable, which in turn is the difference between the corp's trace and the runner's link
    Autoscripts = Autoscript.split('||')
    for autoS in Autoscripts:
       selectedAutoscripts = autoS.split('++')
@@ -1939,6 +1934,58 @@ def CustomScript(card, action = 'PLAY'): # Scripts that are complex and fairly u
       catchwords = ["Excellent.","Don't leave town.","We'll be in touch...","We'll be seeing you soon.","Always a pleasure.","We'll be waiting..."]
       goodbye = catchwords.pop(rnd(0, len(catchwords)))
       notify("{} procures 1 card for {}. {}".format(card,me,goodbye))
+   if fetchProperty(card, 'name') == "Indexing" and action == 'SuccessfulRun':
+      targetPL = findOpponent()
+      if len(targetPL.piles['R&D/Stack']) < 5: count = len(targetPL.piles['R&D/Stack'])
+      else: count = 5
+      cardList = list(targetPL.piles['R&D/Stack'].top(count)) # We make a list of the top 5 cards the runner can look at.
+      debugNotify("Turning Corp's Stack Face Up", 2)
+      cover = table.create("ac3a3d5d-7e3a-4742-b9b2-7f72596d9c1b",0,0,1,True) 
+      cover.moveTo(targetPL.piles['R&D/Stack']) 
+      for c in targetPL.piles['R&D/Stack']: c.isFaceUp = True 
+      rnd(1,100) # Delay to be able to read card info
+      idx = 0 # The index where we're going to be placing each card.
+      while len(cardList) > 0:
+         if len(cardList) == 1: choice = 0
+         else: choice = SingleChoice("Choose card put on the {} position of the Stack".format(numOrder(idx)), makeChoiceListfromCardList(cardList), type = 'button')
+         movedC = cardList.pop(choice)
+         movedC.moveTo(targetPL.piles['R&D/Stack'],idx + 1) # If there's only one card left, we put it in the last available index location in the Stack. We always put the card one index position deeper, because the first card is the cover.
+         idx += 1
+      debugNotify("Turning Pile Face Down", 2)
+      rnd(1,100) # Delay to be able to announce names.
+      for c in targetPL.piles['R&D/Stack']: c.isFaceUp = False # We hide again the source pile cards.
+      cover.moveTo(shared.exile) # we cannot delete cards so we just hide it.
+      notify("{} has successfully indexed {}'s R&D".format(me,targetPL))
+   if fetchProperty(card, 'name') == "Deep Thought" and action == 'Start':
+      if card.markers[mdict['Virus']] and card.markers[mdict['Virus']] == 3:
+         targetPL = findOpponent()
+         debugNotify("Turning Corp's Top card Face Up", 2)
+         cover = table.create("ac3a3d5d-7e3a-4742-b9b2-7f72596d9c1b",0,0,1,True) 
+         cover.moveTo(targetPL.piles['R&D/Stack'])
+         cardView = targetPL.piles['R&D/Stack'].top()
+         cardView.isFaceUp = True
+         rnd(1,10)
+         delayed_whisper(":> Deep Thought: {} is upcoming! Ommm...".format(cardView))
+         rnd(1,10)
+         cardView.isFaceUp = False
+         cover.moveTo(shared.exile) # we cannot delete cards so we just hide it.
+   if fetchProperty(card, 'name') == "Midori" and action == 'USE':
+      if oncePerTurn(card) == 'ABORT': return 'ABORT'
+      targetCards = findTarget('Targeted-atICE-isMutedTarget')
+      if not len(targetCards):
+         delayed_whisper(":::ERROR::: You need to target an installed to use this ability")
+         return 'ABORT'
+      tableICE = targetCards[0]
+      targetCards = findTarget('Targeted-atICE-fromHand-isMutedTarget')
+      if not len(targetCards):
+         delayed_whisper(":::ERROR::: You need to also target an ICE in your hand to use this ability")
+         return 'ABORT'
+      handICE = targetCards[0]
+      x,y = tableICE.position
+      handICE.moveToTable(x,y,True)
+      handICE.orientation = Rot90
+      tableICE.moveTo(me.hand)
+      notify("{} activates Midori to re-arrange the approached {}, with an ICE from the HQ. Naughty Naughty...".format(me,tableICE.name))
    elif action == 'USE': useCard(card)
    debugNotify("<<< CustomScript()", 3) #Debug
 #------------------------------------------------------------------------------
@@ -2458,3 +2505,14 @@ def chkPlayer(Autoscript, controller, manual, targetChk = False): # Function for
       notify("!!!ERROR!!! Null value on chkPlayer()")
       return 0
    
+def chkTagged(Autoscript, silent = False):
+### Check if the action needs the player or his opponent to be targeted
+   if ds == 'corp': runnerPL = findOpponent()
+   else: runnerPL = me
+   regexTag = re.search(r'ifTagged([0-9]+)', Autoscript)
+   if regexTag and runnerPL.Tags < num(regexTag.group(1)): #See if the target needs to be tagged a specific number of times.
+      if not silent:
+         if regexTag.group(1) == '1': whisper("The runner needs to be tagged for you to use this action")
+         else: whisper("The Runner needs to be tagged {} times for you to to use this action".format(regexTag.group(1)))
+      return 'ABORT'
+   return 'OK'
