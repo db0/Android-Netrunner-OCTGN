@@ -1,10 +1,12 @@
 Changelog - Android:Netrunner LCG OCTGN Game Definition
 ===============================================
 
-### 3.0.5.x
+### 3.1.0.x
 
+* New game definition for **Future Proof**. All cards are scripted.
 * Changed card information lookup (via inspect function) to netrunnercards.info
 * Added debug code to help me trace down the pheromones recurr. creds bug
+
 
 ### 3.0.4.x
 
