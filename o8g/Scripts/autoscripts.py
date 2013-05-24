@@ -2309,12 +2309,12 @@ def ofwhom(Autoscript, controller = me):
 def per(Autoscript, card = None, count = 0, targetCards = None, notification = None): # This function goes through the autoscript and looks for the words "per<Something>". Then figures out what the card multiplies its effect with, and returns the appropriate multiplier.
    debugNotify(">>> per(){}".format(extraASDebug(Autoscript))) #Debug
    debugNotify("per() passwd vars: card = {}. count = {}".format(card,count),4)
-   if targetCards is None: targetCards = []
+   if not targetCards: targetCards = []
    div = 1
    ignore = 0
    per = re.search(r'\b(per|upto)(Target|Host|Every)?([A-Z][^-]*)-?', Autoscript) # We're searching for the word per, and grabbing all after that, until the first dash "-" as the variable.   
-   debugNotify("per Regex groups: {}".format(per.groups()),3)
    if per: # If the  search was successful...
+      debugNotify("per Regex groups: {}".format(per.groups()),3)
       multiplier = 0
       if per.group(2) and (per.group(2) == 'Target' or per.group(2) == 'Every'): # If we're looking for a target or any specific type of card, we need to scour the requested group for targets.
          debugNotify("Checking for Targeted per", 2)
@@ -2374,7 +2374,9 @@ def per(Autoscript, card = None, count = 0, targetCards = None, notification = N
       debugNotify("Checking div", 2) # Debug.            
       divS = re.search(r'-div([0-9]+)',Autoscript)
       if divS: div = num(divS.group(1))
-   else: multiplier = 1
+   else: 
+      debugNotify("no per")
+      multiplier = 1
    debugNotify("<<< per() with Multiplier: {}".format((multiplier - ignore) / div), 2) # Debug
    return (multiplier - ignore) / div
 

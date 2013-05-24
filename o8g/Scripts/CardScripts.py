@@ -1785,7 +1785,7 @@ Indexing
 -----
 bc0f047c-01b1-427f-a439-d451eda02106
 -----
-AutoScript
+
 +++++
 A0B0G0T0:Autoaction
 .....
@@ -1794,7 +1794,7 @@ R&D Interface
 -----
 bc0f047c-01b1-427f-a439-d451eda02107
 -----
-AutoScript
+
 +++++
 A0B0G0T0:Autoaction
 .....
@@ -1803,7 +1803,7 @@ Deep Thought
 -----
 bc0f047c-01b1-427f-a439-d451eda02108
 -----
-AutoScript
+
 +++++
 A0B0G0T0:Autoaction
 .....
@@ -1812,7 +1812,7 @@ New Angeles City Hall
 -----
 bc0f047c-01b1-427f-a439-d451eda02109
 -----
-AutoScript
+
 +++++
 A0B0G0T0:Autoaction
 .....
@@ -1821,7 +1821,7 @@ Eli 1.0
 -----
 bc0f047c-01b1-427f-a439-d451eda02110
 -----
-AutoScript
+
 +++++
 A0B0G0T0:Autoaction
 .....
@@ -1830,7 +1830,7 @@ Ruhr Valley
 -----
 bc0f047c-01b1-427f-a439-d451eda02111
 -----
-AutoScript
+
 +++++
 A0B0G0T0:Autoaction
 .....
@@ -1839,7 +1839,7 @@ Ronin
 -----
 bc0f047c-01b1-427f-a439-d451eda02112
 -----
-AutoScript
+
 +++++
 A0B0G0T0:Autoaction
 .....
@@ -1848,7 +1848,7 @@ Midori
 -----
 bc0f047c-01b1-427f-a439-d451eda02113
 -----
-AutoScript
+
 +++++
 A0B0G0T0:Autoaction
 .....
@@ -1857,7 +1857,7 @@ NBN: The World is Yours
 -----
 bc0f047c-01b1-427f-a439-d451eda02114
 -----
-AutoScript
+
 +++++
 A0B0G0T0:Autoaction
 .....
@@ -1866,7 +1866,7 @@ Project Beale
 -----
 bc0f047c-01b1-427f-a439-d451eda02115
 -----
-AutoScript
+
 +++++
 A0B0G0T0:Autoaction
 .....
@@ -1875,7 +1875,7 @@ Midseason Replacements
 -----
 bc0f047c-01b1-427f-a439-d451eda02116
 -----
-AutoScript
+
 +++++
 A0B0G0T0:Autoaction
 .....
@@ -1884,7 +1884,7 @@ Flare
 -----
 bc0f047c-01b1-427f-a439-d451eda02117
 -----
-AutoScript
+
 +++++
 A0B0G0T0:Autoaction
 .....
@@ -1893,7 +1893,7 @@ Dedicated Response Team
 -----
 bc0f047c-01b1-427f-a439-d451eda02118
 -----
-AutoScript
+
 +++++
 A0B0G0T0:Autoaction
 .....
@@ -1902,7 +1902,7 @@ Burke Bugs
 -----
 bc0f047c-01b1-427f-a439-d451eda02119
 -----
-AutoScript
+
 +++++
 A0B0G0T0:Autoaction
 .....
@@ -1911,7 +1911,7 @@ Corporate War
 -----
 bc0f047c-01b1-427f-a439-d451eda02120
 -----
-AutoScript
+
 +++++
 A0B0G0T0:Autoaction
 .....
