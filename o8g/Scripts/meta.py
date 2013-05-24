@@ -867,26 +867,26 @@ def TrialError(group, x=0, y=0): # Debugging
       ds = "corp"
       notify("Corp Now")
    ###### End Testing Corner ######
-   testcards = ["bc0f047c-01b1-427f-a439-d451eda01022", # Humanity's Shadow Cards
-                "bc0f047c-01b1-427f-a439-d451eda02064", 
-                "bc0f047c-01b1-427f-a439-d451eda02083", 
-                "bc0f047c-01b1-427f-a439-d451eda02084", 
-                "bc0f047c-01b1-427f-a439-d451eda02085", 
-                "bc0f047c-01b1-427f-a439-d451eda02086", 
-                "bc0f047c-01b1-427f-a439-d451eda02087", 
-                "bc0f047c-01b1-427f-a439-d451eda02088", 
-                "bc0f047c-01b1-427f-a439-d451eda02089", 
-                "bc0f047c-01b1-427f-a439-d451eda02090", 
-                "bc0f047c-01b1-427f-a439-d451eda02091", 
-                "bc0f047c-01b1-427f-a439-d451eda02092", 
-                "bc0f047c-01b1-427f-a439-d451eda02093", 
-                "bc0f047c-01b1-427f-a439-d451eda02094", 
-                "bc0f047c-01b1-427f-a439-d451eda02095", 
-                "bc0f047c-01b1-427f-a439-d451eda02096", 
-                "bc0f047c-01b1-427f-a439-d451eda02097", 
-                "bc0f047c-01b1-427f-a439-d451eda02098", 
-                "bc0f047c-01b1-427f-a439-d451eda02099", 
-                "bc0f047c-01b1-427f-a439-d451eda02100"] 
+   testcards = ["bc0f047c-01b1-427f-a439-d451eda02101", # Future Proof Cards
+                "bc0f047c-01b1-427f-a439-d451eda02102", 
+                "bc0f047c-01b1-427f-a439-d451eda02103", 
+                "bc0f047c-01b1-427f-a439-d451eda02104", 
+                "bc0f047c-01b1-427f-a439-d451eda02105", 
+                "bc0f047c-01b1-427f-a439-d451eda02106", 
+                "bc0f047c-01b1-427f-a439-d451eda02107", 
+                "bc0f047c-01b1-427f-a439-d451eda02108", 
+                "bc0f047c-01b1-427f-a439-d451eda02109", 
+                "bc0f047c-01b1-427f-a439-d451eda02110", 
+                "bc0f047c-01b1-427f-a439-d451eda02111", 
+                "bc0f047c-01b1-427f-a439-d451eda02112", 
+                "bc0f047c-01b1-427f-a439-d451eda02113", 
+                "bc0f047c-01b1-427f-a439-d451eda02114", 
+                "bc0f047c-01b1-427f-a439-d451eda02115", 
+                "bc0f047c-01b1-427f-a439-d451eda02116", 
+                "bc0f047c-01b1-427f-a439-d451eda02117", 
+                "bc0f047c-01b1-427f-a439-d451eda02118", 
+                "bc0f047c-01b1-427f-a439-d451eda02119", 
+                "bc0f047c-01b1-427f-a439-d451eda02120"] 
    if not ds: 
       if confirm("corp?"): ds = "corp"
       else: ds = "runner"

@@ -5,7 +5,7 @@
          <block type="text" id="corpIdent_name">
            <location x="63" y="23" />
            <text color="#000000" size="17" />
-           <wordwrap height="19" width="230" />
+           <wordwrap height="17" width="230" />
          </block>
          <block type="text" id="corpIdent_subtitle">
            <location x="17" y="51" />
@@ -13,7 +13,8 @@
          </block>
          <block type="text" id="corpIdent_keywords">
            <location x="105" y="330" />
-           <text color="#000000" size="13" />
+           <text color="#000000" size="14" />
+           <wordwrap height="14" width="204" />
          </block>
          <block type="text" id="corpIdent_rules">
            <location x="63" y="358" />
@@ -43,6 +44,7 @@
          <block type="text" id="operation_keywords">
            <location x="116" y="262" />
            <text color="#000000" size="14" />
+           <wordwrap height="14" width="175" />
          </block>
          <block type="text" id="operation_rules">
            <location x="40" y="300" />
@@ -71,6 +73,7 @@
          <block type="text" id="ICE_keywords">
            <location x="17" y="313" rotate="270" />
            <text color="#000000" size="14" />
+           <wordwrap height="14" width="242" />
          </block>
          <block type="text" id="ICE_rules">
            <location x="68" y="68" />
@@ -96,6 +99,7 @@
          <block type="text" id="agenda_keywords">
            <location x="95" y="280" />
            <text color="#000000" size="14" />
+           <wordwrap height="14" width="175" />
          </block>
          <block type="text" id="agenda_rules">
            <location x="40" y="310" />
@@ -121,6 +125,7 @@
          <block type="text" id="asset_keywords">
            <location x="86" y="255" />
            <text color="#000000" size="13" />
+           <wordwrap height="13" width="210" />
          </block>
          <block type="text" id="asset_rules">
            <location x="40" y="287" />
@@ -146,6 +151,7 @@
          <block type="text" id="upgrade_keywords">
            <location x="106" y="258" />
            <text color="#000000" size="13" />
+           <wordwrap height="13" width="175" />
          </block>
          <block type="text" id="upgrade_rules">
            <location x="40" y="288" />
@@ -170,6 +176,7 @@
          <block type="text" id="runIdent_keywords">
            <location x="119" y="326" />
            <text color="#000000" size="13" />
+           <wordwrap height="13" width="160" />
          </block>
          <block type="text" id="runIdent_rules">
            <location x="49" y="358" />
@@ -199,6 +206,7 @@
          <block type="text" id="event_keywords">
            <location x="90" y="276" />
            <text color="#000000" size="13" />
+           <wordwrap height="13" width="190" />
          </block>
          <block type="text" id="event_rules">
            <location x="40" y="308" />
@@ -219,6 +227,7 @@
          <block type="text" id="resource_keywords">
            <location x="95" y="217" />
            <text color="#000000" size="13" />
+           <wordwrap height="13" width="160" />
          </block>
          <block type="text" id="resource_rules">
            <location x="22" y="248" />
@@ -239,6 +248,7 @@
          <block type="text" id="hardware_keywords">
            <location x="130" y="262" />
            <text color="#000000" size="13" />
+           <wordwrap height="13" width="170" />
          </block>
          <block type="text" id="hardware_rules">
            <location x="45" y="290" />
@@ -264,6 +274,7 @@
          <block type="text" id="program_keywords">
            <location x="110" y="238" />
            <text color="#000000" size="13" />
+           <wordwrap height="13" width="168" />
          </block>
          <block type="text" id="program_rules">
            <location x="34" y="267" />

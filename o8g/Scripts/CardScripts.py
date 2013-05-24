@@ -1769,7 +1769,7 @@ bc0f047c-01b1-427f-a439-d451eda02104
 -----
 
 +++++
-A0B0G0T0:SimplyAnnounce{break sentry subroutine}$$TrashMyself||A0B1G0T0:Put1PlusOne
+A0B0G0T0:SimplyAnnounce{break sentry subroutine}||A0B1G0T0:Put1PlusOne
 .....
 
 Mr. Li
