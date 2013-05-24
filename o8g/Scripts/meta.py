@@ -624,7 +624,7 @@ def versionCheck():
       
 def MOTD():
    debugNotify(">>> MOTD()") #Debug
-   if me.name == 'Db0' or me.name == 'Dbzer0': return #I can't be bollocksed
+   if me.name == 'db0' or me.name == 'dbzer0': return #I can't be bollocksed
    (MOTDurl, MOTDcode) = webRead('https://raw.github.com/db0/Android-Netrunner-OCTGN/master/MOTD.txt')
    (DYKurl, DYKcode) = webRead('https://raw.github.com/db0/Android-Netrunner-OCTGN/master/DidYouKnow.txt')
    if (MOTDcode != 200 or not MOTDurl) or (DYKcode !=200 or not DYKurl):

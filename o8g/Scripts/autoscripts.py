@@ -129,11 +129,11 @@ def executePlayScripts(card, action):
          if re.search(r':Pass\b', activeAutoscript): continue # Pass is a simple command of doing nothing ^_^
          effect = re.search(r'\b([A-Z][A-Za-z]+)([0-9]*)([A-Za-z& ]*)\b([^:]?[A-Za-z0-9_&{}\|:,<> -]*)', activeAutoscript)
          debugNotify('effects: {}'.format(effect.groups()), 2) #Debug
-         if effectType.group(1) == 'whileRezzed' or effectType.group(1) == 'whileScored' or effectType.group(1) == 'whileLiberated':
+         if effectType.group(1) == 'whileRezzed' or effectType.group(1) == 'whileInstalled' or effectType.group(1) == 'whileScored' or effectType.group(1) == 'whileLiberated':
             if effect.group(1) != 'Gain' and effect.group(1) != 'Lose': continue # The only things that whileRezzed and whileScored affect in execute Automations is GainX scripts (for now). All else is onTrash, onPlay etc
             if action == 'DEREZ' or ((action == 'TRASH' or action == 'UNINSTALL') and card.isFaceUp): Removal = True
             else: Removal = False
-         elif action == 'DEREZ' or action == 'TRASH': continue # If it's just a one-off event, and we're trashing it, then do nothing.
+         #elif action == 'DEREZ' or action == 'TRASH': continue # If it's just a one-off event, and we're trashing it, then do nothing.
          else: Removal = False
          targetC = findTarget(activeAutoscript)
          targetPL = ofwhom(activeAutoscript,card.controller) # So that we know to announce the right person the effect, affects.
@@ -512,7 +512,9 @@ def autoscriptOtherPlayers(lookup, origin_card = Identity, count = 1): # Functio
       debugNotify("{}'s AS: {}".format(card,Autoscripts), 4) # Debug
       AutoScriptSnapshot = list(Autoscripts)
       for autoS in AutoScriptSnapshot: # Checking and removing anything other than whileRezzed or whileScored.
-         if not re.search(r'while(Rezzed|Scored|Running)', autoS): Autoscripts.remove(autoS)
+         if not re.search(r'while(Rezzed|Scored|Running|Installed)', autoS): 
+            debugNotify("Card does not have triggered ability while in play. Aborting", 2) #Debug
+            Autoscripts.remove(autoS)
          if not chkRunningStatus(autoS): Autoscripts.remove(autoS) # If the script only works while running a specific server, and we're not, then abort.
       if len(Autoscripts) == 0: continue
       for AutoS in Autoscripts:
@@ -540,6 +542,8 @@ def autoscriptOtherPlayers(lookup, origin_card = Identity, count = 1): # Functio
             if InflictX(AutoS, costText, card, targetCard, notification = 'Automatic', n = count) == 'ABORT': break
          elif regexHooks['DrawX'].search(AutoS):
             if DrawX(AutoS, costText, card, targetCard, notification = 'Automatic', n = count) == 'ABORT': break
+         elif regexHooks['ModifyStatus'].search(AutoS):
+            if ModifyStatus(AutoS, costText, card, targetCard, notification = 'Automatic', n = count) == 'ABORT': break
          elif regexHooks['UseCustomAbility'].search(AutoS):
             if UseCustomAbility(AutoS, costText, card, targetCard, notification = 'Automatic', n = count) == 'ABORT': break
    debugNotify("<<< autoscriptOtherPlayers()", 3) # Debug
@@ -1931,8 +1935,8 @@ def CustomScript(card, action = 'PLAY'): # Scripts that are complex and fairly u
          loopChk(c,'Type')
       returnChoice = SingleChoice('Select a card to put to the botton of your Stack', makeChoiceListfromCardList(StackTop, True), type = 'button', default = 0)
       StackTop[returnChoice].moveToBottom(me.piles['R&D/Stack'])
-      catchwords = ["Excellent.","Don't leave town.","We'll be in touch...","We'll be seeing you soon.","Always a pleasure.","We'll be waiting..."]
-      goodbye = catchwords.pop(rnd(0, len(catchwords)))
+      catchwords = ["Excellent.","Don't leave town.","We'll be in touch.","We'll be seeing you soon...","Always a pleasure.","Remember our agreement.","Interesting request there."]
+      goodbye = catchwords.pop(rnd(0, len(catchwords) - 1))
       notify('{} procures 1 card for {}.\n- "{}"'.format(card,me,goodbye))
    elif fetchProperty(card, 'name') == "Indexing" and action == 'SuccessfulRun':
       targetPL = findOpponent()
@@ -1986,7 +1990,7 @@ def CustomScript(card, action = 'PLAY'): # Scripts that are complex and fairly u
       handICE.orientation = Rot90
       tableICE.moveTo(me.hand)
       notify('{} activates Midori to replace the approached {}, with an ICE from the HQ.'.format(me,tableICE.name))
-      notify('\n- "Naughty Naughty..."')
+      notify('- "Naughty Naughty..."')
    elif action == 'USE': useCard(card)
    debugNotify("<<< CustomScript()", 3) #Debug
 #------------------------------------------------------------------------------
@@ -2360,8 +2364,10 @@ def per(Autoscript, card = None, count = 0, targetCards = None, notification = N
    if not targetCards: targetCards = []
    div = 1
    ignore = 0
-   per = re.search(r'\b(per|upto)(Target|Host|Every)?([A-Z][^-]*)-?', Autoscript) # We're searching for the word per, and grabbing all after that, until the first dash "-" as the variable.   
-   if per: # If the  search was successful...
+   
+   per = re.search(r'\b(per|upto)(Target|Host|Every)?([A-Z][^-]*)-?', Autoscript) # We're searching for the word per, and grabbing all after that, until the first dash "-" as the variable. 
+   if per and not re.search(r'<.*?(per|upto).*?>',Autoscript): # If the  search was successful...
+                                                               # We ignore "per" between <> as these are trace effects and are not part of the same script
       debugNotify("per Regex groups: {}".format(per.groups()),3)
       multiplier = 0
       if per.group(2) and (per.group(2) == 'Target' or per.group(2) == 'Every'): # If we're looking for a target or any specific type of card, we need to scour the requested group for targets.

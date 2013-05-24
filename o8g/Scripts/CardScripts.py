@@ -1787,7 +1787,7 @@ bc0f047c-01b1-427f-a439-d451eda02106
 -----
 onPlay:RunR&D||atSuccessfulRun:CustomScript-isAlternativeRunResult-isOptional-ifSuccessfulRunR&D$$TrashMyself-ifSuccessfulRunR&D-isSilent
 +++++
-atTurnStart:CustomScript
+
 .....
 
 R&D Interface
@@ -1812,7 +1812,7 @@ New Angeles City Hall
 -----
 bc0f047c-01b1-427f-a439-d451eda02109
 -----
-onLiberation:TrashMyself
+whileInstalled:TrashMyself-perAgendaLiberated
 +++++
 A0B2G0T0:Lose1Tags
 .....

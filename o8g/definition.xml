@@ -4,7 +4,7 @@
       name="Android-Netrunner" 
       id="0f38e453-26df-4c04-9d67-6d43de939c77" 
       octgnVersion="3.1.0.0" 
-      version="3.0.4.23" 
+      version="3.0.4.29" 
       markersize="20"
       tags="asymmetric cyberpunk LCG bluff duel"
       description="Android: Netrunner is an asymmetrical cyberpunk Card Game for two players.
@@ -106,9 +106,9 @@
          <cardaction menu="Mark with +1" default="False" shortcut="Alt+1" execute="addPlusOne" />
          <cardaction menu="Mark with -1" default="False" shortcut="Alt+Shift+1" execute="addMinusOne" />
          <cardaction menu="Mark with Permanent +1" default="False" execute="addPlusOnePerm" />
-         <cardaction menu="Put X Credits from the Bank" default="False" shortcut="Alt+B" execute="addCredits" />
+         <cardaction menu="Put X Credits from the Bank" default="False" shortcut="Alt+C" execute="addCredits" />
          <cardaction menu="Remove X Credits" default="False" execute="remCredits" />
-         <cardaction menu="Take X Credits to your Pool" default="False" shortcut="Alt+Shift+B" execute="remXCredits" />
+         <cardaction menu="Take X Credits to your Pool" default="False" shortcut="Alt+Shift+C" execute="remXCredits" />
          <cardaction menu="Add Markers" default="False" shortcut="Alt+M" batchExecute="addMarker" />
       </cardactions>
       <cardactions menu="Rez...">
@@ -123,7 +123,7 @@
       <cardaction menu="Inspect" default="False" shortcut="Ctrl+I" execute="inspectCard" />
       <groupaction menu="Inspect Target" default="False" shortcut="Ctrl+I" execute="inspectTargetCard" />
       <cardaction menu="(Un)Expose" default="False" shortcut="Ctrl+E" execute="expose" />
-      <cardaction menu="Prioritize" default="False" shortcut="Ctrl+P" execute="prioritize" />
+      <cardaction menu="Prioritize" default="False" shortcut="Ctrl+Alt+P" execute="prioritize" />
       <cardaction menu="Uninstall" default="False" shortcut="Ctrl+U" execute="uninstall" />
       <cardaction menu="Score Agenda" default="False" shortcut="Ctrl+G" execute="scrAgenda" />
       <cardaction menu="Pay and &#9167;" default="False" shortcut="Ctrl+del" execute="trashCard" />

@@ -62,7 +62,7 @@ def calcStringLabelSize(STRING):
    for char in STRING:
       if char == '\n': newlines += 1
    STRINGwidth = 200 + (len(STRING) / 4)
-   STRINGheight = 30 + ((20 - newlines) * newlines) + (30 * (STRINGwidth / 70))
+   STRINGheight = 30 + ((20 - newlines) * newlines) + (30 * (STRINGwidth / 100))
    return (STRINGwidth, STRINGheight)
 
 def calcStringButtonHeight(STRING): 
@@ -70,7 +70,7 @@ def calcStringButtonHeight(STRING):
    newlines = 0
    for char in STRING:
       if char == '\n': newlines += 1
-   STRINGheight = 30 + (8 * newlines) + (7 * (len(STRING) / 30))
+   STRINGheight = 30 + (8 * newlines) + (7 * (len(STRING) / 20))
    return STRINGheight
    
 def formStringEscape(STRING): # A function to escape some characters that are not otherwise displayed by WinForms, like amperasands '&'
