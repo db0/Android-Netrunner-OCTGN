@@ -20,7 +20,7 @@ Sets will be uncensored after 6 months.
 * [Cyber Exodus](http://octgn.dbzer0.com/ANR/o8c/ANR-Cyber-Exodus.o8c) *(Censored)*
 * [A Study In Static](http://octgn.dbzer0.com/ANR/o8c/ANR-A-Study-In-Static.o8c) *(Censored)*
 * [Humanity's Shadow](http://octgn.dbzer0.com/ANR/o8c/ANR-Humanitys-Shadow.o8c) *(Censored)*
-* [Future Proof](http://octgn.dbzer0.com/ANR/o8c/ANR-Future-Proof-Censored.o8c) *(Censored)*
+* [Future Proof](http://octgn.dbzer0.com/ANR/o8c/ANR-Future-Proof.o8c) *(Censored)*
  
 
 ### Converting 
