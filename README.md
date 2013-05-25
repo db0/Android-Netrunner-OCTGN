@@ -14,12 +14,13 @@ Available Sets and Data Packs
 While you can play the game with the auto-generated proxies, if you've already memorized the cards, the censored images will allow you to play and recognise cards quicker.
 Sets will be uncensored after 6 months.
 
-* [Core](http://dbzer0.com/pub/ANR/Sets/ANR-Core.o8c)
-* [What Lies Ahead](http://dbzer0.com/pub/ANR/Sets/ANR-What-Lies-Ahead.o8c) *(Censored)*
-* [Trace Amount](http://dbzer0.com/pub/ANR/Sets/ANR-Trace-Amount.o8c) *(Censored)*
-* [Cyber Exodus](http://dbzer0.com/pub/ANR/Sets/ANR-Cyber-Exodus.o8c) *(Censored)*
-* [A Study In Static](http://dbzer0.com/pub/ANR/Sets/ANR-A-Study-In-Static.o8c) *(Censored)*
-* [Humanity's Shadow](http://dbzer0.com/pub/ANR/Sets/ANR-Humanitys-Shadow.o8c) *(Censored)*
+* [Core](http://octgn.dbzer0.com/ANR/o8c/ANR-Core.o8c)
+* [What Lies Ahead](http://octgn.dbzer0.com/ANR/o8c/ANR-What-Lies-Ahead.o8c) *(Censored)*
+* [Trace Amount](http://octgn.dbzer0.com/ANR/o8c/ANR-Trace-Amount.o8c) *(Censored)*
+* [Cyber Exodus](http://octgn.dbzer0.com/ANR/o8c/ANR-Cyber-Exodus.o8c) *(Censored)*
+* [A Study In Static](http://octgn.dbzer0.com/ANR/o8c/ANR-A-Study-In-Static.o8c) *(Censored)*
+* [Humanity's Shadow](http://octgn.dbzer0.com/ANR/o8c/ANR-Humanitys-Shadow.o8c) *(Censored)*
+* [Future Proof](http://octgn.dbzer0.com/ANR/o8c/ANR-Future-Proof-Censored.o8c) *(Censored)*
  
 
 ### Converting 
