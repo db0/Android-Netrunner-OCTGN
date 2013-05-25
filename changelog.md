@@ -1,6 +1,10 @@
 Changelog - Android:Netrunner LCG OCTGN Game Definition
 ===============================================
 
+### 3.1.2.x
+
+* Midori will remove hosted cards (like parasites) from ICE that goes in your hand.
+
 ### 3.1.1.x
 
 * Fixed Replicator

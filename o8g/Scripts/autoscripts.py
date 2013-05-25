@@ -1988,6 +1988,7 @@ def CustomScript(card, action = 'PLAY'): # Scripts that are complex and fairly u
       x,y = tableICE.position
       handICE.moveToTable(x,y,True)
       handICE.orientation = Rot90
+      clearAttachLinks(tableICE)
       tableICE.moveTo(me.hand)
       notify('{} activates Midori to replace the approached {}, with an ICE from the HQ.'.format(me,tableICE.name))
       notify('- "Naughty Naughty..."')
