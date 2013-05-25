@@ -1841,7 +1841,7 @@ bc0f047c-01b1-427f-a439-d451eda02112
 -----
 
 +++++
-A0B0G0T1:Remove4Advancement-isCost$$Inflict3NetDamage-onOpponent
+A1B0G0T1:Remove4Advancement-isCost$$Inflict3NetDamage-onOpponent
 .....
 
 Midori
