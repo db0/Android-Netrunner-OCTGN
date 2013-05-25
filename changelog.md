@@ -1,6 +1,10 @@
 Changelog - Android:Netrunner LCG OCTGN Game Definition
 ===============================================
 
+### 3.1.1.x
+
+* Fixed Replicator
+
 ### 3.1.0.x
 
 * New game definition for **Future Proof**. All cards are scripted.
