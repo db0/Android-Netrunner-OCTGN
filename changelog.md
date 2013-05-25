@@ -12,18 +12,18 @@ Changelog - Android:Netrunner LCG OCTGN Game Definition
 ### 3.1.0.x
 
 * New game definition for **Future Proof**. All cards are scripted.
-* Changed card information lookup (via inspect function) to netrunnercards.info
-* Added debug code to help me trace down the pheromones recurr. creds bug
+##### Cards NOT automated:
+  * R&D Interface (Just select the number of cards during R&D access)
+  * Ruhr Valley (Just remind the runner to lose a click)
 
-#### Cards NOT automated:
-* R&D Interface (Just select the number of cards during R&D access)
-* Ruhr Valley (Just remind the runner to lose a click)
+##### Trickier Automations
+  * Indexing: It will work automatically but you won't see card text (no space). To see card text, once the automated indexing is complete, eight click on the corp's R&D and select "Take Control" and then right click again and "View top 5 cards". Once you're finished re-arranging, right click on it again and pass control back to the corp
+  * Deep Thought: It will automatically announce the top card of R&D at the start of your turn if it has 3 or more viruses. Mouse over the card name in the chat to see it normally.
+  * Midori: Target an ICE on the table and an ICE in your hand before you double click Midori.
+  * Flare: Damage and ETR are done as part of the trace automations. However you trash a HW separately. Once the trace is complete, target a hardwar, double click flare and use its second ability.
+  * Changed card information lookup (via inspect function) to netrunnercards.info
+  * Added debug code to help me trace down the pheromones recurr. creds bug
 
-#### Trickier Automations
-* Indexing: It will work automatically but you won't see card text (no space). To see card text, once the automated indexing is complete, eight click on the corp's R&D and select "Take Control" and then right click again and "View top 5 cards". Once you're finished re-arranging, right click on it again and pass control back to the corp
-* Deep Thought: It will automatically announce the top card of R&D at the start of your turn if it has 3 or more viruses. Mouse over the card name in the chat to see it normally.
-* Midori: Target an ICE on the table and an ICE in your hand before you double click Midori.
-* Flare: Damage and ETR are done as part of the trace automations. However you trash a HW separately. Once the trace is complete, target a hardwar, double click flare and use its second ability.
 
 
 ### 3.0.4.x
