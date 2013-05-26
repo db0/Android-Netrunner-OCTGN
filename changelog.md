@@ -1,6 +1,13 @@
 Changelog - Android:Netrunner LCG OCTGN Game Definition
 ===============================================
 
+### 3.1.3.x
+
+* Fixed Darwin not having MU requirement
+* Deck checking will now check for more than 3 same cards. (Kiv)
+* Deck checking will now work for 40-card Corp decks (Kiv)
+* Salvage Trace is 2, not 3 (Kiv)
+
 ### 3.1.2.x
 
 * Midori will remove hosted cards (like parasites) from ICE that goes in your hand.
