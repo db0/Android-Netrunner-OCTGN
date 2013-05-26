@@ -59,7 +59,7 @@
 		<property name="Type" value="Program" />
 		<property name="Keywords" value="Icebreaker-Killer" />
 		<property name="Cost" value="0" />
-		<property name="Requirement" value="" />
+		<property name="Requirement" value="1" />
 		<property name="Stat" value="2" />
 		<property name="Rules" value="0[Credits]: Break sentry subroutine.&#xD;&#xA;1[Credits]: +1 strength.&#xD;&#xA;When an encounter with a piece of ice in which you used Faerie to break a subroutine ends, trash Faerie." />
 		<property name="Flavor" value="Do you believe in faeries?" />
@@ -123,7 +123,7 @@
 		<property name="Type" value="Program" />
 		<property name="Keywords" value="Virus" />
 		<property name="Cost" value="1" />
-		<property name="Requirement" value="" />
+		<property name="Requirement" value="1" />
 		<property name="Stat" value="" />
 		<property name="Rules" value="Whenever you make a successful run on R&amp;D, place 1 virus counter on Deep Thought.&#xD;&#xA;If there are at least 3 virus counters on Deep Thought, it gains &quot;When your turn begins, you may look at the top card of R&amp;D.&quot;" />
 		<property name="Flavor" value="" />
