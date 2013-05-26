@@ -20,6 +20,7 @@
 ###=================================================================================================================###
 
 import re
+import collections
 #---------------------------------------------------------------------------
 # Global variables
 #---------------------------------------------------------------------------
@@ -278,7 +279,7 @@ def intJackin(group, x = 0, y = 0):
    if (ds == 'corp' and me.hasInvertedTable()) or (ds == 'runner' and not me.hasInvertedTable()):
       if not confirm(":::ERROR::: Due to engine limitations, the corp player must always be player [A] in order to properly utilize the board. Please start a new game and make sure you've set the corp to be player [A] in the lobby. Are you sure you want to continue?"): return
    debugNotify("Checking Illegality", 3)
-   deckStatus = checkDeckNoLimit(deck)
+   deckStatus = checkDeck(deck)
    if not deckStatus[0]:
       if not confirm("We have found illegal cards in your deck. Bypass?"): return
       else:
@@ -313,8 +314,8 @@ def intJackin(group, x = 0, y = 0):
    executePlayScripts(Identity,'STARTUP')
    initGame()
 
-def checkDeckNoLimit(group):
-   debugNotify(">>> checkDeckNoLimit(){}".format(extraASDebug())) #Debug
+def checkDeck(group):
+   debugNotify(">>> checkDeck(){}".format(extraASDebug())) #Debug
    global totalInfluence
    if not ds:
       whisper ("Choose a side first.")
@@ -338,8 +339,12 @@ def checkDeckNoLimit(group):
    for card in group: card.moveTo(trash)
    if len(players) > 1: random = rnd(1,100) # Fix for multiplayer only. Makes Singleplayer setup very slow otherwise.
    debugNotify("About to check each card in the deck", 5) #Debug
+   counts = collections.defaultdict(int)
    for card in trash:
-      #if ok == False: continue # If we've already found illegal cards, no sense in checking anymore. Will activate this after checking
+      counts[card.name] += 1
+      if counts[card.name] > 3:
+         notify(":::ERROR::: Only 3 copies of {} allowed.".format(card.name))
+         ok = False
       if card.Type == 'Agenda':
          if ds == 'corp':
             loAP += num(card.Stat)
