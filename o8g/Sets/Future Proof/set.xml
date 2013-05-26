@@ -27,7 +27,7 @@
 		<property name="Type" value="Program" />
 		<property name="Keywords" value="Icebreaker-AI-Virus" />
 		<property name="Cost" value="3" />
-		<property name="Requirement" value="" />
+		<property name="Requirement" value="1" />
 		<property name="Stat" value="0" />
 		<property name="Rules" value="2[Credits]: Break ice subroutine.&#xD;&#xA;X is the number of virus counters on Darwin.&#xD;&#xA;When your turn begins, you may pay 1[Credits] to place 1 virus counter on Darwin." />
 		<property name="Flavor" value="" />
