@@ -20,6 +20,7 @@
 ###=================================================================================================================###
 
 import re
+import collections
 #---------------------------------------------------------------------------
 # Global variables
 #---------------------------------------------------------------------------
@@ -278,7 +279,7 @@ def intJackin(group, x = 0, y = 0):
    if (ds == 'corp' and me.hasInvertedTable()) or (ds == 'runner' and not me.hasInvertedTable()):
       if not confirm(":::ERROR::: Due to engine limitations, the corp player must always be player [A] in order to properly utilize the board. Please start a new game and make sure you've set the corp to be player [A] in the lobby. Are you sure you want to continue?"): return
    debugNotify("Checking Illegality", 3)
-   deckStatus = checkDeckNoLimit(deck)
+   deckStatus = checkDeck(deck)
    if not deckStatus[0]:
       if not confirm("We have found illegal cards in your deck. Bypass?"): return
       else:
@@ -313,8 +314,8 @@ def intJackin(group, x = 0, y = 0):
    executePlayScripts(Identity,'STARTUP')
    initGame()
 
-def checkDeckNoLimit(group):
-   debugNotify(">>> checkDeckNoLimit(){}".format(extraASDebug())) #Debug
+def checkDeck(group):
+   debugNotify(">>> checkDeck(){}".format(extraASDebug())) #Debug
    global totalInfluence
    if not ds:
       whisper ("Choose a side first.")
@@ -329,7 +330,7 @@ def checkDeckNoLimit(group):
       ok = False
       notify ( ":::ERROR::: Only {} cards in {}'s Deck. {} Needed!".format(loDeckCount,me,num(identity.Requirement)))
    mute()
-   loAP = 0.0
+   loAP = 0
    loInf = 0
    loRunner = False
    agendasCount = 0
@@ -338,8 +339,12 @@ def checkDeckNoLimit(group):
    for card in group: card.moveTo(trash)
    if len(players) > 1: random = rnd(1,100) # Fix for multiplayer only. Makes Singleplayer setup very slow otherwise.
    debugNotify("About to check each card in the deck", 5) #Debug
+   counts = collections.defaultdict(int)
    for card in trash:
-      #if ok == False: continue # If we've already found illegal cards, no sense in checking anymore. Will activate this after checking
+      counts[card.name] += 1
+      if counts[card.name] > 3:
+         notify(":::ERROR::: Only 3 copies of {} allowed.".format(card.name))
+         ok = False
       if card.Type == 'Agenda':
          if ds == 'corp':
             loAP += num(card.Stat)
@@ -363,9 +368,11 @@ def checkDeckNoLimit(group):
             ok = False
    if len(players) > 1: random = rnd(1,100) # Fix for multiplayer only. Makes Singleplayer setup very slow otherwise.
    for card in trash: card.moveToBottom(group) # We use a second loop because we do not want to pause after each check
-   if ds == 'corp' and loAP/loDeckCount < 2.0/5.0:
-      notify(":::ERROR::: Only {} Agenda Points in {}'s R&D.".format(loAP/1,me))
-      ok = False
+   if ds == 'corp':
+      requiredAP = 2 + 2 * int(loDeckCount / 5)
+      if loAP not in (requiredAP, requiredAP + 1):
+         notify(":::ERROR::: {} cards requires {} or {} Agenda Points, found {}.".format(loDeckCount, requiredAP, requiredAP + 1, loAP))
+         ok = False
    if loInf > num(identity.Stat):
       notify(":::ERROR::: Too much rival faction influence in {}'s R&D. {} found with a max of {}".format(me, loInf, num(identity.Stat)))
       ok = False
@@ -413,7 +420,7 @@ def intRun(aCost = 1, Name = 'R&D', silent = False):
          myIdent.markers[mdict['BadPublicity']] += BadPub
          notify("--> The Bad Publicity of {} allows {} to secure {} for this run".format(enemyIdent,myIdent,uniCredit(BadPub)))
    debugNotify("Painting run Arrow", 2)
-   if Name != 'Remote': 
+   if Name != 'Remote':
       targetServer = getSpecial(Name,enemyIdent.controller)
       if not targetServer: abortArrow = True # If for some reason we can't find the relevant central server card (e.g. during debug), we abort gracefully
    else:
@@ -1212,7 +1219,7 @@ def accessTarget(group = table, x = 0, y = 0):
                extraText2 = '' # I only set this here, even though it's used in line 1190 later, because to reach that part, it will have to pass through this if clause always.
             action1TXT = 'Pay {}{} to Trash.'.format(num(card.Stat) - reduction,extraText)
          options = ["Leave where it is.","Force trash at no cost.\n(Only through card effects)",action1TXT]
-      else:                    
+      else:
          options = ["Leave where it is.","Force trash at no cost.\n(Only through card effects)"]
       choice = SingleChoice(title, options, 'button')
       if choice == None: choice = 0
@@ -1320,7 +1327,7 @@ def RDaccessX(group = table, x = 0, y = 0): # A function which looks at the top 
                extraText2 = ''
             action1TXT = 'Pay {}{} to Trash.'.format(num(cStat) - reduction,extraText)
          options = ["Leave where it is.","Force trash at no cost.\n(Only through card effects)",action1TXT]
-      else:                    
+      else:
          options = ["Leave where it is.","Force trash at no cost.\n(Only through card effects)"]
       choice = SingleChoice(title, options, 'button')
       if choice == None: choice = 0
@@ -1442,7 +1449,7 @@ def HQaccess(group=table, x=0,y=0, silent = False):
                extraText2 = ''
             action1TXT = 'Pay {}{} to Trash.'.format(num(revealedCard.Stat) - reduction,extraText)
          options = ["Leave where it is.","Force trash at no cost.\n(Only through card effects)",action1TXT]
-      else:                    
+      else:
          options = ["Leave where it is.","Force trash at no cost.\n(Only through card effects)"]
       debugNotify("Opening Choice Window", 2) #Debug
       choice = SingleChoice(title, options, 'button')
