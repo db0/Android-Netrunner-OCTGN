@@ -1717,7 +1717,7 @@ bc0f047c-01b1-427f-a439-d451eda02098
 -----
 
 +++++
-A0B0G0T0:Trace3-isSubroutine-traceEffects<Gain1Tags-onOpponent,None>
+A0B0G0T0:Trace2-isSubroutine-traceEffects<Gain1Tags-onOpponent,None>
 .....
 Simone Diego
 -----
