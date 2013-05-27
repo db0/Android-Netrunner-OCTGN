@@ -1585,7 +1585,10 @@ def RetrieveX(Autoscript, announceText, card, targetCards = None, notification =
    if re.search(r'-fromTrash', Autoscript) or re.search(r'-fromArchives', Autoscript) or re.search(r'-fromHeap', Autoscript):
       source = targetPL.piles['Heap/Archives(Face-up)']
    else: 
-      source = targetPL.piles['R&D/Stack']
+      debugNotify("Moving R&D/Stack to the scripting Pile", 2)
+      for c in targetPL.piles['R&D/Stack']: c.moveToBottom(me.ScriptingPile) # If the source is the R&D/Stack, then we move everything to the scripting pile in order to be able to read their properties. We move each new card to the bottom to preserve card order
+      source = me.ScriptingPile # # Then we change the source to that pile so that the rest of the script can process the right location.
+      rnd(1,10) # We give a delay to allow OCTGN to read the card properties before we proceed with checking them
    sourcePath =  "from their {}".format(pileName(source))
    if sourcePath == "from their Face-up Archives": sourcePath = "from their Archives"
    debugNotify("Setting Destination", 2)
@@ -1598,13 +1601,12 @@ def RetrieveX(Autoscript, announceText, card, targetCards = None, notification =
    debugNotify("Fething Script Variables", 2)
    count = num(action.group(1))
    multiplier = per(Autoscript, card, n, targetCards, notification)
-   if source != targetPL.piles['Heap/Archives(Face-up)']: # The discard pile is anyway visible.
-      cover = prepPile(source)
-   elif source == targetPL.piles['Heap/Archives(Face-up)'] and re.search(r'-fromArchives', Autoscript): # If we're flipping the
-      cover = prepPile(targetPL.piles['Archives(Hidden)'])
    restrictions = prepareRestrictions(Autoscript, seek = 'type')
    cardList = []
-   for c in source:
+   countRestriction = re.search(r'-onTop([0-9]+)Cards', Autoscript)
+   if countRestriction: topCount = num(countRestriction.group(1))
+   else: topCount = len(source)
+   for c in source.top(topCount):
       debugNotify("Checking card: {}".format(c), 4)
       if checkCardRestrictions(gatherCardProperties(c), restrictions):
          cardList.append(c)
@@ -1649,10 +1651,8 @@ def RetrieveX(Autoscript, announceText, card, targetCards = None, notification =
       tokensRegex = re.search(r'-with([A-Za-z0-9: ]+)', Autoscript) # If we have a -with in our autoscript, this is meant to put some tokens on the retrieved card.
       if tokensRegex: TokensX('Put{}'.format(tokensRegex.group(1)), announceText,c, n = n) 
    debugNotify("About to hide pile.", 2)
-   if source != targetPL.piles['Heap/Archives(Face-up)']:
-      restorePile(source, cover)
-   elif re.search(r'-fromArchives', Autoscript):
-      restorePile(targetPL.piles['Archives(Hidden)'], cover)   
+   if source == me.ScriptingPile: # If our source was the scripting pile, we know we just checked the R&D,
+      for c in source: c.moveToBottom(targetPL.piles['R&D/Stack']) # So we return cards to their original location
    debugNotify("About to announce.", 2)
    if len(chosenCList) == 0: announceString = "{} attempts to {} a card {}, but there were no valid targets.".format(announceText, destiVerb, sourcePath)
    else: announceString = "{} {} {} {}{}.".format(announceText, destiVerb, [c.name for c in chosenCList], sourcePath,MUtext)

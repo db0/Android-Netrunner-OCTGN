@@ -1258,8 +1258,6 @@ def RDaccessX(group = table, x = 0, y = 0): # A function which looks at the top 
    if debugVerbosity >= 4:
       for card in RDtop: notify(" Card: {}".format(card))
    notify("{} is accessing the top {} cards of {}'s R&D".format(me,count,targetPL))
-   cover = table.create("ac3a3d5d-7e3a-4742-b9b2-7f72596d9c1b",0,0,1,True) # Creating a dummy card to cover that player's archives in case they're empty
-   cover.moveTo(me.ScriptingPile) # Moving that dummy card on top of their archives
    for iter in range(len(RDtop)):
       debugNotify("Moving card {}".format(iter), 3) #Debug
       notify(" -- {} is now accessing the {} card".format(me,numOrder(iter)))
@@ -1350,7 +1348,6 @@ def RDaccessX(group = table, x = 0, y = 0): # A function which looks at the top 
             notify("{} paid {}{} to {} {}".format(me,uniCredit(num(cStat) - reduction),extraText2,uniTrash(),RDtop[iter]))
             removedCards += 1
       else: continue
-   cover.moveTo(shared.exile) # now putting the cover card to the exile deck that nobody looks at.
    notify("{} has finished accessing {}'s R&D".format(me,targetPL))
    gatheredCardList = False  # We set this variable to False, so that reduceCost() calls from other functions can start scanning the table again.
    debugNotify("<<< RDaccessX()", 3)
