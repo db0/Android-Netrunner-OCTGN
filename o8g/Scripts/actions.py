@@ -196,49 +196,49 @@ def createStartingCards():
       debugNotify(">>> createStartingCards()") #Debug
       if ds == "corp":
          if debugVerbosity >= 5: information("Creating Trace Card")
-         traceCard = table.create("eb7e719e-007b-4fab-973c-3fe228c6ce20", 510, 200, 1, True) #The Trace card
+         traceCard = table.create("eb7e719e-007b-4fab-973c-3fe228c6ce20", 569, 163, 1, True) #The Trace card
          storeSpecial(traceCard)
          if debugVerbosity >= 5: information("Creating HQ")
-         HQ = table.create("81cba950-9703-424f-9a6f-af02e0203762", 0, 0, 1, True)
-         HQ.moveToTable(125, 185) # MoveToTable is accurate. Table.create isn't.
+         HQ = table.create("81cba950-9703-424f-9a6f-af02e0203762", 169, 188, 1, True)
+         HQ.moveToTable(169, 188) # MoveToTable is accurate. Table.create isn't.
          storeSpecial(HQ) # We pass control of the centrals to the runner, so that they can double click them to start runs
          HQ.setController(findOpponent())
          if debugVerbosity >= 5: information("Creating R&D")
-         RD = table.create("fbb865c9-fccc-4372-9618-ae83a47101a2", 0, 0, 1, True)
-         RD.moveToTable(245, 185)
+         RD = table.create("fbb865c9-fccc-4372-9618-ae83a47101a2", 277, 188, 1, True)
+         RD.moveToTable(277, 188)
          storeSpecial(RD)
          RD.setController(findOpponent())
          if debugVerbosity >= 5: information("Creating Archives")
-         ARC = table.create("47597fa5-cc0c-4451-943b-9a14417c2007", 0, 0, 1, True)
-         ARC.moveToTable(363, 185)
+         ARC = table.create("47597fa5-cc0c-4451-943b-9a14417c2007", 382, 188, 1, True)
+         ARC.moveToTable(382, 188)
          storeSpecial(ARC)
          ARC.setController(findOpponent())
          if debugVerbosity >= 5: information("Creating Virus Scan")
-         AV = table.create("23473bd3-f7a5-40be-8c66-7d35796b6031", 0, 0, 1, True) # The Virus Scan card.
-         AV.moveToTable(510, 127)
+         AV = table.create("23473bd3-f7a5-40be-8c66-7d35796b6031", 478, 165, 1, True) # The Virus Scan card.
+         AV.moveToTable(478, 165)
          storeSpecial(AV)
          try:
-            BTN = table.create("fb146e53-714b-4b29-861a-d58ca9840c00", 0, 0, 1, True) # The No Rez Button
+            BTN = table.create("fb146e53-714b-4b29-861a-d58ca9840c00", -652, 150, 1, True) # The No Rez Button
             BTN.moveToTable(-652, 150)
-            BTN = table.create("e904542b-83db-4022-9e8e-9369fe7bc761", 0, 0, 1, True) # The OK Button
+            BTN = table.create("e904542b-83db-4022-9e8e-9369fe7bc761", -652, 220, 1, True) # The OK Button
             BTN.moveToTable(-652, 220)
-            BTN = table.create("0887f64f-4fe8-4a5b-9d41-77408fe0224b", 0, 0, 1, True) # The Wait Button
+            BTN = table.create("0887f64f-4fe8-4a5b-9d41-77408fe0224b", -652, 290, 1, True) # The Wait Button
             BTN.moveToTable(-652, 290)
          except: delayed_whisper("!!!ERROR!!! In createStartingCards()\n!!! Please Install Markers Set v2.2.1+ !!!")
       else:
          if debugVerbosity >= 5: information("Creating Trace Card")
-         traceCard = table.create("eb7e719e-007b-4fab-973c-3fe228c6ce20", 566, -323, 1, True) #The Trace card
-         traceCard.moveToTable(345, -345) # Otherwise it's bugging out
+         traceCard = table.create("eb7e719e-007b-4fab-973c-3fe228c6ce20", 342, -349, 1, True) #The Trace card
+         traceCard.moveToTable(342, -349) # Otherwise it's bugging out
          storeSpecial(traceCard)
          #TC = table.create("71a89203-94cd-42cd-b9a8-15377caf4437", 471, -325, 1, True) # The Technical Difficulties card.
          #TC.moveToTable(471, -325) # It's never creating them in the right place. Move is accurate.
          #storeSpecial(TC)
          try:
-            BTN = table.create("33ac6951-93ec-4034-9578-0d7dcc77c3f8", 0, 0, 1, True) # The Access Imminent Button
+            BTN = table.create("33ac6951-93ec-4034-9578-0d7dcc77c3f8", -641, -230, 1, True) # The Access Imminent Button
             BTN.moveToTable(-641, -230)
-            BTN = table.create("e904542b-83db-4022-9e8e-9369fe7bc761", 0, 0, 1, True) # The OK Button
+            BTN = table.create("e904542b-83db-4022-9e8e-9369fe7bc761", -641, -300, 1, True) # The OK Button
             BTN.moveToTable(-641, -300)
-            BTN = table.create("0887f64f-4fe8-4a5b-9d41-77408fe0224b", 0, 0, 1, True) # The Wait Button
+            BTN = table.create("0887f64f-4fe8-4a5b-9d41-77408fe0224b", -641, -370, 1, True) # The Wait Button
             BTN.moveToTable(-641, -370)
          except: delayed_whisper("!!!ERROR!!! In createStartingCards()\n!!! Please Install Markers Set v2.2.1+ !!!")
    except: notify("!!!ERROR!!! {} - In createStartingCards()\n!!! PLEASE INSTALL MARKERS SET FILE !!!".format(me))
@@ -289,13 +289,13 @@ def intJackin(group, x = 0, y = 0):
    debugNotify("Placing Identity", 3)
    debugNotify("Identity is: {}".format(Identity), 3)
    if ds == "corp":
-      Identity.moveToTable(125, 240)
+      Identity.moveToTable(169, 245)
       rnd(1,10) # Allow time for the ident to be recognised
       maxClicks = 3
       me.MU = 0
       notify("{} is the CEO of the {} Corporation".format(me,Identity))
    else:
-      Identity.moveToTable(105, -345)
+      Identity.moveToTable(103, -349)
       rnd(1,10)  # Allow time for the ident to be recognised
       maxClicks = 4
       me.MU = 4
