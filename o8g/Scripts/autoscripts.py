@@ -1932,8 +1932,9 @@ def CustomScript(card, action = 'PLAY'): # Scripts that are complex and fairly u
          debugNotify("Pulling cards to hand", 3) #Debug
          c.moveTo(me.hand)
          debugNotify(" Looping...", 4)
-         loopChk(card)
+         loopChk(c)
          storeProperties(c)
+      rnd(1,100) # A delay because it bugs out
       debugNotify("StackTop: {} in hand".format([c.name for c in StackTop])) #Debug
       returnChoice = SingleChoice('Select a card to put to the botton of your Stack', makeChoiceListfromCardList(StackTop, True), type = 'button', default = 0)
       StackTop[returnChoice].moveToBottom(me.piles['R&D/Stack'])

@@ -1,6 +1,15 @@
 Changelog - Android:Netrunner LCG OCTGN Game Definition
 ===============================================
 
+### 3.1.4.x
+
+* Added new background
+* Added new board
+* Repositioned cards to fit with the new board.
+* Fixed Mr. Li's talking about the wrong cards.
+* Reworked code to avoid https://github.com/kellyelton/OCTGN/issues/878
+* Changed the Virus Scan card.
+
 ### 3.1.3.x
 
 * Fixed Darwin, Faerie, Deep Thought not having MU requirement
