@@ -490,27 +490,15 @@ def displaymatch(match):
 def storeProperties(card, forced = False): # Function that grabs a cards important properties and puts them in a dictionary
    mute()
    try:
-      coverExists = False
       debugNotify(">>> storeProperties(){}".format(extraASDebug())) #Debug
       global Stored_Name, Stored_Cost, Stored_Type, Stored_Keywords, Stored_AutoActions, Stored_AutoScripts, identName
       if (card.Name == '?' and Stored_Name.get(card._id,'?') == '?') or forced:
-         if not card.isFaceUp and card.group == table:
-            debugNotify("Adding Cover", 2)
-            x,y = card.position
-            cover = table.create("ac3a3d5d-7e3a-4742-b9b2-7f72596d9c1b",x,y,1,False)
-            cover.moveToTable(x,y,False)
-            if card.orientation == Rot90: cover.orientation = Rot90
-            coverExists = True
-            card.isFaceUp = True
-            loopcount = 0
-            while card.name == 'Card':
-               debugNotify("Loop {} while searching for properties".format(loopcount), 4)
-               rnd(1,10)
-               loopcount += 1
-               if loopcount == 5:
-                  whisper(":::Error::: Card properties can't be grabbed. Aborting!")
-                  break
-      if Stored_Type.get(card._id,'?') == '?' or (Stored_Name.get(card._id,'?') != card.Name and card.Name != '?') or forced:
+         if not card.isFaceUp and card.group == table and (card.controller == me or forced): # If card is not ours and it's face down, we cannot store its properties without revealing it to the player via the full game log
+                                                                                             # See https://github.com/kellyelton/OCTGN/issues/879
+            debugNotify("Peeking Card", 2)
+            card.peek()
+            loopChk(card)
+      if (Stored_Name.get(card._id,'?') == '?' and card.Name != '?') or (Stored_Name.get(card._id,'?') != card.Name and card.Name != '?') or forced:
          debugNotify("{} not stored. Storing...".format(card), 3)
          Stored_Name[card._id] = card.Name
          Stored_Cost[card._id] = card.Cost
@@ -519,18 +507,14 @@ def storeProperties(card, forced = False): # Function that grabs a cards importa
          Stored_AutoActions[card._id] = CardsAA.get(card.model,'')
          Stored_AutoScripts[card._id] = CardsAS.get(card.model,'')
          if card.Type == 'Identity' and card.owner == me: identName = card.Name
-      if coverExists:
-         debugNotify("Removing Cover", 2)
-         card.isFaceUp = False
-         if card.controller == me: card.peek()
-         rnd(1,10) # To give time to the card facedown automation to complete.
-         cover.moveTo(shared.exile) # now destorying cover card
+      elif card.Name == '?':
+         debugNotify("Could not store card properties because it is hidden from us")
+         return 'ABORT'
       debugNotify("<<< storeProperties()", 3)
    except: notify("!!!ERROR!!! In storeProperties()")
 
 def fetchProperty(card, property): 
    mute()
-   coverExists = False
    debugNotify(">>> fetchProperty(){}".format(extraASDebug())) #Debug
    if property == 'name' or property == 'Name': currentValue = Stored_Name.get(card._id,'?')
    elif property == 'Cost': currentValue = Stored_Cost.get(card._id,'?')
@@ -541,26 +525,16 @@ def fetchProperty(card, property):
    else: currentValue = card.properties[property]
    if currentValue == '?' or currentValue == 'Card':
       debugNotify("Card property: {} unreadable = {}".format(property,currentValue), 4) #Debug
-      if not card.isFaceUp and card.group == table:
-         debugNotify("Need to flip card up to read its properties.", 3) #Debug
-         x,y = card.position
-         cover = table.create("ac3a3d5d-7e3a-4742-b9b2-7f72596d9c1b",x,y,1,False)
-         cover.moveToTable(x,y,False)
-         if card.orientation == Rot90: cover.orientation = Rot90
-         coverExists = True
-         card.isFaceUp = True
+      if not card.isFaceUp and card.group == table and card.controller == me:
+         debugNotify("Need to peek card to read its properties.", 3) #Debug
+         card.peek()
          loopChk(card)
       debugNotify("Ready to grab real properties.", 3) #Debug
-      if property == 'name': currentValue = card.name # Now that we had a chance to flip the card face up temporarily, we grab its property again.
+      if property == 'name': currentValue = card.Name # Now that we had a chance to peek at the card, we grab its property again.
       else: 
          currentValue = card.properties[property]
          debugNotify("Grabbing {}'s {} manually: {}.".format(card,property,card.properties[property]), 3)
          #storeProperties(card) # Commented out because putting it here can cause an infinite loop
-   if coverExists: 
-      card.isFaceUp = False
-      if card.controller == me: card.peek()
-      rnd(1,10) # To give time to the card facedown automation to complete.
-      cover.moveTo(shared.exile) # now destorying cover card
    debugNotify("<<< fetchProperty() by returning: {}".format(currentValue), 3)
    if not currentValue: currentValue = ''
    return currentValue

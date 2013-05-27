@@ -863,6 +863,7 @@ def reduceCost(card, action = 'REZ', fullCost = 0, dryRun = False):
       debugNotify("cTuple[2] (i.e. autoS) is: {}".format(autoS), 4) #Debug
       if reductionSearch.group(4) == 'All' or checkCardRestrictions(gatherCardProperties(card), prepareRestrictions(autoS)):
          debugNotify(" ### Search match! Reduction Value is {}".format(reductionSearch.group(2)), 3) # Debug
+         if not checkSpecialRestrictions(autoS,c): continue
          if re.search(r'onlyOnce',autoS):
             if dryRun: # For dry Runs we do not want to add the "Activated" token on the card.
                if oncePerTurn(c, act = 'dryRun') == 'ABORT': continue

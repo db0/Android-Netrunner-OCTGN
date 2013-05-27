@@ -1932,7 +1932,9 @@ def CustomScript(card, action = 'PLAY'): # Scripts that are complex and fairly u
          debugNotify("Pulling cards to hand", 3) #Debug
          c.moveTo(me.hand)
          debugNotify(" Looping...", 4)
-         loopChk(c,'Type')
+         loopChk(card)
+         storeProperties(c)
+      debugNotify("StackTop: {} in hand".format([c.name for c in StackTop])) #Debug
       returnChoice = SingleChoice('Select a card to put to the botton of your Stack', makeChoiceListfromCardList(StackTop, True), type = 'button', default = 0)
       StackTop[returnChoice].moveToBottom(me.piles['R&D/Stack'])
       catchwords = ["Excellent.","Don't leave town.","We'll be in touch.","We'll be seeing you soon...","Always a pleasure.","Remember our agreement.","Interesting request there."]
@@ -2133,19 +2135,19 @@ def findTarget(Autoscript, fromHand = False, card = None): # Function for findin
    except: notify("!!!ERROR!!! on findTarget()")   
    
 def gatherCardProperties(card,Autoscript = ''):
-   debugNotify(">>> gatherCardProperties()") #Debug
-   storeProperties(card) # We store the card properties so that we don't start flipping the cards over each time.
+   debugNotify(">>> gatherCardProperties()") #Debug     
    cardProperties = []
-   debugNotify("Appending name", 4) #Debug                
-   cardProperties.append(card.Name) # We are going to check its name
-   debugNotify("Appending Type", 4) #Debug                
-   cardProperties.append(fetchProperty(card, 'Type')) # We are going to check its Type
-   debugNotify("Appending Keywords", 4) #Debug                
-   cardSubkeywords = getKeywords(card).split('-') # And each individual keyword. keywords are separated by " - "
-   for cardSubkeyword in cardSubkeywords:
-      strippedCS = cardSubkeyword.strip() # Remove any leading/trailing spaces between keywords. We need to use a new variable, because we can't modify the loop iterator.
-      if strippedCS: cardProperties.append(strippedCS) # If there's anything left after the stip (i.e. it's not an empty string anymrore) add it to the list.
-   debugNotify("<<< gatherCardProperties() with Card Properties: {}".format(cardProperties), 3) #Debug
+   if storeProperties(card) != 'ABORT': # We store the card properties so that we don't start flipping the cards over each time.
+      debugNotify("Appending name", 4) #Debug                
+      cardProperties.append(fetchProperty(card, 'Name')) # We are going to check its name
+      debugNotify("Appending Type", 4) #Debug                
+      cardProperties.append(fetchProperty(card, 'Type')) # We are going to check its Type
+      debugNotify("Appending Keywords", 4) #Debug                
+      cardSubkeywords = getKeywords(card).split('-') # And each individual keyword. keywords are separated by " - "
+      for cardSubkeyword in cardSubkeywords:
+         strippedCS = cardSubkeyword.strip() # Remove any leading/trailing spaces between keywords. We need to use a new variable, because we can't modify the loop iterator.
+         if strippedCS: cardProperties.append(strippedCS) # If there's anything left after the stip (i.e. it's not an empty string anymrore) add it to the list.
+      debugNotify("<<< gatherCardProperties() with Card Properties: {}".format(cardProperties), 3) #Debug
    return cardProperties
 
 def prepareRestrictions(Autoscript, seek = 'target'):
@@ -2217,6 +2219,7 @@ def checkSpecialRestrictions(Autoscript,card):
    debugNotify("Card: {}".format(card)) #Debug
    validCard = True
    if not chkPlayer(Autoscript, card.controller, False, True): validCard = False
+   if re.search(r'isICE',Autoscript) and card.orientation != Rot90: validCard = False # We made a special check for ICE, because some cards must be able target face-down ICE without being able to read its properties.
    if re.search(r'isRezzed',Autoscript) and not card.isFaceUp: validCard = False
    if re.search(r'isUnrezzed',Autoscript) and card.isFaceUp: validCard = False
    markerName = re.search(r'-hasMarker{([\w ]+)}',Autoscript) # Checking if we need specific markers on the card.
@@ -2248,6 +2251,7 @@ def makeChoiceListfromCardList(cardList,includeText = False):
 # A function that returns a list of strings suitable for a choice menu, out of a list of cards
 # Each member of the list includes a card's name, traits, resources, markers and, if applicable, combat icons
    debugNotify(">>> makeChoiceListfromCardList()")
+   debugNotify("cardList: {}".format([c.name for c in cardList]), 2)
    targetChoices = []
    debugNotify("About to prepare choices list.", 2)# Debug
    for T in cardList:

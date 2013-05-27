@@ -470,7 +470,9 @@ def orgAttachments(card):
    else: 
       debugNotify("No specialHostPlacementAlgs", 3)
       xAlg = 0 # The Default placement on the X axis, is to place the attachments at the same X as their parent
-      yAlg =  -(cwidth(card) / 4 * playerside) # Defaults
+      if card.controller == me: sideOffset = playerside # If it's our card, we need to assign it towards our side
+      else: sideOffset = playerside * -1 # Otherwise we assign it towards the opponent's side
+      yAlg =  -(cwidth(card) / 4 * sideOffset) # Defaults
    hostCards = eval(getGlobalVariable('Host Cards'))
    cardAttachements = [Card(att_id) for att_id in hostCards if hostCards[att_id] == card._id]
    x,y = card.position

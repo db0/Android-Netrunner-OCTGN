@@ -378,7 +378,7 @@ Femme Fatale
 -----
 bc0f047c-01b1-427f-a439-d451eda01026
 -----
-onInstall:Put1Femme Fatale-Targeted-atICE-isOptional
+onInstall:Put1Femme Fatale-Targeted-isICE-isOptional
 +++++
 A0B1G0T0:SimplyAnnounce{break sentry subroutine}||A0B2G0T0:Put1PlusOne||A0B0G0T0:RequestInt-Msg{How many subroutines does the target ice have?}$$Lose1Credits-perX-isCost$$SimplyAnnounce{bypass target ice}	
 .....
@@ -874,7 +874,7 @@ Tinkering
 -----
 bc0f047c-01b1-427f-a439-d451eda01037
 -----
-onPlay:Put1Keyword:Sentry-Targeted-atICE-isSilent$$Put1Keyword:Code Gate-Targeted-atICE-isSilent$$Put1Keyword:Barrier-Targeted-atICE-isSilent$$Put1Tinkering-Targeted-atICE
+onPlay:Put1Keyword:Sentry-Targeted-isICE-isSilent$$Put1Keyword:Code Gate-Targeted-isICE-isSilent$$Put1Keyword:Barrier-Targeted-isICE-isSilent$$Put1Tinkering-Targeted-isICE
 +++++
 	
 .....
@@ -980,7 +980,7 @@ bc0f047c-01b1-427f-a439-d451eda02005
 -----
 
 +++++
-A0B0G0T1:Put1Cortez Chip-Targeted-onICE
+A0B0G0T1:Put1Cortez Chip-Targeted-isICE
 .....
 Draco
 -----
@@ -1308,7 +1308,7 @@ bc0f047c-01b1-427f-a439-d451eda02045
 -----
 
 +++++
-A0B0G0T0:ExposeTarget-Targeted-atICE
+A0B0G0T0:ExposeTarget-Targeted-isICE
 .....
 Public Sympathy
 -----
@@ -1330,7 +1330,7 @@ Commercialization
 -----
 bc0f047c-01b1-427f-a439-d451eda02058
 -----
-onPlay:Gain1Credits-perTargetMarker{Advancement}-Targeted-onICE
+onPlay:Gain1Credits-perTargetMarker{Advancement}-Targeted-atICE
 +++++
 
 .....
@@ -1586,7 +1586,7 @@ Xanadu
 -----
 bc0f047c-01b1-427f-a439-d451eda02082
 -----
-whileRezzed:Increase1CostRez-forICE-forOpponent
+whileRezzed:Increase1CostRez-isICE-forOpponent
 +++++
 
 .....
