@@ -334,13 +334,12 @@ def checkDeck(group):
    loInf = 0
    loRunner = False
    agendasCount = 0
-   trash = me.piles['Archives(Hidden)'] # We use the hidden archives so that the opponent can't see the cards as we check them
-   debugNotify("About to move cards into trash", 5) #Debug
-   for card in group: card.moveTo(trash)
+   debugNotify("About to move cards into me.ScriptingPile", 5) #Debug
+   for card in group: card.moveTo(me.ScriptingPile)
    if len(players) > 1: random = rnd(1,100) # Fix for multiplayer only. Makes Singleplayer setup very slow otherwise.
    debugNotify("About to check each card in the deck", 5) #Debug
    counts = collections.defaultdict(int)
-   for card in trash:
+   for card in me.ScriptingPile:
       counts[card.name] += 1
       if counts[card.name] > 3:
          notify(":::ERROR::: Only 3 copies of {} allowed.".format(card.name))
@@ -367,7 +366,7 @@ def checkDeck(group):
             notify(":::ERROR::: Faction-restricted card ({}) found in {}'s {}.".format(fetchProperty(card, 'name'), me, pileName(group)))
             ok = False
    if len(players) > 1: random = rnd(1,100) # Fix for multiplayer only. Makes Singleplayer setup very slow otherwise.
-   for card in trash: card.moveToBottom(group) # We use a second loop because we do not want to pause after each check
+   for card in me.ScriptingPile: card.moveToBottom(group) # We use a second loop because we do not want to pause after each check
    if ds == 'corp':
       requiredAP = 2 + 2 * int(loDeckCount / 5)
       if loAP not in (requiredAP, requiredAP + 1):
@@ -1260,11 +1259,11 @@ def RDaccessX(group = table, x = 0, y = 0): # A function which looks at the top 
       for card in RDtop: notify(" Card: {}".format(card))
    notify("{} is accessing the top {} cards of {}'s R&D".format(me,count,targetPL))
    cover = table.create("ac3a3d5d-7e3a-4742-b9b2-7f72596d9c1b",0,0,1,True) # Creating a dummy card to cover that player's archives in case they're empty
-   cover.moveTo(targetPL.piles['Heap/Archives(Face-up)']) # Moving that dummy card on top of their archives
+   cover.moveTo(me.ScriptingPile) # Moving that dummy card on top of their archives
    for iter in range(len(RDtop)):
       debugNotify("Moving card {}".format(iter), 3) #Debug
       notify(" -- {} is now accessing the {} card".format(me,numOrder(iter)))
-      RDtop[iter].moveToBottom(targetPL.piles['Heap/Archives(Face-up)'])
+      RDtop[iter].moveToBottom(me.ScriptingPile)
       debugNotify(" Looping...", 4)
       loopChk(RDtop[iter],'Type')
       accessRegex = re.search(r'onAccess:([^|]+)',CardsAS.get(RDtop[iter].model,''))
@@ -1746,7 +1745,7 @@ def exileCard(card, silent = False):
          me.counters['Agenda Points'].value -= num(card.Stat) # Trashing Agendas for any reason, now takes they value away as well.
          notify("--> {} loses {} Agenda Points".format(me, card.Stat))
       if card.highlight != RevealedColor: executePlayScripts(card,'TRASH') # We don't want to run automations on simply revealed cards.
-      card.moveTo(shared.exile)
+      card.moveTo(card.owner.piles['Removed from Game'])
    if not silent: notify("{} exiled {}{}.".format(me,card,MUtext))
 
 def uninstall(card, x=0, y=0, destination = 'hand', silent = False):

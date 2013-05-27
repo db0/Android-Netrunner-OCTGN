@@ -189,6 +189,8 @@
          <groupaction menu="Move all to Archives" default="False" execute="toarchives" />
          <groupaction menu="Move all to R&amp;D/Stack" default="False" execute="archivestoStack" />
       </group>
+		<group name="Removed from Game" visibility="all" ordered="False" width="63" height="88" icon="Groups/Exile.png" collapsed="True" />
+		<group name="ScriptingPile" visibility="me" ordered="False" width="63" height="88" icon="Groups/hand.png" collapsed="True" />
       <counter name="Clicks" default="0" reset="True" icon="Counters/Click.png" />
       <counter name="Credits" default="0" reset="True" icon="Counters/Credit.png" />
       <counter name="MU" default="0" reset="True" icon="Counters/MU.png" />
