@@ -65,8 +65,8 @@ automatedMarkers = [] #Used in the Inspect() command to let the player know if t
 
 place = dict( # A table holding tuples with the original location various card types are expected to start their setup
             Hardware =              (100, -214, 10, 8, 1),  # 1st value is X, second is Y third is Offset (i.e. how far from the other cards (in pixel size) each extra copy should be played. Negative values means it will fall on top of the previous ones slightly) 
-            Program =               (-16, -216, 10, 10, -1), # 4th value is Loop Limit (i.e. at how many cards after the first do we loop back to the first position. Loop is always slightly offset, so as not to hide the previous ones completely)
-            Resource =              (-16, -349, 10, 10, -1), # Last value is wether the cards will be placed towards the right or left. -1 means to the left.
+            Program =               (-16, -216, 10, 9, -1), # 4th value is Loop Limit (i.e. at how many cards after the first do we loop back to the first position. Loop is always slightly offset, so as not to hide the previous ones completely)
+            Resource =              (-16, -349, 10, 9, -1), # Last value is wether the cards will be placed towards the right or left. -1 means to the left.
             Event =                 (435, -351, 10, 3, 1),
             Console =               (221, -349, 0, 1, 1),
             scoredAgenda =          (477, 54, -30, 6, 1),

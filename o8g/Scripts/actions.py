@@ -218,12 +218,12 @@ def createStartingCards():
          AV.moveToTable(478, 165)
          storeSpecial(AV)
          try:
-            BTN = table.create("fb146e53-714b-4b29-861a-d58ca9840c00", -652, 150, 1, True) # The No Rez Button
-            BTN.moveToTable(-652, 150)
-            BTN = table.create("e904542b-83db-4022-9e8e-9369fe7bc761", -652, 220, 1, True) # The OK Button
-            BTN.moveToTable(-652, 220)
-            BTN = table.create("0887f64f-4fe8-4a5b-9d41-77408fe0224b", -652, 290, 1, True) # The Wait Button
-            BTN.moveToTable(-652, 290)
+            BTN = table.create("fb146e53-714b-4b29-861a-d58ca9840c00", -655, 150, 1, True) # The No Rez Button
+            BTN.moveToTable(-655, 150)
+            BTN = table.create("e904542b-83db-4022-9e8e-9369fe7bc761", -655, 220, 1, True) # The OK Button
+            BTN.moveToTable(-655, 220)
+            BTN = table.create("0887f64f-4fe8-4a5b-9d41-77408fe0224b", -655, 290, 1, True) # The Wait Button
+            BTN.moveToTable(-655, 290)
          except: delayed_whisper("!!!ERROR!!! In createStartingCards()\n!!! Please Install Markers Set v2.2.1+ !!!")
       else:
          if debugVerbosity >= 5: information("Creating Trace Card")
@@ -234,12 +234,12 @@ def createStartingCards():
          #TC.moveToTable(471, -325) # It's never creating them in the right place. Move is accurate.
          #storeSpecial(TC)
          try:
-            BTN = table.create("33ac6951-93ec-4034-9578-0d7dcc77c3f8", -641, -230, 1, True) # The Access Imminent Button
-            BTN.moveToTable(-641, -230)
-            BTN = table.create("e904542b-83db-4022-9e8e-9369fe7bc761", -641, -300, 1, True) # The OK Button
-            BTN.moveToTable(-641, -300)
-            BTN = table.create("0887f64f-4fe8-4a5b-9d41-77408fe0224b", -641, -370, 1, True) # The Wait Button
-            BTN.moveToTable(-641, -370)
+            BTN = table.create("33ac6951-93ec-4034-9578-0d7dcc77c3f8", -655, -230, 1, True) # The Access Imminent Button
+            BTN.moveToTable(-655, -230)
+            BTN = table.create("e904542b-83db-4022-9e8e-9369fe7bc761", -655, -300, 1, True) # The OK Button
+            BTN.moveToTable(-655, -300)
+            BTN = table.create("0887f64f-4fe8-4a5b-9d41-77408fe0224b", -655, -370, 1, True) # The Wait Button
+            BTN.moveToTable(-655, -370)
          except: delayed_whisper("!!!ERROR!!! In createStartingCards()\n!!! Please Install Markers Set v2.2.1+ !!!")
    except: notify("!!!ERROR!!! {} - In createStartingCards()\n!!! PLEASE INSTALL MARKERS SET FILE !!!".format(me))
 
