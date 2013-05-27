@@ -4,7 +4,7 @@ Changelog - Android:Netrunner LCG OCTGN Game Definition
 ### 3.1.4.x
 
 * Added new background
-* Added new board
+* Added new board (Many many thanks to [Simon Gunkel](http://boardgamegeek.com/user/susuexp)
 * Repositioned cards to fit with the new board.
 * Fixed Mr. Li's talking about the wrong cards.
 * Reworked code to avoid https://github.com/kellyelton/OCTGN/issues/878
