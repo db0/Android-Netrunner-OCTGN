@@ -136,7 +136,7 @@ def executePlayScripts(card, action):
          #elif action == 'DEREZ' or action == 'TRASH': continue # If it's just a one-off event, and we're trashing it, then do nothing.
          else: Removal = False
          targetC = findTarget(activeAutoscript)
-         targetPL = ofwhom(activeAutoscript,card.controller) # So that we know to announce the right person the effect, affects.
+         targetPL = ofwhom(activeAutoscript,card.owner) # So that we know to announce the right person the effect, affects.
          announceText = "{} uses {}'s ability to".format(targetPL,card)
          debugNotify(" targetC: {}".format(targetC), 3) # Debug
          if effect.group(1) == 'Gain' or effect.group(1) == 'Lose':
@@ -811,7 +811,7 @@ def redirect(Autoscript, card, announceText = None, notificationType = 'Quick', 
    debugNotify(">>> redirect(){}".format(extraASDebug(Autoscript))) #Debug
    if re.search(r':Pass\b', Autoscript): return # Pass is a simple command of doing nothing ^_^
    targetC = findTarget(Autoscript)
-   targetPL = ofwhom(Autoscript,card.controller) # So that we know to announce the right person the effect, affects.
+   targetPL = ofwhom(Autoscript,card.owner) # So that we know to announce the right person the effect, affects.
    if not announceText: announceText = "{} uses {}'s ability to".format(targetPL,card) 
    debugNotify(" targetC: {}. Notification Type = {}".format(targetC,notificationType), 3) # Debug
    if regexHooks['GainX'].search(Autoscript):
@@ -875,7 +875,7 @@ def GainX(Autoscript, announceText, card, targetCards = None, notification = Non
    actiontypeRegex = re.search(r'actiontype([A-Z]+)',Autoscript) # This is used by some scripts so that they do not use the triggered action as the type of action that triggers the effect. For example, Draco's ability is not a "Rez" action and thus its cost is not affected by card that affect ICE rez costs, like Project Braintrust
    if actiontypeRegex: actionType = actiontypeRegex.group(1)
    gain += num(action.group(2))
-   targetPL = ofwhom(Autoscript, card.controller)
+   targetPL = ofwhom(Autoscript, card.owner)
    if targetPL != me: 
       otherTXT = ' force {} to'.format(targetPL)
       if action.group(1) == 'Lose': actionType = 'Force'
@@ -1156,7 +1156,7 @@ def DrawX(Autoscript, announceText, card, targetCards = None, notification = Non
    if targetCards is None: targetCards = []
    destiVerb = 'draw'
    action = re.search(r'\bDraw([0-9]+)Card', Autoscript)
-   targetPL = ofwhom(Autoscript, card.controller)
+   targetPL = ofwhom(Autoscript, card.owner)
    if targetPL != me: destiVerb = 'move'
    if re.search(r'-fromTrash', Autoscript): source = targetPL.piles['Heap/Archives(Face-up)']
    else: source = targetPL.piles['R&D/Stack']
@@ -1198,7 +1198,7 @@ def DiscardX(Autoscript, announceText, card, targetCards = None, notification = 
    debugNotify(">>> DiscardX(){}".format(extraASDebug(Autoscript))) #Debug
    if targetCards is None: targetCards = []
    action = re.search(r'\bDiscard([0-9]+)Card', Autoscript)
-   targetPL = ofwhom(Autoscript, card.controller)
+   targetPL = ofwhom(Autoscript, card.owner)
    if targetPL != me: otherTXT = ' force {} to'.format(targetPL)
    else: otherTXT = ''
    discardNR = num(action.group(1))
@@ -1247,7 +1247,7 @@ def ShuffleX(Autoscript, announceText, card, targetCards = None, notification = 
    if targetCards is None: targetCards = []
    mute()
    action = re.search(r'\bShuffle([A-Za-z& ]+)', Autoscript)
-   targetPL = ofwhom(Autoscript, card.controller)
+   targetPL = ofwhom(Autoscript, card.owner)
    if action.group(1) == 'Trash' or action.group(1) == 'Archives': pile = targetPL.piles['Heap/Archives(Face-up)']
    elif action.group(1) == 'Stack' or action.group(1) == 'R&D': pile = targetPL.piles['R&D/Stack']
    elif action.group(1) == 'Hidden Archives': pile = targetPL.piles['Archives(Hidden)']
@@ -1922,8 +1922,8 @@ def CustomScript(card, action = 'PLAY'): # Scripts that are complex and fairly u
             MUtext = chkRAM(selectedCard)
             notify("--> {} has been built{} from {}'s Personal Workshop{}".format(selectedCard,extraTXT,identName,MUtext))         
    elif fetchProperty(card, 'name') == 'Mr. Li' and action == 'USE':
-      actionCost = useClick(count = 1)
-      if actionCost == 'ABORT': return
+      ClickCost = useClick(count = 1)
+      if ClickCost == 'ABORT': return
       StackTop = list(me.piles['R&D/Stack'].top(2))
       if len(StackTop) < 2:
          whisper("Your Stack is does not have enough cards. You cannot take this action")
@@ -1940,7 +1940,7 @@ def CustomScript(card, action = 'PLAY'): # Scripts that are complex and fairly u
       StackTop[returnChoice].moveToBottom(me.piles['R&D/Stack'])
       catchwords = ["Excellent.","Don't leave town.","We'll be in touch.","We'll be seeing you soon...","Always a pleasure.","Remember our agreement.","Interesting request there."]
       goodbye = catchwords.pop(rnd(0, len(catchwords) - 1))
-      notify('{} procures 1 card for {}.\n- "{}"'.format(card,me,goodbye))
+      notify('{} to have {} procure 1 card.\n- "{}"'.format(ClickCost,card,goodbye))
    elif fetchProperty(card, 'name') == "Indexing" and action == 'SuccessfulRun':
       targetPL = findOpponent()
       if len(targetPL.piles['R&D/Stack']) < 5: count = len(targetPL.piles['R&D/Stack'])

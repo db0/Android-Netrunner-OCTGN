@@ -1276,6 +1276,7 @@ def RDaccessX(group = table, x = 0, y = 0): # A function which looks at the top 
                if not re.search(r'ifInstalled',autoS):
                   RDtop[iter].moveToTable(0, 0 + yaxisMove(RDtop[iter]), False)
                   RDtop[iter].highlight = RevealedColor
+                  RDtop[iter].controller = RDtop[iter].owner # We change the owner to the original because after the scripting pile, the runner will control the card.
                   while not confirm("Ambush! You have stumbled into a {}\
                             \n(This card activates even on access from R&D.)\
                           \n\nYour blunder has already triggered the alarms. Please wait until corporate OpSec has decided whether to use its effects or not.\
