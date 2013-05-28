@@ -3,6 +3,11 @@ Changelog - Android:Netrunner LCG OCTGN Game Definition
 
 ### 3.1.4.x
 
+* Fix for Fetal AI damaging the corp.
+* Added more opaque board.
+
+### 3.1.4.x
+
 * Added new background
 * Added new board (Many many thanks to [Simon Gunkel](http://boardgamegeek.com/user/susuexp)
 * Repositioned cards to fit with the new board.

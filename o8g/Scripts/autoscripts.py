@@ -811,6 +811,7 @@ def redirect(Autoscript, card, announceText = None, notificationType = 'Quick', 
    debugNotify(">>> redirect(){}".format(extraASDebug(Autoscript))) #Debug
    if re.search(r':Pass\b', Autoscript): return # Pass is a simple command of doing nothing ^_^
    targetC = findTarget(Autoscript)
+   debugNotify("card.owner = {}".format(card.owner),2)
    targetPL = ofwhom(Autoscript,card.owner) # So that we know to announce the right person the effect, affects.
    if not announceText: announceText = "{} uses {}'s ability to".format(targetPL,card) 
    debugNotify(" targetC: {}. Notification Type = {}".format(targetC,notificationType), 3) # Debug
@@ -1223,7 +1224,7 @@ def ReshuffleX(Autoscript, announceText, card, targetCards = None, notification 
    if targetCards is None: targetCards = []
    mute()
    X = 0
-   targetPL = ofwhom(Autoscript, card.controller)
+   targetPL = ofwhom(Autoscript, card.owner)
    action = re.search(r'\bReshuffle([A-Za-z& ]+)', Autoscript)
    debugNotify("!!! regex: {}".format(action.groups())) # Debug
    if action.group(1) == 'HQ' or action.group(1) == 'Stack':
@@ -1390,7 +1391,7 @@ def CreateDummy(Autoscript, announceText, card, targetCards = None, notification
    dummyCard = None
    action = re.search(r'\bCreateDummy[A-Za-z0-9_ -]*(-with)(?!onOpponent|-doNotTrash|-nonUnique)([A-Za-z0-9_ -]*)', Autoscript)
    if debugVerbosity >= 3 and action: notify('clicks regex: {}'.format(action.groups())) # debug
-   targetPL = ofwhom(Autoscript, card.controller)
+   targetPL = ofwhom(Autoscript, card.owner)
    for c in table:
       if c.model == card.model and c.controller == targetPL and c.highlight == DummyColor: dummyCard = c # We check if already have a dummy of the same type on the table.
    if not dummyCard or re.search(r'nonUnique',Autoscript): #Some create dummy effects allow for creating multiple copies of the same card model.
@@ -1531,7 +1532,8 @@ def InflictX(Autoscript, announceText, card, targetCards = None, notification = 
    action = re.search(r'\b(Inflict)([0-9]+)(Meat|Net|Brain)Damage', Autoscript) # Find out what kind of damage we're going
    multiplier = per(Autoscript, card, n, targetCards)
    enhancer = findEnhancements(Autoscript) #See if any of our cards increases damage we deal
-   targetPL = ofwhom(Autoscript, card.controller) #Find out who the target is
+   debugNotify("card.owner = {}".format(card.owner),3)
+   targetPL = ofwhom(Autoscript, card.owner) #Find out who the target is
    if enhancer > 0: enhanceTXT = ' (Enhanced: +{})'.format(enhancer) #Also notify that this is the case
    else: enhanceTXT = ''
    if multiplier == 0 or num(action.group(2)) == 0: DMG = 0 # if we don't do any damage, we don't enhance it
@@ -1580,7 +1582,7 @@ def RetrieveX(Autoscript, announceText, card, targetCards = None, notification =
    if targetCards is None: targetCards = []
    MUtext = ''
    action = re.search(r'\bRetrieve([0-9]+)Card', Autoscript)
-   targetPL = ofwhom(Autoscript, card.controller)
+   targetPL = ofwhom(Autoscript, card.owner)
    debugNotify("Setting Source", 2)
    if re.search(r'-fromTrash', Autoscript) or re.search(r'-fromArchives', Autoscript) or re.search(r'-fromHeap', Autoscript):
       source = targetPL.piles['Heap/Archives(Face-up)']
@@ -2336,6 +2338,7 @@ def ASclosureTXT(string, count): # Used by Gain and Transfer, to return unicode 
    
 def ofwhom(Autoscript, controller = me): 
    debugNotify(">>> ofwhom(){}".format(extraASDebug(Autoscript))) #Debug
+   debugNotify("Controller = {}".format(controller),2) #Debug
    if re.search(r'o[fn]Opponent', Autoscript):
       if debugVerbosity >= 2:  notify("Autoscript requirement found!")
       if len(players) > 1:
