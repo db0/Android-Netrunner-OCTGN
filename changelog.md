@@ -1,7 +1,12 @@
 Changelog - Android:Netrunner LCG OCTGN Game Definition
 ===============================================
 
-### 3.1.4.x
+### 3.1.6.x
+
+* Fixed Xanadu not increased ICE rez costs
+* Fixed Midseason Replacements not taking into account existing link
+
+### 3.1.5.x
 
 * Fix for Fetal AI damaging the corp.
 * Added more opaque board.
