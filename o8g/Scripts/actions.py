@@ -691,12 +691,12 @@ def inputTraceValue (card, x=0,y=0, limit = 0, silent = False):
       CorpTraceValue = num(getGlobalVariable('CorpTraceValue'))
       currentTraceEffectTuple = eval(getGlobalVariable('CurrentTraceEffect'))
       debugNotify("currentTraceEffectTuple = {}".format(currentTraceEffectTuple), 2)
-      if CorpTraceValue > TraceValue  + me.counters['Base Link'].value:
+      if CorpTraceValue > TraceValue + me.counters['Base Link'].value:
          notify("-- {} has been traced".format(identName))
          autoscriptOtherPlayers('UnavoidedTrace', card)
          try:
             if currentTraceEffectTuple[1] != 'None':
-               executeTraceEffects(Card(currentTraceEffectTuple[0]),currentTraceEffectTuple[1], count = CorpTraceValue - TraceValue) # We sent this function the card which triggered the trace, and the effect which was triggered.
+               executeTraceEffects(Card(currentTraceEffectTuple[0]),currentTraceEffectTuple[1], count = CorpTraceValue - TraceValue - me.counters['Base Link'].value) # We sent this function the card which triggered the trace, and the effect which was triggered.
          except: pass # If it's an exception it means our tuple does not exist, so there's no current trace effects. Manual use of the trace card?
       else:
          notify("-- {} has eluded the trace".format(identName))
