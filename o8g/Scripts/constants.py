@@ -64,9 +64,9 @@ specialHostPlacementAlgs = { # A Dictionary which holds tuples of X and Y placem
 automatedMarkers = [] #Used in the Inspect() command to let the player know if the card has automations based on the markers it puts out.
 
 place = dict( # A table holding tuples with the original location various card types are expected to start their setup
-            Hardware =              (106, -204, 10, 8, 1),  # 1st value is X, second is Y third is Offset (i.e. how far from the other cards (in pixel size) each extra copy should be played. Negative values means it will fall on top of the previous ones slightly) 
+            Hardware =              (106, -207, 10, 8, 1),  # 1st value is X, second is Y third is Offset (i.e. how far from the other cards (in pixel size) each extra copy should be played. Negative values means it will fall on top of the previous ones slightly) 
             Program =               (-6, -207, 10, 9, -1), # 4th value is Loop Limit (i.e. at how many cards after the first do we loop back to the first position. Loop is always slightly offset, so as not to hide the previous ones completely)
-            Resource =              (-6, -331, 10, 9, -1), # Last value is wether the cards will be placed towards the right or left. -1 means to the left.
+            Resource =              (-6, -337, 10, 9, -1), # Last value is wether the cards will be placed towards the right or left. -1 means to the left.
             Event =                 (435, -331, 10, 3, 1),
             Console =               (221, -331, 0, 1, 1),
             scoredAgenda =          (477, 54, -30, 6, 1),

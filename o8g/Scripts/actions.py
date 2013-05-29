@@ -227,8 +227,8 @@ def createStartingCards():
          except: delayed_whisper("!!!ERROR!!! In createStartingCards()\n!!! Please Install Markers Set v2.2.1+ !!!")
       else:
          if debugVerbosity >= 5: information("Creating Trace Card")
-         traceCard = table.create("eb7e719e-007b-4fab-973c-3fe228c6ce20", 342, -349, 1, True) #The Trace card
-         traceCard.moveToTable(342, -349) # Otherwise it's bugging out
+         traceCard = table.create("eb7e719e-007b-4fab-973c-3fe228c6ce20", 342, -331, 1, True) #The Trace card
+         traceCard.moveToTable(342, -331) # Otherwise it's bugging out
          storeSpecial(traceCard)
          #TC = table.create("71a89203-94cd-42cd-b9a8-15377caf4437", 471, -325, 1, True) # The Technical Difficulties card.
          #TC.moveToTable(471, -325) # It's never creating them in the right place. Move is accurate.
