@@ -1586,7 +1586,7 @@ Xanadu
 -----
 bc0f047c-01b1-427f-a439-d451eda02082
 -----
-whileRezzed:Increase1CostRez-isICE-forOpponent
+whileRezzed:Increase1CostRez-forAll-isICE-forOpponent
 +++++
 
 .....
