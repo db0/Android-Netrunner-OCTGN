@@ -71,12 +71,12 @@ place = dict( # A table holding tuples with the original location various card t
             Console =               (221, -331, 0, 1, 1),
             scoredAgenda =          (477, 54, -30, 6, 1),
             liberatedAgenda =       (477, -79, -30, 6, 1),
-            Server =                (74, 188, 45, 7, -1),
+            Server =                (54, 188, 45, 7, -1),
             Operation =             (463, 256, 10, 3, 1),
             ICE =                   (157, 110, 30, 7, -1), # Temporary. ICE, Upgrades, Assets and Agendas will be special
-            Upgrade =               (74, 255, -30, 13, -1), # Temporary.
-            Asset =                 (74, 255, -30, 13, -1), # Temporary.
-            Agenda =                (74, 255, -30, 13, -1) # Temporary.
+            Upgrade =               (54, 255, -30, 13, -1), # Temporary.
+            Asset =                 (54, 255, -30, 13, -1), # Temporary.
+            Agenda =                (54, 255, -30, 13, -1) # Temporary.
             )
                
 markerRemovals = { # A dictionary which holds the costs to remove various special markers.
