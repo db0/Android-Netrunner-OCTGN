@@ -295,7 +295,7 @@ def intJackin(group, x = 0, y = 0):
       me.MU = 0
       notify("{} is the CEO of the {} Corporation".format(me,Identity))
    else:
-      Identity.moveToTable(103, -349)
+      Identity.moveToTable(106, -331)
       rnd(1,10)  # Allow time for the ident to be recognised
       maxClicks = 4
       me.MU = 4

@@ -1,6 +1,10 @@
 Changelog - Android:Netrunner LCG OCTGN Game Definition
 ===============================================
 
+### 3.1.7.x
+
+* Added the new sweet sweet tabletop
+
 ### 3.1.6.x
 
 * Fixed Xanadu not increased ICE rez costs
