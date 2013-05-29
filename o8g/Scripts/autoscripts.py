@@ -580,7 +580,7 @@ def atTimedEffects(Time = 'Start'): # Function which triggers card effects at th
          if not effect: continue
          debugNotify("Time maches. Script triggers on: {}".format(effect.group(1)), 3)
          if re.search(r'-ifSuccessfulRun', autoS):
-            if Time == 'SuccessfulRun' or Time == 'JackOut': #If we're looking only for successful runs, we need the Time to be a successful run or jackout period.
+            if Time == 'SuccessfulRun' or (Time == 'JackOut' and getGlobalVariable('SuccessfulRun') == 'True'): #If we're looking only for successful runs, we need the Time to be a successful run or jackout period.
                requiredTarget = re.search(r'-ifSuccessfulRun([A-Za-z&]+)', autoS) # We check what the script requires to be the successful target
                if getGlobalVariable('feintTarget') != 'None': currentRunTarget = getGlobalVariable('feintTarget')
                else: 

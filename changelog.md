@@ -4,6 +4,7 @@ Changelog - Android:Netrunner LCG OCTGN Game Definition
 ### 3.1.7.x
 
 * Added the new sweet sweet tabletop
+* Dedicated Response Team won't do damage on non-successful Runs
 
 ### 3.1.6.x
 
