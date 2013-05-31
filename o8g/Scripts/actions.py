@@ -200,46 +200,35 @@ def createStartingCards():
          storeSpecial(traceCard)
          if debugVerbosity >= 5: information("Creating HQ")
          HQ = table.create("81cba950-9703-424f-9a6f-af02e0203762", 169, 188, 1, True)
-         HQ.moveToTable(169, 188) # MoveToTable is accurate. Table.create isn't.
          storeSpecial(HQ) # We pass control of the centrals to the runner, so that they can double click them to start runs
          HQ.setController(findOpponent())
          if debugVerbosity >= 5: information("Creating R&D")
          RD = table.create("fbb865c9-fccc-4372-9618-ae83a47101a2", 277, 188, 1, True)
-         RD.moveToTable(277, 188)
          storeSpecial(RD)
          RD.setController(findOpponent())
          if debugVerbosity >= 5: information("Creating Archives")
          ARC = table.create("47597fa5-cc0c-4451-943b-9a14417c2007", 382, 188, 1, True)
-         ARC.moveToTable(382, 188)
          storeSpecial(ARC)
          ARC.setController(findOpponent())
          if debugVerbosity >= 5: information("Creating Virus Scan")
          AV = table.create("23473bd3-f7a5-40be-8c66-7d35796b6031", 478, 165, 1, True) # The Virus Scan card.
-         AV.moveToTable(478, 165)
          storeSpecial(AV)
          try:
-            BTN = table.create("fb146e53-714b-4b29-861a-d58ca9840c00", -655, 150, 1, True) # The No Rez Button
-            BTN.moveToTable(-655, 150)
-            BTN = table.create("e904542b-83db-4022-9e8e-9369fe7bc761", -655, 220, 1, True) # The OK Button
-            BTN.moveToTable(-655, 220)
-            BTN = table.create("0887f64f-4fe8-4a5b-9d41-77408fe0224b", -655, 290, 1, True) # The Wait Button
-            BTN.moveToTable(-655, 290)
+            BTN = table.create("fb146e53-714b-4b29-861a-d58ca9840c00", 638, 25, 1, True) # The No Rez Button
+            BTN = table.create("e904542b-83db-4022-9e8e-9369fe7bc761", 638, 95, 1, True) # The OK Button
+            BTN = table.create("0887f64f-4fe8-4a5b-9d41-77408fe0224b", 638, 165, 1, True) # The Wait Button
          except: delayed_whisper("!!!ERROR!!! In createStartingCards()\n!!! Please Install Markers Set v2.2.1+ !!!")
       else:
          if debugVerbosity >= 5: information("Creating Trace Card")
          traceCard = table.create("eb7e719e-007b-4fab-973c-3fe228c6ce20", 342, -331, 1, True) #The Trace card
-         traceCard.moveToTable(342, -331) # Otherwise it's bugging out
          storeSpecial(traceCard)
          #TC = table.create("71a89203-94cd-42cd-b9a8-15377caf4437", 471, -325, 1, True) # The Technical Difficulties card.
          #TC.moveToTable(471, -325) # It's never creating them in the right place. Move is accurate.
          #storeSpecial(TC)
          try:
-            BTN = table.create("33ac6951-93ec-4034-9578-0d7dcc77c3f8", -655, -230, 1, True) # The Access Imminent Button
-            BTN.moveToTable(-655, -230)
-            BTN = table.create("e904542b-83db-4022-9e8e-9369fe7bc761", -655, -300, 1, True) # The OK Button
-            BTN.moveToTable(-655, -300)
-            BTN = table.create("0887f64f-4fe8-4a5b-9d41-77408fe0224b", -655, -370, 1, True) # The Wait Button
-            BTN.moveToTable(-655, -370)
+            BTN = table.create("33ac6951-93ec-4034-9578-0d7dcc77c3f8", 638, -80, 1, True) # The Access Imminent Button
+            BTN = table.create("e904542b-83db-4022-9e8e-9369fe7bc761", 638, -150, 1, True) # The OK Button
+            BTN = table.create("0887f64f-4fe8-4a5b-9d41-77408fe0224b", 638, -220, 1, True) # The Wait Button
          except: delayed_whisper("!!!ERROR!!! In createStartingCards()\n!!! Please Install Markers Set v2.2.1+ !!!")
    except: notify("!!!ERROR!!! {} - In createStartingCards()\n!!! PLEASE INSTALL MARKERS SET FILE !!!".format(me))
 
