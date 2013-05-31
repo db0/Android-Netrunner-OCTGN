@@ -1,6 +1,10 @@
 Changelog - Android:Netrunner LCG OCTGN Game Definition
 ===============================================
 
+### 3.1.8.x
+
+* Quick fix to stop accessing snares from R&D crashing the scirpt
+
 ### 3.1.7.x
 
 * Added the new sweet sweet tabletop
