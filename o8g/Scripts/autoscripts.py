@@ -871,6 +871,7 @@ def GainX(Autoscript, announceText, card, targetCards = None, notification = Non
    gain = 0
    extraText = ''
    reduction = 0
+   exactFail = False # A Variable that changes the notification if the cost needs to be paid exact, but the target player does not have enough counters.
    action = re.search(r'\b(Gain|Lose|SetTo)([0-9]+)([A-Z][A-Za-z &]+)-?', Autoscript)
    debugNotify("action groups: {}. Autoscript: {}".format(action.groups(0),Autoscript), 2) # Debug
    actiontypeRegex = re.search(r'actiontype([A-Z]+)',Autoscript) # This is used by some scripts so that they do not use the triggered action as the type of action that triggers the effect. For example, Draco's ability is not a "Rez" action and thus its cost is not affected by card that affect ICE rez costs, like Project Braintrust
@@ -909,9 +910,12 @@ def GainX(Autoscript, announceText, card, targetCards = None, notification = Non
             if targetPL == me: actionType = 'None' # If we're losing money from a card effect that's not a cost, we considered a 'use' cost.
             reduction = reduceCost(card, actionType, gain * multiplier) # If the loss is not a cost, we still check for generic reductions such as BP
          if reversePlayerChk == True: reversePlayerChk = False # Once we're done with the reduction effects, we return our global variable to its natural state of False.
-         targetPL.counters['Credits'].value += (gain * multiplier) + reduction
-         if reduction > 0: extraText = ' (Reduced by {})'.format(uniCredit(reduction))
-         elif reduction < 0: extraText = " (increased by {})".format(uniCredit(abs(reduction)))
+         if action.group(1) == 'Lose' and re.search(r'isExact', Autoscript) and targetPL.counters['Credits'].value < abs((gain * multiplier) + reduction): 
+            exactFail = True
+         else: 
+            targetPL.counters['Credits'].value += (gain * multiplier) + reduction
+            if reduction > 0: extraText = ' (Reduced by {})'.format(uniCredit(reduction))
+            elif reduction < 0: extraText = " (increased by {})".format(uniCredit(abs(reduction)))
       if targetPL.counters['Credits'].value < 0: 
          if re.search(r'isCost', Autoscript): notify(":::Warning:::{} did not have enough {} to pay the cost of this action".format(targetPL,action.group(3)))
          elif re.search(r'isPenalty', Autoscript): pass #If an action is marked as penalty, it means that the value can go negative and the player will have to recover that amount.
@@ -935,8 +939,12 @@ def GainX(Autoscript, announceText, card, targetCards = None, notification = Non
          targetPL.Clicks = 0
          lastKnownNrClicks = 0
       else: 
-         targetPL.Clicks += (gain * multiplier) - gainReduce
-         lastKnownNrClicks += (gain * multiplier) - gainReduce # We also increase the offset, to make sure we announce the correct current action.
+         if action.group(1) == 'Lose' and re.search(r'isExact', Autoscript) and targetPL.Clicks < abs((gain * multiplier) - gainReduce): 
+            exactFail = True
+         else:
+            debugNotify("Proceeding to gain/lose clicks. Had {} Clicks. Modification is {}".format(targetPL.Clicks,(gain * multiplier) - gainReduce), 2)
+            targetPL.Clicks += (gain * multiplier) - gainReduce
+            lastKnownNrClicks += (gain * multiplier) - gainReduce # We also increase the offset, to make sure we announce the correct current action.
    elif re.match(r'MU', action.group(3)): 
       if action.group(1) == 'SetTo': targetPL.MU = 0 # If we're setting to a specific value, we wipe what it's currently.
       else: targetPL.MU += (gain * multiplier) - gainReduce
@@ -955,7 +963,11 @@ def GainX(Autoscript, announceText, card, targetCards = None, notification = Non
    elif re.match(r'Bad Publicity', action.group(3)): 
       if action.group(1) == 'SetTo': targetPL.counters['Bad Publicity'].value = 0 # If we're setting to a specific value, we wipe what it's currently.
       if gain == -999: targetPL.counters['Bad Publicity'].value = 0
-      else: targetPL.counters['Bad Publicity'].value += (gain * multiplier) - gainReduce
+      else: 
+         if action.group(1) == 'Lose' and re.search(r'isExact', Autoscript) and targetPL.counters['Bad Publicity'].value < abs((gain * multiplier)) - gainReduce: 
+            exactFail = True
+         else:
+            targetPL.counters['Bad Publicity'].value += (gain * multiplier) - gainReduce
       if targetPL.counters['Bad Publicity'].value < 0: 
          if re.search(r'isCost', Autoscript): notify(":::Warning:::{} did not have enough {} to pay the cost of this action".format(targetPL,action.group(3)))
          elif re.search(r'isPenalty', Autoscript): pass #If an action is marked as penalty, it means that the value can go negative and the player will have to recover that amount.
@@ -963,7 +975,11 @@ def GainX(Autoscript, announceText, card, targetCards = None, notification = Non
    elif re.match(r'Tags', action.group(3)): 
       if action.group(1) == 'SetTo': targetPL.Tags = 0 # If we're setting to a specific value, we wipe what it's currently.
       if gain == -999: targetPL.Tags = 0
-      else: targetPL.Tags += (gain * multiplier) - gainReduce
+      else: 
+         if action.group(1) == 'Lose' and re.search(r'isExact', Autoscript) and targetPL.Tags < abs((gain * multiplier) - gainReduce): 
+            exactFail = True
+         else:
+            targetPL.Tags += (gain * multiplier) - gainReduce
       if targetPL.Tags < 0: 
          if re.search(r'isCost', Autoscript): notify(":::Warning:::{} did not have enough {} to pay the cost of this action".format(targetPL,action.group(3)))
          elif re.search(r'isPenalty', Autoscript): pass #If an action is marked as penalty, it means that the value can go negative and the player will have to recover that amount.
@@ -997,8 +1013,14 @@ def GainX(Autoscript, announceText, card, targetCards = None, notification = Non
    else: total = abs(gain * multiplier) - reduction# Else it's just the absolute value which we announce they "gain" or "lose"
    closureTXT = ASclosureTXT(action.group(3), total)
    debugNotify("Gainx() about to announce", 2)
-   if notification == 'Quick': announceString = "{}{} {} {}{}".format(announceText, otherTXT, verb, closureTXT,extraText)
-   else: announceString = "{}{} {} {}{}".format(announceText, otherTXT, verb, closureTXT,extraText)
+   if notification == 'Quick': 
+      if exactFail: announceString = ":::WARNING::: {}'s ability failed to work because {} didn't have exactly {} {} to lose".format(card, targetPL, action.group(2), action.group(3))
+      else: announceString = "{}{} {} {}{}".format(announceText, otherTXT, verb, closureTXT,extraText)
+   else: 
+      if exactFail: 
+         announceString = announceText
+         notify(":::WARNING::: {}'s ability failed to work because {} didn't have exactly {} {} to lose".format(card, targetPL, action.group(2), action.group(3)))
+      else: announceString = "{}{} {} {}{}".format(announceText, otherTXT, verb, closureTXT,extraText)
    debugNotify("notification = {}".format(notification), 4)
    if notification and multiplier > 0: notify('--> {}.'.format(announceString))
    debugNotify("<<< Gain() total: {}".format(total), 3)

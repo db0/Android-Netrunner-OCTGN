@@ -1580,7 +1580,7 @@ bc0f047c-01b1-427f-a439-d451eda02080
 -----
 
 +++++
-A0B0G0T0:Lose2Clicks-ofOpponent$$ExileMyself
+A0B0G0T0:Lose2Clicks-ofOpponent-isExact$$ExileMyself
 .....
 Surge
 -----
