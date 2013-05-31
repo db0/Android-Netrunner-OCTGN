@@ -561,7 +561,7 @@ def atTimedEffects(Time = 'Start'): # Function which triggers card effects at th
    TitleDone = False
    AlternativeRunResultUsed = False # Used for SuccessfulRun effects which replace the normal effect of running a server. If set to True, then no more effects on that server will be processed (to avoid 2 bank jobs triggering at the same time for example).
    X = 0
-   tableCards = [card for card in table if card.highlight != InactiveColor and card.highlight != RevealedColor]
+   tableCards = sortPriority([card for card in table if card.highlight != InactiveColor and card.highlight != RevealedColor])
    inactiveCards = [card for card in table if card.highlight == InactiveColor or card.highlight == RevealedColor]
    # tableCards.extend(inactiveCards) # Nope, we don't check inactive cards anymore. If they were inactive at the start of the turn, they won't trigger (See http://boardgamegeek.com/article/11686680#11686680)
    for card in tableCards:
