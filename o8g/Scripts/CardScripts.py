@@ -1094,6 +1094,14 @@ atTurnStart:Refill3Credits-duringMyTurn||Reduce#CostTrash-forAll-forMe
 +++++
 
 .....
+Haas-Bioroid
+-----
+bc0f047c-01b1-427f-a439-d451eda02010
+-----
+whileRezzed:Put1PlusOnePerm-afterCardRezzed-onTriggerCard-typeBioroid
++++++
+
+.....
 ZU.13 Key Master
 -----
 bc0f047c-01b1-427f-a439-d451eda02007
