@@ -1533,9 +1533,10 @@ def derez(card, x = 0, y = 0, silent = False):
       else:
          if not silent: notify("{} derezzed {}".format(me, card))
          card.markers[mdict['Credits']] = 0
+         executePlayScripts(card,'DEREZ')
+         autoscriptOtherPlayers('CardDerezzed',card)
          card.isFaceUp = False
          if card.controller == me: card.peek()
-         executePlayScripts(card,'DEREZ')
    else:
       notify ( "you can't derez a unrezzed card")
       return 'ABORT'
