@@ -6,58 +6,6 @@ Android: Netrunner is an asymmetrical cyberpunk Card Game for two players made b
 
 This is a game definition for the [Online Card and Tabletop Gaming Network (OCTGN)](http://octgn.net). Its card effects are almost completely automated to allow for smoother play and prevent mistakes
 
-Enjoy!
+**[Please visit the OCTGN Game Directory Site for all relevant information](http://octgn.gamersjudgement.com/wordpress/anr/)**
 
-Available Sets and Data Packs
----------
-
-While you can play the game with the auto-generated proxies, if you've already memorized the cards, the censored images will allow you to play and recognise cards quicker.
-Sets will be uncensored after 6 months.
-
-* [Core](http://octgn.dbzer0.com/ANR/o8c/ANR-Core.o8c)
-* [What Lies Ahead](http://octgn.dbzer0.com/ANR/o8c/ANR-What-Lies-Ahead.o8c) *(Censored)*
-* [Trace Amount](http://octgn.dbzer0.com/ANR/o8c/ANR-Trace-Amount.o8c) *(Censored)*
-* [Cyber Exodus](http://octgn.dbzer0.com/ANR/o8c/ANR-Cyber-Exodus.o8c) *(Censored)*
-* [A Study In Static](http://octgn.dbzer0.com/ANR/o8c/ANR-A-Study-In-Static.o8c) *(Censored)*
-* [Humanity's Shadow](http://octgn.dbzer0.com/ANR/o8c/ANR-Humanitys-Shadow.o8c) *(Censored)*
-* [Future Proof](http://octgn.dbzer0.com/ANR/o8c/ANR-Future-Proof.o8c) *(Censored)*
- 
-
-### Converting 
-If you have the sets already from OCTGN 3.0 and you want to convert them to 3.1 without redownloading, [check this guide](https://github.com/kellyelton/OCTGN/wiki/o8c-conversion-guide).
-
-### Uncensoring 
-If you have your own scans and want to use those instead of the censored card, you can [follow this guide to do so](https://github.com/kellyelton/OCTGN/wiki/o8c-modification-guide).
-
-Tutorials
----------
-
-Step-by-Step Tutorial Video *(Made in v2.1.11 so things have improved since then.)*
-
-[![Step-by-Step Tutorial Video (v2.1.11)](Turorial_video_screenshot.png)](http://www.youtube.com/watch?v=nGGECL7nom0)
-
-
-Other Links
----------
-* [Official site](http://www.fantasyflightgames.com/edge_minisite_sec.asp?eidm=207&esem=1)
-* [Plugin Forum](http://octgn.gamersjudgement.com/viewforum.php?f=52)
-* [OCTGN Game Definition Changelog](changelog.md)
-* [Online League](http://www.challengeboards.net/boards/details/4)
-  
-  [![](https://dl.dropboxusercontent.com/u/11028/anr-3.png)](http://www.challengeboards.net/boards/details/4) 
-
-Screenshots
----------
-(Click for larger size)
-
-Chaos Theory makes an end game run into Archives with Darwin
-[![](http://i.imgur.com/dUY4bOcl.jpg)](http://i.imgur.com/dUY4bOc.jpg)
-
-#### Older versions
-
-Kate Stealing the game from R&D.
-
-[![](http://i.imgur.com/PgYecKsl.jpg)](http://i.imgur.com/PgYecKs.jpg)
-
-Shaper running on a heavily fortifield Haas-Bioroid server.
-[![](http://i.imgur.com/fYDVrl.jpg)](http://i.imgur.com/fYDVr.jpg)
+And enjoy!
