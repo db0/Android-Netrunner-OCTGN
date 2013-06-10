@@ -1997,6 +1997,7 @@ def CustomScript(card, action = 'PLAY'): # Scripts that are complex and fairly u
          cardView.isFaceUp = True
          rnd(1,10)
          delayed_whisper(":> Deep Thought: {} is upcoming! Ommm...".format(cardView))
+         notify(":> Deep Thought has revealed the top card of R&D to {}".format(me))
          rnd(1,10)
          cardView.isFaceUp = False
          cover.moveTo(shared.exile) # we cannot delete cards so we just hide it.
