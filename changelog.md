@@ -3,6 +3,12 @@ Changelog - Android:Netrunner LCG OCTGN Game Definition
 
 ### 3.1.9.x
 
+* Added comprehensive rules in the documentation menu, [courtesy of netrunnercards.info](http://netrunnercards.info/rules/)
+* Made the Runner Trace Card highlight yellow to stick out from the board.
+* Deep Thought announces its use to the corp.
+
+### 3.1.9.x
+
 * New board again! Now with Runner red, and text
 * False lead now will now lose clicks if the player doesn't have at least 2
 * NBN:TWiY won't lose its extra hand size after mulligan
