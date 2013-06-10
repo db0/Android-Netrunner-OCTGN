@@ -141,7 +141,7 @@ trashEasterEggIDX = 0
  
 ScoredColor = "#00ff44"
 SelectColor = "#009900"
-EmergencyColor = "#ff0000"
+EmergencyColor = "#fff600"
 DummyColor = "#000000" # Marks cards which are supposed to be out of play, so that players can tell them apart.
 RevealedColor = "#ffffff"
 PriorityColor = "#ffd700"
