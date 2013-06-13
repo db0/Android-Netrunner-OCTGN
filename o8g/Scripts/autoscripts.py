@@ -1572,7 +1572,8 @@ def InflictX(Autoscript, announceText, card, targetCards = None, notification = 
          DMGprevented = 0
          preventTXT = ' (Unpreventable)'
       else: DMGprevented = findDMGProtection(DMG, action.group(3), targetPL)
-      if DMGprevented > 0:
+      if DMGprevented == 'ABORT': return 'ABORT'
+      elif DMGprevented > 0:
          preventTXT = ' ({} prevented)'.format(DMGprevented)
          DMG -= DMGprevented
       for DMGpt in range(DMG): #Start applying the damage

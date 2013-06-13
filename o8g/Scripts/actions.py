@@ -975,9 +975,12 @@ def findDMGProtection(DMGdone, DMGtype, targetPL): # Find out if the player has 
                   if re.search(r'onlyOnce',CardsAS.get(card.model,'')): card.orientation = Rot90
             else:
                notify(":::NOTICE::: {} is about to inflict {} Damage. {} can now use their damage prevention effects such as {}.".format(me,DMGtype,targetPL,card))
+               pingCount = 0 
                while not confirm("{} controls a {} which can prevent some of the damage you're about to inflict to them. Please wait until they decide to use it.\
                                \n\nHas the runner  decided whether or not to the effects of their damage prevention card?\
                                  \n(Pressing 'No' will send a ping to the runner  player to remind him to take action)".format(targetPL.name,fetchProperty(card, 'name'))):
+                     pingCount += 1
+                     if pingCount > 2 and confirm("You've tried to ping your opponent {} times already. Do you perhaps want to abort this script?".format(pingCount)): return 'ABORT'
                      rnd(1,1000)
                      notify(":::NOTICE::: {} is still waiting for {} to decide whether to use {} or not".format(me,targetPL,card))
    cardList = sortPriority([c for c in table
