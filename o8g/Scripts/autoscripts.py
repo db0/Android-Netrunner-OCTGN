@@ -867,7 +867,7 @@ def GainX(Autoscript, announceText, card, targetCards = None, notification = Non
    debugNotify(">>> GainX(){}".format(extraASDebug(Autoscript))) #Debug
    debugNotify("notification = {}".format(notification), 3)
    if targetCards is None: targetCards = []
-   global maxClicks, lastKnownNrClicks, reversePlayerChk
+   global maxClicks, lastKnownNrClicks
    gain = 0
    extraText = ''
    reduction = 0
@@ -903,13 +903,12 @@ def GainX(Autoscript, announceText, card, targetCards = None, notification = Non
       if gain == -999: targetPL.counters['Credits'].value = 0
       else: 
          debugNotify(" Checking Cost Reduction", 2)
-         if actionType == 'Force': reversePlayerChk = True # If the loss is forced on another player, we reverse the recude cost player checking effects, to check for their reduction effects and not ours
+         reversePlayer = actionType == 'Force' # If the loss is forced on another player, we reverse the recude cost player checking effects, to check for their reduction effects and not ours
          if re.search(r'isCost', Autoscript) and action.group(1) == 'Lose':
-            reduction = reduceCost(card, actionType, gain * multiplier)
+            reduction = reduceCost(card, actionType, gain * multiplier, reversePlayer = reversePlayer)
          elif action.group(1) == 'Lose':
             if targetPL == me: actionType = 'None' # If we're losing money from a card effect that's not a cost, we considered a 'use' cost.
-            reduction = reduceCost(card, actionType, gain * multiplier) # If the loss is not a cost, we still check for generic reductions such as BP
-         if reversePlayerChk == True: reversePlayerChk = False # Once we're done with the reduction effects, we return our global variable to its natural state of False.
+            reduction = reduceCost(card, actionType, gain * multiplier, reversePlayer = reversePlayer) # If the loss is not a cost, we still check for generic reductions such as BP
          if action.group(1) == 'Lose' and re.search(r'isExact', Autoscript) and targetPL.counters['Credits'].value < abs((gain * multiplier) + reduction): 
             exactFail = True
          else: 
@@ -1688,16 +1687,13 @@ def UseCustomAbility(Autoscript, announceText, card, targetCards = None, notific
    if fetchProperty(card, 'name') == "Tollbooth":
       targetPL = findOpponent()
       global reversePlayerChk
-      reversePlayerChk = True # We reverse for which player the reduce effects work, because we want cards which pay for the opponent's credit cost to take effect now.
-      reduction = reduceCost(card, 'FORCE', 3, True) # We use a dry-run to see if they have a card which card reduce the tollbooth cost such as stimhack
-      reversePlayerChk = False
+      # We reverse for which player the reduce effects work, because we want cards which pay for the opponent's credit cost to take effect now.
+      reduction = reduceCost(card, 'FORCE', 3, True, reversePlayer = True) # We use a dry-run to see if they have a card which card reduce the tollbooth cost such as stimhack
       if reduction > 0: extraText = " (reduced by {})".format(uniCredit(reduction))  
       elif reduction < 0: extraText = " (increased by {})".format(uniCredit(abs(reduction)))
       else: extraText = ''
       if targetPL.Credits >= 3 - reduction: 
-         reversePlayerChk = True
-         targetPL.Credits -= 3 - reduceCost(card, 'FORCE', 3)
-         reversePlayerChk = False
+         targetPL.Credits -= 3 - reduceCost(card, 'FORCE', 3, reversePlayer = True)
          announceString = announceText + ' force {} to pay {}{}'.format(targetPL,uniCredit(3),extraText)
       else: 
          jackOut(silent = True)
@@ -2507,7 +2503,7 @@ def chkRunningStatus(autoS): # Checks a script to see if it requires a run to be
    debugNotify("<<< chkRunningStatus() with Result: {}".format(Result), 3) # Debug
    return Result
    
-def chkPlayer(Autoscript, controller, manual, targetChk = False): # Function for figuring out if an autoscript is supposed to target an opponent's cards or ours.
+def chkPlayer(Autoscript, controller, manual, targetChk = False, reversePlayerChk = False): # Function for figuring out if an autoscript is supposed to target an opponent's cards or ours.
 # Function returns 1 if the card is not only for rivals, or if it is for rivals and the card being activated it not ours.
 # This is then multiplied by the multiplier, which means that if the card activated only works for Rival's cards, our cards will have a 0 gain.
 # This will probably make no sense when I read it in 10 years...

@@ -760,7 +760,8 @@ def findExtraCosts(card, action = 'REZ'):
    return increase
 
 
-def reduceCost(card, action = 'REZ', fullCost = 0, dryRun = False):
+def reduceCost(card, action = 'REZ', fullCost = 0, dryRun = False, reversePlayer = False): 
+   # reversePlayer is a variable that holds if we're looking for cost reducing effects affecting our opponent, rather than the one running the script.
    type = action.capitalize()
    debugNotify(">>> reduceCost(). Action is: {}. FullCost = {}".format(type,fullCost)) #Debug
    #if fullCost == 0: return 0 # Not used as we now have actions which also increase costs
@@ -824,7 +825,7 @@ def reduceCost(card, action = 'REZ', fullCost = 0, dryRun = False):
          for autoS in Autoscripts:
             debugNotify("Checking {} with AS: {}".format(c, autoS), 2) #Debug
             if not chkRunningStatus(autoS): continue # if the reduction is only during runs, and we're not in a run, bypass this effect
-            if not chkPlayer(autoS, c.controller, False): continue
+            if not chkPlayer(autoS, c.controller, False, reversePlayerChk = reversePlayer): continue
             reductionSearch = reductionRegex.search(autoS)
             if debugVerbosity >= 2: #Debug
                if reductionSearch: notify("!!! Regex is {}".format(reductionSearch.groups()))
