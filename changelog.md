@@ -5,8 +5,8 @@ Changelog - Android:Netrunner LCG OCTGN Game Definition
 
 * Fixed Pop-up window/tollbooth not using stimhack/Pheromones money
 * If you're doing damage and your opponent has a damage prevention card, a confirm window will appear and ask if to wait until they decide to use damage effects or not. 
-
-  If you press 'No', "ping" will be sent to the opponent to remind them to use their damage prevention effects, similar to how snare and other traps work
+  
+  If you press 'No', a "ping" will be sent to the opponent to remind them to use their damage prevention effects, similar to how snare and other traps work
   
   If you press 'Yes' you will proceed to do the damage, so make sure you opponent has decided to use their effects or not.
   

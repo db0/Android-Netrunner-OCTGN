@@ -29,7 +29,6 @@ import re
 
 secretCred = None # Used to allow the player to spend credits in secret for some card abilities (e.g. Snowflake)
 failedRequirement = True # A Global boolean that we set in case an Autoscript cost cannot be paid, so that we know to abort the rest of the script.
-reversePlayerChk = False
 
 
 #------------------------------------------------------------------------------
