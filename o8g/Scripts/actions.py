@@ -974,9 +974,12 @@ def findDMGProtection(DMGdone, DMGtype, targetPL): # Find out if the player has 
                   executePlayScripts(card, 'DAMAGE')
                   if re.search(r'onlyOnce',CardsAS.get(card.model,'')): card.orientation = Rot90
             else:
-               if confirm("{} controls a {} which can prevent some of the damage you're about to inflict to them. Do they wish you to activate their card for them automatically?".format(targetPL.name,fetchProperty(card, 'name'))):
-                  executePlayScripts(card, 'DAMAGE')
-                  if re.search(r'onlyOnce',CardsAS.get(card.model,'')): card.orientation = Rot90
+               notify(":::NOTICE::: {} is about to inflict {} Damage. {} can now use their damage prevention effects such as {}.".format(me,DMGtype,targetPL,card))
+               while not confirm("{} controls a {} which can prevent some of the damage you're about to inflict to them. Please wait until they decide to use it.\
+                               \n\nHas the runner  decided whether or not to the effects of their damage prevention card?\
+                                 \n(Pressing 'No' will send a ping to the runner  player to remind him to take action)".format(targetPL.name,fetchProperty(card, 'name'))):
+                     rnd(1,1000)
+                     notify(":::NOTICE::: {} is still waiting for {} to decide whether to use {} or not".format(me,targetPL,card))
    cardList = sortPriority([c for c in table
                if c.controller == targetPL
                and c.markers])
