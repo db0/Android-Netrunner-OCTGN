@@ -570,6 +570,7 @@ def HELP_RunStructure(group,x=0,y=0):
 #------------------------------------------------------------------------------
 
 def BUTTON_Access(group = None,x=0,y=0):
+   mute()
    AccessMsgs = ["--- Alert: Unauthorized Access Imminent!", 
                  "--- Alert: Runner entry detected!",
                  "--- Alert: Firewalls breached!",
