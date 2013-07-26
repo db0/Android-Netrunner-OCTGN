@@ -1967,7 +1967,7 @@ Sentinel Defense Program
 -----
 bc0f047c-01b1-427f-a439-d451eda03007
 -----
-
+whileScored:Inflict1NetDamage-onOpponent-foreachBrainDMGInflicted
 +++++
 
 .....
@@ -1975,23 +1975,23 @@ Alix T4LB07
 -----
 bc0f047c-01b1-427f-a439-d451eda03008
 -----
-
+whileRezzed:Gain1Power-foreachCardInstall
 +++++
-
+A1B0G0T1:Gain2Credits-perMarker{Power}
 .....
 Cerebral Overwriter
 -----
 bc0f047c-01b1-427f-a439-d451eda03009
 -----
-
+onAccess:Reveal-ifInstalled
 +++++
-
+A0B3G0T0:Inflict1BrainDamage-onOpponent-perMarker{Advancement}-onAccess	
 .....
 Director Haas
 -----
 bc0f047c-01b1-427f-a439-d451eda03010
 -----
-
+whileRezzed:Gain1Max Click||onRez:Gain1Clicks||onTrash:Gain2Agenda Points-onOpponent-ifAccessed$$ScoreMyself-forOpponent
 +++++
 
 .....

@@ -41,7 +41,7 @@ installedCount = {} # A dictionary which keeps track how many of each card type 
 MemoryRequirements = {}
 InstallationCosts = {}
 autoRezFlags = [] # A dictionary which holds cards that the corp has set to Auto Rez at the start of their turn.
-maxClicks = 3
+#maxClicks = 3
 scoredAgendas = 0
 currClicks = 0
 
@@ -86,14 +86,28 @@ def useClick(group = table, x=0, y=0, count = 1):
    elif count == 3: return "{} {} {} {} uses Triple Click #{}, #{} and #{}{}".format(uniClick(),uniClick(),uniClick(),me,currClicks - 2, currClicks - 1, currClicks,extraText)
    else: return "{} {} uses Click #{}{}".format(uniClick(),me,currClicks,extraText)
 
-def modClicks(group,x=0,y=0):
-   debugNotify(">>> modClicks(){}".format(extraASDebug())) #Debug
-   global maxClicks
+def modClicks(group = table,x=0,y=0,targetPL = me, count = 1, action = 'interactive'):
+   debugNotify(">>> modClicks() for {} with count {}".format(targetPL,count)) #Debug
    mute()
-   bkup = maxClicks
-   maxClicks = askInteger("What is your current maximum Clicks per turn?", maxClicks)
-   if maxClicks == None: maxClicks = bkup # In case the player closes the window, we restore their previous max.
-   else: notify("{} has set their Max Clicks to {} per turn".format(me,maxClicks))
+   loopWait = 0
+   while getGlobalVariable('Max Clicks') == 'CHECKED OUT':
+      rnd(1,10)
+      loopWait += 1
+      if loopWait == 10: 
+         delayed_whisper(":::ERROR::: cannot check out the max clicks variable. Try again later")
+         return 'ABORT'
+   maxClicksDict = eval(getGlobalVariable('Max Clicks'))
+   setGlobalVariable('Max Clicks','CHECKED OUT')
+   if action == 'interactive': # If we're silent and at count 0, we're just looking to grab how many maxclicks we have at the end.
+      count = askInteger("What is your new current maximum Clicks per turn?", maxClicksDict[targetPL.name])
+      if count == None: return
+      maxClicksDict[targetPL.name] = count
+      notify("{} has set their Max Clicks to {} per turn".format(me,count))
+   elif action == 'increment': maxClicksDict[targetPL.name] += count 
+   elif action == 'set to': maxClicksDict[targetPL.name] = count
+   setGlobalVariable('Max Clicks',str(maxClicksDict)) # Clear any feinted targets
+   debugNotify("<<< modClicks() with return {}".format(maxClicksDict[targetPL.name])) #Debug
+   return maxClicksDict[targetPL.name]
 
 #---------------------------------------------------------------------------
 # Start/End of turn
@@ -153,10 +167,10 @@ def goToSot (group, x=0,y=0):
       if turn != 0 and not confirm("You opponent does not seem to have finished their turn properly with F12 yet. Continue?"): return
       else: me.setActivePlayer()
    currClicks = 0 # We wipe it again just in case they ended their last turn badly but insist on going through the next one.
-   clicksReduce = findCounterPrevention(maxClicks, 'Clicks', me) # Checking if the player has any effects which force them to forfeit clicks.
-   if clicksReduce: extraTXT = " ({} forfeited)".format(clicksReduce)
-   else: extraTXT = ''
-   me.Clicks = maxClicks - clicksReduce
+   #clicksReduce = findCounterPrevention(maxClicks, 'Clicks', me) # Checking if the player has any effects which force them to forfeit clicks.
+   #if clicksReduce: extraTXT = " ({} forfeited)".format(clicksReduce)
+   extraTXT = ''
+   me.Clicks = modClicks(action = 'chk')
    lastKnownNrClicks = me.Clicks
    myCards = (card for card in table if card.controller == me and card.owner == me)
    for card in myCards:
@@ -238,7 +252,7 @@ def createStartingCards():
 
 def intJackin(group, x = 0, y = 0):
    debugNotify(">>> intJackin(){}".format(extraASDebug())) #Debug
-   global ds, maxClicks, Identity
+   global ds, Identity
    mute()
    if not startupMsg: fetchCardScripts() # We only download the scripts at the very first setup of each play session.
    versionCheck()
@@ -283,13 +297,13 @@ def intJackin(group, x = 0, y = 0):
    if ds == "corp":
       Identity.moveToTable(169, 255)
       rnd(1,10) # Allow time for the ident to be recognised
-      maxClicks = 3
+      modClicks(count = 3, action = 'set to')
       me.MU = 0
       notify("{} is the CEO of the {} Corporation".format(me,Identity))
    else:
       Identity.moveToTable(106, -331)
       rnd(1,10)  # Allow time for the ident to be recognised
-      maxClicks = 4
+      modClicks(count = 4, action = 'set to')
       me.MU = 4
       BL = num(Identity.Cost)
       me.counters['Base Link'].value = BL
@@ -938,7 +952,7 @@ def addBrainDmg(group, x = 0, y = 0):
       applyBrainDmg()
       notify ("{} suffers 1 Brain Damage.".format(me))
       intdamageDiscard(me.hand)     
-      autoscriptOtherPlayers('BrainDamage',getSpecial('Identity',fetchRunnerPL()))
+      autoscriptOtherPlayers('BrainDMGInflicted',getSpecial('Identity',fetchRunnerPL()))
 
 def applyBrainDmg(player = me):
    debugNotify(">>> applyBrainDmg(){}".format(extraASDebug())) #Debug
@@ -953,7 +967,7 @@ def addMeatDmg(group, x = 0, y = 0):
    else:
       notify ("{} suffers 1 Meat Damage.".format(me))
       intdamageDiscard(me.hand)
-      autoscriptOtherPlayers('MeatDamage',getSpecial('Identity',fetchRunnerPL()))
+      autoscriptOtherPlayers('MeatDMGInflicted',getSpecial('Identity',fetchRunnerPL()))
 
 def addNetDmg(group, x = 0, y = 0):
    mute()
@@ -963,7 +977,7 @@ def addNetDmg(group, x = 0, y = 0):
    else:
       notify ("{} suffers 1 Net Damage.".format(me))
       intdamageDiscard(me.hand)
-      autoscriptOtherPlayers('NetDamage',getSpecial('Identity',fetchRunnerPL()))
+      autoscriptOtherPlayers('NetDMGInflicted',getSpecial('Identity',fetchRunnerPL()))
 
 def getCredit(group, x = 0, y = 0):
    debugNotify(">>> getCredit(){}".format(extraASDebug())) #Debug

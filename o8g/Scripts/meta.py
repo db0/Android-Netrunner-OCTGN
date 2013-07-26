@@ -340,7 +340,7 @@ def chkTags():
 
 def fetchRunnerPL():
    if ds == 'runner': return me
-   else return findOpponent()
+   else: return findOpponent()
    
 def clearAttachLinks(card):
 # This function takes care to discard any attachments of a card that left play
@@ -405,7 +405,7 @@ def resetAll(): # Clears all the global variables in order to start a new game.
 # Card Placement
 #---------------------------------------------------------------------------
 
-def placeCard(card, action = 'INSTALL', hostCard = None):
+def placeCard(card, action = 'INSTALL', hostCard = None, type = None):
    debugNotify(">>> placeCard() with action: {}".format(action)) #Debug
    hostType = re.search(r'Placement:([A-Za-z1-9:_ -]+)', fetchProperty(card, 'AutoScripts'))
    if hostType:
@@ -430,11 +430,12 @@ def placeCard(card, action = 'INSTALL', hostCard = None):
          card.sendToBack()
    else:
       global installedCount
-      type = fetchProperty(card, 'Type')
-      if action != 'INSTALL' and type == 'Agenda':
-         if ds == 'corp': type = 'scoredAgenda'
-         else: type = 'liberatedAgenda'
-      if action == 'INSTALL' and re.search(r'Console',card.Keywords): type = 'Console'
+      if not type: 
+         type = fetchProperty(card, 'Type') # We can pass the type of card as a varialbe. This way we can pass one card as another.
+         if action != 'INSTALL' and type == 'Agenda':
+            if ds == 'corp': type = 'scoredAgenda'
+            else: type = 'liberatedAgenda'
+         if action == 'INSTALL' and re.search(r'Console',card.Keywords): type = 'Console'
       if action == 'INSTALL' and type in CorporationCardTypes: CfaceDown = True
       else: CfaceDown = False
       debugNotify("Setting installedCount. Type is: {}, CfaceDown: {}".format(type, str(CfaceDown)), 3) #Debug
@@ -881,7 +882,7 @@ def TrialError(group, x=0, y=0): # Debugging
    ###### End Testing Corner ######
    delayed_whisper("## Defining Test Cards")
    testcards = ["bc0f047c-01b1-427f-a439-d451eda03004", # Future Proof Cards
-                # "bc0f047c-01b1-427f-a439-d451eda02102", 
+                "bc0f047c-01b1-427f-a439-d451eda03010", 
                 # "bc0f047c-01b1-427f-a439-d451eda02103", 
                 # "bc0f047c-01b1-427f-a439-d451eda02104", 
                 # "bc0f047c-01b1-427f-a439-d451eda02105", 

@@ -112,13 +112,16 @@ def executePlayScripts(card, action):
           (effectType.group(1) == 'whileLiberated' and ds != 'runner') or
           (effectType.group(1) == 'onDamage' and action != 'DAMAGE') or
           (effectType.group(1) == 'onLiberation' and action != 'LIBERATE') or
-          (effectType.group(1) == 'onTrash' and (action != 'TRASH' or action!= 'UNINSTALL' or action != 'DEREZ')) or
-          (effectType.group(1) == 'onDerez' and action != 'DEREZ')): continue 
+          (effectType.group(1) == 'onTrash' and action != 'TRASH' and action!= 'UNINSTALL' and action != 'DEREZ') or
+          (effectType.group(1) == 'onDerez' and action != 'DEREZ')): 
+         debugNotify("Rejected {} because {} does not fit with {}".format(AutoS,effectType.group(1),action))
+         continue 
       if re.search(r'-isOptional', AutoS):
          if not confirm("This card has an optional ability you can activate at this point. Do you want to do so?"): 
             notify("{} opts not to activate {}'s optional ability".format(me,card))
             return 'ABORT'
          else: notify("{} activates {}'s optional ability".format(me,card))
+      if re.search(r'-ifAccessed', AutoS) and ds != 'runner': continue # These scripts are only supposed to fire from the runner (when they access a card)         
       selectedAutoscripts = AutoS.split('$$')
       if debugVerbosity >= 2: notify ('selectedAutoscripts: {}'.format(selectedAutoscripts)) # Debug
       for activeAutoscript in selectedAutoscripts:
@@ -867,7 +870,7 @@ def GainX(Autoscript, announceText, card, targetCards = None, notification = Non
    debugNotify(">>> GainX(){}".format(extraASDebug(Autoscript))) #Debug
    debugNotify("notification = {}".format(notification), 3)
    if targetCards is None: targetCards = []
-   global maxClicks, lastKnownNrClicks
+   global lastKnownNrClicks
    gain = 0
    extraText = ''
    reduction = 0
@@ -894,7 +897,7 @@ def GainX(Autoscript, announceText, card, targetCards = None, notification = Non
          if overcharge < 0: overcharge = 0 # But if the overcharge is 0 or less, it means that all the loss could be taken out.
       else: overcharge = 0
       gain *= -1
-      debugNotify(" overcharge = {}\n#### Gain = {}.\n #### Multiplier = {}.\n#### Counter = {}".format(overcharge,gain,multiplier,targetPL.counters[action.group(3)].value), 2)
+      debugNotify(" overcharge = {}\n#### Gain = {}.\n #### Multiplier = {}.".format(overcharge,gain,multiplier), 2)
    if re.search(r'ifNoisyOpponent', Autoscript) and targetPL.getGlobalVariable('wasNoisy') != '1': return announceText # If our effect only takes place when our opponent has been noisy, and they haven't been, don't do anything. We return the announcement so that we don't crash the parent function expecting it
    gainReduce = findCounterPrevention(gain * multiplier, action.group(3), targetPL) # If we're going to gain counter, then we check to see if we have any markers which might reduce the cost.
    #confirm("multiplier: {}, gain: {}, reduction: {}".format(multiplier, gain, gainReduce)) # Debug
@@ -985,10 +988,9 @@ def GainX(Autoscript, announceText, card, targetCards = None, notification = Non
          else: targetPL.Tags = 0
       chkTags() # At the end we check and put the tag markers on the identity as well, if it's tagged.
    elif re.match(r'Max Click', action.group(3)): 
-      if targetPL == me: 
-         if action.group(1) == 'SetTo': maxClicks = 0 # If we're setting to a specific value, we wipe what it's currently.
-         maxClicks += gain * multiplier
-      else: notify("--> {} loses {} clicks maximum. They must make this modification manually".format(targetPL,gain * multiplier))
+      if action.group(1) == 'SetTo': modType = 'set to' 
+      else: modType = 'increment' 
+      modClicks(targetPL = targetPL, count = gain * multiplier, action = modType)
    elif re.match(r'Hand Size', action.group(3)): 
       if action.group(1) == 'SetTo': targetPL.counters['Hand Size'].value = 0 # If we're setting to a specific value, we wipe what it's currently.
       targetPL.counters['Hand Size'].value += gain * multiplier
@@ -1000,12 +1002,15 @@ def GainX(Autoscript, announceText, card, targetCards = None, notification = Non
       return 'ABORT'
    debugNotify("Gainx() Finished counter manipulation", 2)
    if notification != 'Automatic': # Since the verb is in the middle of the sentence, we want it lowercase.
-      if action.group(1) == 'Gain': verb = 'gain'
+      if action.group(1) == 'Gain': 
+         verb = 'gain'
       elif action.group(1) == 'Lose': 
          if re.search(r'isCost', Autoscript): verb = 'pay'
          else: verb = 'lose'
-      else: verb = 'set to'
-   else: verb = action.group(1) # Automatic notifications start with the verb, so it needs to be capitaliszed. 
+      else: 
+         verb = 'set to'
+   else: 
+      verb = action.group(1) # Automatic notifications start with the verb, so it needs to be capitaliszed. 
    if abs(gain) == abs(999): total = 'all' # If we have +/-999 as the count, then this mean "all" of the particular counter.
    elif action.group(1) == 'Lose' and re.search(r'isCost', Autoscript): total = abs(gain * multiplier)
    elif action.group(1) == 'Lose' and not re.search(r'isPenalty', Autoscript): total = abs(gain * multiplier) - overcharge - reduction
@@ -1503,7 +1508,7 @@ def ModifyStatus(Autoscript, announceText, card, targetCards = None, notificatio
    if targetCards is None: targetCards = []
    targetCardlist = '' # A text field holding which cards are going to get tokens.
    extraText = ''
-   action = re.search(r'\b(Rez|Derez|Expose|Trash|Uninstall|Possess|Exile|Rework|Install)(Target|Parent|Multi|Myself)[-to]*([A-Z][A-Za-z&_ ]+)?', Autoscript)
+   action = re.search(r'\b(Rez|Derez|Expose|Trash|Uninstall|Possess|Exile|Rework|Install|Score)(Target|Parent|Multi|Myself)[-to]*([A-Z][A-Za-z&_ ]+)?', Autoscript)
    if action.group(2) == 'Myself': 
       del targetCards[:] # Empty the list, just in case.
       targetCards.append(card)
@@ -1539,6 +1544,12 @@ def ModifyStatus(Autoscript, announceText, card, targetCards = None, notificatio
       elif action.group(1) == 'Install': # Install simply plays a cast on the table unrezzed without paying any costs.
          placeCard(targetCard, 'INSTALL')
          autoscriptOtherPlayers('CardInstall',targetCard)
+      elif action.group(1) == 'Score': # Score takes a card and claims it as an agenda
+         targetPL = ofwhom(Autoscript, targetCard.owner)
+         if targetPL.getGlobalVariable('ds') == 'corp': scoreType = 'scoredAgenda'
+         else: scoreType = 'liberatedAgenda'
+         placeCard(targetCard, 'SCORE', type = scoreType)
+         autoscriptOtherPlayers('CardTrashed',targetCard)
       else: return 'ABORT'
       if action.group(2) != 'Multi': break # If we're not doing a multi-targeting, abort after the first run.
    if notification == 'Quick': announceString = "{} {}es {}{}".format(announceText, action.group(1), targetCardlist,extraText)
@@ -1594,7 +1605,7 @@ def InflictX(Autoscript, announceText, card, targetCards = None, notification = 
             if action.group(3) == 'Brain':  
                #targetPL.counters['Hand Size'].value -= 1 # If it's brain damage, also reduce the player's maximum handsize.               
                applyBrainDmg(targetPL)
-      autoscriptOtherPlayers('{}Damage'.format(action.group(3)),getSpecial('Identity',targetPL),DMG) # We also trigger any script for damage
+      autoscriptOtherPlayers('{}DMGInflicted'.format(action.group(3)),getSpecial('Identity',targetPL),DMG) # We also trigger any script for damage
    if targetPL == me: targetPL = 'theirself' # Just changing the announcement to fit better.
    if re.search(r'isRequirement', Autoscript) and DMG < 1: failedRequirement = True # Requirement means that the cost is still paid but other clicks are not going to follow.
    if notification == 'Quick': announceString = "{} suffer {} {} damage{}".format(announceText,DMG,action.group(3),preventTXT)
