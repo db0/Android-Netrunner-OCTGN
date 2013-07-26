@@ -2015,6 +2015,7 @@ def CustomScript(card, action = 'PLAY'): # Scripts that are complex and fairly u
       handICE.orientation = Rot90
       clearAttachLinks(tableICE)
       tableICE.moveTo(me.hand)
+      autoscriptOtherPlayers('CardInstall',handICE)
       notify('{} activates Midori to replace the approached {}, with an ICE from the HQ.'.format(me,tableICE.name))
       notify('- "Naughty Naughty..."')
    elif action == 'USE': useCard(card)
