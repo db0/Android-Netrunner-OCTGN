@@ -237,7 +237,15 @@ class SingleChoiceWindow(Form):
       buttonNext.Dock = DockStyle.Bottom
       buttonNext.Click += self.nextPage
       if pages > 1: self.Controls.Add(buttonNext) # We only add the "Confirm" button on a radio menu.
- 
+
+      cancelButton = Button() # We add a bytton to Cancel the selection
+      cancelButton.Text = "Cancel"
+      cancelButton.Width = 100
+      cancelButton.Dock = DockStyle.Bottom
+      #button.Anchor = AnchorStyles.Bottom
+      cancelButton.Click += self.cancelPressed
+      self.Controls.Add(cancelButton)
+      
    def buttonPressed(self, sender, args):
       self.timer.Stop()
       self.Close()
@@ -247,6 +255,11 @@ class SingleChoiceWindow(Form):
       self.timer.Stop()
       self.Close()
  
+   def cancelPressed(self, sender, args): # The function called from the cancelButton
+      self.confirmValue = None # It replaces the choice list with an ABORT message which is parsed by the calling function
+      self.timer.Stop()
+      self.Close() # And then closes the form
+      
    def checkedChanged(self, sender, args):
       self.confirmValue = sender.Name
       
@@ -266,7 +279,7 @@ class SingleChoiceWindow(Form):
          self.TopMost = True
          self.timer_tries += 1
 
-def SingleChoice(title, options, type = 'radio', default = 0):
+def SingleChoice(title, options, type = 'button', default = 0):
    debugNotify(">>> SingleChoice()".format(title))
    if Automations['WinForms']:
       optChunks=[options[x:x+8] for x in xrange(0, len(options), 8)]
@@ -283,9 +296,8 @@ def SingleChoice(title, options, type = 'radio', default = 0):
             debugNotify("Going to next page", 3)
             optCurrent += 1
             if optCurrent >= len(optChunks): optCurrent = 0
-         else: 
+         elif choice != None: 
             choice = num(form.getIndex()) + (optCurrent * 8) # if the choice is not a next page, then we convert it to an integer and give that back, adding 8 per number of page passed
-            
    else:
       concatTXT = title + '\n\n'
       for iter in range(len(options)):
@@ -293,7 +305,6 @@ def SingleChoice(title, options, type = 'radio', default = 0):
       choice = askInteger(concatTXT,0)
    debugNotify("<<< SingleChoice() with return {}".format(choice), 3)
    return choice
- 
    
 class MultiChoiceWindow(Form):
  # This is a windows form which creates a multiple choice form, with a button for each choice. 
@@ -437,11 +448,12 @@ def multiChoice(title, options,card): # This displays a choice where the player 
 # Generic
 #---------------------------------------------------------------------------
 
-def debugNotify(msg = 'Debug Ping!', level = 1):
+def debugNotify(msg = 'Debug Ping!', level = 2):
    if not re.search(r'<<<',msg) and not re.search(r'>>>',msg):
       hashes = '#' 
       for iter in range(level): hashes += '#' # We add extra hashes at the start of debug messages equal to the level of the debug+1, to make them stand out more
       msg = hashes + ' ' +  msg
+   else: level = 1
    if debugVerbosity >= level: notify(msg)
 
 def num (s):

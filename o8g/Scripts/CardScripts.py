@@ -1943,7 +1943,7 @@ Director Haas' Pet Project
 -----
 bc0f047c-01b1-427f-a439-d451eda03004
 -----
-
+onScore:CustomScript
 +++++
 
 .....

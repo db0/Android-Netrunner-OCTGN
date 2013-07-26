@@ -1723,6 +1723,7 @@ def UseCustomAbility(Autoscript, announceText, card, targetCards = None, notific
       for c in targetPL.piles['R&D/Stack']: c.isFaceUp = True 
       rnd(1,100) # Delay to be able to read card info
       if len(cardList) > 1:
+         notify(":> {}'s Data Hound is sniffing through {}'s Stack".format(me,trashedC,targetPL))
          choice = SingleChoice("Choose card to trash", makeChoiceListfromCardList(cardList), type = 'button')
          trashedC = cardList.pop(choice)
       else: trashedC = cardList.pop(0)
@@ -2022,6 +2023,67 @@ def CustomScript(card, action = 'PLAY'): # Scripts that are complex and fairly u
       autoscriptOtherPlayers('CardInstall',handICE)
       notify('{} activates Midori to replace the approached {}, with an ICE from the HQ.'.format(me,tableICE.name))
       notify('- "Naughty Naughty..."')
+   elif fetchProperty(card, 'name') == "Director Haas' Pet Project" and action == 'SCORE':
+      debugNotify("about to implement Director Haas' Pet Project")
+      # First we need to gather all the valid cards from hand or archives.
+      installableCards = []
+      for c in me.hand:
+         if c.Type != 'Operation': installableCards.append(c)
+      for c in me.piles['Heap/Archives(Face-up)']:
+         if c.Type != 'Operation': installableCards.append(c)
+      for c in me.piles['Archives(Hidden)']:
+         if c.Type != 'Operation': installableCards.append(c)
+      debugNotify("Finished creating installableCards[]")
+      if len(installableCards) == 0:
+         notify("Director Haas cannot find any cards to use for their pet project :(")
+         return
+      if not confirm("Would you like to initiate Director Haass' Pet Project?"): return
+      cardChoices = []
+      cardTexts = []
+      chosenCList = []
+      for iter in range(3):
+         debugNotify("len(installableCards) = {}".format(len(installableCards)))
+         debugNotify("installableCards: {}".format([rootC.name for rootC in installableCards]), 4)
+         debugNotify("iter: {}/{}".format(iter,3), 4)
+         del cardChoices[:]
+         del cardTexts[:]
+         for c in installableCards:
+            if c.Rules not in cardTexts: # we don't want to provide the player with a the same card as a choice twice.
+               debugNotify("Appending card", 4)
+               cardChoices.append(c)
+               cardTexts.append(c.Rules)
+         choice = SingleChoice("Choose {} card to install in the pet project".format(numOrder(iter)), makeChoiceListfromCardList(cardChoices), [], 'Cancel')
+         debugNotify("choice = {}".format(choice))
+         if choice == None: break
+         chosenCList.append(cardChoices[choice])
+         installableCards.remove(cardChoices[choice])
+         if cardChoices[choice].Type == 'Asset' or cardChoices[choice].Type == 'Agenda': # If we install an asset or agenda, we can't install any more of those so we remove them from the choice list.
+            for rootC in installableCards:
+               if rootC.Type == 'Asset' or rootC.Type == 'Agenda': 
+                  debugNotify("{} Type = {}. Removing".format(rootC,rootC.Type))
+                  installableCards.remove(rootC) 
+               else:
+                  debugNotify("{} Type = {}. Keeping".format(rootC,rootC.Type))            
+         if len(installableCards) < 2 - iter: break
+      if len(chosenCList) > 0: # If it's 0, it means the player changed their mind and pressed cancel on the first choice.
+         debugNotify("chosenCList = {}".format([c.name for c in chosenCList]))
+         debugNotify("About to create the new remote")
+         Server = table.create("d59fc50c-c727-4b69-83eb-36c475d60dcb", 0, 0 - (40 * playerside), 1, False)
+         placeCard(Server,'INSTALL')
+         x,y = Server.position
+         serverRoot = 0
+         serverICE = 0
+         debugNotify("About the place the cards in the new remote")
+         for c in chosenCList:
+            if c.Type == 'ICE':
+               c.moveToTable(x - (10 * playerside), 120 - (70 * serverICE),True)
+               c.orientation = Rot90
+               serverICE += 1
+            else:
+               c.moveToTable(x - (serverRoot * 30), 255,True)
+               serverRoot += 1
+            autoscriptOtherPlayers('CardInstall',c)
+         notify("{} implements {} and installs {} ICE and {} cards in the server root".format(me,card,serverICE,serverRoot))
    elif action == 'USE': useCard(card)
    debugNotify("<<< CustomScript()", 3) #Debug
 #------------------------------------------------------------------------------

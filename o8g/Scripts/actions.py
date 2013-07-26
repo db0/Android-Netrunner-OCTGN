@@ -281,7 +281,7 @@ def intJackin(group, x = 0, y = 0):
    debugNotify("Placing Identity", 3)
    debugNotify("Identity is: {}".format(Identity), 3)
    if ds == "corp":
-      Identity.moveToTable(169, 245)
+      Identity.moveToTable(169, 255)
       rnd(1,10) # Allow time for the ident to be recognised
       maxClicks = 3
       me.MU = 0
@@ -358,7 +358,7 @@ def checkDeck(group):
          elif card.Faction != identity.Faction and card.Faction != 'Neutral':
             notify(":::ERROR::: Faction-restricted card ({}) found in {}'s {}.".format(fetchProperty(card, 'name'), me, pileName(group)))
             ok = False
-      if identity.model == 'bc0f047c-01b1-427f-a439-d451eda03002' and card.Faction == 'Jinteki'
+      if identity.model == 'bc0f047c-01b1-427f-a439-d451eda03002' and card.Faction == 'Jinteki':
          notify(":::ERROR::: Jinteki cards found in a {} deck".format(identity))
          ok = False
       if card.model in LimitedCard:
