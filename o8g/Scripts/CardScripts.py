@@ -1098,7 +1098,7 @@ Haas-Bioroid
 -----
 bc0f047c-01b1-427f-a439-d451eda02010
 -----
-whileRezzed:Put1PlusOnePerm-afterCardRezzed-onTriggerCard-typeBioroid||whileRezzed:Remove1PlusOnePerm-afterCardDerezzed-onTriggerCard-typeBioroid
+whileRezzed:Put1PlusOnePerm-afterCardRezzed-onTriggerCard-typeBioroid_and_ICE||whileRezzed:Remove1PlusOnePerm-afterCardDerezzed-onTriggerCard-typeBioroid_and_ICE
 +++++
 
 .....
