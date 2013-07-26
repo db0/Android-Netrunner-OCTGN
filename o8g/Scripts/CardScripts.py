@@ -250,7 +250,7 @@ Crash Space
 -----
 bc0f047c-01b1-427f-a439-d451eda01030
 -----
-onInstall:Put2Credits||whileRezzed:Reduce#CostDeltag-forAll-excludeDummy-forMe||atTurnStart:Refill2Credits-excludeDummy-duringMyTurn||onDamage:Put3protectionMeatDMG-trashCost-excludeDummy
+onInstall:Put2Credits||whileRezzed:Reduce#CostDeltag-forAll-excludeDummy-forMe||atTurnPreStart:Refill2Credits-excludeDummy-duringMyTurn||onDamage:Put3protectionMeatDMG-trashCost-excludeDummy
 +++++
 A0B0G0T1:CreateDummy-with3protectionMeatDMG-trashCost
 .....
@@ -266,7 +266,7 @@ Cyberfeeder
 -----
 bc0f047c-01b1-427f-a439-d451eda01005
 -----
-onInstall:Put1Credits-isSilent||whileRezzed:Reduce#CostUse-forIcebreaker-forMe||whileRezzed:Reduce#CostInstall-forVirus-forMe||atTurnStart:Refill1Credits-duringMyTurn
+onInstall:Put1Credits-isSilent||whileRezzed:Reduce#CostUse-forIcebreaker-forMe||whileRezzed:Reduce#CostInstall-forVirus-forMe||atTurnPreStart:Refill1Credits-duringMyTurn
 +++++
 	
 .....
@@ -586,7 +586,7 @@ NBN
 -----
 bc0f047c-01b1-427f-a439-d451eda01080
 -----
-atTurnStart:Refill2Credits-duringMyTurn||whileRezzed:Reduce#CostTrace-forAll-forMe
+atTurnPreStart:Refill2Credits-duringMyTurn||whileRezzed:Reduce#CostTrace-forAll-forMe
 +++++
 	
 .....
@@ -866,7 +866,7 @@ The Toolbox
 -----
 bc0f047c-01b1-427f-a439-d451eda01041
 -----
-whileRezzed:Gain2MU$$Gain2Base Link||onInstall:Put2Credits-isSilent||atTurnStart:Refill2Credits-duringMyTurn||whileRezzed:Reduce#CostUse-forIcebreaker-forMe
+whileRezzed:Gain2MU$$Gain2Base Link||onInstall:Put2Credits-isSilent||atTurnPreStart:Refill2Credits-duringMyTurn||whileRezzed:Reduce#CostUse-forIcebreaker-forMe
 +++++
 	
 .....
@@ -1066,7 +1066,7 @@ Spinal Modem
 -----
 bc0f047c-01b1-427f-a439-d451eda02002
 -----
-onInstall:Put2Credits-isSilent||whileInstalled:Gain1MU||atTurnStart:Refill2Credits-duringMyTurn||whileRezzed:Reduce#CostUse-forIcebreaker-forMe||whileRunning:Inflict1BrainDamage-afterUnavoidedTrace-byMe
+onInstall:Put2Credits-isSilent||whileInstalled:Gain1MU||atTurnPreStart:Refill2Credits-duringMyTurn||whileRezzed:Reduce#CostUse-forIcebreaker-forMe||whileRunning:Inflict1BrainDamage-afterUnavoidedTrace-byMe
 +++++
 
 .....
@@ -1090,7 +1090,7 @@ Whizzard
 -----
 bc0f047c-01b1-427f-a439-d451eda02001
 -----
-atTurnStart:Refill3Credits-duringMyTurn||Reduce#CostTrash-forAll-forMe
+atTurnPreStart:Refill3Credits-duringMyTurn||Reduce#CostTrash-forAll-forMe
 +++++
 
 .....
@@ -1138,7 +1138,7 @@ Compromised Employee
 -----
 bc0f047c-01b1-427f-a439-d451eda02025
 -----
-onInstall:Put1Credits-isSilent||atTurnStart:Refill1Credits-duringMyTurn||whileRezzed:Reduce#CostTrace-forAll-forMe||whileRezzed:Gain1Credits-perCardRezzed-typeICE
+onInstall:Put1Credits-isSilent||atTurnPreStart:Refill1Credits-duringMyTurn||whileRezzed:Reduce#CostTrace-forAll-forMe||whileRezzed:Gain1Credits-perCardRezzed-typeICE
 +++++
 
 .....
@@ -1442,7 +1442,7 @@ Scrubber
 -----
 bc0f047c-01b1-427f-a439-d451eda02063
 -----
-onInstall:Put2Credits-isSilent||atTurnStart:Refill2Credits-duringMyTurn||whileRezzed:Reduce#CostTrash-forAll-forMe
+onInstall:Put2Credits-isSilent||atTurnPreStart:Refill2Credits-duringMyTurn||whileRezzed:Reduce#CostTrash-forAll-forMe
 +++++
 
 .....
@@ -1482,7 +1482,7 @@ Inside Man
 -----
 bc0f047c-01b1-427f-a439-d451eda02068
 -----
-onInstall:Put2Credits-isSilent||atTurnStart:Refill2Credits-duringMyTurn||whileRezzed:Reduce#CostInstall-forHardware-forMe
+onInstall:Put2Credits-isSilent||atTurnPreStart:Refill2Credits-duringMyTurn||whileRezzed:Reduce#CostInstall-forHardware-forMe
 +++++
 
 .....
@@ -1514,7 +1514,7 @@ Dedicated Server
 -----
 bc0f047c-01b1-427f-a439-d451eda02072
 -----
-onRez:Put2Credits-isSilent||atTurnStart:Refill2Credits-duringMyTurn||whileRezzed:Reduce#CostRez-forICE-forMe
+onRez:Put2Credits-isSilent||atTurnPreStart:Refill2Credits-duringMyTurn||whileRezzed:Reduce#CostRez-forICE-forMe
 +++++
 
 .....
@@ -1538,7 +1538,7 @@ Net Police
 -----
 bc0f047c-01b1-427f-a439-d451eda02075
 -----
-onRez:Put1Credits-perOpponentCounter{Base Link}||atTurnStart:Refill1Credits-perOpponentCounter{Base Link}-duringMyTurn||whileRezzed:Reduce#CostTrace-forAll-forMe
+onRez:Put1Credits-perOpponentCounter{Base Link}||atTurnPreStart:Refill1Credits-perOpponentCounter{Base Link}-duringMyTurn||whileRezzed:Reduce#CostTrace-forAll-forMe
 +++++
 
 .....
@@ -1546,7 +1546,7 @@ Weyland Consortium: Because we Build it
 -----
 bc0f047c-01b1-427f-a439-d451eda02076
 -----
-atTurnStart:Refill1Credits-duringMyTurn||whileRezzed:Reduce#CostAdvancement-forICE-forMe
+atTurnPreStart:Refill1Credits-duringMyTurn||whileRezzed:Reduce#CostAdvancement-forICE-forMe
 +++++
 
 .....
@@ -1626,7 +1626,7 @@ Pheromones
 -----
 bc0f047c-01b1-427f-a439-d451eda02086
 -----
-atSuccessfulRun:Put1Virus-ifSuccessfulRunHQ||onRez:Put1Credits-perMarker{Virus}||atTurnStart:Refill1Credits-perMarker{Virus}-duringMyTurn||whileRunningHQ:Reduce#CostAll-forAll-forMe
+atSuccessfulRun:Put1Virus-ifSuccessfulRunHQ||onRez:Put1Credits-perMarker{Virus}||atTurnPreStart:Refill1Credits-perMarker{Virus}-duringMyTurn||whileRunningHQ:Reduce#CostAll-forAll-forMe
 +++++
 
 .....
@@ -1731,7 +1731,7 @@ Simone Diego
 -----
 bc0f047c-01b1-427f-a439-d451eda02099
 -----
-onRez:Put2Credits-isSilent||atTurnStart:Refill2Credits-duringMyTurn
+onRez:Put2Credits-isSilent||atTurnPreStart:Refill2Credits-duringMyTurn
 +++++
 A1B0G0T0:Remove1Credits-isCost$$Put1Advancement-Targeted
 .....
@@ -1920,6 +1920,446 @@ Corporate War
 bc0f047c-01b1-427f-a439-d451eda02120
 -----
 onScore:Gain7Credits-ifIHave7Credits-isSilentHaveChk$$Lose999Credits-ifIHasnt7Credits-isSilentHaveChk
++++++
+
+.....
+Cerebral Imaging: Infinite Frontiers
+-----
+bc0f047c-01b1-427f-a439-d451eda03001
+-----
+atTurnPreEnd:SetTo1Hand Size-perCounter{Credits}
++++++
+
+.....
+Custom Biotics: Engineered for Success
+-----
+bc0f047c-01b1-427f-a439-d451eda03002
+-----
+
++++++
+
+.....
+Next Design: Guarding the Net
+-----
+bc0f047c-01b1-427f-a439-d451eda03003
+-----
+
++++++
+
+.....
+Director Haas' Pet Project
+-----
+bc0f047c-01b1-427f-a439-d451eda03004
+-----
+
++++++
+
+.....
+Efficiency Committee
+-----
+bc0f047c-01b1-427f-a439-d451eda03005
+-----
+
++++++
+
+.....
+Project Wotan
+-----
+bc0f047c-01b1-427f-a439-d451eda03006
+-----
+
++++++
+
+.....
+Sentinel Defense Program
+-----
+bc0f047c-01b1-427f-a439-d451eda03007
+-----
+
++++++
+
+.....
+Alix T4LB07
+-----
+bc0f047c-01b1-427f-a439-d451eda03008
+-----
+
++++++
+
+.....
+Cerebral Overwriter
+-----
+bc0f047c-01b1-427f-a439-d451eda03009
+-----
+
++++++
+
+.....
+Director Haas
+-----
+bc0f047c-01b1-427f-a439-d451eda03010
+-----
+
++++++
+
+.....
+Haas Arcology AI
+-----
+bc0f047c-01b1-427f-a439-d451eda03011
+-----
+
++++++
+
+.....
+Thomas Haas
+-----
+bc0f047c-01b1-427f-a439-d451eda03012
+-----
+
++++++
+
+.....
+Bioroid Efficiency Research
+-----
+bc0f047c-01b1-427f-a439-d451eda03013
+-----
+
++++++
+
+.....
+Successful Demonstration
+-----
+bc0f047c-01b1-427f-a439-d451eda03014
+-----
+
++++++
+
+.....
+Heimdall 2.0
+-----
+bc0f047c-01b1-427f-a439-d451eda03015
+-----
+
++++++
+
+.....
+Howler
+-----
+bc0f047c-01b1-427f-a439-d451eda03016
+-----
+
++++++
+
+.....
+Ichi 2.0
+-----
+bc0f047c-01b1-427f-a439-d451eda03017
+-----
+
++++++
+
+.....
+Minelayer
+-----
+bc0f047c-01b1-427f-a439-d451eda03018
+-----
+
++++++
+
+.....
+Viktor 2.0
+-----
+bc0f047c-01b1-427f-a439-d451eda03019
+-----
+
++++++
+
+.....
+Zed 1.0
+-----
+bc0f047c-01b1-427f-a439-d451eda03020
+-----
+
++++++
+
+.....
+Awakening Center
+-----
+bc0f047c-01b1-427f-a439-d451eda03021
+-----
+
++++++
+
+.....
+Tyr's Hand
+-----
+bc0f047c-01b1-427f-a439-d451eda03022
+-----
+
++++++
+
+.....
+Gila Hands Arcology
+-----
+bc0f047c-01b1-427f-a439-d451eda03023
+-----
+
++++++
+
+.....
+Levy University
+-----
+bc0f047c-01b1-427f-a439-d451eda03024
+-----
+
++++++
+
+.....
+Server Diagnostics
+-----
+bc0f047c-01b1-427f-a439-d451eda03025
+-----
+
++++++
+
+.....
+Bastion
+-----
+bc0f047c-01b1-427f-a439-d451eda03026
+-----
+
++++++
+
+.....
+Datapike
+-----
+bc0f047c-01b1-427f-a439-d451eda03027
+-----
+
++++++
+
+.....
+Rielle "Kit" Peddler: Transhuman
+-----
+bc0f047c-01b1-427f-a439-d451eda03028
+-----
+
++++++
+
+.....
+The Professor: Keeper of Knowledge
+-----
+bc0f047c-01b1-427f-a439-d451eda03029
+-----
+
++++++
+
+.....
+Exile: Streethawk
+-----
+bc0f047c-01b1-427f-a439-d451eda03030
+-----
+
++++++
+
+.....
+Escher
+-----
+bc0f047c-01b1-427f-a439-d451eda03031
+-----
+
++++++
+
+.....
+Exploratory Romp
+-----
+bc0f047c-01b1-427f-a439-d451eda03032
+-----
+
++++++
+
+.....
+Freelance Coding Contract
+-----
+bc0f047c-01b1-427f-a439-d451eda03033
+-----
+
++++++
+
+.....
+Scavenge
+-----
+bc0f047c-01b1-427f-a439-d451eda03034
+-----
+
++++++
+
+.....
+Levy AR Lab Access
+-----
+bc0f047c-01b1-427f-a439-d451eda03035
+-----
+
++++++
+
+.....
+Monolith
+-----
+bc0f047c-01b1-427f-a439-d451eda03036
+-----
+
++++++
+
+.....
+Feedback Filter
+-----
+bc0f047c-01b1-427f-a439-d451eda03037
+-----
+
++++++
+
+.....
+Clone Chip
+-----
+bc0f047c-01b1-427f-a439-d451eda03038
+-----
+
++++++
+
+.....
+Omni-drive
+-----
+bc0f047c-01b1-427f-a439-d451eda03039
+-----
+
++++++
+
+.....
+Atman
+-----
+bc0f047c-01b1-427f-a439-d451eda03040
+-----
+
++++++
+
+.....
+Cloak
+-----
+bc0f047c-01b1-427f-a439-d451eda03041
+-----
+
++++++
+
+.....
+Dagger
+-----
+bc0f047c-01b1-427f-a439-d451eda03042
+-----
+
++++++
+
+.....
+Chakana
+-----
+bc0f047c-01b1-427f-a439-d451eda03043
+-----
+
++++++
+
+.....
+Cyber-Cypher
+-----
+bc0f047c-01b1-427f-a439-d451eda03044
+-----
+
++++++
+
+.....
+Paricia
+-----
+bc0f047c-01b1-427f-a439-d451eda03045
+-----
+
++++++
+
+.....
+Self-modifying Code
+-----
+bc0f047c-01b1-427f-a439-d451eda03046
+-----
+
++++++
+
+.....
+Sahasrara
+-----
+bc0f047c-01b1-427f-a439-d451eda03047
+-----
+
++++++
+
+.....
+Inti
+-----
+bc0f047c-01b1-427f-a439-d451eda03048
+-----
+
++++++
+
+.....
+Professional Contacts
+-----
+bc0f047c-01b1-427f-a439-d451eda03049
+-----
+
++++++
+
+.....
+Borrowed Satellite
+-----
+bc0f047c-01b1-427f-a439-d451eda03050
+-----
+
++++++
+
+.....
+Ice Analyzer
+-----
+bc0f047c-01b1-427f-a439-d451eda03051
+-----
+
++++++
+
+.....
+Dirty Laundry
+-----
+bc0f047c-01b1-427f-a439-d451eda03052
+-----
+
++++++
+
+.....
+Daily Casts
+-----
+bc0f047c-01b1-427f-a439-d451eda03053
+-----
+
++++++
+
+.....
+Same Old Thing
+-----
+bc0f047c-01b1-427f-a439-d451eda03054
+-----
+
++++++
+
+.....
+The Source
+-----
+bc0f047c-01b1-427f-a439-d451eda03055
+-----
+
 +++++
 
 .....

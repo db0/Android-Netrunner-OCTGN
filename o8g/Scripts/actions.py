@@ -105,6 +105,7 @@ def goToEndTurn(group, x = 0, y = 0):
    if ds == None:
       whisper ("Please perform the game setup first (Ctrl+Shift+S)")
       return
+   atTimedEffects('PreEnd')
    if re.search(r'running',getGlobalVariable('status')): jackOut() # If the player forgot to end the run, we do it for them now.
    if me.Clicks > 0: # If the player has not used all their clicks for this turn, remind them, just in case.
       if debugVerbosity <= 0 and not confirm("You have not taken all your clicks for this turn, are you sure you want to declare end of turn"): return
@@ -136,7 +137,7 @@ def goToSot (group, x=0,y=0):
    debugNotify(">>> goToSot(){}".format(extraASDebug())) #Debug
    global newturn, endofturn, lastKnownNrClicks, currClicks, turn
    mute()
-   clearNoise()
+   atTimedEffects('PreStart')
    if endofturn or currClicks or newturn:
       if debugVerbosity <= 0 and not confirm("You have not yet properly ended you previous turn. You need to use F12 after you've finished all your clicks.\n\nAre you sure you want to continue?"): return
       else:

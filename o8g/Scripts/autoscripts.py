@@ -575,6 +575,7 @@ def atTimedEffects(Time = 'Start'): # Function which triggers card effects at th
          if Time == 'Run': effect = re.search(r'at(Run)Start:(.*)', autoS) # Putting Run in a group, only to retain the search results groupings later
          elif Time == 'JackOut': effect = re.search(r'at(JackOut):(.*)', autoS) # Same as above
          elif Time == 'SuccessfulRun': effect = re.search(r'at(SuccessfulRun):(.*)', autoS) # Same as above
+         elif Time == 'PreStart' or Time == 'PreEnd': effect = re.search(r'atTurn(PreStart|PreEnd):(.*)', autoS)
          else: effect = re.search(r'atTurn(Start|End):(.*)', autoS) #Putting "Start" or "End" in a group to compare with the Time variable later
          if not effect: continue
          debugNotify("Time maches. Script triggers on: {}".format(effect.group(1)), 3)
@@ -618,7 +619,7 @@ def atTimedEffects(Time = 'Start'): # Function which triggers card effects at th
                if Time == 'Run': title = "{}'s Start-of-Run Effects".format(me)
                elif Time == 'JackOut': title = "{}'s Jack-Out Effects".format(me)
                elif Time == 'SuccessfulRun': title = "{}'s Successful Run Effects".format(me)
-               else: title = "{}'s {}-of-Turn Effects".format(me,effect.group(1))
+               elif Time != 'PreStart' and Time != 'PreEnd': title = "{}'s {}-of-Turn Effects".format(me,effect.group(1))
                notify("{:=^36}".format(title))
             TitleDone = True
             debugNotify("passedScript: {}".format(passedScript), 2)
