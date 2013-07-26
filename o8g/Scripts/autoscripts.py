@@ -808,7 +808,7 @@ def executeTraceEffects(card,Autoscript,count = 0):
             
 def redirect(Autoscript, card, announceText = None, notificationType = 'Quick', X = 0):
    debugNotify(">>> redirect(){}".format(extraASDebug(Autoscript))) #Debug
-   if re.search(r':Pass\b', Autoscript): return # Pass is a simple command of doing nothing ^_^
+   if re.search(r':Pass\b', Autoscript): return X # Pass is a simple command of doing nothing ^_^
    targetC = findTarget(Autoscript)
    debugNotify("card.owner = {}".format(card.owner),2)
    targetPL = ofwhom(Autoscript,card.owner) # So that we know to announce the right person the effect, affects.

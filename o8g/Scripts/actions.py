@@ -1157,6 +1157,7 @@ def accessTarget(group = table, x = 0, y = 0):
    debugNotify(">>> accessTarget()") #Debug
    mute()
    targetPL = ofwhom('-ofOpponent')
+   if getGlobalVariable('SuccessfulRun') != 'True': runSuccess() # If the player is trying to access, then we assume the run was a success.
    cardList = [c for c in table
                if c.targetedBy
                and c.targetedBy == me
