@@ -337,6 +337,10 @@ def chkTags():
    else:
       ID.markers[mdict['Tag']] = 0
       return False
+
+def fetchRunnerPL():
+   if ds == 'runner': return me
+   else return findOpponent()
    
 def clearAttachLinks(card):
 # This function takes care to discard any attachments of a card that left play

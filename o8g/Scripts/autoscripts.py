@@ -1594,6 +1594,7 @@ def InflictX(Autoscript, announceText, card, targetCards = None, notification = 
             if action.group(3) == 'Brain':  
                #targetPL.counters['Hand Size'].value -= 1 # If it's brain damage, also reduce the player's maximum handsize.               
                applyBrainDmg(targetPL)
+      autoscriptOtherPlayers('{}Damage'.format(action.group(3)),getSpecial('Identity',targetPL),DMG) # We also trigger any script for damage
    if targetPL == me: targetPL = 'theirself' # Just changing the announcement to fit better.
    if re.search(r'isRequirement', Autoscript) and DMG < 1: failedRequirement = True # Requirement means that the cost is still paid but other clicks are not going to follow.
    if notification == 'Quick': announceString = "{} suffer {} {} damage{}".format(announceText,DMG,action.group(3),preventTXT)

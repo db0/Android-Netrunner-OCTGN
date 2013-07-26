@@ -936,8 +936,9 @@ def addBrainDmg(group, x = 0, y = 0):
       notify ("{} prevents 1 Brain Damage.".format(me))
    else:
       applyBrainDmg()
-      notify ("{} suffers 1 Brain Damage.".format(me) )
-      intdamageDiscard(me.hand)
+      notify ("{} suffers 1 Brain Damage.".format(me))
+      intdamageDiscard(me.hand)     
+      autoscriptOtherPlayers('BrainDamage',getSpecial('Identity',fetchRunnerPL()))
 
 def applyBrainDmg(player = me):
    debugNotify(">>> applyBrainDmg(){}".format(extraASDebug())) #Debug
@@ -952,6 +953,7 @@ def addMeatDmg(group, x = 0, y = 0):
    else:
       notify ("{} suffers 1 Meat Damage.".format(me))
       intdamageDiscard(me.hand)
+      autoscriptOtherPlayers('MeatDamage',getSpecial('Identity',fetchRunnerPL()))
 
 def addNetDmg(group, x = 0, y = 0):
    mute()
@@ -961,6 +963,7 @@ def addNetDmg(group, x = 0, y = 0):
    else:
       notify ("{} suffers 1 Net Damage.".format(me))
       intdamageDiscard(me.hand)
+      autoscriptOtherPlayers('NetDamage',getSpecial('Identity',fetchRunnerPL()))
 
 def getCredit(group, x = 0, y = 0):
    debugNotify(">>> getCredit(){}".format(extraASDebug())) #Debug

@@ -418,7 +418,7 @@ Grimoire
 -----
 bc0f047c-01b1-427f-a439-d451eda01006
 -----
-whileRezzed:Gain2MU||whileRezzed:Put1Virus-afterCardInstall-onTriggerCard-typeVirus
+whileRezzed:Gain2MU||whileRezzed:Put1Virus-foreachCardInstall-onTriggerCard-typeVirus
 +++++
 A0B0G0T0:Put1Virus-Targeted-atProgram_and_Virus
 .....
@@ -514,7 +514,7 @@ Jinteki
 -----
 bc0f047c-01b1-427f-a439-d451eda01067
 -----
-whileRezzed:Inflict1NetDamage-onOpponent-perAgendaScored||whileRezzed:Inflict1NetDamage-onOpponent-perAgendaLiberated
+whileRezzed:Inflict1NetDamage-onOpponent-foreachAgendaScored||whileRezzed:Inflict1NetDamage-onOpponent-foreachAgendaLiberated
 +++++
 	
 .....
@@ -522,7 +522,7 @@ Kate "Mac" McCaffrey
 -----
 bc0f047c-01b1-427f-a439-d451eda01033
 -----
-whileRezzed:Reduce1CostInstall-forHardware-onlyOnce-forMe||whileRezzed:Reduce1CostInstall-forProgram-onlyOnce-forMe||whileRezzed:Pass-perCardInstall-typeProgram_or_Hardware-byMe-onlyOnce
+whileRezzed:Reduce1CostInstall-forHardware-onlyOnce-forMe||whileRezzed:Reduce1CostInstall-forProgram-onlyOnce-forMe||whileRezzed:Pass-foreachCardInstall-typeProgram_or_Hardware-byMe-onlyOnce
 +++++
 	
 .....
@@ -578,7 +578,7 @@ Modded
 -----
 bc0f047c-01b1-427f-a439-d451eda01035
 -----
-onPlay:Put3Credits$$Put1Click-isPriority||whileRezzed:Reduce#CostInstall-forHardware-onlyOnce-forMe||whileRezzed:Reduce#CostInstall-forProgram-onlyOnce-forMe||whileRezzed:Transfer1Click-perCardInstall
+onPlay:Put3Credits$$Put1Click-isPriority||whileRezzed:Reduce#CostInstall-forHardware-onlyOnce-forMe||whileRezzed:Reduce#CostInstall-forProgram-onlyOnce-forMe||whileRezzed:Transfer1Click-foreachCardInstall
 +++++
 	
 .....
@@ -634,7 +634,7 @@ Noise
 -----
 bc0f047c-01b1-427f-a439-d451eda01001
 -----
-whileRezzed:Draw1Card-toTrash-ofOpponent-perCardInstall-typeVirus-byMe
+whileRezzed:Draw1Card-toTrash-ofOpponent-foreachCardInstall-typeVirus-byMe
 +++++
 	
 .....
@@ -802,7 +802,7 @@ Shipment from Mirrormorph
 -----
 bc0f047c-01b1-427f-a439-d451eda01060
 -----
-onPlay:Put3Click||whileRezzed:Transfer1Click-perCardInstall
+onPlay:Put3Click||whileRezzed:Transfer1Click-foreachCardInstall
 +++++
 	
 .....
@@ -914,7 +914,7 @@ Weyland Consortium
 -----
 bc0f047c-01b1-427f-a439-d451eda01093
 -----
-whileRezzed:Gain1Credits-perCardPlay-typeTransaction-byMe
+whileRezzed:Gain1Credits-foreachCardPlay-typeTransaction-byMe
 +++++
 	
 .....
@@ -1066,7 +1066,7 @@ Spinal Modem
 -----
 bc0f047c-01b1-427f-a439-d451eda02002
 -----
-onInstall:Put2Credits-isSilent||whileInstalled:Gain1MU||atTurnPreStart:Refill2Credits-duringMyTurn||whileRezzed:Reduce#CostUse-forIcebreaker-forMe||whileRunning:Inflict1BrainDamage-afterUnavoidedTrace-byMe
+onInstall:Put2Credits-isSilent||whileInstalled:Gain1MU||atTurnPreStart:Refill2Credits-duringMyTurn||whileRezzed:Reduce#CostUse-forIcebreaker-forMe||whileRunning:Inflict1BrainDamage-foreachUnavoidedTrace-byMe
 +++++
 
 .....
@@ -1098,7 +1098,7 @@ Haas-Bioroid
 -----
 bc0f047c-01b1-427f-a439-d451eda02010
 -----
-whileRezzed:Put1PlusOnePerm-afterCardRezzed-onTriggerCard-typeBioroid_and_ICE||whileRezzed:Remove1PlusOnePerm-afterCardDerezzed-onTriggerCard-typeBioroid_and_ICE
+whileRezzed:Put1PlusOnePerm-foreachCardRezzed-onTriggerCard-typeBioroid_and_ICE||whileRezzed:Remove1PlusOnePerm-foreachCardDerezzed-onTriggerCard-typeBioroid_and_ICE
 +++++
 
 .....
@@ -1138,7 +1138,7 @@ Compromised Employee
 -----
 bc0f047c-01b1-427f-a439-d451eda02025
 -----
-onInstall:Put1Credits-isSilent||atTurnPreStart:Refill1Credits-duringMyTurn||whileRezzed:Reduce#CostTrace-forAll-forMe||whileRezzed:Gain1Credits-perCardRezzed-typeICE
+onInstall:Put1Credits-isSilent||atTurnPreStart:Refill1Credits-duringMyTurn||whileRezzed:Reduce#CostTrace-forAll-forMe||whileRezzed:Gain1Credits-foreachCardRezzed-typeICE
 +++++
 
 .....
@@ -1642,7 +1642,7 @@ Replicator
 -----
 bc0f047c-01b1-427f-a439-d451eda02088
 -----
-whileRezzed:UseCustomAbility-perCardInstall-onTriggerCard-typeHardware-byMe
+whileRezzed:UseCustomAbility-foreachCardInstall-onTriggerCard-typeHardware-byMe
 +++++
 
 .....
@@ -1820,7 +1820,7 @@ New Angeles City Hall
 -----
 bc0f047c-01b1-427f-a439-d451eda02109
 -----
-whileInstalled:TrashMyself-perAgendaLiberated
+whileInstalled:TrashMyself-foreachAgendaLiberated
 +++++
 A0B2G0T0:Lose1Tags
 .....
@@ -1951,17 +1951,17 @@ Efficiency Committee
 -----
 bc0f047c-01b1-427f-a439-d451eda03005
 -----
-
+onScore:Put3Agenda
 +++++
-
+A1B0G0T0:Gain2Clicks
 .....
 Project Wotan
 -----
 bc0f047c-01b1-427f-a439-d451eda03006
 -----
-
+onScore:Put3Agenda||atJackOut:Remove999Project Wotan ETR-AutoTargeted-atICE-hasMarker{Project Wotan ETR}
 +++++
-
+A0B0G0T0:Put1Project Wotan ETR-Targeted-atICE_and_Bioroid-isRezzed
 .....
 Sentinel Defense Program
 -----
