@@ -6,8 +6,8 @@
      gameVersion="3.1.0.0" 
      version="3.1.0.0">
 <cards>
-	<card id="bc0f047c-01b1-427f-a439-d451eda03001" name="Cerebral Imaging: Infinite Frontiers">
-		<property name="Subtitle" value="" />
+	<card id="bc0f047c-01b1-427f-a439-d451eda03001" name="Cerebral Imaging">
+		<property name="Subtitle" value="Infinite Frontiers" />
 		<property name="Type" value="Identity" />
 		<property name="Keywords" value="Division" />
 		<property name="Cost" value="0" />
@@ -22,8 +22,8 @@
 		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
 	</card>
-	<card id="bc0f047c-01b1-427f-a439-d451eda03002" name="Custom Biotics: Engineered for Success">
-		<property name="Subtitle" value="" />
+	<card id="bc0f047c-01b1-427f-a439-d451eda03002" name="Custom Biotics">
+		<property name="Subtitle" value="Engineered for Success" />
 		<property name="Type" value="Identity" />
 		<property name="Keywords" value="Division" />
 		<property name="Cost" value="0" />
@@ -38,8 +38,8 @@
 		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
 	</card>
-	<card id="bc0f047c-01b1-427f-a439-d451eda03003" name="Next Design: Guarding the Net">
-		<property name="Subtitle" value="" />
+	<card id="bc0f047c-01b1-427f-a439-d451eda03003" name="Next Design">
+		<property name="Subtitle" value="Guarding the Net" />
 		<property name="Type" value="Identity" />
 		<property name="Keywords" value="Division" />
 		<property name="Cost" value="0" />
@@ -438,8 +438,8 @@
 		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
 	</card>
-	<card id="bc0f047c-01b1-427f-a439-d451eda03028" name="Rielle &quot;Kit&quot; Peddler: Transhuman">
-		<property name="Subtitle" value="" />
+	<card id="bc0f047c-01b1-427f-a439-d451eda03028" name="Rielle &quot;Kit&quot; Peddler">
+		<property name="Subtitle" value="Transhuman" />
 		<property name="Type" value="Identity" />
 		<property name="Keywords" value="Cyborg" />
 		<property name="Cost" value="0" />
@@ -454,8 +454,8 @@
 		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
 	</card>
-	<card id="bc0f047c-01b1-427f-a439-d451eda03029" name="The Professor: Keeper of Knowledge">
-		<property name="Subtitle" value="" />
+	<card id="bc0f047c-01b1-427f-a439-d451eda03029" name="The Professor">
+		<property name="Subtitle" value="Keeper of Knowledge" />
 		<property name="Type" value="Identity" />
 		<property name="Keywords" value="Natural" />
 		<property name="Cost" value="0" />
