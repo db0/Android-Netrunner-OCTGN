@@ -1948,6 +1948,7 @@ def CustomScript(card, action = 'PLAY'): # Scripts that are complex and fairly u
       if len(StackTop) < 2:
          whisper("Your Stack is does not have enough cards. You cannot take this action")
          return
+      notify("--> {} is visiting Mr. Li...")
       for c in StackTop:
          debugNotify("Pulling cards to hand", 3) #Debug
          c.moveTo(me.hand)
