@@ -470,8 +470,8 @@
 		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
 	</card>
-	<card id="bc0f047c-01b1-427f-a439-d451eda03030" name="Exile: Streethawk">
-		<property name="Subtitle" value="" />
+	<card id="bc0f047c-01b1-427f-a439-d451eda03030" name="Exile">
+		<property name="Subtitle" value="Streethawk" />
 		<property name="Type" value="Identity" />
 		<property name="Keywords" value="Natural" />
 		<property name="Cost" value="1" />

@@ -331,6 +331,7 @@ def checkDeck(group):
    if len(players) > 1: random = rnd(1,100) # Fix for multiplayer only. Makes Singleplayer setup very slow otherwise.
    debugNotify("About to check each card in the deck", 5) #Debug
    counts = collections.defaultdict(int)
+   CardLimit = {}
    for card in me.ScriptingPile:
       counts[card.name] += 1
       if counts[card.name] > 3:
@@ -356,6 +357,15 @@ def checkDeck(group):
             ok = False
          elif card.Faction != identity.Faction and card.Faction != 'Neutral':
             notify(":::ERROR::: Faction-restricted card ({}) found in {}'s {}.".format(fetchProperty(card, 'name'), me, pileName(group)))
+            ok = False
+      if identity.model == 'bc0f047c-01b1-427f-a439-d451eda03002' and card.Faction == 'Jinteki'
+         notify(":::ERROR::: Jinteki cards found in a {} deck".format(identity))
+         ok = False
+      if card.model in LimitedCard:
+         if card.model not in CardLimit: CardLimit[card.model] = 1
+         else: CardLimit[card.model] += 1
+         if CardLimit[card.model] > 1: 
+            notify(":::ERROR::: Duplicate Limited card ({}) found in {}'s {}.".format(card,me,pileName(group)))
             ok = False
    if len(players) > 1: random = rnd(1,100) # Fix for multiplayer only. Makes Singleplayer setup very slow otherwise.
    for card in me.ScriptingPile: card.moveToBottom(group) # We use a second loop because we do not want to pause after each check

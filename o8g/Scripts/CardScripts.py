@@ -1931,21 +1931,13 @@ atTurnPreEnd:SetTo1Hand Size-perCounter{Credits}
 +++++
 
 .....
-Custom Biotics: Engineered for Success
------
-bc0f047c-01b1-427f-a439-d451eda03002
------
-
-+++++
-
-.....
 Next Design: Guarding the Net
 -----
 bc0f047c-01b1-427f-a439-d451eda03003
 -----
 
 +++++
-
+A0B0G0T0:InstallMulti-Targeted-atICE-fromHand$$Draw999Cards
 .....
 Director Haas' Pet Project
 -----

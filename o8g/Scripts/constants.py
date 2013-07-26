@@ -51,7 +51,7 @@ regexHooks = dict( # A dictionary which holds the regex that then trigger each c
                   TraceX =             re.compile(r'(?<![<,+-])Trace([0-9]+)'),
                   InflictX =           re.compile(r'(?<![<,+-])Inflict([0-9]+)'),
                   RetrieveX =          re.compile(r'(?<![<,+-])Retrieve([0-9]+)'),
-                  ModifyStatus =       re.compile(r'(?<![<,+-])(Rez|Derez|Expose|Trash|Uninstall|Possess|Exile|Rework)(Target|Parent|Multi|Myself)'),
+                  ModifyStatus =       re.compile(r'(?<![<,+-])(Rez|Derez|Expose|Trash|Uninstall|Possess|Exile|Rework|Install)(Target|Parent|Multi|Myself)'),
                   SimplyAnnounce =     re.compile(r'(?<![<,+-])SimplyAnnounce'),
                   ChooseKeyword =      re.compile(r'(?<![<,+-])ChooseKeyword'),
                   CustomScript =       re.compile(r'(?<![<,+-])CustomScript'),
@@ -114,7 +114,10 @@ RunnerCardTypes = [
          'Hardware',
          'Resource',
          'Event']
-         
+
+LimitedCard = [ ### Cards which are limited to one per deck ###
+         'bc0f047c-01b1-427f-a439-d451eda03004' # Director Haas Pet-Project
+         ] 
 SpecialDaemons = [ # These are cards which can host programs and avoid their MU cost, but don't have the daemon keyword
          'Dinosaurus'] # Not in use yet.
 
