@@ -127,10 +127,16 @@ def executePlayScripts(card, action):
          if chkWarn(card, activeAutoscript) == 'ABORT': return
          if not ifHave(activeAutoscript): continue # If the script requires the playet to have a specific counter value and they don't, do nothing.
          if re.search(r'-ifAccessed', activeAutoscript) and ds != 'runner': 
-            debugNotify("Aborting script because card is not being accessed")
+            debugNotify("!!! Failing script because card is not being accessed")
             continue # These scripts are only supposed to fire from the runner (when they access a card)         
          if re.search(r'-ifActive', activeAutoscript) and (card.highlight == InactiveColor or card.highlight == RevealedColor): 
-            debugNotify("Aborting script because card is inactive")
+            debugNotify("!!! Failing script because card is inactive")
+            continue 
+         if re.search(r'-ifScored', activeAutoscript) and not card.markers[mdict['Scored']]:
+            debugNotify("!!! Failing script because card is not scored")
+            continue 
+         if re.search(r'-ifUnscored', activeAutoscript) and card.markers[mdict['Scored']]:
+            debugNotify("!!! Failing script because card is scored")
             continue 
          if re.search(r':Pass\b', activeAutoscript): continue # Pass is a simple command of doing nothing ^_^
          effect = re.search(r'\b([A-Z][A-Za-z]+)([0-9]*)([A-Za-z& ]*)\b([^:]?[A-Za-z0-9_&{}\|:,<> -]*)', activeAutoscript)

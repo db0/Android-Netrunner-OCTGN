@@ -1991,7 +1991,7 @@ Director Haas
 -----
 bc0f047c-01b1-427f-a439-d451eda03010
 -----
-onRez:Gain1Clicks$$Gain1Max Click||onTrash:ScoreMyself-forOpponent-ifAccessed-preventTrash$$Gain2Agenda Points-onOpponent$$Put2Scored-isSilent$$Lose1Max Click-ifActive
+onRez:Gain1Clicks$$Gain1Max Click||onTrash:ScoreMyself-forOpponent-ifAccessed-ifUnscored-preventTrash$$Gain2Agenda Points-onOpponent-ifAccessed-ifUnscored$$Lose1Max Click-ifActive-ifUnscored$$Lose1Clicks-ifActive-ifUnscored$$Put2Scored-isSilent-ifAccessed-ifUnscored
 +++++
 
 .....

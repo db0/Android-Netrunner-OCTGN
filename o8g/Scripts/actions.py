@@ -1322,8 +1322,6 @@ def RDaccessX(group = table, x = 0, y = 0): # A function which looks at the top 
       cCost = RDtop[iter].Cost
       cName = RDtop[iter].name
       cRules = RDtop[iter].Rules
-      debugNotify(" Finished Storing. About to move back...", 4)
-      RDtop[iter].moveTo(targetPL.piles['R&D/Stack'],iter - removedCards)
       debugNotify("Stored properties. Checking type...", 3) #Debug
       if cType == 'ICE':
          cStatTXT = '\nStrength: {}.'.format(cStat)
@@ -1377,7 +1375,9 @@ def RDaccessX(group = table, x = 0, y = 0): # A function which looks at the top 
             loopChk(RDtop[iter],'Type')
             notify("{} paid {}{} to {} {}".format(me,uniCredit(num(cStat) - reduction),extraText2,uniTrash(),RDtop[iter]))
             removedCards += 1
-      else: continue
+      else: 
+         debugNotify("Selected doing nothing. About to move back...", 4)
+         RDtop[iter].moveTo(targetPL.piles['R&D/Stack'],iter - removedCards)
    notify("{} has finished accessing {}'s R&D".format(me,targetPL))
    gatheredCardList = False  # We set this variable to False, so that reduceCost() calls from other functions can start scanning the table again.
    debugNotify("<<< RDaccessX()", 3)
@@ -1645,6 +1645,9 @@ def intTrashCard(card, stat, cost = "not free",  ClickCost = '', silent = False)
    storeProperties(card)
    if card.group.name == 'Heap/Archives(Face-up)' or card.group.name == 'Archives(Hidden)': # If the card is already trashed (say from a previous script), we don't want to try and trash it again
       return # We don't return abort, otherwise scripts will stop executing (e.g. see using Fairy to break two subroutines)
+   if card.markers[mdict['Scored']]: 
+      exileCard(card) # If the card is scored, then card effects don't trash it, but rather remove it from play (Otherwise the runner could score it again)
+      return
    if ClickCost == '':
       ClickCost = '{} '.format(me) # If not clicks were used, then just announce our name.
       goodGrammar = 'es' # LOL Grammar Nazi
@@ -1686,18 +1689,13 @@ def intTrashCard(card, stat, cost = "not free",  ClickCost = '', silent = False)
          if cost == "host removed": notify("{} {} {} because its host has been removed from play{}.".format(card.owner, uniTrash(), card, MUtext))
          else: notify("{} {} {} at no cost{}.".format(me, uniTrash(), card, MUtext))
       elif not silent: notify("{} {}{} {}{}{}.".format(ClickCost, uniTrash(), goodGrammar, card, extraText, MUtext))
-      if card.markers[mdict['Scored']]:
-         if card.Type == 'Agenda': APloss = num(card.Stat)
-         else: APloss = card.markers[mdict['Scored']] # If we're trashing a card that's not an agenda but nevertheless counts as one, the amount of scored counters are the AP it provides.
-         me.counters['Agenda Points'].value -= APloss # Trashing Agendas for any reason, now takes they value away as well.
-         notify("--> {} loses {} Agenda Points".format(me, APloss))
       sendToTrash(card)
    elif (ds == "runner" and card.controller == me) or (ds == "runner" and card.controller != me and cost == "not free") or (ds == "corp" and card.controller != me ):
    #I'm the runner and I trash my cards, or an accessed card from the corp, or I 'm the corp and I trash a runner's card, then the card will go to the open archives
       sendToTrash(card)
       if rc == "free" and not silent:
          if card.highlight == DummyColor: notify ("{} clears {}'s lingering effects.".format(me, card)) # In case the card is a dummy card, we change the notification slightly.
-         else: notify ("{} {} {}{} at no cost.".format(me, uniTrash(), card))
+         else: notify ("{} {} {}{} at no cost.".format(me, uniTrash(), card, extraText))
       elif not silent: notify("{} {}{} {}{}.".format(ClickCost, uniTrash() , goodGrammar, card, extraText))
    else: #I'm the corp and I trash my own hidden cards or the runner and trash a hidden corp card without cost (e.g. randomly picking one from their hand)
       sendToTrash(card, cardowner.piles['Archives(Hidden)'])
@@ -1773,7 +1771,7 @@ def exileCard(card, silent = False):
          else: APloss = card.markers[mdict['Scored']] # If we're trashing a card that's not an agenda but nevertheless counts as one, the amount of scored counters are the AP it provides.
          me.counters['Agenda Points'].value -= APloss # Trashing Agendas for any reason, now takes they value away as well.
          notify("--> {} loses {} Agenda Points".format(me, APloss))
-      if card.highlight != RevealedColor: executePlayScripts(card,'TRASH') # We don't want to run automations on simply revealed cards.
+      executePlayScripts(card,'TRASH') # We don't want to run automations on simply revealed cards.
       card.moveTo(card.owner.piles['Removed from Game'])
    if not silent: notify("{} exiled {}{}.".format(me,card,MUtext))
 
