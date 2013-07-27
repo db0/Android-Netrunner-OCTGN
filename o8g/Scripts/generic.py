@@ -628,6 +628,25 @@ def restorePile(group, cover): # This pile returns a pike visibility to the defa
    rnd(1,100) # Small delay to allow OCTGN to finish 
    cover.moveTo(shared.exile) # we cannot delete cards so we just hide it.
    debugNotify("<<< restorePile()") #Debug
+   
+def chkModulator(card, modulator, scriptType = 'onPlay'): # Checks the card's autoscripts for the existence of a specific modulator
+   debugNotify(">>> chkModulator() looking for {}".format(modulator)) #Debug
+   debugNotify("scriptType = {}".format(scriptType)) #Debug
+   ModulatorExists = False
+   Autoscripts = CardsAS.get(card.model,'').split('||')
+   for autoS in Autoscripts:
+      debugNotify("Checking {}'s AS: {}".format(card,autoS))
+      if not re.search(r'{}'.format(scriptType),autoS): 
+         debugNotify("Rejected!",4)
+         continue
+      # We check the script only if it matches the script type we're looking for.
+      # So if we're checking if a specific onTrash modulator exists on the card, we only check for "onTrash" scripts.
+      if re.search(r'{}'.format(modulator),autoS): 
+         debugNotify("Modulator Matches!",4)
+         ModulatorExists = True
+   debugNotify("<<< chkModulator() with return {}".format(ModulatorExists)) #Debug
+   return ModulatorExists
+      
 #---------------------------------------------------------------------------
 # Card Placement functions
 #---------------------------------------------------------------------------

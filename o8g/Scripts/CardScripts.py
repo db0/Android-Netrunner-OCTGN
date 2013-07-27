@@ -276,7 +276,7 @@ bc0f047c-01b1-427f-a439-d451eda01031
 -----
 
 +++++
-A1B0G0T0:ExileTarget-Targeted-atAgenda-targetMine$$Gain9Credits	
+A1B0G0T0:ExileTarget-Targeted-isScored-targetMine$$Gain9Credits	
 .....
 Data Mine
 -----
@@ -1210,7 +1210,7 @@ Notoriety
 -----
 bc0f047c-01b1-427f-a439-d451eda02026
 -----
-onPlay:Gain1Agenda Points$$Put1Scored-isSilent
+onPlay:Gain1Agenda Points$$ScoreMyself$$Put1Scored-isSilent
 +++++
 
 .....
@@ -1991,7 +1991,7 @@ Director Haas
 -----
 bc0f047c-01b1-427f-a439-d451eda03010
 -----
-whileRezzed:Gain1Max Click||onRez:Gain1Clicks||onTrash:Gain2Agenda Points-onOpponent-ifAccessed$$ScoreMyself-forOpponent
+onRez:Gain1Clicks$$Gain1Max Click||onTrash:ScoreMyself-forOpponent-ifAccessed-preventTrash$$Gain2Agenda Points-onOpponent$$Put2Scored-isSilent$$Lose1Max Click-ifActive
 +++++
 
 .....

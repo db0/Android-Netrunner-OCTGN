@@ -1192,6 +1192,7 @@ def accessTarget(group = table, x = 0, y = 0):
                and c.controller == targetPL
                and not c.markers[mdict['Scored']]
                and c.Type != 'Server'
+               and c.Type != 'ICE' # To prevent mistakes
                and c.Type != 'Remote Server']
    for card in cardList:
       cFaceD = False
@@ -1251,7 +1252,7 @@ def accessTarget(group = table, x = 0, y = 0):
       choice = SingleChoice(title, options, 'button')
       if choice == None: choice = 0
       if choice == 1:
-         card.moveTo(targetPL.piles['Heap/Archives(Face-up)'])
+         sendToTrash(card)
          notify("{} {} {} at no cost".format(me,uniTrash(),card))
       elif choice == 2:
          if card.Type == 'Agenda':
@@ -1260,7 +1261,7 @@ def accessTarget(group = table, x = 0, y = 0):
             reduction = reduceCost(card, 'TRASH', num(card.Stat))
             rc = payCost(num(card.Stat) - reduction, "not free")
             if rc == "ABORT": pass # If the player couldn't pay to trash the card, we leave it where it is.
-            card.moveTo(targetPL.piles['Heap/Archives(Face-up)'])
+            sendToTrash(card)
             notify("{} paid {}{} to {} {}".format(me,uniCredit(num(card.Stat) - reduction),extraText2,uniTrash(),card))
       else: pass
       if cFaceD and card.group == table and not card.markers[mdict['Scored']]: card.isFaceUp = False
@@ -1358,7 +1359,7 @@ def RDaccessX(group = table, x = 0, y = 0): # A function which looks at the top 
       choice = SingleChoice(title, options, 'button')
       if choice == None: choice = 0
       if choice == 1:
-         RDtop[iter].moveTo(targetPL.piles['Heap/Archives(Face-up)'])
+         sendToTrash(RDtop[iter])
          loopChk(RDtop[iter],'Type')
          notify("{} {} {} at no cost".format(me,uniTrash(),RDtop[iter]))
          removedCards += 1
@@ -1372,7 +1373,7 @@ def RDaccessX(group = table, x = 0, y = 0): # A function which looks at the top 
             reduction = reduceCost(RDtop[iter], 'TRASH', num(cStat))
             rc = payCost(num(cStat) - reduction, "not free")
             if rc == "ABORT": continue # If the player couldn't pay to trash the card, we leave it where it is.
-            RDtop[iter].moveTo(targetPL.piles['Heap/Archives(Face-up)'])
+            sendToTrash(RDtop[iter])
             loopChk(RDtop[iter],'Type')
             notify("{} paid {}{} to {} {}".format(me,uniCredit(num(cStat) - reduction),extraText2,uniTrash(),RDtop[iter]))
             removedCards += 1
@@ -1397,13 +1398,16 @@ def ARCscore(group=table, x=0,y=0):
       whisper("Corp's Archives are empty. You cannot take this action")
       return
    rnd(10,100) # A small pause
+   agendaFound = False
    for card in ARC:
       debugNotify("Checking: {}.".format(card), 3) #Debug
-      if card.Type == 'Agenda':
+      if card.Type == 'Agenda': 
+         agendaFound = True
          card.moveToTable(0,0)
          card.highlight = RevealedColor
          scrAgenda(card) # We don't want it silent, as it needs to ask the runner to score, in case of agendas like Fetal AI for which they have to pay as well.
          if card.highlight == RevealedColor: card.moveTo(ARC) # If the runner opted not to score the agenda, put it back into the deck.
+   if not agendaFound: notify("{} has rumaged through {}'s archives but found no Agendas".format(targetPL))
    debugNotify("<<< ARCscore()", 3)
 
 def HQaccess(group=table, x=0,y=0, silent = False):
@@ -1481,7 +1485,7 @@ def HQaccess(group=table, x=0,y=0, silent = False):
       if choice == None: choice = 0
       revealedCard.highlight = None
       if choice == 1:
-         revealedCard.moveTo(targetPL.piles['Heap/Archives(Face-up)'])
+         sendToTrash(revealedCard)
          loopChk(revealedCard,'Type')
          notify("{} {} {} at no cost".format(me,uniTrash(),revealedCard))
       elif choice == 2:
@@ -1491,7 +1495,7 @@ def HQaccess(group=table, x=0,y=0, silent = False):
             reduction = reduceCost(revealedCard, 'TRASH', num(revealedCard.Stat))
             rc = payCost(num(revealedCard.Stat) - reduction, "not free")
             if rc == "ABORT": revealedCard.moveTo(targetPL.hand) # If the player couldn't pay to trash the card, we leave it where it is.
-            revealedCard.moveTo(targetPL.piles['Heap/Archives(Face-up)'])
+            sendToTrash(revealedCard)
             loopChk(revealedCard,'Type')
             notify("{} paid {}{} to {} {}".format(me,uniCredit(num(revealedCard.Stat) - reduction),extraText2,uniTrash(),revealedCard))
       else: revealedCard.moveTo(targetPL.hand)
@@ -1682,25 +1686,21 @@ def intTrashCard(card, stat, cost = "not free",  ClickCost = '', silent = False)
          if cost == "host removed": notify("{} {} {} because its host has been removed from play{}.".format(card.owner, uniTrash(), card, MUtext))
          else: notify("{} {} {} at no cost{}.".format(me, uniTrash(), card, MUtext))
       elif not silent: notify("{} {}{} {}{}{}.".format(ClickCost, uniTrash(), goodGrammar, card, extraText, MUtext))
-      if card.Type == 'Agenda' and card.markers[mdict['Scored']]:
-         me.counters['Agenda Points'].value -= num(card.Stat) # Trashing Agendas for any reason, now takes they value away as well.
-         notify("--> {} loses {} Agenda Points".format(me, card.Stat))
-      if card.highlight != RevealedColor:
-         executePlayScripts(card,'TRASH') # We don't want to run automations on simply revealed cards.
-         autoscriptOtherPlayers('CardTrashed',card)
-      clearAttachLinks(card)
-      card.moveTo(cardowner.piles['Heap/Archives(Face-up)'])
+      if card.markers[mdict['Scored']]:
+         if card.Type == 'Agenda': APloss = num(card.Stat)
+         else: APloss = card.markers[mdict['Scored']] # If we're trashing a card that's not an agenda but nevertheless counts as one, the amount of scored counters are the AP it provides.
+         me.counters['Agenda Points'].value -= APloss # Trashing Agendas for any reason, now takes they value away as well.
+         notify("--> {} loses {} Agenda Points".format(me, APloss))
+      sendToTrash(card)
    elif (ds == "runner" and card.controller == me) or (ds == "runner" and card.controller != me and cost == "not free") or (ds == "corp" and card.controller != me ):
-   #I'm the runner and I trash my cards, or an accessed card from the corp, or I 'm the corp and I trash a runner's card.
-      clearAttachLinks(card)
-      card.moveTo(cardowner.piles['Heap/Archives(Face-up)'])
+   #I'm the runner and I trash my cards, or an accessed card from the corp, or I 'm the corp and I trash a runner's card, then the card will go to the open archives
+      sendToTrash(card)
       if rc == "free" and not silent:
          if card.highlight == DummyColor: notify ("{} clears {}'s lingering effects.".format(me, card)) # In case the card is a dummy card, we change the notification slightly.
          else: notify ("{} {} {}{} at no cost.".format(me, uniTrash(), card))
       elif not silent: notify("{} {}{} {}{}.".format(ClickCost, uniTrash() , goodGrammar, card, extraText))
    else: #I'm the corp and I trash my own hidden cards or the runner and trash a hidden corp card without cost (e.g. randomly picking one from their hand)
-      clearAttachLinks(card)
-      card.moveTo(cardowner.piles['Archives(Hidden)'])
+      sendToTrash(card, cardowner.piles['Archives(Hidden)'])
       if rc == "free" and not silent: notify("{} {} a hidden card at no cost.".format(me, uniTrash()))
       elif not silent: notify("{} {}{} a hidden card.".format(ClickCost, uniTrash(), goodGrammar))
    debugNotify("<<< intTrashCard()", 3)
@@ -1768,9 +1768,11 @@ def exileCard(card, silent = False):
    else:
       if card.isFaceUp: MUtext = chkRAM(card, 'UNINSTALL')
       else: MUtext = ''
-      if card.Type == 'Agenda' and card.markers[mdict['Scored']]:
-         me.counters['Agenda Points'].value -= num(card.Stat) # Trashing Agendas for any reason, now takes they value away as well.
-         notify("--> {} loses {} Agenda Points".format(me, card.Stat))
+      if card.markers[mdict['Scored']]:
+         if card.Type == 'Agenda': APloss = num(card.Stat)
+         else: APloss = card.markers[mdict['Scored']] # If we're trashing a card that's not an agenda but nevertheless counts as one, the amount of scored counters are the AP it provides.
+         me.counters['Agenda Points'].value -= APloss # Trashing Agendas for any reason, now takes they value away as well.
+         notify("--> {} loses {} Agenda Points".format(me, APloss))
       if card.highlight != RevealedColor: executePlayScripts(card,'TRASH') # We don't want to run automations on simply revealed cards.
       card.moveTo(card.owner.piles['Removed from Game'])
    if not silent: notify("{} exiled {}{}.".format(me,card,MUtext))

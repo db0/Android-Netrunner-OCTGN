@@ -21,7 +21,7 @@ Changelog - Android:Netrunner LCG OCTGN Game Definition
 ### 3.1.9.x
 
 * New board again! Now with Runner red, and text
-* False lead now will now lose clicks if the player doesn't have at least 2
+* False lead now will not lose clicks if the player doesn't have at least 2
 * NBN:TWiY won't lose its extra hand size after mulligan
 * Can now prioritize Start of Turn abilities. This way you can set your Wyldsize to fire before your Darwin, even if you played Wyldside later in the turn. (Make sure you prioritize your cyberfeeders over your Darwin, so that you always have money to pay for it)
 * Hasbro:ST will now put visible +1 markers on your Bioroids

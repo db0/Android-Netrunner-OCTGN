@@ -37,15 +37,14 @@ failedRequirement = True # A Global boolean that we set in case an Autoscript co
 
 def executePlayScripts(card, action):
    action = action.upper() # Just in case we passed the wrong case
-   debugNotify(">>> executePlayScripts() with action: {}".format(action)) #Debug
+   debugNotify(">>> executePlayScripts() for {} with action: {}".format(card,action)) #Debug
+   debugNotify("AS dict entry = {}".format(CardsAS.get(card.model,'NULL')),4)
+   debugNotify("card.model = {}".format(card.model),4)
    global failedRequirement
    if not Automations['Play, Score and Rez']: 
       debugNotify("Exiting because automations are off", 2)
       return
-   if not card.isFaceUp: 
-      debugNotify("Exiting because card is face down", 2)
-      return
-   if CardsAS.get(card.model,'') == '': 
+   if CardsAS.get(card.model,'NULL') == 'NULL': 
       debugNotify("Exiting because card has no autoscripts", 2)
       return
    failedRequirement = False
@@ -121,19 +120,24 @@ def executePlayScripts(card, action):
             notify("{} opts not to activate {}'s optional ability".format(me,card))
             return 'ABORT'
          else: notify("{} activates {}'s optional ability".format(me,card))
-      if re.search(r'-ifAccessed', AutoS) and ds != 'runner': continue # These scripts are only supposed to fire from the runner (when they access a card)         
       selectedAutoscripts = AutoS.split('$$')
       if debugVerbosity >= 2: notify ('selectedAutoscripts: {}'.format(selectedAutoscripts)) # Debug
       for activeAutoscript in selectedAutoscripts:
          debugNotify("Second Processing: {}".format(activeAutoscript), 2) # Debug
          if chkWarn(card, activeAutoscript) == 'ABORT': return
          if not ifHave(activeAutoscript): continue # If the script requires the playet to have a specific counter value and they don't, do nothing.
+         if re.search(r'-ifAccessed', activeAutoscript) and ds != 'runner': 
+            debugNotify("Aborting script because card is not being accessed")
+            continue # These scripts are only supposed to fire from the runner (when they access a card)         
+         if re.search(r'-ifActive', activeAutoscript) and (card.highlight == InactiveColor or card.highlight == RevealedColor): 
+            debugNotify("Aborting script because card is inactive")
+            continue 
          if re.search(r':Pass\b', activeAutoscript): continue # Pass is a simple command of doing nothing ^_^
          effect = re.search(r'\b([A-Z][A-Za-z]+)([0-9]*)([A-Za-z& ]*)\b([^:]?[A-Za-z0-9_&{}\|:,<> -]*)', activeAutoscript)
          debugNotify('effects: {}'.format(effect.groups()), 2) #Debug
          if effectType.group(1) == 'whileRezzed' or effectType.group(1) == 'whileInstalled' or effectType.group(1) == 'whileScored' or effectType.group(1) == 'whileLiberated':
             if effect.group(1) != 'Gain' and effect.group(1) != 'Lose': continue # The only things that whileRezzed and whileScored affect in execute Automations is GainX scripts (for now). All else is onTrash, onPlay etc
-            if action == 'DEREZ' or ((action == 'TRASH' or action == 'UNINSTALL') and card.isFaceUp): Removal = True
+            if action == 'DEREZ' or ((action == 'TRASH' or action == 'UNINSTALL') and card.highlight != InactiveColor and card.highlight != RevealedColor): Removal = True
             else: Removal = False
          #elif action == 'DEREZ' or action == 'TRASH': continue # If it's just a one-off event, and we're trashing it, then do nothing.
          else: Removal = False
@@ -1552,7 +1556,7 @@ def ModifyStatus(Autoscript, announceText, card, targetCards = None, notificatio
          autoscriptOtherPlayers('CardTrashed',targetCard)
       else: return 'ABORT'
       if action.group(2) != 'Multi': break # If we're not doing a multi-targeting, abort after the first run.
-   if notification == 'Quick': announceString = "{} {}es {}{}".format(announceText, action.group(1), targetCardlist,extraText)
+   if notification == 'Quick': announceString = "{} {} {}{}".format(announceText, action.group(1), targetCardlist,extraText)
    else: announceString = "{} {} {}{}".format(announceText, action.group(1), targetCardlist, extraText)
    if notification and not re.search(r'isSilent', Autoscript): notify('--> {}.'.format(announceString))
    debugNotify("<<< ModifyStatus()", 3)
@@ -2321,21 +2325,34 @@ def checkSpecialRestrictions(Autoscript,card):
    debugNotify("Card: {}".format(card)) #Debug
    validCard = True
    if not chkPlayer(Autoscript, card.controller, False, True): validCard = False
-   if re.search(r'isICE',Autoscript) and card.orientation != Rot90: validCard = False # We made a special check for ICE, because some cards must be able target face-down ICE without being able to read its properties.
-   if re.search(r'isRezzed',Autoscript) and not card.isFaceUp: validCard = False
-   if re.search(r'isUnrezzed',Autoscript) and card.isFaceUp: validCard = False
+   if re.search(r'isICE',Autoscript) and card.orientation != Rot90: 
+      debugNotify("Rejecting because it's an ICE")
+      validCard = False # We made a special check for ICE, because some cards must be able target face-down ICE without being able to read its properties.
+   if re.search(r'isRezzed',Autoscript) and not card.isFaceUp: 
+      debugNotify("Rejecting because it's not unrezzed")
+      validCard = False
+   if re.search(r'isUnrezzed',Autoscript) and card.isFaceUp: 
+      debugNotify("Rejecting because it's not rezzed")
+      validCard = False
+   if re.search(r'isScored',Autoscript) and not card.markers[mdict['Scored']]:
+      debugNotify("Rejecting because it's not a scored agenda")
+      validCard = False
    markerName = re.search(r'-hasMarker{([\w ]+)}',Autoscript) # Checking if we need specific markers on the card.
    if markerName: #If we're looking for markers, then we go through each targeted card and check if it has any relevant markers
       debugNotify("Checking marker restrictions", 2)# Debug
       debugNotify("Marker Name: {}".format(markerName.group(1)), 2)# Debug
       marker = findMarker(card, markerName.group(1))
-      if not marker: validCard = False
+      if not marker: 
+         debugNotify("Rejecting because marker not found")
+         validCard = False
    markerNeg = re.search(r'-hasntMarker{([\w ]+)}',Autoscript) # Checking if we need to not have specific markers on the card.
    if markerNeg: #If we're looking for markers, then we go through each targeted card and check if it has any relevant markers
       debugNotify("Checking negative marker restrictions", 2)# Debug
       debugNotify("Marker Name: {}".format(markerNeg.group(1)), 2)# Debug
       marker = findMarker(card, markerNeg.group(1))
-      if marker: validCard = False
+      if marker: 
+         debugNotify("Rejecting because marker was found")
+         validCard = False
    else: debugNotify("No marker restrictions.", 4)
    propertyReq = re.search(r'-hasProperty{([\w ]+)}(eq|le|ge|gt|lt)([0-9])',Autoscript) 
    # Checking if the target needs to have a property at a certiain value. 
