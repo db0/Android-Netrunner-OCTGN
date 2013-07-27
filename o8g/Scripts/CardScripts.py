@@ -1953,7 +1953,7 @@ bc0f047c-01b1-427f-a439-d451eda03005
 -----
 onScore:Put3Agenda
 +++++
-A1B0G0T0:Gain2Clicks
+A1B0G0T0:Remove1Agenda-isCost$$Gain2Clicks
 .....
 Project Wotan
 -----
@@ -1961,7 +1961,7 @@ bc0f047c-01b1-427f-a439-d451eda03006
 -----
 onScore:Put3Agenda||atJackOut:Remove999Project Wotan ETR-AutoTargeted-atICE-hasMarker{Project Wotan ETR}
 +++++
-A0B0G0T0:Put1Project Wotan ETR-Targeted-atICE_and_Bioroid-isRezzed
+A0B0G0T0:Remove1Agenda-isCost$$Put1Project Wotan ETR-Targeted-atICE_and_Bioroid-isRezzed
 .....
 Sentinel Defense Program
 -----
@@ -1975,7 +1975,7 @@ Alix T4LB07
 -----
 bc0f047c-01b1-427f-a439-d451eda03008
 -----
-whileRezzed:Gain1Power-foreachCardInstall
+whileRezzed:Put1Power-foreachCardInstall
 +++++
 A1B0G0T1:Gain2Credits-perMarker{Power}
 .....
@@ -2001,7 +2001,7 @@ bc0f047c-01b1-427f-a439-d451eda03011
 -----
 
 +++++
-
+A1B0G0T0:Remove1Advancement-isCost-onlyOnce$$Gain2Clicks
 .....
 Thomas Haas
 -----
@@ -2009,13 +2009,13 @@ bc0f047c-01b1-427f-a439-d451eda03012
 -----
 
 +++++
-
+A0B0G0T1:Gain2Credits-perMarker{Advancement}
 .....
 Bioroid Efficiency Research
 -----
 bc0f047c-01b1-427f-a439-d451eda03013
 -----
-
+Placement:ICE_and_Bioroid-isUnrezzed||onPlay:RezTarget-Targeted-atICE_and_Bioroid-isUnrezzed||onTrash:DerezHost
 +++++
 
 .....
@@ -2023,7 +2023,7 @@ Successful Demonstration
 -----
 bc0f047c-01b1-427f-a439-d451eda03014
 -----
-
+onPlay:Gain7Credits
 +++++
 
 .....
@@ -2033,15 +2033,15 @@ bc0f047c-01b1-427f-a439-d451eda03015
 -----
 
 +++++
-
+A0B0G0T0:Inflict1BrainDamage-onOpponent-isSubroutine||A0B0G0T0:Inflict1BrainDamage-onOpponent-isSubroutine$$RunEnd||A0B0G0T0:RunEnd-isSubroutine	
 .....
 Howler
 -----
 bc0f047c-01b1-427f-a439-d451eda03016
 -----
-
+atJackOut:DerezTarget-AutoTargeted-atICE_and_Bioroid-hasMarker{Howler}$$Remove1Howler-AutoTargeted-atICE_and_Bioroid-hasMarker{Howler}$$TrashTarget-AutoTargeted-atHowler-hasMarker{Howler}
 +++++
-
+A0B0G0T0:CustomScript
 .....
 Ichi 2.0
 -----

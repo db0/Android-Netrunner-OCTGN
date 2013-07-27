@@ -239,7 +239,7 @@
 		<property name="Stat" value="7" />	
 		<property name="Rules" value="The Runner can spend [Click] [Click] to break up to 2 subroutines on Heimdall 2.0.&#xD;[Subroutine] Do 1 brain damage.&#xD;[Subroutine] Do 1 brain damage and end the run.&#xD;[Subroutine] End the run." />
 		<property name="Flavor" value="The realm beyond is still forbidden." />
-		<property name="Instructions" value="" />
+		<property name="Instructions" value="[Subroutine] Do 1 brain damage.||[Subroutine] Do 1 brain damage and end the run.||[Subroutine] End the run." />
 		<property name="Faction" value="Haas-Bioroid" />
 		<property name="Influence" value="3" />
 		<property name="Side" value="Corp" />

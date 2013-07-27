@@ -52,7 +52,8 @@ def executePlayScripts(card, action):
    Autoscripts = CardsAS.get(card.model,'').split('||') # When playing cards, the || is used as an "and" separator, rather than "or". i.e. we don't do choices (yet)
    AutoScriptsSnapshot = list(Autoscripts) # Need to work on a snapshot, because we'll be modifying the list.
    for autoS in AutoScriptsSnapshot: # Checking and removing any "AtTurnStart" clicks.
-      if (re.search(r'atTurn(Start|End)', autoS) or 
+      if (autoS == '' or 
+          re.search(r'atTurn(Start|End)', autoS) or 
           re.search(r'atRunStart', autoS) or 
           re.search(r'Reduce[0-9#X]Cost', autoS) or 
           re.search(r'whileRunning', autoS) or 
@@ -100,7 +101,11 @@ def executePlayScripts(card, action):
          if debugVerbosity >= 2: notify ('Final Autoscripts after choices: {}'.format(Autoscripts)) # Debug
    for AutoS in Autoscripts:
       debugNotify("First Processing: {}".format(AutoS), 2) # Debug
-      effectType = re.search(r'(on[A-Za-z]+|while[A-Za-z]+):', AutoS) 
+      effectType = re.search(r'(on[A-Za-z]+|while[A-Za-z]+):', AutoS)
+      if not effectType:
+         debugNotify("no regeX match for playscripts. aborting",4)
+         continue
+      else: debugNotify("effectType.group(1)= {}".format(effectType.group(1)),4)
       if ((effectType.group(1) == 'onRez' and action != 'REZ') or # We don't want onPlay effects to activate onTrash for example.
           (effectType.group(1) == 'onPlay' and action != 'PLAY') or
           (effectType.group(1) == 'onInstall' and action != 'INSTALL') or
@@ -218,7 +223,7 @@ def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
    AutoscriptsList = [] # An empty list which we'll put the AutoActions to execute.
    storeProperties(card) # Just in case
    failedRequirement = False # We set it to false when we start a new autoscript.
-   debugNotify("+++ Checking if Tracing card...", 5)
+   debugNotify("Checking if Tracing card...", 4)
    if card.Type == 'Button': # The Special button cards.
       if card.name == 'Access Imminent': BUTTON_Access()
       elif card.name == 'No Rez': BUTTON_NoRez()
@@ -231,15 +236,14 @@ def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
       elif card.isFaceUp and card.markers[mdict['Credits']]: payTraceValue(card)
       elif not card.isFaceUp: card.isFaceUp = True
       return
-   debugNotify("+++ Not a tracing card. Checking highlight...", 5)
+   debugNotify("Not a tracing card. Checking highlight...", 4)
    if markerScripts(card): return # If there's a special marker, it means the card triggers to do something else with the default action
    if card.highlight == InactiveColor:
       accessRegex = re.search(r'onAccess:([^|]+)',CardsAS.get(card.model,''))
       if not accessRegex:
          whisper("You cannot use inactive cards. Please use the relevant card abilities to clear them first. Aborting")
          return
-   debugNotify("+++ Not an inactive card. Checking Stored_Autoactions{}...", 5)
-   debugNotify("+++ Finished storing CardsAA.get(card.model,'')s. Checking Rez status", 5)
+   debugNotify("Finished storing CardsAA.get(card.model,'')s. Checking Rez status", 4)
    if not card.isFaceUp:
       if re.search(r'onAccess',fetchProperty(card, 'AutoActions')) and confirm("This card has an ability that can be activated even when unrezzed. Would you like to activate that now?"): card.isFaceUp = True # Activating an on-access ability requires the card to be exposed, it it's no already.
       elif re.search(r'Hidden',fetchProperty(card, 'Keywords')): card.isFaceUp # If the card is a hidden resource, just turn it face up for its imminent use.
@@ -249,11 +253,12 @@ def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
       else: 
          intRez(card) # If card is face down or not rezzed assume they wanted to rez       
          return
-   debugNotify("+++ Card not unrezzed. Checking for automations switch...", 5)
-   if not Automations['Play, Score and Rez'] or fetchProperty(card, 'AutoActions') == "": 
+   debugNotify("Card not unrezzed. Checking for automations switch...", 4)
+   if not Automations['Play, Score and Rez'] or fetchProperty(card, 'AutoActions') == '':
+      debugNotify("Going to useCard() because AA = {}".format(fetchProperty(card, 'AutoActions')))
       useCard(card) # If card is face up but has no autoscripts, or automation is disabled just notify that we're using it.
       return
-   debugNotify("+++ Automations active. Checking for CustomScript...", 5)
+   debugNotify("Automations active. Checking for CustomScript...", 4)
    if re.search(r'CustomScript', fetchProperty(card, 'AutoActions')): 
       if chkTargeting(card) == 'ABORT': return
       CustomScript(card,'USE') # Some cards just have a fairly unique effect and there's no use in trying to make them work in the generic framework.
@@ -531,7 +536,9 @@ def autoscriptOtherPlayers(lookup, origin_card = Identity, count = 1): # Functio
       if len(Autoscripts) == 0: continue
       for AutoS in Autoscripts:
          debugNotify('Checking AutoS: {}'.format(AutoS), 2) # Debug
-         if not re.search(r'{}'.format(lookup), AutoS): continue # Search if in the script of the card, the string that was sent to us exists. The sent string is decided by the function calling us, so for example the ProdX() function knows it only needs to send the 'GeneratedSpice' string.
+         if not re.search(r'{}'.format(lookup), AutoS): 
+            debugNotify("lookup: {} not found in CardScript. Aborting".format(lookup))
+            continue # Search if in the script of the card, the string that was sent to us exists. The sent string is decided by the function calling us, so for example the ProdX() function knows it only needs to send the 'GeneratedSpice' string.
          if chkPlayer(AutoS, card.controller,False) == 0: continue # Check that the effect's origninator is valid.
          if not ifHave(AutoS,card.controller,silent = True): continue # If the script requires the playet to have a specific counter value and they don't, do nothing.
          if chkTagged(AutoS, True) == 'ABORT': continue
@@ -590,7 +597,9 @@ def atTimedEffects(Time = 'Start'): # Function which triggers card effects at th
          elif Time == 'SuccessfulRun': effect = re.search(r'at(SuccessfulRun):(.*)', autoS) # Same as above
          elif Time == 'PreStart' or Time == 'PreEnd': effect = re.search(r'atTurn(PreStart|PreEnd):(.*)', autoS)
          else: effect = re.search(r'atTurn(Start|End):(.*)', autoS) #Putting "Start" or "End" in a group to compare with the Time variable later
-         if not effect: continue
+         if not effect: 
+            debugNotify("Not effect Regex found. Aborting")
+            continue
          debugNotify("Time maches. Script triggers on: {}".format(effect.group(1)), 3)
          if re.search(r'-ifSuccessfulRun', autoS):
             if Time == 'SuccessfulRun' or (Time == 'JackOut' and getGlobalVariable('SuccessfulRun') == 'True'): #If we're looking only for successful runs, we need the Time to be a successful run or jackout period.
@@ -624,10 +633,10 @@ def atTimedEffects(Time = 'Start'): # Function which triggers card effects at th
             if not confirm("{} can have its optional ability take effect at this point. Do you want to activate it?{}".format(fetchProperty(card, 'name'),extraCountersTXT)): continue         
          if re.search(r'isAlternativeRunResult', effect.group(2)): AlternativeRunResultUsed = True # If the card has an alternative result to the normal access for a run, mark that we've used it.         
          if re.search(r'onlyOnce',autoS) and oncePerTurn(card, silent = True, act = 'automatic') == 'ABORT': continue
-         targetC = findTarget(effect.group(2))
-         if re.search(r'Targeted', effect.group(2)) and findTarget(effect.group(2)) == []: continue # If our script requires a target and we can't find any, do nothing.
          splitAutoscripts = effect.group(2).split('$$')
          for passedScript in splitAutoscripts:
+            targetC = findTarget(passedScript)
+            if re.search(r'Targeted', passedScript) and len(targetC) == 0: continue # If our script requires a target and we can't find any, do nothing.
             if not TitleDone: 
                if Time == 'Run': title = "{}'s Start-of-Run Effects".format(me)
                elif Time == 'JackOut': title = "{}'s Jack-Out Effects".format(me)
@@ -1518,10 +1527,18 @@ def ModifyStatus(Autoscript, announceText, card, targetCards = None, notificatio
    if targetCards is None: targetCards = []
    targetCardlist = '' # A text field holding which cards are going to get tokens.
    extraText = ''
-   action = re.search(r'\b(Rez|Derez|Expose|Trash|Uninstall|Possess|Exile|Rework|Install|Score)(Target|Parent|Multi|Myself)[-to]*([A-Z][A-Za-z&_ ]+)?', Autoscript)
+   action = re.search(r'\b(Rez|Derez|Expose|Trash|Uninstall|Possess|Exile|Rework|Install|Score)(Target|Host|Multi|Myself)[-to]*([A-Z][A-Za-z&_ ]+)?', Autoscript)
    if action.group(2) == 'Myself': 
       del targetCards[:] # Empty the list, just in case.
       targetCards.append(card)
+   if action.group(2) == 'Host': 
+      del targetCards[:] # Empty the list, just in case.
+      debugNotify("Finding Host")
+      host = fetchHost(card)
+      if host: targetCards = [host]
+      else: 
+         debugNotify("No Host Found? Aborting!")
+         return 'ABORT'      
    if action.group(3): dest = action.group(3)
    else: dest = 'hand'
    for targetCard in targetCards: 
@@ -1553,6 +1570,7 @@ def ModifyStatus(Autoscript, announceText, card, targetCards = None, notificatio
          targetCard.moveTo(targetCard.controller.piles['R&D/Stack'])
       elif action.group(1) == 'Install': # Install simply plays a cast on the table unrezzed without paying any costs.
          placeCard(targetCard, 'INSTALL')
+         if fetchProperty(targetCard, 'Type') == 'ICE': targetCard.orientation = Rot90
          autoscriptOtherPlayers('CardInstall',targetCard)
       elif action.group(1) == 'Score': # Score takes a card and claims it as an agenda
          targetPL = ofwhom(Autoscript, targetCard.owner)
@@ -1709,405 +1727,7 @@ def RetrieveX(Autoscript, announceText, card, targetCards = None, notification =
    debugNotify("<<< RetrieveX()", 3)
    return announceString
       
-def UseCustomAbility(Autoscript, announceText, card, targetCards = None, notification = None, n = 0):
-   if fetchProperty(card, 'name') == "Tollbooth":
-      targetPL = findOpponent()
-      global reversePlayerChk
-      # We reverse for which player the reduce effects work, because we want cards which pay for the opponent's credit cost to take effect now.
-      reduction = reduceCost(card, 'FORCE', 3, True, reversePlayer = True) # We use a dry-run to see if they have a card which card reduce the tollbooth cost such as stimhack
-      if reduction > 0: extraText = " (reduced by {})".format(uniCredit(reduction))  
-      elif reduction < 0: extraText = " (increased by {})".format(uniCredit(abs(reduction)))
-      else: extraText = ''
-      if targetPL.Credits >= 3 - reduction: 
-         targetPL.Credits -= 3 - reduceCost(card, 'FORCE', 3, reversePlayer = True)
-         announceString = announceText + ' force {} to pay {}{}'.format(targetPL,uniCredit(3),extraText)
-      else: 
-         jackOut(silent = True)
-         announceString = announceText + ' end the run'.format(targetPL,uniCredit(3))   
-   if fetchProperty(card, 'name') == "Replicator":
-      targetC = targetCards[0] # For this to be triggered a program has to have been installed, which was passed to us in an array.
-      if not confirm("Would you like to replicate the {}?".format(targetC.name)):
-         return 'ABORT'
-      retrieveResult = RetrieveX('Retrieve1Card-type{}-isTopmost'.format(targetC.name), announceText, card)
-      shuffle(me.piles['R&D/Stack'])
-      if re.search(r'no valid targets',retrieveResult): announceString = "{} tries to use their replicator to create a copy of {}, but they run out of juice.".format(me,targetC.name) # If we couldn't find a copy of the played card to replicate, we inform of this
-      else: announceString = "{} uses their replicator to create a copy of {}".format(me,targetC.name)
-      notify(announceString)
-   if fetchProperty(card, 'name') == "Data Hound":
-      count = askInteger("By which amount of trace strength did you exceeded the runner's link strength?",1)
-      if not count: return 'ABORT'
-      if count > 5 and confirm("If you are sniffing at more than 5 cards from the opponent's deck, we suggest you take this action manually, by right clicking on their Stack, taking control and then looking at the top X cards.\n\bTrying to use the Data Hound automatically with a large number of cards can be very unwiedly.\n\nAbort Now?"): return 'ABORT'      
-      targetPL = findOpponent()
-      cardList = list(targetPL.piles['R&D/Stack'].top(count)) # We make a list of the top cards the corp can look at.
-      debugNotify("Turning Runner's Stack Face Up", 2)
-      cover = table.create("ac3a3d5d-7e3a-4742-b9b2-7f72596d9c1b",0,0,1,True) 
-      cover.moveTo(targetPL.piles['R&D/Stack']) 
-      for c in targetPL.piles['R&D/Stack']: c.isFaceUp = True 
-      rnd(1,100) # Delay to be able to read card info
-      if len(cardList) > 1:
-         notify(":> {}'s Data Hound is sniffing through {}'s Stack".format(me,trashedC,targetPL))
-         choice = SingleChoice("Choose card to trash", makeChoiceListfromCardList(cardList), type = 'button')
-         trashedC = cardList.pop(choice)
-      else: trashedC = cardList.pop(0)
-      debugNotify("Trashing {}".format(trashedC), 2)
-      trashedC.moveTo(targetPL.piles['Heap/Archives(Face-up)'])
-      if len(cardList) > 1: notify("{}'s Data Hound has sniffed out and trashed {} and is now reorganizing {}'s Stack".format(me,trashedC,targetPL))
-      else: notify("{} has sniffed out and trashed {}".format(me,trashedC))
-      idx = 0 # The index where we're going to be placing each card.
-      while len(cardList) > 0:
-         if len(cardList) == 1: choice = 0
-         else: choice = SingleChoice("Choose card put on the {} position of the Stack".format(numOrder(idx)), makeChoiceListfromCardList(cardList), type = 'button')
-         movedC = cardList.pop(choice)
-         movedC.moveTo(targetPL.piles['R&D/Stack'],idx + 1) # If there's only one card left, we put it in the last available index location in the Stack. We always put the card one index position deeper, because the first card is the cover.
-         idx += 1
-      debugNotify("Turning Pile Face Down", 2)
-      rnd(1,100) # Delay to be able to announce names.
-      for c in targetPL.piles['R&D/Stack']: c.isFaceUp = False # We hide again the source pile cards.
-      cover.moveTo(shared.exile) # we cannot delete cards so we just hide it.
-      announceString = ':=> Sniff'
-         #      __
-         # (___()'`;   *Sniff*
-         # /,    /`
-         # \\"--\\      
-         # Pity the chatbox does not support formatting :(
-   return announceString
-   
-def CustomScript(card, action = 'PLAY'): # Scripts that are complex and fairly unique to specific cards, not worth making a whole generic function for them.
-   global ModifyDraw, secretCred
-   debugNotify(">>> CustomScript() with action: {}".format(action)) #Debug
-   trash = me.piles['Heap/Archives(Face-up)']
-   arcH = me.piles['Archives(Hidden)']
-   deck = me.piles['R&D/Stack']
-   #confirm("Customscript") # Debug
-   if card.model == '23473bd3-f7a5-40be-8c66-7d35796b6031' and action == 'USE': # Virus Scan Special Ability
-      clickCost = useClick(count = 3)
-      if clickCost == 'ABORT': return
-      for c in table: 
-         foundMarker = findMarker(c,'Virus')
-         if foundMarker: c.markers[foundMarker] = 0
-      notify("{} to clean all viruses from their corporate grid".format(clickCost))
-   elif card.model == '71a89203-94cd-42cd-b9a8-15377caf4437' and action == 'USE': # Technical Difficulties Special Ability
-      knownMarkers = []
-      for marker in card.markers:
-         if marker[0] in markerRemovals: # If the name of the marker exists in the markerRemovals dictionary it means it can be removed and has a specific cost.
-            knownMarkers.append(marker)
-      if len(knownMarkers) == 0: 
-         whisper("No known markers with ability to remove")
-         return
-      elif len(knownMarkers) == 1: selectedMarker = knownMarkers[0]
-      else: 
-         selectTXT = 'Please select a marker to remove\n\n'
-         iter = 0
-         for choice in knownMarkers:
-            selectTXT += '{}: {} ({} {} and {})\n'.format(iter,knownMarkers[iter][0],markerRemovals[choice[0]][0],uniClick(),markerRemovals[choice[0]][1])
-            iter += 1
-         sel = askInteger(selectTXT,0)
-         selectedMarker = knownMarkers[sel]
-      aCost = markerRemovals[selectedMarker[0]][0] # The first field in the tuple for the entry with the same name as the selected marker, in the markerRemovals dictionary. All clear? Good.
-      cost = markerRemovals[selectedMarker[0]][1]
-      clickCost = useClick(count = aCost)
-      if clickCost == 'ABORT': return
-      creditCost = payCost(cost)
-      if creditCost == 'ABORT':
-         me.Clicks += aCost # If the player can't pay the cost after all and aborts, we give him his clicks back as well.
-         return         
-      card.markers[selectedMarker] -= 1
-      notify("{} to remove {} for {}.".format(clickCost,selectedMarker[0],creditCost))
-   elif fetchProperty(card, 'name') == 'Accelerated Beta Test' and action == 'SCORE':
-      if not confirm("Would you like to initiate an accelerated beta test?"): return
-      iter = 0
-      for c in deck.top(3):
-         c.moveTo(arcH)
-         loopChk(c,'Type')
-         if c.type == 'ICE':
-            placeCard(c,'InstallRezzed')
-            c.orientation ^= Rot90
-            iter +=1
-            notify(" -- {} Beta Tested!".format(c))
-            autoscriptOtherPlayers('CardInstall',c)
-            autoscriptOtherPlayers('CardRezzed',c)
-      if iter: # If we found any ice in the top 3
-         notify("{} initiates an Accelerated Beta Test and reveals {} Ice from the top of their R&D. These Ice are automatically installed and rezzed".format(me, iter))
-      else: notify("{} initiates a Accelerated Beta Test but their beta team was incompetent.".format(me))
-   elif fetchProperty(card, 'name') == 'Infiltration' and action == 'PLAY':
-      tCards = [c for c in table if c.targetedBy and c.targetedBy == me and c.isFaceUp == False]
-      if tCards: expose(tCards[0]) # If the player has any face-down cards currently targeted, we assume he wanted to expose them.
-      elif confirm("Do you wish to gain 2 credits?\
-                \n\nIf you want to expose a target, simply ask the corp to use the 'Expose' option on the table.\
-                \n\nHowever if you have a target selected when you play this card, we will also announce that for you."):
-         me.Credits += 2
-         notify("--> {} gains {}".format(me,uniCredit(2)))
-   elif fetchProperty(card, 'name') == "Rabbit Hole" and action == 'INSTALL':
-      if not confirm("Would you like to extend the rabbit hole?"): 
-         return
-      cardList = [c for c in deck]
-      reduction = 0
-      rabbits = 0
-      totalCost = 0
-      for c in cardList: c.moveTo(arcH)
-      rnd(1,100)
-      debugNotify("Entering rabbit search loop", 2)
-      for c in cardList: 
-         if c.model == "bc0f047c-01b1-427f-a439-d451eda01039":
-            debugNotify("found rabbit!", 2)
-            storeProperties(c)
-            reduction += reduceCost(c, action, num(c.Cost)) #Checking to see if the cost is going to be reduced by cards we have in play.
-            rc = payCost(num(c.Cost) - reduction, "not free")
-            if rc == "ABORT": break
-            else: totalCost += (num(c.Cost) - reduction)
-            placeCard(c, action)
-            rabbits += 1
-            cardList.remove(c)
-            if not confirm("Rabbit Hole extended! Would you like to dig deeper?"): break
-      for c in cardList: c.moveTo(deck)
-      rnd(1,10)
-      shuffle(deck)
-      if rabbits: # If the player managed to find and install some extra rabbit holes...
-         if reduction > 0: extraText = " (reduced by {})".format(uniCredit(reduction)) #If it is, make sure to inform.    
-         elif reduction < 0: extraText = " (increased by {})".format(uniCredit(abs(reduction)))
-         else: extraText = ''
-         me.counters['Base Link'].value += rabbits
-         notify("{} has extended the Rabbit Hole by {} {} by paying {}{}".format(me,rabbits,uniLink(),uniCredit(totalCost),extraText))
-      else: notify("{} does not find enough rabbits.".format(me))
-   elif fetchProperty(card, 'name') == 'Snowflake' and action == 'USE':
-      if secretCred == None:
-         secretCred = askInteger("How many credits do you want to secretly spend?\n\nOnce you have selected your total, ask your opponent to spend their own amount visibly, then re-use this card.",0)
-         while secretCred and (secretCred > me.Credits) or (secretCred > 2):
-            if secretCred > me.Credits and confirm("You do not have that many credits to spend. Bypass?"): break
-            if secretCred > 2: warn = ":::ERROR::: You cannot spend more than 2 credits!\n"
-            else: warn = ''
-            secretCred = askInteger("{}How many credits do you want to secretly spend?".format(warn),0)
-         if secretCred != None: notify("{} has spent a hidden amount of credits for {}. Runner must now declare how many credits to spend".format(me,card))
-      else: 
-         notify("{} has spent {} in secret for {}'s subroutine".format(me,uniCredit(secretCred),card))
-         me.Credits -= secretCred
-         secretCred = None
-   elif fetchProperty(card, 'name') == 'Bullfrog' and action == 'USE':
-      choice = SingleChoice('Select Ability to use', ['Spend/Reveal 0-2 Credits','Move Bullfrog and runner to another server and continue run from there'], type = 'button')
-      if choice == 0:
-         if secretCred == None:
-            secretCred = askInteger("How many credits do you want to secretly spend?\n\nOnce you have selected your total, ask your opponent to spend their own amount visibly, then re-use this card.",0)
-            while secretCred and (secretCred > me.Credits) or (secretCred > 2):
-               if secretCred > me.Credits and confirm("You do not have that many credits to spend. Bypass?"): break
-               if secretCred > 2: warn = ":::ERROR::: You cannot spend more than 2 credits!\n"
-               else: warn = ''
-               secretCred = askInteger("{}How many credits do you want to secretly spend?".format(warn),0)
-            if secretCred != None: notify("{} has spent a hidden amount of credits for {}. Runner must now declare how many credits to spend".format(me,card))
-         else: 
-            notify("{} has spent {} in secret for {}'s subroutine".format(me,uniCredit(secretCred),card))
-            me.Credits -= secretCred
-            secretCred = None
-      else:
-         choice = SingleChoice("Which server are you going to redirect the run at?", ['Remote Server','HQ','R&D','Archives'])
-         if choice != None: # Just in case the player didn't just close the askInteger window.
-            if choice == 0: targetServer = 'Remote'
-            elif choice == 1: targetServer = 'HQ'
-            elif choice == 2: targetServer = 'R&D'
-            elif choice == 3: targetServer = 'Archives'
-            else: return 'ABORT'
-         else: return 'ABORT'
-         setGlobalVariable('status','running{}'.format(targetServer)) # We change the global variable which holds on which server the runner is currently running on
-         if targetServer == 'Remote': announceText = 'a remote server'
-         else: announceText = 'the ' + targetServer
-         notify("Bullfrog's Ability triggers and redirects the runner to {}.".format(announceText))
-   elif fetchProperty(card, 'name') == 'Personal Workshop':
-      if action == 'USE':
-         targetList = [c for c in me.hand  # First we see if they've targeted a card from their hand
-                        if c.targetedBy 
-                        and c.targetedBy == me 
-                        and num(c.Cost) > 0
-                        and (c.Type == 'Program' or c.Type == 'Hardware')]
-         if len(targetList) > 0:
-            selectedCard = targetList[0]
-            actionCost = useClick(count = 1)
-            if actionCost == 'ABORT': return
-            hostCards = eval(getGlobalVariable('Host Cards'))
-            hostCards[selectedCard._id] = card._id # We set the Personal Workshop to be the card's host
-            setGlobalVariable('Host Cards',str(hostCards))
-            cardAttachementsNR = len([att_id for att_id in hostCards if hostCards[att_id] == card._id])
-            debugNotify("About to move into position", 2) #Debug
-            storeProperties(selectedCard)
-            orgAttachments(card)
-            TokensX('Put1PersonalWorkshop-isSilent', "", selectedCard) # We add a Personal Workshop counter to be able to trigger the paying the cost ability
-            announceText = TokensX('Put1Power-perProperty{Cost}', "{} to activate {} in order to ".format(actionCost,card), selectedCard)
-            selectedCard.highlight = InactiveColor
-            notify(announceText)
-         else: 
-            whisper(":::ERROR::: You need to target a program or hardware in your hand, with a cost of 1 or more, before using this action")  
-            return
-      elif action == 'Start' and card.controller == me:
-         hostCards = eval(getGlobalVariable('Host Cards'))
-         PWcards = [Card(att_id) for att_id in hostCards if hostCards[att_id] == card._id]
-         if len(PWcards) == 0: return # No cards are hosted in the PW, we're doing nothing
-         elif len(PWcards) == 1: selectedCard = PWcards[0] # If only one card is hosted in the PW, we remove a power from one of those.
-         else: # Else we have to ask which one to remove.
-            selectTXT = 'Personal Workshop: Please select one of your hosted cards from which to remove a power counter\n\n'
-            iter = 0
-            PWchoices = makeChoiceListfromCardList(PWcards)
-            choice = SingleChoice("Choose one of the Personal Workshop hosted cards from which to remove a power counter", PWchoices, type = 'button', default = 0)
-            selectedCard = PWcards[choice]
-         TokensX('Remove1Power', "Personal Workshop:",selectedCard)
-         notify("--> {}'s Personal Workshop removes 1 power marker from {}".format(me,selectedCard))
-         if selectedCard.markers[mdict['Power']] == 0: # Empty of power markers means the card can be automatically installed
-            host = chkHostType(selectedCard, seek = 'DemiAutoTargeted') 
-            if host:
-               try:
-                  if host == 'ABORT': 
-                     selectedCard.markers[mdict['Power']] += 1
-                     delayed_whisper("-- Undoing Personal Workshop build")
-                     return
-               except:
-                  extraTXT = ' and hosted on {}'.format(host) # If the card requires a valid host and we found one, we will mention it later.
-            else: extraTXT = ''
-            clearAttachLinks(selectedCard) # We unhost it from Personal Workshop so that it's not trashed if PW is trashed
-            placeCard(selectedCard, hostCard = host)
-            orgAttachments(card)
-            selectedCard.markers[mdict['PersonalWorkshop']] = 0
-            selectedCard.highlight = None
-            executePlayScripts(selectedCard,'INSTALL')
-            autoscriptOtherPlayers('CardInstall',selectedCard)
-            MUtext = chkRAM(selectedCard)
-            notify("--> {} has been built{} from {}'s Personal Workshop{}".format(selectedCard,extraTXT,identName,MUtext))         
-   elif fetchProperty(card, 'name') == 'Mr. Li' and action == 'USE':
-      ClickCost = useClick(count = 1)
-      if ClickCost == 'ABORT': return
-      StackTop = list(me.piles['R&D/Stack'].top(2))
-      if len(StackTop) < 2:
-         whisper("Your Stack is does not have enough cards. You cannot take this action")
-         return
-      notify("--> {} is visiting Mr. Li...")
-      for c in StackTop:
-         debugNotify("Pulling cards to hand", 3) #Debug
-         c.moveTo(me.hand)
-         debugNotify(" Looping...", 4)
-         loopChk(c)
-         storeProperties(c)
-      rnd(1,100) # A delay because it bugs out
-      debugNotify("StackTop: {} in hand".format([c.name for c in StackTop])) #Debug
-      returnChoice = SingleChoice('Select a card to put to the botton of your Stack', makeChoiceListfromCardList(StackTop, True), type = 'button', default = 0)
-      StackTop[returnChoice].moveToBottom(me.piles['R&D/Stack'])
-      catchwords = ["Excellent.","Don't leave town.","We'll be in touch.","We'll be seeing you soon...","Always a pleasure.","Remember our agreement.","Interesting request there."]
-      goodbye = catchwords.pop(rnd(0, len(catchwords) - 1))
-      notify('{} to have {} procure 1 card.\n- "{}"'.format(ClickCost,card,goodbye))
-   elif fetchProperty(card, 'name') == "Indexing" and action == 'SuccessfulRun':
-      targetPL = findOpponent()
-      if len(targetPL.piles['R&D/Stack']) < 5: count = len(targetPL.piles['R&D/Stack'])
-      else: count = 5
-      cardList = list(targetPL.piles['R&D/Stack'].top(count)) # We make a list of the top 5 cards the runner can look at.
-      debugNotify("Turning Corp's Stack Face Up", 2)
-      cover = table.create("ac3a3d5d-7e3a-4742-b9b2-7f72596d9c1b",0,0,1,True) 
-      cover.moveTo(targetPL.piles['R&D/Stack']) 
-      for c in targetPL.piles['R&D/Stack']: c.isFaceUp = True 
-      rnd(1,100) # Delay to be able to read card info
-      idx = 0 # The index where we're going to be placing each card.
-      while len(cardList) > 0:
-         if len(cardList) == 1: choice = 0
-         else: choice = SingleChoice("Choose card put on the {} position of the Stack".format(numOrder(idx)), makeChoiceListfromCardList(cardList), type = 'button')
-         movedC = cardList.pop(choice)
-         movedC.moveTo(targetPL.piles['R&D/Stack'],idx + 1) # If there's only one card left, we put it in the last available index location in the Stack. We always put the card one index position deeper, because the first card is the cover.
-         idx += 1
-      debugNotify("Turning Pile Face Down", 2)
-      rnd(1,100) # Delay to be able to announce names.
-      for c in targetPL.piles['R&D/Stack']: c.isFaceUp = False # We hide again the source pile cards.
-      cover.moveTo(shared.exile) # we cannot delete cards so we just hide it.
-      notify("{} has successfully indexed {}'s R&D".format(me,targetPL))
-   elif fetchProperty(card, 'name') == "Deep Thought" and action == 'Start':
-      if card.markers[mdict['Virus']] and card.markers[mdict['Virus']] >= 3:
-         targetPL = findOpponent()
-         debugNotify("Turning Corp's Top card Face Up", 2)
-         cover = table.create("ac3a3d5d-7e3a-4742-b9b2-7f72596d9c1b",0,0,1,True) 
-         cover.moveTo(targetPL.piles['R&D/Stack'])
-         cardView = targetPL.piles['R&D/Stack'][1]
-         cardView.isFaceUp = True
-         rnd(1,10)
-         delayed_whisper(":> Deep Thought: {} is upcoming! Ommm...".format(cardView))
-         notify(":> Deep Thought has revealed the top card of R&D to {}".format(me))
-         rnd(1,10)
-         cardView.isFaceUp = False
-         cover.moveTo(shared.exile) # we cannot delete cards so we just hide it.
-   elif fetchProperty(card, 'name') == "Midori" and action == 'USE':
-      targetCards = findTarget('Targeted-atICE-isMutedTarget')
-      if not len(targetCards):
-         delayed_whisper(":::ERROR::: You need to target an installed to use this ability")
-         return 'ABORT'
-      tableICE = targetCards[0]
-      targetCards = findTarget('Targeted-atICE-fromHand-isMutedTarget')
-      if not len(targetCards):
-         delayed_whisper(":::ERROR::: You need to also target an ICE in your hand to use this ability")
-         return 'ABORT'
-      if oncePerTurn(card) == 'ABORT': return 'ABORT'
-      handICE = targetCards[0]
-      x,y = tableICE.position
-      handICE.moveToTable(x,y,True)
-      handICE.orientation = Rot90
-      clearAttachLinks(tableICE)
-      tableICE.moveTo(me.hand)
-      autoscriptOtherPlayers('CardInstall',handICE)
-      notify('{} activates Midori to replace the approached {}, with an ICE from the HQ.'.format(me,tableICE.name))
-      notify('- "Naughty Naughty..."')
-   elif fetchProperty(card, 'name') == "Director Haas' Pet Project" and action == 'SCORE':
-      debugNotify("about to implement Director Haas' Pet Project")
-      # First we need to gather all the valid cards from hand or archives.
-      installableCards = []
-      for c in me.hand:
-         if c.Type != 'Operation': installableCards.append(c)
-      for c in me.piles['Heap/Archives(Face-up)']:
-         if c.Type != 'Operation': installableCards.append(c)
-      for c in me.piles['Archives(Hidden)']:
-         if c.Type != 'Operation': installableCards.append(c)
-      debugNotify("Finished creating installableCards[]")
-      if len(installableCards) == 0:
-         notify("Director Haas cannot find any cards to use for their pet project :(")
-         return
-      if not confirm("Would you like to initiate Director Haass' Pet Project?"): return
-      cardChoices = []
-      cardTexts = []
-      chosenCList = []
-      for iter in range(3):
-         debugNotify("len(installableCards) = {}".format(len(installableCards)))
-         debugNotify("installableCards: {}".format([rootC.name for rootC in installableCards]), 4)
-         debugNotify("iter: {}/{}".format(iter,3), 4)
-         del cardChoices[:]
-         del cardTexts[:]
-         for c in installableCards:
-            if c.Rules not in cardTexts: # we don't want to provide the player with a the same card as a choice twice.
-               debugNotify("Appending card", 4)
-               cardChoices.append(c)
-               cardTexts.append(c.Rules)
-         choice = SingleChoice("Choose {} card to install in the pet project".format(numOrder(iter)), makeChoiceListfromCardList(cardChoices), [], 'Cancel')
-         debugNotify("choice = {}".format(choice))
-         if choice == None: break
-         chosenCList.append(cardChoices[choice])
-         installableCards.remove(cardChoices[choice])
-         if cardChoices[choice].Type == 'Asset' or cardChoices[choice].Type == 'Agenda': # If we install an asset or agenda, we can't install any more of those so we remove them from the choice list.
-            for rootC in installableCards:
-               if rootC.Type == 'Asset' or rootC.Type == 'Agenda': 
-                  debugNotify("{} Type = {}. Removing".format(rootC,rootC.Type))
-                  installableCards.remove(rootC) 
-               else:
-                  debugNotify("{} Type = {}. Keeping".format(rootC,rootC.Type))            
-         if len(installableCards) < 2 - iter: break
-      if len(chosenCList) > 0: # If it's 0, it means the player changed their mind and pressed cancel on the first choice.
-         debugNotify("chosenCList = {}".format([c.name for c in chosenCList]))
-         debugNotify("About to create the new remote")
-         Server = table.create("d59fc50c-c727-4b69-83eb-36c475d60dcb", 0, 0 - (40 * playerside), 1, False)
-         placeCard(Server,'INSTALL')
-         x,y = Server.position
-         serverRoot = 0
-         serverICE = 0
-         debugNotify("About the place the cards in the new remote")
-         for c in chosenCList:
-            if c.Type == 'ICE':
-               c.moveToTable(x - (10 * playerside), 120 - (70 * serverICE),True)
-               c.orientation = Rot90
-               serverICE += 1
-            else:
-               c.moveToTable(x - (serverRoot * 30), 255,True)
-               serverRoot += 1
-            autoscriptOtherPlayers('CardInstall',c)
-         notify("{} implements {} and installs {} ICE and {} cards in the server root".format(me,card,serverICE,serverRoot))
-   elif action == 'USE': useCard(card)
-   debugNotify("<<< CustomScript()", 3) #Debug
+
 #------------------------------------------------------------------------------
 # Helper Functions
 #------------------------------------------------------------------------------
@@ -2372,7 +1992,7 @@ def checkSpecialRestrictions(Autoscript,card):
    debugNotify("<<< checkSpecialRestrictions() with return {}".format(validCard)) #Debug
    return validCard
 
-def makeChoiceListfromCardList(cardList,includeText = False):
+def makeChoiceListfromCardList(cardList,includeText = False, includeGroup = False):
 # A function that returns a list of strings suitable for a choice menu, out of a list of cards
 # Each member of the list includes a card's name, traits, resources, markers and, if applicable, combat icons
    debugNotify(">>> makeChoiceListfromCardList()")
@@ -2400,8 +2020,10 @@ def makeChoiceListfromCardList(cardList,includeText = False):
       if cType == 'Asset' or cType == 'Upgrade': stats += "Trash Cost: {}.".format(cStat)
       if includeText: cText = '\n' + fetchProperty(T, 'Rules')
       else: cText = ''
+      if includeGroup: cGroup = '\n' + pileName(T.group) # Include group is used to inform the player where the card resides in cases where they're selecting cards from multiple groups.
+      else: cGroup = ''
       debugNotify("Finished Adding Stats. Going to choice...", 4)# Debug               
-      choiceTXT = "{}\n{}\n{}{}{}".format(fetchProperty(T, 'name'),cType,markers,stats,cText)
+      choiceTXT = "{}\n{}\n{}{}{}{}".format(fetchProperty(T, 'name'),cType,markers,stats,cText,cGroup)
       targetChoices.append(choiceTXT)
    return targetChoices
    debugNotify("<<< makeChoiceListfromCardList()", 3)
