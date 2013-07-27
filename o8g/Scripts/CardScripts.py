@@ -250,7 +250,7 @@ Crash Space
 -----
 bc0f047c-01b1-427f-a439-d451eda01030
 -----
-onInstall:Put2Credits||whileRezzed:Reduce#CostDeltag-forAll-excludeDummy-forMe||atTurnStart:Refill2Credits-excludeDummy-duringMyTurn||onDamage:Put3protectionMeatDMG-trashCost-excludeDummy
+onInstall:Put2Credits||whileRezzed:Reduce#CostDeltag-forAll-excludeDummy-forMe||atTurnPreStart:Refill2Credits-excludeDummy-duringMyTurn||onDamage:Put3protectionMeatDMG-trashCost-excludeDummy
 +++++
 A0B0G0T1:CreateDummy-with3protectionMeatDMG-trashCost
 .....
@@ -266,7 +266,7 @@ Cyberfeeder
 -----
 bc0f047c-01b1-427f-a439-d451eda01005
 -----
-onInstall:Put1Credits-isSilent||whileRezzed:Reduce#CostUse-forIcebreaker-forMe||whileRezzed:Reduce#CostInstall-forVirus-forMe||atTurnStart:Refill1Credits-duringMyTurn
+onInstall:Put1Credits-isSilent||whileRezzed:Reduce#CostUse-forIcebreaker-forMe||whileRezzed:Reduce#CostInstall-forVirus-forMe||atTurnPreStart:Refill1Credits-duringMyTurn
 +++++
 	
 .....
@@ -586,7 +586,7 @@ NBN
 -----
 bc0f047c-01b1-427f-a439-d451eda01080
 -----
-atTurnStart:Refill2Credits-duringMyTurn||whileRezzed:Reduce#CostTrace-forAll-forMe
+atTurnPreStart:Refill2Credits-duringMyTurn||whileRezzed:Reduce#CostTrace-forAll-forMe
 +++++
 	
 .....
@@ -866,7 +866,7 @@ The Toolbox
 -----
 bc0f047c-01b1-427f-a439-d451eda01041
 -----
-whileRezzed:Gain2MU$$Gain2Base Link||onInstall:Put2Credits-isSilent||atTurnStart:Refill2Credits-duringMyTurn||whileRezzed:Reduce#CostUse-forIcebreaker-forMe
+whileRezzed:Gain2MU$$Gain2Base Link||onInstall:Put2Credits-isSilent||atTurnPreStart:Refill2Credits-duringMyTurn||whileRezzed:Reduce#CostUse-forIcebreaker-forMe
 +++++
 	
 .....
@@ -1066,7 +1066,7 @@ Spinal Modem
 -----
 bc0f047c-01b1-427f-a439-d451eda02002
 -----
-onInstall:Put2Credits-isSilent||whileInstalled:Gain1MU||atTurnStart:Refill2Credits-duringMyTurn||whileRezzed:Reduce#CostUse-forIcebreaker-forMe||whileRunning:Inflict1BrainDamage-foreachUnavoidedTrace-byMe
+onInstall:Put2Credits-isSilent||whileInstalled:Gain1MU||atTurnPreStart:Refill2Credits-duringMyTurn||whileRezzed:Reduce#CostUse-forIcebreaker-forMe||whileRunning:Inflict1BrainDamage-foreachUnavoidedTrace-byMe
 +++++
 
 .....
@@ -1090,7 +1090,7 @@ Whizzard
 -----
 bc0f047c-01b1-427f-a439-d451eda02001
 -----
-atTurnStart:Refill3Credits-duringMyTurn||Reduce#CostTrash-forAll-forMe
+atTurnPreStart:Refill3Credits-duringMyTurn||Reduce#CostTrash-forAll-forMe
 +++++
 
 .....
@@ -1138,7 +1138,7 @@ Compromised Employee
 -----
 bc0f047c-01b1-427f-a439-d451eda02025
 -----
-onInstall:Put1Credits-isSilent||atTurnStart:Refill1Credits-duringMyTurn||whileRezzed:Reduce#CostTrace-forAll-forMe||whileRezzed:Gain1Credits-foreachCardRezzed-typeICE
+onInstall:Put1Credits-isSilent||atTurnPreStart:Refill1Credits-duringMyTurn||whileRezzed:Reduce#CostTrace-forAll-forMe||whileRezzed:Gain1Credits-foreachCardRezzed-typeICE
 +++++
 
 .....
@@ -1442,7 +1442,7 @@ Scrubber
 -----
 bc0f047c-01b1-427f-a439-d451eda02063
 -----
-onInstall:Put2Credits-isSilent||atTurnStart:Refill2Credits-duringMyTurn||whileRezzed:Reduce#CostTrash-forAll-forMe
+onInstall:Put2Credits-isSilent||atTurnPreStart:Refill2Credits-duringMyTurn||whileRezzed:Reduce#CostTrash-forAll-forMe
 +++++
 
 .....
@@ -1482,7 +1482,7 @@ Inside Man
 -----
 bc0f047c-01b1-427f-a439-d451eda02068
 -----
-onInstall:Put2Credits-isSilent||atTurnStart:Refill2Credits-duringMyTurn||whileRezzed:Reduce#CostInstall-forHardware-forMe
+onInstall:Put2Credits-isSilent||atTurnPreStart:Refill2Credits-duringMyTurn||whileRezzed:Reduce#CostInstall-forHardware-forMe
 +++++
 
 .....
@@ -1514,7 +1514,7 @@ Dedicated Server
 -----
 bc0f047c-01b1-427f-a439-d451eda02072
 -----
-onRez:Put2Credits-isSilent||atTurnStart:Refill2Credits-duringMyTurn||whileRezzed:Reduce#CostRez-forICE-forMe
+onRez:Put2Credits-isSilent||atTurnPreStart:Refill2Credits-duringMyTurn||whileRezzed:Reduce#CostRez-forICE-forMe
 +++++
 
 .....
@@ -1538,7 +1538,7 @@ Net Police
 -----
 bc0f047c-01b1-427f-a439-d451eda02075
 -----
-onRez:Put1Credits-perOpponentCounter{Base Link}||atTurnStart:Refill1Credits-perOpponentCounter{Base Link}-duringMyTurn||whileRezzed:Reduce#CostTrace-forAll-forMe
+onRez:Put1Credits-perOpponentCounter{Base Link}||atTurnPreStart:Refill1Credits-perOpponentCounter{Base Link}-duringMyTurn||whileRezzed:Reduce#CostTrace-forAll-forMe
 +++++
 
 .....
@@ -1546,7 +1546,7 @@ Weyland Consortium: Because we Build it
 -----
 bc0f047c-01b1-427f-a439-d451eda02076
 -----
-atTurnStart:Refill1Credits-duringMyTurn||whileRezzed:Reduce#CostAdvancement-forICE-forMe
+atTurnPreStart:Refill1Credits-duringMyTurn||whileRezzed:Reduce#CostAdvancement-forICE-forMe
 +++++
 
 .....
@@ -1626,7 +1626,7 @@ Pheromones
 -----
 bc0f047c-01b1-427f-a439-d451eda02086
 -----
-atSuccessfulRun:Put1Virus-ifSuccessfulRunHQ||onRez:Put1Credits-perMarker{Virus}||atTurnStart:Refill1Credits-perMarker{Virus}-duringMyTurn||whileRunningHQ:Reduce#CostAll-forAll-forMe
+atSuccessfulRun:Put1Virus-ifSuccessfulRunHQ||onRez:Put1Credits-perMarker{Virus}||atTurnPreStart:Refill1Credits-perMarker{Virus}-duringMyTurn||whileRunningHQ:Reduce#CostAll-forAll-forMe
 +++++
 
 .....
@@ -1731,7 +1731,7 @@ Simone Diego
 -----
 bc0f047c-01b1-427f-a439-d451eda02099
 -----
-onRez:Put2Credits-isSilent||atTurnStart:Refill2Credits-duringMyTurn
+onRez:Put2Credits-isSilent||atTurnPreStart:Refill2Credits-duringMyTurn
 +++++
 A1B0G0T0:Remove1Credits-isCost$$Put1Advancement-Targeted
 .....
