@@ -250,7 +250,7 @@ Crash Space
 -----
 bc0f047c-01b1-427f-a439-d451eda01030
 -----
-onInstall:Put2Credits||whileRezzed:Reduce#CostDeltag-forAll-excludeDummy-forMe||atTurnPreStart:Refill2Credits-excludeDummy-duringMyTurn||onDamage:Put3protectionMeatDMG-trashCost-excludeDummy
+onInstall:Put2Credits||whileRezzed:Reduce#CostDeltag-affectsAll-excludeDummy-affectsMe||atTurnPreStart:Refill2Credits-excludeDummy-duringMyTurn||onDamage:Put3protectionMeatDMG-trashCost-excludeDummy
 +++++
 A0B0G0T1:CreateDummy-with3protectionMeatDMG-trashCost
 .....
@@ -266,7 +266,7 @@ Cyberfeeder
 -----
 bc0f047c-01b1-427f-a439-d451eda01005
 -----
-onInstall:Put1Credits-isSilent||whileRezzed:Reduce#CostUse-forIcebreaker-forMe||whileRezzed:Reduce#CostInstall-forVirus-forMe||atTurnPreStart:Refill1Credits-duringMyTurn
+onInstall:Put1Credits-isSilent||whileRezzed:Reduce#CostUse-affectsIcebreaker-forMe||whileRezzed:Reduce#CostInstall-affectsVirus-forMe||atTurnPreStart:Refill1Credits-duringMyTurn
 +++++
 	
 .....
@@ -348,7 +348,7 @@ bc0f047c-01b1-427f-a439-d451eda01009
 -----
 onInstall:Put3DaemonMU-isSilent
 +++++
-A0B0G0T0:PossessTarget-Targeted-atProgram_and_nonIcebreaker-targetMine||A1B1G0T0:Retrieve1Card-typeVirus$$ShuffleStack
+A0B0G0T0:PossessTarget-Targeted-atProgram_and_nonIcebreaker-targetMine||A1B1G0T0:Retrieve1Card-grabVirus$$ShuffleStack
 .....
 Easy Mark
 -----
@@ -522,7 +522,7 @@ Kate "Mac" McCaffrey
 -----
 bc0f047c-01b1-427f-a439-d451eda01033
 -----
-whileRezzed:Reduce1CostInstall-forHardware-onlyOnce-forMe||whileRezzed:Reduce1CostInstall-forProgram-onlyOnce-forMe||whileRezzed:Pass-foreachCardInstall-typeProgram_or_Hardware-byMe-onlyOnce
+whileRezzed:Reduce1CostInstall-affectsHardware-onlyOnce-forMe||whileRezzed:Reduce1CostInstall-affectsProgram-onlyOnce-forMe||whileRezzed:Pass-foreachCardInstall-typeProgram_or_Hardware-byMe-onlyOnce
 +++++
 	
 .....
@@ -578,7 +578,7 @@ Modded
 -----
 bc0f047c-01b1-427f-a439-d451eda01035
 -----
-onPlay:Put3Credits$$Put1Click-isPriority||whileRezzed:Reduce#CostInstall-forHardware-onlyOnce-forMe||whileRezzed:Reduce#CostInstall-forProgram-onlyOnce-forMe||whileRezzed:Transfer1Click-foreachCardInstall
+onPlay:Put3Credits$$Put1Click-isPriority||whileRezzed:Reduce#CostInstall-affectsHardware-onlyOnce-forMe||whileRezzed:Reduce#CostInstall-affectsProgram-onlyOnce-forMe||whileRezzed:Transfer1Click-foreachCardInstall
 +++++
 	
 .....
@@ -586,7 +586,7 @@ NBN
 -----
 bc0f047c-01b1-427f-a439-d451eda01080
 -----
-atTurnPreStart:Refill2Credits-duringMyTurn||whileRezzed:Reduce#CostTrace-forAll-forMe
+atTurnPreStart:Refill2Credits-duringMyTurn||whileRezzed:Reduce#CostTrace-affectsAll-forMe
 +++++
 	
 .....
@@ -826,7 +826,7 @@ Special Order
 -----
 bc0f047c-01b1-427f-a439-d451eda01022
 -----
-onPlay:Retrieve1Card-typeIcebreaker$$ShuffleStack
+onPlay:Retrieve1Card-grabIcebreaker$$ShuffleStack
 +++++
 	
 .....
@@ -834,7 +834,7 @@ Stimhack
 -----
 bc0f047c-01b1-427f-a439-d451eda01004
 -----
-onPlay:RunGeneric$$Put9Credits||whileRunning:Reduce#CostAll-forAll-forMe||atJackOut:Inflict1BrainDamage-nonPreventable$$TrashMyself
+onPlay:RunGeneric$$Put9Credits||whileRunning:Reduce#CostAll-affectsAll-forMe||atJackOut:Inflict1BrainDamage-nonPreventable$$TrashMyself
 +++++
 	
 .....
@@ -866,7 +866,7 @@ The Toolbox
 -----
 bc0f047c-01b1-427f-a439-d451eda01041
 -----
-whileRezzed:Gain2MU$$Gain2Base Link||onInstall:Put2Credits-isSilent||atTurnPreStart:Refill2Credits-duringMyTurn||whileRezzed:Reduce#CostUse-forIcebreaker-forMe
+whileRezzed:Gain2MU$$Gain2Base Link||onInstall:Put2Credits-isSilent||atTurnPreStart:Refill2Credits-duringMyTurn||whileRezzed:Reduce#CostUse-affectsIcebreaker-forMe
 +++++
 	
 .....
@@ -1066,7 +1066,7 @@ Spinal Modem
 -----
 bc0f047c-01b1-427f-a439-d451eda02002
 -----
-onInstall:Put2Credits-isSilent||whileInstalled:Gain1MU||atTurnPreStart:Refill2Credits-duringMyTurn||whileRezzed:Reduce#CostUse-forIcebreaker-forMe||whileRunning:Inflict1BrainDamage-foreachUnavoidedTrace-byMe
+onInstall:Put2Credits-isSilent||whileInstalled:Gain1MU||atTurnPreStart:Refill2Credits-duringMyTurn||whileRezzed:Reduce#CostUse-affectsIcebreaker-forMe||whileRunning:Inflict1BrainDamage-foreachUnavoidedTrace-byMe
 +++++
 
 .....
@@ -1138,7 +1138,7 @@ Compromised Employee
 -----
 bc0f047c-01b1-427f-a439-d451eda02025
 -----
-onInstall:Put1Credits-isSilent||atTurnPreStart:Refill1Credits-duringMyTurn||whileRezzed:Reduce#CostTrace-forAll-forMe||whileRezzed:Gain1Credits-foreachCardRezzed-typeICE
+onInstall:Put1Credits-isSilent||atTurnPreStart:Refill1Credits-duringMyTurn||whileRezzed:Reduce#CostTrace-affectsAll-forMe||whileRezzed:Gain1Credits-foreachCardRezzed-typeICE
 +++++
 
 .....
@@ -1394,7 +1394,7 @@ Test Run
 -----
 bc0f047c-01b1-427f-a439-d451eda02047
 -----
-onPlay:Retrieve1Card-typeProgram-toTable-with1Test Run$$ShuffleStack||onPlay:Retrieve1Card-fromHeap-typeProgram-toTable-with1Test Run||atTurnEnd:UninstallTarget-toStack-AutoTargeted-atProgram-hasMarker{Test Run}
+onPlay:Retrieve1Card-grabProgram-toTable-with1Test Run$$ShuffleStack||onPlay:Retrieve1Card-fromHeap-grabProgram-toTable-with1Test Run||atTurnEnd:UninstallTarget-toStack-AutoTargeted-atProgram-hasMarker{Test Run}
 +++++
 A0B0G0T0:UninstallTarget-toStack-AutoTargeted-atProgram-hasMarker{Test Run}$$TrashMyself
 .....
@@ -1442,7 +1442,7 @@ Scrubber
 -----
 bc0f047c-01b1-427f-a439-d451eda02063
 -----
-onInstall:Put2Credits-isSilent||atTurnPreStart:Refill2Credits-duringMyTurn||whileRezzed:Reduce#CostTrash-forAll-forMe
+onInstall:Put2Credits-isSilent||atTurnPreStart:Refill2Credits-duringMyTurn||whileRezzed:Reduce#CostTrash-affectsAll-forMe
 +++++
 
 .....
@@ -1482,7 +1482,7 @@ Inside Man
 -----
 bc0f047c-01b1-427f-a439-d451eda02068
 -----
-onInstall:Put2Credits-isSilent||atTurnPreStart:Refill2Credits-duringMyTurn||whileRezzed:Reduce#CostInstall-forHardware-forMe
+onInstall:Put2Credits-isSilent||atTurnPreStart:Refill2Credits-duringMyTurn||whileRezzed:Reduce#CostInstall-affectsHardware-forMe
 +++++
 
 .....
@@ -1514,7 +1514,7 @@ Dedicated Server
 -----
 bc0f047c-01b1-427f-a439-d451eda02072
 -----
-onRez:Put2Credits-isSilent||atTurnPreStart:Refill2Credits-duringMyTurn||whileRezzed:Reduce#CostRez-forICE-forMe
+onRez:Put2Credits-isSilent||atTurnPreStart:Refill2Credits-duringMyTurn||whileRezzed:Reduce#CostRez-affectsICE-forMe
 +++++
 
 .....
@@ -1538,7 +1538,7 @@ Net Police
 -----
 bc0f047c-01b1-427f-a439-d451eda02075
 -----
-onRez:Put1Credits-perOpponentCounter{Base Link}||atTurnPreStart:Refill1Credits-perOpponentCounter{Base Link}-duringMyTurn||whileRezzed:Reduce#CostTrace-forAll-forMe
+onRez:Put1Credits-perOpponentCounter{Base Link}||atTurnPreStart:Refill1Credits-perOpponentCounter{Base Link}-duringMyTurn||whileRezzed:Reduce#CostTrace-affectsAll-forMe
 +++++
 
 .....
@@ -1546,7 +1546,7 @@ Weyland Consortium: Because we Build it
 -----
 bc0f047c-01b1-427f-a439-d451eda02076
 -----
-atTurnPreStart:Refill1Credits-duringMyTurn||whileRezzed:Reduce#CostAdvancement-forICE-forMe
+atTurnPreStart:Refill1Credits-duringMyTurn||whileRezzed:Reduce#CostAdvancement-affectsICE-forMe
 +++++
 
 .....
@@ -1626,7 +1626,7 @@ Pheromones
 -----
 bc0f047c-01b1-427f-a439-d451eda02086
 -----
-atSuccessfulRun:Put1Virus-ifSuccessfulRunHQ||onRez:Put1Credits-perMarker{Virus}||atTurnPreStart:Refill1Credits-perMarker{Virus}-duringMyTurn||whileRunningHQ:Reduce#CostAll-forAll-forMe
+atSuccessfulRun:Put1Virus-ifSuccessfulRunHQ||onRez:Put1Credits-perMarker{Virus}||atTurnPreStart:Refill1Credits-perMarker{Virus}-duringMyTurn||whileRunningHQ:Reduce#CostAll-affectsAll-forMe
 +++++
 
 .....
@@ -1748,7 +1748,7 @@ Retrieval Run
 -----
 bc0f047c-01b1-427f-a439-d451eda02101
 -----
-onPlay:RunArchives||atSuccessfulRun:Retrieve1Card-fromHeap-typeProgram-toTable-isOptional-isAlternativeRunResult$$TrashMyself-ifSuccessfulRunArchives-isSilent
+onPlay:RunArchives||atSuccessfulRun:Retrieve1Card-fromHeap-grabProgram-toTable-isOptional-isAlternativeRunResult$$TrashMyself-ifSuccessfulRunArchives-isSilent
 +++++
 
 .....
@@ -2049,7 +2049,7 @@ bc0f047c-01b1-427f-a439-d451eda03017
 -----
 
 +++++
-
+A0B0G0T0:TrashTarget-Targeted-atProgram-isSubroutine||A0B0G0T0:Trace3-isSubroutine-traceEffects<Gain1Tags-onOpponent++Inflict1BrainDamage-onOpponent,None>	
 .....
 Minelayer
 -----
@@ -2057,7 +2057,7 @@ bc0f047c-01b1-427f-a439-d451eda03018
 -----
 
 +++++
-
+A0B0G0T0:InstallTarget-Targeted-atICE-fromHand
 .....
 Viktor 2.0
 -----
@@ -2065,7 +2065,7 @@ bc0f047c-01b1-427f-a439-d451eda03019
 -----
 
 +++++
-
+A0B0G0T0:Trace2-isSubroutine-traceEffects<Put1Power,None>||A0B0G0T0:RunEnd-isSubroutine||A0B0G0T0:Remove1Power-isCost$$Inflict1BrainDamage-onOpponent
 .....
 Zed 1.0
 -----
@@ -2073,15 +2073,15 @@ bc0f047c-01b1-427f-a439-d451eda03020
 -----
 
 +++++
-
+A0B0G0T0:Inflict1BrainDamage-onOpponent
 .....
 Awakening Center
 -----
 bc0f047c-01b1-427f-a439-d451eda03021
 -----
-
+tJackOut:TrashTarget-AutoTargeted-atICE_and_Bioroid-hasMarker{AwakeningCenter}
 +++++
-
+A1B0G0T0:CustomScript
 .....
 Tyr's Hand
 -----
@@ -2089,7 +2089,7 @@ bc0f047c-01b1-427f-a439-d451eda03022
 -----
 
 +++++
-
+A0B0G0T1:SimplyAnnounce{prevent a subroutine from being broken on a piece of bioroid ice protecting this server}
 .....
 Gila Hands Arcology
 -----
@@ -2097,7 +2097,7 @@ bc0f047c-01b1-427f-a439-d451eda03023
 -----
 
 +++++
-
+A2B0G0T0:Gain3Credits
 .....
 Levy University
 -----
@@ -2105,7 +2105,7 @@ bc0f047c-01b1-427f-a439-d451eda03024
 -----
 
 +++++
-
+A1B1G0T0:Retrieve1Card-grabICE
 .....
 Server Diagnostics
 -----

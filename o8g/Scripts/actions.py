@@ -846,7 +846,7 @@ def reduceCost(card, action = 'REZ', fullCost = 0, dryRun = False, reversePlayer
                               if c.isFaceUp
                               and c.highlight != RevealedColor
                               and c.highlight != InactiveColor])
-      reductionRegex = re.compile(r'(Reduce|Increase)([0-9#X]+)Cost({}|All)-for([A-Z][A-Za-z ]+)(-not[A-Za-z_& ]+)?'.format(type)) # Doing this now, to reduce load.
+      reductionRegex = re.compile(r'(Reduce|Increase)([0-9#X]+)Cost({}|All)-affects([A-Z][A-Za-z ]+)(-not[A-Za-z_& ]+)?'.format(type)) # Doing this now, to reduce load.
       for c in RC_cardList: # Then check if there's other cards in the table that reduce its costs.
          Autoscripts = CardsAS.get(c.model,'').split('||')
          if len(Autoscripts) == 0: continue
@@ -879,7 +879,7 @@ def reduceCost(card, action = 'REZ', fullCost = 0, dryRun = False, reversePlayer
       autoS = cTuple[2]
       debugNotify("cTuple[0] (i.e. card) is: {}".format(c), 2) #Debug
       debugNotify("cTuple[2] (i.e. autoS) is: {}".format(autoS), 4) #Debug
-      if reductionSearch.group(4) == 'All' or checkCardRestrictions(gatherCardProperties(card), prepareRestrictions(autoS)):
+      if reductionSearch.group(4) == 'All' or checkCardRestrictions(gatherCardProperties(card), prepareRestrictions(autoS,seek = 'reduce')):
          debugNotify(" ### Search match! Reduction Value is {}".format(reductionSearch.group(2)), 3) # Debug
          if not checkSpecialRestrictions(autoS,card): continue
          if re.search(r'onlyOnce',autoS):

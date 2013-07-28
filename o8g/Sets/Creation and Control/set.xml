@@ -271,7 +271,7 @@
 		<property name="Stat" value="5" />	
 		<property name="Rules" value="The Runner can spend [Click] [Click] to break up to 2 subroutines on Ichi 2.0.&#xD;[Subroutine] Trash 1 program.&#xD;[Subroutine] Trash 1 program.&#xD;[Subroutine] Trace3 - If successful, give the Runner 1 tag and do 1 brain damage." />
 		<property name="Flavor" value="The game has changed." />
-		<property name="Instructions" value="" />
+		<property name="Instructions" value="[Subroutine] Trash target program.||[Subroutine] Trace 3. If successful give the Runner 1 Tag and inflict 1 brain damage." />
 		<property name="Faction" value="Haas-Bioroid" />
 		<property name="Influence" value="3" />
 		<property name="Side" value="Corp" />
@@ -303,7 +303,7 @@
 		<property name="Stat" value="5" />	
 		<property name="Rules" value="The Runner can spend [Click] [Click] to break u to 2 subroutines on Viktor 2.0.&#xD;Hosted power counter: Do 1 brain damage.&#xD;[Subroutine] Trace2 - If successful, place 1 power counter on Viktor 2.0.&#xD;[Subroutine] End the run." />
 		<property name="Flavor" value="" />
-		<property name="Instructions" value="" />
+		<property name="Instructions" value="[Subroutine] Trace 2 – If successful, place 1 power counter on Viktor 2.0.||[Subroutine] End the run.||Inflict 1 Brain Damage" />
 		<property name="Faction" value="Haas-Bioroid" />
 		<property name="Influence" value="3" />
 		<property name="Side" value="Corp" />

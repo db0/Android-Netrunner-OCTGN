@@ -809,6 +809,24 @@ def markerScripts(card, action = 'USE'):
             notify("{} has paid {}{} in order to install {}{} from their Personal Workshop{}".format(me,uniCredit(count),reduceTXT,card,extraTXT,MUtext))
          else:
             notify("{} has paid {}{} to remove {} power counters from {} in their Personal Workshop".format(me,uniCredit(count),reduceTXT,count,card))         
+      if key[0] == 'Awakening Center' and action == 'USE':
+         foundSpecial = True
+         host = chkHostType(card) 
+         hostCards = eval(getGlobalVariable('Host Cards'))
+         hostCard = Card(hostCards[card._id])
+         cardCost = num(fetchProperty(card, 'Cost')) - 7
+         if cardCost < 0: cardCost = 0
+         reduction = reduceCost(card, 'REZ', cardCost, dryRun = True)
+         rc = payCost(cardCost - reduction, "not free")
+         if rc == 'ABORT': return foundSpecial # If the cost couldn't be paid, we don't proceed.
+         reduceCost(card, 'REZ', cardCost, dryRun = True) # If the cost could be paid, we finally take the credits out from cost reducing cards.
+         if reduction: reduceTXT = ' (reduced by {})'.format(reduction)
+         else: reduceTXT = ''
+         #card.markers[mdict['AwakeningCenter']] = 0
+         card.highlight = None
+         executePlayScripts(card,'REZ')
+         autoscriptOtherPlayers('CardRezzed',card)
+         notify("{} has paid {}{} in order to rez {} from their {}.".format(me,uniCredit(cardCost),reduceTXT,card,hostCard))
    return foundSpecial
            
          
@@ -1668,20 +1686,20 @@ def RetrieveX(Autoscript, announceText, card, targetCards = None, notification =
    debugNotify("Fething Script Variables", 2)
    count = num(action.group(1))
    multiplier = per(Autoscript, card, n, targetCards, notification)
-   restrictions = prepareRestrictions(Autoscript, seek = 'type')
+   restrictions = prepareRestrictions(Autoscript, seek = 'retrieve')
    cardList = []
    countRestriction = re.search(r'-onTop([0-9]+)Cards', Autoscript)
    if countRestriction: topCount = num(countRestriction.group(1))
    else: topCount = len(source)
    for c in source.top(topCount):
       debugNotify("Checking card: {}".format(c), 4)
-      if checkCardRestrictions(gatherCardProperties(c), restrictions):
+      if checkCardRestrictions(gatherCardProperties(c), restrictions) and checkSpecialRestrictions(Autoscript,c):
          cardList.append(c)
          if re.search(r'-isTopmost', Autoscript) and len(cardList) == count: break # If we're selecting only the topmost cards, we select only the first matches we get.         
    if re.search(r'-fromArchives', Autoscript): # If the card is being retrieved from archives, we need to also check hidden archives.
       for c in targetPL.piles['Archives(Hidden)']:
          debugNotify("Checking Hidden Arc card: {}".format(c), 4)
-         if checkCardRestrictions(gatherCardProperties(c), restrictions):
+         if checkCardRestrictions(gatherCardProperties(c), restrictions) and checkSpecialRestrictions(Autoscript,c):
             cardList.append(c)
             if re.search(r'-isTopmost', Autoscript) and len(cardList) == count: break # If we're selecting only the topmost cards, we select only the first matches we get.         
    debugNotify("cardList: {}".format([c.name for c in cardList]), 3)
@@ -1891,7 +1909,9 @@ def prepareRestrictions(Autoscript, seek = 'target'):
    validTargets = [] # a list that holds any type that a card must be, in order to be a valid target.
    targetGroups = []
    if seek == 'type': whatTarget = re.search(r'\b(type)([A-Za-z_{},& ]+)[-]?', Autoscript) # seek of "type" is used by autoscripting other players, and it's separated so that the same card can have two different triggers (e.g. see Darth Vader)
-   else: whatTarget = re.search(r'\b(at|for)([A-Za-z_{},& ]+)[-]?', Autoscript) # We signify target restrictions keywords by starting a string with "or"
+   elif seek == 'retrieve': whatTarget = re.search(r'\b(grab)([A-Za-z_{},& ]+)[-]?', Autoscript) # seek of "retrieve" is used when checking what types of cards to retrieve from one's deck or discard pile
+   elif seek == 'reduce': whatTarget = re.search(r'\b(affects)([A-Za-z_{},& ]+)[-]?', Autoscript) # seek of "reduce" is used when checking for what types of cards to recuce the cost.
+   else: whatTarget = re.search(r'\b(at)([A-Za-z_{},& ]+)[-]?', Autoscript) # We signify target restrictions keywords by starting a string with "or"
    if whatTarget: 
       debugNotify("Splitting on _or_", 2) #Debug
       validTargets = whatTarget.group(2).split('_or_') # If we have a list of valid targets, split them into a list, separated by the string "_or_". Usually this results in a list of 1 item.

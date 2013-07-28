@@ -445,5 +445,29 @@ def CustomScript(card, action = 'PLAY'): # Scripts that are complex and fairly u
       chosenC.orientation = Rot90
       TokensX('Put1Howler-isSilent', "", card, [chosenC,card])
       notify("{} wueaaAAAA! {} has awakened a {} from {} for the defense of this server!".format(uniSubroutine(),card,chosenC,previousGroup)) 
+   elif fetchProperty(card, 'name') == 'Awakening Center':
+      if action == 'USE':
+         targetList = [c for c in me.hand  # First we see if they've targeted a card from their hand
+                        if c.targetedBy 
+                        and c.targetedBy == me 
+                        and c.Type == 'ICE'
+                        and re.search('Bioroid',getKeywords(c))]
+         if len(targetList) > 0:
+            selectedCard = targetList[0]
+            actionCost = useClick(count = 1)
+            if actionCost == 'ABORT': return
+            hostCards = eval(getGlobalVariable('Host Cards'))
+            hostCards[selectedCard._id] = card._id # We set the Personal Workshop to be the card's host
+            setGlobalVariable('Host Cards',str(hostCards))
+            cardAttachementsNR = len([att_id for att_id in hostCards if hostCards[att_id] == card._id])
+            debugNotify("About to move into position", 2) #Debug
+            storeProperties(selectedCard)
+            orgAttachments(card)
+            TokensX('Put1AwakeningCenter-isSilent', "", selectedCard) # We add an Awakening Center counter to be able to trigger the rez the ice ability
+            selectedCard.highlight = InactiveColor
+            notify(announceText)
+         else: 
+            whisper(":::ERROR::: You need to target a Bioroid ICE in your HQ before using this action")  
+            return
    elif action == 'USE': useCard(card)
    debugNotify("<<< CustomScript()", 3) #Debug
