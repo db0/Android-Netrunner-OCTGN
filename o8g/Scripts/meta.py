@@ -494,8 +494,12 @@ def orgAttachments(card):
    cardAttachements = [Card(att_id) for att_id in hostCards if hostCards[att_id] == card._id]
    x,y = card.position
    for attachment in cardAttachements:
-      if attachment.owner.getGlobalVariable('ds') == 'corp' and not attachment.isFaceUp: cFaceDown = True
-      else: cFaceDown = False # If we're moving corp cards to the table, we generally move them face down
+      if attachment.owner.getGlobalVariable('ds') == 'corp' and pileName(attachment.group) in ['R&D','Face-up Archives','HQ']:
+         debugNotify("card is faceDown")
+         cFaceDown = True
+      else: 
+         debugNotify("attachment.isFaceUp = {}".format(attachment.isFaceUp))
+         cFaceDown = False # If we're moving corp cards to the table, we generally move them face down
       attachment.moveToTable(x + (xAlg * attNR), y + (yAlg * attNR),cFaceDown)
       if cFaceDown and attachment.owner == me: attachment.peek() # If we moved our own card facedown to the table, we peek at it.
       if fetchProperty(attachment, 'Type') == 'ICE': attachment.orientation = Rot90 # If we just moved an ICE to the table, we make sure it's turned sideways.
@@ -897,9 +901,10 @@ def TrialError(group, x=0, y=0): # Debugging
       notify("Corp Now")
    ###### End Testing Corner ######
    delayed_whisper("## Defining Test Cards")
-   testcards = ["bc0f047c-01b1-427f-a439-d451eda03021", # Future Proof Cards
+   testcards = [
+                "bc0f047c-01b1-427f-a439-d451eda03021", 
                 "bc0f047c-01b1-427f-a439-d451eda03016", 
-                # "bc0f047c-01b1-427f-a439-d451eda02103", 
+                "bc0f047c-01b1-427f-a439-d451eda03024", 
                 # "bc0f047c-01b1-427f-a439-d451eda02104", 
                 # "bc0f047c-01b1-427f-a439-d451eda02105", 
                 # "bc0f047c-01b1-427f-a439-d451eda02106", 

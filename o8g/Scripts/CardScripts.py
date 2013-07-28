@@ -250,7 +250,7 @@ Crash Space
 -----
 bc0f047c-01b1-427f-a439-d451eda01030
 -----
-onInstall:Put2Credits||whileRezzed:Reduce#CostDeltag-affectsAll-excludeDummy-affectsMe||atTurnPreStart:Refill2Credits-excludeDummy-duringMyTurn||onDamage:Put3protectionMeatDMG-trashCost-excludeDummy
+onInstall:Put2Credits||whileRezzed:Reduce#CostDeltag-affectsAll-excludeDummy-forMe||atTurnPreStart:Refill2Credits-excludeDummy-duringMyTurn||onDamage:Put3protectionMeatDMG-trashCost-excludeDummy
 +++++
 A0B0G0T1:CreateDummy-with3protectionMeatDMG-trashCost
 .....
@@ -426,7 +426,7 @@ Haas-Bioroid
 -----
 bc0f047c-01b1-427f-a439-d451eda01054
 -----
-whileRezzed:Gain1Credits-perCardInstall-byMe-onlyOnce
+whileRezzed:Gain1Credits-foreachCardInstall-byMe-onlyOnce
 +++++
 	
 .....
@@ -802,7 +802,7 @@ Shipment from Mirrormorph
 -----
 bc0f047c-01b1-427f-a439-d451eda01060
 -----
-onPlay:Put3Click||whileRezzed:Transfer1Click-foreachCardInstall
+onPlay:InstallMulti-Targeted-atnonOperation-fromHand
 +++++
 	
 .....
@@ -1498,7 +1498,7 @@ Green Level Clearance
 -----
 bc0f047c-01b1-427f-a439-d451eda02070
 -----
-onPlay:Gain3Credits$$Draw1Cards
+onPlay:Gain3Credits$$Draw1Card
 +++++
 
 .....
@@ -2079,7 +2079,7 @@ Awakening Center
 -----
 bc0f047c-01b1-427f-a439-d451eda03021
 -----
-tJackOut:TrashTarget-AutoTargeted-atICE_and_Bioroid-hasMarker{AwakeningCenter}
+atJackOut:TrashTarget-AutoTargeted-atICE_and_Bioroid-hasMarker{AwakeningCenter}
 +++++
 A1B0G0T0:CustomScript
 .....
@@ -2105,13 +2105,13 @@ bc0f047c-01b1-427f-a439-d451eda03024
 -----
 
 +++++
-A1B1G0T0:Retrieve1Card-grabICE
+A1B1G0T0:Retrieve1Card-grabICE$$ShuffleR&D
 .....
 Server Diagnostics
 -----
 bc0f047c-01b1-427f-a439-d451eda03025
 -----
-
+atTurnStart:Gain2Credits-duringMyTurn||whileRezzed:TrashMyself-foreachCardInstall-isICE
 +++++
 
 .....
@@ -2121,7 +2121,7 @@ bc0f047c-01b1-427f-a439-d451eda03026
 -----
 
 +++++
-
+A0B0G0T0:RunEnd-isSubroutine
 .....
 Datapike
 -----
@@ -2129,19 +2129,11 @@ bc0f047c-01b1-427f-a439-d451eda03027
 -----
 
 +++++
-
+A0B0G0T0:UseCustomAbility-isSubroutine||A0B0G0T0:RunEnd-isSubroutine	
 .....
 Rielle "Kit" Peddler: Transhuman
 -----
 bc0f047c-01b1-427f-a439-d451eda03028
------
-
-+++++
-
-.....
-The Professor: Keeper of Knowledge
------
-bc0f047c-01b1-427f-a439-d451eda03029
 -----
 
 +++++
@@ -2153,13 +2145,13 @@ bc0f047c-01b1-427f-a439-d451eda03030
 -----
 
 +++++
-
+A0B0G0T0:Draw1Card
 .....
 Escher
 -----
 bc0f047c-01b1-427f-a439-d451eda03031
 -----
-
+onPlay:RunHQ||atSuccessfulRun:CustomScript-isOptional-isAlternativeRunResult-ifSuccessfulRunHQ||atJackOut:CustomScript
 +++++
 
 .....
@@ -2167,15 +2159,15 @@ Exploratory Romp
 -----
 bc0f047c-01b1-427f-a439-d451eda03032
 -----
-
+onPlay:RunGeneric||atSuccessfulRun:Remove3Advancement-DemiAutoTargeted-hasMarker{Advancement}-choose1-isAlternativeRunResult$$TrashMyself-isSilent
 +++++
-
+A0B0G0T0:Remove3Advancement-Targeted-hasMarker{Advancement}
 .....
 Freelance Coding Contract
 -----
 bc0f047c-01b1-427f-a439-d451eda03033
 -----
-
+onPlay:Discard0Card-Targeted-fromHand$$Gain2Credits-perX
 +++++
 
 .....
@@ -2183,7 +2175,7 @@ Scavenge
 -----
 bc0f047c-01b1-427f-a439-d451eda03034
 -----
-
+onPlay:CustomScript
 +++++
 
 .....

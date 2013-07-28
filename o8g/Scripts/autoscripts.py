@@ -29,7 +29,7 @@ import re
 
 secretCred = None # Used to allow the player to spend credits in secret for some card abilities (e.g. Snowflake)
 failedRequirement = True # A Global boolean that we set in case an Autoscript cost cannot be paid, so that we know to abort the rest of the script.
-
+EscherUse = 0
 
 #------------------------------------------------------------------------------
 # Play/Score/Rez/Trash trigger
@@ -50,8 +50,8 @@ def executePlayScripts(card, action):
    failedRequirement = False
    X = 0
    Autoscripts = CardsAS.get(card.model,'').split('||') # When playing cards, the || is used as an "and" separator, rather than "or". i.e. we don't do choices (yet)
-   AutoScriptsSnapshot = list(Autoscripts) # Need to work on a snapshot, because we'll be modifying the list.
-   for autoS in AutoScriptsSnapshot: # Checking and removing any "AtTurnStart" clicks.
+   autoScriptsSnapshot = list(Autoscripts) # Need to work on a snapshot, because we'll be modifying the list.
+   for autoS in autoScriptsSnapshot: # Checking and removing any "AtTurnStart" clicks.
       if (autoS == '' or 
           re.search(r'atTurn(Start|End)', autoS) or 
           re.search(r'atRunStart', autoS) or 
@@ -81,9 +81,9 @@ def executePlayScripts(card, action):
    if debugVerbosity >= 2: notify ('trigger = {}'.format(trigger)) # Debug
    if trigger != 'N/A': # If there's a possibility of a multiple choice trigger, we do the check
       TriggersFound = [] # A List which will hold any valid abilities for this trigger
-      for AutoS in Autoscripts:
-         if re.search(r'{}:'.format(trigger),AutoS): # If the script has the appropriate trigger, we put it into the list.
-            TriggersFound.append(AutoS)
+      for autoS in Autoscripts:
+         if re.search(r'{}:'.format(trigger),autoS): # If the script has the appropriate trigger, we put it into the list.
+            TriggersFound.append(autoS)
       if debugVerbosity >= 2: notify ('TriggersFound = {}'.format(TriggersFound)) # Debug
       if len(TriggersFound) > 1: # If we have more than one option for this trigger, we need to ask the player for which to use.
          if Automations['WinForms']: ChoiceTXT = "This card has multiple abilities that can trigger at this point.\nSelect the ones you would like to use."
@@ -99,9 +99,9 @@ def executePlayScripts(card, action):
             if debugVerbosity >= 4: notify (' Removing unused option: {}'.format(unchosenOption)) # Debug
             Autoscripts.remove(unchosenOption)
          if debugVerbosity >= 2: notify ('Final Autoscripts after choices: {}'.format(Autoscripts)) # Debug
-   for AutoS in Autoscripts:
-      debugNotify("First Processing: {}".format(AutoS), 2) # Debug
-      effectType = re.search(r'(on[A-Za-z]+|while[A-Za-z]+):', AutoS)
+   for autoS in Autoscripts:
+      debugNotify("First Processing: {}".format(autoS), 2) # Debug
+      effectType = re.search(r'(on[A-Za-z]+|while[A-Za-z]+):', autoS)
       if not effectType:
          debugNotify("no regeX match for playscripts. aborting",4)
          continue
@@ -118,14 +118,14 @@ def executePlayScripts(card, action):
           (effectType.group(1) == 'onLiberation' and action != 'LIBERATE') or
           (effectType.group(1) == 'onTrash' and action != 'TRASH' and action!= 'UNINSTALL' and action != 'DEREZ') or
           (effectType.group(1) == 'onDerez' and action != 'DEREZ')): 
-         debugNotify("Rejected {} because {} does not fit with {}".format(AutoS,effectType.group(1),action))
+         debugNotify("Rejected {} because {} does not fit with {}".format(autoS,effectType.group(1),action))
          continue 
-      if re.search(r'-isOptional', AutoS):
+      if re.search(r'-isOptional', autoS):
          if not confirm("This card has an optional ability you can activate at this point. Do you want to do so?"): 
             notify("{} opts not to activate {}'s optional ability".format(me,card))
             return 'ABORT'
          else: notify("{} activates {}'s optional ability".format(me,card))
-      selectedAutoscripts = AutoS.split('$$')
+      selectedAutoscripts = autoS.split('$$')
       if debugVerbosity >= 2: notify ('selectedAutoscripts: {}'.format(selectedAutoscripts)) # Debug
       for activeAutoscript in selectedAutoscripts:
          debugNotify("Second Processing: {}".format(activeAutoscript), 2) # Debug
@@ -206,7 +206,9 @@ def executePlayScripts(card, action):
             elif regexHooks['InflictX'].search(passedScript): 
                if InflictX(passedScript, announceText, card, targetC, notification = 'Quick', n = X) == 'ABORT': return
             elif regexHooks['RetrieveX'].search(passedScript): 
-               if RetrieveX(passedScript, announceText, card, targetC, notification = 'Quick', n = X) == 'ABORT': return
+               retrieveTuple = RetrieveX(passedScript, announceText, card, targetC, notification = 'Quick', n = X)
+               if retrieveTuple == 'ABORT': return # Retrieve also returns the cards it found in a tuple. But we're not using those here.
+               X = len(retrieveTuple[1])
             elif regexHooks['ModifyStatus'].search(passedScript): 
                if ModifyStatus(passedScript, announceText, card, targetC, notification = 'Quick', n = X) == 'ABORT': return
          if failedRequirement: break # If one of the Autoscripts was a cost that couldn't be paid, stop everything else.
@@ -266,8 +268,8 @@ def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
    debugNotify("+++ All checks done!. Starting Choice Parse...", 5)
    ### Checking if card has multiple autoscript options and providing choice to player.
    Autoscripts = fetchProperty(card, 'AutoActions').split('||')
-   AutoScriptSnapshot = list(Autoscripts)
-   for autoS in AutoScriptSnapshot: # Checking and removing any clickscripts which were put here in error.
+   autoScriptSnapshot = list(Autoscripts)
+   for autoS in autoScriptSnapshot: # Checking and removing any clickscripts which were put here in error.
       if (re.search(r'while(Rezzed|Scored)', autoS) 
          or re.search(r'on(Play|Score|Install)', autoS) 
          or re.search(r'AtTurn(Start|End)', autoS)
@@ -441,6 +443,12 @@ def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
             reshuffleTuple = ReshuffleX(activeAutoscript, announceText, card) # The reshuffleX() function is special because it returns a tuple.
             announceText = reshuffleTuple[0] # The first element of the tuple contains the announceText string
             X = reshuffleTuple[1] # The second element of the tuple contains the number of cards that were reshuffled from the hand in the deck.
+         elif regexHooks['RetrieveX'].search(activeAutoscript): 
+            retrieveTuple = RetrieveX(activeAutoscript, announceText, card, targetC, n = X)
+            if retrieveTuple == 'ABORT': announceText == 'ABORT'
+            else:
+               announceText = retrieveTuple[0] # The first element of the tuple contains the announceText string
+               X = len(retrieveTuple[1]) # The second element of the tuple contains the cards which were retrieved. by countring them we have the X
          elif regexHooks['RollX'].search(activeAutoscript): 
             rollTuple = RollX(activeAutoscript, announceText, card) # Returns like reshuffleX()
             announceText = rollTuple[0] 
@@ -462,7 +470,6 @@ def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
          elif regexHooks['RunX'].search(activeAutoscript):              announceText = RunX(activeAutoscript, announceText, card, targetC, n = X)
          elif regexHooks['TraceX'].search(activeAutoscript):            announceText = TraceX(activeAutoscript, announceText, card, targetC, n = X)
          elif regexHooks['InflictX'].search(activeAutoscript):          announceText = InflictX(activeAutoscript, announceText, card, targetC, n = X)
-         elif regexHooks['RetrieveX'].search(activeAutoscript):         announceText = RetrieveX(activeAutoscript, announceText, card, targetC, n = X)
          elif regexHooks['ModifyStatus'].search(activeAutoscript):      announceText = ModifyStatus(activeAutoscript, announceText, card, targetC, n = X)
          elif regexHooks['SimplyAnnounce'].search(activeAutoscript):    announceText = SimplyAnnounce(activeAutoscript, announceText, card, targetC, n = X)
          elif regexHooks['ChooseKeyword'].search(activeAutoscript):     announceText = ChooseKeyword(activeAutoscript, announceText, card, targetC, n = X)
@@ -527,44 +534,45 @@ def autoscriptOtherPlayers(lookup, origin_card = Identity, count = 1): # Functio
       costText = '{} activates {} to'.format(card.controller, card) 
       Autoscripts = CardsAS.get(card.model,'').split('||')
       debugNotify("{}'s AS: {}".format(card,Autoscripts), 4) # Debug
-      AutoScriptSnapshot = list(Autoscripts)
-      for autoS in AutoScriptSnapshot: # Checking and removing anything other than whileRezzed or whileScored.
+      autoScriptSnapshot = list(Autoscripts)
+      for autoS in autoScriptSnapshot: # Checking and removing anything other than whileRezzed or whileScored.
          if not re.search(r'while(Rezzed|Scored|Running|Installed)', autoS): 
             debugNotify("Card does not have triggered ability while in play. Aborting", 2) #Debug
             Autoscripts.remove(autoS)
          if not chkRunningStatus(autoS): Autoscripts.remove(autoS) # If the script only works while running a specific server, and we're not, then abort.
       if len(Autoscripts) == 0: continue
-      for AutoS in Autoscripts:
-         debugNotify('Checking AutoS: {}'.format(AutoS), 2) # Debug
-         if not re.search(r'{}'.format(lookup), AutoS): 
+      for autoS in Autoscripts:
+         debugNotify('Checking autoS: {}'.format(autoS), 2) # Debug
+         if not re.search(r'{}'.format(lookup), autoS): 
             debugNotify("lookup: {} not found in CardScript. Aborting".format(lookup))
             continue # Search if in the script of the card, the string that was sent to us exists. The sent string is decided by the function calling us, so for example the ProdX() function knows it only needs to send the 'GeneratedSpice' string.
-         if chkPlayer(AutoS, card.controller,False) == 0: continue # Check that the effect's origninator is valid.
-         if not ifHave(AutoS,card.controller,silent = True): continue # If the script requires the playet to have a specific counter value and they don't, do nothing.
-         if chkTagged(AutoS, True) == 'ABORT': continue
+         if chkPlayer(autoS, card.controller,False) == 0: continue # Check that the effect's origninator is valid.
+         if not ifHave(autoS,card.controller,silent = True): continue # If the script requires the playet to have a specific counter value and they don't, do nothing.
+         if chkTagged(autoS, True) == 'ABORT': continue
          if not checkCardRestrictions(gatherCardProperties(origin_card), prepareRestrictions(autoS, 'type')): continue #If we have the '-type' modulator in the script, then need ot check what type of property it's looking for
+         if not checkSpecialRestrictions(autoS,origin_card): continue #If we fail the special restrictions on the trigger card, we also abort.
          if re.search(r'onlyOnce',autoS) and oncePerTurn(card, silent = True, act = 'automatic') == 'ABORT': continue # If the card's ability is only once per turn, use it or silently abort if it's already been used
          if re.search(r'onTriggerCard',autoS): targetCard = [origin_card] # if we have the "-onTriggerCard" modulator, then the target of the script will be the original card (e.g. see Grimoire)
          else: targetCard = None
-         debugNotify("Automatic Autoscripts: {}".format(AutoS), 2) # Debug
-         #effect = re.search(r'\b([A-Z][A-Za-z]+)([0-9]*)([A-Za-z& ]*)\b([^:]?[A-Za-z0-9_&{} -]*)', AutoS)
+         debugNotify("Automatic Autoscripts: {}".format(autoS), 2) # Debug
+         #effect = re.search(r'\b([A-Z][A-Za-z]+)([0-9]*)([A-Za-z& ]*)\b([^:]?[A-Za-z0-9_&{} -]*)', autoS)
          #passedScript = "{}".format(effect.group(0))
          #confirm('effects: {}'.format(passedScript)) #Debug
-         if regexHooks['GainX'].search(AutoS):
-            gainTuple = GainX(AutoS, costText, card, targetCard, notification = 'Automatic', n = count)
+         if regexHooks['GainX'].search(autoS):
+            gainTuple = GainX(autoS, costText, card, targetCard, notification = 'Automatic', n = count)
             if gainTuple == 'ABORT': break
-         elif regexHooks['TokensX'].search(AutoS): 
-            if TokensX(AutoS, costText, card, targetCard, notification = 'Automatic', n = count) == 'ABORT': break
-         elif regexHooks['TransferX'].search(AutoS): 
-            if TransferX(AutoS, costText, card, targetCard, notification = 'Automatic', n = count) == 'ABORT': break
-         elif regexHooks['InflictX'].search(AutoS):
-            if InflictX(AutoS, costText, card, targetCard, notification = 'Automatic', n = count) == 'ABORT': break
-         elif regexHooks['DrawX'].search(AutoS):
-            if DrawX(AutoS, costText, card, targetCard, notification = 'Automatic', n = count) == 'ABORT': break
-         elif regexHooks['ModifyStatus'].search(AutoS):
-            if ModifyStatus(AutoS, costText, card, targetCard, notification = 'Automatic', n = count) == 'ABORT': break
-         elif regexHooks['UseCustomAbility'].search(AutoS):
-            if UseCustomAbility(AutoS, costText, card, targetCard, notification = 'Automatic', n = count) == 'ABORT': break
+         elif regexHooks['TokensX'].search(autoS): 
+            if TokensX(autoS, costText, card, targetCard, notification = 'Automatic', n = count) == 'ABORT': break
+         elif regexHooks['TransferX'].search(autoS): 
+            if TransferX(autoS, costText, card, targetCard, notification = 'Automatic', n = count) == 'ABORT': break
+         elif regexHooks['InflictX'].search(autoS):
+            if InflictX(autoS, costText, card, targetCard, notification = 'Automatic', n = count) == 'ABORT': break
+         elif regexHooks['DrawX'].search(autoS):
+            if DrawX(autoS, costText, card, targetCard, notification = 'Automatic', n = count) == 'ABORT': break
+         elif regexHooks['ModifyStatus'].search(autoS):
+            if ModifyStatus(autoS, costText, card, targetCard, notification = 'Automatic', n = count) == 'ABORT': break
+         elif regexHooks['UseCustomAbility'].search(autoS):
+            if UseCustomAbility(autoS, costText, card, targetCard, notification = 'Automatic', n = count) == 'ABORT': break
    debugNotify("<<< autoscriptOtherPlayers()", 3) # Debug
 
 #------------------------------------------------------------------------------
@@ -664,7 +672,9 @@ def atTimedEffects(Time = 'Start'): # Function which triggers card effects at th
             elif regexHooks['InflictX'].search(passedScript):
                if InflictX(passedScript, announceText, card, targetC, notification = 'Automatic', n = X) == 'ABORT': break
             elif regexHooks['RetrieveX'].search(passedScript):
-               if RetrieveX(passedScript, announceText, card, targetC, notification = 'Automatic', n = X) == 'ABORT': break
+               retrieveTuple = RetrieveX(passedScript, announceText, card, targetC, notification = 'Automatic', n = X)
+               if retrieveTuple == 'ABORT': return
+               X = len(retrieveTuple[1])
             elif regexHooks['ModifyStatus'].search(passedScript):
                if ModifyStatus(passedScript, announceText, card, targetC, notification = 'Automatic', n = X) == 'ABORT': break
             elif regexHooks['DiscardX'].search(passedScript): 
@@ -819,7 +829,7 @@ def markerScripts(card, action = 'USE'):
          reduction = reduceCost(card, 'REZ', cardCost, dryRun = True)
          rc = payCost(cardCost - reduction, "not free")
          if rc == 'ABORT': return foundSpecial # If the cost couldn't be paid, we don't proceed.
-         reduceCost(card, 'REZ', cardCost, dryRun = True) # If the cost could be paid, we finally take the credits out from cost reducing cards.
+         reduceCost(card, 'REZ', cardCost) # If the cost could be paid, we finally take the credits out from cost reducing cards.
          if reduction: reduceTXT = ' (reduced by {})'.format(reduction)
          else: reduceTXT = ''
          #card.markers[mdict['AwakeningCenter']] = 0
@@ -827,6 +837,36 @@ def markerScripts(card, action = 'USE'):
          executePlayScripts(card,'REZ')
          autoscriptOtherPlayers('CardRezzed',card)
          notify("{} has paid {}{} in order to rez {} from their {}.".format(me,uniCredit(cardCost),reduceTXT,card,hostCard))
+      if key[0] == 'Escher' and action == 'USE': 
+         global EscherUse
+         foundSpecial = True
+         if ds == 'corp': 
+            whisper("Our ICE shouldn't have Escher tokens! Cleaning")
+            tableICE = [c for c in table if fetchProperty(c, 'Type') == 'ICE' or (not c.isFaceUp and c.orientation == Rot90)]
+            TokensX('Remove1Escher-isSilent', "", card, tableICE)
+         else:
+            EscherUse +=1
+            if EscherUse == 1: whisper(":::ERROR::: Runners are not allowed to rez Escher ICE")
+            elif EscherUse == 2: whisper("Bweep! Please don't touch that!")
+            elif EscherUse == 3: whisper("Bweep! Bweep! Intruder Alert!")
+            elif EscherUse == 4: whisper("Please stay where you are. Our helpful assistants will be right with you.")
+            elif EscherUse == 5: whisper("Please remain calm. Assistance is on the way.")
+            elif EscherUse == 6: whisper("Please remain calm...")
+            elif EscherUse == 7: whisper("Remain calm...")
+            elif EscherUse == 8: whisper("Suddenly it is pitch black!")
+            elif EscherUse == 9: whisper("It is pitch black! You feel that you should really consider jacking out any time now...")
+            elif EscherUse == 10: whisper("You are likely to be eaten by a Grue...")
+            elif EscherUse == 11: 
+               if confirm("Fine! A Grue 1.0 is rezzed! Run away?"):
+                  me.Clicks = 0
+                  jackOut()
+                  notify("{} has encountered a Grue and run away. They lose the rest of their turn for wasting so much time.".format(me))
+               else:
+                  delayed_whisper(":> You FOOL!")
+                  notify("{} was looking for trouble in the dark and has been eaten by a Grue. {} has flatlined".format(me,me))
+                  for i in range(6): applyBrainDmg()
+                  jackOut()
+            else: EscherUse = 0
    return foundSpecial
            
          
@@ -1269,15 +1309,25 @@ def DiscardX(Autoscript, announceText, card, targetCards = None, notification = 
    if discardNR == 999:
       multiplier = 1
       discardNR = len(targetPL.hand) # 999 means we discard our whole hand
-   else: # Any other number just discard as many cards at random.
+   if re.search(r'-isRandom',Autoscript): # Any other number just discard as many cards at random.
       multiplier = per(Autoscript, card, n, targetCards, notification)
       count = handRandomDiscard(targetPL.hand, discardNR * multiplier, targetPL, silent = True)
       if re.search(r'isCost', Autoscript) and count < discardNR:
          whisper("You do not have enough cards in your hand to discard")
          return ('ABORT',0)
-   if count == 0: return (announceText,count) # If there are no cards, then we effectively did nothing, so we don't change the notification.
-   if notification == 'Quick': announceString = "{} discards {} cards".format(announceText, count)
-   else: announceString = "{}{} discard {} cards from their hand".format(announceText,otherTXT, count)
+   else: # Otherwise we just discard the targeted cards from hand  
+      multiplier = 1
+      count = len(targetCards)
+      if re.search(r'isCost', Autoscript) and count < discardNR:
+         whisper("You do not have enough cards in your hand to discard")
+         return ('ABORT',0)
+      for targetC in targetCards: handDiscard(targetC)
+      debugNotify("Finished discarding targeted cards from hand")
+   if count == 0: 
+      debugNotify("Exiting because count == 0")
+      return (announceText,count) # If there are no cards, then we effectively did nothing, so we don't change the notification.
+   if notification == 'Quick': announceString = "{} discards {} cards ({})".format(announceText, count, [c.name for c in targetCards])
+   else: announceString = "{}{} discard {} cards ({}) from their hand".format(announceText,otherTXT, count,[c.name for c in targetCards])
    if notification and multiplier > 0: notify('--> {}.'.format(announceString))
    debugNotify("<<< DiscardX()", 3)
    return (announceString,count)
@@ -1317,9 +1367,9 @@ def ShuffleX(Autoscript, announceText, card, targetCards = None, notification = 
    elif action.group(1) == 'Hidden Archives': pile = targetPL.piles['Archives(Hidden)']
    random = rnd(10,100) # Small wait (bug workaround) to make sure all animations are done.
    shuffle(pile)
-   if notification == 'Quick': announceString = "{} shuffles their {}".format(announceText, pile.name)
-   elif targetPL == me: announceString = "{} shuffle their {}".format(announceText, pile.name)
-   else: announceString = "{} shuffle {}' {}".format(announceText, targetPL, pile.name)
+   if notification == 'Quick': announceString = "{} shuffles their {}".format(announceText, pileName(pile))
+   elif targetPL == me: announceString = "{} shuffle their {}".format(announceText, pileName(pile))
+   else: announceString = "{} shuffle {}' {}".format(announceText, targetPL, pileName(pile))
    if notification: notify('--> {}.'.format(announceString))
    debugNotify("<<< ShuffleX()", 3)
    return announceString
@@ -1450,7 +1500,7 @@ def CreateDummy(Autoscript, announceText, card, targetCards = None, notification
    debugNotify(">>> CreateDummy(){}".format(extraASDebug(Autoscript))) #Debug
    if targetCards is None: targetCards = []
    global Dummywarn
-   global Stored_Name, Stored_Type, Stored_Cost, Stored_Keywords, Stored_AutoActions, Stored_AutoScripts
+   global Stored_Name, Stored_Type, Stored_Cost, Stored_Keywords, Stored_AutoActions, Stored_autoScripts
    dummyCard = None
    action = re.search(r'\bCreateDummy[A-Za-z0-9_ -]*(-with)(?!onOpponent|-doNotTrash|-nonUnique)([A-Za-z0-9_ -]*)', Autoscript)
    if debugVerbosity >= 3 and action: notify('clicks regex: {}'.format(action.groups())) # debug
@@ -1743,7 +1793,7 @@ def RetrieveX(Autoscript, announceText, card, targetCards = None, notification =
    else: announceString = "{} {} {} {}{}.".format(announceText, destiVerb, [c.name for c in chosenCList], sourcePath,MUtext)
    if notification and multiplier > 0: notify(':> {}.'.format(announceString))
    debugNotify("<<< RetrieveX()", 3)
-   return announceString
+   return (announceString,chosenCList) # We also return which cards we've retrieved
       
 
 #------------------------------------------------------------------------------
@@ -1972,7 +2022,7 @@ def checkSpecialRestrictions(Autoscript,card):
    validCard = True
    if not chkPlayer(Autoscript, card.controller, False, True): validCard = False
    if re.search(r'isICE',Autoscript) and card.orientation != Rot90: 
-      debugNotify("Rejecting because it's an ICE")
+      debugNotify("Rejecting because it isn't an ICE")
       validCard = False # We made a special check for ICE, because some cards must be able target face-down ICE without being able to read its properties.
    if re.search(r'isRezzed',Autoscript) and not card.isFaceUp: 
       debugNotify("Rejecting because it's not unrezzed")

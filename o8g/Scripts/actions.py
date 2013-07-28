@@ -347,6 +347,7 @@ def checkDeck(group):
    debugNotify("About to check each card in the deck", 5) #Debug
    counts = collections.defaultdict(int)
    CardLimit = {}
+   professorsRig = [] # This is used by "The Professor" to avoid counting influence for the first instance of a program.
    for card in me.ScriptingPile:
       counts[card.name] += 1
       if counts[card.name] > 3:
@@ -365,7 +366,10 @@ def checkDeck(group):
       elif card.Type in RunnerCardTypes and identity.Faction in CorporateFactions:
          notify(":::ERROR::: Runner cards found in {}'s R&Ds.".format(me))
          ok = False
-      if card.Influence and card.Faction != identity.Faction: loInf += num(card.Influence)
+      if num(card.Influence) and card.Faction != identity.Faction:
+         if identity.model == 'bc0f047c-01b1-427f-a439-d451eda03029' and card.model not in professorsRig:
+            professorsRig.append(card.model) # First instance of a card is free of influence costs.
+         else: loInf += num(card.Influence)
       else:
          if card.Type == 'Identity':
             notify(":::ERROR::: Extra Identity Cards found in {}'s {}.".format(me, pileName(group)))

@@ -303,7 +303,7 @@
 		<property name="Stat" value="5" />	
 		<property name="Rules" value="The Runner can spend [Click] [Click] to break u to 2 subroutines on Viktor 2.0.&#xD;Hosted power counter: Do 1 brain damage.&#xD;[Subroutine] Trace2 - If successful, place 1 power counter on Viktor 2.0.&#xD;[Subroutine] End the run." />
 		<property name="Flavor" value="" />
-		<property name="Instructions" value="[Subroutine] Trace 2 – If successful, place 1 power counter on Viktor 2.0.||[Subroutine] End the run.||Inflict 1 Brain Damage" />
+		<property name="Instructions" value="[Subroutine] Trace 2 – If successful, place 1 power counter on Viktor 2.0.||[Subroutine] End the run.||Remove a power counter to inflict 1 Brain Damage" />
 		<property name="Faction" value="Haas-Bioroid" />
 		<property name="Influence" value="3" />
 		<property name="Side" value="Corp" />
@@ -431,7 +431,7 @@
 		<property name="Stat" value="2" />	
 		<property name="Rules" value="[Subroutine] The Runner must pay 2 [Credits], if able. If the Runner cannot pay 2 [Credits], end the run.&#xD;[Subroutine] End the run." />
 		<property name="Flavor" value="&quot;Cheap off-the-shelf data protection. Cheap for them, that is. Not for us.&quot; - Ele &quot;Smoke&quot; Scovak" />
-		<property name="Instructions" value="" />
+		<property name="Instructions" value="[Subroutine] Force the runner to lose exactly 2 [Credits] or end the run||[Subroutine] End the run." />
 		<property name="Faction" value="Neutral" />
 		<property name="Influence" value="0" />
 		<property name="Side" value="Corp" />

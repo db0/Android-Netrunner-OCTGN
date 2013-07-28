@@ -21,9 +21,9 @@
 ###=================================================================================================================###
 
 def UseCustomAbility(Autoscript, announceText, card, targetCards = None, notification = None, n = 0):
+   global reversePlayerChk
    if fetchProperty(card, 'name') == "Tollbooth":
       targetPL = findOpponent()
-      global reversePlayerChk
       # We reverse for which player the reduce effects work, because we want cards which pay for the opponent's credit cost to take effect now.
       reduction = reduceCost(card, 'FORCE', 3, True, reversePlayer = True) # We use a dry-run to see if they have a card which card reduce the tollbooth cost such as stimhack
       if reduction > 0: extraText = " (reduced by {})".format(uniCredit(reduction))  
@@ -34,14 +34,27 @@ def UseCustomAbility(Autoscript, announceText, card, targetCards = None, notific
          announceString = announceText + ' force {} to pay {}{}'.format(targetPL,uniCredit(3),extraText)
       else: 
          jackOut(silent = True)
-         announceString = announceText + ' end the run'.format(targetPL,uniCredit(3))   
+         announceString = announceText + ' end the run'
+   if fetchProperty(card, 'name') == "Datapike":
+      targetPL = findOpponent()
+      # We reverse for which player the reduce effects work, because we want cards which pay for the opponent's credit cost to take effect now.
+      reduction = reduceCost(card, 'FORCE', 2, True, reversePlayer = True) # We use a dry-run to see if they have a card which card reduce the tollbooth cost such as stimhack
+      if reduction > 0: extraText = " (reduced by {})".format(uniCredit(reduction))  
+      elif reduction < 0: extraText = " (increased by {})".format(uniCredit(abs(reduction)))
+      else: extraText = ''
+      if targetPL.Credits >= 2 - reduction: 
+         targetPL.Credits -= 2 - reduceCost(card, 'FORCE', 2, reversePlayer = True)
+         announceString = announceText + ' force {} to pay {}{}'.format(targetPL,uniCredit(2),extraText)
+      else: 
+         jackOut(silent = True)
+         announceString = announceText + ' end the run'
    if fetchProperty(card, 'name') == "Replicator":
       targetC = targetCards[0] # For this to be triggered a program has to have been installed, which was passed to us in an array.
       if not confirm("Would you like to replicate the {}?".format(targetC.name)):
          return 'ABORT'
       retrieveResult = RetrieveX('Retrieve1Card-type{}-isTopmost'.format(targetC.name), announceText, card)
       shuffle(me.piles['R&D/Stack'])
-      if re.search(r'no valid targets',retrieveResult): announceString = "{} tries to use their replicator to create a copy of {}, but they run out of juice.".format(me,targetC.name) # If we couldn't find a copy of the played card to replicate, we inform of this
+      if re.search(r'no valid targets',retrieveResult[0]): announceString = "{} tries to use their replicator to create a copy of {}, but they run out of juice.".format(me,targetC.name) # If we couldn't find a copy of the played card to replicate, we inform of this
       else: announceString = "{} uses their replicator to create a copy of {}".format(me,targetC.name)
       notify(announceString)
    if fetchProperty(card, 'name') == "Data Hound":
@@ -445,29 +458,93 @@ def CustomScript(card, action = 'PLAY'): # Scripts that are complex and fairly u
       chosenC.orientation = Rot90
       TokensX('Put1Howler-isSilent', "", card, [chosenC,card])
       notify("{} wueaaAAAA! {} has awakened a {} from {} for the defense of this server!".format(uniSubroutine(),card,chosenC,previousGroup)) 
-   elif fetchProperty(card, 'name') == 'Awakening Center':
-      if action == 'USE':
-         targetList = [c for c in me.hand  # First we see if they've targeted a card from their hand
-                        if c.targetedBy 
-                        and c.targetedBy == me 
-                        and c.Type == 'ICE'
-                        and re.search('Bioroid',getKeywords(c))]
-         if len(targetList) > 0:
-            selectedCard = targetList[0]
-            actionCost = useClick(count = 1)
-            if actionCost == 'ABORT': return
-            hostCards = eval(getGlobalVariable('Host Cards'))
-            hostCards[selectedCard._id] = card._id # We set the Personal Workshop to be the card's host
-            setGlobalVariable('Host Cards',str(hostCards))
-            cardAttachementsNR = len([att_id for att_id in hostCards if hostCards[att_id] == card._id])
-            debugNotify("About to move into position", 2) #Debug
-            storeProperties(selectedCard)
-            orgAttachments(card)
-            TokensX('Put1AwakeningCenter-isSilent', "", selectedCard) # We add an Awakening Center counter to be able to trigger the rez the ice ability
-            selectedCard.highlight = InactiveColor
-            notify(announceText)
-         else: 
-            whisper(":::ERROR::: You need to target a Bioroid ICE in your HQ before using this action")  
-            return
+   elif fetchProperty(card, 'name') == 'Awakening Center' and action == 'USE':
+      targetList = [c for c in me.hand  # First we see if they've targeted a card from their hand
+                     if c.targetedBy 
+                     and c.targetedBy == me 
+                     and c.Type == 'ICE'
+                     and re.search('Bioroid',getKeywords(c))]
+      if len(targetList) > 0:
+         selectedCard = targetList[0]
+         actionCost = useClick(count = 1)
+         if actionCost == 'ABORT': return
+         hostCards = eval(getGlobalVariable('Host Cards'))
+         hostCards[selectedCard._id] = card._id # We set the Personal Workshop to be the card's host
+         setGlobalVariable('Host Cards',str(hostCards))
+         cardAttachementsNR = len([att_id for att_id in hostCards if hostCards[att_id] == card._id])
+         debugNotify("About to move into position", 2) #Debug
+         storeProperties(selectedCard)
+         orgAttachments(card)
+         TokensX('Put1AwakeningCenter-isSilent', "", selectedCard) # We add an Awakening Center counter to be able to trigger the rez the ice ability
+         selectedCard.highlight = InactiveColor
+         notify("{} has installed a Bioroid ICE in their {}".format(me,card))
+      else: 
+         whisper(":::ERROR::: You need to target a Bioroid ICE in your HQ before using this action")  
+         return
+   elif fetchProperty(card, 'name') == 'Escher':
+      tableICE = [c for c in table if fetchProperty(c, 'Type') == 'ICE' or (not c.isFaceUp and c.orientation == Rot90)]
+      if action == 'SuccessfulRun':
+         for c in tableICE: c.setController(me)
+         TokensX('Put1Escher-isSilent', "", card, tableICE)
+         notify("{} uses non-euclidian hacks to re-organize the corporation's ICE.".format(Identity))
+         delayed_whisper(":::INFO::: All ICE control has been passed to you. Jack Out to pass control back to the corporation player.")
+      if action == 'JackOut':
+         for c in tableICE: c.setController(findOpponent())
+         TokensX('Remove1Escher-isSilent', "", card, tableICE)
+         card.moveTo(card.owner.piles['Heap/Archives(Face-up)'])
+   elif fetchProperty(card, 'name') == 'Scavenge' and action == 'PLAY':
+      targetPrograms = findTarget('Targeted-atProgram')
+      if len(targetPrograms) == 0: return 'ABORT'
+      else: trashProgram = targetPrograms[0]
+      gripTargets = findTarget('Targeted-atProgram-fromHand-isMutedTarget') # First we check if the player has targeted a program from their grip as well, this way we don't have to ask.
+      if len(gripTargets) > 0: 
+         debugNotify("Found Hand Card Targeted group = {}".format([c.name for c in gripTargets]))
+         newProgram = gripTargets[0] #If they've targeted more than one, they shouldn't have. We just select the first.
+         targetPile = 'Grip'
+      else:
+         debugNotify("Didn't find hand card targeted")
+         gripProgsNR = len([c for c in me.hand if c.Type == 'Program'])
+         heapProgsNR = len([c for c in me.piles['Heap/Archives(Face-up)'] if c.Type == 'Program'])
+         debugNotify("gripProgsNR = {}, heapProgsNR = {}".format(gripProgsNR,heapProgsNR))
+         if gripProgsNR == 0 and heapProgsNR == 0:
+            notify("{} wanted to scavenge but forgot they don't have any programs in their grip and heap")
+            return 'ABORT'
+         elif gripProgsNR == 0: targetPile = 'Heap'
+         elif heapProgsNR == 0: targetPile = 'Grip'
+         else:
+            if confirm("Do you want to install the program from your heap?"):
+               targetPile = 'Heap'
+            else:
+               targetPile = 'Grip'
+         if targetPile == 'Heap':
+            debugNotify("Retrieving from {}".format(targetPile))
+            retrieveTuple = RetrieveX('Retrieve1Card-fromHeap-grabProgram', '', card)
+            debugNotify("retrieveTuple = {}".format(retrieveTuple))
+            if len(retrieveTuple[1]) == 0: 
+               notify("{} scavenged their heap but couldn't find a program to install.".format(me))
+               return 'ABORT'
+            newProgram = retrieveTuple[1][0]
+            pile = me.piles['Heap/Archives(Face-up)']
+         else:
+            debugNotify("Retrieving from {}".format(targetPile))
+            gripTargets = findTarget('AutoTargeted-atProgram-fromHand')
+            debugNotify("About to SingleChoice")
+            newProgram = gripTargets[SingleChoice("Choose a program to scavenge from your grip", makeChoiceListfromCardList(gripTargets))]
+            pile = me.hand
+      cardCost = num(fetchProperty(newProgram, 'Cost')) - num(trashProgram.Cost)
+      if cardCost < 0: cardCost = 0
+      reduction = reduceCost(newProgram, 'INSTALL', cardCost, dryRun = True)
+      rc = payCost(cardCost - reduction, "not free")
+      if rc == 'ABORT': return 'ABORT' # If the cost couldn't be paid, we don't proceed.
+      reduceCost(newProgram, 'INSTALL', cardCost) # If the cost could be paid, we finally take the credits out from cost reducing cards.
+      if reduction: reduceTXT = ' (reduced by {})'.format(reduction)
+      else: reduceTXT = ''
+      placeCard(newProgram)
+      debugNotify("Executing newProgram triggers")
+      executePlayScripts(newProgram,'INSTALL')
+      autoscriptOtherPlayers('CardInstall',newProgram)
+      debugNotify("About to announce")
+      notify("{} has trashed {} and {}d through their {} finding and installing {} for {}{}.".format(me,trashProgram,card,targetPile,newProgram,uniCredit(cardCost),reduceTXT))
+      intTrashCard(trashProgram, fetchProperty(trashProgram,'Stat'), "free", silent = True)
    elif action == 'USE': useCard(card)
    debugNotify("<<< CustomScript()", 3) #Debug
