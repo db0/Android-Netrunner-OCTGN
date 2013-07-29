@@ -1927,7 +1927,7 @@ Cerebral Imaging: Infinite Frontiers
 -----
 bc0f047c-01b1-427f-a439-d451eda03001
 -----
-atTurnPreEnd:SetTo1Hand Size-perCounter{Credits}
+atTurnPreEnd:SetTo1Hand Size-perMyCounter{Credits}-duringMyTurn
 +++++
 
 .....
