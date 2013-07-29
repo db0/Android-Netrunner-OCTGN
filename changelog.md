@@ -1,6 +1,25 @@
 Changelog - Android:Netrunner LCG OCTGN Game Definition
 ===============================================
 
+### 3.2.0.x
+
+* New game definition for **Creation and Control**. Almost cards are scripted.
+
+* ##### Cards NOT automated:
+  * Chakana (It adds viruses but doesn't increase Agenda costs)
+  * The Source
+
+* ##### Trickier Automations
+  * Exile: double click the identity to draw the card. it won't do it automatically.
+  * Escher: After succeeding the run, you will automatically take control of all the corp ICE. You cann now move them around. Once you jack out, control will pass back to the corp.
+  * Exploratory Romp: Target the card you want before you press F3. It you haven't it will target the best possible match but it may choose wrong. In that case, just reverse the effect manually
+  * Freelance Coding Contract:  Target the 5 programs from your hand before you play it
+  * Scavenge: Target the card from your hand if you want that. Otherwise it will select the right pile smartly and ask if it's confused.
+  * Monolith: Target the programs you want to install in your hand before you play it
+
+* **Significant** Added scripting which allows the game to install cards. As such I've changed the way Modded and Shipment from Mirrormorph works. Now you need to target the card(s) in your hand before you play them, and they will install them automatically. This should bring these two cards in line with other similar effects
+* Cards will now refill their credits before every other card. This means that your unused cyberfeeders will never refill after Darwin uses them for example.
+
 ### 3.1.11.x
 
 * Fixed Pop-up window/tollbooth not using stimhack/Pheromones money

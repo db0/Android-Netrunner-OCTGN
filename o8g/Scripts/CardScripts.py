@@ -1138,7 +1138,7 @@ Compromised Employee
 -----
 bc0f047c-01b1-427f-a439-d451eda02025
 -----
-onInstall:Put1Credits-isSilent||atTurnPreStart:Refill1Credits-duringMyTurn||whileRezzed:Reduce#CostTrace-affectsAll-forMe||whileRezzed:Gain1Credits-foreachCardRezzed-typeICE
+onInstall:Put1Credits-isSilent||atTurnPreStart:Refill1Credits-duringMyTurn||whileInstalled:Reduce#CostTrace-affectsAll-forMe||whileInstalled:Gain1Credits-foreachCardRezzed-typeICE
 +++++
 
 .....
@@ -2199,9 +2199,9 @@ Feedback Filter
 -----
 bc0f047c-01b1-427f-a439-d451eda03037
 -----
-
+onDamage:Lose3Credits-isCost$$Put1protectionNetDMG-excludeDummy-isSilent||onDamage:CreateDummy-with2protectionBrainDMG-trashCost
 +++++
-
+A0B3G0T0:Put1protectionNetDMG-excludeDummy||A0B0G0T1:CreateDummy-with2protectionBrainDMG-trashCost
 .....
 Clone Chip
 -----
@@ -2209,29 +2209,29 @@ bc0f047c-01b1-427f-a439-d451eda03038
 -----
 
 +++++
-
+A0B0G0T1:Retrieve1Card-grabProgram-fromHeap-toTable-payCost
 .....
 Omni-drive
 -----
 bc0f047c-01b1-427f-a439-d451eda03039
 -----
-
+onInstall:Put1DaemonMU-isSilent$$Put1Credits-isSilent||atTurnPreStart:Refill1Credits-duringMyTurn||whileRezzed:Reduce#CostUse-affectsAll-forMe-ifHosted||ConstantAbility:CountsAsDaemon
 +++++
-
+A0B0G0T0:PossessTarget-Targeted-atProgram-targetMine
 .....
 Atman
 -----
 bc0f047c-01b1-427f-a439-d451eda03040
 -----
-
+onInstall:RequestInt-Msg{How many Power counters do you want to add on Atman?}$$Lose1Credits-perX-isCost-actiontypeUSE$$Put1PlusOnePerm-perX
 +++++
-
+A0B1G0T0:SimplyAnnounce{break ICE subroutine}
 .....
 Cloak
 -----
 bc0f047c-01b1-427f-a439-d451eda03041
 -----
-
+onInstall:Put1Credits-isSilent||whileRezzed:Reduce#CostUse-affectsIcebreaker-forMe||atTurnPreStart:Refill1Credits-duringMyTurn
 +++++
 
 .....
@@ -2241,13 +2241,13 @@ bc0f047c-01b1-427f-a439-d451eda03042
 -----
 
 +++++
-
+A0B1G0T0:SimplyAnnounce{break sentry subroutine}||A0B0G0T0:Remove1Credit-AutoTargeted-atStealth-isCost$$Put5PlusOne
 .....
 Chakana
 -----
 bc0f047c-01b1-427f-a439-d451eda03043
 -----
-
+atSuccessfulRun:Put1Virus-ifSuccessfulRunR&D
 +++++
 
 .....
@@ -2255,15 +2255,15 @@ Cyber-Cypher
 -----
 bc0f047c-01b1-427f-a439-d451eda03044
 -----
-
+onInstall:Put1CyberCypher-Targeted-isServer
 +++++
-
+A0B1G0T0:SimplyAnnounce{break code gate subroutine}||A0B1G0T0:Put1PlusOne	
 .....
 Paricia
 -----
 bc0f047c-01b1-427f-a439-d451eda03045
 -----
-
+onInstall:Put2Credits-isSilent||atTurnPreStart:Refill2Credits-duringMyTurn||whileRezzed:Reduce#CostTrash-affectsAsset-forMe
 +++++
 
 .....
@@ -2273,13 +2273,13 @@ bc0f047c-01b1-427f-a439-d451eda03046
 -----
 
 +++++
-
+A0B2G0T1:Retrieve1Card-grabProgram-fromStack-toTable-payCost$$ShuffleStack
 .....
 Sahasrara
 -----
 bc0f047c-01b1-427f-a439-d451eda03047
 -----
-
+onInstall:Put2Credits-isSilent||atTurnPreStart:Refill2Credits-duringMyTurn||whileRezzed:Reduce#CostInstall-affectsProgram-forMe
 +++++
 
 .....
@@ -2289,7 +2289,7 @@ bc0f047c-01b1-427f-a439-d451eda03048
 -----
 
 +++++
-
+A0B1G0T0:SimplyAnnounce{break a barrier subroutine}||A0B1G0T0:Put1PlusOne	
 .....
 Professional Contacts
 -----
@@ -2297,13 +2297,13 @@ bc0f047c-01b1-427f-a439-d451eda03049
 -----
 
 +++++
-
+A1B0G0T0:Gain1Credits$$Draw1Card
 .....
 Borrowed Satellite
 -----
 bc0f047c-01b1-427f-a439-d451eda03050
 -----
-
+whileRezzed:Gain1Hand Size$$Gain1Base Link
 +++++
 
 .....
@@ -2311,7 +2311,7 @@ Ice Analyzer
 -----
 bc0f047c-01b1-427f-a439-d451eda03051
 -----
-
+whileRezzed:Reduce#CostInstall-affectsProgram-forMe||whileInstalled:Put1Credits-foreachCardRezzed-typeICE
 +++++
 
 .....
@@ -2319,7 +2319,7 @@ Dirty Laundry
 -----
 bc0f047c-01b1-427f-a439-d451eda03052
 -----
-
+onPlay:RunGeneric||atSuccessfulRun:Gain5Credits$$TrashMyself
 +++++
 
 .....
@@ -2327,7 +2327,7 @@ Daily Casts
 -----
 bc0f047c-01b1-427f-a439-d451eda03053
 -----
-
+onInstall:Put8Credits||atTurnStart:Transfer2Credits-byMe$$TrashMyself-ifEmpty
 +++++
 
 .....
@@ -2337,7 +2337,7 @@ bc0f047c-01b1-427f-a439-d451eda03054
 -----
 
 +++++
-
+A2B0G0T1:CustomScript
 .....
 The Source
 -----

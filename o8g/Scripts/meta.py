@@ -880,12 +880,6 @@ def TrialError(group, x=0, y=0): # Debugging
       elif debugVerbosity == 3: debugVerbosity = 4
       else: debugVerbosity = 0
       whisper("Debug verbosity is now: {}".format(debugVerbosity))
-      if ds == "corp": 
-         notify("Runner now")
-         ds = "runner"
-      else: 
-         ds = "corp"
-         notify("Corp Now")
       return
    delayed_whisper("## Checking my Name")
    if me.name == 'db0' or me.name == 'dbzer0': 
@@ -899,11 +893,11 @@ def TrialError(group, x=0, y=0): # Debugging
    ###### End Testing Corner ######
    delayed_whisper("## Defining Test Cards")
    testcards = [
-                "bc0f047c-01b1-427f-a439-d451eda01035", 
-                "bc0f047c-01b1-427f-a439-d451eda03036", 
-                "bc0f047c-01b1-427f-a439-d451eda01060", 
-                # "bc0f047c-01b1-427f-a439-d451eda02104", 
-                # "bc0f047c-01b1-427f-a439-d451eda02105", 
+                "bc0f047c-01b1-427f-a439-d451eda03035", 
+                "bc0f047c-01b1-427f-a439-d451eda03030", 
+                "bc0f047c-01b1-427f-a439-d451eda03025", 
+                "bc0f047c-01b1-427f-a439-d451eda03024", 
+                "bc0f047c-01b1-427f-a439-d451eda03001", 
                 # "bc0f047c-01b1-427f-a439-d451eda02106", 
                 # "bc0f047c-01b1-427f-a439-d451eda02107", 
                 # "bc0f047c-01b1-427f-a439-d451eda02108", 

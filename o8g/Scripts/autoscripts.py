@@ -644,13 +644,17 @@ def atTimedEffects(Time = 'Start'): # Function which triggers card effects at th
          splitAutoscripts = effect.group(2).split('$$')
          for passedScript in splitAutoscripts:
             targetC = findTarget(passedScript)
-            if re.search(r'Targeted', passedScript) and len(targetC) == 0: continue # If our script requires a target and we can't find any, do nothing.
+            if re.search(r'Targeted', passedScript) and len(targetC) == 0: 
+               debugNotify("Needed target but have non. Aborting")
+               continue # If our script requires a target and we can't find any, do nothing.
             if not TitleDone: 
+               debugNotify("Preparing Title")
+               title = None
                if Time == 'Run': title = "{}'s Start-of-Run Effects".format(me)
                elif Time == 'JackOut': title = "{}'s Jack-Out Effects".format(me)
                elif Time == 'SuccessfulRun': title = "{}'s Successful Run Effects".format(me)
                elif Time != 'PreStart' and Time != 'PreEnd': title = "{}'s {}-of-Turn Effects".format(me,effect.group(1))
-               notify("{:=^36}".format(title))
+               if title: notify("{:=^36}".format(title))
             TitleDone = True
             debugNotify("passedScript: {}".format(passedScript), 2)
             if card.highlight == DummyColor: announceText = "{}'s lingering effects:".format(card)
@@ -1718,7 +1722,6 @@ def InflictX(Autoscript, announceText, card, targetCards = None, notification = 
 def RetrieveX(Autoscript, announceText, card, targetCards = None, notification = None, n = 0): # Core Command for finding a specific card from a pile and putting it in hand or trash pile
    debugNotify(">>> RetrieveX(){}".format(extraASDebug(Autoscript))) #Debug
    if targetCards is None: targetCards = []
-   MUtext = ''
    action = re.search(r'\bRetrieve([0-9]+)Card', Autoscript)
    targetPL = ofwhom(Autoscript, card.owner)
    debugNotify("Setting Source", 2)
@@ -1729,7 +1732,8 @@ def RetrieveX(Autoscript, announceText, card, targetCards = None, notification =
       for c in targetPL.piles['R&D/Stack']: c.moveToBottom(me.ScriptingPile) # If the source is the R&D/Stack, then we move everything to the scripting pile in order to be able to read their properties. We move each new card to the bottom to preserve card order
       source = me.ScriptingPile # # Then we change the source to that pile so that the rest of the script can process the right location.
       rnd(1,10) # We give a delay to allow OCTGN to read the card properties before we proceed with checking them
-   sourcePath =  "from their {}".format(pileName(source))
+   if source == me.ScriptingPile: sourcePath =  "from their {}".format(pileName(targetPL.piles['R&D/Stack']))
+   else: sourcePath =  "from their {}".format(pileName(source))
    if sourcePath == "from their Face-up Archives": sourcePath = "from their Archives"
    debugNotify("Setting Destination", 2)
    if re.search(r'-toTable', Autoscript):
@@ -1778,15 +1782,15 @@ def RetrieveX(Autoscript, announceText, card, targetCards = None, notification =
    debugNotify("chosenCList: {}".format(chosenCList), 2)
    for c in chosenCList:
       if destination == table: 
-         placeCard(c)
-         if c.Type == 'Program':
-            MUtext = chkRAM(c)
-            for targetLookup in table: # We check if we're targeting a daemon to install the program in.
-               if targetLookup.targetedBy and targetLookup.targetedBy == me and re.search(r'Daemon',getKeywords(targetLookup)) and possess(targetLookup, c, silent = True) != 'ABORT':
-                  MUtext = ", installing it into {}".format(targetLookup)
-                  break  
-         executePlayScripts(c,'INSTALL')
-         autoscriptOtherPlayers('CardInstall',c)
+         if re.search(r'-payCost',Autoscript): # This modulator means the script is going to pay for the card normally
+            preReducRegex = re.search(r'-reduc([0-9])',Autoscript) # this one means its going to reduce the cost a bit.
+            if preReducRegex: preReduc = num(preReducRegex.group(1))
+            else: preReduc = 0
+            payCost = 'not free'
+         else: 
+            preReduc = 0
+            payCost = 'free'         
+         intPlay(c, payCost, True, preReduc)
       else: c.moveTo(destination)
       tokensRegex = re.search(r'-with([A-Za-z0-9: ]+)', Autoscript) # If we have a -with in our autoscript, this is meant to put some tokens on the retrieved card.
       if tokensRegex: TokensX('Put{}'.format(tokensRegex.group(1)), announceText,c, n = n) 
@@ -1795,7 +1799,7 @@ def RetrieveX(Autoscript, announceText, card, targetCards = None, notification =
       for c in source: c.moveToBottom(targetPL.piles['R&D/Stack']) # So we return cards to their original location
    debugNotify("About to announce.", 2)
    if len(chosenCList) == 0: announceString = "{} attempts to {} a card {}, but there were no valid targets.".format(announceText, destiVerb, sourcePath)
-   else: announceString = "{} {} {} {}{}.".format(announceText, destiVerb, [c.name for c in chosenCList], sourcePath,MUtext)
+   else: announceString = "{} {} {} {}".format(announceText, destiVerb, [c.name for c in chosenCList], sourcePath)
    if notification and multiplier > 0: notify(':> {}.'.format(announceString))
    debugNotify("<<< RetrieveX()", 3)
    return (announceString,chosenCList) # We also return which cards we've retrieved
@@ -1963,11 +1967,12 @@ def prepareRestrictions(Autoscript, seek = 'target'):
    debugNotify(">>> prepareRestrictions() {}".format(extraASDebug(Autoscript))) #Debug
    validTargets = [] # a list that holds any type that a card must be, in order to be a valid target.
    targetGroups = []
-   if seek == 'type': whatTarget = re.search(r'\b(type)([A-Za-z_{},& ]+)[-]?', Autoscript) # seek of "type" is used by autoscripting other players, and it's separated so that the same card can have two different triggers (e.g. see Darth Vader)
-   elif seek == 'retrieve': whatTarget = re.search(r'\b(grab)([A-Za-z_{},& ]+)[-]?', Autoscript) # seek of "retrieve" is used when checking what types of cards to retrieve from one's deck or discard pile
-   elif seek == 'reduce': whatTarget = re.search(r'\b(affects)([A-Za-z_{},& ]+)[-]?', Autoscript) # seek of "reduce" is used when checking for what types of cards to recuce the cost.
-   else: whatTarget = re.search(r'\b(at)([A-Za-z_{},& ]+)[-]?', Autoscript) # We signify target restrictions keywords by starting a string with "or"
+   if seek == 'type': whatTarget = re.search(r'\b(type)([A-Za-z0-9_{},& ]+)[-]?', Autoscript) # seek of "type" is used by autoscripting other players, and it's separated so that the same card can have two different triggers (e.g. see Darth Vader)
+   elif seek == 'retrieve': whatTarget = re.search(r'\b(grab)([A-Za-z0-9_{},& ]+)[-]?', Autoscript) # seek of "retrieve" is used when checking what types of cards to retrieve from one's deck or discard pile
+   elif seek == 'reduce': whatTarget = re.search(r'\b(affects)([A-Za-z0-9_{},& ]+)[-]?', Autoscript) # seek of "reduce" is used when checking for what types of cards to recuce the cost.
+   else: whatTarget = re.search(r'\b(at)([A-Za-z0-9_{},& ]+)[-]?', Autoscript) # We signify target restrictions keywords by starting a string with "or"
    if whatTarget: 
+      debugNotify("whatTarget = {}".format(whatTarget))
       debugNotify("Splitting on _or_", 2) #Debug
       validTargets = whatTarget.group(2).split('_or_') # If we have a list of valid targets, split them into a list, separated by the string "_or_". Usually this results in a list of 1 item.
       ValidTargetsSnapshot = list(validTargets) # We have to work on a snapshot, because we're going to be modifying the actual list as we iterate.
@@ -2098,7 +2103,7 @@ def makeChoiceListfromCardList(cardList,includeText = False, includeGroup = Fals
       if includeGroup: cGroup = '\n' + pileName(T.group) # Include group is used to inform the player where the card resides in cases where they're selecting cards from multiple groups.
       else: cGroup = ''
       debugNotify("Finished Adding Stats. Going to choice...", 4)# Debug               
-      choiceTXT = "{}\n{}\n{}{}{}{}".format(fetchProperty(T, 'name'),cType,markers,stats,cText,cGroup)
+      choiceTXT = "{}\n{}\n{}\n{}{}{}{}".format(fetchProperty(T, 'name'),cType,getKeywords(T),markers,stats,cText,cGroup)
       targetChoices.append(choiceTXT)
    return targetChoices
    debugNotify("<<< makeChoiceListfromCardList()", 3)

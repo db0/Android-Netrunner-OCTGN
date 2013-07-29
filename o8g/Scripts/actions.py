@@ -119,10 +119,10 @@ def goToEndTurn(group, x = 0, y = 0):
    if ds == None:
       whisper ("Please perform the game setup first (Ctrl+Shift+S)")
       return
-   atTimedEffects('PreEnd')
    if re.search(r'running',getGlobalVariable('status')): jackOut() # If the player forgot to end the run, we do it for them now.
    if me.Clicks > 0: # If the player has not used all their clicks for this turn, remind them, just in case.
       if debugVerbosity <= 0 and not confirm("You have not taken all your clicks for this turn, are you sure you want to declare end of turn"): return
+   atTimedEffects('PreEnd')
    if len(me.hand) > currentHandSize(): #If the player is holding more cards than their hand max. remind them that they need to discard some
                                         # and put them in the end of turn to allow them to do so.
       if endofturn: #If the player has gone through the end of turn phase and still has more hands, allow them to continue but let everyone know.
@@ -151,7 +151,6 @@ def goToSot (group, x=0,y=0):
    debugNotify(">>> goToSot(){}".format(extraASDebug())) #Debug
    global newturn, endofturn, lastKnownNrClicks, currClicks, turn
    mute()
-   atTimedEffects('PreStart')
    if endofturn or currClicks or newturn:
       if debugVerbosity <= 0 and not confirm("You have not yet properly ended you previous turn. You need to use F12 after you've finished all your clicks.\n\nAre you sure you want to continue?"): return
       else:
@@ -166,6 +165,7 @@ def goToSot (group, x=0,y=0):
    if not me.isActivePlayer:
       if turn != 0 and not confirm("You opponent does not seem to have finished their turn properly with F12 yet. Continue?"): return
       else: me.setActivePlayer()
+   atTimedEffects('PreStart')
    currClicks = 0 # We wipe it again just in case they ended their last turn badly but insist on going through the next one.
    #clicksReduce = findCounterPrevention(maxClicks, 'Clicks', me) # Checking if the player has any effects which force them to forfeit clicks.
    #if clicksReduce: extraTXT = " ({} forfeited)".format(clicksReduce)
@@ -329,10 +329,10 @@ def checkDeck(group):
       return
    notify (" -> Checking deck of {} ...".format(me))
    ok = True
-   debugNotify("About to fetch identity card", 5) #Debug
+   debugNotify("About to fetch identity card", 4) #Debug
    identity = getSpecial('Identity')
    loDeckCount = len(group)
-   debugNotify("About to check identity min deck size.", 5) #Debug
+   debugNotify("About to check identity min deck size.", 4) #Debug
    if loDeckCount < num(identity.Requirement): # For identities, .Requirement is the card minimum they have.
       ok = False
       notify ( ":::ERROR::: Only {} cards in {}'s Deck. {} Needed!".format(loDeckCount,me,num(identity.Requirement)))
@@ -341,10 +341,10 @@ def checkDeck(group):
    loInf = 0
    loRunner = False
    agendasCount = 0
-   debugNotify("About to move cards into me.ScriptingPile", 5) #Debug
+   debugNotify("About to move cards into me.ScriptingPile", 4) #Debug
    for card in group: card.moveTo(me.ScriptingPile)
    if len(players) > 1: random = rnd(1,100) # Fix for multiplayer only. Makes Singleplayer setup very slow otherwise.
-   debugNotify("About to check each card in the deck", 5) #Debug
+   debugNotify("About to check each card in the deck", 4) #Debug
    counts = collections.defaultdict(int)
    CardLimit = {}
    professorsRig = [] # This is used by "The Professor" to avoid counting influence for the first instance of a program.
@@ -367,9 +367,12 @@ def checkDeck(group):
          notify(":::ERROR::: Runner cards found in {}'s R&Ds.".format(me))
          ok = False
       if num(card.Influence) and card.Faction != identity.Faction:
-         if identity.model == 'bc0f047c-01b1-427f-a439-d451eda03029' and card.model not in professorsRig:
+         if identity.model == 'bc0f047c-01b1-427f-a439-d451eda03029' and card.Type == 'Program' and card.model not in professorsRig:
+            debugNotify("adding {} to prof. rig. card type = {}".format(card,card.Type))
             professorsRig.append(card.model) # First instance of a card is free of influence costs.
-         else: loInf += num(card.Influence)
+         else: 
+            debugNotify("adding influence of {}. card type = {}".format(card,card.Type))
+            loInf += num(card.Influence)
       else:
          if card.Type == 'Identity':
             notify(":::ERROR::: Extra Identity Cards found in {}'s {}.".format(me, pileName(group)))
@@ -805,6 +808,7 @@ def reduceCost(card, action = 'REZ', fullCost = 0, dryRun = False, reversePlayer
    ### First we check if the card has an innate reduction.
    Autoscripts = fetchProperty(card, 'AutoScripts').split('||')
    if len(Autoscripts):
+      debugNotify("Checking for onPay reductions")
       for autoS in Autoscripts:
          if not re.search(r'onPay', autoS):
             debugNotify("No onPay trigger found in {}!".format(autoS), 2)
@@ -827,6 +831,7 @@ def reduceCost(card, action = 'REZ', fullCost = 0, dryRun = False, reversePlayer
       debugNotify("No self-reducing autoscripts found!", 2)
    ### Now we check if we're in a run and we have bad publicity credits to spend
    if re.search(r'running',status) and fullCost > 0:
+      debugNotify("Checking for running reductions")
       if type == 'Force': myIdent = getSpecial('Identity',ofwhom('-ofOpponent'))
       else: myIdent = getSpecial('Identity',me)
       if myIdent.markers[mdict['BadPublicity']]:
@@ -843,7 +848,8 @@ def reduceCost(card, action = 'REZ', fullCost = 0, dryRun = False, reversePlayer
             myIdent.markers[mdict['BadPublicity']] -= usedBP
             notify(" -- {} spends {} Bad Publicity credits".format(myIdent,usedBP))
    ### Finally we go through the table and see if there's any cards providing cost reduction
-   if not gatheredCardList: # A global variable that stores if we've scanned the tables for cards which reduce costs, so that we don't have to do it again.
+   if not gatheredCardList: # A global variable set during access of card use, that stores if we've scanned the tables for cards which reduce costs, so that we don't have to do it again.
+      debugNotify("No gatheredCardList. About to Scan table cards.")
       global costModifiers
       del costModifiers[:]
       RC_cardList = sortPriority([c for c in table
@@ -852,10 +858,13 @@ def reduceCost(card, action = 'REZ', fullCost = 0, dryRun = False, reversePlayer
                               and c.highlight != InactiveColor])
       reductionRegex = re.compile(r'(Reduce|Increase)([0-9#X]+)Cost({}|All)-affects([A-Z][A-Za-z ]+)(-not[A-Za-z_& ]+)?'.format(type)) # Doing this now, to reduce load.
       for c in RC_cardList: # Then check if there's other cards in the table that reduce its costs.
+         debugNotify("Checking {}".format(c), 2) #Debug
          Autoscripts = CardsAS.get(c.model,'').split('||')
-         if len(Autoscripts) == 0: continue
+         if len(Autoscripts) == 0: 
+            debugNotify("No AS found. Continuing")
+            continue
          for autoS in Autoscripts:
-            debugNotify("Checking {} with AS: {}".format(c, autoS), 2) #Debug
+            debugNotify("AS: {}".format(autoS), 2) #Debug
             if not chkRunningStatus(autoS): continue # if the reduction is only during runs, and we're not in a run, bypass this effect
             if not chkPlayer(autoS, c.controller, False, reversePlayerChk = reversePlayer): continue
             reductionSearch = reductionRegex.search(autoS)
@@ -876,6 +885,7 @@ def reduceCost(card, action = 'REZ', fullCost = 0, dryRun = False, reversePlayer
                   costModifiers.append((c,reductionSearch,autoS)) # Cost increasing cards go into the main list we'll check in a bit, as we need to check them first.
                                                             # In each entry we store a tuple of the card object and the search result for its cost modifying abilities, so that we don't regex again later.
       if len(costReducers): costModifiers.extend(costReducers)
+   else: debugNotify("gatheredCardList = {}".format(gatheredCardList))
    for cTuple in costModifiers: # Now we check what kind of cost modification each card provides. First we check for cost increasers and then for cost reducers
       debugNotify("Checking next cTuple", 4) #Debug
       c = cTuple[0]
@@ -885,7 +895,10 @@ def reduceCost(card, action = 'REZ', fullCost = 0, dryRun = False, reversePlayer
       debugNotify("cTuple[2] (i.e. autoS) is: {}".format(autoS), 4) #Debug
       if reductionSearch.group(4) == 'All' or checkCardRestrictions(gatherCardProperties(card), prepareRestrictions(autoS,seek = 'reduce')):
          debugNotify(" ### Search match! Reduction Value is {}".format(reductionSearch.group(2)), 3) # Debug
-         if not checkSpecialRestrictions(autoS,card): continue
+         if not checkSpecialRestrictions(autoS,card): continue # Check if the card who's cost we're reducing matches the special restrictions of the autoscript
+         if re.search(r'ifHosted',autoS): 
+            c = fetchHost(card)
+            if not c: continue # If we're only reducing cost for hosted cards and it isn't one, we do nothing.
          if re.search(r'onlyOnce',autoS):
             if dryRun: # For dry Runs we do not want to add the "Activated" token on the card.
                if oncePerTurn(c, act = 'dryRun') == 'ABORT': continue
@@ -934,6 +947,7 @@ def reduceCost(card, action = 'REZ', fullCost = 0, dryRun = False, reversePlayer
                else:
                   reduction -= 1
                   fullCost += 1
+   debugNotify("<<< reduceCost() with return {}".format(reduction))
    return reduction
 
 def intdamageDiscard(group,x=0,y=0):
@@ -995,30 +1009,35 @@ def getCredit(group, x = 0, y = 0):
    me.counters['Credits'].value += 1 - creditsReduce
 
 def findDMGProtection(DMGdone, DMGtype, targetPL): # Find out if the player has any card preventing damage
-   debugNotify(">>> findDMGProtection(){}".format(extraASDebug())) #Debug
+   debugNotify(">>> findDMGProtection() with DMGtype: {}".format(DMGtype)) #Debug
    if not Automations['Damage Prevention']: return 0
    protectionFound = 0
    protectionType = 'protection{}DMG'.format(DMGtype) # This is the string key that we use in the mdict{} dictionary
    for card in table: # First we check if we have some emergency protection cards.
-      if card.controller == targetPL and re.search(r'onDamage', CardsAS.get(card.model,'')):
-         availablePrevRegex = re.search(r'protection(Meat|Net|Brain|NetBrain|MeatNet|All)DMG', CardsAS.get(card.model,''))
-         if availablePrevRegex and (re.search(r'{}'.format(DMGtype),availablePrevRegex.group(1)) or availablePrevRegex.group(1) == 'All'):
-            if re.search(r'onlyOnce',CardsAS.get(card.model,'')) and card.orientation == Rot90: continue # If the card has a once per-turn ability which has been used, ignore it
-            if re.search(r'excludeDummy',CardsAS.get(card.model,'')) and card.highlight == DummyColor: continue
-            if targetPL == me:
-               if confirm("You control a {} which can prevent some of the damage you're about to suffer. Do you want to activate it now?".format(fetchProperty(card, 'name'))):
-                  executePlayScripts(card, 'DAMAGE')
-                  if re.search(r'onlyOnce',CardsAS.get(card.model,'')): card.orientation = Rot90
-            else:
-               notify(":::NOTICE::: {} is about to inflict {} Damage. {} can now use their damage prevention effects such as {}.".format(me,DMGtype,targetPL,card))
-               pingCount = 0 
-               while not confirm("{} controls a {} which can prevent some of the damage you're about to inflict to them. Please wait until they decide to use it.\
-                               \n\nHas the runner  decided whether or not to the effects of their damage prevention card?\
-                                 \n(Pressing 'No' will send a ping to the runner  player to remind him to take action)".format(targetPL.name,fetchProperty(card, 'name'))):
-                     pingCount += 1
-                     if pingCount > 2 and confirm("You've tried to ping your opponent {} times already. Do you perhaps want to abort this script?".format(pingCount)): return 'ABORT'
-                     rnd(1,1000)
-                     notify(":::NOTICE::: {} is still waiting for {} to decide whether to use {} or not".format(me,targetPL,card))
+      debugNotify("Checking {} for emergency protection".format(card))
+      for autoS in CardsAS.get(card.model,'').split('||'):
+         debugNotify("Checking autoS = {} ".format(autoS),4)
+         if card.controller == targetPL and re.search(r'onDamage', autoS):
+            availablePrevRegex = re.search(r'protection(Meat|Net|Brain|NetBrain|All)DMG', autoS)
+            debugNotify("availablePrevRegex = {} ".format(availablePrevRegex.groups()))
+            if availablePrevRegex and (re.search(r'{}'.format(DMGtype),availablePrevRegex.group(1)) or availablePrevRegex.group(1) == 'All'):
+               if re.search(r'onlyOnce',autoS) and card.orientation == Rot90: continue # If the card has a once per-turn ability which has been used, ignore it
+               if (re.search(r'excludeDummy',autoS) or re.search(r'CreateDummy',autoS)) and card.highlight == DummyColor: continue
+               if targetPL == me:
+                  if confirm("You control a {} which can prevent some of the damage you're about to suffer. Do you want to activate it now?".format(fetchProperty(card, 'name'))):
+                     splitScripts = autoS.split("$$")
+                     for passedScript in splitScripts: X = redirect(passedScript, card, announceText = None, notificationType = 'Quick', X = 0)
+                     if re.search(r'onlyOnce',autoS): card.orientation = Rot90
+               else:
+                  notify(":::NOTICE::: {} is about to inflict {} Damage. {} can now use their damage prevention effects such as {}.".format(me,DMGtype,targetPL,card))
+                  pingCount = 0 
+                  while not confirm("{} controls a {} which can prevent some of the damage you're about to inflict to them. Please wait until they decide to use it.\
+                                  \n\nHas the runner  decided whether or not to the effects of their damage prevention card?\
+                                    \n(Pressing 'No' will send a ping to the runner  player to remind him to take action)".format(targetPL.name,fetchProperty(card, 'name'))):
+                        pingCount += 1
+                        if pingCount > 2 and confirm("You've tried to ping your opponent {} times already. Do you perhaps want to abort this script?".format(pingCount)): return 'ABORT'
+                        rnd(1,1000)
+                        notify(":::NOTICE::: {} is still waiting for {} to decide whether to use {} or not".format(me,targetPL,card))
    cardList = sortPriority([c for c in table
                if c.controller == targetPL
                and c.markers])
@@ -1033,27 +1052,23 @@ def findDMGProtection(DMGdone, DMGtype, targetPL): # Find out if the player has 
                protectionFound += 1
                DMGdone -= 1
                card.markers[mdict['protectionAllDMG']] -= 1
-         if re.search(r'trashCost',CardsAS.get(card.model,'')):
+         if re.search(r'trashCost',CardsAS.get(card.model,'')) and card.highlight == DummyColor:
             debugNotify("{} has with trashCost".format(card), 3)
             ModifyStatus('TrashMyself', targetPL.name, card, notification = 'Quick') # If the modulator -trashCost is there, the card trashes itself in order to use it's damage prevention ability
          if DMGdone == 0: break
    for card in cardList:
-      if card.markers[mdict['protectionNetBrainDMG']] and (DMGtype == 'Brain' or DMGtype == 'Net'):
-         checkedProtection = 'protectionNetBrainDMG'
-      if card.markers[mdict['protectionMeatNetDMG']] and (DMGtype == 'Meat' or DMGtype == 'Net'):
-         checkedProtection = 'protectionMeatNetDMG'
-      else: checkedProtection = protectionType
-      if card.markers[mdict[checkedProtection]]:
-         if card.markers[mdict[checkedProtection]] == 100: # If we have 100 markers of damage prevention, the card is trying to prevent all Damage.
+      protectionType
+      if card.markers[mdict[protectionType]]:
+         if card.markers[mdict[protectionType]] == 100: # If we have 100 markers of damage prevention, the card is trying to prevent all Damage.
             protectionFound += DMGdone
             DMGdone = 0
-            card.markers[mdict[checkedProtection]] = 0
+            card.markers[mdict[protectionType]] = 0
          else:
-            while DMGdone > 0 and card.markers[mdict[checkedProtection]] > 0: # For each point of damage we do.
+            while DMGdone > 0 and card.markers[mdict[protectionType]] > 0: # For each point of damage we do.
                protectionFound += 1 # We increase the protection found by 1
                DMGdone -= 1 # We reduce how much damage we still need to prevent by 1
-               card.markers[mdict[checkedProtection]] -= 1 # We reduce the card's damage protection counters by 1
-         if re.search(r'trashCost',CardsAS.get(card.model,'')): ModifyStatus('TrashMyself', targetPL.name, card, notification = 'Quick') # If the modulator -trashCost is there, the card trashes itself in order to use it's damage prevention ability
+               card.markers[mdict[protectionType]] -= 1 # We reduce the card's damage protection counters by 1
+         if re.search(r'trashCost',CardsAS.get(card.model,'')) and card.highlight == DummyColor: ModifyStatus('TrashMyself', targetPL.name, card, notification = 'Quick') # If the modulator -trashCost is there, the card trashes itself in order to use it's damage prevention ability
          if DMGdone == 0: break # If we've found enough protection to alleviate all damage, stop the search.
    if DMGtype == 'Net' or DMGtype == 'Brain': altprotectionType = 'protectionNetBrainDMG' # To check for the combined Net & Brain protection counter as well.
    else: altprotectionType = None
@@ -1068,7 +1083,7 @@ def findDMGProtection(DMGdone, DMGtype, targetPL): # Find out if the player has 
                protectionFound += 1 #
                DMGdone -= 1
                card.markers[mdict[altprotectionType]] -= 1
-         if re.search(r'trashCost',CardsAS.get(card.model,'')): ModifyStatus('TrashMyself', targetPL.name, card, notification = 'Quick') # If the modulator -trashCost is there, the card trashes itself in order to use it's damage prevention ability
+         if re.search(r'trashCost',CardsAS.get(card.model,'')) and card.highlight == DummyColor: ModifyStatus('TrashMyself', targetPL.name, card, notification = 'Quick') # If the modulator -trashCost is there, the card trashes itself in order to use it's damage prevention ability
          if DMGdone == 0: break
    debugNotify("<<< findDMGProtection() by returning: {}".format(protectionFound), 3)
    return protectionFound
@@ -1951,6 +1966,8 @@ def currentHandSize(player = me):
 
 def intPlay(card, cost = 'not free', scripted = False, preReduction = 0):
    debugNotify(">>> intPlay(){}".format(extraASDebug())) #Debug
+   global gatheredCardList
+   gatheredCardList = False # We reset this variable because we can call intPlay from other scripts. And at that point we want to re-scan the table.
    extraText = '' # We set this here, because the if clause that may modify this variable will not be reached in all cases. So we need to set it to null here to avoid a python error later.
    mute()
    chooseSide() # Just in case...
@@ -2016,7 +2033,7 @@ def intPlay(card, cost = 'not free', scripted = False, preReduction = 0):
       placeCard(card, action)
       if card.Type == 'Program':
          for targetLookup in table: # We check if we're targeting a daemon to install the program in.
-            if targetLookup.targetedBy and targetLookup.targetedBy == me and re.search(r'Daemon',getKeywords(targetLookup)) and possess(targetLookup, card, silent = True) != 'ABORT':
+            if targetLookup.targetedBy and targetLookup.targetedBy == me and (re.search(r'Daemon',getKeywords(targetLookup)) or re.search(r'CountsAsDaemon', CardsAS.get(targetLookup.model,''))) and possess(targetLookup, card, silent = True) != 'ABORT':
                MUtext = ", installing it into {}".format(targetLookup)
                break
          notify("{}{} to install {}{}{}{}.".format(ClickCost, rc, card, hostTXT, extraText,MUtext))

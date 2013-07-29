@@ -52,7 +52,7 @@ def UseCustomAbility(Autoscript, announceText, card, targetCards = None, notific
       targetC = targetCards[0] # For this to be triggered a program has to have been installed, which was passed to us in an array.
       if not confirm("Would you like to replicate the {}?".format(targetC.name)):
          return 'ABORT'
-      retrieveResult = RetrieveX('Retrieve1Card-type{}-isTopmost'.format(targetC.name), announceText, card)
+      retrieveResult = RetrieveX('Retrieve1Card-grab{}-isTopmost'.format(targetC.name), announceText, card)
       shuffle(me.piles['R&D/Stack'])
       if re.search(r'no valid targets',retrieveResult[0]): announceString = "{} tries to use their replicator to create a copy of {}, but they run out of juice.".format(me,targetC.name) # If we couldn't find a copy of the played card to replicate, we inform of this
       else: announceString = "{} uses their replicator to create a copy of {}".format(me,targetC.name)
@@ -546,5 +546,17 @@ def CustomScript(card, action = 'PLAY'): # Scripts that are complex and fairly u
       debugNotify("About to announce")
       notify("{} has trashed {} and {}d through their {} finding and installing {} for {}{}.".format(me,trashProgram,card,targetPile,newProgram,uniCredit(cardCost),reduceTXT))
       intTrashCard(trashProgram, fetchProperty(trashProgram,'Stat'), "free", silent = True)
+   elif fetchProperty(card, 'name') == 'Same Old Thing' and action == 'USE':
+      ClickCost = useClick(count = 2)
+      if ClickCost == 'ABORT': return  #If the player didn't have enough clicks and opted not to proceed, do nothing.
+      retrieveTuple = RetrieveX('Retrieve1Card-fromHeap-grabEvent', '', card)
+      debugNotify("retrieveTuple = {}".format(retrieveTuple))
+      if len(retrieveTuple[1]) == 0: 
+         notify("{} tried to do the same old thing but they never did a thing in their life!".format(me))
+         return 'ABORT'
+      sameOldThing = retrieveTuple[1][0]
+      notify("{} does the same old {}".format(me,sameOldThing))
+      intPlay(sameOldThing,scripted = True)
+      intTrashCard(card, fetchProperty(sameOldThing,'Stat'), "free", silent = True)
    elif action == 'USE': useCard(card)
    debugNotify("<<< CustomScript()", 3) #Debug

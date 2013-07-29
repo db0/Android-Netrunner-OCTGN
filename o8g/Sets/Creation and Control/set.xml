@@ -591,7 +591,7 @@
 		<property name="Stat" value="" />	
 		<property name="Rules" value="3 [Credits]: Prevent 1 net damage.&#xD;[Trash]: Prevent up to 2 brain damage." />
 		<property name="Flavor" value="It still hurts a bit, the first time. The second time, you feel nothing at all. But don&#39;t push your luck." />
-		<property name="Instructions" value="" />
+		<property name="Instructions" value="3 [Credits]: Prevent 1 net damage.||[Trash]: Prevent up to 2 brain damage." />
 		<property name="Faction" value="Shaper" />
 		<property name="Influence" value="1" />
 		<property name="Side" value="Runner" />
@@ -670,8 +670,8 @@
 		<property name="Requirement" value="1" />	
 		<property name="Stat" value="0" />	
 		<property name="Rules" value="1 [Credits]: Break sentry subroutine.&#xD;1 [Credits]: +5 strength. Use this ability only by spending a credit from a stealth card." />
-		<property name="Flavor" value="&quot;... and once the shadow rises, the curtain shall fall.&quot; - revenant" />
-		<property name="Instructions" value="" />
+		<property name="Flavor" value="&quot;... and once the shadow rises, the curtain shall fall.&quot; - revenant." />
+		<property name="Instructions" value="1 [Credits]: Break sentry subroutine.||1 [Credits]: +5 strength. Must have credits on a stealth card." />
 		<property name="Faction" value="Shaper" />
 		<property name="Influence" value="2" />
 		<property name="Side" value="Runner" />
@@ -767,7 +767,7 @@
 		<property name="Stat" value="1" />	
 		<property name="Rules" value="1 [Credits]: Break barrier subroutine.&#xD;2 [Credits]: +1 strength for the remainder of this run." />
 		<property name="Flavor" value="&quot;The Incans believed that the sun god resided in the Hanan Pacha, the upper realm of the cosmos. They just didn&#39;t know that the Hanan Pacha hadn&#39;t been discovered yet.&quot; - The Professor" />
-		<property name="Instructions" value="" />
+		<property name="Instructions" value="1 [Credit]: Break a barrier subroutine.||1 [Credits]: +1 strength for the remainder of this run." />
 		<property name="Faction" value="Shaper" />
 		<property name="Influence" value="1" />
 		<property name="Side" value="Runner" />
