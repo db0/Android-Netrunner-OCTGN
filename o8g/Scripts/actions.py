@@ -1434,8 +1434,8 @@ def ARCscore(group=table, x=0,y=0):
          card.highlight = RevealedColor
          scrAgenda(card) # We don't want it silent, as it needs to ask the runner to score, in case of agendas like Fetal AI for which they have to pay as well.
          if card.highlight == RevealedColor: card.moveTo(ARC) # If the runner opted not to score the agenda, put it back into the deck.
-   if not agendaFound: notify("{} has rumaged through {}'s archives but found no Agendas".format(targetPL))
-   debugNotify("<<< ARCscore()", 3)
+   if not agendaFound: notify("{} has rumaged through {}'s archives but found no Agendas".format(Identity,targetPL))
+   debugNotify("<<< ARCscore()")
 
 def HQaccess(group=table, x=0,y=0, silent = False):
    mute()
