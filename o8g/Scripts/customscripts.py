@@ -428,6 +428,7 @@ def CustomScript(card, action = 'PLAY'): # Scripts that are complex and fairly u
             else:
                c.moveToTable(x - (serverRoot * 30), 255,True)
                serverRoot += 1
+            c.peek()
             autoscriptOtherPlayers('CardInstall',c)
          notify("{} implements {} and installs {} ICE and {} cards in the server root".format(me,card,serverICE,serverRoot))
    elif fetchProperty(card, 'name') == "Howler" and action == 'USE':
@@ -469,7 +470,7 @@ def CustomScript(card, action = 'PLAY'): # Scripts that are complex and fairly u
          actionCost = useClick(count = 1)
          if actionCost == 'ABORT': return
          hostCards = eval(getGlobalVariable('Host Cards'))
-         hostCards[selectedCard._id] = card._id # We set the Personal Workshop to be the card's host
+         hostCards[selectedCard._id] = card._id # We set the Awakening Center to be the card's host
          setGlobalVariable('Host Cards',str(hostCards))
          cardAttachementsNR = len([att_id for att_id in hostCards if hostCards[att_id] == card._id])
          debugNotify("About to move into position", 2) #Debug

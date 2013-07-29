@@ -551,6 +551,7 @@ def autoscriptOtherPlayers(lookup, origin_card = Identity, count = 1): # Functio
             continue # Search if in the script of the card, the string that was sent to us exists. The sent string is decided by the function calling us, so for example the ProdX() function knows it only needs to send the 'GeneratedSpice' string.
          if chkPlayer(autoS, card.controller,False) == 0: continue # Check that the effect's origninator is valid.
          if not ifHave(autoS,card.controller,silent = True): continue # If the script requires the playet to have a specific counter value and they don't, do nothing.
+         if re.search(r'whileScored',autoS) and card.controller.getGlobalVariable('ds') != 'corp': continue # If the card is only working while scored, then its controller has to be the corp.
          if chkTagged(autoS, True) == 'ABORT': continue
          if not checkCardRestrictions(gatherCardProperties(origin_card), prepareRestrictions(autoS, 'type')): continue #If we have the '-type' modulator in the script, then need ot check what type of property it's looking for
          if not checkSpecialRestrictions(autoS,origin_card): continue #If we fail the special restrictions on the trigger card, we also abort.
@@ -1654,10 +1655,14 @@ def ModifyStatus(Autoscript, announceText, card, targetCards = None, notificatio
          intPlay(targetCard, payCost, True, preReduc)
       elif action.group(1) == 'Score': # Score takes a card and claims it as an agenda
          targetPL = ofwhom(Autoscript, targetCard.owner)
-         if targetPL.getGlobalVariable('ds') == 'corp': scoreType = 'scoredAgenda'
-         else: scoreType = 'liberatedAgenda'
+         targetCard.setController(targetPL)
+         if targetPL.getGlobalVariable('ds') == 'corp': 
+            scoreType = 'scoredAgenda'
+            autoscriptOtherPlayers('AgendaScored',targetCard)
+         else: 
+            scoreType = 'liberatedAgenda'
+            autoscriptOtherPlayers('AgendaLiberated',targetCard)
          placeCard(targetCard, 'SCORE', type = scoreType)
-         autoscriptOtherPlayers('CardTrashed',targetCard)
       else: return 'ABORT'
       if action.group(2) != 'Multi': break # If we're not doing a multi-targeting, abort after the first run.
    if notification == 'Quick': announceString = "{} {} {}{}".format(announceText, action.group(1), targetCardlist,extraText)

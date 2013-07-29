@@ -1174,6 +1174,7 @@ def scrAgenda(card, x = 0, y = 0,silent = False):
          return
       ap = num(fetchProperty(card,'Stat'))
       card.markers[mdict['Scored']] += 1
+      card.setController(me)
       apReduce = findCounterPrevention(ap, 'Agenda Points', me)
       if apReduce: extraTXT = " ({} forfeited)".format(apReduce)
       else: extraTXT = ''

@@ -945,8 +945,10 @@ def debugChangeSides(group=table,x=0,y=0):
       if ds == "corp": 
          notify("Runner now")
          ds = "runner"
+         me.setGlobalVariable('ds','runner')
       else: 
          ds = "corp"
+         me.setGlobalVariable('ds','corp')
          notify("Corp Now")
    else: whisper("Sorry, development purposes only")
 
