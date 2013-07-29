@@ -134,9 +134,12 @@ def executePlayScripts(card, action):
          if re.search(r'-ifAccessed', activeAutoscript) and ds != 'runner': 
             debugNotify("!!! Failing script because card is not being accessed")
             continue # These scripts are only supposed to fire from the runner (when they access a card)         
-         if re.search(r'-ifActive', activeAutoscript) and (card.highlight == InactiveColor or card.highlight == RevealedColor): 
-            debugNotify("!!! Failing script because card is inactive")
-            continue 
+         if re.search(r'-ifActive', activeAutoscript):
+            if card.highlight == InactiveColor or card.highlight == RevealedColor or card.group.name != 'Table':
+               debugNotify("!!! Failing script because card is inactive. highlight == {}. group.name == {}".format(card.highlight,card.group.name))
+               continue 
+            else: debugNotify("Succeeded for -ifActive. highlight == {}. group.name == {}".format(card.highlight,card.group.name))
+         else: debugNotify("No -ifActive Modulator")
          if re.search(r'-ifScored', activeAutoscript) and not card.markers[mdict['Scored']]:
             debugNotify("!!! Failing script because card is not scored")
             continue 

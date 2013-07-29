@@ -4,7 +4,7 @@
       name="Android-Netrunner" 
       id="0f38e453-26df-4c04-9d67-6d43de939c77" 
       octgnVersion="3.1.0.0" 
-      version="3.2.0.1" 
+      version="3.2.1.0" 
       markersize="20"
       tags="asymmetric cyberpunk LCG bluff duel"
       description="Android: Netrunner is an asymmetrical cyberpunk Card Game for two players.
@@ -79,7 +79,7 @@
          <groupaction menu="Re-Scan table" default="False" execute="scanTable" />
          <groupaction menu="Re-Download all card automations" default="False" execute="fetchCardScripts" />
          <groupaction menu="Debug" default="False" shortcut="Ctrl+Shift+D" execute="TrialError" /> 
-         <groupaction menu="Debug Side-Change" default="False" shortcut="Ctrl+Shift+C" execute="debugChangeSides" /> 
+         <groupaction menu="Debug Side-Change" default="False" shortcut="Ctrl+Shift+P" execute="debugChangeSides" /> 
       </groupactions>
       <cardaction menu="Debug Card" default="False" execute="DebugCard" /> 
       <groupactions menu="Turns/Clicks...">

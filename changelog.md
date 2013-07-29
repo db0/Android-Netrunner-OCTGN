@@ -1,6 +1,13 @@
 Changelog - Android:Netrunner LCG OCTGN Game Definition
 ===============================================
 
+### 3.2.1.x
+
+* Fixed Dir. Haas losing the corp's clicks even when trashed from HQ or R&D
+* Dir. Haas Now scores at the runner's Pile.
+* Dirty Laundry now gives the credits on JackOut
+* Fixed Tyr Hand's Cost
+
 ### 3.2.0.x
 
 * New game definition for **Creation and Control**. Almost cards are scripted.

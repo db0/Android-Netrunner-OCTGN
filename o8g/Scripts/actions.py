@@ -1509,7 +1509,6 @@ def HQaccess(group=table, x=0,y=0, silent = False):
       debugNotify("Opening Choice Window", 2) #Debug
       choice = SingleChoice(title, options, 'button')
       if choice == None: choice = 0
-      revealedCard.highlight = None
       if choice == 1:
          sendToTrash(revealedCard)
          loopChk(revealedCard,'Type')

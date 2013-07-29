@@ -378,6 +378,7 @@ def clearAttachLinks(card):
 def sendToTrash(card, pile = None): # A function which takes care of sending a card to the right trash pile and running the appropriate scripts. Doesn't handle costs.
    debugNotify(">>> sendToTrash()") #Debug   
    if not pile: pile = card.owner.piles['Heap/Archives(Face-up)'] # I can't pass it as a function variable. OCTGN doesn't like it.
+   debugNotify("sendToTrash says previous group = {} and highlight = {}".format(card.group.name,card.highlight))
    executePlayScripts(card,'TRASH') # We don't want to run automations on simply revealed cards.
    autoscriptOtherPlayers('CardTrashed',card)
    clearAttachLinks(card)
@@ -938,6 +939,7 @@ def TrialError(group, x=0, y=0): # Debugging
          if test.Type == 'ICE' or test.Type == 'Agenda' or test.Type == 'Asset': test.isFaceUp = False
 
 def debugChangeSides(group=table,x=0,y=0):
+   global ds
    if debugVerbosity >=0:
       delayed_whisper("## Changing side")
       if ds == "corp": 
