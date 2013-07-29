@@ -1,6 +1,9 @@
 =====Message of the Day======
 
-Oops! I broke recurring credits while working on C&C. Should be working again now.
+Creation and Control is now Rezzed! Restart your clients to receive the update.
 
-C&C should be out soon enough.
+NOTE: Modded and Shipment from mirrormorph changed how they work.
+      Now you need to target the cards you want in your hand, and then play those card which will automatically install appropriately.
+      
+As this was a big coding job, please let me know if any bugs slipped through.
 =============================
