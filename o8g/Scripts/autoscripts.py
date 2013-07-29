@@ -834,8 +834,7 @@ def markerScripts(card, action = 'USE'):
          else: reduceTXT = ''
          #card.markers[mdict['AwakeningCenter']] = 0
          card.highlight = None
-         executePlayScripts(card,'REZ')
-         autoscriptOtherPlayers('CardRezzed',card)
+         intRez(card,cost = 'free',silent = True)
          notify("{} has paid {}{} in order to rez {} from their {}.".format(me,uniCredit(cardCost),reduceTXT,card,hostCard))
       if key[0] == 'Escher' and action == 'USE': 
          global EscherUse
@@ -1343,7 +1342,7 @@ def ReshuffleX(Autoscript, announceText, card, targetCards = None, notification 
    if action.group(1) == 'HQ' or action.group(1) == 'Stack':
       namestuple = groupToDeck(targetPL.hand, targetPL , True) # We do a silent hand reshuffle into the deck, which returns a tuple
       X = namestuple[2] # The 3rd part of the tuple is how many cards were in our hand before it got shuffled.
-   elif action.group(1) == 'Archives' or action.group(1) == 'Trash':
+   elif action.group(1) == 'Archives' or action.group(1) == 'Heap':
       if targetPL.getGlobalVariable('ds') == "corp": groupToDeck(targetPL.piles['Archives(Hidden)'], targetPL , True)
       namestuple = groupToDeck(targetPL.piles['Heap/Archives(Face-up)'], targetPL, True)    
    else: 
@@ -1637,9 +1636,15 @@ def ModifyStatus(Autoscript, announceText, card, targetCards = None, notificatio
       elif action.group(1) == 'Rework': # Rework puts a card on top of R&D (usually shuffling afterwards)
          targetCard.moveTo(targetCard.controller.piles['R&D/Stack'])
       elif action.group(1) == 'Install': # Install simply plays a cast on the table unrezzed without paying any costs.
-         placeCard(targetCard, 'INSTALL')
-         if fetchProperty(targetCard, 'Type') == 'ICE': targetCard.orientation = Rot90
-         autoscriptOtherPlayers('CardInstall',targetCard)
+         if re.search(r'-payCost',Autoscript): # This modulator means the script is going to pay for the card normally
+            preReducRegex = re.search(r'-reduc([0-9])',Autoscript) # this one means its going to reduce the cost a bit.
+            if preReducRegex: preReduc = num(preReducRegex.group(1))
+            else: preReduc = 0
+            payCost = 'not free'
+         else: 
+            preReduc = 0
+            payCost = 'free'         
+         intPlay(targetCard, payCost, True, preReduc)
       elif action.group(1) == 'Score': # Score takes a card and claims it as an agenda
          targetPL = ofwhom(Autoscript, targetCard.owner)
          if targetPL.getGlobalVariable('ds') == 'corp': scoreType = 'scoredAgenda'

@@ -166,9 +166,11 @@ def getKeywords(card): # A function which combines the existing card keywords, w
    return keywords[:-1] # We need to remove the trailing dash '-'
    
 def pileName(group):
-   debugNotify(">>> pileName(){}".format(extraASDebug())) #Debug   
-   debugNotify(">>> pile player: {}".format(group.player), 2) #Debug   
-   if group.name == 'Heap/Archives(Face-up)':
+   debugNotify(">>> pileName()") #Debug
+   debugNotify("pile name {}".format(group.name), 2) #Debug   
+   debugNotify("pile player: {}".format(group.player), 2) #Debug
+   if group.name == 'Table': name = 'Table'
+   elif group.name == 'Heap/Archives(Face-up)':
       if group.player.getGlobalVariable('ds') == 'corp': name = 'Face-up Archives'
       else: name = 'Heap'
    elif group.name == 'R&D/Stack':
@@ -494,6 +496,8 @@ def orgAttachments(card):
    cardAttachements = [Card(att_id) for att_id in hostCards if hostCards[att_id] == card._id]
    x,y = card.position
    for attachment in cardAttachements:
+      debugNotify("Checking group of {}".format(attachment))
+      debugNotify("group name = {}".format(attachment.group.name))
       if attachment.owner.getGlobalVariable('ds') == 'corp' and pileName(attachment.group) in ['R&D','Face-up Archives','HQ']:
          debugNotify("card is faceDown")
          cFaceDown = True
@@ -892,19 +896,12 @@ def TrialError(group, x=0, y=0): # Debugging
       whisper("This function is only for development purposes")
       return
    ######## Testing Corner ########
-   delayed_whisper("## Changing side")
-   if ds == "corp": 
-      notify("Runner now")
-      ds = "runner"
-   else: 
-      ds = "corp"
-      notify("Corp Now")
    ###### End Testing Corner ######
    delayed_whisper("## Defining Test Cards")
    testcards = [
-                "bc0f047c-01b1-427f-a439-d451eda03021", 
-                "bc0f047c-01b1-427f-a439-d451eda03016", 
-                "bc0f047c-01b1-427f-a439-d451eda03024", 
+                "bc0f047c-01b1-427f-a439-d451eda01035", 
+                "bc0f047c-01b1-427f-a439-d451eda03036", 
+                "bc0f047c-01b1-427f-a439-d451eda01060", 
                 # "bc0f047c-01b1-427f-a439-d451eda02104", 
                 # "bc0f047c-01b1-427f-a439-d451eda02105", 
                 # "bc0f047c-01b1-427f-a439-d451eda02106", 
@@ -945,6 +942,17 @@ def TrialError(group, x=0, y=0): # Debugging
          test = table.create(testcards[idx], (70 * idx) - 150, 0, 1, True)
          storeProperties(test)
          if test.Type == 'ICE' or test.Type == 'Agenda' or test.Type == 'Asset': test.isFaceUp = False
+
+def debugChangeSides(group=table,x=0,y=0):
+   if debugVerbosity >=0:
+      delayed_whisper("## Changing side")
+      if ds == "corp": 
+         notify("Runner now")
+         ds = "runner"
+      else: 
+         ds = "corp"
+         notify("Corp Now")
+   else: whisper("Sorry, development purposes only")
 
 
 def ShowDicts():

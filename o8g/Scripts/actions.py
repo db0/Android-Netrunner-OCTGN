@@ -1001,7 +1001,8 @@ def findDMGProtection(DMGdone, DMGtype, targetPL): # Find out if the player has 
    protectionType = 'protection{}DMG'.format(DMGtype) # This is the string key that we use in the mdict{} dictionary
    for card in table: # First we check if we have some emergency protection cards.
       if card.controller == targetPL and re.search(r'onDamage', CardsAS.get(card.model,'')):
-         if re.search(r'{}DMG'.format(DMGtype), CardsAS.get(card.model,'')):
+         availablePrevRegex = re.search(r'protection(Meat|Net|Brain|NetBrain|MeatNet|All)DMG', CardsAS.get(card.model,''))
+         if availablePrevRegex and (re.search(r'{}'.format(DMGtype),availablePrevRegex.group(1)) or availablePrevRegex.group(1) == 'All'):
             if re.search(r'onlyOnce',CardsAS.get(card.model,'')) and card.orientation == Rot90: continue # If the card has a once per-turn ability which has been used, ignore it
             if re.search(r'excludeDummy',CardsAS.get(card.model,'')) and card.highlight == DummyColor: continue
             if targetPL == me:
@@ -1037,16 +1038,21 @@ def findDMGProtection(DMGdone, DMGtype, targetPL): # Find out if the player has 
             ModifyStatus('TrashMyself', targetPL.name, card, notification = 'Quick') # If the modulator -trashCost is there, the card trashes itself in order to use it's damage prevention ability
          if DMGdone == 0: break
    for card in cardList:
-      if card.markers[mdict[protectionType]]:
-         if card.markers[mdict[protectionType]] == 100: # If we have 100 markers of damage prevention, the card is trying to prevent all Damage.
+      if card.markers[mdict['protectionNetBrainDMG']] and (DMGtype == 'Brain' or DMGtype == 'Net'):
+         checkedProtection = 'protectionNetBrainDMG'
+      if card.markers[mdict['protectionMeatNetDMG']] and (DMGtype == 'Meat' or DMGtype == 'Net'):
+         checkedProtection = 'protectionMeatNetDMG'
+      else: checkedProtection = protectionType
+      if card.markers[mdict[checkedProtection]]:
+         if card.markers[mdict[checkedProtection]] == 100: # If we have 100 markers of damage prevention, the card is trying to prevent all Damage.
             protectionFound += DMGdone
             DMGdone = 0
-            card.markers[mdict[protectionType]] = 0
+            card.markers[mdict[checkedProtection]] = 0
          else:
-            while DMGdone > 0 and card.markers[mdict[protectionType]] > 0: # For each point of damage we do.
+            while DMGdone > 0 and card.markers[mdict[checkedProtection]] > 0: # For each point of damage we do.
                protectionFound += 1 # We increase the protection found by 1
                DMGdone -= 1 # We reduce how much damage we still need to prevent by 1
-               card.markers[mdict[protectionType]] -= 1 # We reduce the card's damage protection counters by 1
+               card.markers[mdict[checkedProtection]] -= 1 # We reduce the card's damage protection counters by 1
          if re.search(r'trashCost',CardsAS.get(card.model,'')): ModifyStatus('TrashMyself', targetPL.name, card, notification = 'Quick') # If the modulator -trashCost is there, the card trashes itself in order to use it's damage prevention ability
          if DMGdone == 0: break # If we've found enough protection to alleviate all damage, stop the search.
    if DMGtype == 'Net' or DMGtype == 'Brain': altprotectionType = 'protectionNetBrainDMG' # To check for the combined Net & Brain protection counter as well.
@@ -1943,31 +1949,32 @@ def currentHandSize(player = me):
    else: currHandSize = player.counters['Hand Size'].value
    return currHandSize
 
-def intPlay(card, cost = 'not free'):
+def intPlay(card, cost = 'not free', scripted = False, preReduction = 0):
    debugNotify(">>> intPlay(){}".format(extraASDebug())) #Debug
    extraText = '' # We set this here, because the if clause that may modify this variable will not be reached in all cases. So we need to set it to null here to avoid a python error later.
    mute()
    chooseSide() # Just in case...
-   whisper("+++ Processing. Please Hold...")
+   if not scripted: whisper("+++ Processing. Please Hold...")
    storeProperties(card)
    random = rnd(10,100)
    if not checkNotHardwareConsole(card): return	#If player already has a Console in play and doesnt want to play that card, do nothing.
    if card.Type != 'ICE' and card.Type != 'Agenda' and card.Type != 'Upgrade' and card.Type != 'Asset': # We only check for uniqueness on install, against cards that install face-up
       if not checkUnique(card): return #If the player has the unique card and opted not to trash it, do nothing.
    if re.search(r'Double', getKeywords(card)): NbReq = 2 # Some cards require two clicks to play. This variable is passed to the useClick() function.
+   elif scripted: NbReq = 0
    else: NbReq = 1 #In case it's not a "Double" card. Then it only uses one click to play.
    ClickCost = useClick(count = NbReq)
    if ClickCost == 'ABORT': return  #If the player didn't have enough clicks and opted not to proceed, do nothing.
-   if (card.Type == 'Operation' or card.Type == 'Event') and chkTargeting(card) == 'ABORT':
+   if (card.Type == 'Operation' or card.Type == 'Event') and chkTargeting(card) == 'ABORT': 
       me.Clicks += NbReq # We return any used clicks in case of aborting due to missing target
-      return # If it's an Operation or Event and has targeting requirements, check with the user first.
+      return 'ABORT'# If it's an Operation or Event and has targeting requirements, check with the user first.
    host = chkHostType(card)
    debugNotify("host received: {}".format(host), 4)
    if host:
       try:
          if host == 'ABORT':
             me.Clicks += NbReq
-            return
+            return 'ABORT'
       except: # If there's an exception, it means that the host is a card object which cannot be compared to a string
          debugNotify("Found Host", 2)
          hostTXT = ' on {}'.format(host) # If the card requires a valid host and we found one, we will mention it later.
@@ -1981,6 +1988,8 @@ def intPlay(card, cost = 'not free'):
    rc = ''
    if card.Type == 'Resource' and re.search(r'Hidden', getKeywords(card)): hiddenresource = 'yes'
    else: hiddenresource = 'no'
+   expectedCost = num(card.Cost) - preReduction
+   if expectedCost < 0: expectedCost = 0
    if card.Type == 'ICE' or card.Type == 'Agenda' or card.Type == 'Asset' or card.Type == 'Upgrade':
       placeCard(card, action)
       if fetchProperty(card, 'Type') == 'ICE': card.orientation ^= Rot90 # Ice are played sideways.
@@ -1994,13 +2003,13 @@ def intPlay(card, cost = 'not free'):
          card.isFaceUp = False
          notify("{} to install a hidden resource.".format(ClickCost))
          return
-      reduction = reduceCost(card, action, num(card.Cost)) #Checking to see if the cost is going to be reduced by cards we have in play.
+      reduction = reduceCost(card, action, expectedCost) #Checking to see if the cost is going to be reduced by cards we have in play.
       if reduction > 0: extraText = " (reduced by {})".format(uniCredit(reduction)) #If it is, make sure to inform.
       elif reduction < 0: extraText = " (increased by {})".format(uniCredit(abs(reduction)))
-      rc = payCost(num(card.Cost) - reduction, cost)
+      rc = payCost(expectedCost - reduction, cost)
       if rc == "ABORT":
          me.Clicks += NbReq # If the player didn't notice they didn't have enough credits, we give them back their click
-         return # If the player didn't have enough money to pay and aborted the function, then do nothing.
+         return 'ABORT' # If the player didn't have enough money to pay and aborted the function, then do nothing.
       elif rc == "free": extraText = " at no cost"
       elif rc != 0: rc = " and pays {}".format(rc)
       else: rc = ''
@@ -2016,13 +2025,13 @@ def intPlay(card, cost = 'not free'):
       elif card.Type == 'Resource' and hiddenresource == 'no': notify("{}{} to acquire {}{}{}{}.".format(ClickCost, rc, card, hostTXT, extraText,MUtext))
       else: notify("{}{} to play {}{}{}.".format(ClickCost, rc, card, extraText,MUtext))
    else:
-      reduction = reduceCost(card, action, num(card.Cost)) #Checking to see if the cost is going to be reduced by cards we have in play.
+      reduction = reduceCost(card, action, expectedCost) #Checking to see if the cost is going to be reduced by cards we have in play.
       if reduction > 0: extraText = " (reduced by {})".format(uniCredit(reduction)) #If it is, make sure to inform.
       elif reduction < 0: extraText = " (increased by {})".format(uniCredit(abs(reduction)))
-      rc = payCost(num(card.Cost) - reduction, cost)
+      rc = payCost(expectedCost - reduction, cost)
       if rc == "ABORT":
          me.Clicks += NbReq # If the player didn't notice they didn't have enough credits, we give them back their click
-         return # If the player didn't have enough money to pay and aborted the function, then do nothing.
+         return 'ABORT' # If the player didn't have enough money to pay and aborted the function, then do nothing.
       elif rc == "free": extraText = " at no cost"
       elif rc != 0: rc = " and pays {}".format(rc)
       else: rc = '' # When the cast costs nothing, we don't include the cost.

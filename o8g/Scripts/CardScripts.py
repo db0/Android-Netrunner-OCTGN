@@ -578,7 +578,7 @@ Modded
 -----
 bc0f047c-01b1-427f-a439-d451eda01035
 -----
-onPlay:Put3Credits$$Put1Click-isPriority||whileRezzed:Reduce#CostInstall-affectsHardware-onlyOnce-forMe||whileRezzed:Reduce#CostInstall-affectsProgram-onlyOnce-forMe||whileRezzed:Transfer1Click-foreachCardInstall
+onPlay:InstallTarget-DemiAutoTargeted-atProgram_or_Hardware-fromHand-choose1-payCost-reduc3
 +++++
 	
 .....
@@ -866,7 +866,7 @@ The Toolbox
 -----
 bc0f047c-01b1-427f-a439-d451eda01041
 -----
-whileRezzed:Gain2MU$$Gain2Base Link||onInstall:Put2Credits-isSilent||atTurnPreStart:Refill2Credits-duringMyTurn||whileRezzed:Reduce#CostUse-affectsIcebreaker-forMe
+whileInstalled:Gain2MU$$Gain2Base Link||onInstall:Put2Credits-isSilent||atTurnPreStart:Refill2Credits-duringMyTurn||whileRezzed:Reduce#CostUse-affectsIcebreaker-forMe
 +++++
 	
 .....
@@ -2183,7 +2183,7 @@ Levy AR Lab Access
 -----
 bc0f047c-01b1-427f-a439-d451eda03035
 -----
-
+onPlay:ReshuffleHeap$$ReshuffleStack$$Draw5Cards$$ExileMyself
 +++++
 
 .....
@@ -2191,9 +2191,9 @@ Monolith
 -----
 bc0f047c-01b1-427f-a439-d451eda03036
 -----
-
+whileInstalled:Gain3MU||onInstall:InstallMulti-Targeted-atProgram-fromHand-payCost-reduc4||onDamage:Discard1Card-isCost-DemiAutoTargeted-atProgram-fromHand-choose1$$Put1protectionNetBrainDMG
 +++++
-
+A0B0G0T0:Discard1Card-isCost-DemiAutoTargeted-atProgram-fromHand-choose1$$Put1protectionNetBrainDMG
 .....
 Feedback Filter
 -----
