@@ -346,7 +346,7 @@
 		<property name="Subtitle" value="" />
 		<property name="Type" value="Upgrade" />
 		<property name="Keywords" value="Hostile" />
-		<property name="Cost" value="11" />
+		<property name="Cost" value="1" />
 		<property name="Requirement" value="" />	
 		<property name="Stat" value="1" />	
 		<property name="Rules" value="If the Runner is about to break a subroutine on a piece of bioroid ice protecting this server you may rez Tyr&#39;s Hand.&#xD;[Trash]: Prevent a subroutine from being broken on a piece of bioroid ice protecting this server." />
