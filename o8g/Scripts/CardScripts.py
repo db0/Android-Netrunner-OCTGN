@@ -1090,7 +1090,7 @@ Whizzard
 -----
 bc0f047c-01b1-427f-a439-d451eda02001
 -----
-atTurnPreStart:Refill3Credits-duringMyTurn||Reduce#CostTrash-forAll-forMe
+atTurnPreStart:Refill3Credits-duringMyTurn||Reduce#CostTrash-affectsAll-forMe
 +++++
 
 .....
@@ -1162,7 +1162,7 @@ Encryption Protocol
 -----
 bc0f047c-01b1-427f-a439-d451eda02029
 -----
-whileRezzed:Increase1CostTrash-forAll-forOpponent-ifInstalled
+whileRezzed:Increase1CostTrash-affectsAll-forOpponent-ifInstalled
 +++++
 
 .....
@@ -1594,7 +1594,7 @@ Xanadu
 -----
 bc0f047c-01b1-427f-a439-d451eda02082
 -----
-whileRezzed:Increase1CostRez-forAll-isICE-forOpponent
+whileRezzed:Increase1CostRez-affectsAll-isICE-forOpponent
 +++++
 
 .....
