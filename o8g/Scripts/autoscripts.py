@@ -1959,8 +1959,9 @@ def gatherCardProperties(card,Autoscript = ''):
    debugNotify(">>> gatherCardProperties()") #Debug     
    cardProperties = []
    if storeProperties(card) != 'ABORT': # We store the card properties so that we don't start flipping the cards over each time.
-      debugNotify("Appending name", 4) #Debug                
-      cardProperties.append(fetchProperty(card, 'Name')) # We are going to check its name
+      debugNotify("Appending name", 4) #Debug
+      cName = fetchProperty(card, 'Name')
+      cardProperties.append(cName.replace('-','_')) # We are going to check its name. We replace all dashes to underscores to avoid messing up our lookup in prepareRestrictions() 
       debugNotify("Appending Type", 4) #Debug                
       cardProperties.append(fetchProperty(card, 'Type')) # We are going to check its Type
       debugNotify("Appending Keywords", 4) #Debug                

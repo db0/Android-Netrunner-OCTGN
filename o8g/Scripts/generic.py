@@ -463,7 +463,7 @@ def num (s):
       return int(s)
    except ValueError:
       return 0
-
+      
 def numOrder(num):
     """Return the ordinal for each place in a zero-indexed list.
 

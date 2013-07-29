@@ -52,7 +52,7 @@ def UseCustomAbility(Autoscript, announceText, card, targetCards = None, notific
       targetC = targetCards[0] # For this to be triggered a program has to have been installed, which was passed to us in an array.
       if not confirm("Would you like to replicate the {}?".format(targetC.name)):
          return 'ABORT'
-      retrieveResult = RetrieveX('Retrieve1Card-grab{}-isTopmost'.format(targetC.name), announceText, card)
+      retrieveResult = RetrieveX('Retrieve1Card-grab{}-isTopmost'.format(targetC.name.replace('-','_')), announceText, card)
       shuffle(me.piles['R&D/Stack'])
       if re.search(r'no valid targets',retrieveResult[0]): announceString = "{} tries to use their replicator to create a copy of {}, but they run out of juice.".format(me,targetC.name) # If we couldn't find a copy of the played card to replicate, we inform of this
       else: announceString = "{} uses their replicator to create a copy of {}".format(me,targetC.name)

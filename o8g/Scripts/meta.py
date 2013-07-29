@@ -894,9 +894,9 @@ def TrialError(group, x=0, y=0): # Debugging
    ###### End Testing Corner ######
    delayed_whisper("## Defining Test Cards")
    testcards = [
-                "bc0f047c-01b1-427f-a439-d451eda03035", 
-                "bc0f047c-01b1-427f-a439-d451eda03030", 
-                "bc0f047c-01b1-427f-a439-d451eda03025", 
+                "bc0f047c-01b1-427f-a439-d451eda02088", 
+                "bc0f047c-01b1-427f-a439-d451eda03039", 
+                "bc0f047c-01b1-427f-a439-d451eda03039", 
                 "bc0f047c-01b1-427f-a439-d451eda03024", 
                 "bc0f047c-01b1-427f-a439-d451eda03001", 
                 # "bc0f047c-01b1-427f-a439-d451eda02106", 
