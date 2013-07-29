@@ -150,6 +150,10 @@ def executePlayScripts(card, action):
          effect = re.search(r'\b([A-Z][A-Za-z]+)([0-9]*)([A-Za-z& ]*)\b([^:]?[A-Za-z0-9_&{}\|:,<> -]*)', activeAutoscript)
          debugNotify('effects: {}'.format(effect.groups()), 2) #Debug
          if effectType.group(1) == 'whileRezzed' or effectType.group(1) == 'whileInstalled' or effectType.group(1) == 'whileScored' or effectType.group(1) == 'whileLiberated':
+            if action == 'STARTUP' or action == 'MULLIGAN': 
+               debugNotify("Aborting while(Rezzed|Scored|etc) because we're on statup/mulligan")
+               continue # We don't want to run whileRezzed events during startup
+            else: debugNotify("not on statup/mulligan. proceeding")
             if effect.group(1) != 'Gain' and effect.group(1) != 'Lose': continue # The only things that whileRezzed and whileScored affect in execute Automations is GainX scripts (for now). All else is onTrash, onPlay etc
             if action == 'DEREZ' or ((action == 'TRASH' or action == 'UNINSTALL') and card.highlight != InactiveColor and card.highlight != RevealedColor): Removal = True
             else: Removal = False
