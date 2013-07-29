@@ -1,6 +1,15 @@
 Changelog - Android:Netrunner LCG OCTGN Game Definition
 ===============================================
 
+### 3.2.2.x
+
+* Omni-drive now replicatable
+* Original Hasbro won't give 1 credit on setup anymore
+* Checking archives when there's no agendas shouldn't error out anymore
+* Haas pet project will now peek at the cards she installs
+* Cerebral Imaging will now use our own credit count.
+
+
 ### 3.2.1.x
 
 * Fixed Dir. Haas losing the corp's clicks even when trashed from HQ or R&D
