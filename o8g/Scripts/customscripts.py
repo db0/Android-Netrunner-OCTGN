@@ -497,6 +497,7 @@ def CustomScript(card, action = 'PLAY'): # Scripts that are complex and fairly u
       targetPrograms = findTarget('Targeted-atProgram')
       if len(targetPrograms) == 0: return 'ABORT'
       else: trashProgram = targetPrograms[0]
+      intTrashCard(trashProgram, fetchProperty(trashProgram,'Stat'), "free", silent = True) # We trash it immediately as it can be picked up by scavenge itself.
       gripTargets = findTarget('Targeted-atProgram-fromHand-isMutedTarget') # First we check if the player has targeted a program from their grip as well, this way we don't have to ask.
       if len(gripTargets) > 0: 
          debugNotify("Found Hand Card Targeted group = {}".format([c.name for c in gripTargets]))
@@ -546,7 +547,6 @@ def CustomScript(card, action = 'PLAY'): # Scripts that are complex and fairly u
       autoscriptOtherPlayers('CardInstall',newProgram)
       debugNotify("About to announce")
       notify("{} has trashed {} and {}d through their {} finding and installing {} for {}{}.".format(me,trashProgram,card,targetPile,newProgram,uniCredit(cardCost),reduceTXT))
-      intTrashCard(trashProgram, fetchProperty(trashProgram,'Stat'), "free", silent = True)
    elif fetchProperty(card, 'name') == 'Same Old Thing' and action == 'USE':
       ClickCost = useClick(count = 2)
       if ClickCost == 'ABORT': return  #If the player didn't have enough clicks and opted not to proceed, do nothing.

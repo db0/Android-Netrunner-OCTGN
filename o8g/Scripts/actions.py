@@ -81,6 +81,10 @@ def useClick(group = table, x=0, y=0, count = 1):
    currClicks += count + lastKnownNrClicks - me.Clicks# If the player modified their click counter manually, the last two will increase/decreate our current click accordingly.
    me.Clicks -= count
    lastKnownNrClicks = me.Clicks
+   for card in table: # We discard all events on the table when the player tries to use another click.
+      hostCards = eval(getGlobalVariable('Host Cards'))
+      if card.isFaceUp and (card.Type == 'Operation' or card.Type == 'Event') and card.highlight != DummyColor and card.highlight != RevealedColor and card.highlight != InactiveColor and not card.markers[mdict['Scored']] and not hostCards.has_key(card._id): # We do not trash "scored" events (e.g. see Notoriety) or cards hosted on others card (e.g. see Oversight AI)
+         intTrashCard(card,0,"free") # Clearing all Events and operations for players who keep forgeting to clear them.   
    debugNotify("<<< useClick", 3) #Debug
    if count == 2: return "{} {} {} uses Double Click #{} and #{}{}".format(uniClick(),uniClick(),me,currClicks - 1, currClicks,extraText)
    elif count == 3: return "{} {} {} {} uses Triple Click #{}, #{} and #{}{}".format(uniClick(),uniClick(),uniClick(),me,currClicks - 2, currClicks - 1, currClicks,extraText)
