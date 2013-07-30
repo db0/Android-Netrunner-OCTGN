@@ -1975,7 +1975,7 @@ Alix T4LB07
 -----
 bc0f047c-01b1-427f-a439-d451eda03008
 -----
-whileRezzed:Put1Power-foreachCardInstall
+whileRezzed:Put1Power-foreachCardInstall-byme
 +++++
 A1B0G0T1:Gain2Credits-perMarker{Power}
 .....
