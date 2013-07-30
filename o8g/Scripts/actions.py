@@ -2024,9 +2024,10 @@ def intPlay(card, cost = 'not free', scripted = False, preReduction = 0):
          card.isFaceUp = False
          notify("{} to install a hidden resource.".format(ClickCost))
          return
-      reduction = reduceCost(card, action, expectedCost) #Checking to see if the cost is going to be reduced by cards we have in play.
-      if reduction > 0: extraText = " (reduced by {})".format(uniCredit(reduction)) #If it is, make sure to inform.
-      elif reduction < 0: extraText = " (increased by {})".format(uniCredit(abs(reduction)))
+      if cost = 'not free': # If the cost is not free, then we check for cost reductors/increasers and do a dryrun to gather how much the reduction is going to be.
+         reduction = reduceCost(card, action, expectedCost, dryRun = True) #Checking to see if the cost is going to be reduced by cards we have in play.
+         if reduction > 0: extraText = " (reduced by {})".format(uniCredit(reduction)) #If it is, make sure to inform.
+         elif reduction < 0: extraText = " (increased by {})".format(uniCredit(abs(reduction)))
       rc = payCost(expectedCost - reduction, cost)
       if rc == "ABORT":
          me.Clicks += NbReq # If the player didn't notice they didn't have enough credits, we give them back their click
@@ -2034,6 +2035,7 @@ def intPlay(card, cost = 'not free', scripted = False, preReduction = 0):
       elif rc == "free": extraText = " at no cost"
       elif rc != 0: rc = " and pays {}".format(rc)
       else: rc = ''
+      if cost = 'not free': reduction = reduceCost(card, action, expectedCost) # Now we go ahead and actually remove any markers from cards
       placeCard(card, action)
       if card.Type == 'Program':
          for targetLookup in table: # We check if we're targeting a daemon to install the program in.
@@ -2046,9 +2048,10 @@ def intPlay(card, cost = 'not free', scripted = False, preReduction = 0):
       elif card.Type == 'Resource' and hiddenresource == 'no': notify("{}{} to acquire {}{}{}{}.".format(ClickCost, rc, card, hostTXT, extraText,MUtext))
       else: notify("{}{} to play {}{}{}.".format(ClickCost, rc, card, extraText,MUtext))
    else:
-      reduction = reduceCost(card, action, expectedCost) #Checking to see if the cost is going to be reduced by cards we have in play.
-      if reduction > 0: extraText = " (reduced by {})".format(uniCredit(reduction)) #If it is, make sure to inform.
-      elif reduction < 0: extraText = " (increased by {})".format(uniCredit(abs(reduction)))
+      if cost = 'not free': 
+         reduction = reduceCost(card, action, expectedCost, dryRun = True) #Checking to see if the cost is going to be reduced by cards we have in play.
+         if reduction > 0: extraText = " (reduced by {})".format(uniCredit(reduction)) #If it is, make sure to inform.
+         elif reduction < 0: extraText = " (increased by {})".format(uniCredit(abs(reduction)))
       rc = payCost(expectedCost - reduction, cost)
       if rc == "ABORT":
          me.Clicks += NbReq # If the player didn't notice they didn't have enough credits, we give them back their click
@@ -2056,6 +2059,7 @@ def intPlay(card, cost = 'not free', scripted = False, preReduction = 0):
       elif rc == "free": extraText = " at no cost"
       elif rc != 0: rc = " and pays {}".format(rc)
       else: rc = '' # When the cast costs nothing, we don't include the cost.
+      if cost = 'not free': reduction = reduceCost(card, action, expectedCost)
       placeCard(card, action)
       if card.Type == 'Operation': notify("{}{} to initiate {}{}.".format(ClickCost, rc, card, extraText))
       else: notify("{}{} to play {}{}.".format(ClickCost, rc, card, extraText))
