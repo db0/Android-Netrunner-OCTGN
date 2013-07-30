@@ -1394,7 +1394,7 @@ Test Run
 -----
 bc0f047c-01b1-427f-a439-d451eda02047
 -----
-onPlay:Retrieve1Card-grabProgram-toTable-with1Test Run$$ShuffleStack||onPlay:Retrieve1Card-fromHeap-grabProgram-toTable-with1Test Run||atTurnEnd:UninstallTarget-toStack-AutoTargeted-atProgram-hasMarker{Test Run}
+onPlay:Retrieve1Card-grabProgram-toTable-with1Test Run$$ShuffleStack||onPlay:Retrieve1Card-fromHeap-grabProgram-toTable-with1Test Run
 +++++
 A0B0G0T0:UninstallTarget-toStack-AutoTargeted-atProgram-hasMarker{Test Run}$$TrashMyself
 .....
