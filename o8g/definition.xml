@@ -4,7 +4,7 @@
       name="Android-Netrunner" 
       id="0f38e453-26df-4c04-9d67-6d43de939c77" 
       octgnVersion="3.1.0.0" 
-      version="3.2.3.23" 
+      version="3.2.4.0" 
       markersize="20"
       tags="asymmetric cyberpunk LCG bluff duel"
       description="Android: Netrunner is an asymmetrical cyberpunk Card Game for two players.
@@ -64,7 +64,6 @@
    </card>
    <table name="Table" visibility="undefined" ordered="False" width="1300" height="808" board="Table/Tabletop.png" boardPosition="-650,-370,1300,808" background="Table/background.jpg" backgroundStyle="uniformToFill">
       <cardaction menu="Use Card Ability/Clear" default="True" execute="useAbility" />
-		<cardaction menu="controlChange" default="False" execute="controlChange" />
       <cardaction menu="Clear Card" default="False" execute="clear" />
       <groupactions menu="Game...">
          <groupaction menu="Set up" default="False" shortcut="Ctrl+Shift+S" execute="intJackin" />
@@ -130,6 +129,7 @@
       <cardaction menu="Inspect" default="False" shortcut="Ctrl+I" execute="inspectCard" />
       <groupaction menu="Inspect Target" default="False" shortcut="Ctrl+I" execute="inspectTargetCard" />
       <cardaction menu="(Un)Expose" default="False" shortcut="Ctrl+E" execute="expose" />
+      <cardaction menu="(Un)Reserve for Stealth" default="False" shortcut="Ctrl+Alt+R" execute="stealthReserve" />
       <cardaction menu="Prioritize" default="False" shortcut="Ctrl+Alt+P" execute="prioritize" />
       <cardaction menu="Uninstall" default="False" shortcut="Ctrl+U" execute="uninstall" />
       <cardaction menu="Score Agenda" default="False" shortcut="Ctrl+G" execute="scrAgenda" />

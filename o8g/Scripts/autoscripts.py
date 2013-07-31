@@ -1048,6 +1048,7 @@ def TokensX(Autoscript, announceText, card, targetCards = None, notification = N
          #else:
          rndGUID = rnd(1,8)
          token = ("{}".format(action.group(3)),"00000000-0000-0000-0000-00000000000{}".format(rndGUID)) #This GUID is one of the builtin ones
+   debugNotify("Token = {}".format(token))
    count = num(action.group(2))
    multiplier = per(Autoscript, card, n, targetCards, notification)
    modtokens = count * multiplier

@@ -149,10 +149,11 @@ trashEasterEggIDX = 0
 ScoredColor = "#00ff44"
 SelectColor = "#009900"
 EmergencyColor = "#fff600"
-DummyColor = "#000000" # Marks cards which are supposed to be out of play, so that players can tell them apart.
+DummyColor = "#9370db" # Marks cards which are supposed to be out of play, so that players can tell them apart.
 RevealedColor = "#ffffff"
 PriorityColor = "#ffd700"
 InactiveColor = "#888888" # Cards which are in play but not active yer (e.g. see the shell traders)
+StealthColor = "#000000" # Cards which are in play but not active yer (e.g. see the shell traders)
 
 Xaxis = 'x'
 Yaxis = 'y'

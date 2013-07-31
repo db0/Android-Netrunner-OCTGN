@@ -861,6 +861,7 @@ def reduceCost(card, action = 'REZ', fullCost = 0, dryRun = False, reversePlayer
       RC_cardList = sortPriority([c for c in table
                               if c.isFaceUp
                               and c.highlight != RevealedColor
+                              and c.highlight != StealthColor # Cards reserved for stealth do not give the credits elsewhere. Stealth cards like dagger use those credits via TokensX
                               and c.highlight != InactiveColor])
       reductionRegex = re.compile(r'(Reduce|Increase)([0-9#X]+)Cost({}|All)-affects([A-Z][A-Za-z ]+)(-not[A-Za-z_& ]+)?'.format(type)) # Doing this now, to reduce load.
       for c in RC_cardList: # Then check if there's other cards in the table that reduce its costs.
@@ -1907,6 +1908,21 @@ def prioritize(card,x=0,y=0):
       card.highlight = None
       card.target(False)
 
+def stealthReserve(card,x=0,y=0):
+   debugNotify(">>> prioritize(){}".format(extraASDebug())) #Debug
+   if card.highlight == None:
+      card.highlight = StealthColor
+      notify ("{} reserves credits on {} for stealth cards.".format(me,card))
+   else:
+      if card.highlight == DummyColor:
+         information(":::ERROR::: This highlight signifies that this card is a lingering effect left behind from the original\
+                \nYou cannot reserve such cards for stealth as they would lose their highlight and thus create problems with automation.\
+                \nIf you want one such card to use counter before others, simply target (shift+click) it for the duration of the effect.")
+         return
+      notify("{} clears {}'s stealth reservation.".format(me, card))
+      card.highlight = None
+      card.target(False)
+      
 def rulings(card, x = 0, y = 0):
    debugNotify(">>> rulings(){}".format(extraASDebug())) #Debug
    mute()
