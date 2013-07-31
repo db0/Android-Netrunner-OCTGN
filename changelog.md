@@ -3,9 +3,9 @@ Changelog - Android:Netrunner LCG OCTGN Game Definition
 
 ### 3.2.3.x
 
-* All Events/Operations in play will now be discarded in-between clicks. Should allow people to use Same Old Thing on an even they played this turn if they need to.
+* All Events/Operations in play will now be discarded in-between clicks. Should allow people to use Same Old Thing on an even events they played this turn if they need to.
 * Test Run should not wipe Sahsara credits anymore
-* Scavenge can now picked the card just trashed
+* Scavenge can now pick the card just trashed
 * Howler will now properly remove the marker from the Bioroid once the run ends.
 
 ### 3.2.2.x
