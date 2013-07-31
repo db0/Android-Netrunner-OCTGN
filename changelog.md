@@ -1,6 +1,12 @@
 Changelog - Android:Netrunner LCG OCTGN Game Definition
 ===============================================
 
+### 3.2.4.x
+
+* Escher won't peek at ICE at jack out anymore
+* Dagger will now use credits from only as many Cloaks as required.
+* Added menu action to reserve a card's credits for Stealth-using cards. Such cards won't use their credits on anything but cards which explicitly use stealth credits
+
 ### 3.2.3.x
 
 * All Events/Operations in play will now be discarded in-between clicks. Should allow people to use Same Old Thing on an even events they played this turn if they need to.

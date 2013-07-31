@@ -179,7 +179,9 @@ def goToSot (group, x=0,y=0):
    myCards = (card for card in table if card.controller == me and card.owner == me)
    for card in myCards:
       if card._id in Stored_Type and fetchProperty(card, 'Type') != 'ICE': card.orientation &= ~Rot90 # Refresh all cards which can be used once a turn.
-      if card.name == 'card': card.peek() # We also peek at all our facedown cards which the runner accessed last turn (because they left them unpeeked)
+      if card.name == 'card' and card.owner == me:
+         debugNotify("Peeking() at goToSot()")
+         card.peek() # We also peek at all our facedown cards which the runner accessed last turn (because they left them unpeeked)
    remoteServers = (card for card in table if card.Name == 'Remote Server')
    for card in remoteServers: card.setController(me) # At the start of each player's turn, we swap the ownership of all remote server, to allow them to double-click them (If they're a runner) or manipulate them (if they're a corp)
    newturn = True
@@ -859,6 +861,7 @@ def reduceCost(card, action = 'REZ', fullCost = 0, dryRun = False, reversePlayer
       RC_cardList = sortPriority([c for c in table
                               if c.isFaceUp
                               and c.highlight != RevealedColor
+                              and c.highlight != StealthColor # Cards reserved for stealth do not give the credits elsewhere. Stealth cards like dagger use those credits via TokensX
                               and c.highlight != InactiveColor])
       reductionRegex = re.compile(r'(Reduce|Increase)([0-9#X]+)Cost({}|All)-affects([A-Z][A-Za-z ]+)(-not[A-Za-z_& ]+)?'.format(type)) # Doing this now, to reduce load.
       for c in RC_cardList: # Then check if there's other cards in the table that reduce its costs.
@@ -1608,7 +1611,9 @@ def derez(card, x = 0, y = 0, silent = False):
          executePlayScripts(card,'DEREZ')
          autoscriptOtherPlayers('CardDerezzed',card)
          card.isFaceUp = False
-         if card.controller == me: card.peek()
+         if card.owner == me:
+            debugNotify("Peeking() at derez()")
+            card.peek()
    else:
       notify ( "you can't derez a unrezzed card")
       return 'ABORT'
@@ -1624,6 +1629,7 @@ def expose(card, x = 0, y = 0, silent = False):
          if not silent: notify("{} exposed {}".format(me, card))
    else:
       card.isFaceUp = False
+      debugNotify("Peeking() at expose()")
       card.peek()
       if card.highlight == RevealedColor: card.highlight = None
       if not silent: notify("{} hides {} once more again".format(me, card))
@@ -1902,6 +1908,21 @@ def prioritize(card,x=0,y=0):
       card.highlight = None
       card.target(False)
 
+def stealthReserve(card,x=0,y=0):
+   debugNotify(">>> prioritize(){}".format(extraASDebug())) #Debug
+   if card.highlight == None:
+      card.highlight = StealthColor
+      notify ("{} reserves credits on {} for stealth cards.".format(me,card))
+   else:
+      if card.highlight == DummyColor:
+         information(":::ERROR::: This highlight signifies that this card is a lingering effect left behind from the original\
+                \nYou cannot reserve such cards for stealth as they would lose their highlight and thus create problems with automation.\
+                \nIf you want one such card to use counter before others, simply target (shift+click) it for the duration of the effect.")
+         return
+      notify("{} clears {}'s stealth reservation.".format(me, card))
+      card.highlight = None
+      card.target(False)
+      
 def rulings(card, x = 0, y = 0):
    debugNotify(">>> rulings(){}".format(extraASDebug())) #Debug
    mute()

@@ -428,6 +428,7 @@ def CustomScript(card, action = 'PLAY'): # Scripts that are complex and fairly u
             else:
                c.moveToTable(x - (serverRoot * 30), 255,True)
                serverRoot += 1
+            debugNotify("Peeking() at Director Haas' Pet Project")
             c.peek()
             autoscriptOtherPlayers('CardInstall',c)
          notify("{} implements {} and installs {} ICE and {} cards in the server root".format(me,card,serverICE,serverRoot))

@@ -473,7 +473,9 @@ def placeCard(card, action = 'INSTALL', hostCard = None, type = None):
          installedCount['Agenda'] = installedCount[type]
          installedCount['Asset'] = installedCount[type]
          installedCount['Upgrade'] = installedCount[type]
-      if not card.isFaceUp: card.peek() # Added in octgn 3.0.5.47
+      if not card.isFaceUp: 
+         debugNotify("Peeking() at placeCard()")
+         card.peek() # Added in octgn 3.0.5.47
    debugNotify("<<< placeCard()", 3) #Debug
    
 def orgAttachments(card):
@@ -506,7 +508,9 @@ def orgAttachments(card):
          debugNotify("attachment.isFaceUp = {}".format(attachment.isFaceUp))
          cFaceDown = False # If we're moving corp cards to the table, we generally move them face down
       attachment.moveToTable(x + (xAlg * attNR), y + (yAlg * attNR),cFaceDown)
-      if cFaceDown and attachment.owner == me: attachment.peek() # If we moved our own card facedown to the table, we peek at it.
+      if cFaceDown and attachment.owner == me: 
+         debugNotify("Peeking() at orgAttachments()")
+         attachment.peek() # If we moved our own card facedown to the table, we peek at it.
       if fetchProperty(attachment, 'Type') == 'ICE': attachment.orientation = Rot90 # If we just moved an ICE to the table, we make sure it's turned sideways.
       attachment.setIndex(len(cardAttachements) - attNR) # This whole thing has become unnecessary complicated because sendToBack() does not work reliably
       debugNotify("{} index = {}".format(attachment,attachment.getIndex), 4) # Debug
@@ -894,12 +898,12 @@ def TrialError(group, x=0, y=0): # Debugging
    ###### End Testing Corner ######
    delayed_whisper("## Defining Test Cards")
    testcards = [
-                "bc0f047c-01b1-427f-a439-d451eda02088", 
-                "bc0f047c-01b1-427f-a439-d451eda03039", 
-                "bc0f047c-01b1-427f-a439-d451eda03039", 
-                "bc0f047c-01b1-427f-a439-d451eda03024", 
-                "bc0f047c-01b1-427f-a439-d451eda03001", 
-                # "bc0f047c-01b1-427f-a439-d451eda02106", 
+                "bc0f047c-01b1-427f-a439-d451eda03042", 
+                "bc0f047c-01b1-427f-a439-d451eda03041", 
+                "bc0f047c-01b1-427f-a439-d451eda03041", 
+                "bc0f047c-01b1-427f-a439-d451eda03041", 
+                "bc0f047c-01b1-427f-a439-d451eda01005", 
+                "bc0f047c-01b1-427f-a439-d451eda02086", 
                 # "bc0f047c-01b1-427f-a439-d451eda02107", 
                 # "bc0f047c-01b1-427f-a439-d451eda02108", 
                 # "bc0f047c-01b1-427f-a439-d451eda02109", 
@@ -997,3 +1001,6 @@ def ShowPosC(card, x=0,y=0):
       x,y = card.position
       notify('card x={}, y={}'.format(x,y))      
       
+def controlChange(card,x,y):
+   if card.controller != me: card.setController(me)
+   else: card.setController(findOpponent())
