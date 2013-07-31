@@ -1028,24 +1028,13 @@ def TransferX(Autoscript, announceText, card, targetCards = None, notification =
 def TokensX(Autoscript, announceText, card, targetCards = None, notification = None, n = 0): # Core Command for adding tokens to cards
    debugNotify(">>> TokensX(){}".format(extraASDebug(Autoscript))) #Debug
    if targetCards is None: targetCards = []
-   if len(targetCards) == 0:
-      targetCards.append(card) # If there's been to target card given, assume the target is the card itself.
-      targetCardlist = ' on it' 
-   else:
-      targetCardlist = ' on' # A text field holding which cards are going to get tokens.
-      for targetCard in targetCards:
-         targetCardlist += ' {},'.format(targetCard)
+   if len(targetCards) == 0: targetCards.append(card) # If there's been to target card given, assume the target is the card itself.
    #confirm("TokensX List: {}".format(targetCardlist)) # Debug
    foundKey = False # We use this to see if the marker used in the AutoAction is already defined.
-   infectTXT = '' # We only inject this into the announcement when this is an infect AutoAction.
-   preventTXT = '' # Again for virus infections, to note down how much was prevented.
    action = re.search(r'\b(Put|Remove|Refill|Use|Infect)([0-9]+)([A-Za-z: ]+)-?', Autoscript)
    #confirm("{}".format(action.group(3))) # Debug
    if action.group(3) in mdict: token = mdict[action.group(3)]
    else: # If the marker we're looking for it not defined, then either create a new one with a random color, or look for a token with the custom name we used above.
-      if action.group(1) == 'Infect': 
-         victim = ofwhom(Autoscript, card.controller)
-         if targetCards[0] == card: targetCards[0] = getSpecial('Identity',victim)
       if targetCards[0].markers:
          for key in targetCards[0].markers:
             #confirm("Key: {}\n\naction.group(3): {}".format(key[0],action.group(3))) # Debug
@@ -1061,47 +1050,44 @@ def TokensX(Autoscript, announceText, card, targetCards = None, notification = N
          token = ("{}".format(action.group(3)),"00000000-0000-0000-0000-00000000000{}".format(rndGUID)) #This GUID is one of the builtin ones
    count = num(action.group(2))
    multiplier = per(Autoscript, card, n, targetCards, notification)
+   modtokens = count * multiplier
+   if re.search(r'isCost', Autoscript): # If we remove tokens as a cost, then we do a dry run to see if we have enough tokens on the targeted cards available
+                                        # This way we can stop the execution without actually removing any tokens
+      dryRunAmount = 0 # We reset for the next loop
+      for targetCard in targetCards: # First we do a dry-run for removing tokens.
+         if targetCard.markers[token]: dryRunAmount += targetCard.markers[token]
+         debugNotify("Added {} tokens to the pool ({}) from {} at pos {}".format(targetCard.markers[token],dryRunAmount,targetCard,targetCard.position))
+      if dryRunAmount < modtokens:
+         debugNotify("Found {} tokens. Required {}. Aborting".format(dryRunAmount,modtokens))
+         if notification != 'Automatic': delayed_whisper ("No enough tokens to remove. Aborting!") #Some end of turn effect put a special counter and then remove it so that they only run for one turn. This avoids us announcing that it doesn't have markers every turn.
+         return 'ABORT'
+   tokenAmount = 0  # We count the amount of token we've manipulated, to be used with the -isExactAmount modulator.
+   modifiedCards = [] # A list which holds the cards whose tokens we modified ,so that we can announce only the right names.
    for targetCard in targetCards:
-      if action.group(1) == 'Put': modtokens = count * multiplier
-      elif action.group(1) == 'Refill': modtokens = (count * multiplier) - targetCard.markers[token]
-      elif action.group(1) == 'Infect':
-         targetCardlist = '' #We don't want to mention the target card for infections. It's always the same.
-         victim = ofwhom(Autoscript, card.controller)
-         if targetCard == card: targetCard = getSpecial('Identity',victim) # For infecting targets, the target is never the card causing the effect.
-         modtokens = count * multiplier
-         if re.search('virus',token[0]) and token != mdict['protectionVirus']: # We don't want us to prevent putting virus protection tokens, even though we put them with the "Infect" keyword.
-            Virusprevented = findVirusProtection(targetCard, victim, modtokens)
-            if Virusprevented > 0:
-               preventTXT = ' ({} prevented)'.format(Virusprevented)
-               modtokens -= Virusprevented
-         infectTXT = ' {} with'.format(victim)
-      elif action.group(1) == 'USE':
-         if not targetCard.markers[token] or count > targetCard.markers[token]: 
-            delayed_whisper("There's not enough counters left on the card to use this ability!")
-            return 'ABORT'
-         else: modtokens = -count * multiplier
-      else: #Last option is for removing tokens.
-         if count == 999: # 999 effectively means "all markers on card"
-            if action.group(3) == 'BrainDMG': # We need to remove brain damage from the Identity
-               targetCardlist = ''
-               victim = ofwhom(Autoscript, card.controller)
-               if not targetCard or targetCard == card: targetCard = getSpecial('Identity',victim)
-               if targetCard.markers[token]: count = targetCard.markers[token]
-               else: count = 0
-            elif targetCard.markers[token]: count = targetCard.markers[token]
-            else: 
-               if not re.search(r'isSilent', Autoscript): delayed_whisper("There was nothing to remove.")
-               count = 0
-         elif re.search(r'isCost', Autoscript) and (not targetCard.markers[token] or (targetCard.markers[token] and count > targetCard.markers[token])):
-            if notification != 'Automatic': delayed_whisper ("No markers to remove. Aborting!") #Some end of turn effect put a special counter and then remove it so that they only run for one turn. This avoids us announcing that it doesn't have markers every turn.
-            return 'ABORT'
-         elif not targetCard.markers[token]: 
-            if not re.search(r'isSilent', Autoscript): delayed_whisper("There was nothing to remove.")        
-            count = 0 # If we don't have any markers, we have obviously nothing to remove.
-         modtokens = -count * multiplier
-      targetCard.markers[token] += modtokens # Finally we apply the marker modification
-   if abs(num(action.group(2))) == abs(999): total = 'all'
-   else: total = abs(modtokens)
+      for iter in range(modtokens): # We're removng the tokens 1 by 1, so we can stop once we reached an exact amount that we want.
+         if (re.search(r'isExactAmount', Autoscript) or re.search(r'isCost', Autoscript)) and tokenAmount == modtokens: 
+            debugNotify("Aborting loop because tokenAmount reached ({})".format(tokenAmount))
+            break 
+         # If we're modifying the tokens by an exact amount (cost is always this way), then we will stop manipulating tokens on all cards as soon as this amount it reached.
+         # If we've accumulated the amount of tokens we need to manipulate, we stop removing any more.
+         if action.group(1) == 'Remove':
+            if not targetCard.markers[token]:
+               #if not re.search(r'isSilent', Autoscript): delayed_whisper("There was nothing to remove.") 
+               break
+            else: targetCard.markers[token] -= 1 
+         else:
+            if action.group(1) == 'Refill' and targetCard.markers[token] and targetCard.markers[token] >= modtokens: break # If we're refilling the tokens and we've already exceeded that amount, we don't add more
+            targetCard.markers[token] += 1
+         tokenAmount += 1
+         if targetCard not in modifiedCards: modifiedCards.append(targetCard)
+   debugNotify("tokenAmount = {}".format(tokenAmount))
+   if len(modifiedCards) == 1 and modifiedCards[0] == card: targetCardlist = ' on it'
+   else: 
+      targetCardlist = ' on' # A text field holding which cards are going to get tokens.
+      for targetCard in modifiedCards:
+         targetCardlist += ' {},'.format(targetCard)
+   if num(action.group(2)) == 999: total = 'all'
+   else: total = modtokens
    if re.search(r'isPriority', Autoscript): card.highlight = PriorityColor
    if action.group(1) == 'Refill': 
       if token[0] == 'Credit': 
@@ -1112,7 +1098,7 @@ def TokensX(Autoscript, announceText, card, targetCards = None, notification = N
       counter = re.search(r'forfeitCounter:(\w+)',action.group(3))
       if not victim or victim == me: announceString = '{} forfeit their next {} {}'.format(announceText,total,counter.group(1)) # If we're putting on forfeit counters, we don't announce it as an infection.
       else: announceString = '{} force {} to forfeit their next {} {}'.format(announceText, victim, total,counter.group(1))
-   else: announceString = "{} {}{} {} {} counters{}{}".format(announceText, action.group(1).lower(),infectTXT, total, token[0],targetCardlist,preventTXT)
+   else: announceString = "{} {} {} {} counters{}".format(announceText, action.group(1).lower(), total, token[0],targetCardlist)
    if notification and modtokens != 0 and not re.search(r'isSilent', Autoscript): notify('--> {}.'.format(announceString))
    debugNotify("TokensX() String: {}".format(announceString), 2) #Debug
    debugNotify("<<< TokensX()", 3)

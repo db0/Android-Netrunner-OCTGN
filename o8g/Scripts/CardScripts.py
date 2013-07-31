@@ -2241,7 +2241,7 @@ bc0f047c-01b1-427f-a439-d451eda03042
 -----
 
 +++++
-A0B1G0T0:SimplyAnnounce{break sentry subroutine}||A0B0G0T0:Remove1Credit-AutoTargeted-atStealth-isCost$$Put5PlusOne
+A0B1G0T0:SimplyAnnounce{break sentry subroutine}||A0B0G0T0:Remove1Credits-AutoTargeted-atStealth-isCost$$Put5PlusOne
 .....
 Chakana
 -----

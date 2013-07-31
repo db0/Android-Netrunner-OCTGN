@@ -15,6 +15,7 @@ mdict = dict( # A dictionary which holds all the hard coded markers (in the mark
              Click =                   ("Click", "1c873bd4-007f-46f9-9b17-3d8780dabfc4"),
              Credit5 =                 ("5 Credits","feb0e161-da94-4705-8d56-b48f17d74a99"),
              Credits =                 ("Credit","bda3ae36-c312-4bf7-a288-7ee7760c26f7"),
+             Credit =                  ("Credit","bda3ae36-c312-4bf7-a288-7ee7760c26f7"), # Just in case of Typos
              Tag =                     ("Tag","1d1e7dd2-c60a-4770-82b7-d2d9232b3be8"),
              Advancement =             ("Advancement", "f8372e2c-c5df-42d9-9d54-f5d9890e9821"),
              Scored =                  ("Scored", "4911f1ad-abf9-4b75-b4c5-86df3f9098ee"),
