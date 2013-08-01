@@ -1937,7 +1937,7 @@ bc0f047c-01b1-427f-a439-d451eda03003
 -----
 
 +++++
-A0B0G0T0:InstallMulti-Targeted-atICE-fromHand||Draw999Cards
+A0B0G0T0:InstallMulti-Targeted-atICE-fromHand||A0B0G0T0:Draw999Cards
 .....
 Director Haas' Pet Project
 -----
@@ -2343,7 +2343,7 @@ The Source
 -----
 bc0f047c-01b1-427f-a439-d451eda03055
 -----
-
+whileInstalled:TrashMyself-foreachAgendaLiberated||whileInstalled:TrashMyself-foreachAgendaScored
 +++++
 
 .....
