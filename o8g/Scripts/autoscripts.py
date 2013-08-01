@@ -61,6 +61,7 @@ def executePlayScripts(card, action):
           re.search(r'atSuccessfulRun', autoS) or 
           re.search(r'onAccess', autoS) or 
           re.search(r'Placement', autoS) or 
+          re.search(r'whileInPlay', autoS) or 
           re.search(r'constantAbility', autoS) or 
           re.search(r'onPay', autoS) or # onPay effects are only useful before we go to the autoscripts, for the cost reduction.
           re.search(r'triggerNoisy', autoS) or # Trigger Noisy are used automatically during action use.
@@ -543,7 +544,7 @@ def autoscriptOtherPlayers(lookup, origin_card = Identity, count = 1): # Functio
       debugNotify("{}'s AS: {}".format(card,Autoscripts), 4) # Debug
       autoScriptSnapshot = list(Autoscripts)
       for autoS in autoScriptSnapshot: # Checking and removing anything other than whileRezzed or whileScored.
-         if not re.search(r'while(Rezzed|Scored|Running|Installed)', autoS): 
+         if not re.search(r'while(Rezzed|Scored|Running|Installed|InPlay)', autoS): 
             debugNotify("Card does not have triggered ability while in play. Aborting", 2) #Debug
             Autoscripts.remove(autoS)
          if not chkRunningStatus(autoS): Autoscripts.remove(autoS) # If the script only works while running a specific server, and we're not, then abort.

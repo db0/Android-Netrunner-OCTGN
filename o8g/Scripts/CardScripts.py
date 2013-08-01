@@ -2343,7 +2343,7 @@ The Source
 -----
 bc0f047c-01b1-427f-a439-d451eda03055
 -----
-whileInstalled:TrashMyself-foreachAgendaLiberated||whileInstalled:TrashMyself-foreachAgendaScored
+whileInPlay:Lose3Credits-isCost-foreachAgendaLiberated-typeAgenda||whileInPlay:TrashMyself-foreachAgendaLiberated-typeAgenda||whileInPlay:TrashMyself-foreachAgendaScored
 +++++
 
 .....
