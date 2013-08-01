@@ -1937,7 +1937,7 @@ bc0f047c-01b1-427f-a439-d451eda03003
 -----
 
 +++++
-A0B0G0T0:InstallMulti-Targeted-atICE-fromHand$$Draw999Cards
+A0B0G0T0:InstallMulti-Targeted-atICE-fromHand||Draw999Cards
 .....
 Director Haas' Pet Project
 -----
@@ -2289,7 +2289,7 @@ bc0f047c-01b1-427f-a439-d451eda03048
 -----
 
 +++++
-A0B1G0T0:SimplyAnnounce{break a barrier subroutine}||A0B1G0T0:Put1PlusOne	
+A0B1G0T0:SimplyAnnounce{break a barrier subroutine}||A0B2G0T0:Put1PlusOne	
 .....
 Professional Contacts
 -----

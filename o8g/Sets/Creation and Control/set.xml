@@ -47,7 +47,7 @@
 		<property name="Stat" value="12" />	
 		<property name="Rules" value="Before taking your first turn, you may install up to 3 pieces of ice, with no more than a single piece of ice per server. Draw until you have 5 cards in HQ." />
 		<property name="Flavor" value="" />
-		<property name="Instructions" value="" />
+		<property name="Instructions" value="Install up to three targeted ICE from hand||Refill hand to 5" />
 		<property name="Faction" value="Haas-Bioroid" />
 		<property name="Influence" value="" />
 		<property name="Side" value="Corp" />
@@ -767,7 +767,7 @@
 		<property name="Stat" value="1" />	
 		<property name="Rules" value="1 [Credits]: Break barrier subroutine.&#xD;2 [Credits]: +1 strength for the remainder of this run." />
 		<property name="Flavor" value="&quot;The Incans believed that the sun god resided in the Hanan Pacha, the upper realm of the cosmos. They just didn&#39;t know that the Hanan Pacha hadn&#39;t been discovered yet.&quot; - The Professor" />
-		<property name="Instructions" value="1 [Credit]: Break a barrier subroutine.||1 [Credits]: +1 strength for the remainder of this run." />
+		<property name="Instructions" value="1 [Credit]: Break a barrier subroutine.||2 [Credits]: +1 strength for the remainder of this run." />
 		<property name="Faction" value="Shaper" />
 		<property name="Influence" value="1" />
 		<property name="Side" value="Runner" />
