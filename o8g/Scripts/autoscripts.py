@@ -1615,6 +1615,7 @@ def RetrieveX(Autoscript, announceText, card, targetCards = None, notification =
             if re.search(r'-isTopmost', Autoscript) and len(cardList) == count: break # If we're selecting only the topmost cards, we select only the first matches we get.         
    debugNotify("cardList: {}".format([c.name for c in cardList]), 3)
    chosenCList = []
+   abortedRetrieve = False
    if len(cardList) > count:
       cardChoices = []
       cardTexts = []
@@ -1628,27 +1629,36 @@ def RetrieveX(Autoscript, announceText, card, targetCards = None, notification =
                cardChoices.append(c)
                cardTexts.append(c.Rules) 
          choice = SingleChoice("Choose card to retrieve{}".format({1:''}.get(count,' {} {}'.format(iter + 1,count))), makeChoiceListfromCardList(cardChoices), type = 'button')
-         chosenCList.append(cardChoices[choice])
-         cardList.remove(cardChoices[choice])
+         if choice == None: 
+            abortedRetrieve = True
+            break
+         else:
+            chosenCList.append(cardChoices[choice])
+            cardList.remove(cardChoices[choice])
    else: chosenCList = cardList
    debugNotify("chosenCList: {}".format(chosenCList), 2)
-   for c in chosenCList:
-      if destination == table: 
-         if re.search(r'-payCost',Autoscript): # This modulator means the script is going to pay for the card normally
-            preReducRegex = re.search(r'-reduc([0-9])',Autoscript) # this one means its going to reduce the cost a bit.
-            if preReducRegex: preReduc = num(preReducRegex.group(1))
-            else: preReduc = 0
-            payCost = 'not free'
-         else: 
-            preReduc = 0
-            payCost = 'free'         
-         intPlay(c, payCost, True, preReduc)
-      else: c.moveTo(destination)
-      tokensRegex = re.search(r'-with([A-Za-z0-9: ]+)', Autoscript) # If we have a -with in our autoscript, this is meant to put some tokens on the retrieved card.
-      if tokensRegex: TokensX('Put{}'.format(tokensRegex.group(1)), announceText,c, n = n) 
-   debugNotify("About to hide pile.", 2)
+   if not abortedRetrieve:
+      for c in chosenCList:
+         if destination == table: 
+            if re.search(r'-payCost',Autoscript): # This modulator means the script is going to pay for the card normally
+               preReducRegex = re.search(r'-reduc([0-9])',Autoscript) # this one means its going to reduce the cost a bit.
+               if preReducRegex: preReduc = num(preReducRegex.group(1))
+               else: preReduc = 0
+               payCost = 'not free'
+            else: 
+               preReduc = 0
+               payCost = 'free'         
+            intPlay(c, payCost, True, preReduc)
+         else: c.moveTo(destination)
+         tokensRegex = re.search(r'-with([A-Za-z0-9: ]+)', Autoscript) # If we have a -with in our autoscript, this is meant to put some tokens on the retrieved card.
+         if tokensRegex: TokensX('Put{}'.format(tokensRegex.group(1)), announceText,c, n = n) 
+   debugNotify("About to restore pile.", 2)
    if source == me.ScriptingPile: # If our source was the scripting pile, we know we just checked the R&D,
       for c in source: c.moveToBottom(targetPL.piles['R&D/Stack']) # So we return cards to their original location
+   if abortedRetrieve: #If the player canceled a retrieve effect from R&D / Stack, we make sure to shuffle their pile as well.
+      notify("{} has aborted the retrieval effect from {}".format(me,card))
+      if source == me.ScriptingPile: shuffle(targetPL.piles['R&D/Stack'])
+      return 'ABORT'
    debugNotify("About to announce.", 2)
    if len(chosenCList) == 0: announceString = "{} attempts to {} a card {}, but there were no valid targets.".format(announceText, destiVerb, sourcePath)
    else: announceString = "{} {} {} {}".format(announceText, destiVerb, [c.name for c in chosenCList], sourcePath)
