@@ -1,6 +1,13 @@
 Changelog - Android:Netrunner LCG OCTGN Game Definition
 ===============================================
 
+### 3.2.5.x
+
+* Next Design's ability now split into two parts, so that you don't see the new cards before you play the ICE
+* The Source will now trash itself upon agenda score and will cost 3 credits upon agenda theft.
+* Cancelling a tutor effect won't leave your deck in the scripting pile anymore.
+* Inti's +1 now costs 2 creds.
+
 ### 3.2.4.x
 
 * Escher won't peek at ICE at jack out anymore
