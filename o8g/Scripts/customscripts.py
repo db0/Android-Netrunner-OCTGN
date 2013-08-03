@@ -361,6 +361,7 @@ def CustomScript(card, action = 'PLAY'): # Scripts that are complex and fairly u
          return 'ABORT'
       if oncePerTurn(card) == 'ABORT': return 'ABORT'
       handICE = targetCards[0]
+      storeProperties(handICE)
       x,y = tableICE.position
       handICE.moveToTable(x,y,True)
       handICE.orientation = Rot90
@@ -421,6 +422,7 @@ def CustomScript(card, action = 'PLAY'): # Scripts that are complex and fairly u
          serverICE = 0
          debugNotify("About the place the cards in the new remote")
          for c in chosenCList:
+            storeProperties(c)
             if c.Type == 'ICE':
                c.moveToTable(x - (10 * playerside), 120 - (70 * serverICE),True)
                c.orientation = Rot90
@@ -454,12 +456,14 @@ def CustomScript(card, action = 'PLAY'): # Scripts that are complex and fairly u
       chosenC = installableCards[choice]
       previousGroup = pileName(chosenC.group)
       debugNotify("chosenC = {}".format(chosenC))
+      storeProperties(chosenC)
       debugNotify("About to move ICE behind the Howler")
       x,y = card.position
       chosenC.moveToTable(x, y + 40)
       chosenC.orientation = Rot90
       TokensX('Put1Howler-isSilent', "", card, [chosenC,card])
-      notify("{} wueaaAAAA! {} has awakened a {} from {} for the defense of this server!".format(uniSubroutine(),card,chosenC,previousGroup)) 
+      notify("{} wueaaAAAA! {} has awakened a {} from {} for the defense of this server!".format(uniSubroutine(),card,chosenC,previousGroup))
+      autoscriptOtherPlayers('CardInstall',chosenC)
    elif fetchProperty(card, 'name') == 'Awakening Center' and action == 'USE':
       targetList = [c for c in me.hand  # First we see if they've targeted a card from their hand
                      if c.targetedBy 
@@ -480,6 +484,7 @@ def CustomScript(card, action = 'PLAY'): # Scripts that are complex and fairly u
          TokensX('Put1AwakeningCenter-isSilent', "", selectedCard) # We add an Awakening Center counter to be able to trigger the rez the ice ability
          selectedCard.highlight = InactiveColor
          notify("{} has installed a Bioroid ICE in their {}".format(me,card))
+         autoscriptOtherPlayers('CardInstall',selectedCard)
       else: 
          whisper(":::ERROR::: You need to target a Bioroid ICE in your HQ before using this action")  
          return
