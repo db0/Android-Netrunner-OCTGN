@@ -464,6 +464,7 @@ def CustomScript(card, action = 'PLAY'): # Scripts that are complex and fairly u
       TokensX('Put1Howler-isSilent', "", card, [chosenC,card])
       notify("{} wueaaAAAA! {} has awakened a {} from {} for the defense of this server!".format(uniSubroutine(),card,chosenC,previousGroup))
       autoscriptOtherPlayers('CardInstall',chosenC)
+      autoscriptOtherPlayers('CardRezzed',chosenC)
    elif fetchProperty(card, 'name') == 'Awakening Center' and action == 'USE':
       targetList = [c for c in me.hand  # First we see if they've targeted a card from their hand
                      if c.targetedBy 
