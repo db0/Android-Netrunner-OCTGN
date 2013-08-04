@@ -318,7 +318,10 @@ def checkUnique (card):
       return True #If the played card isn't unique do nothing.
    cName = fetchProperty(card, 'name')
    ExistingUniques = [ c for c in table
-         if c.owner == me and c.isFaceUp and c.name == cName ]
+                       if c.owner == me 
+                       and c.controller == me 
+                       and c.isFaceUp 
+                       and c.name == cName ]
    if len(ExistingUniques) != 0 and not confirm("This unique card is already in play. Are you sure you want to play {}?\n\n(If you do, your existing unique card will be Trashed at no cost)".format(fetchProperty(card, 'name'))) : return False
    else:
       for uniqueC in ExistingUniques: trashForFree(uniqueC)

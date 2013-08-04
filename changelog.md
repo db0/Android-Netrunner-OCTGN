@@ -1,6 +1,16 @@
 Changelog - Android:Netrunner LCG OCTGN Game Definition
 ===============================================
 
+### 3.2.7.x
+
+* Fixed Dir. Haas getting trashed from runner's score pile when the corp rezzes a second one
+* Fixed Data Hound
+
+### 3.2.6.x
+
+* Howler and Awakening center will not trigger Alix
+* Howler will now trigger compromised employee and ice analyzer
+
 ### 3.2.5.x
 
 * Next Design's ability now split into two parts, so that you don't see the new cards before you play the ICE
