@@ -141,7 +141,7 @@ def goToEndTurn(group, x = 0, y = 0):
    endofturn = False
    newturn = False
    currClicks = 0
-   myCards = (card for card in table if card.controller == me and card.owner == me)
+   myCards = [card for card in table if card.controller == me and card.owner == me]
    for card in myCards: # We refresh once-per-turn cards to be used on the opponent's turn as well (e.g. Net Shield)
       if card._id in Stored_Type and fetchProperty(card, 'Type') != 'ICE': card.orientation &= ~Rot90
    atTimedEffects('End')
@@ -176,10 +176,10 @@ def goToSot (group, x=0,y=0):
    extraTXT = ''
    me.Clicks = modClicks(action = 'chk')
    lastKnownNrClicks = me.Clicks
-   myCards = (card for card in table if card.controller == me and card.owner == me)
+   myCards = [card for card in table if card.controller == me and card.owner == me]
    for card in myCards:
       if card._id in Stored_Type and fetchProperty(card, 'Type') != 'ICE': card.orientation &= ~Rot90 # Refresh all cards which can be used once a turn.
-      if card.name == 'card' and card.owner == me:
+      if card.Name == '?' and card.owner == me and not card.isFaceUp:
          debugNotify("Peeking() at goToSot()")
          card.peek() # We also peek at all our facedown cards which the runner accessed last turn (because they left them unpeeked)
    remoteServers = (card for card in table if card.Name == 'Remote Server')
