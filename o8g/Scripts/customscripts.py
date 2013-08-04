@@ -69,8 +69,8 @@ def UseCustomAbility(Autoscript, announceText, card, targetCards = None, notific
       for c in targetPL.piles['R&D/Stack']: c.isFaceUp = True 
       rnd(1,100) # Delay to be able to read card info
       if len(cardList) > 1:
-         notify(":> {}'s Data Hound is sniffing through {}'s Stack".format(me,trashedC,targetPL))
-         choice = SingleChoice("Choose card to trash", makeChoiceListfromCardList(cardList), type = 'button')
+         notify(":> {}'s Data Hound is sniffing through {}'s Stack".format(me,targetPL))
+         choice = SingleChoice("Choose card to trash", makeChoiceListfromCardList(cardList))
          trashedC = cardList.pop(choice)
       else: trashedC = cardList.pop(0)
       debugNotify("Trashing {}".format(trashedC), 2)
@@ -80,7 +80,7 @@ def UseCustomAbility(Autoscript, announceText, card, targetCards = None, notific
       idx = 0 # The index where we're going to be placing each card.
       while len(cardList) > 0:
          if len(cardList) == 1: choice = 0
-         else: choice = SingleChoice("Choose card put on the {} position of the Stack".format(numOrder(idx)), makeChoiceListfromCardList(cardList), type = 'button')
+         else: choice = SingleChoice("Choose card put on the {} position of the Stack".format(numOrder(idx)), makeChoiceListfromCardList(cardList))
          movedC = cardList.pop(choice)
          movedC.moveTo(targetPL.piles['R&D/Stack'],idx + 1) # If there's only one card left, we put it in the last available index location in the Stack. We always put the card one index position deeper, because the first card is the cover.
          idx += 1
