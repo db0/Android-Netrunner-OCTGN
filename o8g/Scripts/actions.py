@@ -165,32 +165,41 @@ def goToSot (group, x=0,y=0):
    if ds == None:
       whisper ("Please perform the game setup first (Ctrl+Shift+S)")
       return
-   #if debugVerbosity >= 1: notify("turncount = {}".format(turnCount())) #Debug (not yet implemented)
    if not me.isActivePlayer:
       if turn != 0 and not confirm("You opponent does not seem to have finished their turn properly with F12 yet. Continue?"): return
       else: me.setActivePlayer()
-   atTimedEffects('PreStart')
+   try: atTimedEffects('PreStart') # Trying to figure out where #275 is coming from
+   except: notify(":::ERROR::: When executing PreStart scripts")
    currClicks = 0 # We wipe it again just in case they ended their last turn badly but insist on going through the next one.
-   #clicksReduce = findCounterPrevention(maxClicks, 'Clicks', me) # Checking if the player has any effects which force them to forfeit clicks.
-   #if clicksReduce: extraTXT = " ({} forfeited)".format(clicksReduce)
-   extraTXT = ''
-   me.Clicks = modClicks(action = 'chk')
+   try: # Trying to figure out where #275 is coming from
+      getMaxClicks = modClicks(action = 'chk')
+      if getMaxClicks == 'ABORT': 
+         if ds == 'corp' me.Clicks = 3
+         else: me.Clicks = 4
+      else: me.Clicks = getMaxClicks
+   except: 
+      notify(":::ERROR::: When executing PreStart scripts")
+      if getMaxClicks == 'ABORT': 
+         if ds == 'corp' me.Clicks = 3
+         else: me.Clicks = 4      
    lastKnownNrClicks = me.Clicks
-   myCards = [card for card in table if card.controller == me and card.owner == me]
-   for card in myCards:
-      if card._id in Stored_Type and fetchProperty(card, 'Type') != 'ICE': card.orientation &= ~Rot90 # Refresh all cards which can be used once a turn.
-      if card.Name == '?' and card.owner == me and not card.isFaceUp:
-         debugNotify("Peeking() at goToSot()")
-         card.peek() # We also peek at all our facedown cards which the runner accessed last turn (because they left them unpeeked)
+   try: # Trying to figure out where #275 is coming from
+      myCards = [card for card in table if card.controller == me and card.owner == me]
+      for card in myCards:
+         if card._id in Stored_Type and fetchProperty(card, 'Type') != 'ICE': card.orientation &= ~Rot90 # Refresh all cards which can be used once a turn.
+         if card.Name == '?' and card.owner == me and not card.isFaceUp:
+            debugNotify("Peeking() at goToSot()")
+            card.peek() # We also peek at all our facedown cards which the runner accessed last turn (because they left them unpeeked)
+   except: notify(":::ERROR::: When trying to refresh cards")
    remoteServers = (card for card in table if card.Name == 'Remote Server')
    for card in remoteServers: card.setController(me) # At the start of each player's turn, we swap the ownership of all remote server, to allow them to double-click them (If they're a runner) or manipulate them (if they're a corp)
    newturn = True
    turn += 1
    autoRez()
    atTimedEffects('Start') # Check all our cards to see if there's any Start of Turn effects active.
-   if ds == "corp": notify("=> The offices of {} ({}) are now open for business. They have {} and {} {} for this turn{}.".format(identName,me,uniCredit(me.Credits),me.Clicks,uniClick(),extraTXT))
+   if ds == "corp": notify("=> The offices of {} ({}) are now open for business. They have {} and {} {} for this turn.".format(identName,me,uniCredit(me.Credits),me.Clicks,uniClick()))
    else:
-      notify ("=> {} ({}) has woken up. They have {} and {} {} for this turn{}.".format(identName,me,uniCredit(me.Credits),me.Clicks,uniClick(),extraTXT))
+      notify ("=> {} ({}) has woken up. They have {} and {} {} for this turn.".format(identName,me,uniCredit(me.Credits),me.Clicks,uniClick()))
       if chkTags(): notify(":::Reminder::: {} is Tagged!".format(identName))
    opponent = ofwhom('onOpponent')
    if turn == 1:
