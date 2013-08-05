@@ -169,18 +169,18 @@ def goToSot (group, x=0,y=0):
       if turn != 0 and not confirm("You opponent does not seem to have finished their turn properly with F12 yet. Continue?"): return
       else: me.setActivePlayer()
    try: atTimedEffects('PreStart') # Trying to figure out where #275 is coming from
-   except: notify(":::ERROR::: When executing PreStart scripts")
+   except: notify(":::ERROR::: When executing PreStart scripts. Please report at: https://github.com/db0/Android-Netrunner-OCTGN/issues/275")
    currClicks = 0 # We wipe it again just in case they ended their last turn badly but insist on going through the next one.
    try: # Trying to figure out where #275 is coming from
       getMaxClicks = modClicks(action = 'chk')
       if getMaxClicks == 'ABORT': 
-         if ds == 'corp' me.Clicks = 3
+         if ds == 'corp': me.Clicks = 3
          else: me.Clicks = 4
       else: me.Clicks = getMaxClicks
    except: 
-      notify(":::ERROR::: When executing PreStart scripts")
+      notify(":::ERROR::: When setting max clicks. Please report at: https://github.com/db0/Android-Netrunner-OCTGN/issues/275")
       if getMaxClicks == 'ABORT': 
-         if ds == 'corp' me.Clicks = 3
+         if ds == 'corp': me.Clicks = 3
          else: me.Clicks = 4      
    lastKnownNrClicks = me.Clicks
    try: # Trying to figure out where #275 is coming from
@@ -190,7 +190,7 @@ def goToSot (group, x=0,y=0):
          if card.Name == '?' and card.owner == me and not card.isFaceUp:
             debugNotify("Peeking() at goToSot()")
             card.peek() # We also peek at all our facedown cards which the runner accessed last turn (because they left them unpeeked)
-   except: notify(":::ERROR::: When trying to refresh cards")
+   except: notify(":::ERROR::: When trying to refresh cards. Please report at: https://github.com/db0/Android-Netrunner-OCTGN/issues/275")
    remoteServers = (card for card in table if card.Name == 'Remote Server')
    for card in remoteServers: card.setController(me) # At the start of each player's turn, we swap the ownership of all remote server, to allow them to double-click them (If they're a runner) or manipulate them (if they're a corp)
    newturn = True

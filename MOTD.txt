@@ -1,9 +1,8 @@
 =====Message of the Day======
 
-Creation and Control is now Rezzed! Restart your clients to receive the update.
+There seems to be a bug breaking the runner's Start of Turn (F1).
 
-NOTE: Modded and Shipment from mirrormorph changed how they work.
-      Now you need to target the cards you want in your hand, and then play those card which will automatically install appropriately.
-      
-As this was a big coding job, please let me know if any bugs slipped through.
+If you experience it, please take a screenshot and report it on github on the dedicared issue report.
+
+Thanks for helping me track and fix this.
 =============================
