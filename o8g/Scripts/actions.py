@@ -97,8 +97,8 @@ def modClicks(group = table,x=0,y=0,targetPL = me, count = 1, action = 'interact
    while getGlobalVariable('Max Clicks') == 'CHECKED OUT':
       rnd(1,10)
       loopWait += 1
-      if loopWait == 10: 
-         delayed_whisper(":::ERROR::: cannot check out the max clicks variable. Try again later")
+      if loopWait == 15: 
+         notify(":::ERROR::: cannot check out the max clicks variable. Try again later")
          return 'ABORT'
    maxClicksDict = eval(getGlobalVariable('Max Clicks'))
    setGlobalVariable('Max Clicks','CHECKED OUT')
@@ -109,6 +109,10 @@ def modClicks(group = table,x=0,y=0,targetPL = me, count = 1, action = 'interact
       notify("{} has set their Max Clicks to {} per turn".format(me,count))
    elif action == 'increment': maxClicksDict[targetPL.name] += count 
    elif action == 'set to': maxClicksDict[targetPL.name] = count
+   if maxClicksDict.get(targetPL.name,'NULL') == 'NULL': # If the value has not been set, we reset it to avoid a crash.
+      notify(":::WARNING::: {}'s Max Clicks were not set. Setting at the default value".format(targetPL))
+      if targetPL.getGlobalVariable('ds') == 'corp': maxClicksDict[targetPL.name] = 3
+      else: maxClicksDict[targetPL.name] = 4
    setGlobalVariable('Max Clicks',str(maxClicksDict)) # Clear any feinted targets
    debugNotify("<<< modClicks() with return {}".format(maxClicksDict[targetPL.name])) #Debug
    return maxClicksDict[targetPL.name]
