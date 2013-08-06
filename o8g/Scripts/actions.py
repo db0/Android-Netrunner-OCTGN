@@ -183,9 +183,8 @@ def goToSot (group, x=0,y=0):
       else: me.Clicks = getMaxClicks
    except: 
       notify(":::ERROR::: When setting max clicks. Please report at: https://github.com/db0/Android-Netrunner-OCTGN/issues/275")
-      if getMaxClicks == 'ABORT': 
-         if ds == 'corp': me.Clicks = 3
-         else: me.Clicks = 4      
+      if ds == 'corp': me.Clicks = 3
+      else: me.Clicks = 4      
    lastKnownNrClicks = me.Clicks
    try: # Trying to figure out where #275 is coming from
       myCards = [card for card in table if card.controller == me and card.owner == me]
