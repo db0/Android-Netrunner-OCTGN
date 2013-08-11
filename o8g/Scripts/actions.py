@@ -338,6 +338,7 @@ def intJackin(group, x = 0, y = 0):
    shuffle(me.piles['R&D/Stack']) # And another one just to be sure
    executePlayScripts(Identity,'STARTUP')
    initGame()
+   setleague(manual = False) # Check if this is a league match
 
 def checkDeck(group):
    debugNotify(">>> checkDeck(){}".format(extraASDebug())) #Debug

@@ -410,6 +410,7 @@ def resetAll(): # Clears all the global variables in order to start a new game.
    installedCount.clear()
    setGlobalVariable('CurrentTraceEffect','None')
    setGlobalVariable('CorpTraceValue','None')
+   setGlobalVariable('League','')
    newturn = False 
    endofturn = False
    currClicks = 0
@@ -664,18 +665,23 @@ def versionCheck():
       
 def MOTD():
    debugNotify(">>> MOTD()") #Debug
-   if me.name == 'db0' or me.name == 'dbzer0': return #I can't be bollocksed
+   #if me.name == 'db0' or me.name == 'dbzer0': return #I can't be bollocksed
    (MOTDurl, MOTDcode) = webRead('https://raw.github.com/db0/Android-Netrunner-OCTGN/master/MOTD.txt')
    (DYKurl, DYKcode) = webRead('https://raw.github.com/db0/Android-Netrunner-OCTGN/master/DidYouKnow.txt')
-   if (MOTDcode != 200 or not MOTDurl) or (DYKcode !=200 or not DYKurl):
-      whisper(":::WARNING::: Cannot fetch MOTD or DYK info at the moment.")
+   if MOTDcode != 200 or not MOTDurl:
+      whisper(":::WARNING::: Cannot fetch MOTD info at the moment.")
       return
-   DYKlist = DYKurl.split('||')
-   DYKrnd = rnd(0,len(DYKlist)-1)
-   while MOTDdisplay(MOTDurl,DYKlist[DYKrnd]) == 'MORE': 
-      MOTDurl = '' # We don't want to spam the MOTD for the further notifications
-      DYKrnd += 1
-      if DYKrnd == len(DYKlist): DYKrnd = 0
+   if getSetting('MOTD', 'UNSET') != MOTDurl: # If we've already shown the player the MOTD already, we don't do it again.
+      setSetting('MOTD', MOTDurl) # We store the current MOTD so that we can check next time if it's the same.
+      if DYKcode !=200 or not DYKurl:
+         whisper(":::WARNING::: Cannot fetch DYK info at the moment.")
+         return
+      DYKlist = DYKurl.split('||')
+      DYKrnd = rnd(0,len(DYKlist)-1)
+      while MOTDdisplay(MOTDurl,DYKlist[DYKrnd]) == 'MORE': 
+         MOTDurl = '' # We don't want to spam the MOTD for the further notifications
+         DYKrnd += 1
+         if DYKrnd == len(DYKlist): DYKrnd = 0
    debugNotify("<<< MOTD()", 3) #Debug
    
 def MOTDdisplay(MOTD,DYK):
@@ -720,13 +726,12 @@ def reportGame(result = 'AgendaVictory'): # This submits the game results online
    gameEnded = getGlobalVariable('gameEnded')
    if gameEnded == 'True':
      if not confirm("Your game already seems to have finished once before. Do you want to change the results to '{}' for {}?".format(result,me.name)): return
-   #LEAGUE = fetchLeagues()
-   LEAGUE = '' #Disabled as I don't think I need this part of the code anymore.
    PLAYER = me.name # Seeting some variables for readability in the URL
    id = getSpecial('Identity',me)
    IDENTITY = id.Subtitle
    RESULT = result
    GNAME = currentGameName()
+   LEAGUE = getGlobalVariable('League')
    if result == 'Flatlined' or result == 'Conceded' or result == 'DeckDefeat': WIN = 0
    else: WIN = 1
    SCORE = me.counters['Agenda Points'].value
@@ -792,31 +797,34 @@ def reportGame(result = 'AgendaVictory'): # This submits the game results online
    notify("Thanks for playing. Please submit any bugs or feature requests on github.\n-- https://github.com/db0/Android-Netrunner-OCTGN/issues")
    debugNotify("<<< reportGame()", 3) #Debug
 
-def fetchLeagues():
-   debugNotify(">>> fetchLeagues()") #Debug
-   #return '' ### Code still WiP! Remove this at 1.1.16
-   (LeagueTXT, LeagueCode) = webRead('https://raw.github.com/db0/Android-Netrunner-OCTGN/master/Leagues.txt')
-   if LeagueCode != 200 or not LeagueTXT:
-      whisper(":::WARNING::: Cannot check League Details online.")
-      return ''
-   if LeagueTXT == "No Leagues Ongoing": return
-   leaguesSplit = LeagueTXT.split('-----') # Five dashes separate on league from another
-   opponent = ofwhom('onOpponent')
-   for league in leaguesSplit:
-      leagueMatches = league.split('\n')
-      debugNotify("League Linebreak Splits: {}".format(leagueMatches), 4)
-      for matchup in leagueMatches:
-         if re.search(r'{}'.format(me.name),matchup, re.IGNORECASE) and re.search(r'{}'.format(opponent.name),matchup, re.IGNORECASE): #Check if the player's name exists in the league
-            leagueDetails = league.split('=====') # Five equals separate the league name from its participants
-            timeDetails = leagueDetails[1].strip() # We grab the time after which the matchup are not valid anymore.
-            endTimes = timeDetails.split('.')
-            currenttime = time.gmtime(time.time())
-            debugNotify("Current Time:{}\n### End Times:{}".format(currenttime,endTimes), 2) #Debug
-            if endTimes[0] >= currenttime[0] and endTimes[1] >= currenttime[1] and endTimes[2] >= currenttime[2] and endTimes[3] >= currenttime[3] and endTimes[4] >= currenttime[4]:          
-               if confirm("Was this a match for the {} League?".format(leagueDetails[0])):
-                  return leagueDetails[0] # If we matched a league, the return the first entry in the list, which is the league name.
-   return '' # If we still haven't found a league name, it means the player is not listed as taking part in a league.
-   
+def setleague(group = table, x=0,y=0, manual = True):
+   debugNotify(">>> setleague()") #Debug
+   mute()
+   league = getGlobalVariable('League')
+   origLeague = league
+   debugNotify("global var = {}".format(league))
+   if league == '': # If there is no league set, we attempt to find out the league name from the game name
+      for leagueTag in knownLeagues:
+         if re.search(r'{}'.format(leagueTag),currentGameName()): league = leagueTag
+   debugNotify("League after automatic check: {}".format(league))
+   if manual:
+      if not confirm("Do you want to set this match to count for an active league\n(Pressing 'No' will unset this match from all leagues)"): league = ''
+      else:
+         choice = SingleChoice('Please Select One the Active Leagues', [knownLeagues[leagueTag] for leagueTag in knownLeagues])
+         if choice != None: league = [leagueTag for leagueTag in knownLeagues][choice]
+   debugNotify("League after manual check: {}".format(league))
+   debugNotify("Comparing with origLeague: {}".format(origLeague))
+   if origLeague != league:
+      if manual: 
+         if league ==  '': notify("{} sets this match as casual".format(me))
+         else: notify("{} sets this match to count for the {}".format(me,knownLeagues[league]))
+      elif league != '': notify(":::LEAGUE::: This match will be recorded for the the {}. (press Ctrl+Alt+L to unset)".format(knownLeagues[league]))
+   elif manual: 
+         if league == '': delayed_whisper("Game is already casual.")
+         else: delayed_whisper("Game already counts for the {}".format(me,knownLeagues[league]))
+   setGlobalVariable('League',league)
+   debugNotify(">>> setleague() with league: {}".format(league)) #Debug
+         
 def fetchCardScripts(group = table, x=0, y=0): # Creates 2 dictionaries with all scripts for all cards stored, based on a web URL or the local version if that doesn't exist.
    debugNotify(">>> fetchCardScripts()") #Debug
    global CardsAA, CardsAS # Global dictionaries holding Card AutoActions and Card AutoScripts for all cards.

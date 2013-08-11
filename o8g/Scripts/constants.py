@@ -157,3 +157,6 @@ StealthColor = "#000000" # Cards which are in play but not active yer (e.g. see 
 
 Xaxis = 'x'
 Yaxis = 'y'
+
+knownLeagues = {'BGG-L02'        : 'Acceletated Beta League' # The known leagues. Now the game will confirm this was a league match before submitting.
+               }
