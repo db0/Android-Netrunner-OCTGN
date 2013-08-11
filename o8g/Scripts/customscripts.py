@@ -338,17 +338,14 @@ def CustomScript(card, action = 'PLAY'): # Scripts that are complex and fairly u
    elif fetchProperty(card, 'name') == "Deep Thought" and action == 'Start':
       if card.markers[mdict['Virus']] and card.markers[mdict['Virus']] >= 3:
          targetPL = findOpponent()
-         debugNotify("Turning Corp's Top card Face Up", 2)
-         cover = table.create("ac3a3d5d-7e3a-4742-b9b2-7f72596d9c1b",0,0,1,True) 
-         cover.moveTo(targetPL.piles['R&D/Stack'])
-         cardView = targetPL.piles['R&D/Stack'][1]
-         cardView.isFaceUp = True
+         debugNotify("Moving Corp's Top card to our Scripting Pile", 2)
+         cardView = targetPL.piles['R&D/Stack'].top()
+         cardView.moveTo(me.ScriptingPile)
          rnd(1,10)
-         delayed_whisper(":> Deep Thought: {} is upcoming! Ommm...".format(cardView))
          notify(":> Deep Thought has revealed the top card of R&D to {}".format(me))
+         delayed_whisper(":> Deep Thought: {} is upcoming! Ommm...".format(cardView))
          rnd(1,10)
-         cardView.isFaceUp = False
-         cover.moveTo(shared.exile) # we cannot delete cards so we just hide it.
+         cardView.moveTo(targetPL.piles['R&D/Stack'])
    elif fetchProperty(card, 'name') == "Midori" and action == 'USE':
       targetCards = findTarget('Targeted-atICE-isMutedTarget')
       if not len(targetCards):
