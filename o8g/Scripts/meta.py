@@ -666,13 +666,13 @@ def versionCheck():
 def MOTD():
    debugNotify(">>> MOTD()") #Debug
    #if me.name == 'db0' or me.name == 'dbzer0': return #I can't be bollocksed
-   (MOTDurl, MOTDcode) = webRead('https://raw.github.com/db0/Android-Netrunner-OCTGN/master/MOTD.txt')
+   (MOTDurl, MOTDcode) = webRead('https://raw.github.com/db0/Android-Netrunner-OCTGN/master/MOTD.txt',3000)
    if MOTDcode != 200 or not MOTDurl:
       whisper(":::WARNING::: Cannot fetch MOTD info at the moment.")
       return
    if getSetting('MOTD', 'UNSET') != MOTDurl: # If we've already shown the player the MOTD already, we don't do it again.
       setSetting('MOTD', MOTDurl) # We store the current MOTD so that we can check next time if it's the same.
-      (DYKurl, DYKcode) = webRead('https://raw.github.com/db0/Android-Netrunner-OCTGN/master/DidYouKnow.txt')
+      (DYKurl, DYKcode) = webRead('https://raw.github.com/db0/Android-Netrunner-OCTGN/master/DidYouKnow.txt',3000)
       if DYKcode !=200 or not DYKurl:
          whisper(":::WARNING::: Cannot fetch DYK info at the moment.")
          return
@@ -707,7 +707,7 @@ def MOTDdisplay(MOTD,DYK):
 def initGame(): # A function which prepares the game for online submition
    debugNotify(">>> initGame()") #Debug
    if getGlobalVariable('gameGUID') != 'None': return #If we've already grabbed a GUID, then just use that.
-   (gameInit, initCode) = webRead('http://84.205.248.92/slaghund/init.slag')
+   (gameInit, initCode) = webRead('http://84.205.248.92/slaghund/init.slag',3000)
    if initCode != 200:
       #whisper("Cannot grab GameGUID at the moment!") # Maybe no need to inform players yet.
       return
