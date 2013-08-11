@@ -1,6 +1,11 @@
 Changelog - Android:Netrunner LCG OCTGN Game Definition
 ===============================================
 
+### 3.2.8.x
+
+* Trashing a program hosted in the omni-drive should now restore the omni-drive's MU
+* Research Station won't reduce your hand size when trashed from HQ/R&D
+
 ### 3.2.7.x
 
 * Fixed Dir. Haas getting trashed from runner's score pile when the corp rezzes a second one
