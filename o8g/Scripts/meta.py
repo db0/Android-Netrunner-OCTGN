@@ -363,7 +363,7 @@ def clearAttachLinks(card):
    debugNotify("Checking if the card is attached to unlink.", 2)      
    if hostCards.has_key(card._id):
       hostCard = Card(hostCards[card._id])
-      if re.search(r'Daemon',getKeywords(hostCard)) and hostCard.group == table: 
+      if (re.search(r'Daemon',getKeywords(hostCard)) or re.search(r'CountsAsDaemon', CardsAS.get(hostCard.model,''))) and hostCard.group == table: 
          if card.markers[mdict['DaemonMU']] and not re.search(r'Daemon',getKeywords(card)):
             hostCard.markers[mdict['DaemonMU']] += card.markers[mdict['DaemonMU']] # If the card was hosted by a Daemon, we return any Daemon MU's used.
          DaemonHosted = findMarker(card,'Daemon Hosted MU')

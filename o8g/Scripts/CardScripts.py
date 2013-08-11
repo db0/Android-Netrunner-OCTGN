@@ -730,7 +730,7 @@ Research Station
 -----
 bc0f047c-01b1-427f-a439-d451eda01105
 -----
-whileRezzed:Gain2Hand Size
+onRez:Gain2Hand Size||onTrash:Lose2Hand Size-ifActive
 +++++
 	
 .....
