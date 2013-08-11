@@ -8,7 +8,7 @@ Changelog - Android:Netrunner LCG OCTGN Game Definition
 
 ### 3.2.6.x
 
-* Howler and Awakening center will not trigger Alix
+* Howler and Awakening center will now trigger Alix
 * Howler will now trigger compromised employee and ice analyzer
 
 ### 3.2.5.x
