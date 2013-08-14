@@ -3,6 +3,13 @@ Changelog - Android:Netrunner LCG OCTGN Game Definition
 
 ### 3.2.8.x
 
+* Each new MOTD will only appear once to the player
+* Game will now announce during setup if it's a league match or not
+* Added a new action (Ctrl+Alt+A) to manually set or unset the match from a league
+
+
+### 3.2.8.x
+
 * Trashing a program hosted in the omni-drive should now restore the omni-drive's MU
 * Research Station won't reduce your hand size when trashed from HQ/R&D
 

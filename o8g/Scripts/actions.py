@@ -21,6 +21,7 @@
 
 import re
 import collections
+import time
 
 
 #---------------------------------------------------------------------------
@@ -2259,6 +2260,7 @@ def showatrandom(group = None, count = 1, targetPL = None, silent = False, cover
       if card.controller != me: # If we're revealing a card from another player's hand, we grab its properties before we put it on the table, as as not to give away if we're scanning it right now or not.
          card.isFaceUp = True
          storeProperties(card, forced = False)
+      time.sleep(1)
       if card == None:
          notify(":::Info:::{} has no more cards in their hand to reveal".format(targetPL))
          break
