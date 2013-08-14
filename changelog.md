@@ -1,7 +1,14 @@
 Changelog - Android:Netrunner LCG OCTGN Game Definition
 ===============================================
 
-### 3.2.8.x
+### 3.2.10.x
+
+* HQ access now adds larger artificial delay after each pick to obscure whether the runner has seen the same card in HQ before
+* HQ will now be shuffled before runner access.
+* Tested HQ Access randomness. [It works fine you monkeys](http://boardgamegeek.com/article/13122604#13122604)!
+
+
+### 3.2.9.x
 
 * Each new MOTD will only appear once to the player
 * Game will now announce during setup if it's a league match or not
