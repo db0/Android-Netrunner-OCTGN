@@ -906,6 +906,7 @@ def TrialError(group, x=0, y=0): # Debugging
       whisper("This function is only for development purposes")
       return
    ######## Testing Corner ########
+   #testHandRandom()
    ###### End Testing Corner ######
    delayed_whisper("## Defining Test Cards")
    testcards = [
@@ -1015,3 +1016,17 @@ def ShowPosC(card, x=0,y=0):
 def controlChange(card,x,y):
    if card.controller != me: card.setController(me)
    else: card.setController(findOpponent())
+   
+def testHandRandom():
+   if confirm("Run Hand random alg?"):
+      randomsList = []
+      notify("About to fill list")
+      for iter in range(len(me.hand)): randomsList.append(0)
+      notify("about to iter 100")
+      for i in range(500):
+         c = me.hand.random()
+         for iter in range(len(me.hand)):            
+            if c == me.hand[iter]: 
+               randomsList[iter] += 1
+               break
+      notify("randomsList: {}".format(randomsList))
