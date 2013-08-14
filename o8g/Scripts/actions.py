@@ -2255,6 +2255,10 @@ def showatrandom(group = None, count = 1, targetPL = None, silent = False, cover
    elif count > len(group):
       whisper(":::WARNING::: {} has only {} cards in their hand.".format(targetPL,len(group)))
       count = len(group)
+   if group == targetPL.hand:
+      for c in group:  c.moveTo(targetPL.ScriptingPile)        
+      targetPL.ScriptingPile.shuffle()
+      for c in targetPL.ScriptingPile: c.moveTo(targetPL.hand)
    for iter in range(count):
       card = group.random()
       if card.controller != me: # If we're revealing a card from another player's hand, we grab its properties before we put it on the table, as as not to give away if we're scanning it right now or not.
@@ -2292,7 +2296,7 @@ def mulligan(group):
    notify("{} is taking a Mulligan...".format(me))
    groupToDeck(group,silent = True)
    resetAll()
-   for i in range(2):
+   for i in range(1):
       shuffle(me.piles['R&D/Stack']) # We do a good shuffle this time.
       rnd(1,10)
       whisper("Shuffling...")
