@@ -5,6 +5,9 @@ Changelog - Android:Netrunner LCG OCTGN Game Definition
 
 * Made all pop-up warnings once-only
 * Removed game action to hide newbie warning since they're all disabled after the first time now
+* The Source and Chakana will now increase advancement costs
+* Fixed Crash Space not properly trashing when triggered during damage
+* Fixed Mulligan not shuffling correctly on single player.
 
 ### 3.2.10.x
 
