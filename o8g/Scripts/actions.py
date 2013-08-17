@@ -2297,8 +2297,8 @@ def mulligan(group):
    groupToDeck(group,silent = True)
    resetAll()
    for i in range(1):
-      shuffle(me.piles['R&D/Stack']) # We do a good shuffle this time.
       rnd(1,10)
+      shuffle(me.piles['R&D/Stack']) # We do a good shuffle this time.
       whisper("Shuffling...")
    drawMany(me.piles['R&D/Stack'], 5)
    executePlayScripts(Identity,'MULLIGAN')
