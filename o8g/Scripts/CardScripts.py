@@ -58,7 +58,7 @@ Access to Globalsec
 -----
 bc0f047c-01b1-427f-a439-d451eda01052
 -----
-whileRezzed:Gain1Base Link
+whileInstalled:Gain1Base Link
 +++++
 	
 .....
@@ -106,7 +106,7 @@ Akamatsu Mem Chip
 -----
 bc0f047c-01b1-427f-a439-d451eda01038
 -----
-whileRezzed:Gain1MU
+whileInstalled:Gain1MU
 +++++
 
 .....
@@ -250,7 +250,7 @@ Crash Space
 -----
 bc0f047c-01b1-427f-a439-d451eda01030
 -----
-onInstall:Put2Credits||whileRezzed:Reduce#CostDeltag-affectsAll-excludeDummy-forMe||atTurnPreStart:Refill2Credits-excludeDummy-duringMyTurn||onDamage:Put3protectionMeatDMG-trashCost-excludeDummy
+onInstall:Put2Credits||whileInstalled:Reduce#CostDeltag-affectsAll-excludeDummy-forMe||atTurnPreStart:Refill2Credits-excludeDummy-duringMyTurn||onDamage:Put3protectionMeatDMG-trashCost-excludeDummy
 +++++
 A0B0G0T1:CreateDummy-with3protectionMeatDMG-trashCost
 .....
@@ -266,7 +266,7 @@ Cyberfeeder
 -----
 bc0f047c-01b1-427f-a439-d451eda01005
 -----
-onInstall:Put1Credits-isSilent||whileRezzed:Reduce#CostUse-affectsIcebreaker-forMe||whileRezzed:Reduce#CostInstall-affectsVirus-forMe||atTurnPreStart:Refill1Credits-duringMyTurn
+onInstall:Put1Credits-isSilent||whileInstalled:Reduce#CostUse-affectsIcebreaker-forMe||whileInstalled:Reduce#CostInstall-affectsVirus-forMe||atTurnPreStart:Refill1Credits-duringMyTurn
 +++++
 	
 .....
@@ -330,7 +330,7 @@ Desperado
 -----
 bc0f047c-01b1-427f-a439-d451eda01024
 -----
-whileRezzed:Gain1MU||atSuccessfulRun:Gain1Credits
+whileInstalled:Gain1MU||atSuccessfulRun:Gain1Credits
 +++++
 	
 .....
@@ -418,7 +418,7 @@ Grimoire
 -----
 bc0f047c-01b1-427f-a439-d451eda01006
 -----
-whileRezzed:Gain2MU||whileRezzed:Put1Virus-foreachCardInstall-onTriggerCard-typeVirus
+whileInstalled:Gain2MU||whileInPlay:Put1Virus-foreachCardInstall-onTriggerCard-typeVirus
 +++++
 A0B0G0T0:Put1Virus-Targeted-atProgram_and_Virus
 .....
@@ -426,7 +426,7 @@ Haas-Bioroid
 -----
 bc0f047c-01b1-427f-a439-d451eda01054
 -----
-whileRezzed:Gain1Credits-foreachCardInstall-byMe-onlyOnce
+whileInPlay:Gain1Credits-foreachCardInstall-byMe-onlyOnce
 +++++
 	
 .....
@@ -514,7 +514,7 @@ Jinteki
 -----
 bc0f047c-01b1-427f-a439-d451eda01067
 -----
-whileRezzed:Inflict1NetDamage-onOpponent-foreachAgendaScored||whileRezzed:Inflict1NetDamage-onOpponent-foreachAgendaLiberated
+whileInPlay:Inflict1NetDamage-onOpponent-foreachAgendaScored||whileInPlay:Inflict1NetDamage-onOpponent-foreachAgendaLiberated
 +++++
 	
 .....
@@ -522,7 +522,7 @@ Kate "Mac" McCaffrey
 -----
 bc0f047c-01b1-427f-a439-d451eda01033
 -----
-whileRezzed:Reduce1CostInstall-affectsHardware-onlyOnce-forMe||whileRezzed:Reduce1CostInstall-affectsProgram-onlyOnce-forMe||whileRezzed:Pass-foreachCardInstall-typeProgram_or_Hardware-byMe-onlyOnce
+whileInstalled:Reduce1CostInstall-affectsHardware-onlyOnce-forMe||whileInstalled:Reduce1CostInstall-affectsProgram-onlyOnce-forMe||whileInPlay:Pass-foreachCardInstall-typeProgram_or_Hardware-byMe-onlyOnce
 +++++
 	
 .....
@@ -634,7 +634,7 @@ Noise
 -----
 bc0f047c-01b1-427f-a439-d451eda01001
 -----
-whileRezzed:Draw1Card-toTrash-ofOpponent-foreachCardInstall-typeVirus-byMe
+whileInPlay:Draw1Card-toTrash-ofOpponent-foreachCardInstall-typeVirus-byMe
 +++++
 	
 .....
@@ -714,7 +714,7 @@ Rabbit Hole
 -----
 bc0f047c-01b1-427f-a439-d451eda01039
 -----
-whileRezzed:Gain1Base Link||onInstall:CustomScript
+whileInstalled:Gain1Base Link||onInstall:CustomScript
 +++++
 	
 .....
@@ -914,7 +914,7 @@ Weyland Consortium
 -----
 bc0f047c-01b1-427f-a439-d451eda01093
 -----
-whileRezzed:Gain1Credits-foreachCardPlay-typeTransaction-byMe
+whileInPlay:Gain1Credits-foreachCardPlay-typeTransaction-byMe
 +++++
 	
 .....
@@ -1074,7 +1074,7 @@ The Helpful AI
 -----
 bc0f047c-01b1-427f-a439-d451eda02008
 -----
-whileRezzed:Gain1Base Link
+whileInstalled:Gain1Base Link
 +++++
 A0B0G0T1:Put2PlusOne-Targeted-atIcebreaker
 .....
@@ -1098,7 +1098,7 @@ Haas-Bioroid
 -----
 bc0f047c-01b1-427f-a439-d451eda02010
 -----
-whileRezzed:Put1PlusOnePerm-foreachCardRezzed-onTriggerCard-typeBioroid_and_ICE||whileRezzed:Remove1PlusOnePerm-foreachCardDerezzed-onTriggerCard-typeBioroid_and_ICE
+whileInPlay:Put1PlusOnePerm-foreachCardRezzed-onTriggerCard-typeBioroid_and_ICE||whileInPlay:Remove1PlusOnePerm-foreachCardDerezzed-onTriggerCard-typeBioroid_and_ICE
 +++++
 
 .....
@@ -1138,7 +1138,7 @@ Compromised Employee
 -----
 bc0f047c-01b1-427f-a439-d451eda02025
 -----
-onInstall:Put1Credits-isSilent||atTurnPreStart:Refill1Credits-duringMyTurn||whileInstalled:Reduce#CostTrace-affectsAll-forMe||whileInstalled:Gain1Credits-foreachCardRezzed-typeICE
+onInstall:Put1Credits-isSilent||atTurnPreStart:Refill1Credits-duringMyTurn||whileInstalled:Reduce#CostTrace-affectsAll-forMe||whileInPlay:Gain1Credits-foreachCardRezzed-typeICE
 +++++
 
 .....
@@ -1146,7 +1146,7 @@ Dyson Mem Chip
 -----
 bc0f047c-01b1-427f-a439-d451eda02028
 -----
-whileRezzed:Gain1Base Link$$Gain1MU
+whileInstalled:Gain1Base Link$$Gain1MU
 +++++
 
 .....
@@ -1322,7 +1322,7 @@ Public Sympathy
 -----
 bc0f047c-01b1-427f-a439-d451eda02050
 -----
-whileRezzed:Gain2Hand Size
+whileInstalled:Gain2Hand Size
 +++++
 
 .....
@@ -1442,7 +1442,7 @@ Scrubber
 -----
 bc0f047c-01b1-427f-a439-d451eda02063
 -----
-onInstall:Put2Credits-isSilent||atTurnPreStart:Refill2Credits-duringMyTurn||whileRezzed:Reduce#CostTrash-affectsAll-forMe
+onInstall:Put2Credits-isSilent||atTurnPreStart:Refill2Credits-duringMyTurn||whileInstalled:Reduce#CostTrash-affectsAll-forMe
 +++++
 
 .....
@@ -1450,7 +1450,7 @@ Doppelganger
 -----
 bc0f047c-01b1-427f-a439-d451eda02064
 -----
-whileRezzed:Gain1MU
+whileInstalled:Gain1MU
 +++++
 A0B0G0T2:RunEnd-isSilent$$RunGeneric
 .....
@@ -1482,7 +1482,7 @@ Inside Man
 -----
 bc0f047c-01b1-427f-a439-d451eda02068
 -----
-onInstall:Put2Credits-isSilent||atTurnPreStart:Refill2Credits-duringMyTurn||whileRezzed:Reduce#CostInstall-affectsHardware-forMe
+onInstall:Put2Credits-isSilent||atTurnPreStart:Refill2Credits-duringMyTurn||whileInstalled:Reduce#CostInstall-affectsHardware-forMe
 +++++
 
 .....
@@ -1594,7 +1594,7 @@ Xanadu
 -----
 bc0f047c-01b1-427f-a439-d451eda02082
 -----
-whileRezzed:Increase1CostRez-affectsAll-isICE-forOpponent
+whileInstalled:Increase1CostRez-affectsAll-isICE-forOpponent
 +++++
 
 .....
@@ -1642,7 +1642,7 @@ Replicator
 -----
 bc0f047c-01b1-427f-a439-d451eda02088
 -----
-whileRezzed:UseCustomAbility-foreachCardInstall-onTriggerCard-typeHardware-byMe
+whileInPlay:UseCustomAbility-foreachCardInstall-onTriggerCard-typeHardware-byMe
 +++++
 
 .....
@@ -1975,7 +1975,7 @@ Alix T4LB07
 -----
 bc0f047c-01b1-427f-a439-d451eda03008
 -----
-whileRezzed:Put1Power-foreachCardInstall-byMe
+whileInPlay:Put1Power-foreachCardInstall-byMe
 +++++
 A1B0G0T1:Gain2Credits-perMarker{Power}
 .....
@@ -2231,7 +2231,7 @@ Cloak
 -----
 bc0f047c-01b1-427f-a439-d451eda03041
 -----
-onInstall:Put1Credits-isSilent||whileRezzed:Reduce#CostUse-affectsIcebreaker-forMe||atTurnPreStart:Refill1Credits-duringMyTurn
+onInstall:Put1Credits-isSilent||whileInstalled:Reduce#CostUse-affectsIcebreaker-forMe||atTurnPreStart:Refill1Credits-duringMyTurn
 +++++
 
 .....
@@ -2263,7 +2263,7 @@ Paricia
 -----
 bc0f047c-01b1-427f-a439-d451eda03045
 -----
-onInstall:Put2Credits-isSilent||atTurnPreStart:Refill2Credits-duringMyTurn||whileRezzed:Reduce#CostTrash-affectsAsset-forMe
+onInstall:Put2Credits-isSilent||atTurnPreStart:Refill2Credits-duringMyTurn||whileInstalled:Reduce#CostTrash-affectsAsset-forMe
 +++++
 
 .....
@@ -2303,7 +2303,7 @@ Borrowed Satellite
 -----
 bc0f047c-01b1-427f-a439-d451eda03050
 -----
-whileRezzed:Gain1Hand Size$$Gain1Base Link
+whileInstalled:Gain1Hand Size$$Gain1Base Link
 +++++
 
 .....
@@ -2311,7 +2311,7 @@ Ice Analyzer
 -----
 bc0f047c-01b1-427f-a439-d451eda03051
 -----
-whileRezzed:Reduce#CostInstall-affectsProgram-forMe||whileInstalled:Put1Credits-foreachCardRezzed-typeICE
+whileInstalled:Reduce#CostInstall-affectsProgram-forMe||whileInPlay:Put1Credits-foreachCardRezzed-typeICE
 +++++
 
 .....
