@@ -591,16 +591,6 @@ def switchUniCode(group,x=0,y=0,command = 'Off'):
       whisper("Credits and Clicks will now be displayed as Unicode.".format(me))
       UniCode = True
 
-def ImAProAtThis(group = table, x=0, y=0):
-   debugNotify(">>> ImAProAtThis(){}".format(extraASDebug())) #Debug
-   setSetting('DMGwarn',False)
-   setSetting('Dummywarn',False)
-   setSetting('ExposeTargetsWarn',False)
-   setSetting('RevealandShuffleWarn',False)
-   setSetting('DummyTrashWarn',False)
-   setSetting('PriorityInform',False)
-   whisper("-- All Newbie warnings have been disabled. Play safe.")
-
 #------------------------------------------------------------------------------
 # Help functions
 #------------------------------------------------------------------------------

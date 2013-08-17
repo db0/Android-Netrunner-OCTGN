@@ -4,6 +4,7 @@ Changelog - Android:Netrunner LCG OCTGN Game Definition
 ### 3.2.11.x
 
 * Made all pop-up warnings once-only
+* Removed game action to hide newbie warning since they're all disabled after the first time now
 
 ### 3.2.10.x
 

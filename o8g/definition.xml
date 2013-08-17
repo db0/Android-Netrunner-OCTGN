@@ -77,7 +77,6 @@
          <groupaction menu="Switch Automatic Damage Prevention ON/OFF" default="False" execute="switchPreventDMGAutomation" />  
          <groupaction menu="Switch Automatic Triggers ON/OFF" default="False" execute="switchTriggersAutomation" />  
          <groupaction menu="Switch Custom Forms ON/OFF" default="False" execute="switchWinForms" />  
-         <groupaction menu="Disable all &quot;Newbie&quot; Warnings" default="False" shortcut="Ctrl+Shift+N" execute="ImAProAtThis" />  
          <groupaction menu="Re-Scan table" default="False" execute="scanTable" />
          <groupaction menu="Re-Download all card automations" default="False" execute="fetchCardScripts" />
          <groupaction menu="Debug" default="False" shortcut="Ctrl+Shift+D" execute="TrialError" /> 
