@@ -1,6 +1,10 @@
 Changelog - Android:Netrunner LCG OCTGN Game Definition
 ===============================================
 
+### 3.2.11.x
+
+* Made all pop-up warnings once-only
+
 ### 3.2.10.x
 
 * HQ access now adds larger artificial delay after each pick to obscure whether the runner has seen the same card in HQ before

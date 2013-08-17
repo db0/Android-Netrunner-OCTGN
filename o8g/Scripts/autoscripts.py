@@ -1351,7 +1351,6 @@ def SimplyAnnounce(Autoscript, announceText, card, targetCards = None, notificat
 def CreateDummy(Autoscript, announceText, card, targetCards = None, notification = None, n = 0): # Core Command for creating dummy cards.
    debugNotify(">>> CreateDummy(){}".format(extraASDebug(Autoscript))) #Debug
    if targetCards is None: targetCards = []
-   global Dummywarn
    global Stored_Name, Stored_Type, Stored_Cost, Stored_Keywords, Stored_AutoActions, Stored_autoScripts
    dummyCard = None
    action = re.search(r'\bCreateDummy[A-Za-z0-9_ -]*(-with)(?!onOpponent|-doNotTrash|-nonUnique)([A-Za-z0-9_ -]*)', Autoscript)
@@ -1360,17 +1359,17 @@ def CreateDummy(Autoscript, announceText, card, targetCards = None, notification
    for c in table:
       if c.model == card.model and c.controller == targetPL and c.highlight == DummyColor: dummyCard = c # We check if already have a dummy of the same type on the table.
    if not dummyCard or re.search(r'nonUnique',Autoscript): #Some create dummy effects allow for creating multiple copies of the same card model.
-      if Dummywarn and re.search('onOpponent',Autoscript):
+      if getSetting('Dummywarn',True) and re.search('onOpponent',Autoscript):
          if not confirm("This action creates an effect for your opponent and a way for them to remove it.\
                        \nFor this reason we've created a dummy card on the table and marked it with a special highlight so that you know that it's just a token.\
                      \n\nYou opponent can activate any abilities meant for them on the Dummy card. If this card has one, they can activate it by double clicking on the dummy. Very often, this will often remove the dummy since its effect will disappear.\
                      \n\nOnce the   dummy card is on the table, please right-click on it and select 'Pass control to {}'\
-                     \n\nDo you want to see this warning again?".format(targetPL)): Dummywarn = False      
-      elif Dummywarn:
+                     \n\nDo you want to see this warning again?".format(targetPL)): setSetting('Dummywarn',False)
+      elif getSetting('Dummywarn',True):
          if not confirm("This card's effect requires that you trash it, but its lingering effects will only work automatically while a copy is in play.\
                        \nFor this reason we've created a dummy card on the table and marked it with a special highlight so that you know that it's just a token.\
                      \n\nSome cards provide you with an ability that you can activate after they're been trashed. If this card has one, you can activate it by double clicking on the dummy. Very often, this will often remove the dummy since its effect will disappear.\
-                     \n\nDo you want to see this warning again?"): Dummywarn = False
+                     \n\nDo you want to see this warning again?"): setSetting('Dummywarn',False)
       elif re.search(r'onOpponent', Autoscript): information('The dummy card just created is meant for your opponent. Please right-click on it and select "Pass control to {}"'.format(targetPL))
       dummyCard = table.create(card.model, -680, 200 * playerside, 1) # This will create a fake card like the one we just created.
       dummyCard.highlight = DummyColor
@@ -1520,7 +1519,7 @@ def ModifyStatus(Autoscript, announceText, card, targetCards = None, notificatio
 def InflictX(Autoscript, announceText, card, targetCards = None, notification = None, n = 0): # Core Command for inflicting Damage to players (even ourselves)
    debugNotify(">>> InflictX(){}".format(extraASDebug(Autoscript))) #Debug
    if targetCards is None: targetCards = []
-   global DMGwarn, failedRequirement
+   global failedRequirement
    localDMGwarn = True #A variable to check if we've already warned the player during this damage dealing.
    action = re.search(r'\b(Inflict)([0-9]+)(Meat|Net|Brain)Damage', Autoscript) # Find out what kind of damage we're going
    multiplier = per(Autoscript, card, n, targetCards)
@@ -1533,13 +1532,13 @@ def InflictX(Autoscript, announceText, card, targetCards = None, notification = 
    else: DMG = (num(action.group(2)) * multiplier) + enhancer #Calculate our damage
    preventTXT = ''
    if DMG and Automations['Damage']: #The actual effects happen only if the Damage automation switch is ON. It should be ON by default.
-      if DMGwarn and localDMGwarn:
+      if getSetting('DMGwarn',True) and localDMGwarn:
          localDMGwarn = False # We don't want to warn the player for every point of damage.
          if targetPL != me: notify(":::ATTENTION::: {} is about to inflict {} {} Damage to {}!".format(me,DMG,action.group(3),targetPL))
          if not confirm(":::Warning::: You are about to inflict automatic damage!\
                        \nBefore you do that, please make sure that your target is not currently manipulating their hand or this might cause the game to crash.\
                      \n\nImportant: Before proceeding, ask your target to activate any cards they want that add protection against this type of damage. If this is yourself, please make sure you do this before you activate damage effects.\
-                     \n\nDo you want this warning message will to appear again next time you do damage? (Recommended)"): DMGwarn = False
+                     \n\nDo you want this warning message will to appear again next time you do damage? (Recommended)"): setSetting('DMGwarn',False)
       if re.search(r'nonPreventable', Autoscript): 
          DMGprevented = 0
          preventTXT = ' (Unpreventable)'
@@ -1974,7 +1973,6 @@ def makeChoiceListfromCardList(cardList,includeText = False, includeGroup = Fals
    
 def chkWarn(card, Autoscript): # Function for checking that an autoscript announces a warning to the player
    debugNotify(">>> chkWarn(){}".format(extraASDebug(Autoscript))) #Debug
-   global AfterRunInf, AfterTraceInf
    warning = re.search(r'warn([A-Z][A-Za-z0-9 ]+)-?', Autoscript)
    if debugVerbosity >= 2:  notify("About to check warning")
    if warning:
@@ -1997,16 +1995,6 @@ def chkWarn(card, Autoscript): # Function for checking that an autoscript announ
          if not confirm("This card performs a lot of complex clicks that will very difficult to undo. Are you sure you want to proceed?"):
             whisper("--> Aborting action.")
             return 'ABORT'
-      if warning.group(1) == 'AfterRun': 
-         information("Some cards, like the one you just played, have a secondary effect that only works if your run is successful.\
-                       \nIn those cases, usually the secondary effect has been scripted as well, but you will need to manually activate it. To do so, just double click on the Event card you used to start the run.\
-                     \n\n(This message will not appear again.)")
-         AfterRunInf = False  
-      if warning.group(1) == 'AfterTrace': 
-         information("Some cards, like the one you just played, have a secondary effect that only works if your trace is successful.\
-                       \nIn those cases, usually the secondary effect has been scripted as well, but you will need to manually activate it. To do so, just double click on the Operation card you used to start the trace.\
-                     \n\n(This message will not appear again.)")
-         AfterTraceInf = False  
    debugNotify("<<< chkWarn() gracefully", 3) 
    return 'OK'
 

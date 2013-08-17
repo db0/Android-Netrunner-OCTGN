@@ -46,16 +46,9 @@ autoRezFlags = [] # A dictionary which holds cards that the corp has set to Auto
 scoredAgendas = 0
 currClicks = 0
 
-DMGwarn = True # A boolean varialbe to track whether we've warned the player about doing automatic damage.
-Dummywarn = True # Much like above, but it serves to remind the player not to trash some cards.
-DummyTrashWarn = True
 PriorityInform = True # Explains what the "prioritize card" action does.
-ExposeTargetsWarn = True # A boolean variable that reminds the player to select multiple targets to expose for used by specific cards like Encryption Breakthrough
-RevealandShuffleWarn = True # Similar to above.
 newturn = True #We use this variable to track whether a player has yet to do anything this turn.
 endofturn = False #We use this variable to know if the player is in the end-of-turn phase.
-AfterRunInf = True # A warning to remind players that some actions have effects that need to be activated after a run.
-AfterTraceInf = True # Similar to above
 lastKnownNrClicks = 0 # A Variable keeping track of what the engine thinks our action counter should be, in case we change it manually.
 SuccessfulRun = False # Set by the runner when a run is successful, in order to avoid asking the player every time.
 
@@ -1688,7 +1681,7 @@ def clearAll(markersOnly = False, allPlayers = False): # Just clears all the pla
 
 def intTrashCard(card, stat, cost = "not free",  ClickCost = '', silent = False):
    debugNotify(">>> intTrashCard(){}".format(extraASDebug())) #Debug
-   global trashEasterEggIDX, DummyTrashWarn
+   global trashEasterEggIDX
    mute()
    MUtext = ""
    rc = ''
@@ -1715,10 +1708,10 @@ def intTrashCard(card, stat, cost = "not free",  ClickCost = '', silent = False)
          card.moveToBottom(cardowner.piles['Heap/Archives(Face-up)'])
          trashEasterEggIDX = 0
          return 'ABORT'
-   if card.highlight == DummyColor and DummyTrashWarn and not silent and not confirm(":::Warning!:::\n\nYou are about to trash a dummy card. You will not be able to restore it without using the effect that created it originally.\n\nAre you sure you want to proceed? (This message will not appear again)"):
-      DummyTrashWarn = False
+   if card.highlight == DummyColor and getSetting('DummyTrashWarn',True) and not silent and not confirm(":::Warning!:::\n\nYou are about to trash a dummy card. You will not be able to restore it without using the effect that created it originally.\n\nAre you sure you want to proceed? (This message will not appear again)"):
+      setSetting('DummyTrashWarn',False)
       return
-   else: DummyTrashWarn = False
+   else: setSetting('DummyTrashWarn',False)
    if cost != 'free': reduction = reduceCost(card, 'TRASH', num(stat)) # So as not to waste time.
    else: reduction = 0
    if reduction > 0: extraText = " (reduced by {})".format(uniCredit(reduction))
@@ -1900,11 +1893,10 @@ def useCard(card,x=0,y=0):
 
 def prioritize(card,x=0,y=0):
    debugNotify(">>> prioritize(){}".format(extraASDebug())) #Debug
-   global PriorityInform
    if card.highlight == None:
       card.highlight = PriorityColor
       notify ("{} prioritizes {} for using counters automatically.".format(me,card))
-      if PriorityInform:
+      if getSetting('PriorityInform',True):
          information("This action prioritizes a card for when selecting which card will use its counters from automated effects\
                     \nSuch automated effects include losing counters from stealth cards for using noisy icebreakers, or preventing damage\
                   \n\nSelecting a card for priority gives it first order in the pick. So it will use its counters before any other card will\
@@ -1912,7 +1904,7 @@ def prioritize(card,x=0,y=0):
                   \n\nFinally, if any part of the effect is left requiring the use of counters, any card without priority or targeted will be used.\
                   \n\nKeep this in mind if you wish to fine tune which cards use their counter automatically first\
                     \n(This message will not appear again)")
-         PriorityInform = False
+         setSetting('PriorityInform',False)
    else:
       if card.highlight == DummyColor:
          information(":::ERROR::: This highlight signifies that this card is a lingering effect left behind from the original\
@@ -2115,7 +2107,6 @@ def intPlay(card, cost = 'not free', scripted = False, preReduction = 0):
 
 def chkTargeting(card):
    debugNotify(">>> chkTargeting(){}".format(extraASDebug())) #Debug
-   global ExposeTargetsWarn, RevealandShuffleWarn
    if (re.search(r'on(Rez|Play|Install)[^|]+(?<!Auto)Targeted', CardsAS.get(card.model,''))
          and len(findTarget(CardsAS.get(card.model,''))) == 0
          and not re.search(r'isOptional', CardsAS.get(card.model,''))
@@ -2128,24 +2119,24 @@ def chkTargeting(card):
    if re.search(r'ifTagged', CardsAS.get(card.model,'')) and runnerPL.Tags == 0 and not re.search(r'isOptional', CardsAS.get(card.model,'')):
       whisper("{} must be tagged in order to use this card".format(runnerPL))
       return 'ABORT'
-   if re.search(r'isExposeTarget', CardsAS.get(card.model,'')) and ExposeTargetsWarn:
+   if re.search(r'isExposeTarget', CardsAS.get(card.model,'')) and getSetting('ExposeTargetsWarn',True):
       if confirm("This card will automatically provide a bonus depending on how many non-exposed derezzed cards you've selected.\
                 \nMake sure you've selected all the cards you wish to expose and have peeked at them before taking this action\
                 \nSince this is the first time you take this action, you have the opportunity now to abort and select your targets before traying it again.\
               \n\nDo you want to abort this action?\
                 \n(This message will not appear again)"):
-         ExposeTargetsWarn = False
+         setSetting('ExposeTargetsWarn',False)
          return 'ABORT'
-      else: ExposeTargetsWarn = False # Whatever happens, we don't show this message again.
-   if re.search(r'Reveal&Shuffle', CardsAS.get(card.model,'')) and RevealandShuffleWarn:
+      else: setSetting('ExposeTargetsWarn',False) # Whatever happens, we don't show this message again.
+   if re.search(r'Reveal&Shuffle', CardsAS.get(card.model,'')) and getSetting('RevealandShuffleWarn',True):
       if confirm("This card will automatically provide a bonus depending on how many cards you selected to reveal (i.e. place on the table) from your hand.\
                 \nMake sure you've selected all the cards (of any specific type required) you wish to reveal to the other players\
                 \nSince this is the first time you take this action, you have the opportunity now to abort and select your targets before trying it again.\
               \n\nDo you want to abort this action?\
                 \n(This message will not appear again)"):
-         RevealandShuffleWarn = False
+         setSetting('RevealandShuffleWarn',False)
          return 'ABORT'
-      else: RevealandShuffleWarn = False # Whatever happens, we don't show this message again.
+      else: setSetting('RevealandShuffleWarn',False) # Whatever happens, we don't show this message again.
    if re.search(r'HandTarget', CardsAS.get(card.model,'')) or re.search(r'HandTarget', CardsAA.get(card.model,'')):
       hasTarget = False
       for c in me.hand:

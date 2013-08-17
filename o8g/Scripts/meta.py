@@ -593,15 +593,12 @@ def switchUniCode(group,x=0,y=0,command = 'Off'):
 
 def ImAProAtThis(group = table, x=0, y=0):
    debugNotify(">>> ImAProAtThis(){}".format(extraASDebug())) #Debug
-   global DMGwarn, Dummywarn, DummyTrashWarn, ExposeTargetsWarn, RevealandShuffleWarn, PriorityInform, AfterRunInf, AfterTraceInf
-   DMGwarn = False 
-   Dummywarn = False 
-   ExposeTargetsWarn = False
-   RevealandShuffleWarn = False
-   DummyTrashWarn = False
-   PriorityInform = False
-   AfterRunInf = False
-   AfterTraceInf = False
+   setSetting('DMGwarn',False)
+   setSetting('Dummywarn',False)
+   setSetting('ExposeTargetsWarn',False)
+   setSetting('RevealandShuffleWarn',False)
+   setSetting('DummyTrashWarn',False)
+   setSetting('PriorityInform',False)
    whisper("-- All Newbie warnings have been disabled. Play safe.")
 
 #------------------------------------------------------------------------------
