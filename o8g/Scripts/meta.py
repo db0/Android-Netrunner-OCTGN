@@ -390,6 +390,24 @@ def sendToTrash(card, pile = None): # A function which takes care of sending a c
    else: card.moveTo(pile)
    debugNotify("<<< sendToTrash()", 3) #Debug   
    
+def findAgendaRequirement(card):
+   mute()
+   debugNotify(">>> findAgendaRequirement() for card: {}".format(card)) #Debug
+   AdvanceReq = num(fetchProperty(card, 'Cost'))
+   for c in table:
+      for autoS in CardsAS.get(c.model,'').split('||'):
+         if re.search(r'whileInPlay', autoS):
+            advanceModRegex = re.search(r'(Increase|Decrease)([0-9])Advancement', autoS)
+            if advanceModRegex:
+               debugNotify("advanceModRegex = {} ".format(advanceModRegex.groups()))
+               if re.search(r'onlyOnce',autoS) and c.orientation == Rot90: continue # If the card has a once per-turn ability which has been used, ignore it
+               if (re.search(r'excludeDummy',autoS) or re.search(r'CreateDummy',autoS)) and c.highlight == DummyColor: continue
+               advanceMod = num(advanceModRegex.group(2)) * {'Decrease': -1}.get(advanceModRegex.group(1),1) * per(autoS, c, 0, findTarget(autoS, card = card))
+               debugNotify("advanceMod = {}".format(advanceMod))
+               AdvanceReq += advanceMod
+               if advanceMod: delayed_whisper("-- {} {}s advance requirement by {}".format(c,advanceModRegex.group(1),advanceMod))
+   debugNotify("<<< findAgendaRequirement() with return {}".format(AdvanceReq)) #Debug
+   return AdvanceReq
    
 def resetAll(): # Clears all the global variables in order to start a new game.
    global Stored_Name, Stored_Type, Stored_Cost, Stored_Keywords, Stored_AutoActions, Stored_AutoScripts
@@ -525,7 +543,6 @@ def orgAttachments(card):
       for attachment in cardAttachements: notify("{} index = {}".format(attachment,attachment.getIndex)) # Debug
    debugNotify("<<< orgAttachments()", 3) #Debug      
      
-
 #------------------------------------------------------------------------------
 # Switches
 #------------------------------------------------------------------------------
@@ -910,8 +927,8 @@ def TrialError(group, x=0, y=0): # Debugging
    ###### End Testing Corner ######
    delayed_whisper("## Defining Test Cards")
    testcards = [
+                "bc0f047c-01b1-427f-a439-d451eda03043", 
                 "bc0f047c-01b1-427f-a439-d451eda03055", 
-                "bc0f047c-01b1-427f-a439-d451eda03041", 
                 "bc0f047c-01b1-427f-a439-d451eda03041", 
                 "bc0f047c-01b1-427f-a439-d451eda03041", 
                 "bc0f047c-01b1-427f-a439-d451eda01005", 

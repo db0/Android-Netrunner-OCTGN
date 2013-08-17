@@ -2061,7 +2061,7 @@ def per(Autoscript, card = None, count = 0, targetCards = None, notification = N
    if not targetCards: targetCards = []
    div = 1
    ignore = 0
-   
+   max = 0 # A maximum of 0 means no limit   
    per = re.search(r'\b(per|upto)(Target|Host|Every)?([A-Z][^-]*)-?', Autoscript) # We're searching for the word per, and grabbing all after that, until the first dash "-" as the variable. 
    if per and not re.search(r'<.*?(per|upto).*?>',Autoscript): # If the  search was successful...
                                                                # We ignore "per" between <> as these are trace effects and are not part of the same script
@@ -2125,11 +2125,18 @@ def per(Autoscript, card = None, count = 0, targetCards = None, notification = N
       debugNotify("Checking div", 2) # Debug.            
       divS = re.search(r'-div([0-9]+)',Autoscript)
       if divS: div = num(divS.group(1))
+      debugNotify("Checking max") # Debug.            
+      maxS = re.search(r'-max([0-9]+)',Autoscript)
+      if maxS: max = num(maxS.group(1))
    else: 
       debugNotify("no per")
       multiplier = 1
+   finalMultiplier = (multiplier - ignore) / div
+   if max and finalMultiplier > max: 
+      debugNotify("Reducing Multiplier to Max",2)
+      finalMultiplier = max
    debugNotify("<<< per() with Multiplier: {}".format((multiplier - ignore) / div), 2) # Debug
-   return (multiplier - ignore) / div
+   return finalMultiplier
 
 def ifHave(Autoscript,controller = me,silent = False):
 # A functions that checks if a player has a specific property at a particular level or not and returns True/False appropriately

@@ -2247,7 +2247,7 @@ Chakana
 -----
 bc0f047c-01b1-427f-a439-d451eda03043
 -----
-atSuccessfulRun:Put1Virus-ifSuccessfulRunR&D
+atSuccessfulRun:Put1Virus-ifSuccessfulRunR&D||whileInPlay:Increase1Advancement-perMarker{Virus}-div3-max1
 +++++
 
 .....
@@ -2343,7 +2343,7 @@ The Source
 -----
 bc0f047c-01b1-427f-a439-d451eda03055
 -----
-whileInPlay:Lose3Credits-isCost-foreachAgendaLiberated-typeAgenda||whileInPlay:TrashMyself-foreachAgendaLiberated-typeAgenda||whileInPlay:TrashMyself-foreachAgendaScored
+whileInPlay:Lose3Credits-isCost-foreachAgendaLiberated-typeAgenda||whileInPlay:TrashMyself-foreachAgendaLiberated-typeAgenda||whileInPlay:TrashMyself-foreachAgendaScored||whileInPlay:Increase1Advancement
 +++++
 
 .....

@@ -1182,7 +1182,7 @@ def scrAgenda(card, x = 0, y = 0,silent = False):
    if ds == 'runner': agendaTxt = 'LIBERATE'
    else: agendaTxt = 'SCORE'
    if fetchProperty(card, 'Type') == "Agenda":
-      if ds == 'corp' and card.markers[mdict['Advancement']] < num(fetchProperty(card, 'Cost')):
+      if ds == 'corp' and card.markers[mdict['Advancement']] < findAgendaRequirement(card):
          if confirm("You have not advanced this agenda enough to score it. Bypass?"):
             cheapAgenda = True
             currentAdv = card.markers[mdict['Advancement']]
