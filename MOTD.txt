@@ -1,13 +1,5 @@
 =====Message of the Day======
 
-The Accelerated Beta League is now running and I've just made a change that should will cut down on the statistical mistakes and bad game names.
+The Source and Chakana have now been automated to increase the advancement costs of Agendas.
 
-Every time your start a match that has [BGG-L02] (or any other active league or tournament tag) in the game title, the game announce that this is a league match
-
-If you do not see any such message, it means you named you game incorrectly. 
-No worries! You can now press Ctrl+Alt+L to manually set your game to count for a specific active league or even set it as a casual game if you changed your mind.
-
-Another change is that now you don't have to see the MOTDs every time you start a new session. They will only appear if you haven't seen them before
-
-This means that if a MOTD pops-up, it's definitelly something new and you should take the time to read it.
 =============================
