@@ -484,7 +484,7 @@ def placeCard(card, action = 'INSTALL', hostCard = None, type = None):
       if loopsNR and place[type][3] != 1: offset = 15 * (loopsNR % 3) # This means that in one loop the offset is going to be 0 and in another 15.
       else: offset = 0
       debugNotify("installedCount[type] is: {}.\nLoopsNR is: {}.\nLoopback is: {}\nOffset is: {}".format(installedCount[type],offset, loopback, offset), 3) #Debug
-      card.moveToTable(place[type][0] + (((cwidth(card,0) + place[type][2]) * (installedCount[type] - loopback)) + offset) * place[type][4],place[type][1],CfaceDown) 
+      card.moveToTable(((place[type][0] + (((cwidth(card,0) + place[type][2]) * (installedCount[type] - loopback)) + offset) * place[type][4]) * flipBoard) + flipModX,(place[type][1] * flipBoard) + flipModY,CfaceDown) 
       # To explain the above, we place the card at: Its original location
       #                                             + the width of the card
       #                                             + a predefined distance from each other times the number of other cards of the same type
@@ -529,7 +529,7 @@ def orgAttachments(card):
       else: 
          debugNotify("attachment.isFaceUp = {}".format(attachment.isFaceUp))
          cFaceDown = False # If we're moving corp cards to the table, we generally move them face down
-      attachment.moveToTable(x + (xAlg * attNR), y + (yAlg * attNR),cFaceDown)
+      attachment.moveToTable(x + ((xAlg * attNR) * flipBoard), y + ((yAlg * attNR) * flipBoard),cFaceDown)
       if cFaceDown and attachment.owner == me: 
          debugNotify("Peeking() at orgAttachments()")
          attachment.peek() # If we moved our own card facedown to the table, we peek at it.

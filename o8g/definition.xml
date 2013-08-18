@@ -4,7 +4,7 @@
       name="Android-Netrunner" 
       id="0f38e453-26df-4c04-9d67-6d43de939c77" 
       octgnVersion="3.1.0.0" 
-      version="3.2.11.0" 
+      version="3.2.11.11" 
       markersize="20"
       tags="asymmetric cyberpunk LCG bluff duel"
       description="Android: Netrunner is an asymmetrical cyberpunk Card Game for two players.
@@ -17,6 +17,7 @@
       iconurl="https://raw.github.com/db0/Android-Netrunner-OCTGN/master/ANR_box.jpg">
    <scripts>
       <script src="Scripts/actions.py" />
+      <script src="Scripts/events.py" />
       <script src="Scripts/constants.py" />
       <script src="Scripts/autoscripts.py" />
       <script src="Scripts/customscripts.py" />
@@ -24,6 +25,9 @@
       <script src="Scripts/meta.py" />
       <script src="Scripts/CardScripts.py" />
    </scripts>
+   <events>
+       <event name="OnLoadDeck" action="chkSideFlip" />
+   </events>
    <fonts>
        <font src="Fonts/CyberpunkIsNotDead_ANR.ttf" size="11" target="context"/> <!--menu-->
        <font src="Fonts/ANR_symbols_only-enlarged.ttf" size="12" target="chat"/> <!--chat-->

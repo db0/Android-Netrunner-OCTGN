@@ -421,11 +421,11 @@ def CustomScript(card, action = 'PLAY'): # Scripts that are complex and fairly u
          for c in chosenCList:
             storeProperties(c)
             if c.Type == 'ICE':
-               c.moveToTable(x - (10 * playerside), 120 - (70 * serverICE),True)
+               c.moveToTable(x - (10 * flipBoard), (120 * flipBoard) + flipModY - (70 * serverICE * playerside),True)
                c.orientation = Rot90
                serverICE += 1
             else:
-               c.moveToTable(x - (serverRoot * 30), 255,True)
+               c.moveToTable(x - (serverRoot * 30 * flipBoard), (255 * flipBoard) + flipModY,True)
                serverRoot += 1
             debugNotify("Peeking() at Director Haas' Pet Project")
             c.peek()
@@ -456,7 +456,7 @@ def CustomScript(card, action = 'PLAY'): # Scripts that are complex and fairly u
       storeProperties(chosenC)
       debugNotify("About to move ICE behind the Howler")
       x,y = card.position
-      chosenC.moveToTable(x, y + 40)
+      chosenC.moveToTable(x, y + (40 * flipBoard))
       chosenC.orientation = Rot90
       TokensX('Put1Howler-isSilent', "", card, [chosenC,card])
       notify("{} wueaaAAAA! {} has awakened a {} from {} for the defense of this server!".format(uniSubroutine(),card,chosenC,previousGroup))

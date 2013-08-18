@@ -27,7 +27,6 @@ import time
 #---------------------------------------------------------------------------
 # Global variables
 #---------------------------------------------------------------------------
-ds = None # The side of the player. 'runner' or 'corp'
 identName = None # The name of our current identity
 Identity = None
 ModifyDraw = 0 #if True the audraw should warn the player to look at r&D instead
@@ -265,12 +264,11 @@ def createStartingCards():
 
 def intJackin(group, x = 0, y = 0):
    debugNotify(">>> intJackin(){}".format(extraASDebug())) #Debug
-   global ds, Identity
+   global Identity
    mute()
    if not startupMsg: fetchCardScripts() # We only download the scripts at the very first setup of each play session.
    versionCheck()
-   if ds and not confirm("Are you sure you want to setup for a new game? (This action should only be done after a table reset)"): return
-   ds = None
+   if Identity and not confirm("Are you sure you want to setup for a new game? (This action should only be done after a table reset)"): return
    if not table.isTwoSided() and not confirm(":::WARNING::: This game is designed to be played on a two-sided table. Things will be extremely uncomfortable otherwise!! Please start a new game and makde sure the  the appropriate button is checked. Are you sure you want to continue?"): return
    chooseSide()
    #for type in Automations: switchAutomation(type,'Announce') # Too much spam.
@@ -282,21 +280,9 @@ def intJackin(group, x = 0, y = 0):
    debugNotify("Reseting Variables", 3)
    resetAll()
    debugNotify("Placing Identity", 3)
-   for card in me.hand:
-      if card.Type != 'Identity':
-         whisper(":::Warning::: You are not supposed to have any non-Identity cards in your hand when you start the game")
-         card.moveToBottom(me.piles['R&D/Stack'])
-         continue
-      else:
-         ds = card.Side.lower()
-         storeSpecial(card)
-         me.setGlobalVariable('ds', ds)
    if not ds:
-      confirm("You need to have your identity card in your hand when you try to setup the game. If you have it in your deck, please look for it and put it in your hand before running this function again")
+      information("::: ERROR::: No identify found in your deck! Please load a deck which contains an identity card.")
       return
-   debugNotify("Giving Possible Warning", 3)
-   if (ds == 'corp' and me.hasInvertedTable()) or (ds == 'runner' and not me.hasInvertedTable()):
-      if not confirm(":::ERROR::: Due to engine limitations, the corp player must always be player [A] in order to properly utilize the board. Please start a new game and make sure you've set the corp to be player [A] in the lobby. Are you sure you want to continue?"): return
    debugNotify("Checking Illegality", 3)
    deckStatus = checkDeck(deck)
    if not deckStatus[0]:
@@ -308,13 +294,14 @@ def intJackin(group, x = 0, y = 0):
    debugNotify("Placing Identity", 3)
    debugNotify("Identity is: {}".format(Identity), 3)
    if ds == "corp":
-      Identity.moveToTable(169, 255)
+      Identity.moveToTable((169 * flipBoard) + flipModX, (255 * flipBoard) + flipModY)
       rnd(1,10) # Allow time for the ident to be recognised
       modClicks(count = 3, action = 'set to')
       me.MU = 0
       notify("{} is the CEO of the {} Corporation".format(me,Identity))
    else:
-      Identity.moveToTable(106, -331)
+      notify("flipModX = {}, flipModY = {}".format(flipModX,flipModY))
+      Identity.moveToTable((106 * flipBoard) + flipModX, (-331 * flipBoard) + flipModY)
       rnd(1,10)  # Allow time for the ident to be recognised
       modClicks(count = 4, action = 'set to')
       me.MU = 4
