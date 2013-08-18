@@ -1,5 +1,13 @@
 =====Message of the Day======
 
-The Source and Chakana have now been automated to increase the advancement costs of Agendas.
+No Opening Moves yet, but something almost as good.
+
+Board flip now implemented! This means that it doesn't matter on which side the corp or the runner is. 
+The runner can be on side [A] and the corp can be on side [B] and the game will just flip the board around. 
+Just make sure of course that the players are on different sides ;)
+
+The game will now also check your deck as soon as you load it, rather than when you press setup, allowing you to notice errors earlier!
+
+And yes, Opening Moves will be coming out soon enough. Just be patient, weeflerunners!
 
 =============================
