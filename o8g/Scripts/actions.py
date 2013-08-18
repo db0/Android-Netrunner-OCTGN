@@ -30,6 +30,7 @@ import time
 identName = None # The name of our current identity
 Identity = None
 ModifyDraw = 0 #if True the audraw should warn the player to look at r&D instead
+scriptedPlay = 0 # Attempt to work with the OnMoveCard event. Doesn't work atm
 
 gatheredCardList = False # A variable used in reduceCost to avoid scanning the table too many times.
 costModifiers = [] # used in reduceCost to store the cards that might hold potential cost-modifying effects. We store them globally so that we only scan the table once per execution
@@ -265,6 +266,7 @@ def createStartingCards():
 def intJackin(group, x = 0, y = 0):
    debugNotify(">>> intJackin(){}".format(extraASDebug())) #Debug
    mute()
+   global scriptedPlay
    if not startupMsg: fetchCardScripts() # We only download the scripts at the very first setup of each play session.
    versionCheck()
    if not Identity:
@@ -278,18 +280,17 @@ def intJackin(group, x = 0, y = 0):
    if len(deck) == 0:
       whisper ("Please load a deck first!")
       return
-   debugNotify("Reseting Variables", 3)
-   resetAll()
    debugNotify("Placing Identity", 3)
    debugNotify("Identity is: {}".format(Identity), 3)
    if ds == "corp":
+      scriptedPlay += 1
       Identity.moveToTable((169 * flipBoard) + flipModX, (255 * flipBoard) + flipModY)
       rnd(1,10) # Allow time for the ident to be recognised
       modClicks(count = 3, action = 'set to')
       me.MU = 0
       notify("{} is the CEO of the {} Corporation".format(me,Identity))
    else:
-      debugNotify("flipModX = {}, flipModY = {}".format(flipModX,flipModY))
+      scriptedPlay += 1
       Identity.moveToTable((106 * flipBoard) + flipModX, (-331 * flipBoard) + flipModY)
       rnd(1,10)  # Allow time for the ident to be recognised
       modClicks(count = 4, action = 'set to')
@@ -1085,9 +1086,6 @@ def scrAgenda(card, x = 0, y = 0,silent = False):
       debugNotify("About to Score", 2)
       me.counters['Agenda Points'].value += ap - apReduce
       placeCard(card, action = 'SCORE')
-      #if ds == 'corp': card.moveToTable(495 + (scoredAgendas * 15), 8, False) # Location of the Agenda Scoring point for the Corp.
-      #else: card.moveToTable(336 + (scoredAgendas * 15), -206, False) # Location of the Agenda Scoring point for the Runner.
-      #scoredAgendas += 1
       notify("{} {}s {} and receives {} agenda point(s){}".format(me, agendaTxt.lower(), card, ap - apReduce,extraTXT))
       if cheapAgenda: notify(":::Warning:::{} did not have enough advance tokens ({} out of {})! ".format(card,currentAdv,card.Cost))
       executePlayScripts(card,agendaTxt)
@@ -1705,7 +1703,6 @@ def exileCard(card, silent = False):
          me.counters['Agenda Points'].value -= APloss # Trashing Agendas for any reason, now takes they value away as well.
          notify("--> {} loses {} Agenda Points".format(me, APloss))
       executePlayScripts(card,'TRASH') # We don't want to run automations on simply revealed cards.
-      clearAttachLinks(card)
       card.moveTo(card.owner.piles['Removed from Game'])
    if not silent: notify("{} exiled {}{}.".format(me,card,MUtext))
 
@@ -1725,7 +1722,6 @@ def uninstall(card, x=0, y=0, destination = 'hand', silent = False):
       else: MUtext = ''
       executePlayScripts(card,'UNINSTALL')
       autoscriptOtherPlayers('CardUninstalled',card)
-      clearAttachLinks(card)
       card.moveTo(group)
    if not silent: notify("{} uninstalled {}{}.".format(me,card,MUtext))
 

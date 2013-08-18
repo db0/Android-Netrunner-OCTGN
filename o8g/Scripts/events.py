@@ -35,6 +35,7 @@ def checkDeck(player,groups):
    debugNotify(">>> checkDeck(){}".format(extraASDebug())) #Debug
    #confirm("raw groups = {}".format(groups))
    #confirm("group names= {}".format([g.name for g in groups]))
+   mute()
    global totalInfluence, Identity, ds
    notify (" -> Checking deck of {} ...".format(me))
    ok = True
@@ -133,6 +134,7 @@ def checkDeck(player,groups):
    chkSideFlip()
   
 def chkSideFlip():
+   mute()
    debugNotify(">>> chkSideFlip()")
    debugNotify("Checking Identity", 3)
    global flipBoard, flipModX, flipModY
@@ -161,3 +163,21 @@ def parseNewCounters(player,counter,oldValue):
    debugNotify(">>> parseNewCounters() for player {} with counter {}. Old Value = {}".format(player,counter.name,oldValue))
    if counter.name == 'Tags': chkTags()
    debugNotify("<<< parseNewCounters()")
+
+def checkMovedCard(player,card,fromGroup,toGroup,oldIndex,index,oldX,oldY,x,y):
+   mute()
+   global scriptedPlay 
+   #debugNotify("scriptedPlay = {}".format(scriptedPlay))
+   if fromGroup == me.hand and toGroup == table: 
+      return # Doesn't work. Too many outlier scenarios. See https://github.com/kellyelton/OCTGN/issues/984
+      if not scriptedPlay: 
+         intPlay(card)
+         scriptedPlay -= 1
+      else: 
+         scriptedPlay -= 1
+         if scriptedPlay < 0: scriptedPlay = 0 # Just in case
+   if fromGroup == table and toGroup != table and card.owner == me: # If the player dragged a card manually from the table to their discard pile...
+      debugNotify("Clearing card attachments")
+      clearAttachLinks(card)
+      
+      

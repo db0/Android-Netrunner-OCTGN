@@ -1,6 +1,14 @@
 Changelog - Android:Netrunner LCG OCTGN Game Definition
 ===============================================
 
+### 3.2.12.x
+
+* **Significant** Game will now flip the board if the corp is on position B, or the runner in position A. many thanks to OCTGN for implementing the API to make this possible.
+* Deck checking will now happen on deck load rather than setup. Game will pop-up a window if you have an illegal deck
+* Game will now auto-update the tags on the runner ID, even if they were modified manually
+* Game now more robust if someone manually drags a card off the table. Game will now clear attachment links to prevent mess-ups.
+
+
 ### 3.2.11.x
 
 * Made all pop-up warnings once-only

@@ -373,9 +373,10 @@ def clearAttachLinks(card):
       if customMU and hostCard.group == table: # If the card has a custom hosting marker (e.g. Dinosaurus)
          hostCard.markers[customMU] += 1 # Then we return the custom hosting marker to its original card to signifiy it's free to host another program.
       del hostCards[card._id] # If the card was an attachment, delete the link
+      setGlobalVariable('Host Cards',str(hostCards)) # We need to store again before orgAttachments takes over
       if not re.search(r'Daemon',getKeywords(hostCard)) and not customMU: 
          orgAttachments(hostCard) # Reorganize the attachments if the parent is not a daemon-type card.
-   setGlobalVariable('Host Cards',str(hostCards))
+   else: setGlobalVariable('Host Cards',str(hostCards))
    debugNotify("<<< clearAttachLinks()", 3) #Debug   
 
 def sendToTrash(card, pile = None): # A function which takes care of sending a card to the right trash pile and running the appropriate scripts. Doesn't handle costs.
@@ -384,7 +385,7 @@ def sendToTrash(card, pile = None): # A function which takes care of sending a c
    debugNotify("sendToTrash says previous group = {} and highlight = {}".format(card.group.name,card.highlight))
    executePlayScripts(card,'TRASH') # We don't want to run automations on simply revealed cards.
    autoscriptOtherPlayers('CardTrashed',card)
-   clearAttachLinks(card)
+   #clearAttachLinks(card)
    if chkModulator(card, 'preventTrash', 'onTrash'): # IF the card has the preventTrash modulator, it's not supposed to be trashed.
       if chkModulator(card, 'ifAccessed', 'onTrash') and ds != 'runner': card.moveTo(pile) # Unless it only has that modulator active during runner access. Then when the corp trashes it, it should trash normally.
    else: card.moveTo(pile)
@@ -444,6 +445,8 @@ def resetAll(): # Clears all the global variables in order to start a new game.
 
 def placeCard(card, action = 'INSTALL', hostCard = None, type = None):
    debugNotify(">>> placeCard() with action: {}".format(action)) #Debug
+   global scriptedPlay
+   scriptedPlay += 1
    hostType = re.search(r'Placement:([A-Za-z1-9:_ -]+)', fetchProperty(card, 'AutoScripts'))
    if hostType:
       debugNotify("hostType: {}.".format(hostType.group(1)), 2) #Debug
