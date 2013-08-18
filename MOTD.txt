@@ -6,6 +6,8 @@ Board flip now implemented! This means that it doesn't matter on which side the 
 The runner can be on side [A] and the corp can be on side [B] and the game will just flip the board around. 
 Just make sure of course that the players are on different sides ;)
 
+This of course means that you can swap sides while in the game, without having to re-host a new lobby!
+
 The game will now also check your deck as soon as you load it, rather than when you press setup, allowing you to notice errors earlier!
 
 And yes, Opening Moves will be coming out soon enough. Just be patient, weeflerunners!
