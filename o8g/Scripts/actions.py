@@ -264,13 +264,14 @@ def createStartingCards():
 
 def intJackin(group, x = 0, y = 0):
    debugNotify(">>> intJackin(){}".format(extraASDebug())) #Debug
-   global Identity
    mute()
    if not startupMsg: fetchCardScripts() # We only download the scripts at the very first setup of each play session.
    versionCheck()
-   if Identity and not confirm("Are you sure you want to setup for a new game? (This action should only be done after a table reset)"): return
-   if not table.isTwoSided() and not confirm(":::WARNING::: This game is designed to be played on a two-sided table. Things will be extremely uncomfortable otherwise!! Please start a new game and makde sure the  the appropriate button is checked. Are you sure you want to continue?"): return
-   chooseSide()
+   if not Identity:
+      information("::: ERROR::: No identify found! Please load a deck which contains an identity card.")
+      return
+   else:
+      if Identity.group == table and not confirm("Are you sure you want to setup for a new game? (This action should only be done after a table reset)"): return
    #for type in Automations: switchAutomation(type,'Announce') # Too much spam.
    deck = me.piles['R&D/Stack']
    debugNotify("Checking Deck", 3)
@@ -280,18 +281,6 @@ def intJackin(group, x = 0, y = 0):
    debugNotify("Reseting Variables", 3)
    resetAll()
    debugNotify("Placing Identity", 3)
-   if not ds:
-      information("::: ERROR::: No identify found in your deck! Please load a deck which contains an identity card.")
-      return
-   debugNotify("Checking Illegality", 3)
-   deckStatus = checkDeck(deck)
-   if not deckStatus[0]:
-      if not confirm("We have found illegal cards in your deck. Bypass?"): return
-      else:
-         notify("{} has chosen to proceed with an illegal deck.".format(me))
-         Identity = deckStatus[1]
-   else: Identity = deckStatus[1] # For code readability
-   debugNotify("Placing Identity", 3)
    debugNotify("Identity is: {}".format(Identity), 3)
    if ds == "corp":
       Identity.moveToTable((169 * flipBoard) + flipModX, (255 * flipBoard) + flipModY)
@@ -300,7 +289,7 @@ def intJackin(group, x = 0, y = 0):
       me.MU = 0
       notify("{} is the CEO of the {} Corporation".format(me,Identity))
    else:
-      notify("flipModX = {}, flipModY = {}".format(flipModX,flipModY))
+      debugNotify("flipModX = {}, flipModY = {}".format(flipModX,flipModY))
       Identity.moveToTable((106 * flipBoard) + flipModX, (-331 * flipBoard) + flipModY)
       rnd(1,10)  # Allow time for the ident to be recognised
       modClicks(count = 4, action = 'set to')
@@ -320,91 +309,6 @@ def intJackin(group, x = 0, y = 0):
    executePlayScripts(Identity,'STARTUP')
    initGame()
    setleague(manual = False) # Check if this is a league match
-
-def checkDeck(group):
-   debugNotify(">>> checkDeck(){}".format(extraASDebug())) #Debug
-   global totalInfluence
-   if not ds:
-      whisper ("Choose a side first.")
-      return
-   notify (" -> Checking deck of {} ...".format(me))
-   ok = True
-   debugNotify("About to fetch identity card", 4) #Debug
-   identity = getSpecial('Identity')
-   loDeckCount = len(group)
-   debugNotify("About to check identity min deck size.", 4) #Debug
-   if loDeckCount < num(identity.Requirement): # For identities, .Requirement is the card minimum they have.
-      ok = False
-      notify ( ":::ERROR::: Only {} cards in {}'s Deck. {} Needed!".format(loDeckCount,me,num(identity.Requirement)))
-   mute()
-   loAP = 0
-   loInf = 0
-   loRunner = False
-   agendasCount = 0
-   debugNotify("About to move cards into me.ScriptingPile", 4) #Debug
-   for card in group: card.moveTo(me.ScriptingPile)
-   if len(players) > 1: random = rnd(1,100) # Fix for multiplayer only. Makes Singleplayer setup very slow otherwise.
-   debugNotify("About to check each card in the deck", 4) #Debug
-   counts = collections.defaultdict(int)
-   CardLimit = {}
-   professorsRig = [] # This is used by "The Professor" to avoid counting influence for the first instance of a program.
-   for card in me.ScriptingPile:
-      counts[card.name] += 1
-      if counts[card.name] > 3:
-         notify(":::ERROR::: Only 3 copies of {} allowed.".format(card.name))
-         ok = False
-      if card.Type == 'Agenda':
-         if ds == 'corp':
-            loAP += num(card.Stat)
-            agendasCount += 1
-         else:
-            notify(":::ERROR::: Agendas found in {}'s Stack.".format(me))
-            ok = False
-      elif card.Type in CorporationCardTypes and identity.Faction in RunnerFactions:
-         notify(":::ERROR::: Corporate cards found in {}'s Stack.".format(me))
-         ok = False
-      elif card.Type in RunnerCardTypes and identity.Faction in CorporateFactions:
-         notify(":::ERROR::: Runner cards found in {}'s R&Ds.".format(me))
-         ok = False
-      if num(card.Influence) and card.Faction != identity.Faction:
-         if identity.model == 'bc0f047c-01b1-427f-a439-d451eda03029' and card.Type == 'Program' and card.model not in professorsRig:
-            debugNotify("adding {} to prof. rig. card type = {}".format(card,card.Type))
-            professorsRig.append(card.model) # First instance of a card is free of influence costs.
-         else: 
-            debugNotify("adding influence of {}. card type = {}".format(card,card.Type))
-            loInf += num(card.Influence)
-      else:
-         if card.Type == 'Identity':
-            notify(":::ERROR::: Extra Identity Cards found in {}'s {}.".format(me, pileName(group)))
-            ok = False
-         elif card.Faction != identity.Faction and card.Faction != 'Neutral':
-            notify(":::ERROR::: Faction-restricted card ({}) found in {}'s {}.".format(fetchProperty(card, 'name'), me, pileName(group)))
-            ok = False
-      if identity.model == 'bc0f047c-01b1-427f-a439-d451eda03002' and card.Faction == 'Jinteki':
-         notify(":::ERROR::: Jinteki cards found in a {} deck".format(identity))
-         ok = False
-      if card.model in LimitedCard:
-         if card.model not in CardLimit: CardLimit[card.model] = 1
-         else: CardLimit[card.model] += 1
-         if CardLimit[card.model] > 1: 
-            notify(":::ERROR::: Duplicate Limited card ({}) found in {}'s {}.".format(card,me,pileName(group)))
-            ok = False
-   if len(players) > 1: random = rnd(1,100) # Fix for multiplayer only. Makes Singleplayer setup very slow otherwise.
-   for card in me.ScriptingPile: card.moveToBottom(group) # We use a second loop because we do not want to pause after each check
-   if ds == 'corp':
-      requiredAP = 2 + 2 * int(loDeckCount / 5)
-      if loAP not in (requiredAP, requiredAP + 1):
-         notify(":::ERROR::: {} cards requires {} or {} Agenda Points, found {}.".format(loDeckCount, requiredAP, requiredAP + 1, loAP))
-         ok = False
-   if loInf > num(identity.Stat):
-      notify(":::ERROR::: Too much rival faction influence in {}'s R&D. {} found with a max of {}".format(me, loInf, num(identity.Stat)))
-      ok = False
-   deckStats = (loInf,loDeckCount,agendasCount) # The deck stats is a tuple that we stored shared, and stores how much influence is in the player's deck, how many cards it has and how many agendas
-   me.setGlobalVariable('Deck Stats',str(deckStats))
-   debugNotify("Total Influence used: {} (Influence string stored is: {}".format(loInf, me.getGlobalVariable('Influence')), 2) #Debug
-   if ok: notify("-> Deck of {} is OK!".format(me))
-   debugNotify("<<< checkDeckNoLimit() with return: {},{}.".format(ok,identity), 3) #Debug
-   return (ok,identity)
 
 def createRemoteServer(group,x=0,y=0):
    debugNotify(">>> createSDF(){}".format(extraASDebug())) #Debug
