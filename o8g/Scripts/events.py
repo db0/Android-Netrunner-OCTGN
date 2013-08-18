@@ -29,7 +29,9 @@ flipModX = 0
 flipModY = 0
 
 def chkTwoSided():
+   mute()
    if not table.isTwoSided(): information(":::WARNING::: This game is designed to be played on a two-sided table. Things will be extremely uncomfortable otherwise!! Please start a new game and make sure  the appropriate button is checked")
+   versionCheck()
 
 def checkDeck(player,groups):
    debugNotify(">>> checkDeck(){}".format(extraASDebug())) #Debug
