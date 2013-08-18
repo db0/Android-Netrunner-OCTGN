@@ -267,7 +267,6 @@ def intJackin(group, x = 0, y = 0):
    debugNotify(">>> intJackin(){}".format(extraASDebug())) #Debug
    mute()
    global scriptedPlay
-   if not startupMsg: fetchCardScripts() # We only download the scripts at the very first setup of each play session.
    if not Identity:
       information("::: ERROR::: No identify found! Please load a deck which contains an identity card.")
       return

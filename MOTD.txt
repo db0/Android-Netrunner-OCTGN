@@ -1,5 +1,7 @@
 =====Message of the Day======
 
+UPDATE: Oops! Sorry people, I messed up and my card scripts were not loading at all. It's working now so restart OCTGN to get the fix.
+
 No Opening Moves yet, but something almost as good.
 
 Board flip now implemented! This means that it doesn't matter on which side the corp or the runner is. 
