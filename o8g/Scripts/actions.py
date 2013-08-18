@@ -225,7 +225,7 @@ def createStartingCards():
       debugNotify(">>> createStartingCards()") #Debug
       if ds == "corp":
          if debugVerbosity >= 5: information("Creating Trace Card")
-         traceCard = table.create("eb7e719e-007b-4fab-973c-3fe228c6ce20", 569, 163, 1, True) #The Trace card
+         traceCard = table.create("eb7e719e-007b-4fab-973c-3fe228c6ce20", (569 * flipBoard) + flipModX, (163 * flipBoard) + flipModY, 1, True) #The Trace card
          storeSpecial(traceCard)
          if debugVerbosity >= 5: information("Creating HQ")
          HQ = table.create("81cba950-9703-424f-9a6f-af02e0203762", (169 * flipBoard) + flipModX, (188 * flipBoard) + flipModY, 1, True)
@@ -445,7 +445,6 @@ def pay2andDelTag(group, x = 0, y = 0):
       me.Clicks += 1 # If the player didn't notice they didn't have enough credits, we give them back their click
       return # If the player didn't have enough money to pay and aborted the function, then do nothing.
    me.counters['Tags'].value -= 1
-   chkTags() # We also update the tag markers on the runner.
    notify ("{} and pays {}{} to lose a tag.".format(ClickCost,uniCredit(2 - reduction),extraText))
 
 #------------------------------------------------------------------------------
