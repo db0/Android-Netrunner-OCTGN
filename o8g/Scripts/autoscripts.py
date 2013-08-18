@@ -928,7 +928,7 @@ def GainX(Autoscript, announceText, card, targetCards = None, notification = Non
          if re.search(r'isCost', Autoscript): notify(":::Warning:::{} did not have enough {} to pay the cost of this action".format(targetPL,action.group(3)))
          elif re.search(r'isPenalty', Autoscript): pass #If an action is marked as penalty, it means that the value can go negative and the player will have to recover that amount.
          else: targetPL.Tags = 0
-      chkTags() # At the end we check and put the tag markers on the identity as well, if it's tagged.
+      #chkTags() # At the end we check and put the tag markers on the identity as well, if it's tagged.
    elif re.match(r'Max Click', action.group(3)): 
       if action.group(1) == 'SetTo': modType = 'set to' 
       else: modType = 'increment' 

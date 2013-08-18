@@ -156,3 +156,8 @@ def chkSideFlip():
       table.setBoardImage("table\\Tabletop.png") # If they had already reversed the table before, we set it back proper again
    else: debugNotify("Leaving Board as is")
 
+def parseNewCounters(player,counter,oldValue):
+   mute()
+   debugNotify(">>> parseNewCounters() for player {} with counter {}. Old Value = {}".format(player,counter.name,oldValue))
+   if counter.name == 'Tags': chkTags()
+   debugNotify("<<< parseNewCounters()")
