@@ -35,6 +35,7 @@ def checkDeck(player,groups):
    debugNotify(">>> checkDeck(){}".format(extraASDebug())) #Debug
    #confirm("raw groups = {}".format(groups))
    #confirm("group names= {}".format([g.name for g in groups]))
+   if player != me: return # We only want the owner of to run this script
    mute()
    global totalInfluence, Identity, ds
    notify (" -> Checking deck of {} ...".format(me))
@@ -161,7 +162,7 @@ def chkSideFlip():
 def parseNewCounters(player,counter,oldValue):
    mute()
    debugNotify(">>> parseNewCounters() for player {} with counter {}. Old Value = {}".format(player,counter.name,oldValue))
-   if counter.name == 'Tags': chkTags()
+   if counter.name == 'Tags' and player == me: chkTags()
    debugNotify("<<< parseNewCounters()")
 
 def checkMovedCard(player,card,fromGroup,toGroup,oldIndex,index,oldX,oldY,x,y):
