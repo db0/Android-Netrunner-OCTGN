@@ -1,6 +1,24 @@
 Changelog - Android:Netrunner LCG OCTGN Game Definition
 ===============================================
 
+### 3.3.0.x
+
+* New game definition for **Opening Moves**. As always, almost every card scripted!
+
+* ##### Cards NOT automated:
+  * Project Ares (It will just an appropriate amount of agenda markers to reming you how many to trash)
+  * False Echo (It will just announce what needs to happen, but the corp will have to do it manually)
+  
+
+* ##### Trickier Automations
+  * Pawn: Its placement is not automated. To Rehost it, just target the ICE you want, double click it and select the first option
+  * Rook: Its placement is not restricted. To rehost it, just target an appropriate ICE and double click it. It also does not increase costs, you'll have to take care of this manually.
+  * Invasion of Privacy: When the trace succeeds, the runners hand will go on the table. As the corporation, target the cards you can and want to trash and press "Del" for each one. Then the runner can press 'Yes' to retieve their hand back.
+
+* **Significant** Added scripting which allows the game to install cards. As such I've changed the way Modded and Shipment from Mirrormorph works. Now you need to target the card(s) in your hand before you play them, and they will install them automatically. This should bring these two cards in line with other similar effects
+* Cards will now refill their credits before every other card. This means that your unused cyberfeeders will never refill after Darwin uses them for example.
+
+
 ### 3.2.12.x
 
 * **Significant** Game will now flip the board if the corp is on position B, or the runner in position A. many thanks to OCTGN for implementing the API to make this possible.

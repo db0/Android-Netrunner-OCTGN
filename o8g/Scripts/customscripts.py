@@ -96,10 +96,13 @@ def UseCustomAbility(Autoscript, announceText, card, targetCards = None, notific
          # Pity the chatbox does not support formatting :(
    if fetchProperty(card, 'name') == "Invasion of Privacy":
       cardList = []
+      count = len(me.hand)
+      iter = 0
       for c in me.hand:
          cardList.append(c)
-         c.moveToTable(playerside * side * iter * cwidth(c) - (count * cwidth(c) / 2), 0 - yaxisMove(c) * side, False)
+         c.moveToTable(playerside * iter * cwidth(c) - (count * cwidth(c) / 2), 0 - yaxisMove(c), False)
          c.highlight = RevealedColor
+         iter += 1
       notify("{} reveals {} from their hand. Target the cards you want to trash and press 'Del'".format(me,[c.name for c in cardList]))
       while not confirm("You have revealed your hand to your opponent. Return them to Grip?\n\n(Pressing 'No' will send a ping to your opponent to see if they're done reading them)"):
          notify("{} would like to know if it's OK to return their remaining cards to their Grip.".format(me))
@@ -579,18 +582,21 @@ def CustomScript(card, action = 'PLAY'): # Scripts that are complex and fairly u
       cardView = targetPL.piles['R&D/Stack'].top()
       cardView.moveTo(me.ScriptingPile)
       rnd(1,10)
-      notify(":> Motivation has revealed the runner's top card of {}'s Stack".format(me))
+      notify(":> Motivation has revealed the top card of their Stack to {}".format(me))
       delayed_whisper(":> Motivation: {} is next! Go get 'em!".format(cardView))
       rnd(1,10)
       cardView.moveTo(targetPL.piles['R&D/Stack'])
    elif fetchProperty(card, 'name') == 'Celebrity Gift' and action == 'PLAY':
       revealedCards = findTarget('Targeted-fromHand')
+      del revealedCards[5:] # We don't want it to be more than 5 cards
       if len(revealedCards) == 0: 
          delayed_whisper("You need to gift something to the celebrities first you cheapskate!")
          return
+      iter = 0
       for c in revealedCards:
-         c.moveToTable(playerside * side * iter * cwidth(c) - (count * cwidth(c) / 2), 0 - yaxisMove(c) * side, False)
+         c.moveToTable(playerside * iter * cwidth(c) - (len(revealedCards) * cwidth(c) / 2), 0 - yaxisMove(c), False)
          c.highlight = RevealedColor
+         iter += 1
       notify("{} reveals {} as their celebrity gift and gains {}".format(me,[c.name for c in revealedCards],uniCredit(len(revealedCards) * 2)))
       while not confirm("You have revealed your celebrity gifts to your opponent. Return them to HQ?\n\n(Pressing 'No' will send a ping to your opponent to see if they're done reading them)"):
          notify("{} would like to know if it's OK to return their celebrity gifts to their HQ.".format(me))

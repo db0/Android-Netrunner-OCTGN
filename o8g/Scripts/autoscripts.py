@@ -562,6 +562,7 @@ def autoscriptOtherPlayers(lookup, origin_card = Identity, count = 1): # Functio
          if not checkSpecialRestrictions(autoS,origin_card): continue #If we fail the special restrictions on the trigger card, we also abort.
          if re.search(r'onlyOnce',autoS) and oncePerTurn(card, silent = True, act = 'automatic') == 'ABORT': continue # If the card's ability is only once per turn, use it or silently abort if it's already been used
          if re.search(r'onTriggerCard',autoS): targetCard = [origin_card] # if we have the "-onTriggerCard" modulator, then the target of the script will be the original card (e.g. see Grimoire)
+         elif re.search(r'AutoTargeted',autoS): targetCard = findTarget(autoS)
          else: targetCard = None
          debugNotify("Automatic Autoscripts: {}".format(autoS), 2) # Debug
          #effect = re.search(r'\b([A-Z][A-Za-z]+)([0-9]*)([A-Za-z& ]*)\b([^:]?[A-Za-z0-9_&{} -]*)', autoS)
@@ -1498,7 +1499,7 @@ def ModifyStatus(Autoscript, announceText, card, targetCards = None, notificatio
             if possess(card, targetCard, silent = True, force = True) == 'ABORT': return 'ABORT'
          elif possess(card, targetCard, silent = True) == 'ABORT': return 'ABORT'
       elif action.group(1) == 'Rehost':
-         newHost = chkHostType(targetCard)
+         newHost = chkHostType(targetCard,'DemiAutoTargeted')
          if not newHost: 
             delayed_whisper("Not a card that card rehost. Bad script?!")
             return 'ABORT'
@@ -1659,7 +1660,7 @@ def RetrieveX(Autoscript, announceText, card, targetCards = None, notification =
                debugNotify("Appending card", 4)
                cardChoices.append(c)
                cardTexts.append(c.Rules) 
-         choice = SingleChoice("Choose card to retrieve{}".format({1:''}.get(count,' {} {}'.format(iter + 1,count))), makeChoiceListfromCardList(cardChoices), type = 'button')
+         choice = SingleChoice("Choose card to retrieve{}".format({1:''}.get(count,' {}/{}'.format(iter + 1,count))), makeChoiceListfromCardList(cardChoices), type = 'button')
          if choice == None: 
             abortedRetrieve = True
             break
@@ -1866,7 +1867,7 @@ def prepareRestrictions(Autoscript, seek = 'target'):
    elif seek == 'reduce': whatTarget = re.search(r'\b(affects)([A-Za-z0-9_{},& ]+)[-]?', Autoscript) # seek of "reduce" is used when checking for what types of cards to recuce the cost.
    else: whatTarget = re.search(r'\b(at)([A-Za-z0-9_{},& ]+)[-]?', Autoscript) # We signify target restrictions keywords by starting a string with "or"
    if whatTarget: 
-      debugNotify("whatTarget = {}".format(whatTarget))
+      debugNotify("whatTarget = {}".format(whatTarget.groups()))
       debugNotify("Splitting on _or_", 2) #Debug
       validTargets = whatTarget.group(2).split('_or_') # If we have a list of valid targets, split them into a list, separated by the string "_or_". Usually this results in a list of 1 item.
       ValidTargetsSnapshot = list(validTargets) # We have to work on a snapshot, because we're going to be modifying the actual list as we iterate.
@@ -2077,7 +2078,6 @@ def ofwhom(Autoscript, controller = me):
 def per(Autoscript, card = None, count = 0, targetCards = None, notification = None): # This function goes through the autoscript and looks for the words "per<Something>". Then figures out what the card multiplies its effect with, and returns the appropriate multiplier.
    debugNotify(">>> per(){}".format(extraASDebug(Autoscript))) #Debug
    debugNotify("per() passwd vars: card = {}. count = {}".format(card,count),4)
-   if not targetCards: targetCards = []
    div = 1
    ignore = 0
    max = 0 # A maximum of 0 means no limit   
@@ -2088,27 +2088,27 @@ def per(Autoscript, card = None, count = 0, targetCards = None, notification = N
       multiplier = 0
       if per.group(2) and (per.group(2) == 'Target' or per.group(2) == 'Every'): # If we're looking for a target or any specific type of card, we need to scour the requested group for targets.
          debugNotify("Checking for Targeted per", 2)
-         if per.group(2) == 'Target' and len(targetCards) == 0: 
-            delayed_whisper(":::ERROR::: Script expected a card targeted but found none! Exiting with 0 multiplier.")
-            # If we were expecting a target card and we have none we shouldn't even be in here. But in any case, we return a multiplier of 0
-         elif per.group(2) == 'Every' and len(targetCards) == 0: pass #If we looking for a number of cards and we found none, then obviously we return 0
+         perTargetRegex = re.search(r'\bper(Target|Every).*?-at(.*)', Autoscript)
+         debugNotify("perTargetRegex = {}".format(perTargetRegex.groups()))
+         if perTargetRegex.group(1) == 'Target': targetCards = findTarget('Targeted-at{}'.format(perTargetRegex.group(2)))
+         else: targetCards = findTarget('AutoTargeted-at{}'.format(perTargetRegex.group(2)))
+         if len(targetCards) == 0: pass # If we were expecting some targeted cards but found none, we return a multiplier of 0
          else:
-            if per.group(2) == 'Host': 
-               debugNotify("Checking for perHost", 2)
-               hostCards = eval(getGlobalVariable('Host Cards'))
-               hostID = hostCards.get(card._id,None)
-               if hostID: # If we do not have a parent, then we do nothing and return 0
-                  targetCards = [Card(hostID)] # if we have a host, we make him the only one in the list of cards to process.
+            debugNotify("Looping through {} targetCards".format(len(targetCards)))
             for perCard in targetCards:
                debugNotify("perCard = {}".format(perCard), 2)
                if re.search(r'Marker',per.group(3)):
+                  debugNotify("Counting Markers on Card")
                   markerName = re.search(r'Marker{([\w ]+)}',per.group(3)) # I don't understand why I had to make the curly brackets optional, but it seens atTurnStart/End completely eats them when it parses the CardsAS.get(card.model,'')
                   marker = findMarker(perCard, markerName.group(1))
                   if marker: multiplier += perCard.markers[marker]
                elif re.search(r'Property',per.group(3)):
+                  debugNotify("Counting Property stat on Card")
                   property = re.search(r'Property{([\w ]+)}',per.group(3))
                   multiplier += num(perCard.properties[property.group(1)])
-               else: multiplier += 1 # If there's no special conditions, then we just add one multiplier per valid (auto)target. Ef. "-perEvery-AutoTargeted-onICE" would give 1 multiplier per ICE on the table
+               else: 
+                  multiplier += 1 # If there's no special conditions, then we just add one multiplier per valid (auto)target. Ef. "-perEvery-AutoTargeted-onICE" would give 1 multiplier per ICE on the table
+                  debugNotify("Increasing Multiplier by 1 to {}".format(multiplier))
       else: #If we're not looking for a particular target, then we check for everything else.
          debugNotify("Doing no table lookup", 2) # Debug.
          if per.group(3) == 'X': multiplier = count # Probably not needed and the next elif can handle alone anyway.

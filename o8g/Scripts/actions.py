@@ -189,6 +189,7 @@ def goToSot (group, x=0,y=0):
             debugNotify("Peeking() at goToSot()")
             card.peek() # We also peek at all our facedown cards which the runner accessed last turn (because they left them unpeeked)
    except: notify(":::ERROR::: When trying to refresh cards. Please report at: https://github.com/db0/Android-Netrunner-OCTGN/issues/275")
+   clearRestrictionMarkers()
    remoteServers = (card for card in table if card.Name == 'Remote Server')
    for card in remoteServers: card.setController(me) # At the start of each player's turn, we swap the ownership of all remote server, to allow them to double-click them (If they're a runner) or manipulate them (if they're a corp)
    newturn = True
@@ -911,7 +912,8 @@ def getCredit(group, x = 0, y = 0):
    else: extraTXT = ''
    notify ("{} and receives {}{}.".format(ClickCost,uniCredit(1 - creditsReduce),extraTXT))
    me.counters['Credits'].value += 1 - creditsReduce
-   autoscriptOtherPlayers('CreditClicked')
+   debugNotify("About to autoscript other players")
+   autoscriptOtherPlayers('CreditClicked', Identity)
 
 def findDMGProtection(DMGdone, DMGtype, targetPL): # Find out if the player has any card preventing damage
    debugNotify(">>> findDMGProtection() with DMGtype: {}".format(DMGtype)) #Debug
@@ -1502,8 +1504,6 @@ def derez(card, x = 0, y = 0, silent = False):
          return 'ABORT'
       else:
          if not silent: notify("{} derezzed {}".format(me, card))
-         autoscriptOtherPlayers('CardDerezzed',card)
-         rnd(1,10)
          card.markers[mdict['Credits']] = 0
          executePlayScripts(card,'DEREZ')
          autoscriptOtherPlayers('CardDerezzed',card)

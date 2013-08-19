@@ -63,7 +63,7 @@
 		<property name="Stat" value="" />	
 		<property name="Rules" value="As an additional cost to play this event, spend [Click].&#xD;Search your stack for a connection, reveal it, and add it to your grip. You may install that connection (paying its install cost). Shuffle your stack." />
 		<property name="Flavor" value="" />
-		<property name="Instructions" value="Search your stack for a connection, reveal it, and add it to your grip.||Search your stack for a connection and install it paying all costs." />
+		<property name="Instructions" value="onPlay[Search your stack for a connection, reveal it, and add it to your grip.|-|Search your stack for a connection and install it paying all costs.]" />
 		<property name="Faction" value="Criminal" />
 		<property name="Influence" value="2" />
 		<property name="Side" value="Runner" />

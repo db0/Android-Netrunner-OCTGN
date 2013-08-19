@@ -278,6 +278,7 @@ def chkHostType(card, seek = 'Targeted'):
    hostType = re.search(r'Placement:([A-Za-z1-9:_ -]+)', fetchProperty(card, 'AutoScripts'))
    if hostType:
       debugNotify("hostType: {}.".format(hostType.group(1)), 2) #Debug
+      if hostType.group(1) == 'ICE': host = findTarget('{}-isICE-choose1'.format(seek))
       host = findTarget('{}-at{}-choose1'.format(seek,hostType.group(1)),card = card)
       if len(host) == 0:
          delayed_whisper("ABORTING!")
@@ -447,17 +448,15 @@ def placeCard(card, action = 'INSTALL', hostCard = None, type = None):
    debugNotify(">>> placeCard() with action: {}".format(action)) #Debug
    global scriptedPlay
    scriptedPlay += 1
-   hostType = re.search(r'Placement:([A-Za-z1-9:_ -]+)', fetchProperty(card, 'AutoScripts'))
-   if hostType:
-      debugNotify("hostType: {}.".format(hostType.group(1)), 2) #Debug
-      if not hostCard:
-         host = findTarget('Targeted-at{}'.format(hostType.group(1))) 
-         if len(host) == 0: 
-            delayed_whisper(":::ERROR::: No Valid Host Targeted! Aborting Placement.") # We can pass a host from a previous function (e.g. see Personal Workshop)
-            return 'ABORT'
-         else: hostCard = host[0]
-      debugNotify("We have a host", 2) #Debug
-      hostMe(card,hostCard)
+   if not hostCard:
+      hostCard = chkHostType(card, seek = 'DemiAutoTargeted')
+      if hostCard:
+         try:
+            if hostCard == 'ABORT': 
+               delayed_whisper(":::ERROR::: No Valid Host Targeted! Aborting Placement.") # We can pass a host from a previous function (e.g. see Personal Workshop)
+               return 'ABORT'
+         except: pass
+   if hostCard: hostMe(card,hostCard)
    else:
       global installedCount
       if not type: 
@@ -919,7 +918,7 @@ def TrialError(group, x=0, y=0): # Debugging
    ###### End Testing Corner ######
    delayed_whisper("## Defining Test Cards")
    testcards = [
-                "bc0f047c-01b1-427f-a439-d451eda04001", 
+                "bc0f047c-01b1-427f-a439-d451eda02058", 
                 "bc0f047c-01b1-427f-a439-d451eda04002", 
                 "bc0f047c-01b1-427f-a439-d451eda04003", 
                 "bc0f047c-01b1-427f-a439-d451eda04004", 
@@ -928,10 +927,10 @@ def TrialError(group, x=0, y=0): # Debugging
                 "bc0f047c-01b1-427f-a439-d451eda04007", 
                 "bc0f047c-01b1-427f-a439-d451eda04008", 
                 "bc0f047c-01b1-427f-a439-d451eda04009", 
-                "bc0f047c-01b1-427f-a439-d451eda04010", 
+                "bc0f047c-01b1-427f-a439-d451eda04011", 
                 "bc0f047c-01b1-427f-a439-d451eda04011", 
                 "bc0f047c-01b1-427f-a439-d451eda04012", 
-                "bc0f047c-01b1-427f-a439-d451eda04013", 
+                "bc0f047c-01b1-427f-a439-d451eda04011", 
                 "bc0f047c-01b1-427f-a439-d451eda04014", 
                 "bc0f047c-01b1-427f-a439-d451eda04015", 
                 "bc0f047c-01b1-427f-a439-d451eda04016", 
@@ -959,7 +958,7 @@ def TrialError(group, x=0, y=0): # Debugging
    notify("<<< TrialError()") #Debug
    if confirm("Spawn Test Cards?"):
       for idx in range(len(testcards)):
-         test = table.create(testcards[idx], (70 * idx) - 150, 0, 1, True)
+         test = table.create(testcards[idx], (70 * idx) - 650, 0, 1, True)
          storeProperties(test)
          if test.Type == 'ICE' or test.Type == 'Agenda' or test.Type == 'Asset': test.isFaceUp = False
 

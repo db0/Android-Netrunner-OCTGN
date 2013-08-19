@@ -1338,7 +1338,7 @@ Commercialization
 -----
 bc0f047c-01b1-427f-a439-d451eda02058
 -----
-onPlay:Gain1Credits-perTargetMarker{Advancement}-Targeted-atICE
+onPlay:Gain1Credits-perTargetMarker{Advancement}-Targeted-atICE-isICE
 +++++
 
 .....
@@ -2361,7 +2361,7 @@ bc0f047c-01b1-427f-a439-d451eda04002
 -----
 Placement:ICE
 +++++
-A0B0G0T0:RehostMyself-Targeted-isICE||A0B0G0T1:InstallTarget-DemiAutoTargeted-atCaissa-fromHand||A0B0G0T1:Retrieve1Card-fromHeap-grabCaissa-toTable
+A0B0G0T0:RehostMyself-Targeted-isICE||A0B0G0T1:InstallTarget-DemiAutoTargeted-atCaissa-fromHand-choose1||A0B0G0T1:Retrieve1Card-fromHeap-grabCaissa-toTable
 .....
 Rook
 -----
@@ -2375,7 +2375,7 @@ Hostage
 -----
 bc0f047c-01b1-427f-a439-d451eda04004
 -----
-onPlay:Retrieve1Card-fromHeap-grabConnection$$ShuffleStack||onPlay:Retrieve1Card-fromHeap-grabConnection-toTable-payCost$$ShuffleStack
+onPlay:Retrieve1Card-grabConnection$$ShuffleStack||onPlay:Retrieve1Card-grabConnection-toTable-payCost$$ShuffleStack
 +++++
 
 .....
@@ -2385,7 +2385,7 @@ bc0f047c-01b1-427f-a439-d451eda04005
 -----
 whileInPlay:Put1Virus-foreachCreditClicked-byOpponent||whileInPlay:Put1Virus-foreachCardDrawnClicked-byOpponent
 +++++
-A0B0G0T1:Gain1Credit-perMarker{Virus}
+A0B0G0T1:Gain1Credits-perMarker{Virus}
 .....
 Lockpick
 -----
@@ -2431,7 +2431,7 @@ NEXT Bronze
 -----
 bc0f047c-01b1-427f-a439-d451eda04011
 -----
-whileRezzed:Put1PlusOne-foreachCardRezzed-typeNEXT_and_ICE||whileRezzed:Remove1PlusOne-foreachCardDerezzed-typeNEXT_and_ICE
+whileRezzed:Refill1PlusOnePerm-perEveryCard-atNEXT-isICE-isRezzed-foreachCardRezzed-typeNEXT_and_ICE-isSilent||whileRezzed:Remove1PlusOnePerm-foreachCardDerezzed-typeNEXT_and_ICE-isSilent||whileRezzed:Remove1PlusOnePerm-foreachCardTrashed-typeNEXT_and_ICE-isSilent||onDerez:Remove999PlusOnePerm||onTrash:Remove999PlusOnePerm
 +++++
 A0B0G0T0:RunEnd-isSubroutine
 .....
@@ -2489,7 +2489,7 @@ bc0f047c-01b1-427f-a439-d451eda04018
 -----
 onRez:Gain1Bad Publicity
 +++++
-A0B0G0T0:TrashTarget-Targeted-atProgram-isSubroutine||A0B0G0T0:Lose3Credits-perAdvancement-onOpponent
+A0B0G0T0:TrashTarget-Targeted-atProgram-isSubroutine||A0B0G0T0:Lose3Credits-onOpponent-perMarker{Advancement}
 .....
 Cyberdex Trial
 -----
