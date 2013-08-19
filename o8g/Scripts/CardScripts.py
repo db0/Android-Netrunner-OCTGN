@@ -2479,23 +2479,23 @@ Geothermal Fracking
 -----
 bc0f047c-01b1-427f-a439-d451eda04017
 -----
-
+onScore:Put2Agenda
 +++++
-
+A1B0G0T0:Remove1Agenda-isCost$$Gain7Credits$$Gain1Bad Publicity
 .....
 Swarm
 -----
 bc0f047c-01b1-427f-a439-d451eda04018
 -----
-
+onRez:Gain1Bad Publicity
 +++++
-
+A0B0G0T0:TrashTarget-Targeted-atProgram-isSubroutine||A0B0G0T0:Lose3Credits-perAdvancement-onOpponent
 .....
 Cyberdex Trial
 -----
 bc0f047c-01b1-427f-a439-d451eda04019
 -----
-
+onPlay:Remove999Virus-AutoTargeted-atProgram-hasMarker{Virus}-targetOpponents
 +++++
 
 .....
@@ -2503,9 +2503,9 @@ Grim
 -----
 bc0f047c-01b1-427f-a439-d451eda04020
 -----
-
+onRez:Gain1Bad Publicity
 +++++
-
+A0B0G0T0:TrashTarget-Targeted-atProgram-isSubroutine
 .....
 
 ENDSCRIPTS

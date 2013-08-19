@@ -287,7 +287,7 @@
 		<property name="Stat" value="5" />	
 		<property name="Rules" value="When you rez Swarm, take 1 bad publicity.&#xD;Swarm can be advanced and gains &quot;[Subroutine] Trash 1 program unless the runner pays 3 [Credits].&quot; for each advancement token on it." />
 		<property name="Flavor" value="" />
-		<property name="Instructions" value="" />
+		<property name="Instructions" value="[Subroutine] Trash Target Program||Runner loses 3 credits per advancement token" />
 		<property name="Faction" value="The Weyland Consortium" />
 		<property name="Influence" value="4" />
 		<property name="Side" value="Corp" />
