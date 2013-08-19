@@ -168,7 +168,7 @@ def parseNewCounters(player,counter,oldValue):
    if counter.name == 'Tags' and player == me: chkTags()
    debugNotify("<<< parseNewCounters()")
 
-def checkMovedCard(player,card,fromGroup,toGroup,oldIndex,index,oldX,oldY,x,y):
+def checkMovedCard(player,card,fromGroup,toGroup,oldIndex,index,oldX,oldY,x,y,scriptedMove):
    mute()
    global scriptedPlay 
    #debugNotify("scriptedPlay = {}".format(scriptedPlay))

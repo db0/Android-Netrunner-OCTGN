@@ -1,6 +1,7 @@
 =====Message of the Day======
 
-UPDATE: Oops! Sorry people, I messed up and my card scripts were not loading at all. It's working now so restart OCTGN to get the fix.
+UPDATE2: Latest OCTGN version introduced a non-breaking bug in one of my scripts (it was just complaining with scary big letters). 
+         It's now been fixed, so restart OCTGN to get the latest update for it.
 
 No Opening Moves yet, but something almost as good.
 
