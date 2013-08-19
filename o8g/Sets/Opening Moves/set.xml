@@ -207,7 +207,7 @@
 		<property name="Stat" value="2" />	
 		<property name="Rules" value="1 [Credits]: Add Himitsu-Bako to HQ.&#xD;[Subroutine] End the run." />
 		<property name="Flavor" value="Himitsu-Bako is a simple ice barrier that appears as a digital puzzle box. What makes it special is the ease with which it can be uninstalled and installed in a different server, throwing up barriers in unexpected places and giving any intruder a curious feeling of deja vu." />
-		<property name="Instructions" value="" />
+		<property name="Instructions" value="1 [Credits]: Add Himitsu-Bako to HQ.||[Subroutine] End the run." />
 		<property name="Faction" value="Jinteki" />
 		<property name="Influence" value="2" />
 		<property name="Side" value="Corp" />
@@ -239,7 +239,7 @@
 		<property name="Stat" value="3" />	
 		<property name="Rules" value="[Click]: Draw 2 cards.&#xD;Remove Jackson Howard from the game: Shuffle up to 3 cards from Archives into R&amp;D." />
 		<property name="Flavor" value="&quot;It is my job to ensure our creations are the perfect companions and edutainment for tomorrow&#39;s consumers.&quot;" />
-		<property name="Instructions" value="" />
+		<property name="Instructions" value="[Click]: Draw 2 cards.||Remove Jackson Howard from the game: Shuffle up to 3 cards from Archives into R&amp;D." />
 		<property name="Faction" value="NBN" />
 		<property name="Influence" value="1" />
 		<property name="Side" value="Corp" />

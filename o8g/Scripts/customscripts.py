@@ -94,6 +94,17 @@ def UseCustomAbility(Autoscript, announceText, card, targetCards = None, notific
          # /,    /`
          # \\"--\\      
          # Pity the chatbox does not support formatting :(
+   if fetchProperty(card, 'name') == "Invasion of Privacy":
+      cardList = []
+      for c in me.hand:
+         cardList.append(c)
+         c.moveToTable(playerside * side * iter * cwidth(c) - (count * cwidth(c) / 2), 0 - yaxisMove(c) * side, False)
+         c.highlight = RevealedColor
+      notify("{} reveals {} from their hand. Target the cards you want to trash and press 'Del'".format(me,[c.name for c in cardList]))
+      while not confirm("You have revealed your hand to your opponent. Return them to Grip?\n\n(Pressing 'No' will send a ping to your opponent to see if they're done reading them)"):
+         notify("{} would like to know if it's OK to return their remaining cards to their Grip.".format(me))
+      for c in cardList: 
+         if c.group == table: c.moveTo(me.hand)
    return announceString
    
 def CustomScript(card, action = 'PLAY'): # Scripts that are complex and fairly unique to specific cards, not worth making a whole generic function for them.
@@ -582,8 +593,8 @@ def CustomScript(card, action = 'PLAY'): # Scripts that are complex and fairly u
          c.highlight = RevealedColor
       notify("{} reveals {} as their celebrity gift and gains {}".format(me,[c.name for c in revealedCards],uniCredit(len(revealedCards) * 2)))
       while not confirm("You have revealed your celebrity gifts to your opponent. Return them to HQ?\n\n(Pressing 'No' will send a ping to your opponent to see if they're done reading them)"):
-         notify("{} would like to know if it's OK to return their celebrity gifts to their HQ.")
-      for c in revealedCards: c.moveTo(me.Hand)
+         notify("{} would like to know if it's OK to return their celebrity gifts to their HQ.".format(me))
+      for c in revealedCards: c.moveTo(me.hand)
       me.Credits += len(revealedCards) * 2
    elif action == 'USE': useCard(card)
    debugNotify("<<< CustomScript()", 3) #Debug

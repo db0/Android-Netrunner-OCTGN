@@ -816,6 +816,8 @@ def redirect(Autoscript, card, announceText = None, notificationType = 'Quick', 
       if ModifyStatus(Autoscript, announceText, card, targetC, notification = notificationType, n = X) == 'ABORT': return
    elif regexHooks['SimplyAnnounce'].search(Autoscript):
       SimplyAnnounce(Autoscript, announceText, card, targetC, notification = notificationType, n = X)
+   elif regexHooks['UseCustomAbility'].search(Autoscript):
+      UseCustomAbility(Autoscript, announceText, card, targetC, notification = notificationType, n = X)
    else: debugNotify(" No regexhook match! :(") # Debug
    debugNotify("Loop for scipt {} finished".format(Autoscript), 2)
    return X
@@ -1617,6 +1619,9 @@ def RetrieveX(Autoscript, announceText, card, targetCards = None, notification =
    if re.search(r'-toTable', Autoscript):
       destination = table
       destiVerb = 'install'   
+   elif re.search(r'-toDeck', Autoscript):
+      destination = targetPL.piles['R&D/Stack']
+      destiVerb = 'rework'
    else: 
       destination = targetPL.hand
       destiVerb = 'retrieve'

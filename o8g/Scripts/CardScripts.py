@@ -2449,13 +2449,13 @@ bc0f047c-01b1-427f-a439-d451eda04013
 -----
 
 +++++
-
+A0B1G0T0:UninstallMyself||A0B0G0T0:RunEnd-isSubroutine
 .....
 Character Assassination
 -----
 bc0f047c-01b1-427f-a439-d451eda04014
 -----
-
+onScore:TrashTarget-DemiAutoTargeted-atResource-choose1
 +++++
 
 .....
@@ -2465,13 +2465,13 @@ bc0f047c-01b1-427f-a439-d451eda04015
 -----
 
 +++++
-
+A1B0G0T0:Draw2Cards||A0B0G0T0:ExileMyself$$Retrieve3Cards-fromArchives-toDeck$$ShuffleR&D
 .....
 Invasion of Privacy
 -----
 bc0f047c-01b1-427f-a439-d451eda04016
 -----
-
+onPlay:Trace2-traceEffects<UseCustomAbility,Gain1Bad Publicity>
 +++++
 
 .....
