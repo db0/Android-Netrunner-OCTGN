@@ -572,6 +572,19 @@ def CustomScript(card, action = 'PLAY'): # Scripts that are complex and fairly u
       delayed_whisper(":> Motivation: {} is next! Go get 'em!".format(cardView))
       rnd(1,10)
       cardView.moveTo(targetPL.piles['R&D/Stack'])
+   elif fetchProperty(card, 'name') == 'Celebrity Gift' and action == 'PLAY':
+      revealedCards = findTarget('Targeted-fromHand')
+      if len(revealedCards) == 0: 
+         delayed_whisper("You need to gift something to the celebrities first you cheapskate!")
+         return
+      for c in revealedCards:
+         c.moveToTable(playerside * side * iter * cwidth(c) - (count * cwidth(c) / 2), 0 - yaxisMove(c) * side, False)
+         c.highlight = RevealedColor
+      notify("{} reveals {} as their celebrity gift and gains {}".format(me,[c.name for c in revealedCards],uniCredit(len(revealedCards) * 2)))
+      while not confirm("You have revealed your celebrity gifts to your opponent. Return them to HQ?\n\n(Pressing 'No' will send a ping to your opponent to see if they're done reading them)"):
+         notify("{} would like to know if it's OK to return their celebrity gifts to their HQ.")
+      for c in revealedCards: c.moveTo(me.Hand)
+      me.Credits += len(revealedCards) * 2
    elif action == 'USE': useCard(card)
    debugNotify("<<< CustomScript()", 3) #Debug
    
