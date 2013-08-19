@@ -1,18 +1,7 @@
 =====Message of the Day======
 
-UPDATE2: Latest OCTGN version introduced a non-breaking bug in one of my scripts (it was just complaining with scary big letters). 
-         It's now been fixed, so restart OCTGN to get the latest update for it.
+Opening Moves has now been rezzed and as includes always includes sweet sweet automations.
 
-No Opening Moves yet, but something almost as good.
-
-Board flip now implemented! This means that it doesn't matter on which side the corp or the runner is. 
-The runner can be on side [A] and the corp can be on side [B] and the game will just flip the board around. 
-Just make sure of course that the players are on different sides ;)
-
-This of course means that you can swap sides while in the game, without having to re-host a new lobby!
-
-The game will now also check your deck as soon as you load it, rather than when you press setup, allowing you to notice errors earlier!
-
-And yes, Opening Moves will be coming out soon enough. Just be patient, weeflerunners!
+Restart your OCTGN to access it.
 
 =============================
