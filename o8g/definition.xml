@@ -162,7 +162,7 @@
          <groupaction menu="OK" default="False" execute="BUTTON_OK"  shortcut="Ctrl+3"/>
          <groupaction menu="Wait!" default="False" execute="BUTTON_Wait" shortcut="Ctrl+4"/>
       </groupactions>
-      <cardaction menu="Show Card Position" default="False" shortcut="Ctrl+Shift+X" execute="ShowPosC" />  
+      <!-- <cardaction menu="Show Card Position" default="False" shortcut="Ctrl+Shift+X" execute="ShowPosC" />  -->
         
       
    </table>

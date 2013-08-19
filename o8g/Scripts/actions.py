@@ -910,6 +910,7 @@ def getCredit(group, x = 0, y = 0):
    else: extraTXT = ''
    notify ("{} and receives {}{}.".format(ClickCost,uniCredit(1 - creditsReduce),extraTXT))
    me.counters['Credits'].value += 1 - creditsReduce
+   autoscriptOtherPlayers('CreditClicked')
 
 def findDMGProtection(DMGdone, DMGtype, targetPL): # Find out if the player has any card preventing damage
    debugNotify(">>> findDMGProtection() with DMGtype: {}".format(DMGtype)) #Debug
@@ -2207,6 +2208,7 @@ def draw(group):
       if ClickCost == 'ABORT': return
       card.moveTo(me.hand)
       notify("{} to draw a card.".format(ClickCost))
+      autoscriptOtherPlayers('CardDrawnClicked',card)
    storeProperties(card)
 
 def drawMany(group, count = None, destination = None, silent = False):

@@ -2361,7 +2361,7 @@ bc0f047c-01b1-427f-a439-d451eda04002
 -----
 Placement:ICE
 +++++
-A0B0G0T0:RehostMyself-Targeted-isICE||A0B0G0T1:InstallTarget-DemiAutoTargeted-atCaissa-fromHand||A0B0G0T1:onPlay:Retrieve1Card-fromHeap-grabCaissa-toTable
+A0B0G0T0:RehostMyself-Targeted-isICE||A0B0G0T1:InstallTarget-DemiAutoTargeted-atCaissa-fromHand||A0B0G0T1:Retrieve1Card-fromHeap-grabCaissa-toTable
 .....
 Rook
 -----
@@ -2375,7 +2375,7 @@ Hostage
 -----
 bc0f047c-01b1-427f-a439-d451eda04004
 -----
-
+onPlay:Retrieve1Card-fromHeap-grabConnection$$ShuffleStack||onPlay:Retrieve1Card-fromHeap-grabConnection-toTable-payCost$$ShuffleStack
 +++++
 
 .....
@@ -2383,9 +2383,9 @@ Gorman Drip v1
 -----
 bc0f047c-01b1-427f-a439-d451eda04005
 -----
-
+whileInPlay:Put1Virus-foreachCreditClicked||whileInPlay:Put1Virus-foreachCardDrawnClicked
 +++++
-
+A0B0G0T1:Gain1Credit-perMarker{Virus}
 .....
 Lockpick
 -----
