@@ -897,7 +897,6 @@ def TrialError(group, x=0, y=0): # Debugging
    if debugVerbosity >=0: 
       if debugVerbosity == 0: 
          debugVerbosity = 1
-         ImAProAtThis() # At debug level 1, we also disable all warnings
       elif debugVerbosity == 1: debugVerbosity = 2
       elif debugVerbosity == 2: debugVerbosity = 3
       elif debugVerbosity == 3: debugVerbosity = 4
@@ -917,26 +916,26 @@ def TrialError(group, x=0, y=0): # Debugging
    ###### End Testing Corner ######
    delayed_whisper("## Defining Test Cards")
    testcards = [
-                "bc0f047c-01b1-427f-a439-d451eda03043", 
-                "bc0f047c-01b1-427f-a439-d451eda03055", 
-                "bc0f047c-01b1-427f-a439-d451eda03041", 
-                "bc0f047c-01b1-427f-a439-d451eda03041", 
-                "bc0f047c-01b1-427f-a439-d451eda01005", 
-                "bc0f047c-01b1-427f-a439-d451eda02086", 
-                # "bc0f047c-01b1-427f-a439-d451eda02107", 
-                # "bc0f047c-01b1-427f-a439-d451eda02108", 
-                # "bc0f047c-01b1-427f-a439-d451eda02109", 
-                # "bc0f047c-01b1-427f-a439-d451eda02110", 
-                # "bc0f047c-01b1-427f-a439-d451eda02111", 
-                # "bc0f047c-01b1-427f-a439-d451eda02112", 
-                # "bc0f047c-01b1-427f-a439-d451eda02113", 
-                # "bc0f047c-01b1-427f-a439-d451eda02114", 
-                # "bc0f047c-01b1-427f-a439-d451eda02115", 
-                # "bc0f047c-01b1-427f-a439-d451eda02116", 
-                # "bc0f047c-01b1-427f-a439-d451eda02117", 
-                # "bc0f047c-01b1-427f-a439-d451eda02118", 
-                # "bc0f047c-01b1-427f-a439-d451eda02119", 
-                # "bc0f047c-01b1-427f-a439-d451eda02120"
+                "bc0f047c-01b1-427f-a439-d451eda04001", 
+                "bc0f047c-01b1-427f-a439-d451eda04002", 
+                "bc0f047c-01b1-427f-a439-d451eda04003", 
+                "bc0f047c-01b1-427f-a439-d451eda04004", 
+                "bc0f047c-01b1-427f-a439-d451eda04005", 
+                "bc0f047c-01b1-427f-a439-d451eda04006", 
+                "bc0f047c-01b1-427f-a439-d451eda04007", 
+                "bc0f047c-01b1-427f-a439-d451eda04008", 
+                "bc0f047c-01b1-427f-a439-d451eda04009", 
+                "bc0f047c-01b1-427f-a439-d451eda04010", 
+                "bc0f047c-01b1-427f-a439-d451eda04011", 
+                "bc0f047c-01b1-427f-a439-d451eda04012", 
+                "bc0f047c-01b1-427f-a439-d451eda04013", 
+                "bc0f047c-01b1-427f-a439-d451eda04014", 
+                "bc0f047c-01b1-427f-a439-d451eda04015", 
+                "bc0f047c-01b1-427f-a439-d451eda04016", 
+                "bc0f047c-01b1-427f-a439-d451eda04017", 
+                "bc0f047c-01b1-427f-a439-d451eda04018", 
+                "bc0f047c-01b1-427f-a439-d451eda04019", 
+                "bc0f047c-01b1-427f-a439-d451eda04020"
                 ] 
    if not ds: 
       if confirm("corp?"): ds = "corp"
