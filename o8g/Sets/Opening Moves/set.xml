@@ -25,13 +25,13 @@
 	<card id="bc0f047c-01b1-427f-a439-d451eda04002" name="Pawn">
 		<property name="Subtitle" value="" />
 		<property name="Type" value="Program" />
-		<property name="Keywords" value="Ca&#239;ssa" />
+		<property name="Keywords" value="Caissa" />
 		<property name="Cost" value="0" />
 		<property name="Requirement" value="0" />	
 		<property name="Stat" value="-" />	
 		<property name="Rules" value="[Click]: Host Pawn on an outermost piece of ice protecting a central server.&#xD;Whenever you make a successful run, move Pawn to the piece of ice directly after the current ice hosting Pawn, if able; otherwise, trash Pawn instead and install a Ca&#239;ssa program from your grip or heap, ignoring all costs." />
 		<property name="Flavor" value="" />
-		<property name="Instructions" value="" />
+		<property name="Instructions" value="Move pawn to targeted ICE directly after the current ICE hosting Pawn||Trash Pawn and install a Caissa program from your Grip||Trash Pawn and install a Caissa program from your Heap" />
 		<property name="Faction" value="Anarch" />
 		<property name="Influence" value="1" />
 		<property name="Side" value="Runner" />
@@ -41,7 +41,7 @@
 	<card id="bc0f047c-01b1-427f-a439-d451eda04003" name="Rook">
 		<property name="Subtitle" value="" />
 		<property name="Type" value="Program" />
-		<property name="Keywords" value="Ca&#239;ssa" />
+		<property name="Keywords" value="Caissa" />
 		<property name="Cost" value="2" />
 		<property name="Requirement" value="1" />	
 		<property name="Stat" value="-" />	
