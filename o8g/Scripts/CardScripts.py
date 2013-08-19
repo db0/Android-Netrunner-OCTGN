@@ -2423,7 +2423,7 @@ Project Ares
 -----
 bc0f047c-01b1-427f-a439-d451eda04010
 -----
-
+onScore:Put1Agenda-perMarker{Advancement}-ignore4
 +++++
 
 .....
@@ -2431,9 +2431,9 @@ NEXT Bronze
 -----
 bc0f047c-01b1-427f-a439-d451eda04011
 -----
-
+whileRezzed:Put1PlusOne-foreachCardRezzed-typeNEXT_and_ICE||whileRezzed:Remove1PlusOne-foreachCardDerezzed-typeNEXT_and_ICE
 +++++
-
+A0B0G0T0:RunEnd-isSubroutine
 .....
 Celebrity Gift
 -----

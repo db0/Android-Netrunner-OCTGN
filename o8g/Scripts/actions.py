@@ -1502,6 +1502,8 @@ def derez(card, x = 0, y = 0, silent = False):
          return 'ABORT'
       else:
          if not silent: notify("{} derezzed {}".format(me, card))
+         autoscriptOtherPlayers('CardDerezzed',card)
+         rnd(1,10)
          card.markers[mdict['Credits']] = 0
          executePlayScripts(card,'DEREZ')
          autoscriptOtherPlayers('CardDerezzed',card)
