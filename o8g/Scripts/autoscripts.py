@@ -1445,7 +1445,7 @@ def ModifyStatus(Autoscript, announceText, card, targetCards = None, notificatio
    if targetCards is None: targetCards = []
    targetCardlist = '' # A text field holding which cards are going to get tokens.
    extraText = ''
-   action = re.search(r'\b(Rez|Derez|Expose|Trash|Uninstall|Possess|Exile|Rework|Install|Score)(Target|Host|Multi|Myself)[-to]*([A-Z][A-Za-z&_ ]+)?', Autoscript)
+   action = re.search(r'\b(Rez|Derez|Expose|Trash|Uninstall|Possess|Exile|Rework|Install|Score|Rehost)(Target|Host|Multi|Myself)[-to]*([A-Z][A-Za-z&_ ]+)?', Autoscript)
    if action.group(2) == 'Myself': 
       del targetCards[:] # Empty the list, just in case.
       targetCards.append(card)
@@ -1479,6 +1479,17 @@ def ModifyStatus(Autoscript, announceText, card, targetCards = None, notificatio
          if re.search(r'-forceHost',Autoscript):
             if possess(card, targetCard, silent = True, force = True) == 'ABORT': return 'ABORT'
          elif possess(card, targetCard, silent = True) == 'ABORT': return 'ABORT'
+      elif action.group(1) == 'Rehost':
+         newHost = chkHostType(targetCard)
+         if not newHost: 
+            delayed_whisper("Not a card that card rehost. Bad script?!")
+            return 'ABORT'
+         else:
+            try:
+               if newHost == 'ABORT':
+                  delayed_whisper("Please target an appropriate card to host {}".format(targetCard))
+                  return 'ABORT'
+            except: hostMe(targetCard,newHost)
       elif action.group(1) == 'Trash':
          trashResult = intTrashCard(targetCard, fetchProperty(targetCard,'Stat'), "free", silent = True)
          if trashResult == 'ABORT': return 'ABORT'

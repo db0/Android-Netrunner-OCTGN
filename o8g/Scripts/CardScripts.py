@@ -2347,6 +2347,166 @@ whileInPlay:Lose3Credits-isCost-foreachAgendaLiberated-typeAgenda||whileInPlay:T
 +++++
 
 .....
+Frame Job
+-----
+bc0f047c-01b1-427f-a439-d451eda04001
+-----
+onPlay:ExileTarget-Targeted-isScored-targetMine$$Gain1Bad Publicity-onOpponent
++++++
+
+.....
+Pawn
+-----
+bc0f047c-01b1-427f-a439-d451eda04002
+-----
+Placement:ICE
++++++
+A0B0G0T0:RehostMyself-Targeted-isICE
+.....
+Rook
+-----
+bc0f047c-01b1-427f-a439-d451eda04003
+-----
+
++++++
+
+.....
+Hostage
+-----
+bc0f047c-01b1-427f-a439-d451eda04004
+-----
+
++++++
+
+.....
+Gorman Drip v1
+-----
+bc0f047c-01b1-427f-a439-d451eda04005
+-----
+
++++++
+
+.....
+Lockpick
+-----
+bc0f047c-01b1-427f-a439-d451eda04006
+-----
+
++++++
+
+.....
+False Echo
+-----
+bc0f047c-01b1-427f-a439-d451eda04007
+-----
+
++++++
+
+.....
+Motivation
+-----
+bc0f047c-01b1-427f-a439-d451eda04008
+-----
+
++++++
+
+.....
+John Masanori
+-----
+bc0f047c-01b1-427f-a439-d451eda04009
+-----
+
++++++
+
+.....
+Project Ares
+-----
+bc0f047c-01b1-427f-a439-d451eda04010
+-----
+
++++++
+
+.....
+NEXT Bronze
+-----
+bc0f047c-01b1-427f-a439-d451eda04011
+-----
+
++++++
+
+.....
+Celebrity Gift
+-----
+bc0f047c-01b1-427f-a439-d451eda04012
+-----
+
++++++
+
+.....
+Himitsu-Bako
+-----
+bc0f047c-01b1-427f-a439-d451eda04013
+-----
+
++++++
+
+.....
+Character Assassination
+-----
+bc0f047c-01b1-427f-a439-d451eda04014
+-----
+
++++++
+
+.....
+Jackson Howard
+-----
+bc0f047c-01b1-427f-a439-d451eda04015
+-----
+
++++++
+
+.....
+Invasion of Privacy
+-----
+bc0f047c-01b1-427f-a439-d451eda04016
+-----
+
++++++
+
+.....
+Geothermal Fracking
+-----
+bc0f047c-01b1-427f-a439-d451eda04017
+-----
+
++++++
+
+.....
+Swarm
+-----
+bc0f047c-01b1-427f-a439-d451eda04018
+-----
+
++++++
+
+.....
+Cyberdex Trial
+-----
+bc0f047c-01b1-427f-a439-d451eda04019
+-----
+
++++++
+
+.....
+Grim
+-----
+bc0f047c-01b1-427f-a439-d451eda04020
+-----
+
++++++
+
+.....
 
 ENDSCRIPTS
 =====

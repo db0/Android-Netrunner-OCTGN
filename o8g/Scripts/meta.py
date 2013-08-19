@@ -457,17 +457,7 @@ def placeCard(card, action = 'INSTALL', hostCard = None, type = None):
             return 'ABORT'
          else: hostCard = host[0]
       debugNotify("We have a host", 2) #Debug
-      hostCards = eval(getGlobalVariable('Host Cards'))
-      hostCards[card._id] = hostCard._id
-      setGlobalVariable('Host Cards',str(hostCards))
-      cardAttachementsNR = len([att_id for att_id in hostCards if hostCards[att_id] == hostCard._id])
-      debugNotify("About to move into position", 2) #Debug
-      x,y = hostCard.position
-      if hostCard.controller != me: xAxis = -1
-      else: xAxis = 1
-      card.moveToTable(x, y - ((cwidth(card) / 4 * playerside) * cardAttachementsNR))
-      if card.name != 'Parasite': # Parasites we want on top of the host ICE, so that the counters can be seen
-         card.sendToBack()
+      hostMe(card,hostCard)
    else:
       global installedCount
       if not type: 
@@ -502,7 +492,20 @@ def placeCard(card, action = 'INSTALL', hostCard = None, type = None):
          debugNotify("Peeking() at placeCard()")
          card.peek() # Added in octgn 3.0.5.47
    debugNotify("<<< placeCard()", 3) #Debug
-   
+
+def hostMe(card,hostCard):
+   debugNotify(">>> hostMe()") #Debug
+   hostCards = eval(getGlobalVariable('Host Cards'))
+   hostCards[card._id] = hostCard._id
+   setGlobalVariable('Host Cards',str(hostCards))
+   x,y = hostCard.position
+   if hostCard.controller != me: xAxis = -1
+   else: xAxis = 1
+   card.moveToTable(x, y - ((cwidth(card) / 4 * playerside) * len([att_id for att_id in hostCards if hostCards[att_id] == hostCard._id])))
+   if card.name != 'Parasite': # Parasites we want on top of the host ICE, so that the counters can be seen
+      card.sendToBack()
+   debugNotify("<<< hostMe()") #Debug
+
 def orgAttachments(card):
 # This function takes all the cards attached to the current card and re-places them so that they are all visible
 # xAlg, yAlg are the algorithsm which decide how the card is placed relative to its host and the other hosted cards. They are always multiplied by attNR
