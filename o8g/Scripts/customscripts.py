@@ -562,6 +562,16 @@ def CustomScript(card, action = 'PLAY'): # Scripts that are complex and fairly u
       notify("{} does the same old {}".format(me,sameOldThing))
       intPlay(sameOldThing,scripted = True)
       intTrashCard(card, fetchProperty(sameOldThing,'Stat'), "free", silent = True)
+   elif fetchProperty(card, 'name') == "Motivation" and action == 'Start':
+      targetPL = me
+      debugNotify("Moving Top card to our Scripting Pile", 2)
+      cardView = targetPL.piles['R&D/Stack'].top()
+      cardView.moveTo(me.ScriptingPile)
+      rnd(1,10)
+      notify(":> Motivation has revealed the runner's top card of {}'s Stack".format(me))
+      delayed_whisper(":> Motivation: {} is next! Go get 'em!".format(cardView))
+      rnd(1,10)
+      cardView.moveTo(targetPL.piles['R&D/Stack'])
    elif action == 'USE': useCard(card)
    debugNotify("<<< CustomScript()", 3) #Debug
    

@@ -633,6 +633,21 @@ def atTimedEffects(Time = 'Start'): # Function which triggers card effects at th
                else: continue # If none of the above, it means the card script is not triggering for this server.
                debugNotify("All checked OK", 3)
             else: continue
+         if re.search(r'-ifUnsuccessfulRun', autoS):
+            if Time == 'JackOut' and getGlobalVariable('SuccessfulRun') != 'True': #If we're looking only for unsuccessful runs, we need the Time to be a jackout without a successful run shared var..
+               requiredTarget = re.search(r'-ifUnsuccessfulRun([A-Za-z&]+)', autoS) # We check what the script requires to be the unsuccessful target
+               if getGlobalVariable('feintTarget') != 'None': currentRunTarget = getGlobalVariable('feintTarget')
+               else: 
+                  currentRunTargetRegex = re.search(r'running([A-Za-z&]+)', getGlobalVariable('status')) # We check what the target of the current run was.
+                  currentRunTarget = currentRunTargetRegex.group(1)
+               if debugVerbosity >= 2: 
+                  if requiredTarget and currentRunTargetRegex: notify("!!! Regex requiredTarget: {}\n!!! currentRunTarget: {}".format(requiredTarget.groups(),currentRunTarget))
+                  else: notify ("No requiredTarget or currentRunTarget regex match :(")
+               if requiredTarget.group(1) == 'Any': pass # -ifSuccessfulRunAny means we run the script on any successful run (e.g. Desperado)
+               elif requiredTarget.group(1) == currentRunTarget: pass # If the card requires a successful run on a server that the global variable points that we were running at, we can proceed.
+               else: continue # If none of the above, it means the card script is not triggering for this server.
+               debugNotify("All checked OK", 3)
+            else: continue
          if chkPlayer(effect.group(2), card.controller,False) == 0: continue # Check that the effect's origninator is valid. 
          if not ifHave(autoS,card.controller,silent = True): continue # If the script requires the playet to have a specific counter value and they don't, do nothing.
          if chkTagged(autoS, True) == 'ABORT': continue
@@ -650,6 +665,7 @@ def atTimedEffects(Time = 'Start'): # Function which triggers card effects at th
             if not confirm("{} can have its optional ability take effect at this point. Do you want to activate it?{}".format(fetchProperty(card, 'name'),extraCountersTXT)): continue         
          if re.search(r'isAlternativeRunResult', effect.group(2)): AlternativeRunResultUsed = True # If the card has an alternative result to the normal access for a run, mark that we've used it.         
          if re.search(r'onlyOnce',autoS) and oncePerTurn(card, silent = True, act = 'automatic') == 'ABORT': continue
+         if re.search(r'restrictionMarker',autoS) and chkRestrictionMarker(card, autoS, silent = True, act = 'automatic') == 'ABORT': continue
          splitAutoscripts = effect.group(2).split('$$')
          for passedScript in splitAutoscripts:
             targetC = findTarget(passedScript)

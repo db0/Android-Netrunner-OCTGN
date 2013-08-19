@@ -142,6 +142,7 @@ def goToEndTurn(group, x = 0, y = 0):
    myCards = [card for card in table if card.controller == me and card.owner == me]
    for card in myCards: # We refresh once-per-turn cards to be used on the opponent's turn as well (e.g. Net Shield)
       if card._id in Stored_Type and fetchProperty(card, 'Type') != 'ICE': card.orientation &= ~Rot90
+   clearRestrictionMarkers()
    atTimedEffects('End')
    clearAll() # Just in case the player has forgotten to remove their temp markers.
    if ds == "corp": notify ("=> {} ({}) has reached CoB (Close of Business hours).".format(identName, me))

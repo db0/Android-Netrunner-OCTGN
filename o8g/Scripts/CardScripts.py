@@ -2383,7 +2383,7 @@ Gorman Drip v1
 -----
 bc0f047c-01b1-427f-a439-d451eda04005
 -----
-whileInPlay:Put1Virus-foreachCreditClicked||whileInPlay:Put1Virus-foreachCardDrawnClicked
+whileInPlay:Put1Virus-foreachCreditClicked-byOpponent||whileInPlay:Put1Virus-foreachCardDrawnClicked-byOpponent
 +++++
 A0B0G0T1:Gain1Credit-perMarker{Virus}
 .....
@@ -2391,7 +2391,7 @@ Lockpick
 -----
 bc0f047c-01b1-427f-a439-d451eda04006
 -----
-
+onInstall:Put1Credits-isSilent||whileInstalled:Reduce#CostUse-affectsDecoder-forMe||atTurnPreStart:Refill1Credits-duringMyTurn
 +++++
 
 .....
@@ -2401,13 +2401,13 @@ bc0f047c-01b1-427f-a439-d451eda04007
 -----
 
 +++++
-
+A0B0G0T1:SimplyAnnounce{force the corporation to rez target ICE or uninstall it to HQ}
 .....
 Motivation
 -----
 bc0f047c-01b1-427f-a439-d451eda04008
 -----
-
+atTurnStart:CustomScript-duringMyTurn
 +++++
 
 .....
@@ -2415,7 +2415,7 @@ John Masanori
 -----
 bc0f047c-01b1-427f-a439-d451eda04009
 -----
-
+atSuccessfulRun:Draw1Card-onlyOnce||atJackOut:Gain1Tags-ifUnsuccessfulRunAny-restrictionMarkerMasanori Unsuccessful
 +++++
 
 .....

@@ -608,6 +608,33 @@ def oncePerTurn(card, x = 0, y = 0, silent = False, act = 'manual'):
    if act != 'dryRun': card.orientation = Rot90
    debugNotify("<<< oncePerTurn() exit OK", 3) #Debug
 
+def chkRestrictionMarker(card, Autoscript, silent = False, act = 'manual'): # An additional oncePerTurn restriction, that works with markers (with cards that have two different once-per-turn abilities)
+   debugNotify(">>> chkRestrictionMarker(){}".format(extraASDebug())) #Debug
+   mute()
+   restrictedMarkerRegex  = re.search(r"restrictionMarker([A-Za-z0-9_:' ]+)",Autoscript)
+   if restrictedMarkerRegex:
+      debugNotify("restrictedMarker = {}".format(restrictedMarkerRegex.group(1)))
+      restrictedMarker = findMarker(card, restrictedMarkerRegex.group(1))
+      if restrictedMarker:
+         if act != 'manual': return 'ABORT' # If the player is not activating an effect manually, we always fail silently. So as not to spam the confirm.
+         elif not confirm("The once-per-turn ability of {} has already been used this turn\nBypass restriction?.".format(fetchProperty(card, 'name'))): return 'ABORT'
+         else: 
+            if not silent and act != 'dryRun': notify('{} activates the once-per-turn ability of {} another time'.format(me, card))
+      else:
+         if not silent and act != 'dryRun': notify('{} activates the once-per-turn ability of {}'.format(me, card))
+      if act != 'dryRun': TokensX('Put1{}-isSilent'.format(restrictedMarkerRegex.group(1)), '', card)
+   debugNotify("<<< chkRestrictionMarker()") #Debug
+
+def clearRestrictionMarkers():
+   debugNotify(">>> clearRestrictionMarkers(){}".format(extraASDebug())) #Debug
+   for card in table:
+      for Autoscript in CardsAS.get(card.model,'').split('||'):
+         restrictedMarkerRegex  = re.search(r"restrictionMarker([A-Za-z0-9_:' ]+)",Autoscript)
+         if restrictedMarkerRegex:
+            restrictedMarker = findMarker(card, restrictedMarkerRegex.group(1))
+            if restrictedMarker: card.markers[restrictedMarker] = 0
+   debugNotify("<<< clearRestrictionMarkers()") #Debug
+         
 def delayed_whisper(text): # Because whispers for some reason execute before notifys
    rnd(1,10)
    whisper(text)   
