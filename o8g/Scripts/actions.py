@@ -2134,10 +2134,10 @@ def showatrandom(group = None, count = 1, targetPL = None, silent = False, cover
    elif count > len(group):
       whisper(":::WARNING::: {} has only {} cards in their hand.".format(targetPL,len(group)))
       count = len(group)
-   if group == targetPL.hand:
-      for c in group:  c.moveTo(targetPL.ScriptingPile)        
-      targetPL.ScriptingPile.shuffle()
-      for c in targetPL.ScriptingPile: c.moveTo(targetPL.hand)
+   # if group == targetPL.hand: # Disabling because it seems buggy and slow.
+      # for c in group:  c.moveTo(targetPL.ScriptingPile)        
+      # targetPL.ScriptingPile.shuffle()
+      # for c in targetPL.ScriptingPile: c.moveTo(targetPL.hand)
    for iter in range(count):
       card = group.random()
       if card.controller != me: # If we're revealing a card from another player's hand, we grab its properties before we put it on the table, as as not to give away if we're scanning it right now or not.
