@@ -1650,7 +1650,7 @@ def RetrieveX(Autoscript, announceText, card, targetCards = None, notification =
    debugNotify("cardList: {}".format([c.name for c in cardList]), 3)
    chosenCList = []
    abortedRetrieve = False
-   if len(cardList) > count:
+   if len(cardList) > count or re.search(r'upToAmount',Autoscript):
       cardChoices = []
       cardTexts = []
       for iter in range(count):
@@ -1661,10 +1661,12 @@ def RetrieveX(Autoscript, announceText, card, targetCards = None, notification =
             if c.Rules not in cardTexts: # we don't want to provide the player with a the same card as a choice twice.
                debugNotify("Appending card", 4)
                cardChoices.append(c)
-               cardTexts.append(c.Rules) 
-         choice = SingleChoice("Choose card to retrieve{}".format({1:''}.get(count,' {}/{}'.format(iter + 1,count))), makeChoiceListfromCardList(cardChoices), type = 'button')
-         if choice == None: 
-            abortedRetrieve = True
+               cardTexts.append(c.Rules)
+         if re.search(r'upToAmount',Autoscript): cancelButtonName = 'Done'
+         else: cancelButtonName = 'Cancel'
+         choice = SingleChoice("Choose card to retrieve{}".format({1:''}.get(count,' {}/{}'.format(iter + 1,count))), makeChoiceListfromCardList(cardChoices), type = 'button', cancelName = cancelButtonName)
+         if choice == None:
+            if not re.search(r'upToAmount',Autoscript): abortedRetrieve = True # If we have the upToAmount, it means the retrieve can get less cards than the max amount, so cancel does not work as a cancel necessarily.            
             break
          else:
             chosenCList.append(cardChoices[choice])
@@ -1694,8 +1696,13 @@ def RetrieveX(Autoscript, announceText, card, targetCards = None, notification =
       if source == me.ScriptingPile: shuffle(targetPL.piles['R&D/Stack'])
       return 'ABORT'
    debugNotify("About to announce.", 2)
+   if re.search(r'doNotReveal',Autoscript): cardNames = "{} cards".format(len(chosenCList))
+   else: 
+      cardNames = '['
+      for c in chosenCList: cardNames += ' {},'.format(c) # We use this method, so that the card names can be moused over.
+      cardNames += ']'
    if len(chosenCList) == 0: announceString = "{} attempts to {} a card {}, but there were no valid targets.".format(announceText, destiVerb, sourcePath)
-   else: announceString = "{} {} {} {}".format(announceText, destiVerb, [c.name for c in chosenCList], sourcePath)
+   else: announceString = "{} {} {} {}".format(announceText, destiVerb, cardNames, sourcePath)
    if notification and multiplier > 0: notify(':> {}.'.format(announceString))
    debugNotify("<<< RetrieveX()", 3)
    return (announceString,chosenCList) # We also return which cards we've retrieved

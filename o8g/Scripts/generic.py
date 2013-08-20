@@ -154,7 +154,7 @@ def information(Message):
    
 class SingleChoiceWindow(Form):
  
-   def __init__(self, BoxTitle, BoxOptions, type, defaultOption, pages = 0):
+   def __init__(self, BoxTitle, BoxOptions, type, defaultOption, pages = 0, cancelName = 'Cancel'):
       self.Text = "Select an Option"
       self.index = 0
       self.confirmValue = None
@@ -239,7 +239,7 @@ class SingleChoiceWindow(Form):
       if pages > 1: self.Controls.Add(buttonNext) # We only add the "Confirm" button on a radio menu.
 
       cancelButton = Button() # We add a bytton to Cancel the selection
-      cancelButton.Text = "Cancel"
+      cancelButton.Text = cancelName # We can rename the cancel button if we want to.
       cancelButton.Width = 100
       cancelButton.Dock = DockStyle.Bottom
       #button.Anchor = AnchorStyles.Bottom
@@ -279,7 +279,7 @@ class SingleChoiceWindow(Form):
          self.TopMost = True
          self.timer_tries += 1
 
-def SingleChoice(title, options, type = 'button', default = 0):
+def SingleChoice(title, options, type = 'button', default = 0, cancelName = 'Cancel'):
    debugNotify(">>> SingleChoice()".format(title))
    if Automations['WinForms']:
       optChunks=[options[x:x+8] for x in xrange(0, len(options), 8)]
@@ -287,7 +287,7 @@ def SingleChoice(title, options, type = 'button', default = 0):
       choice = "New"
       while choice == "New" or choice == "Next Page":
          Application.EnableVisualStyles()
-         form = SingleChoiceWindow(title, optChunks[optCurrent], type, default, pages = len(optChunks))
+         form = SingleChoiceWindow(title, optChunks[optCurrent], type, default, pages = len(optChunks), cancelName = cancelName)
          form.BringToFront()
          form.ShowDialog()
          choice = form.getIndex()

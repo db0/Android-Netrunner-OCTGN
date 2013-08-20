@@ -138,7 +138,7 @@ Archived Memories
 -----
 bc0f047c-01b1-427f-a439-d451eda01058
 -----
-
+onPlay:Retrieve1Cards-fromArchives-doNotReveal
 +++++
 	
 .....
@@ -2465,7 +2465,7 @@ bc0f047c-01b1-427f-a439-d451eda04015
 -----
 
 +++++
-A1B0G0T0:Draw2Cards||A0B0G0T0:ExileMyself$$Retrieve3Cards-fromArchives-toDeck$$ShuffleR&D
+A1B0G0T0:Draw2Cards||A0B0G0T0:ExileMyself$$Retrieve3Cards-fromArchives-toDeck-upToAmount-doNotReveal$$ShuffleR&D
 .....
 Invasion of Privacy
 -----
