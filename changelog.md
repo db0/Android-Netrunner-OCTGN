@@ -1,6 +1,13 @@
 Changelog - Android:Netrunner LCG OCTGN Game Definition
 ===============================================
 
+### 3.3.1.x
+
+* Added first batch of sounds (See [The ANR sound effects project](http://boardgamegeek.com/thread/1023387/octgn-the-anr-sound-effects-project)
+* Jackson Howard will not announce which cards he retrieves
+* Jackson Howard can now retrieve less than 3 cards
+* Archived Memories now Automated
+
 ### 3.3.0.x
 
 * New game definition for **Opening Moves**. As always, almost every card scripted!
