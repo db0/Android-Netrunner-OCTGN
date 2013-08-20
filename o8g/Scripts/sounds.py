@@ -18,6 +18,7 @@ import re
 
 def playInstallSound(card):
    debugNotify(">>> playInstallSound()") #Debug
+   if getSetting('Sounds', True) == 'False': return
    if re.search(r'Daemon',getKeywords(card)): playSound('Install-Daemon')
    elif fetchProperty(card, 'Type') == 'Program': playSound('Install-Program')
    elif fetchProperty(card, 'Type') == 'Hardware': playSound('Install-Hardware')
@@ -25,6 +26,7 @@ def playInstallSound(card):
 
 def playRezSound(card):
    debugNotify(">>> playRezSound()") #Debug
+   if getSetting('Sounds', True) == 'False': return
    if fetchProperty(card, 'Name') == 'Archer': playSound('Rez-Archer')
    elif re.search(r'Sentry',getKeywords(card)): playSound('Rez-Sentry')
    elif re.search(r'Barrier',getKeywords(card)): playSound('Rez-Barrier')
@@ -35,14 +37,17 @@ def playRezSound(card):
     
 def playDerezSound(card):
    debugNotify(">>> playDerezSound()") #Debug
+   if getSetting('Sounds', True) == 'False': return
    if fetchProperty(card, 'Type') == 'ICE': playSound('Derez-ICE')
     
 def playTurnStartSound():
    debugNotify(">>> playTurnStartSound()") #Debug
+   if getSetting('Sounds', True) == 'False': return
    if ds == 'runner': playSound('Runner-Start')
 
 def playTrashSound(card):
    debugNotify(">>> playTrashSound()") #Debug
+   if getSetting('Sounds', True) == 'False': return
    if fetchProperty(card, 'Type') == 'Upgrade' or fetchProperty(card, 'Type') == 'Asset': 
       if card.controller != me: playSound('Trash-Opposing_Asset')
    if fetchProperty(card, 'Type') == 'Hardware': 
@@ -54,59 +59,69 @@ def playTrashSound(card):
       
 def playButtonSound(buttonType):
    debugNotify(">>> playButtonSound()") #Debug
+   if getSetting('Sounds', True) == 'False': return
    if buttonType == 'Access': playSound('BTN-Access_Imminent')
    elif buttonType == 'NoRez': playSound('BTN-No_Rez')
    elif buttonType == 'Wait': playSound('BTN-Wait')  
    
 def playTraceAvoidedSound():
    debugNotify(">>> playTraceAvoidedSound()") #Debug
+   if getSetting('Sounds', True) == 'False': return
    playSound('Trace-Avoided')
    
 def playTraceStartSound():
    debugNotify(">>> playTraceStartSound()") #Debug
+   if getSetting('Sounds', True) == 'False': return
    playSound('Trace-Start')
    
 def playScoreAgendaSound():
    debugNotify(">>> playScoreAgendaSound()") #Debug
+   if getSetting('Sounds', True) == 'False': return
    if ds == 'corp': playSound('Score-Agenda')
    
 def playDMGSound(DMGType):
    debugNotify(">>> playDMGSound()") #Debug
+   if getSetting('Sounds', True) == 'False': return
    mute()
    if DMGType == 'Brain':
       if rnd(1,10) == 5: playSound('DMG-Brains')
       else: playSound('DMG-Brain')
    elif DMGType == 'Net': playSound('DMG-Net')
+   elif DMGType == 'Meat': playSound('DMG-Meat')
 
 def playRunStartSound():
    debugNotify(">>> playRunStartSound()") #Debug
+   if getSetting('Sounds', True) == 'False': return
    playSound('Run-Start')
    
 def playRunUnsuccesfulSound():
    debugNotify(">>> playRunStartSound()") #Debug
+   if getSetting('Sounds', True) == 'False': return
    playSound('Run-Unsuccessful')
    
 def playCorpEndSound():
    debugNotify(">>> playRunStartSound()") #Debug
+   if getSetting('Sounds', True) == 'False': return
    playSound('Run-End')
    
 def playAccessSound(ServerType):
    debugNotify(">>> playAccessSound()") #Debug
+   if getSetting('Sounds', True) == 'False': return
    mute()
    if ServerType == 'HQ': playSound('Access-HQ')
    elif ServerType == 'R&D': playSound('Access-RD')
    
 def playVirusPurgeSound():
    debugNotify(">>> playVirusPurgeSound()") #Debug
+   if getSetting('Sounds', True) == 'False': return
    playSound('Purge-Viruses')
    
 def playClickCreditSound():
    debugNotify(">>> playClickCreditSound()") #Debug
+   if getSetting('Sounds', True) == 'False': return
    playSound('Credit-Click')
    
 def playClickDrawSound():
    debugNotify(">>> playClickDrawSound()") #Debug
+   if getSetting('Sounds', True) == 'False': return
    playSound('Draw-Card')
-   
-
-

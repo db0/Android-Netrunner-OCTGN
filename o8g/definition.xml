@@ -4,7 +4,7 @@
       name="Android-Netrunner" 
       id="0f38e453-26df-4c04-9d67-6d43de939c77" 
       octgnVersion="3.1.0.0" 
-      version="3.3.1.0" 
+      version="3.3.1.2" 
       markersize="20"
       tags="asymmetric cyberpunk LCG bluff duel"
       description="Android: Netrunner is an asymmetrical cyberpunk Card Game for two players.
@@ -63,6 +63,7 @@
       <sound name="DMG-Brain" src="Sounds/DMG-Brain.mp3"/>
       <sound name="DMG-Brains" src="Sounds/DMG-Brains.mp3"/>
       <sound name="DMG-Net" src="Sounds/DMG-Net.mp3"/>
+      <sound name="DMG-Meat" src="Sounds/DMG-Meat.mp3"/>
       <sound name="Install-Daemon" src="Sounds/Install-Daemon.mp3"/>
       <sound name="Install-Hardware" src="Sounds/Install-Hardware.mp3"/>
       <sound name="Install-Program" src="Sounds/Install-Program.mp3"/>
@@ -123,6 +124,7 @@
          <groupaction menu="Concede" default="False" shortcut="Ctrl+Shift+C" execute="concede" />
          <groupaction menu="(Un)Set as League match" default="False" shortcut="Ctrl+Alt+L" execute="setleague" />
          <groupaction menu="Switch Unicode ON/OFF" default="False" execute="switchUniCode" />
+         <groupaction menu="Switch Sound Effects ON/OFF" default="False" execute="switchSounds" />  
          <groupaction menu="Switch Play, Score and Rez Automation ON/OFF" default="False" execute="switchPlayAutomation" />  
          <groupaction menu="Switch Start/End-of-Turn Automation ON/OFF" default="False" execute="switchStartEndAutomation" />  
          <groupaction menu="Switch Damage Automation ON/OFF" default="False" execute="switchDMGAutomation" />  

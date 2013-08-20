@@ -597,6 +597,15 @@ def switchUniCode(group,x=0,y=0,command = 'Off'):
       whisper("Credits and Clicks will now be displayed as Unicode.".format(me))
       UniCode = True
 
+def switchSounds(group,x=0,y=0):
+   debugNotify(">>> switchSounds(){}".format(extraASDebug())) #Debug
+   if getSetting('Sounds', True):
+      setSetting('Sounds', False)
+      whisper("Sound effects have been switched off")
+   else:
+      setSetting('Sounds', True)
+      whisper("Sound effects have been switched on")
+        
 #------------------------------------------------------------------------------
 # Help functions
 #------------------------------------------------------------------------------
