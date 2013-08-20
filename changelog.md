@@ -1,6 +1,11 @@
 Changelog - Android:Netrunner LCG OCTGN Game Definition
 ===============================================
 
+### 3.3.2.x
+
+* Added option to turn sound effects off/on.
+* Replaced some sounds.
+
 ### 3.3.1.x
 
 * Added first batch of sounds (See [The ANR sound effects project](http://boardgamegeek.com/thread/1023387/octgn-the-anr-sound-effects-project)
