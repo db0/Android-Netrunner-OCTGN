@@ -2273,7 +2273,7 @@ bc0f047c-01b1-427f-a439-d451eda03046
 -----
 
 +++++
-A0B2G0T1:Retrieve1Card-grabProgram-fromStack-toTable-payCost$$ShuffleStack
+A0B2G0T0:TrashMyself$$Retrieve1Card-grabProgram-fromStack-toTable-payCost$$ShuffleStack
 .....
 Sahasrara
 -----
