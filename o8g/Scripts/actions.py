@@ -167,6 +167,7 @@ def goToSot (group, x=0,y=0):
    if not me.isActivePlayer:
       if turn != 0 and not confirm("You opponent does not seem to have finished their turn properly with F12 yet. Continue?"): return
       else: me.setActivePlayer()
+   playTurnStartSound()
    try: atTimedEffects('PreStart') # Trying to figure out where #275 is coming from
    except: notify(":::ERROR::: When executing PreStart scripts. Please report at: https://github.com/db0/Android-Netrunner-OCTGN/issues/275")
    currClicks = 0 # We wipe it again just in case they ended their last turn badly but insist on going through the next one.
@@ -201,12 +202,6 @@ def goToSot (group, x=0,y=0):
       notify ("=> {} ({}) has woken up. They have {} and {} {} for this turn.".format(identName,me,uniCredit(me.Credits),me.Clicks,uniClick()))
       if chkTags(): notify(":::Reminder::: {} is Tagged!".format(identName))
    opponent = ofwhom('onOpponent')
-   if turn == 1:
-      if opponent.getGlobalVariable('gameVersion') == '':
-         information(":::ATTENTION:::\n\nCannot see your opponent's game version! This likely means that they are using a very old version of this plugin.\
-                      \n\nPlease inform them to update their version.\
-                      \n\nYou can continue with this game, but if you do, you are very likely to run into bugs and unexpected behaviour. You have been warned!")
-
 
 def autoRez():
    # A function which rezzes all cards which have been flagged to be auto-rezzed at the start of the turn.
@@ -333,6 +328,7 @@ def intRun(aCost = 1, Name = 'R&D', silent = False):
    #if findMarker(CounterHold,'Fang') or findMarker(CounterHold,'Rex') or findMarker(CounterHold,'Fragmentation Storm'): # These are counters which prevent the runner from running.
    #   notify(":::Warning:::{} attempted to run but was prevented by a resident Sentry effect in their Rig. They will have to remove all such effects before attempting a run".format(me))
    #   return 'ABORT'
+   playRunStartSound()
    if not silent:
       if Name == 'Archives': announceTXT = 'the Archives'
       elif Name == 'Remote': announceTXT = 'a remote server'
@@ -393,13 +389,16 @@ def jackOut(group=table,x=0,y=0, silent = False):
       runTarget = runTargetRegex.group(1) # If the runner is not feinting, then extract the target from the shared variable
       if ds == 'runner' : myIdent.markers[mdict['BadPublicity']] = 0 #If we're the runner, then remove out remaining bad publicity tokens
       else: enemyIdent.markers[mdict['BadPublicity']] = 0 # If we're not the runner, then find the runners and remove any bad publicity tokens
+      if getGlobalVariable('SuccessfulRun') == 'False': playRunUnsuccesfulSound()
       atTimedEffects('JackOut') # If this was a simple jack-out, then make the end-of-run effects trigger only jack-out effects
       setGlobalVariable('status','idle') # Clear the run variable
       setGlobalVariable('feintTarget','None') # Clear any feinted targets
       setGlobalVariable('SuccessfulRun','False') # Set the variable which tells the code if the run was successful or not, to false.
       debugNotify("About to announce end of Run", 2) #Debug
       if not silent: # Announce the end of run from the perspective of each player.
-         if targetPL != me: notify("{} has kicked {} out of their corporate grid".format(myIdent,enemyIdent))
+         if targetPL != me: 
+            notify("{} has kicked {} out of their corporate grid".format(myIdent,enemyIdent))
+            playCorpEndSound()
          else: notify("{} has jacked out of their run on the {} server".format(myIdent,runTarget))
       clearAll(True, True) # On jack out we clear all player's counters, but don't discard cards from the table.
    debugNotify("<<< jackOut()", 3) # Debug
@@ -544,6 +543,7 @@ def advanceCardP(card, x = 0, y = 0):
       me.Clicks += 1 # If the player didn't notice they didn't have enough credits, we give them back their click
       return # If the player didn't have enough money to pay and aborted the function, then do nothing.
    card.markers[mdict['Advancement']] += 1
+   playSound('Advance-Card')
    if card.isFaceUp: notify("{} and paid {}{} to advance {}.".format(ClickCost,uniCredit(1 - reduction),extraText,card))
    else: notify("{} and paid {}{} to advance a card.".format(ClickCost,uniCredit(1 - reduction),extraText))
 
@@ -587,7 +587,9 @@ def inputTraceValue (card, x=0,y=0, limit = 0, silent = False):
    if limit > 0: limitText = '\n\n(Max Trace Power: {})'.format(limit)
    if ds == 'corp': traceTXT = 'Trace'
    else: traceTXT = 'Link'
-   if ds == 'corp': notify("-- {} is initiating a trace...".format(me))
+   if ds == 'corp': 
+      notify("-- {} is initiating a trace...".format(me))
+      playTraceStartSound()
    else: notify("-- {} is working on their base link".format(me))
    TraceValue = askInteger("Increase {} Strength by how much?{}".format(traceTXT,limitText), 0)
    if TraceValue == None:
@@ -628,6 +630,7 @@ def inputTraceValue (card, x=0,y=0, limit = 0, silent = False):
          except: pass # If it's an exception it means our tuple does not exist, so there's no current trace effects. Manual use of the trace card?
       else:
          notify("-- {} has eluded the trace".format(identName))
+         playTraceAvoidedSound()
          autoscriptOtherPlayers('EludedTrace', card)
          try:
             if currentTraceEffectTuple[2] != 'None':
@@ -875,7 +878,8 @@ def addBrainDmg(group, x = 0, y = 0):
    else:
       applyBrainDmg()
       notify ("{} suffers 1 Brain Damage.".format(me))
-      intdamageDiscard(me.hand)     
+      intdamageDiscard(me.hand)    
+      playDMGSound('Brain')
       autoscriptOtherPlayers('BrainDMGInflicted',getSpecial('Identity',fetchRunnerPL()))
 
 def applyBrainDmg(player = me):
@@ -891,6 +895,7 @@ def addMeatDmg(group, x = 0, y = 0):
    else:
       notify ("{} suffers 1 Meat Damage.".format(me))
       intdamageDiscard(me.hand)
+      playDMGSound('Meat')
       autoscriptOtherPlayers('MeatDMGInflicted',getSpecial('Identity',fetchRunnerPL()))
 
 def addNetDmg(group, x = 0, y = 0):
@@ -901,6 +906,7 @@ def addNetDmg(group, x = 0, y = 0):
    else:
       notify ("{} suffers 1 Net Damage.".format(me))
       intdamageDiscard(me.hand)
+      playDMGSound('Net')
       autoscriptOtherPlayers('NetDMGInflicted',getSpecial('Identity',fetchRunnerPL()))
 
 def getCredit(group, x = 0, y = 0):
@@ -913,6 +919,7 @@ def getCredit(group, x = 0, y = 0):
    notify ("{} and receives {}{}.".format(ClickCost,uniCredit(1 - creditsReduce),extraTXT))
    me.counters['Credits'].value += 1 - creditsReduce
    debugNotify("About to autoscript other players")
+   playClickCreditSound()
    autoscriptOtherPlayers('CreditClicked', Identity)
 
 def findDMGProtection(DMGdone, DMGtype, targetPL): # Find out if the player has any card preventing damage
@@ -1090,6 +1097,7 @@ def scrAgenda(card, x = 0, y = 0,silent = False):
       placeCard(card, action = 'SCORE')
       notify("{} {}s {} and receives {} agenda point(s){}".format(me, agendaTxt.lower(), card, ap - apReduce,extraTXT))
       if cheapAgenda: notify(":::Warning:::{} did not have enough advance tokens ({} out of {})! ".format(card,currentAdv,card.Cost))
+      playScoreAgendaSound()
       executePlayScripts(card,agendaTxt)
       autoscriptOtherPlayers('Agenda'+agendaTxt.capitalize()+'d',card) # The autoscripts triggered by this effect are using AgendaLiberated and AgendaScored as the hook
       if me.counters['Agenda Points'].value >= 7 :
@@ -1209,6 +1217,7 @@ def RDaccessX(group = table, x = 0, y = 0): # A function which looks at the top 
       return
    count = askInteger("How many files are you able to access from the corporation's R&D?",1)
    if count == None: return
+   playAccessSound('RD')
    targetPL = ofwhom('-ofOpponent')
    debugNotify("Found opponent. Storing the top {} as a list".format(count), 3) #Debug
    RDtop = list(targetPL.piles['R&D/Stack'].top(count))
@@ -1328,6 +1337,7 @@ def ARCscore(group=table, x=0,y=0):
    if len(ARC) == 0:
       whisper("Corp's Archives are empty. You cannot take this action")
       return
+   playAccessSound('Achives')
    rnd(10,100) # A small pause
    agendaFound = False
    for card in ARC:
@@ -1352,6 +1362,7 @@ def HQaccess(group=table, x=0,y=0, silent = False):
                               \n\nProceed?"): return
    count = askInteger("How many files are you able to access from the corporation's HQ?",1)
    if count == None: return
+   playAccessSound('HQ')
    targetPL = ofwhom('-ofOpponent')
    debugNotify("Found opponent.", 3) #Debug
    revealedCards = showatrandom(count = count, targetPL = targetPL, covered = True)
@@ -1470,6 +1481,7 @@ def intRez (card, x=0, y=0, cost = 'not free', silent = False, silentCost = Fals
       if card.Type == 'ICE': notify("{} has rezzed {} {}{}.".format(me, card, rc, extraText))
       if card.Type == 'Asset': notify("{} has acquired {} {}{}.".format(me, card, rc, extraText))
       if card.Type == 'Upgrade': notify("{} has installed {} {}{}.".format(me, card, rc, extraText))
+   playRezSound(card)
    random = rnd(10,100) # Bug workaround.
    executePlayScripts(card,'REZ')
    autoscriptOtherPlayers('CardRezzed',card)
@@ -1505,6 +1517,7 @@ def derez(card, x = 0, y = 0, silent = False):
       else:
          if not silent: notify("{} derezzed {}".format(me, card))
          card.markers[mdict['Credits']] = 0
+         playDerezSound(card)
          executePlayScripts(card,'DEREZ')
          autoscriptOtherPlayers('CardDerezzed',card)
          card.isFaceUp = False
@@ -1981,6 +1994,7 @@ def intPlay(card, cost = 'not free', scripted = False, preReduction = 0):
       placeCard(card, action)
       if card.Type == 'Operation': notify("{}{} to initiate {}{}.".format(ClickCost, rc, card, extraText))
       else: notify("{}{} to play {}{}.".format(ClickCost, rc, card, extraText))
+   playInstallSound(card)
    executePlayScripts(card,action)
    autoscriptOtherPlayers('Card'+action.capitalize(),card) # we tell the autoscriptotherplayers that we installed/played a card. (e.g. See Haas-Bioroid ability)
    if debugVerbosity >= 3: notify("<<< intPlay().action: {}\nAutoscriptedothers: {}".format(action,'Card'+action.capitalize())) #Debug
@@ -2211,6 +2225,7 @@ def draw(group):
       if ClickCost == 'ABORT': return
       card.moveTo(me.hand)
       notify("{} to draw a card.".format(ClickCost))
+      playClickDrawSound()
       autoscriptOtherPlayers('CardDrawnClicked',card)
    storeProperties(card)
 

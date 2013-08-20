@@ -166,6 +166,7 @@ def parseNewCounters(player,counter,oldValue):
    mute()
    debugNotify(">>> parseNewCounters() for player {} with counter {}. Old Value = {}".format(player,counter.name,oldValue))
    if counter.name == 'Tags' and player == me: chkTags()
+   if counter.name == 'Bad Publicity' and oldValue < counter.value and player == me: playSound('Gain-Bad_Publicity')
    debugNotify("<<< parseNewCounters()")
 
 def checkMovedCard(player,card,fromGroup,toGroup,oldIndex,index,oldX,oldY,x,y,scriptedMove):

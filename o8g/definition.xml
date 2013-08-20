@@ -4,7 +4,7 @@
       name="Android-Netrunner" 
       id="0f38e453-26df-4c04-9d67-6d43de939c77" 
       octgnVersion="3.1.0.0" 
-      version="3.3.0.0" 
+      version="3.3.0.6" 
       markersize="20"
       tags="asymmetric cyberpunk LCG bluff duel"
       description="Android: Netrunner is an asymmetrical cyberpunk Card Game for two players.
@@ -18,6 +18,7 @@
    <scripts>
       <script src="Scripts/actions.py" />
       <script src="Scripts/events.py" />
+      <script src="Scripts/sounds.py" />
       <script src="Scripts/constants.py" />
       <script src="Scripts/autoscripts.py" />
       <script src="Scripts/customscripts.py" />
@@ -32,6 +33,49 @@
        <event name="OnChangeCounter" action="parseNewCounters" />
        <event name="OnMoveCard" action="checkMovedCard" />
    </events>
+   <sounds>
+      <!-- Common Sounds -->
+      <sound name="BTN-Wait" src="Sounds/BRN-Wait.mp3"/>
+      <sound name="BTN-Access_Imminent" src="Sounds/BTN-Access_Imminent.mp3"/>
+      <sound name="BTN-No_Rez" src="Sounds/BTN-No_Rez.mp3"/>
+      <sound name="Draw-Card" src="Sounds/Draw-Card.mp3"/>
+      <sound name="Credit-Click" src="Sounds/Credit-Click.mp3"/>
+      <!-- Corp Sounds -->
+      <sound name="Advance-Card" src="Sounds/Advance-Card.mp3"/>
+      <sound name="Install-ICE" src="Sounds/Install-ICE.mp3"/>
+      <sound name="Purge-Viruses" src="Sounds/Purge-Viruses.mp3"/>
+      <sound name="Rez-Asset" src="Sounds/Rez-Asset.mp3"/>
+      <sound name="Rez-Barrier" src="Sounds/Rez-Barrier.mp3"/>
+      <sound name="Rez-Code_Gate" src="Sounds/Rez-Code_Gate.mp3"/>
+      <sound name="Rez-Sentry" src="Sounds/Rez-Sentry.mp3"/>
+      <sound name="Rez-Trap" src="Sounds/Rez-Trap.mp3"/>
+      <sound name="Rez-Upgrade" src="Sounds/Rez-Upgrade.mp3"/>
+      <sound name="Run-End" src="Sounds/Run-End.mp3"/>
+      <sound name="Score-Agenda" src="Sounds/Score-Agenda.mp3"/>
+      <sound name="Trace-Start" src="Sounds/Trace-Start.mp3"/>
+      <sound name="Trash-Opposing_Program" src="Sounds/Trash-Opposing_Program.mp3"/>
+      <sound name="Gain-Bad_Publicity" src="Sounds/Gain-Bad_Publicity.mp3"/>
+      <!-- Runner Sounds -->
+      <sound name="Runner-Start" src="Sounds/Runner-Start.mp3"/>
+      <sound name="Access-HQ" src="Sounds/Access-HQ.mp3"/>
+      <sound name="Access-RD" src="Sounds/Access-RD.mp3"/>
+      <sound name="Derez-ICE" src="Sounds/Derez-ICE.mp3"/>
+      <sound name="DMG-Brain" src="Sounds/DMG-Brain.mp3"/>
+      <sound name="DMG-Brains" src="Sounds/DMG-Brains.mp3"/>
+      <sound name="DMG-Net" src="Sounds/DMG-Net.mp3"/>
+      <sound name="Install-Daemon" src="Sounds/Install-Daemon.mp3"/>
+      <sound name="Install-Hardware" src="Sounds/Install-Hardware.mp3"/>
+      <sound name="Install-Program" src="Sounds/Install-Program.mp3"/>
+      <sound name="Run-Start" src="Sounds/Run-Start.mp3"/>
+      <sound name="Run-Unsuccessful" src="Sounds/Run-Unsuccessful.mp3"/>
+      <sound name="Trace-Avoided" src="Sounds/Trace-Avoided.mp3"/>
+      <sound name="Trash-Opposing_Asset" src="Sounds/Trash-Opposing_Asset.mp3"/>
+      <sound name="Trash-Opposing_Hardware" src="Sounds/Trash-Opposing_Hardware.mp3"/>
+      <sound name="Trash-Opposing_ICE" src="Sounds/Trash-Opposing_ICE.mp3"/>
+      <!-- Specific Sounds -->
+      <sound name="Rez-Archer" src="Sounds/Rez-Archer.mp3"/>
+      <sound name="Play-Stimhack" src="Sounds/Play-Stimhack.mp3"/>
+   </sounds>
    <fonts>
        <font src="Fonts/CyberpunkIsNotDead_ANR.ttf" size="11" target="context"/> <!--menu-->
        <font src="Fonts/ANR_symbols_only-enlarged.ttf" size="12" target="chat"/> <!--chat-->

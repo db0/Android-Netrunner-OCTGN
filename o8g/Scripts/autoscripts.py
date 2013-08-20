@@ -1315,6 +1315,7 @@ def RunX(Autoscript, announceText, card, targetCards = None, notification = None
       if action: notify("!!! Regex results: {}".format(action.groups()))
       else: notify("!!! No Regex match :(")
    if action.group(1) == 'End':
+      playCorpEndSound()
       jackOut(silent = True)
       if notification == 'Quick': announceString = "{} end the run".format(announceText)
       else: announceString = "{} end the run".format(announceText)
@@ -1591,6 +1592,7 @@ def InflictX(Autoscript, announceText, card, targetCards = None, notification = 
             if action.group(3) == 'Brain':  
                #targetPL.counters['Hand Size'].value -= 1 # If it's brain damage, also reduce the player's maximum handsize.               
                applyBrainDmg(targetPL)
+      if DMG: playDMGSound(action.group(3))
       autoscriptOtherPlayers('{}DMGInflicted'.format(action.group(3)),getSpecial('Identity',targetPL),DMG) # We also trigger any script for damage
    if targetPL == me: targetPL = 'theirself' # Just changing the announcement to fit better.
    if re.search(r'isRequirement', Autoscript) and DMG < 1: failedRequirement = True # Requirement means that the cost is still paid but other clicks are not going to follow.

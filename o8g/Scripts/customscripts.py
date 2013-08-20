@@ -120,6 +120,7 @@ def CustomScript(card, action = 'PLAY'): # Scripts that are complex and fairly u
    if card.model == '23473bd3-f7a5-40be-8c66-7d35796b6031' and action == 'USE': # Virus Scan Special Ability
       clickCost = useClick(count = 3)
       if clickCost == 'ABORT': return
+      playVirusPurgeSound()
       for c in table: 
          foundMarker = findMarker(c,'Virus')
          if foundMarker: c.markers[foundMarker] = 0

@@ -384,6 +384,7 @@ def sendToTrash(card, pile = None): # A function which takes care of sending a c
    debugNotify(">>> sendToTrash()") #Debug   
    if not pile: pile = card.owner.piles['Heap/Archives(Face-up)'] # I can't pass it as a function variable. OCTGN doesn't like it.
    debugNotify("sendToTrash says previous group = {} and highlight = {}".format(card.group.name,card.highlight))
+   playTrashSound(card)
    executePlayScripts(card,'TRASH') # We don't want to run automations on simply revealed cards.
    autoscriptOtherPlayers('CardTrashed',card)
    #clearAttachLinks(card)
@@ -624,15 +625,19 @@ def BUTTON_Access(group = None,x=0,y=0):
                  "--- Alert: Intrusion in progress!"]
    AccessTXT = AccessMsgs[rnd(0,len(AccessMsgs) - 1)]
    notify(AccessTXT + "\n-- {} is about to gain access. Corporate React?".format(me))
+   playButtonSound('Access')
 
 def BUTTON_NoRez(group = None,x=0,y=0):  
    notify("--- {} does not rez approached ICE".format(me))
+   playButtonSound('NoRez')
 
 def BUTTON_OK(group = None,x=0,y=0):
    notify("--- {} has no further reactions.".format(me))
+   playButtonSound('OK')
 
 def BUTTON_Wait(group = None,x=0,y=0):  
    notify("--- Wait! {} wants to react.".format(me))
+   playButtonSound('Wait')
 #------------------------------------------------------------------------------
 #  Online Functions
 #------------------------------------------------------------------------------
