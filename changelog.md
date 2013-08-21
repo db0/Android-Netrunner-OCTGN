@@ -1,6 +1,10 @@
 Changelog - Android:Netrunner LCG OCTGN Game Definition
 ===============================================
 
+### 3.3.4.x
+
+* Caissa Programs should now work properly. First placed on the table and then hosted manually, using clicks
+
 ### 3.3.3.x
 
 * Replaced Run Start sound with something more discreet

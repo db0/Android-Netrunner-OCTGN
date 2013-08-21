@@ -2361,7 +2361,7 @@ bc0f047c-01b1-427f-a439-d451eda04002
 -----
 CaissaPlace:ICE
 +++++
-A0B0G0T0:RehostMyself-Targeted-isICE||A0B0G0T1:InstallTarget-DemiAutoTargeted-atCaissa-fromHand-choose1||A0B0G0T1:Retrieve1Card-fromHeap-grabCaissa-toTable
+A0B0G0T0:RehostMyself-Targeted-isICE||A0B0G0T0:RehostMyself-Targeted-isICE||A0B0G0T1:InstallTarget-DemiAutoTargeted-atCaissa-fromHand-choose1||A0B0G0T1:Retrieve1Card-fromHeap-grabCaissa-toTable
 .....
 Rook
 -----
