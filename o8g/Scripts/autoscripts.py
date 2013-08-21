@@ -61,6 +61,7 @@ def executePlayScripts(card, action):
           re.search(r'atSuccessfulRun', autoS) or 
           re.search(r'onAccess', autoS) or 
           re.search(r'Placement', autoS) or 
+          re.search(r'CaissaPlace', autoS) or 
           re.search(r'whileInPlay', autoS) or 
           re.search(r'constantAbility', autoS) or 
           re.search(r'onPay', autoS) or # onPay effects are only useful before we go to the autoscripts, for the cost reduction.
@@ -1500,7 +1501,8 @@ def ModifyStatus(Autoscript, announceText, card, targetCards = None, notificatio
             if possess(card, targetCard, silent = True, force = True) == 'ABORT': return 'ABORT'
          elif possess(card, targetCard, silent = True) == 'ABORT': return 'ABORT'
       elif action.group(1) == 'Rehost':
-         newHost = chkHostType(targetCard,'DemiAutoTargeted')
+         if re.search(r'Caissa', targetCard.Keywords): newHost = chkHostType(targetCard,'DemiAutoTargeted', caissa = True)
+         else: newHost = chkHostType(targetCard,'DemiAutoTargeted')
          if not newHost: 
             delayed_whisper("Not a card that card rehost. Bad script?!")
             return 'ABORT'

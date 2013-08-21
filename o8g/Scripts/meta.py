@@ -272,10 +272,11 @@ def chkCloud(cloudCard = None): # A function which checks the table for cards wh
    debugNotify("<<< chkCloud()", 3)
             
    
-def chkHostType(card, seek = 'Targeted'):
+def chkHostType(card, seek = 'Targeted', caissa = False):
    debugNotify(">>> chkHostType(){}".format(extraASDebug())) #Debug
    # Checks if the card needs to have a special host targeted before it can come in play.
-   hostType = re.search(r'Placement:([A-Za-z1-9:_ -]+)', fetchProperty(card, 'AutoScripts'))
+   if caissa: hostType = re.search(r'CaissaPlace:([A-Za-z1-9:_ -]+)', fetchProperty(card, 'AutoScripts'))
+   else: hostType = re.search(r'Placement:([A-Za-z1-9:_ -]+)', fetchProperty(card, 'AutoScripts'))
    if hostType:
       debugNotify("hostType: {}.".format(hostType.group(1)), 2) #Debug
       if hostType.group(1) == 'ICE': host = findTarget('{}-isICE-choose1'.format(seek))

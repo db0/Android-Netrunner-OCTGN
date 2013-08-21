@@ -2359,7 +2359,7 @@ Pawn
 -----
 bc0f047c-01b1-427f-a439-d451eda04002
 -----
-Placement:ICE
+CaissaPlace:ICE
 +++++
 A0B0G0T0:RehostMyself-Targeted-isICE||A0B0G0T1:InstallTarget-DemiAutoTargeted-atCaissa-fromHand-choose1||A0B0G0T1:Retrieve1Card-fromHeap-grabCaissa-toTable
 .....
@@ -2367,7 +2367,7 @@ Rook
 -----
 bc0f047c-01b1-427f-a439-d451eda04003
 -----
-
+CaissaPlace:ICE
 +++++
 A1B0G0T0:RehostMyself-Targeted-isICE
 .....
