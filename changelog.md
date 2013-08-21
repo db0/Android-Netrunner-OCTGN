@@ -1,6 +1,12 @@
 Changelog - Android:Netrunner LCG OCTGN Game Definition
 ===============================================
 
+### 3.3.3.x
+
+* Replaced Run Start sound with something more discreet
+* Added Trash Resource sound
+* Replaced "[Click] - Gain Credit" sound
+
 ### 3.3.2.x
 
 * Added option to turn sound effects off/on.

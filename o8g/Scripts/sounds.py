@@ -56,6 +56,8 @@ def playTrashSound(card):
       if card.controller != me: playSound('Trash-Opposing_Program')
    if fetchProperty(card, 'Type') == 'ICE' or (card.orientation == Rot90 and not card.isFaceUp): 
       if card.controller != me: playSound('Trash-Opposing_ICE')
+   if fetchProperty(card, 'Type') == 'Resource' or (card.orientation == Rot90 and not card.isFaceUp): 
+      if card.controller != me: playSound('Trash-Opposing_Resource')
       
 def playButtonSound(buttonType):
    debugNotify(">>> playButtonSound()") #Debug
