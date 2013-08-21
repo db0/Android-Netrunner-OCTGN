@@ -2385,7 +2385,7 @@ bc0f047c-01b1-427f-a439-d451eda04005
 -----
 whileInPlay:Put1Virus-foreachCreditClicked-byOpponent||whileInPlay:Put1Virus-foreachCardDrawnClicked-byOpponent
 +++++
-A0B0G0T1:Gain1Credits-perMarker{Virus}
+A1B0G0T1:Gain1Credits-perMarker{Virus}
 .....
 Lockpick
 -----
