@@ -1697,10 +1697,7 @@ def RetrieveX(Autoscript, announceText, card, targetCards = None, notification =
       return 'ABORT'
    debugNotify("About to announce.", 2)
    if re.search(r'doNotReveal',Autoscript): cardNames = "{} cards".format(len(chosenCList))
-   else: 
-      cardNames = '['
-      for c in chosenCList: cardNames += ' {},'.format(c) # We use this method, so that the card names can be moused over.
-      cardNames += ']'
+   else: cardNames = str([c.name for c in chosenCList])
    if len(chosenCList) == 0: announceString = "{} attempts to {} a card {}, but there were no valid targets.".format(announceText, destiVerb, sourcePath)
    else: announceString = "{} {} {} {}".format(announceText, destiVerb, cardNames, sourcePath)
    if notification and multiplier > 0: notify(':> {}.'.format(announceString))
