@@ -2367,9 +2367,9 @@ Rook
 -----
 bc0f047c-01b1-427f-a439-d451eda04003
 -----
-Placement:ICE
+
 +++++
-A0B0G0T0:RehostMyself-Targeted-isICE
+A1B0G0T0:RehostMyself-Targeted-isICE
 .....
 Hostage
 -----
