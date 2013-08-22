@@ -1,6 +1,10 @@
 Changelog - Android:Netrunner LCG OCTGN Game Definition
 ===============================================
 
+### 3.3.5.x
+
+* Turn Change won't clear stealth and priority highlights anymore
+
 ### 3.3.4.x
 
 * Caissa Programs should now work properly. First placed on the table and then hosted manually, using clicks

@@ -1559,7 +1559,7 @@ def clear(card, x = 0, y = 0, silent = False):
    debugNotify(">>> clear() card: {}".format(card), ) #Debug
    mute()
    if not silent: notify("{} clears {}.".format(me, card))
-   if card.highlight != DummyColor and card.highlight != RevealedColor and card.highlight != InactiveColor: card.highlight = None
+   if card.highlight != DummyColor and card.highlight != RevealedColor and card.highlight != InactiveColor and card.highlight != StealthColor and card.highlight != PriorityColor: card.highlight = None
    card.markers[mdict['BaseLink']] = 0
    card.markers[mdict['PlusOne']] = 0
    card.markers[mdict['MinusOne']] = 0
