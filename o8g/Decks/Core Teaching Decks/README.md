@@ -1,4 +1,4 @@
-====== Teaching Decks ======
+===== Teaching Decks =====
 
 Feel free use these decks to teach Netrunner to new players. 
 
