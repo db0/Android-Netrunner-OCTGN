@@ -1,7 +1,13 @@
 =====Message of the Day======
 
-Opening Moves has now been rezzed and as includes always includes sweet sweet automations.
+We now have sound effects available in game.
 
-Restart your OCTGN to access it.
+Unfortunately they will only play for OCTGN subscribers, but they are pretty sweet! 
+Check some of the recorded games on Twitch.tv or Youtube to hear them.
+
+Some bugs that were fixed that you might have noticed:
+
+* Caissa programs should now install according to their text (i.e. first normally and then re-hosted)
+* Reserving a card for Stealth use, won't unset it at the start of the turn.
 
 =============================
