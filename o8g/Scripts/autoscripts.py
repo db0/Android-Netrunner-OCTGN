@@ -1539,6 +1539,10 @@ def ModifyStatus(Autoscript, announceText, card, targetCards = None, notificatio
             scoreType = 'liberatedAgenda'
             autoscriptOtherPlayers('AgendaLiberated',targetCard)
          placeCard(targetCard, 'SCORE', type = scoreType)
+         if targetPL.counters['Agenda Points'].value >= 7 :
+            notify("{} wins the game!".format(targetPL))
+            if targetPL == me: reportGame()         
+            else: reportGame('AgendaDefeat')
       else: return 'ABORT'
       if action.group(2) != 'Multi': break # If we're not doing a multi-targeting, abort after the first run.
    if notification == 'Quick': announceString = "{} {} {}{}".format(announceText, action.group(1), targetCardlist,extraText)

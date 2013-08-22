@@ -756,7 +756,7 @@ def reportGame(result = 'AgendaVictory'): # This submits the game results online
    RESULT = result
    GNAME = currentGameName()
    LEAGUE = getGlobalVariable('League')
-   if result == 'Flatlined' or result == 'Conceded' or result == 'DeckDefeat': WIN = 0
+   if result == 'Flatlined' or result == 'Conceded' or result == 'DeckDefeat' or result == 'AgendaDefeat': WIN = 0
    else: WIN = 1
    SCORE = me.counters['Agenda Points'].value
    deckStats = eval(me.getGlobalVariable('Deck Stats'))
@@ -801,6 +801,9 @@ def reportGame(result = 'AgendaVictory'): # This submits the game results online
    elif result == 'AgendaVictory': 
       E_RESULT = 'AgendaDefeat'
       E_WIN = 0
+   elif result == 'AgendaDefeat': 
+      E_RESULT = 'AgendaVictory'
+      E_WIN = 1
    else: 
       E_RESULT = 'Unknown'
       E_WIN = 0
