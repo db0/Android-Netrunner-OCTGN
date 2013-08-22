@@ -136,6 +136,7 @@ def goToEndTurn(group, x = 0, y = 0):
          if debugVerbosity <= 0: information(':::Warning:::\n\n You have more card in your hand than your current hand size maximum of {}. Please discard enough and then use the "Declare End of Turn" action again.'.format(currentHandSize()))
          endofturn = True
          return
+   playTurnEndSound()
    endofturn = False
    newturn = False
    currClicks = 0
@@ -436,6 +437,7 @@ def pay2andDelTag(group, x = 0, y = 0):
       return
    ClickCost = useClick()
    if ClickCost == 'ABORT': return
+   playRemoveTagSound()
    dummyCard = getSpecial('Tracing') # Just a random card to pass to the next function. Can't be bothered to modify the function to not need this.
    reduction = reduceCost(dummyCard, 'DELTAG', 2)
    if reduction > 0: extraText = " (reduced by {})".format(uniCredit(reduction))
@@ -623,6 +625,7 @@ def inputTraceValue (card, x=0,y=0, limit = 0, silent = False):
       debugNotify("currentTraceEffectTuple = {}".format(currentTraceEffectTuple), 2)
       if CorpTraceValue > TraceValue + me.counters['Base Link'].value:
          notify("-- {} has been traced".format(identName))
+         playTraceLostSound()
          autoscriptOtherPlayers('UnavoidedTrace', card)
          try:
             if currentTraceEffectTuple[1] != 'None':
@@ -1097,7 +1100,7 @@ def scrAgenda(card, x = 0, y = 0,silent = False):
       placeCard(card, action = 'SCORE')
       notify("{} {}s {} and receives {} agenda point(s){}".format(me, agendaTxt.lower(), card, ap - apReduce,extraTXT))
       if cheapAgenda: notify(":::Warning:::{} did not have enough advance tokens ({} out of {})! ".format(card,currentAdv,card.Cost))
-      playScoreAgendaSound()
+      playScoreAgendaSound(card)
       executePlayScripts(card,agendaTxt)
       autoscriptOtherPlayers('Agenda'+agendaTxt.capitalize()+'d',card) # The autoscripts triggered by this effect are using AgendaLiberated and AgendaScored as the hook
       if me.counters['Agenda Points'].value >= 7 :
@@ -1337,7 +1340,7 @@ def ARCscore(group=table, x=0,y=0):
    if len(ARC) == 0:
       whisper("Corp's Archives are empty. You cannot take this action")
       return
-   playAccessSound('Achives')
+   playAccessSound('Archives')
    rnd(10,100) # A small pause
    agendaFound = False
    for card in ARC:
@@ -1995,6 +1998,7 @@ def intPlay(card, cost = 'not free', scripted = False, preReduction = 0):
       if card.Type == 'Operation': notify("{}{} to initiate {}{}.".format(ClickCost, rc, card, extraText))
       else: notify("{}{} to play {}{}.".format(ClickCost, rc, card, extraText))
    playInstallSound(card)
+   playEvOpSound(card)
    executePlayScripts(card,action)
    autoscriptOtherPlayers('Card'+action.capitalize(),card) # we tell the autoscriptotherplayers that we installed/played a card. (e.g. See Haas-Bioroid ability)
    if debugVerbosity >= 3: notify("<<< intPlay().action: {}\nAutoscriptedothers: {}".format(action,'Card'+action.capitalize())) #Debug
@@ -2087,6 +2091,7 @@ def handtoArchives(card):
 def handDiscard(card):
    debugNotify(">>> handDiscard(){}".format(extraASDebug())) #Debug
    mute()
+   playDiscardHandCardSound()
    if ds == "runner":
       card.moveTo(me.piles['Heap/Archives(Face-up)'])
       if endofturn:

@@ -1,6 +1,13 @@
 Changelog - Android:Netrunner LCG OCTGN Game Definition
 ===============================================
 
+### 3.3.6.x
+
+* Notoriety will now announce game victory and submit stats
+* Jackson will now announce the cards from the face-up archives and how many were hidden cards
+* Jackson will now inform from which pile each card is coming from during selection.
+* Added a lot more sounds to the game, and changed some of the annoying ones
+
 ### 3.3.5.x
 
 * Turn Change won't clear stealth and priority highlights anymore

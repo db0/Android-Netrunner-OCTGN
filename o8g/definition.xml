@@ -4,7 +4,7 @@
       name="Android-Netrunner" 
       id="0f38e453-26df-4c04-9d67-6d43de939c77" 
       octgnVersion="3.1.0.0" 
-      version="3.3.5.9" 
+      version="3.3.5.20" 
       markersize="20"
       tags="asymmetric cyberpunk LCG bluff duel"
       description="Android: Netrunner is an asymmetrical cyberpunk Card Game for two players.
@@ -41,8 +41,12 @@
       <sound name="Draw-Card" src="Sounds/Draw-Card.mp3"/>
       <sound name="Credit-Click" src="Sounds/Credit-Click.mp3"/>
       <!-- Corp Sounds -->
+      <sound name="Corp-Start" src="Sounds/Corp-Start.mp3"/>
+      <sound name="Corp-End" src="Sounds/Corp-End.mp3"/>
+      <sound name="Discard-Card_Corp" src="Sounds/Discard-Card_Corp.mp3"/>
       <sound name="Advance-Card" src="Sounds/Advance-Card.mp3"/>
       <sound name="Install-ICE" src="Sounds/Install-ICE.mp3"/>
+      <sound name="Install-Root" src="Sounds/Install-Root.mp3"/>
       <sound name="Purge-Viruses" src="Sounds/Purge-Viruses.mp3"/>
       <sound name="Rez-Asset" src="Sounds/Rez-Asset.mp3"/>
       <sound name="Rez-Barrier" src="Sounds/Rez-Barrier.mp3"/>
@@ -55,28 +59,55 @@
       <sound name="Trace-Start" src="Sounds/Trace-Start.mp3"/>
       <sound name="Trash-Opposing_Program" src="Sounds/Trash-Opposing_Program.mp3"/>
       <sound name="Trash-Opposing_Resource" src="Sounds/Trash-Opposing_Resource.mp3"/>
+      <sound name="Trash-ICE" src="Sounds/Trash-ICE.mp3"/>
       <sound name="Gain-Bad_Publicity" src="Sounds/Gain-Bad_Publicity.mp3"/>
+      <sound name="Play-Transaction" src="Sounds/Play-Transaction.mp3"/>
+      <sound name="Use-ICE_Pop-Up_Window" src="Sounds/Use-ICE_Pop-Up_Window.mp3"/>
+      <sound name="Use-ICE_Archer" src="Sounds/Use-ICE_Archer.mp3"/>
       <!-- Runner Sounds -->
       <sound name="Runner-Start" src="Sounds/Runner-Start.mp3"/>
+      <sound name="Runner-End" src="Sounds/Runner-End.mp3"/>
+      <sound name="Discard-Card_Runner" src="Sounds/Discard-Card_Runner.mp3"/>
       <sound name="Access-HQ" src="Sounds/Access-HQ.mp3"/>
       <sound name="Access-RD" src="Sounds/Access-RD.mp3"/>
+      <sound name="Access-Archives" src="Sounds/Access-Archives.mp3"/>
       <sound name="Derez-ICE" src="Sounds/Derez-ICE.mp3"/>
       <sound name="DMG-Brain" src="Sounds/DMG-Brain.mp3"/>
       <sound name="DMG-Brains" src="Sounds/DMG-Brains.mp3"/>
       <sound name="DMG-Net" src="Sounds/DMG-Net.mp3"/>
-      <sound name="DMG-Meat" src="Sounds/DMG-Meat.mp3"/>
+      <sound name="DMG-Meat1" src="Sounds/DMG-Meat1.mp3"/>
+      <sound name="DMG-Meat2" src="Sounds/DMG-Meat2.mp3"/>
+      <sound name="DMG-Meat3" src="Sounds/DMG-Meat3.mp3"/>
+      <sound name="DMG-Meat4" src="Sounds/DMG-Meat4.mp3"/>
+      <sound name="DMG-Meat_Whilhelm" src="Sounds/DMG-Meat_Whilhelm.mp3"/>
+      <sound name="Runner-Flatline" src="Sounds/Runner-Flatline.mp3"/>
       <sound name="Install-Daemon" src="Sounds/Install-Daemon.mp3"/>
       <sound name="Install-Hardware" src="Sounds/Install-Hardware.mp3"/>
+      <sound name="Install-Chip" src="Sounds/Install-Chip.mp3"/>
+      <sound name="Install-Gear" src="Sounds/Install-Gear.mp3"/>
+      <sound name="Install-Console" src="Sounds/Install-Console.mp3"/>
       <sound name="Install-Program" src="Sounds/Install-Program.mp3"/>
+      <sound name="Install-Resource" src="Sounds/Install-Resource.mp3"/>
+      <sound name="Install-Virus" src="Sounds/Install-Virus.mp3"/>
       <sound name="Run-Start" src="Sounds/Run-Start.mp3"/>
       <sound name="Run-Unsuccessful" src="Sounds/Run-Unsuccessful.mp3"/>
       <sound name="Trace-Avoided" src="Sounds/Trace-Avoided.mp3"/>
+      <sound name="Trace-Lost" src="Sounds/Trace-Lost.mp3"/>
+      <sound name="Tag-Remove" src="Sounds/Tag-Remove.mp3"/>
+      <sound name="Trash-Program" src="Sounds/Trash-Program.mp3"/>
       <sound name="Trash-Opposing_Asset" src="Sounds/Trash-Opposing_Asset.mp3"/>
       <sound name="Trash-Opposing_Hardware" src="Sounds/Trash-Opposing_Hardware.mp3"/>
       <sound name="Trash-Opposing_ICE" src="Sounds/Trash-Opposing_ICE.mp3"/>
+      <sound name="Liberate-Agenda" src="Sounds/Liberate-Agenda.mp3"/>
+      <sound name="Use-ICEbreaker_AI" src="Sounds/Use-ICEbreaker_AI.mp3"/>
+      <sound name="Use-ICEbreaker_Decoder" src="Sounds/Use-ICEbreaker_Decoder.mp3"/>
+      <sound name="Use-ICEbreaker_Fracter" src="Sounds/Use-ICEbreaker_Fracter.mp3"/>
+      <sound name="Use-ICEbreaker_Killer" src="Sounds/Use-ICEbreaker_Killer.mp3"/>
+      <sound name="Play-Job" src="Sounds/Play-Job.mp3"/>
       <!-- Specific Sounds -->
       <sound name="Rez-Archer" src="Sounds/Rez-Archer.mp3"/>
       <sound name="Play-Stimhack" src="Sounds/Play-Stimhack.mp3"/>
+      <sound name="Score-Breaking_News" src="Sounds/Score-Breaking_News.mp3"/>
    </sounds>
    <fonts>
        <font src="Fonts/CyberpunkIsNotDead_ANR.ttf" size="11" target="context"/> <!--menu-->

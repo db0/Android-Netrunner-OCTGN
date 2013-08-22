@@ -750,6 +750,7 @@ def reportGame(result = 'AgendaVictory'): # This submits the game results online
    gameEnded = getGlobalVariable('gameEnded')
    if gameEnded == 'True':
      if not confirm("Your game already seems to have finished once before. Do you want to change the results to '{}' for {}?".format(result,me.name)): return
+   playGameEndSound(result)
    PLAYER = me.name # Seeting some variables for readability in the URL
    id = getSpecial('Identity',me)
    IDENTITY = id.Subtitle

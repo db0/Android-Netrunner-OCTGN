@@ -365,6 +365,7 @@ def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
    else: AutoscriptsList.append(Autoscripts[0].split('$$'))
    prev_announceText = 'NULL'
    multiCount = 0
+   if len(AutoscriptsList): playUseSound(card)
    for iter in range(len(AutoscriptsList)):
       debugNotify("iter = {}".format(iter), 2)
       selectedAutoscripts = AutoscriptsList[iter]
