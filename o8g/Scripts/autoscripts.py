@@ -1648,7 +1648,7 @@ def RetrieveX(Autoscript, announceText, card, targetCards = None, notification =
          debugNotify("Checking Hidden Arc card: {}".format(c), 4)
          if checkCardRestrictions(gatherCardProperties(c), restrictions) and checkSpecialRestrictions(Autoscript,c):
             cardList.append(c)
-            if re.search(r'-isTopmost', Autoscript) and len(cardList) == count: break # If we're selecting only the topmost cards, we select only the first matches we get.         
+            if re.search(r'-isTopmost', Autoscript) and len(cardList) == count: break # If we're selecting only the topmost cards, we select only the first matches we get.     
    debugNotify("cardList: {}".format([c.name for c in cardList]), 3)
    chosenCList = []
    abortedRetrieve = False
@@ -1660,13 +1660,15 @@ def RetrieveX(Autoscript, announceText, card, targetCards = None, notification =
          del cardChoices[:]
          del cardTexts[:]
          for c in cardList:
-            if c.Rules not in cardTexts: # we don't want to provide the player with a the same card as a choice twice.
+            if (c.Rules,c.group.name) not in cardTexts: # we don't want to provide the player with a the same card as a choice twice, so we check if the a card in this group was already an option.
                debugNotify("Appending card", 4)
                cardChoices.append(c)
-               cardTexts.append(c.Rules)
+               cardTexts.append((c.Rules,c.group.name))
          if re.search(r'upToAmount',Autoscript): cancelButtonName = 'Done'
          else: cancelButtonName = 'Cancel'
-         choice = SingleChoice("Choose card to retrieve{}".format({1:''}.get(count,' {}/{}'.format(iter + 1,count))), makeChoiceListfromCardList(cardChoices), type = 'button', cancelName = cancelButtonName)
+         if re.search(r'-fromArchives', Autoscript): showGroup = True # If the card comes from the archives, then we want to inform the player from which group the card is coming from, so that they know to select from Hidden or Face-up Archives
+         else: showGroup = False
+         choice = SingleChoice("Choose card to retrieve{}".format({1:''}.get(count,' {}/{}'.format(iter + 1,count))), makeChoiceListfromCardList(cardChoices, includeGroup = showGroup), type = 'button', cancelName = cancelButtonName)
          if choice == None:
             if not re.search(r'upToAmount',Autoscript): abortedRetrieve = True # If we have the upToAmount, it means the retrieve can get less cards than the max amount, so cancel does not work as a cancel necessarily.            
             break
@@ -1674,7 +1676,20 @@ def RetrieveX(Autoscript, announceText, card, targetCards = None, notification =
             chosenCList.append(cardChoices[choice])
             cardList.remove(cardChoices[choice])
    else: chosenCList = cardList
-   debugNotify("chosenCList: {}".format(chosenCList), 2)
+   debugNotify("Generating cardNames", 2)
+   if re.search(r'doNotReveal',Autoscript): # If we do not reveal the cards, we still want to tell which cards from the face-up archives were taken
+      if re.search(r'-fromArchives', Autoscript):
+         debugNotify(str(["{} in {}".format(c.name, c.group.name) for c in chosenCList]))
+         shownArcCards = [c.name for c in chosenCList if c.group == targetPL.piles['Heap/Archives(Face-up)']]
+         debugNotify("shownArcCards = {}".format(shownArcCards))
+         hiddenArcCards = [c.name for c in chosenCList if c.group == targetPL.piles['Archives(Hidden)']]
+         debugNotify("hiddenArcCards = {}".format(hiddenArcCards))
+         if len(shownArcCards) and len(hiddenArcCards): cardNames = "{} and {} hidden card(s)".format(shownArcCards,len(hiddenArcCards))
+         elif len(shownArcCards): cardNames = str(shownArcCards)
+         else: cardNames = "{} hidden cards".format(len(chosenCList))
+      else: cardNames = "{} cards".format(len(chosenCList))
+   else: cardNames = str([c.name for c in chosenCList])
+   debugNotify("About to move {} to {}".format([c for c in chosenCList],destination.name))
    if not abortedRetrieve:
       for c in chosenCList:
          if destination == table: 
@@ -1698,8 +1713,6 @@ def RetrieveX(Autoscript, announceText, card, targetCards = None, notification =
       if source == me.ScriptingPile: shuffle(targetPL.piles['R&D/Stack'])
       return 'ABORT'
    debugNotify("About to announce.", 2)
-   if re.search(r'doNotReveal',Autoscript): cardNames = "{} cards".format(len(chosenCList))
-   else: cardNames = str([c.name for c in chosenCList])
    if len(chosenCList) == 0: announceString = "{} attempts to {} a card {}, but there were no valid targets.".format(announceText, destiVerb, sourcePath)
    else: announceString = "{} {} {} {}".format(announceText, destiVerb, cardNames, sourcePath)
    if notification and multiplier > 0: notify(':> {}.'.format(announceString))
