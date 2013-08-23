@@ -1,6 +1,10 @@
 Changelog - Android:Netrunner LCG OCTGN Game Definition
 ===============================================
 
+### 3.3.7.x
+
+* Notoriety shouldn't trigger Jinteki's ability anymore
+
 ### 3.3.6.x
 
 * Notoriety will now announce game victory and submit stats
