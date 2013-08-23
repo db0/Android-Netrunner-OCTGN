@@ -1193,7 +1193,7 @@ def DiscardX(Autoscript, announceText, card, targetCards = None, notification = 
       if re.search(r'isCost', Autoscript) and count < discardNR:
          whisper("You do not have enough cards in your hand to discard")
          return ('ABORT',0)
-      for targetC in targetCards: handDiscard(targetC)
+      for targetC in targetCards: handDiscard(targetC, True)
       debugNotify("Finished discarding targeted cards from hand")
    if count == 0: 
       debugNotify("Exiting because count == 0")
@@ -1533,13 +1533,10 @@ def ModifyStatus(Autoscript, announceText, card, targetCards = None, notificatio
       elif action.group(1) == 'Score': # Score takes a card and claims it as an agenda
          targetPL = ofwhom(Autoscript, targetCard.owner)
          targetCard.setController(targetPL)
-         if targetPL.getGlobalVariable('ds') == 'corp': 
-            scoreType = 'scoredAgenda'
-            autoscriptOtherPlayers('AgendaScored',targetCard)
-         else: 
-            scoreType = 'liberatedAgenda'
-            autoscriptOtherPlayers('AgendaLiberated',targetCard)
+         if targetPL.getGlobalVariable('ds') == 'corp': scoreType = 'scoredAgenda'
+         else: scoreType = 'liberatedAgenda'
          placeCard(targetCard, 'SCORE', type = scoreType)
+         # We do not autoscript other players (see http://boardgamegeek.com/thread/914076/personal-evolution-and-notoriety)
          if targetPL.counters['Agenda Points'].value >= 7 :
             notify("{} wins the game!".format(targetPL))
             if targetPL == me: reportGame()         

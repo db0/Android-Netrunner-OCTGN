@@ -110,7 +110,8 @@ def playTraceStartSound():
 def playTraceAvoidedSound():
    debugNotify(">>> playTraceAvoidedSound()") #Debug
    if getSetting('Sounds', True) == 'False': return
-   playSound('Trace-Avoided')
+   if rnd(1,10) == 10: playSound('Trace-Avoided_Zoidberg')
+   else: playSound('Trace-Avoided')
    
 def playTraceLostSound():
    debugNotify(">>> playTraceLostSound()") #Debug

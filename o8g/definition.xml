@@ -4,7 +4,7 @@
       name="Android-Netrunner" 
       id="0f38e453-26df-4c04-9d67-6d43de939c77" 
       octgnVersion="3.1.0.0" 
-      version="3.3.6.0" 
+      version="3.3.6.2" 
       markersize="20"
       tags="asymmetric cyberpunk LCG bluff duel"
       description="Android: Netrunner is an asymmetrical cyberpunk Card Game for two players.
@@ -92,6 +92,7 @@
       <sound name="Run-Start" src="Sounds/Run-Start.mp3"/>
       <sound name="Run-Unsuccessful" src="Sounds/Run-Unsuccessful.mp3"/>
       <sound name="Trace-Avoided" src="Sounds/Trace-Avoided.mp3"/>
+      <sound name="Trace-Avoided_Zoidberg" src="Sounds/Trace-Avoided_Zoidberg.mp3"/>
       <sound name="Trace-Lost" src="Sounds/Trace-Lost.mp3"/>
       <sound name="Tag-Remove" src="Sounds/Tag-Remove.mp3"/>
       <sound name="Trash-Program" src="Sounds/Trash-Program.mp3"/>

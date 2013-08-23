@@ -2088,10 +2088,10 @@ def handtoArchives(card):
    card.moveTo(me.piles['Heap/Archives(Face-up)'])
    notify ("{} moves a card to their face-up Archives.".format(me))
 
-def handDiscard(card):
+def handDiscard(card, scripted = False):
    debugNotify(">>> handDiscard(){}".format(extraASDebug())) #Debug
    mute()
-   playDiscardHandCardSound()
+   if not scripted: playDiscardHandCardSound()
    if ds == "runner":
       card.moveTo(me.piles['Heap/Archives(Face-up)'])
       if endofturn:
