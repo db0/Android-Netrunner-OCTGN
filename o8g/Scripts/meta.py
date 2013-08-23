@@ -817,10 +817,9 @@ def reportGame(result = 'AgendaVictory'): # This submits the game results online
    E_AGENDASNR = E_deckStats[2]
    if ds == 'corp': E_TURNS = turn - 1 # If we're a corp, the opponent has played one less turn than we have.
    else: E_TURNS = turn # If we're the runner, the opponent has played one more turn than we have.
-   E_VERSION = enemyPL.getGlobalVariable('gameVersion')
    debugNotify("About to report enemy results online.", 2) #Debug
    if debugVerbosity < 1: # We only submit stats if we're not debugging
-      (EreportTXT, EreportCode) = webRead('http://84.205.248.92/slaghund/game.slag?g={}&u={}&id={}&r={}&s={}&i={}&t={}&cnr={}&anr={}&v={}&w={}&lid={}&gname={}'.format(GUID,ENEMY,E_IDENTITY,E_RESULT,E_SCORE,E_INFLUENCE,E_TURNS,E_CARDSNR,E_AGENDASNR,E_VERSION,E_WIN,LEAGUE,GNAME),10000)
+      (EreportTXT, EreportCode) = webRead('http://84.205.248.92/slaghund/game.slag?g={}&u={}&id={}&r={}&s={}&i={}&t={}&cnr={}&anr={}&v={}&w={}&lid={}&gname={}'.format(GUID,ENEMY,E_IDENTITY,E_RESULT,E_SCORE,E_INFLUENCE,E_TURNS,E_CARDSNR,E_AGENDASNR,VERSION,E_WIN,LEAGUE,GNAME),10000)
    setGlobalVariable('gameEnded','True')
    notify("Thanks for playing. Please submit any bugs or feature requests on github.\n-- https://github.com/db0/Android-Netrunner-OCTGN/issues")
    debugNotify("<<< reportGame()", 3) #Debug
