@@ -1525,7 +1525,7 @@ def derez(card, x = 0, y = 0, silent = False):
          autoscriptOtherPlayers('CardDerezzed',card)
          card.isFaceUp = False
          if card.owner == me:
-            debugNotify("Peeking() at derez()")
+            if debugVerbosity >= 0 and not confirm("Peek at card?"): return
             card.peek()
    else:
       notify ( "you can't derez a unrezzed card")

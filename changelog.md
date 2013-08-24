@@ -1,6 +1,10 @@
 Changelog - Android:Netrunner LCG OCTGN Game Definition
 ===============================================
 
+### 3.3.8.x
+
+Rook should now properly host on unrezzed ICE
+
 ### 3.3.7.x
 
 * Notoriety shouldn't trigger Jinteki's ability anymore

@@ -507,8 +507,7 @@ def storeProperties(card, forced = False): # Function that grabs a cards importa
       if (card.Name == '?' and Stored_Name.get(card._id,'?') == '?') or forced:
          if not card.isFaceUp and card.group == table and (card.owner == me or forced): # If card is not ours and it's face down, we cannot store its properties without revealing it to the player via the full game log
                                                                                              # See https://github.com/kellyelton/OCTGN/issues/879
-            debugNotify("Peeking Card at storeProperties()", 2)
-            card.peek()
+            if debugVerbosity >= 0 and confirm("Peek at card? (>>>storeProperties())"): card.peek()
             loopChk(card)
       if (Stored_Name.get(card._id,'?') == '?' and card.Name != '?') or (Stored_Name.get(card._id,'?') != card.Name and card.Name != '?') or forced:
          debugNotify("{} not stored. Storing...".format(card), 3)
@@ -539,8 +538,7 @@ def fetchProperty(card, property):
       debugNotify("Card property: {} unreadable = {}".format(property,currentValue), 4) #Debug
       if not card.isFaceUp and card.group == table and card.owner == me:
          debugNotify("Need to peek card to read its properties.", 3) #Debug
-         debugNotify("Peeking() at fetchProperty()")
-         card.peek()
+         if debugVerbosity >= 0 and confirm("Peek at card? (>>>fetchProperty())"): card.peek()
          loopChk(card)
       debugNotify("Ready to grab real properties.", 3) #Debug
       if property == 'name': currentValue = card.Name # Now that we had a chance to peek at the card, we grab its property again.
