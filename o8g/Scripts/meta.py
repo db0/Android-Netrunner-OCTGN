@@ -280,7 +280,7 @@ def chkHostType(card, seek = 'Targeted', caissa = False):
    if hostType:
       debugNotify("hostType: {}.".format(hostType.group(1)), 2) #Debug
       if hostType.group(1) == 'ICE': host = findTarget('{}-isICE-choose1'.format(seek))
-      host = findTarget('{}-at{}-choose1'.format(seek,hostType.group(1)),card = card)
+      else: host = findTarget('{}-at{}-choose1'.format(seek,hostType.group(1)),card = card)
       if len(host) == 0:
          delayed_whisper("ABORTING!")
          result = 'ABORT'
