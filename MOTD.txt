@@ -1,14 +1,8 @@
 =====Message of the Day======
 
-!!VERY IMPORTANT!! PLEASE READ.
+IMPORTANT!
 
-There's a new bug in OCTGN that is bringing player decks in an out-of-sync state after shuffling.
+The shuffle/deck index bug should be fixed now. R&D Accesses should function properly again.
 
-This means that as a runner, your R&D accesses will not view the top cards of the opponent's deck as the corp sees them.
-You will instead be seeing the deck as it was pre-shuffle!!
-Other cards like Indexing will also be broken.
-
-There is nothing I can do about this at the moment as it's a serious OCTGN bug.
-
-I've informed the developers and will inform you on the blog and the MOTD when there's any news.
+The persistent freeze immediately upon playing sounds should also be fixed, so you can re-enable sounds if you disabled them for this reason.
 =============================
