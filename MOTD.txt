@@ -1,13 +1,14 @@
 =====Message of the Day======
 
-We now have sound effects available in game.
+!!VERY IMPORTANT!! PLEASE READ.
 
-Unfortunately they will only play for OCTGN subscribers, but they are pretty sweet! 
-Check some of the recorded games on Twitch.tv or Youtube to hear them.
+There's a new bug in OCTGN that is bringing player decks in an out-of-sync state after shuffling.
 
-Some bugs that were fixed that you might have noticed:
+This means that as a runner, your R&D accesses will not view the top cards of the opponent's deck as the corp sees them.
+You will instead be seeing the deck as it was pre-shuffle!!
+Other cards like Indexing will also be broken.
 
-* Caissa programs should now install according to their text (i.e. first normally and then re-hosted)
-* Reserving a card for Stealth use, won't unset it at the start of the turn.
+There is nothing I can do about this at the moment as it's a serious OCTGN bug.
 
+I've informed the developers and will inform you on the blog and the MOTD when there's any news.
 =============================
