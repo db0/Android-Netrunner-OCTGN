@@ -309,7 +309,7 @@ def SingleChoice(title, options, type = 'button', default = 0, cancelName = 'Can
 class MultiChoiceWindow(Form):
  # This is a windows form which creates a multiple choice form, with a button for each choice. 
  # The player can select more than one, and they are then returned as a list of integers
-   def __init__(self, FormTitle, FormChoices,CPType): # We initialize our form, expecting 3 variables. 
+   def __init__(self, FormTitle, FormChoices,CPType, pages = 0,currPage = 0): # We initialize our form, expecting 3 variables. 
                                                       # FormTitle is the title of the window itself
                                                       # FormChoices is a list of strings which we use for the names of the buttons
                                                       # CPType is combined with FormTitle to give a more thematic window name.
@@ -322,7 +322,9 @@ class MultiChoiceWindow(Form):
       self.TopMost = True # We make sure our new form will be on the top of all other windows. If we didn't have this here, fullscreen OCTGN would hide the form.
       self.origTitle = formStringEscape(FormTitle) # Used when modifying the label from a button
       
-      self.confirmValue = [] # This is our list which will hold the choices of the players as integers
+      self.confirmValue = [] # This is our list which will hold the choices of the players as integers          
+      self.nextPageBool = False  # self.nextPageBool is just remembering if the player has just flipped the page.
+      self.currPage = currPage
       
       self.timer_tries = 0 # Ugly hack to fix the form sometimes not staying on top of OCTGN
       self.timer = Timer() # Create a timer object
@@ -380,6 +382,13 @@ class MultiChoiceWindow(Form):
          choicePush.Controls.Add(btn) # We add each button to its panel
          btn.BringToFront() # Add new buttons to the bottom of existing ones (Otherwise the buttons would be placed in reverse numerical order)
 
+      buttonNext = Button()
+      buttonNext.Text = "Next Page"
+      buttonNext.Width = 100
+      buttonNext.Dock = DockStyle.Bottom
+      buttonNext.Click += self.nextPage
+      if pages > 1: self.Controls.Add(buttonNext) # We only add the "Confirm" button on a radio menu.
+
       finishButton = Button() # We add a button to Finish the selection
       finishButton.Text = "Finish Selection"
       finishButton.Width = 100
@@ -396,6 +405,11 @@ class MultiChoiceWindow(Form):
       cancelButton.Click += self.cancelPressed
       self.Controls.Add(cancelButton)
 
+   def nextPage(self, sender, args):
+      self.nextPageBool = True
+      self.timer.Stop()
+      self.Close()
+ 
    def finishPressed(self, sender, args): # The function called from the finishButton.
       self.timer.Stop()
       self.Close()  # It just closes the form
@@ -406,11 +420,14 @@ class MultiChoiceWindow(Form):
       self.Close() # And then closes the form
  
    def choiceMade(self, sender, args): # The function called when pressing one of the choice buttons
-      self.confirmValue.append(int(sender.Name)) # We append the button's name to the existing choices list
+      self.confirmValue.append((self.currPage * 8) + int(sender.Name)) # We append the button's name to the existing choices list
       self.label.Text = self.origTitle + "\n\nYour current choices are:\n{}".format(self.confirmValue) # We display what choices we've made until now to the player.
  
    def getIndex(self): # The function called after the form is closed, to grab its choices list
-      return self.confirmValue
+      if self.nextPageBool: 
+         self.nextPageBool = False
+         return "Next Page"
+      else: return self.confirmValue
 
    def onTick(self, sender, event): # Ugly hack required because sometimes the winform does not go on top of all
       if self.timer_tries < 3: # Try three times to bring the form on top
@@ -424,14 +441,23 @@ class MultiChoiceWindow(Form):
 def multiChoice(title, options,card): # This displays a choice where the player can select more than one ability to trigger serially one after the other
    debugNotify(">>> multiChoice()".format(title))
    if Automations['WinForms']: # If the player has not disabled the custom WinForms, we use those
-      Application.EnableVisualStyles() # To make the window look like all other windows in the user's system
-      if card.Type == 'ICE': CPType = 'Intrusion Countermeasures Electronics'  # Just some nice fluff
-      elif re.search(r'Icebreaker', card.Keywords): CPType = 'ICEbreaker GUI'
-      elif card.Type == 'Hardware': CPType = 'Dashboard'
-      else: CPType = 'Control Panel'
-      form = MultiChoiceWindow(title, options, CPType) # We create an object called "form" which contains an instance of the MultiChoice windows form.
-      form.ShowDialog() # We bring the form to the front to allow the user to make their choices
-      choices = form.getIndex() # Once the form is closed, we check an internal variable within the form object to grab what choices they made
+      optChunks=[options[x:x+8] for x in xrange(0, len(options), 8)]
+      optCurrent = 0
+      choices = "New"
+      while choices == "New" or choices == "Next Page":
+         Application.EnableVisualStyles() # To make the window look like all other windows in the user's system
+         if card.Type == 'ICE': CPType = 'Intrusion Countermeasures Electronics'  # Just some nice fluff
+         elif re.search(r'Icebreaker', card.Keywords): CPType = 'ICEbreaker GUI'
+         elif card.Type == 'Hardware': CPType = 'Dashboard'
+         else: CPType = 'Control Panel'
+         debugNotify("About to open form")
+         form = MultiChoiceWindow(title, optChunks[optCurrent], CPType, pages = len(optChunks), currPage = optCurrent) # We create an object called "form" which contains an instance of the MultiChoice windows form.
+         form.ShowDialog() # We bring the form to the front to allow the user to make their choices
+         choices = form.getIndex() # Once the form is closed, we check an internal variable within the form object to grab what choices they made
+         if choices == "Next Page": 
+            debugNotify("Going to next page", 3)
+            optCurrent += 1
+            if optCurrent >= len(optChunks): optCurrent = 0
    else: # If the user has disabled the windows forms, we use instead the OCTGN built-in askInteger function
       concatTXT = title + "\n\n(Tip: You can put multiple abilities one after the the other (e.g. '110'). Max 9 at once)\n\n" # We prepare the text of the window with a concat string
       for iter in range(len(options)): # We populate the concat string with the options
