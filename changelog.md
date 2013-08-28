@@ -3,7 +3,7 @@ Changelog - Android:Netrunner LCG OCTGN Game Definition
 
 ### 3.3.8.x
 
-Rook should now properly host on unrezzed ICE
+* Rook should now properly host on unrezzed ICE
 
 ### 3.3.7.x
 

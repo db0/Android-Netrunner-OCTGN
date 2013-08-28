@@ -407,21 +407,21 @@ def jackOut(group=table,x=0,y=0, silent = False):
 def runSuccess(group=table,x=0,y=0, silent = False):
    debugNotify(">>> runSuccess(). Current status:{}".format(getGlobalVariable('status'))) #Debug
    opponent = ofwhom('-ofOpponent') # First we check if our opponent is a runner or a corp.
-   if ds == 'corp': targetPL = opponent
-   else: targetPL = me
-   runTargetRegex = re.search(r'running([A-Za-z&]+)',getGlobalVariable('status'))
-   if not runTargetRegex: # If the runner is not running at the moment, do nothing
-      if targetPL != me: whisper(":::Error:::{} is not running at the moment.".format(targetPL))
-      else: whisper(":::Error::: You are not currently jacked-in.")
-   elif getGlobalVariable('SuccessfulRun') == 'True':
-      whisper(":::Error::: You have already completed this run succesfully. Jacking out instead...")
-      jackOut()
+   if ds == 'corp': 
+      notify("{} acknowledges a successful run.".format(me))
    else:
-      setGlobalVariable('SuccessfulRun','True')
-      if getGlobalVariable('feintTarget') != 'None': runTarget = getGlobalVariable('feintTarget') #If the runner is feinting, now change the target server to the right one
-      else: runTarget = runTargetRegex.group(1) # If the runner is not feinting, then extract the target from the shared variable
-      atTimedEffects('SuccessfulRun')
-      notify("{} has successfully run the {} server".format(identName,runTarget))
+      runTargetRegex = re.search(r'running([A-Za-z&]+)',getGlobalVariable('status'))
+      if not runTargetRegex: # If the runner is not running at the moment, do nothing
+         whisper(":::Error::: You are not currently jacked-in.")
+      elif getGlobalVariable('SuccessfulRun') == 'True':
+         whisper(":::Error::: You have already completed this run succesfully. Jacking out instead...")
+         jackOut()
+      else:
+         setGlobalVariable('SuccessfulRun','True')
+         if getGlobalVariable('feintTarget') != 'None': runTarget = getGlobalVariable('feintTarget') #If the runner is feinting, now change the target server to the right one
+         else: runTarget = runTargetRegex.group(1) # If the runner is not feinting, then extract the target from the shared variable
+         atTimedEffects('SuccessfulRun')
+         notify("{} has successfully run the {} server".format(identName,runTarget))
    debugNotify("<<< runSuccess()", 3) # Debug
 #------------------------------------------------------------------------------
 # Tags...
