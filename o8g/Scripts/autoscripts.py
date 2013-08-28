@@ -1657,6 +1657,7 @@ def RetrieveX(Autoscript, announceText, card, targetCards = None, notification =
    if len(cardList) > count or re.search(r'upToAmount',Autoscript):
       cardChoices = []
       cardTexts = []
+      if count > len(cardList): count = len(cardList) # To avoid crashing if the pile has less cards than the amount we want to retrieve.
       for iter in range(count):
          debugNotify(" iter: {}/{}".format(iter,count), 4)
          del cardChoices[:]
