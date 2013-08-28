@@ -282,7 +282,7 @@ class SingleChoiceWindow(Form):
 def SingleChoice(title, options, type = 'button', default = 0, cancelName = 'Cancel'):
    debugNotify(">>> SingleChoice()".format(title))
    if Automations['WinForms']:
-      optChunks=[options[x:x+8] for x in xrange(0, len(options), 8)]
+      optChunks=[options[x:x+7] for x in xrange(0, len(options), 7)]
       optCurrent = 0
       choice = "New"
       while choice == "New" or choice == "Next Page":
@@ -297,7 +297,7 @@ def SingleChoice(title, options, type = 'button', default = 0, cancelName = 'Can
             optCurrent += 1
             if optCurrent >= len(optChunks): optCurrent = 0
          elif choice != None: 
-            choice = num(form.getIndex()) + (optCurrent * 8) # if the choice is not a next page, then we convert it to an integer and give that back, adding 8 per number of page passed
+            choice = num(form.getIndex()) + (optCurrent * 7) # if the choice is not a next page, then we convert it to an integer and give that back, adding 8 per number of page passed
    else:
       concatTXT = title + '\n\n'
       for iter in range(len(options)):
@@ -422,7 +422,7 @@ class MultiChoiceWindow(Form):
       self.Close() # And then closes the form
  
    def choiceMade(self, sender, args): # The function called when pressing one of the choice buttons
-      self.confirmValue.append((self.currPage * 8) + int(sender.Name)) # We append the button's name to the existing choices list
+      self.confirmValue.append((self.currPage * 7) + int(sender.Name)) # We append the button's name to the existing choices list
       self.label.Text = self.origTitle + "\n\nYour current choices are:\n{}".format(self.confirmValue) # We display what choices we've made until now to the player.
  
    def getIndex(self): # The function called after the form is closed, to grab its choices list
@@ -446,7 +446,7 @@ class MultiChoiceWindow(Form):
 def multiChoice(title, options,card): # This displays a choice where the player can select more than one ability to trigger serially one after the other
    debugNotify(">>> multiChoice()".format(title))
    if Automations['WinForms']: # If the player has not disabled the custom WinForms, we use those
-      optChunks=[options[x:x+8] for x in xrange(0, len(options), 8)]
+      optChunks=[options[x:x+7] for x in xrange(0, len(options), 7)]
       optCurrent = 0
       choices = "New"
       currChoices = []
