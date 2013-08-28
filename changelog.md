@@ -1,6 +1,12 @@
 Changelog - Android:Netrunner LCG OCTGN Game Definition
 ===============================================
 
+### 3.3.9.x
+
+* Choice Form Pagination now will happen at 7 buttons, to work with people with smaller monitors.
+* Paginated multichoice window as well.
+* Corp can't press F3 to succeed the run for the runner anymore. Instead this will just announe that the corp acknowledges a successful run.
+
 ### 3.3.8.x
 
 * Rook should now properly host on unrezzed ICE
