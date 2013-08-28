@@ -154,7 +154,7 @@ def information(Message):
    
 class SingleChoiceWindow(Form):
  
-   def __init__(self, BoxTitle, BoxOptions, type, defaultOption, pages = 0, cancelName = 'Cancel'):
+   def __init__(self, BoxTitle, BoxOptions, type, defaultOption, pages = 0, cancelButtonBool = True, cancelName = 'Cancel'):
       self.Text = "Select an Option"
       self.index = 0
       self.confirmValue = None
@@ -244,7 +244,7 @@ class SingleChoiceWindow(Form):
       cancelButton.Dock = DockStyle.Bottom
       #button.Anchor = AnchorStyles.Bottom
       cancelButton.Click += self.cancelPressed
-      self.Controls.Add(cancelButton)
+      if cancelButtonBool: self.Controls.Add(cancelButton)
       
    def buttonPressed(self, sender, args):
       self.timer.Stop()
@@ -279,15 +279,15 @@ class SingleChoiceWindow(Form):
          self.TopMost = True
          self.timer_tries += 1
 
-def SingleChoice(title, options, type = 'button', default = 0, cancelName = 'Cancel'):
+def SingleChoice(title, options, type = 'button', default = 0, cancelButton = True, cancelName = 'Cancel'):
    debugNotify(">>> SingleChoice()".format(title))
    if Automations['WinForms']:
       optChunks=[options[x:x+7] for x in xrange(0, len(options), 7)]
       optCurrent = 0
       choice = "New"
-      while choice == "New" or choice == "Next Page":
+      while choice == "New" or choice == "Next Page" or (not choice and not cancelButton):
          Application.EnableVisualStyles()
-         form = SingleChoiceWindow(title, optChunks[optCurrent], type, default, pages = len(optChunks), cancelName = cancelName)
+         form = SingleChoiceWindow(title, optChunks[optCurrent], type, default, pages = len(optChunks), cancelButtonBool = cancelButton, cancelName = cancelName)
          form.BringToFront()
          form.ShowDialog()
          choice = form.getIndex()
@@ -305,6 +305,7 @@ def SingleChoice(title, options, type = 'button', default = 0, cancelName = 'Can
       choice = askInteger(concatTXT,0)
    debugNotify("<<< SingleChoice() with return {}".format(choice), 3)
    return choice
+
    
 class MultiChoiceWindow(Form):
  # This is a windows form which creates a multiple choice form, with a button for each choice. 
