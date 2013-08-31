@@ -581,7 +581,7 @@ def fetchProperty(card, property):
          currentValue = card.properties[property]
          debugNotify("Grabbing {}'s {} manually: {}.".format(card,property,card.properties[property]), 3)
          #storeProperties(card) # Commented out because putting it here can cause an infinite loop
-   debugNotify("<<< fetchProperty() by returning: {}".format(currentValue), 3)
+   debugNotify("<<< fetchProperty() by returning: {}".format(currentValue), 4)
    if not currentValue: currentValue = ''
    return currentValue
 

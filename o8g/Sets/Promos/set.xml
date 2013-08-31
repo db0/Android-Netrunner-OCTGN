@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<set xmlns:noNamespaceSchemaLocation="CardSet.xsd" 
+     name="Promos" 
+     id="fb4b7b07-6bf5-4a52-abd1-1e59280fc85e" 
+     gameId="0f38e453-26df-4c04-9d67-6d43de939c77" 
+     gameVersion="3.0.0.0" 
+     version="3.0.0.0">
+	<cards>
+		<card id="491b52ef-9521-416d-b9cf-c01811cf5d7b" name="The Collective">
+         <property name="Subtitle" value="Williams, Wu, et al." />
+         <property name="Type" value="Identity" />
+         <property name="Keywords" value="Cybernetic" />
+         <property name="Cost" value="1" />
+         <property name="Requirement" value="55" />	
+         <property name="Stat" value="5" />	
+         <property name="Rules" value="The first time you perform the same action three times in a row each turn, gain [Click]." />
+         <property name="Flavor" value="&quot;Peace Through Unity&quot;" />
+         <property name="Instructions" value="" />
+         <property name="Faction" value="Shaper" />
+         <property name="Influence" value="" />
+         <property name="Side" value="runner" />
+         <property name="AutoScript" value="" />
+         <property name="AutoAction" value="" />	
+		</card>
+		<card id="e9bcbfbb-b7d3-49e8-86a7-11b1d40c7a19" name="Laramy Fisk">
+         <property name="Subtitle" value="Savvy Investor" />
+         <property name="Type" value="Identity" />
+         <property name="Keywords" value="Natural" />
+         <property name="Cost" value="0" />
+         <property name="Requirement" value="45" />	
+         <property name="Stat" value="15" />	
+         <property name="Rules" value="The first time you make a successful run on a central server each turn, you may force the Corp to draw 1 card." />
+         <property name="Flavor" value="&quot;Timing is Everything.&quot;" />
+         <property name="Instructions" value="" />
+         <property name="Faction" value="Criminal" />
+         <property name="Influence" value="" />
+         <property name="Side" value="runner" />
+         <property name="AutoScript" value="" />
+         <property name="AutoAction" value="" />	
+		</card>
+	</cards>
+</set>

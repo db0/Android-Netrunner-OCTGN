@@ -20,6 +20,8 @@
 # * CustomScipt() is a completely specialized effect, that is usually so unique, that it's not worth updating my core commands to facilitate it for just one card.
 ###=================================================================================================================###
 
+collectiveSequence = []
+
 def UseCustomAbility(Autoscript, announceText, card, targetCards = None, notification = None, n = 0):
    global reversePlayerChk
    if fetchProperty(card, 'name') == "Tollbooth":
@@ -110,8 +112,8 @@ def UseCustomAbility(Autoscript, announceText, card, targetCards = None, notific
          if c.group == table: c.moveTo(me.hand)
    return announceString
    
-def CustomScript(card, action = 'PLAY'): # Scripts that are complex and fairly unique to specific cards, not worth making a whole generic function for them.
-   global ModifyDraw, secretCred
+def CustomScript(card, action = 'PLAY', origin_card = None, original_action = None): # Scripts that are complex and fairly unique to specific cards, not worth making a whole generic function for them.
+   global ModifyDraw, secretCred, collectiveSequence
    debugNotify(">>> CustomScript() with action: {}".format(action)) #Debug
    trash = me.piles['Heap/Archives(Face-up)']
    arcH = me.piles['Archives(Hidden)']
@@ -119,12 +121,13 @@ def CustomScript(card, action = 'PLAY'): # Scripts that are complex and fairly u
    #confirm("Customscript") # Debug
    if card.model == '23473bd3-f7a5-40be-8c66-7d35796b6031' and action == 'USE': # Virus Scan Special Ability
       clickCost = useClick(count = 3)
-      if clickCost == 'ABORT': return
+      if clickCost == 'ABORT': return 'ABORT'
       playVirusPurgeSound()
       for c in table: 
          foundMarker = findMarker(c,'Virus')
          if foundMarker: c.markers[foundMarker] = 0
       notify("{} to clean all viruses from their corporate grid".format(clickCost))
+      return 'CLICK USED'
    elif card.model == '71a89203-94cd-42cd-b9a8-15377caf4437' and action == 'USE': # Technical Difficulties Special Ability
       knownMarkers = []
       for marker in card.markers:
@@ -132,7 +135,7 @@ def CustomScript(card, action = 'PLAY'): # Scripts that are complex and fairly u
             knownMarkers.append(marker)
       if len(knownMarkers) == 0: 
          whisper("No known markers with ability to remove")
-         return
+         return 'ABORT'
       elif len(knownMarkers) == 1: selectedMarker = knownMarkers[0]
       else: 
          selectTXT = 'Please select a marker to remove\n\n'
@@ -145,15 +148,16 @@ def CustomScript(card, action = 'PLAY'): # Scripts that are complex and fairly u
       aCost = markerRemovals[selectedMarker[0]][0] # The first field in the tuple for the entry with the same name as the selected marker, in the markerRemovals dictionary. All clear? Good.
       cost = markerRemovals[selectedMarker[0]][1]
       clickCost = useClick(count = aCost)
-      if clickCost == 'ABORT': return
+      if clickCost == 'ABORT': return 'ABORT'
       creditCost = payCost(cost)
       if creditCost == 'ABORT':
          me.Clicks += aCost # If the player can't pay the cost after all and aborts, we give him his clicks back as well.
-         return         
+         return 'ABORT' 
       card.markers[selectedMarker] -= 1
       notify("{} to remove {} for {}.".format(clickCost,selectedMarker[0],creditCost))
+      return 'CLICK USED'      
    elif fetchProperty(card, 'name') == 'Accelerated Beta Test' and action == 'SCORE':
-      if not confirm("Would you like to initiate an accelerated beta test?"): return
+      if not confirm("Would you like to initiate an accelerated beta test?"): return 'ABORT'
       iter = 0
       for c in deck.top(3):
          c.moveTo(arcH)
@@ -178,7 +182,7 @@ def CustomScript(card, action = 'PLAY'): # Scripts that are complex and fairly u
          notify("--> {} gains {}".format(me,uniCredit(2)))
    elif fetchProperty(card, 'name') == "Rabbit Hole" and action == 'INSTALL':
       if not confirm("Would you like to extend the rabbit hole?"): 
-         return
+         return 'ABORT'
       cardList = [c for c in deck]
       reduction = 0
       rabbits = 0
@@ -259,7 +263,7 @@ def CustomScript(card, action = 'PLAY'): # Scripts that are complex and fairly u
          if len(targetList) > 0:
             selectedCard = targetList[0]
             actionCost = useClick(count = 1)
-            if actionCost == 'ABORT': return
+            if actionCost == 'ABORT': return 'ABORT'
             hostCards = eval(getGlobalVariable('Host Cards'))
             hostCards[selectedCard._id] = card._id # We set the Personal Workshop to be the card's host
             setGlobalVariable('Host Cards',str(hostCards))
@@ -271,13 +275,14 @@ def CustomScript(card, action = 'PLAY'): # Scripts that are complex and fairly u
             announceText = TokensX('Put1Power-perProperty{Cost}', "{} to activate {} in order to ".format(actionCost,card), selectedCard)
             selectedCard.highlight = InactiveColor
             notify(announceText)
+            return 'CLICK USED'
          else: 
             whisper(":::ERROR::: You need to target a program or hardware in your hand, with a cost of 1 or more, before using this action")  
-            return
+            return 'ABORT'
       elif action == 'Start' and card.controller == me:
          hostCards = eval(getGlobalVariable('Host Cards'))
          PWcards = [Card(att_id) for att_id in hostCards if hostCards[att_id] == card._id]
-         if len(PWcards) == 0: return # No cards are hosted in the PW, we're doing nothing
+         if len(PWcards) == 0: return 'ABORT'# No cards are hosted in the PW, we're doing nothing
          elif len(PWcards) == 1: selectedCard = PWcards[0] # If only one card is hosted in the PW, we remove a power from one of those.
          else: # Else we have to ask which one to remove.
             selectTXT = 'Personal Workshop: Please select one of your hosted cards from which to remove a power counter\n\n'
@@ -294,7 +299,7 @@ def CustomScript(card, action = 'PLAY'): # Scripts that are complex and fairly u
                   if host == 'ABORT': 
                      selectedCard.markers[mdict['Power']] += 1
                      delayed_whisper("-- Undoing Personal Workshop build")
-                     return
+                     return 'ABORT'
                except:
                   extraTXT = ' and hosted on {}'.format(host) # If the card requires a valid host and we found one, we will mention it later.
             else: extraTXT = ''
@@ -309,11 +314,11 @@ def CustomScript(card, action = 'PLAY'): # Scripts that are complex and fairly u
             notify("--> {} has been built{} from {}'s Personal Workshop{}".format(selectedCard,extraTXT,identName,MUtext))         
    elif fetchProperty(card, 'name') == 'Mr. Li' and action == 'USE':
       ClickCost = useClick(count = 1)
-      if ClickCost == 'ABORT': return
+      if ClickCost == 'ABORT': return 'ABORT'
       StackTop = list(me.piles['R&D/Stack'].top(2))
       if len(StackTop) < 2:
          whisper("Your Stack is does not have enough cards. You cannot take this action")
-         return
+         return 'ABORT'
       notify("--> {} is visiting Mr. Li...")
       for c in StackTop:
          debugNotify("Pulling cards to hand", 3) #Debug
@@ -328,6 +333,7 @@ def CustomScript(card, action = 'PLAY'): # Scripts that are complex and fairly u
       catchwords = ["Excellent.","Don't leave town.","We'll be in touch.","We'll be seeing you soon...","Always a pleasure.","Remember our agreement.","Interesting request there."]
       goodbye = catchwords.pop(rnd(0, len(catchwords) - 1))
       notify('{} to have {} procure 1 card.\n- "{}"'.format(ClickCost,card,goodbye))
+      return 'CLICK USED'
    elif fetchProperty(card, 'name') == "Indexing" and action == 'SuccessfulRun':
       targetPL = findOpponent()
       if len(targetPL.piles['R&D/Stack']) < 5: count = len(targetPL.piles['R&D/Stack'])
@@ -394,8 +400,8 @@ def CustomScript(card, action = 'PLAY'): # Scripts that are complex and fairly u
       debugNotify("Finished creating installableCards[]")
       if len(installableCards) == 0:
          notify("Director Haas cannot find any cards to use for their pet project :(")
-         return
-      if not confirm("Would you like to initiate Director Haass' Pet Project?"): return
+         return 'ABORT'
+      if not confirm("Would you like to initiate Director Haass' Pet Project?"): return 'ABORT'
       cardChoices = []
       cardTexts = []
       chosenCList = []
@@ -458,12 +464,12 @@ def CustomScript(card, action = 'PLAY'): # Scripts that are complex and fairly u
       debugNotify("Finished creating installableCards[]")
       if len(installableCards) == 0:
          notify("Howler has no valid targets to shout for >_<")
-         return
+         return 'ABORT'
       debugNotify("len(installableCards) = {}".format(len(installableCards)))
       debugNotify("installableCards: {}".format([rootC.name for rootC in installableCards]), 4)
       choice = SingleChoice("WAAAaaAAaa! Choose a Bioroid ICE to awaken!", makeChoiceListfromCardList(installableCards, includeGroup = True), [], 'Cancel')
       debugNotify("choice = {}".format(choice))
-      if choice == None: return
+      if choice == None: return 'ABORT'
       chosenC = installableCards[choice]
       previousGroup = pileName(chosenC.group)
       debugNotify("chosenC = {}".format(chosenC))
@@ -485,7 +491,7 @@ def CustomScript(card, action = 'PLAY'): # Scripts that are complex and fairly u
       if len(targetList) > 0:
          selectedCard = targetList[0]
          actionCost = useClick(count = 1)
-         if actionCost == 'ABORT': return
+         if actionCost == 'ABORT': return 'ABORT'
          hostCards = eval(getGlobalVariable('Host Cards'))
          hostCards[selectedCard._id] = card._id # We set the Awakening Center to be the card's host
          setGlobalVariable('Host Cards',str(hostCards))
@@ -497,9 +503,10 @@ def CustomScript(card, action = 'PLAY'): # Scripts that are complex and fairly u
          selectedCard.highlight = InactiveColor
          notify("{} has installed a Bioroid ICE in their {}".format(me,card))
          autoscriptOtherPlayers('CardInstall',selectedCard)
+         return 'CLICK USED'
       else: 
          whisper(":::ERROR::: You need to target a Bioroid ICE in your HQ before using this action")  
-         return
+         return 'ABORT'
    elif fetchProperty(card, 'name') == 'Escher':
       tableICE = [c for c in table if fetchProperty(c, 'Type') == 'ICE' or (not c.isFaceUp and c.orientation == Rot90)]
       if action == 'SuccessfulRun':
@@ -577,6 +584,7 @@ def CustomScript(card, action = 'PLAY'): # Scripts that are complex and fairly u
       notify("{} does the same old {}".format(me,sameOldThing))
       intPlay(sameOldThing,scripted = True)
       intTrashCard(card, fetchProperty(sameOldThing,'Stat'), "free", silent = True)
+      return 'CLICK USED'
    elif fetchProperty(card, 'name') == "Motivation" and action == 'Start':
       targetPL = me
       debugNotify("Moving Top card to our Scripting Pile", 2)
@@ -592,7 +600,7 @@ def CustomScript(card, action = 'PLAY'): # Scripts that are complex and fairly u
       del revealedCards[5:] # We don't want it to be more than 5 cards
       if len(revealedCards) == 0: 
          delayed_whisper("You need to gift something to the celebrities first you cheapskate!")
-         return
+         return 'ABORT'
       iter = 0
       for c in revealedCards:
          c.moveToTable(playerside * iter * cwidth(c) - (len(revealedCards) * cwidth(c) / 2), 0 - yaxisMove(c), False)
@@ -603,6 +611,33 @@ def CustomScript(card, action = 'PLAY'): # Scripts that are complex and fairly u
          notify("{} would like to know if it's OK to return their celebrity gifts to their HQ.".format(me))
       for c in revealedCards: c.moveTo(me.hand)
       me.Credits += len(revealedCards) * 2
+   elif fetchProperty(card, 'name') == 'The Collective':
+      if action == 'USE' or action == 'Run':
+         debugNotify("Current collectiveSequence = {}".format(collectiveSequence),3)
+         debugNotify("origin_card = {}. original_action = {}".format(origin_card.name,original_action),3)
+         if not len(collectiveSequence):
+            debugNotify("Empty collectiveSequence List")
+            collectiveSequence.extend([original_action,1,origin_card.name])
+         elif collectiveSequence[0] == original_action:
+            debugNotify("Matched original_action")
+            if original_action == 'CardAction' and collectiveSequence[2] != origin_card.name:
+               debugNotify("{} and no match of {} with {}".format(action,collectiveSequence[2],origin_card.name),3)
+               del collectiveSequence[:]
+               collectiveSequence.extend([original_action,1,origin_card.name])
+            else: 
+               debugNotify("{} and matched {} with {}".format(action,collectiveSequence[2],origin_card.name),3)
+               collectiveSequence[1] += 1
+         else:
+            debugNotify("No match on original_action")
+            del collectiveSequence[:]
+            collectiveSequence.extend([original_action,1,origin_card.name])
+         if collectiveSequence[1] == 3:
+            if oncePerTurn(card) == 'ABORT': return 'ABORT'
+            else: 
+               me.Clicks += 1
+               notify(":> {} has streamlined their processes and gained 1 extra {}.".format(card,uniClick()))
+      elif action == 'Start': del collectiveSequence[:]
+      debugNotify("Exiting with collectiveSequence = {}".format(collectiveSequence))
    elif action == 'USE': useCard(card)
    debugNotify("<<< CustomScript()", 3) #Debug
    

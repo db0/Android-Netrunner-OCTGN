@@ -272,7 +272,7 @@ def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
    debugNotify("Automations active. Checking for CustomScript...", 4)
    if re.search(r'CustomScript', fetchProperty(card, 'AutoActions')): 
       if chkTargeting(card) == 'ABORT': return
-      CustomScript(card,'USE') # Some cards just have a fairly unique effect and there's no use in trying to make them work in the generic framework.
+      if CustomScript(card,'USE') == 'CLICK USED': autoscriptOtherPlayers('CardAction', card)  # Some cards just have a fairly unique effect and there's no use in trying to make them work in the generic framework.
       return
    debugNotify("+++ All checks done!. Starting Choice Parse...", 5)
    ### Checking if card has multiple autoscript options and providing choice to player.
@@ -377,6 +377,7 @@ def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
          #confirm("Active Autoscript: {}".format(activeAutoscript)) #Debug
          ### Checking if any of the card's effects requires one or more targets first
          if re.search(r'Targeted', activeAutoscript) and findTarget(activeAutoscript) == []: return
+      CardAction = False # A boolean which stores if the card's ability required a click or not.
       for activeAutoscript in selectedAutoscripts:
          debugNotify("Reached ifHave chk", 3)
          if not ifHave(activeAutoscript): continue # If the script requires the playet to have a specific counter value and they don't, do nothing.
@@ -395,6 +396,7 @@ def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
                Acost = useClick(count = num(actionCost.group(1)))
                if Acost == 'ABORT': return
                else: announceText = Acost
+               CardAction = True
             else: announceText = '{}'.format(me) # A variable with the text to be announced at the end of the action.
             if actionCost.group(2) != '0': # If we need to pay credits
                reduction = reduceCost(card, 'USE', num(actionCost.group(2)))
@@ -525,6 +527,7 @@ def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
                prev_announceText = announceText # And finally we reset the variable holding the previous script.
       chkNoisy(card)
       gatheredCardList = False  # We set this variable to False, so that reduceCost() calls from other functions can start scanning the table again.
+      if announceText != 'ABORT' and CardAction: autoscriptOtherPlayers('CardAction', card)
 
 #------------------------------------------------------------------------------
 # Other Player trigger
@@ -570,7 +573,11 @@ def autoscriptOtherPlayers(lookup, origin_card = Identity, count = 1): # Functio
          #effect = re.search(r'\b([A-Z][A-Za-z]+)([0-9]*)([A-Za-z& ]*)\b([^:]?[A-Za-z0-9_&{} -]*)', autoS)
          #passedScript = "{}".format(effect.group(0))
          #confirm('effects: {}'.format(passedScript)) #Debug
-         if regexHooks['GainX'].search(autoS):
+         if regexHooks['CustomScript'].search(autoS):
+            customScriptResult = CustomScript(card,'USE',origin_card, lookup)
+            if customScriptResult == 'CLICK USED': autoscriptOtherPlayers('CardAction', card)  # Some cards just have a fairly unique effect and there's no use in trying to make them work in the generic framework.
+            if customScriptResult == 'ABORT': break
+         elif regexHooks['GainX'].search(autoS):
             gainTuple = GainX(autoS, costText, card, targetCard, notification = 'Automatic', n = count)
             if gainTuple == 'ABORT': break
          elif regexHooks['TokensX'].search(autoS): 
@@ -660,6 +667,8 @@ def atTimedEffects(Time = 'Start'): # Function which triggers card effects at th
          if re.search(r'excludeDummy', autoS) and card.highlight == DummyColor: continue
          if re.search(r'onlyforDummy', autoS) and card.highlight != DummyColor: continue
          if re.search(r'isAlternativeRunResult', effect.group(2)) and AlternativeRunResultUsed: continue # If we're already used an alternative run result and this card has one as well, ignore it
+         if re.search(r'onlyOnce',autoS) and oncePerTurn(card, silent = True, act = 'dryRun') == 'ABORT': continue
+         if re.search(r'restrictionMarker',autoS) and chkRestrictionMarker(card, autoS, silent = True, act = 'dryRun') == 'ABORT': continue
          if re.search(r'isOptional', effect.group(2)):
             extraCountersTXT = '' 
             for cmarker in card.markers: # If the card has any markers, we mention them do that the player can better decide which one they wanted to use (e.g. multiple bank jobs)
@@ -720,7 +729,9 @@ def atTimedEffects(Time = 'Start'): # Function which triggers card effects at th
             elif regexHooks['SimplyAnnounce'].search(passedScript):
                SimplyAnnounce(passedScript, announceText, card, notification = 'Automatic', n = X)
             elif regexHooks['CustomScript'].search(passedScript):
-               if CustomScript(card, action = Time) == 'ABORT': break
+               customScriptResult = CustomScript(card, Time, original_action = Time)
+               if customScriptResult == 'CLICK USED': autoscriptOtherPlayers('CardAction', card)  # Some cards just have a fairly unique effect and there's no use in trying to make them work in the generic framework.
+               if customScriptResult == 'ABORT': break
             if failedRequirement: break # If one of the Autoscripts was a cost that couldn't be paid, stop everything else.
    markerEffects(Time) 
    if me.counters['Credits'].value < 0: 

@@ -936,25 +936,8 @@ def TrialError(group, x=0, y=0): # Debugging
    ###### End Testing Corner ######
    delayed_whisper("## Defining Test Cards")
    testcards = [
-                "bc0f047c-01b1-427f-a439-d451eda02058", 
-                "bc0f047c-01b1-427f-a439-d451eda04002", 
-                "bc0f047c-01b1-427f-a439-d451eda04003", 
-                "bc0f047c-01b1-427f-a439-d451eda04004", 
-                "bc0f047c-01b1-427f-a439-d451eda04005", 
-                "bc0f047c-01b1-427f-a439-d451eda04006", 
-                "bc0f047c-01b1-427f-a439-d451eda04007", 
-                "bc0f047c-01b1-427f-a439-d451eda04008", 
-                "bc0f047c-01b1-427f-a439-d451eda04009", 
-                "bc0f047c-01b1-427f-a439-d451eda04011", 
-                "bc0f047c-01b1-427f-a439-d451eda04011", 
-                "bc0f047c-01b1-427f-a439-d451eda04012", 
-                "bc0f047c-01b1-427f-a439-d451eda04011", 
-                "bc0f047c-01b1-427f-a439-d451eda04014", 
-                "bc0f047c-01b1-427f-a439-d451eda04015", 
-                "bc0f047c-01b1-427f-a439-d451eda04016", 
-                "bc0f047c-01b1-427f-a439-d451eda04017", 
-                "bc0f047c-01b1-427f-a439-d451eda04018", 
-                "bc0f047c-01b1-427f-a439-d451eda04019", 
+                "491b52ef-9521-416d-b9cf-c01811cf5d7b", 
+                "e9bcbfbb-b7d3-49e8-86a7-11b1d40c7a19", 
                 "bc0f047c-01b1-427f-a439-d451eda04020"
                 ] 
    if not ds: 
