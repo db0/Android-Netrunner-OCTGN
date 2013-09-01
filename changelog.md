@@ -1,6 +1,11 @@
 Changelog - Android:Netrunner LCG OCTGN Game Definition
 ===============================================
 
+### 3.4.0.x
+
+* Added and Scripted The Collective and Laramy Fisk ;)
+
+
 ### 3.3.9.x
 
 * Choice Form Pagination now will happen at 7 buttons, to work with people with smaller monitors.

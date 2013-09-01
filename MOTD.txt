@@ -1,8 +1,9 @@
 =====Message of the Day======
 
-IMPORTANT!
+The two new spoiled identities from FFG have been added to OCTGN! 
 
-The shuffle/deck index bug should be fixed now. R&D Accesses should function properly again.
+They will also both remain available, no matter which one is derezzed via the voting.
+So don't think about losing one ID, think of it as one becoming an OCTGN exclusive ;)
 
-The persistent freeze immediately upon playing sounds should also be fixed, so you can re-enable sounds if you disabled them for this reason.
+Note: In case you made decks with these IDs yesterday, you may have to replace the ID in the deck file, since we've recently had to change the GUID.
 =============================

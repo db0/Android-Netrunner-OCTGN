@@ -2509,7 +2509,7 @@ A0B0G0T0:TrashTarget-Targeted-atProgram-isSubroutine
 .....
 The Collective
 -----
-491b52ef-9521-416d-b9cf-c01811cf5d7b
+bc0f047c-01b1-427f-a439-d451eda00001
 -----
 whileInPlay:CustomScript-foreachCardInstall||whileInPlay:CustomScript-foreachCardPlay||whileInPlay:CustomScript-foreachCardDrawnClicked||whileInPlay:CustomScript-foreachCreditClicked||whileInPlay:CustomScript-foreachCardAction||atRunStart:CustomScript||atTurnStart:CustomScript
 +++++
@@ -2517,7 +2517,7 @@ A0B0G0T0:Gain1Clicks
 .....
 Laramy Fisk
 -----
-e9bcbfbb-b7d3-49e8-86a7-11b1d40c7a19
+bc0f047c-01b1-427f-a439-d451eda00002
 -----
 atSuccessfulRun:Draw1Card-onOpponent-ifSuccessfulRunHQ-onlyOnce-isOptional||atSuccessfulRun:Draw1Card-onOpponent-ifSuccessfulRunR&D-onlyOnce-isOptional||atSuccessfulRun:Draw1Card-onOpponent-ifSuccessfulRunArchives-onlyOnce-isOptional
 +++++

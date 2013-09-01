@@ -936,8 +936,8 @@ def TrialError(group, x=0, y=0): # Debugging
    ###### End Testing Corner ######
    delayed_whisper("## Defining Test Cards")
    testcards = [
-                "491b52ef-9521-416d-b9cf-c01811cf5d7b", 
-                "e9bcbfbb-b7d3-49e8-86a7-11b1d40c7a19", 
+                "bc0f047c-01b1-427f-a439-d451eda00001", 
+                "bc0f047c-01b1-427f-a439-d451eda00002", 
                 "bc0f047c-01b1-427f-a439-d451eda04020"
                 ] 
    if not ds: 
