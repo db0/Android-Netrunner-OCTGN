@@ -2511,7 +2511,7 @@ The Collective
 -----
 bc0f047c-01b1-427f-a439-d451eda00001
 -----
-whileInPlay:CustomScript-foreachCardInstall||whileInPlay:CustomScript-foreachCardPlay||whileInPlay:CustomScript-foreachCardDrawnClicked||whileInPlay:CustomScript-foreachCreditClicked||whileInPlay:CustomScript-foreachCardAction||atRunStart:CustomScript||atTurnStart:CustomScript
+whileInPlay:CustomScript-foreachCardInstall-duringMyTurn||whileInPlay:CustomScript-foreachCardPlay-duringMyTurn||whileInPlay:CustomScript-foreachCardDrawnClicked-duringMyTurn||whileInPlay:CustomScript-foreachCreditClicked-duringMyTurn||whileInPlay:CustomScript-foreachCardAction-duringMyTurn||atRunStart:CustomScript-duringMyTurn||atTurnStart:CustomScript-duringMyTurn
 +++++
 A0B0G0T0:Gain1Clicks
 .....
