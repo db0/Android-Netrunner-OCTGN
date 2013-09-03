@@ -798,7 +798,7 @@ def reportGame(result = 'AgendaVictory'): # This submits the game results online
    playGameEndSound(result)
    PLAYER = me.name # Seeting some variables for readability in the URL
    id = getSpecial('Identity',me)
-   IDENTITY = id.Subtitle
+   IDENTITY = id.Subtitle.replace(',','').replace('.','').replace('#','').replace('@','').replace('#','')
    RESULT = result
    GNAME = currentGameName()
    LEAGUE = getGlobalVariable('League')
@@ -830,7 +830,7 @@ def reportGame(result = 'AgendaVictory'): # This submits the game results online
    enemyPL = ofwhom('-ofOpponent')
    ENEMY = enemyPL.name
    enemyIdent = getSpecial('Identity',enemyPL)
-   E_IDENTITY = enemyIdent.Subtitle
+   E_IDENTITY = enemyIdent.Subtitle.replace(',','').replace('.','').replace('#','').replace('@','').replace('#','')
    debugNotify("Enemy Identity Name: {}".format(E_IDENTITY), 2) #Debug
    if result == 'FlatlineVictory': 
       E_RESULT = 'Flatlined'
