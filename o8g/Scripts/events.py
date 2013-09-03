@@ -137,29 +137,17 @@ def checkDeck(player,groups):
    debugNotify("<<< checkDeckNoLimit()") #Debug
    chkSideFlip()
   
-def chkSideFlip():
+def chkSideFlip(forced = False):
    mute()
    debugNotify(">>> chkSideFlip()")
    debugNotify("Checking Identity", 3)
-   global flipBoard, flipModX, flipModY
    if not ds:
       information(":::ERROR::: No Identity found! Please load a deck which contains an Identity card before proceeding to setup.")
       return
    chooseSide()
    debugNotify("Checking side Flip", 3)
-   if (ds == 'corp' and me.hasInvertedTable()) or (ds == 'runner' and not me.hasInvertedTable()):
-      debugNotify("Flipping Board")
-      if flipBoard == 1:
-         flipBoard = -1
-         flipModX = -61
-         flipModY = -77
-         table.setBoardImage("table\\Tabletop_flipped.png")
-   elif flipBoard == -1: 
-      debugNotify("Restroring Board Orientation")
-      flipBoard = 1
-      flipModX = 0
-      flipModY = 0
-      table.setBoardImage("table\\Tabletop.png") # If they had already reversed the table before, we set it back proper again
+   if (ds == 'corp' and me.hasInvertedTable()) or (ds == 'runner' and not me.hasInvertedTable()): setGlobalVariable('boardFlipState','True')
+   elif flipBoard == -1: setGlobalVariable('boardFlipState','False')
    else: debugNotify("Leaving Board as is")
 
 def parseNewCounters(player,counter,oldValue):
@@ -185,4 +173,26 @@ def checkMovedCard(player,card,fromGroup,toGroup,oldIndex,index,oldX,oldY,x,y,sc
       debugNotify("Clearing card attachments")
       clearAttachLinks(card)
       
-      
+def checkGlobalVars(name,oldValue,value):
+   debugNotify(">>> checkGlobalVars()")
+   mute()
+   checkBoardFlip(name,oldValue,value)
+   debugNotify("<<< checkGlobalVars()")
+
+def checkBoardFlip(name,oldValue,value):   
+   debugNotify(">>> checkBoardFlip()")
+   global flipBoard, flipModX, flipModY
+   if name == 'boardFlipState':
+      if value == 'True':
+         debugNotify("Flipping Board")
+         flipBoard = -1
+         flipModX = -61
+         flipModY = -77
+         table.setBoardImage("table\\Tabletop_flipped.png")
+      else:
+         debugNotify("Restoring Board Orientation")
+         flipBoard = 1
+         flipModX = 0
+         flipModY = 0
+         table.setBoardImage("table\\Tabletop.png") # If they had already reversed the table before, we set it back proper again
+   debugNotify("<<< checkBoardFlip()")      

@@ -1889,6 +1889,7 @@ def inspectTargetCard(group, x = 0, y = 0): # This function shows the player the
    debugNotify(">>> inspectTargetCard(){}".format(extraASDebug())) #Debug
    for card in table:
       if card.targetedBy and card.targetedBy == me: inspectCard(card)
+      
 #------------------------------------------------------------------------------
 # Hand Actions
 #------------------------------------------------------------------------------
