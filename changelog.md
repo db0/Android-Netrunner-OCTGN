@@ -1,10 +1,12 @@
 Changelog - Android:Netrunner LCG OCTGN Game Definition
 ===============================================
 
-### 3.5.0.x
+### 3.4.1.x
 
 * Table board will flip for the spectators as well now.
 * Dinosaurus can now host programs as you play them from hand, as long as you have it targeted.
+* Snitch now once-per-run
+* Cards accessed from HQ should not retain their revealed highlight when returned anymore.
 
 ### 3.4.0.x
 
