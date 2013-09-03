@@ -1290,9 +1290,9 @@ Dinosaurus
 -----
 bc0f047c-01b1-427f-a439-d451eda02048
 -----
-onInstall:Put1Dinosaurus Hosted-isSilent
+onInstall:Put1Dinosaurus Hosted-isSilent||ConstantAbility:CountsAsDaemon||onHost:Put2PlusOnePerm-isSilent
 +++++
-A0B0G0T0:PossessTarget-Targeted-atIcebreaker_and_nonAI-targetMine-forceHost$$Put2PlusOnePerm-Targeted-atIcebreaker_and_nonAI-targetMine
+A0B0G0T0:PossessTarget-Targeted-atIcebreaker_and_nonAI-targetMine$$Put2PlusOnePerm-Targeted-atIcebreaker_and_nonAI-targetMine
 .....
 Emergency Shutdown
 -----

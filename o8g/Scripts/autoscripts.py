@@ -60,6 +60,7 @@ def executePlayScripts(card, action):
           re.search(r'atJackOut', autoS) or 
           re.search(r'atSuccessfulRun', autoS) or 
           re.search(r'onAccess', autoS) or 
+          re.search(r'onHost', autoS) or 
           re.search(r'Placement', autoS) or 
           re.search(r'CaissaPlace', autoS) or 
           re.search(r'whileInPlay', autoS) or 

@@ -121,7 +121,7 @@ def chooseWell(limit, choiceText, default = None):
    return choice
 
 def findMarker(card, markerDesc): # Goes through the markers on the card and looks if one exist with a specific description
-   debugNotify(">>> findMarker(){}".format(extraASDebug())) #Debug
+   debugNotify(">>> findMarker() on {} with markerDesc = {}".format(card,markerDesc)) #Debug
    foundKey = None
    if markerDesc in mdict: markerDesc = mdict[markerDesc][0] # If the marker description is the code of a known marker, then we need to grab the actual name of that.
    for key in card.markers:
@@ -372,6 +372,7 @@ def clearAttachLinks(card):
          if DaemonHosted: # if the card just removed was a daemon hosted by a daemon, then it's going to have a different kind of token.
             hostCard.markers[mdict['DaemonMU']] += card.markers[DaemonHosted] # If the card was hosted by a Daemon, we return any Daemon MU's used.
       customMU = findMarker(card, '{} Hosted'.format(hostCard.name)) 
+      debugNotify("customMU = {}".format(customMU))
       if customMU and hostCard.group == table: # If the card has a custom hosting marker (e.g. Dinosaurus)
          hostCard.markers[customMU] += 1 # Then we return the custom hosting marker to its original card to signifiy it's free to host another program.
       del hostCards[card._id] # If the card was an attachment, delete the link
@@ -388,7 +389,7 @@ def sendToTrash(card, pile = None): # A function which takes care of sending a c
    playTrashSound(card)
    executePlayScripts(card,'TRASH') # We don't want to run automations on simply revealed cards.
    autoscriptOtherPlayers('CardTrashed',card)
-   #clearAttachLinks(card)
+   clearAttachLinks(card)
    if chkModulator(card, 'preventTrash', 'onTrash'): # IF the card has the preventTrash modulator, it's not supposed to be trashed.
       if chkModulator(card, 'ifAccessed', 'onTrash') and ds != 'runner': card.moveTo(pile) # Unless it only has that modulator active during runner access. Then when the corp trashes it, it should trash normally.
    else: card.moveTo(pile)
@@ -561,11 +562,11 @@ def possess(daemonCard, programCard, silent = False, force = False):
    debugNotify("Looking for custom hosting marker", 2)
    customHostMarker = findMarker(daemonCard, '{} Hosted'.format(daemonCard.name)) # We check if the card has a custom hosting marker which we use when the hosting is forced
    debugNotify("Custom hosting marker: {}".format(customHostMarker), 2)
-   hostCards = eval(getGlobalVariable('Host Cards'))
-   if not force and count > daemonCard.markers[mdict['DaemonMU']]:
-      delayed_whisper(":::ERROR::: {} does not have enough free MUs to possess {}.".format(daemonCard, programCard))
+   hostCards = eval(getGlobalVariable('Host Cards'))   
+   if not force and (count > daemonCard.markers[mdict['DaemonMU']] and not customHostMarker):
+      delayed_whisper(":::ERROR::: {} has already hosted the maximum amount of programs it can hold.".format(daemonCard))
       return 'ABORT'
-   elif force and not (customHostMarker and daemonCard.markers[customHostMarker] > 0): # .get didn't work on card.markers[] :-(
+   elif force and not customHostMarker: # .get didn't work on card.markers[] :-(
       delayed_whisper(":::ERROR::: {} has already hosted the maximum amount of programs it can hold.".format(daemonCard))
       return 'ABORT'
    elif hostCards.has_key(programCard._id):
@@ -575,7 +576,7 @@ def possess(daemonCard, programCard, silent = False, force = False):
       debugNotify("We have a valid daemon host", 2) #Debug
       hostCards[programCard._id] = daemonCard._id
       setGlobalVariable('Host Cards',str(hostCards))
-      if not force:
+      if not customHostMarker:
          daemonCard.markers[mdict['DaemonMU']] -= count
          if re.search(r'Daemon',fetchProperty(programCard, 'Keywords')): # If it's a daemon, we do not want to give it the same daemon token, as that's going to be reused for other programs and we do not want that.
             TokensX('Put{}Daemon Hosted MU-isSilent'.format(count), '', programCard)
@@ -583,6 +584,14 @@ def possess(daemonCard, programCard, silent = False, force = False):
       else:
          daemonCard.markers[customHostMarker] -= 1 # If this a forced host, the host should have a special counter on top of it...
          programCard.markers[customHostMarker] += 1 # ...that we move to the hosted program to signify it's hosted
+         Autoscripts = CardsAS.get(daemonCard.model,'').split('||')
+         debugNotify("Daemon Autoscripts found = {}".format(Autoscripts))
+         for autoS in Autoscripts:
+            markersRegex = re.search(r'onHost:(.*)',autoS)            
+            if markersRegex:
+               debugNotify("markersRegex groups = {}".format(markersRegex.groups()))
+               TokensX(markersRegex.group(1),'',programCard)
+            else: debugNotify("No onHost scripts found in {}".format(autoS))
       programCard.owner.MU += count # We return the MUs the card would be otherwise using.
       if not silent: notify("{} installs {} into {}".format(me,programCard,daemonCard))
    debugNotify("<<< possess(){}", 3) #Debug   
@@ -972,8 +981,7 @@ def TrialError(group, x=0, y=0): # Debugging
    ###### End Testing Corner ######
    delayed_whisper("## Defining Test Cards")
    testcards = [
-                "bc0f047c-01b1-427f-a439-d451eda00001", 
-                "bc0f047c-01b1-427f-a439-d451eda00002", 
+                "bc0f047c-01b1-427f-a439-d451eda02048", 
                 "bc0f047c-01b1-427f-a439-d451eda04020"
                 ] 
    if not ds: 
