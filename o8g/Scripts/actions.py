@@ -1443,6 +1443,8 @@ def HQaccess(group=table, x=0,y=0, silent = False):
             loopChk(revealedCard,'Type')
             notify("{} paid {}{} to {} {}".format(me,uniCredit(num(revealedCard.Stat) - reduction),extraText2,uniTrash(),revealedCard))
       else: revealedCard.moveTo(targetPL.hand)
+   rnd(1,10) # a little pause
+   for c in revealedCards: c.highlight = None # We make sure no card remains highlighted for some reason.
    clearCovers() # Finally we clear any remaining cover cards.
    debugNotify("<<< HQAccess()", 3)
 
