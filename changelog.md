@@ -1,6 +1,10 @@
 Changelog - Android:Netrunner LCG OCTGN Game Definition
 ===============================================
 
+### 3.5.0.x
+
+* Table board will flip for the spectators as well now.
+
 ### 3.4.0.x
 
 * Added and Scripted The Collective and Laramy Fisk ;)
