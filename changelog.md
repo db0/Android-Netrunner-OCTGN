@@ -4,6 +4,7 @@ Changelog - Android:Netrunner LCG OCTGN Game Definition
 ### 3.5.0.x
 
 * Table board will flip for the spectators as well now.
+* Dinosaurus can now host programs as you play them from hand, as long as you have it targeted.
 
 ### 3.4.0.x
 
