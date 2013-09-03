@@ -174,13 +174,10 @@ def checkMovedCard(player,card,fromGroup,toGroup,oldIndex,index,oldX,oldY,x,y,sc
       clearAttachLinks(card)
       
 def checkGlobalVars(name,oldValue,value):
-   debugNotify(">>> checkGlobalVars()")
    mute()
    checkBoardFlip(name,oldValue,value)
-   debugNotify("<<< checkGlobalVars()")
 
 def checkBoardFlip(name,oldValue,value):   
-   debugNotify(">>> checkBoardFlip()")
    global flipBoard, flipModX, flipModY
    if name == 'boardFlipState':
       if value == 'True':
@@ -195,4 +192,3 @@ def checkBoardFlip(name,oldValue,value):
          flipModX = 0
          flipModY = 0
          table.setBoardImage("table\\Tabletop.png") # If they had already reversed the table before, we set it back proper again
-   debugNotify("<<< checkBoardFlip()")      
