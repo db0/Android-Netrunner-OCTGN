@@ -75,8 +75,11 @@ def useClick(group = table, x=0, y=0, count = 1):
    currClicks += count + lastKnownNrClicks - me.Clicks# If the player modified their click counter manually, the last two will increase/decreate our current click accordingly.
    me.Clicks -= count
    lastKnownNrClicks = me.Clicks
+   debugNotify("About to clear all events from table")
    for card in table: # We discard all events on the table when the player tries to use another click.
+      debugNotify("Processing {}".format(card))
       hostCards = eval(getGlobalVariable('Host Cards'))
+      debugNotify("hostCards eval = {}".format(hostCards))
       if card.isFaceUp and (card.Type == 'Operation' or card.Type == 'Event') and card.highlight != DummyColor and card.highlight != RevealedColor and card.highlight != InactiveColor and not card.markers[mdict['Scored']] and not hostCards.has_key(card._id): # We do not trash "scored" events (e.g. see Notoriety) or cards hosted on others card (e.g. see Oversight AI)
          intTrashCard(card,0,"free") # Clearing all Events and operations for players who keep forgeting to clear them.   
    debugNotify("<<< useClick", 3) #Debug
@@ -211,8 +214,8 @@ def autoRez():
    global autoRezFlags
    for cID in autoRezFlags:
       card = Card(cID)
-      delayed_whisper("--- Attempting to Auto Rez {}".format(fetchProperty(card, 'Name')))
-      if intRez(card, silentCost = True) == 'ABORT': delayed_whisper(":::WARNING::: Could not rez {} automatically. Ignoring".format(fetchProperty(card, 'Name')))
+      whisper("--- Attempting to Auto Rez {}".format(fetchProperty(card, 'Name')))
+      if intRez(card, silentCost = True) == 'ABORT': whisper(":::WARNING::: Could not rez {} automatically. Ignoring".format(fetchProperty(card, 'Name')))
    del autoRezFlags[:]
    debugNotify("<<< autoRez()", 3) #Debug
 #------------------------------------------------------------------------------
@@ -1036,7 +1039,7 @@ def findVirusProtection(card, targetPL, VirusInfected): # Find out if the player
    return protectionFound
 
 def findCounterPrevention(count, counter, targetPL): # Find out if the player has any markers preventing them form gaining specific counters (Credits, Agenda Points etc)
-   debugNotify(">>> findCounterPrevention(){}".format(extraASDebug())) #Debug
+   debugNotify(">>> findCounterPrevention() for {}.".format(counter)) #Debug
    preventionFound = 0
    forfeit = None
    preventionType = 'preventCounter:{}'.format(counter)
