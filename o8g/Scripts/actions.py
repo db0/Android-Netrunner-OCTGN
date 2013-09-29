@@ -1147,23 +1147,20 @@ def accessTarget(group = table, x = 0, y = 0):
          cFaceD = True
          card.highlight = InactiveColor
       storeProperties(card)
-      accessRegex = re.search(r'onAccess:([^|]+)',CardsAS.get(card.model,''))
-      if accessRegex:
-         debugNotify(" accessRegex found! {}".format(accessRegex.group(1)), 2)
-         notify("{} has just accessed a {}!".format(me,card))
-         Autoscripts = accessRegex.group(1).split('$$')
-         X = 0
-         for autoS in Autoscripts:
-            if re.search(r'Reveal',autoS):
+      Autoscripts = CardsAS.get(card.model,'').split('||')
+      for autoS in Autoscripts:
+         if re.search(r'onAccess:',autoS):
+            debugNotify(" accessRegex found!")
+            notify("{} has just accessed a {}!".format(me,card.name))
+            remoteCall(card.owner, 'remoteAutoscript', [me,card,autoS])
+            if re.search(r'-pauseRunner',autoS): # If the -pauseRunner modulator exists, we need to prevent the runner form trashing or scoring cards, as the amount of advancement tokens they have will be wiped and those may be important for the ambush effect.
                while not confirm("Ambush! You have stumbled into a {}\
-                         \n(This card activates even when inactive.)\
-                       \n\nYour blunder has already triggered the alarms. Please wait until corporate OpSec has decided whether to use its effects or not, before pressing any button\
-                       \n\nHas the corporation decided whether or not to the effects of this ambush?\
-                         \n(Pressing 'No' will send a ping to the corporation player to remind him to take action)\
-                        ".format(card.name)):
+                               \n(This card activates even when inactive. You need to wait for the corporation now.)\
+                             \n\nHas the corporation decided whether or not to the effects of this ambush?\
+                               \n(Pressing 'No' will send a ping to the corporation player to remind him to take action)\
+                                 ".format(card.name)):
                   rnd(1,1000)
                   notify(":::NOTICE::: {} is still waiting for {} to decide whether to use {} or not".format(me,card.owner,card))
-            else: X = redirect(autoS, card, 'Quick', X)
       if card.Type == 'ICE':
          cStatTXT = '\nStrength: {}.'.format(card.Stat)
       elif card.Type == 'Asset' or card.Type == 'Upgrade':
@@ -1239,27 +1236,13 @@ def RDaccessX(group = table, x = 0, y = 0): # A function which looks at the top 
       RDtop[iter].moveToBottom(me.ScriptingPile)
       debugNotify(" Looping...", 4)
       loopChk(RDtop[iter],'Type')
-      accessRegex = re.search(r'onAccess:([^|]+)',CardsAS.get(RDtop[iter].model,''))
-      if accessRegex:
-         debugNotify(" accessRegex found! {}".format(accessRegex.group(1)), 2)
-         if not re.search(r'ifInstalled',accessRegex.group(1)): notify("{} has just accessed a {}!".format(me,RDtop[iter]))
-         Autoscripts = accessRegex.group(1).split('$$')
-         X = 0
-         for autoS in Autoscripts:
-            if re.search(r'Reveal',autoS):
-               if not re.search(r'ifInstalled',autoS):
-                  RDtop[iter].moveToTable(0, 0 + yaxisMove(RDtop[iter]), False)
-                  RDtop[iter].highlight = RevealedColor
-                  RDtop[iter].setController(RDtop[iter].owner) # We change the owner to the original because after the scripting pile, the runner will control the card.
-                  while not confirm("Ambush! You have stumbled into a {}\
-                            \n(This card activates even on access from R&D.)\
-                          \n\nYour blunder has already triggered the alarms. Please wait until corporate OpSec has decided whether to use its effects or not.\
-                          \n\nHas the corporation decided whether or not to the effects of this ambush?\
-                            \n(Pressing 'No' will send a ping to the corporation player to remind him to take action)\
-                           ".format(RDtop[iter].name)):
-                     rnd(1,1000)
-                     notify(":::NOTICE::: {} is still waiting for {} to decide whether to use {} or not".format(me,RDtop[iter].owner,RDtop[iter]))
-            else: X = redirect(autoS, RDtop[iter], 'Quick', X)
+      Autoscripts = CardsAS.get(RDtop[iter].model,'').split('||')
+      for autoS in Autoscripts:
+         if re.search(r'onAccess:',autoS):
+            if re.search(r'-ifInstalled',autoS) and RDtop[iter].group != table: continue # -ifInstalled cards work only while on the table.
+            debugNotify(" accessRegex found!")
+            notify("{} has just accessed a {}!".format(me,RDtop[iter].name))
+            remoteCall(RDtop[iter].owner, 'remoteAutoscript', [me,RDtop[iter],autoS])
       debugNotify(" Storing...", 4)
       storeProperties(RDtop[iter]) # Otherwise trying to trash the card will crash because of reduceCost()
       cType = RDtop[iter].Type
@@ -1380,22 +1363,13 @@ def HQaccess(group=table, x=0,y=0, silent = False):
       if accessRegex:
          debugNotify(" accessRegex found! {}".format(accessRegex.group(1)), 2)
          notify("{} has just accessed a {}!".format(me,revealedCard))
-         Autoscripts = accessRegex.group(1).split('$$')
-         X = 0
-         for autoS in Autoscripts:
-            if re.search(r'Reveal',autoS):
-               if not re.search(r'ifInstalled',autoS):
-                  revealedCard.moveToTable(0, 0 + yaxisMove(revealedCard), False)
-                  revealedCard.highlight = RevealedColor
-                  while not confirm("Ambush! You have stumbled into a {}\
-                            \n(This card activates even on access from HQ.)\
-                          \n\nYour blunder has already triggered the alarms. Please wait until corporate OpSec has decided whether to use its effects or not, before pressing any button.\
-                          \n\nHas the corporation decided whether or not to the effects of this ambush?\
-                            \n(Pressing 'No' will send a ping to the corporation player to remind him to take action)\
-                           ".format(revealedCard.name)):
-                     rnd(1,1000) # We put a hacky delay if the player presses 'No'
-                     notify(":::NOTICE::: {} is still waiting for {} to decide whether to use {} or not".format(me,revealedCard.owner,revealedCard))
-            else: X = redirect(autoS, revealedCard, 'Quick', X)
+      Autoscripts = CardsAS.get(revealedCard.model,'').split('||')
+      for autoS in Autoscripts:
+         if re.search(r'onAccess:',autoS):
+            if re.search(r'-ifInstalled',autoS) and revealedCard.group != table: continue # -ifInstalled cards work only while on the table.
+            debugNotify(" accessRegex found!")
+            notify("{} has just accessed a {}!".format(me,revealedCard.name))
+            remoteCall(revealedCard.owner, 'remoteAutoscript', [me,revealedCard,autoS])
       debugNotify("Not a Trap.", 2) #Debug
       if revealedCard.Type == 'ICE':
          cStatTXT = '\nStrength: {}.'.format(revealedCard.Stat)

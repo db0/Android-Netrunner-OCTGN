@@ -191,4 +191,4 @@ def checkBoardFlip(name,oldValue,value):
          flipBoard = 1
          flipModX = 0
          flipModY = 0
-         table.setBoardImage("table\\Tabletop.png") # If they had already reversed the table before, we set it back proper again
+         table.setBoardImage("table\\Tabletop.png") # If they had already reversed the table before, we set it back proper again      

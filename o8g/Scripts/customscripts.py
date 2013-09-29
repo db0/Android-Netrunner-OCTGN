@@ -110,6 +110,26 @@ def UseCustomAbility(Autoscript, announceText, card, targetCards = None, notific
          notify("{} would like to know if it's OK to return their remaining cards to their Grip.".format(me))
       for c in cardList: 
          if c.group == table: c.moveTo(me.hand)
+   if fetchProperty(card, 'name') == "Aggressive Secretary":
+      programTargets = [c for c in table if c.Type == 'Program']
+      debugNotify("Found {} Programs on table".format(len(programTargets)))
+      if not len(programTargets): 
+         notify("{} can find no programs to trash".format(card))
+         return
+      rc = payCost(2, 'not free')
+      if rc == "ABORT": 
+         notify("{} could not pay to use {}".format(me,card))
+         return
+      chosenProgs = multiChoice('Please choose {} programs to trash'.format(card.markers[mdict['Advancement']]), makeChoiceListfromCardList(programTargets),card)
+      if chosenProgs == 'ABORT': return
+      while len(chosenProgs) > card.markers[mdict['Advancement']]:
+         chosenProgs = multiChoice('You chose too many programs. Please choose up to {} programs to trash'.format(card.markers[mdict['Advancement']]), makeChoiceListfromCardList(programTargets),card)
+         if chosenProgs == 'ABORT': return
+      for choiceProg in chosenProgs:
+         prog = programTargets[choiceProg]
+         intTrashCard(prog, fetchProperty(prog,'Stat'), "free", silent = True)
+         notify(":> {} trashes {}".format(card,prog))
+      announceString = ''
    return announceString
    
 def CustomScript(card, action = 'PLAY', origin_card = None, original_action = None): # Scripts that are complex and fairly unique to specific cards, not worth making a whole generic function for them.

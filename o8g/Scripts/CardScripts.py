@@ -98,7 +98,7 @@ Aggressive Secretary
 -----
 bc0f047c-01b1-427f-a439-d451eda01057
 -----
-onAccess:Reveal-ifInstalled
+onAccess:UseCustomAbility-ifInstalled-isOptional-pauseRunner
 +++++
 A0B2G0T0:TrashMulti-Targeted-atProgram-onAccess
 .....
@@ -402,7 +402,7 @@ Ghost Branch
 -----
 bc0f047c-01b1-427f-a439-d451eda01087
 -----
-onAccess:Reveal-ifInstalled
+onAccess:Gain1Tags-onOpponent-perMarker{Advancement}-isOptional-ifInstalled-pauseRunner
 +++++
 A0B0G0T0:Gain1Tags-onOpponent-perMarker{Advancement}-onAccess	
 .....
@@ -698,9 +698,9 @@ Project Junebug
 -----
 bc0f047c-01b1-427f-a439-d451eda01069
 -----
-onAccess:Reveal-ifInstalled
+onAccess:Lose1Credits-isCost-isOptional-ifInstalled-pauseRunner$$Inflict2NetDamage-onOpponent-perMarker{Advancement}
 +++++
-A0B1G0T0:Inflict2NetDamage-onOpponent-perMarker{Advancement}-onAccess	
+A0B1G0T0:Inflict2NetDamage-onOpponent-perMarker{Advancement}-onAccess
 .....
 Psychographics
 -----
@@ -810,7 +810,7 @@ Snare!
 -----
 bc0f047c-01b1-427f-a439-d451eda01070
 -----
-onAccess:Reveal
+onAccess:Lose4Credits-isCost-isOptional$$Inflict3NetDamage-onOpponent$$Gain1Tags-onOpponent
 +++++
 A0B4G0T0:Inflict3NetDamage-onOpponent-onAccess$$Gain1Tags-onOpponent
 .....
@@ -1346,7 +1346,7 @@ Edge of World
 -----
 bc0f047c-01b1-427f-a439-d451eda02053
 -----
-onAccess:Reveal-ifInstalled
+onAccess:Lose3Credits-isCost-isOptional-ifInstalled$$RequestInt-Msg{How many ICE are installed on this server?}$$Inflict1BrainDamage-onOpponent-perX
 +++++
 A0B3G0T0:RequestInt-Msg{How many ICE are installed on this server?}-onAccess-ifInstalled$$Inflict1BrainDamage-onOpponent-perX
 .....
@@ -1983,7 +1983,7 @@ Cerebral Overwriter
 -----
 bc0f047c-01b1-427f-a439-d451eda03009
 -----
-onAccess:Reveal-ifInstalled
+onAccess:Lose3Credits-isCost-isOptional-ifInstalled-pauseRunner$$Inflict1BrainDamage-onOpponent-perMarker{Advancement}
 +++++
 A0B3G0T0:Inflict1BrainDamage-onOpponent-perMarker{Advancement}-onAccess	
 .....

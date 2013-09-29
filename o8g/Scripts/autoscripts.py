@@ -783,7 +783,30 @@ def executeTraceEffects(card,Autoscript,count = 0):
       if debugVerbosity >= 2: notify ('selectedAutoscripts: {}'.format(selectedAutoscripts)) # Debug
       for passedScript in selectedAutoscripts: X = redirect(passedScript, card, "{}'s trace succeeds to".format(card), 'Quick', X)
       if failedRequirement: break # If one of the Autoscripts was a cost that couldn't be paid, stop everything else.
-            
+         
+#------------------------------------------------------------------------------
+# Remote player script execution
+#------------------------------------------------------------------------------
+      
+def remoteAutoscript(origin_player,card,Autoscript):
+   debugNotify('>>> remoteAutoscript call from {}'.format(origin_player))
+   debugNotify("Autoscript sent: {}".format(Autoscript))
+   if re.search(r'-isOptional', Autoscript):
+      if not confirm("The runner has accessed {} and you can choose to activate it at this point. Do you want to do so?".format(fetchProperty(card, 'name'))):
+         notify("{} opts not to activate {}'s optional ability".format(me,card))
+         return 'ABORT'
+      else: notify("{} activates {}'s ability".format(me,card))
+   selectedAutoscripts = Autoscript.split('$$')
+   debugNotify ('selectedAutoscripts: {}'.format(selectedAutoscripts)) # Debug
+   for passedScript in selectedAutoscripts: 
+      X = redirect(passedScript, card, "{} triggers to".format(card), 'Quick', 0)
+      if X == 'ABORT': return
+   debugNotify('<<< remoteAutoscript')
+
+#------------------------------------------------------------------------------
+# Core Commands redirect
+#------------------------------------------------------------------------------
+      
 def redirect(Autoscript, card, announceText = None, notificationType = 'Quick', X = 0):
    debugNotify(">>> redirect(){}".format(extraASDebug(Autoscript))) #Debug
    if re.search(r':Pass\b', Autoscript): return X # Pass is a simple command of doing nothing ^_^
@@ -794,46 +817,46 @@ def redirect(Autoscript, card, announceText = None, notificationType = 'Quick', 
    debugNotify(" targetC: {}. Notification Type = {}".format(targetC,notificationType), 3) # Debug
    if regexHooks['GainX'].search(Autoscript):
       gainTuple = GainX(Autoscript, announceText, card, notification = notificationType, n = X)
-      if gainTuple == 'ABORT': return
+      if gainTuple == 'ABORT': return 'ABORT'
       X = gainTuple[1] 
    elif regexHooks['CreateDummy'].search(Autoscript): 
-      if CreateDummy(Autoscript, announceText, card, targetC, notification = notificationType, n = X) == 'ABORT': return
+      if CreateDummy(Autoscript, announceText, card, targetC, notification = notificationType, n = X) == 'ABORT': return 'ABORT'
    elif regexHooks['DrawX'].search(Autoscript): 
-      if DrawX(Autoscript, announceText, card, targetC, notification = notificationType, n = X) == 'ABORT': return
+      if DrawX(Autoscript, announceText, card, targetC, notification = notificationType, n = X) == 'ABORT': return 'ABORT'
    elif regexHooks['TokensX'].search(Autoscript): 
-      if TokensX(Autoscript, announceText, card, targetC, notification = notificationType, n = X) == 'ABORT': return
+      if TokensX(Autoscript, announceText, card, targetC, notification = notificationType, n = X) == 'ABORT': return 'ABORT'
    elif regexHooks['RollX'].search(Autoscript): 
       rollTuple = RollX(Autoscript, announceText, card, targetC, notification = notificationType, n = X)
-      if rollTuple == 'ABORT': return
+      if rollTuple == 'ABORT': return 'ABORT'
       X = rollTuple[1] 
    elif regexHooks['RequestInt'].search(Autoscript): 
       numberTuple = RequestInt(Autoscript, announceText, card, targetC, notification = notificationType, n = X)
-      if numberTuple == 'ABORT': return
+      if numberTuple == 'ABORT': return 'ABORT'
       X = numberTuple[1] 
    elif regexHooks['DiscardX'].search(Autoscript): 
       discardTuple = DiscardX(Autoscript, announceText, card, targetC, notification = notificationType, n = X)
-      if discardTuple == 'ABORT': return
+      if discardTuple == 'ABORT': return 'ABORT'
       X = discardTuple[1] 
    elif regexHooks['RunX'].search(Autoscript): 
-      if RunX(Autoscript, announceText, card, targetC, notification = notificationType, n = X) == 'ABORT': return
+      if RunX(Autoscript, announceText, card, targetC, notification = notificationType, n = X) == 'ABORT': return 'ABORT'
    elif regexHooks['TraceX'].search(Autoscript): 
-      if TraceX(Autoscript, announceText, card, targetC, notification = notificationType, n = X) == 'ABORT': return
+      if TraceX(Autoscript, announceText, card, targetC, notification = notificationType, n = X) == 'ABORT': return 'ABORT'
    elif regexHooks['ReshuffleX'].search(Autoscript): 
       reshuffleTuple = ReshuffleX(Autoscript, announceText, card, targetC, notification = notificationType, n = X)
-      if reshuffleTuple == 'ABORT': return
+      if reshuffleTuple == 'ABORT': return 'ABORT'
       X = reshuffleTuple[1]
    elif regexHooks['ShuffleX'].search(Autoscript): 
-      if ShuffleX(Autoscript, announceText, card, targetC, notification = notificationType, n = X) == 'ABORT': return
+      if ShuffleX(Autoscript, announceText, card, targetC, notification = notificationType, n = X) == 'ABORT': return 'ABORT'
    elif regexHooks['ChooseKeyword'].search(Autoscript): 
-      if ChooseKeyword(Autoscript, announceText, card, targetC, notification = notificationType, n = X) == 'ABORT': return
+      if ChooseKeyword(Autoscript, announceText, card, targetC, notification = notificationType, n = X) == 'ABORT': return 'ABORT'
    elif regexHooks['InflictX'].search(Autoscript): 
-      if InflictX(Autoscript, announceText, card, targetC, notification = notificationType, n = X) == 'ABORT': return
+      if InflictX(Autoscript, announceText, card, targetC, notification = notificationType, n = X) == 'ABORT': return 'ABORT'
    elif regexHooks['ModifyStatus'].search(Autoscript): 
-      if ModifyStatus(Autoscript, announceText, card, targetC, notification = notificationType, n = X) == 'ABORT': return
+      if ModifyStatus(Autoscript, announceText, card, targetC, notification = notificationType, n = X) == 'ABORT': return 'ABORT'
    elif regexHooks['SimplyAnnounce'].search(Autoscript):
       SimplyAnnounce(Autoscript, announceText, card, targetC, notification = notificationType, n = X)
    elif regexHooks['UseCustomAbility'].search(Autoscript):
-      UseCustomAbility(Autoscript, announceText, card, targetC, notification = notificationType, n = X)
+      if UseCustomAbility(Autoscript, announceText, card, targetC, notification = notificationType, n = X) == 'ABORT': return 'ABORT'
    else: debugNotify(" No regexhook match! :(") # Debug
    debugNotify("Loop for scipt {} finished".format(Autoscript), 2)
    return X
@@ -2019,6 +2042,7 @@ def makeChoiceListfromCardList(cardList,includeText = False, includeGroup = Fals
       if T.markers[mdict['Power']] and T.markers[mdict['Power']] >= 1: markers += " {} Power.".format(T.markers[mdict['Power']])
       if T.markers[mdict['Virus']] and T.markers[mdict['Virus']] >= 1: markers += " {} Virus.".format(T.markers[mdict['Virus']])
       if T.markers[mdict['Agenda']] and T.markers[mdict['Agenda']] >= 1: markers += " {} Agenda.".format(T.markers[mdict['Agenda']])
+      if T.markers[mdict['DaemonMU']] and T.markers[mdict['DaemonMU']] >= 1: markers += " {} Daemon MU.".format(T.markers[mdict['DaemonMU']])
       if markers != 'Counters:': markers += '\n'
       else: markers = ''
       debugNotify("Finished Adding Markers. Adding stats...", 4)# Debug               
@@ -2032,10 +2056,14 @@ def makeChoiceListfromCardList(cardList,includeText = False, includeGroup = Fals
       if cType == 'Asset' or cType == 'Upgrade': stats += "Trash Cost: {}.".format(cStat)
       if includeText: cText = '\n' + fetchProperty(T, 'Rules')
       else: cText = ''
+      hostCards = eval(getGlobalVariable('Host Cards'))
+      attachmentsList = [Card(cID).name for cID in hostCards if hostCards[cID] == T._id]
+      if len(attachmentsList) >= 1: cAttachments = '\nAttachments:' + str(attachmentsList)
+      else: cAttachments = ''
       if includeGroup: cGroup = '\n' + pileName(T.group) # Include group is used to inform the player where the card resides in cases where they're selecting cards from multiple groups.
       else: cGroup = ''
       debugNotify("Finished Adding Stats. Going to choice...", 4)# Debug               
-      choiceTXT = "{}\n{}\n{}\n{}{}{}{}".format(fetchProperty(T, 'name'),cType,getKeywords(T),markers,stats,cText,cGroup)
+      choiceTXT = "{}\n{}\n{}\n{}{}{}{}{}".format(fetchProperty(T, 'name'),cType,getKeywords(T),markers,stats,cAttachments,cText,cGroup)
       targetChoices.append(choiceTXT)
    return targetChoices
    debugNotify("<<< makeChoiceListfromCardList()", 3)
