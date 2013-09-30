@@ -1,6 +1,10 @@
 Changelog - Android:Netrunner LCG OCTGN Game Definition
 ===============================================
 
+### 3.4.2.x
+
+* Ambush assets such as Snare or Junebug will now immediately pop-up a question window to the corporation asking if they want to trigger their effects. This should hopefully stop mistakes of the runner trashing the asset before one had a chance to use it.
+
 ### 3.4.1.x
 
 * Table board will flip for the spectators as well now.
