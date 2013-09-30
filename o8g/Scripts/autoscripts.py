@@ -788,7 +788,7 @@ def executeTraceEffects(card,Autoscript,count = 0):
 # Remote player script execution
 #------------------------------------------------------------------------------
       
-def remoteAutoscript(origin_player,card,Autoscript):
+def remoteAutoscript(origin_player = me, card = None, Autoscript = ''):
    debugNotify('>>> remoteAutoscript call from {}'.format(origin_player))
    debugNotify("Autoscript sent: {}".format(Autoscript))
    if re.search(r'-isOptional', Autoscript):

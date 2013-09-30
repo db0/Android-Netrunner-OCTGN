@@ -1152,6 +1152,7 @@ def accessTarget(group = table, x = 0, y = 0):
          if re.search(r'onAccess:',autoS):
             debugNotify(" accessRegex found!")
             notify("{} has just accessed a {}!".format(me,card.name))
+            debugNotify("Doing Remote Call with player = {}. card = {}, autoS = {}".format(me,card,autoS))
             remoteCall(card.owner, 'remoteAutoscript', [me,card,autoS])
             if re.search(r'-pauseRunner',autoS): # If the -pauseRunner modulator exists, we need to prevent the runner form trashing or scoring cards, as the amount of advancement tokens they have will be wiped and those may be important for the ambush effect.
                while not confirm("Ambush! You have stumbled into a {}\
