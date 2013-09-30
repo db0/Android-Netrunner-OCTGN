@@ -788,8 +788,8 @@ def executeTraceEffects(card,Autoscript,count = 0):
 # Remote player script execution
 #------------------------------------------------------------------------------
       
-def remoteAutoscript(origin_player = me, card = None, Autoscript = ''):
-   debugNotify('>>> remoteAutoscript call from {}'.format(origin_player))
+def remoteAutoscript(card = None, Autoscript = ''):
+   debugNotify('>>> remoteAutoscript')
    debugNotify("Autoscript sent: {}".format(Autoscript))
    if re.search(r'-isOptional', Autoscript):
       if not confirm("The runner has accessed {} and you can choose to activate it at this point. Do you want to do so?".format(fetchProperty(card, 'name'))):

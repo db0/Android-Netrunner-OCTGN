@@ -1153,7 +1153,7 @@ def accessTarget(group = table, x = 0, y = 0):
             debugNotify(" accessRegex found!")
             notify("{} has just accessed a {}!".format(me,card.name))
             debugNotify("Doing Remote Call with player = {}. card = {}, autoS = {}".format(me,card,autoS))
-            remoteCall(card.owner, 'remoteAutoscript', [me,card,autoS])
+            remoteCall(card.owner, 'remoteAutoscript', [card,autoS])
             if re.search(r'-pauseRunner',autoS): # If the -pauseRunner modulator exists, we need to prevent the runner form trashing or scoring cards, as the amount of advancement tokens they have will be wiped and those may be important for the ambush effect.
                while not confirm("Ambush! You have stumbled into a {}\
                                \n(This card activates even when inactive. You need to wait for the corporation now.)\
@@ -1243,7 +1243,7 @@ def RDaccessX(group = table, x = 0, y = 0): # A function which looks at the top 
             if re.search(r'-ifInstalled',autoS) and RDtop[iter].group != table: continue # -ifInstalled cards work only while on the table.
             debugNotify(" accessRegex found!")
             notify("{} has just accessed a {}!".format(me,RDtop[iter].name))
-            remoteCall(RDtop[iter].owner, 'remoteAutoscript', [me,RDtop[iter],autoS])
+            remoteCall(RDtop[iter].owner, 'remoteAutoscript', [RDtop[iter],autoS])
       debugNotify(" Storing...", 4)
       storeProperties(RDtop[iter]) # Otherwise trying to trash the card will crash because of reduceCost()
       cType = RDtop[iter].Type
@@ -1370,7 +1370,7 @@ def HQaccess(group=table, x=0,y=0, silent = False):
             if re.search(r'-ifInstalled',autoS) and revealedCard.group != table: continue # -ifInstalled cards work only while on the table.
             debugNotify(" accessRegex found!")
             notify("{} has just accessed a {}!".format(me,revealedCard.name))
-            remoteCall(revealedCard.owner, 'remoteAutoscript', [me,revealedCard,autoS])
+            remoteCall(revealedCard.owner, 'remoteAutoscript', [revealedCard,autoS])
       debugNotify("Not a Trap.", 2) #Debug
       if revealedCard.Type == 'ICE':
          cStatTXT = '\nStrength: {}.'.format(revealedCard.Stat)
