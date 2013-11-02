@@ -519,7 +519,7 @@ def CustomScript(card, action = 'PLAY', origin_card = None, original_action = No
          debugNotify("About to move into position", 2) #Debug
          storeProperties(selectedCard)
          orgAttachments(card)
-         TokensX('Put1AwakeningCenter-isSilent', "", selectedCard) # We add an Awakening Center counter to be able to trigger the rez the ice ability
+         TokensX('Put1Awakening Center-isSilent', "", selectedCard) # We add an Awakening Center counter to be able to trigger the rez the ice ability
          selectedCard.highlight = InactiveColor
          notify("{} has installed a Bioroid ICE in their {}".format(me,card))
          autoscriptOtherPlayers('CardInstall',selectedCard)
@@ -724,7 +724,7 @@ def markerScripts(card, action = 'USE'):
             notify("{} has paid {}{} in order to install {}{} from their Personal Workshop{}".format(me,uniCredit(count),reduceTXT,card,extraTXT,MUtext))
          else:
             notify("{} has paid {}{} to remove {} power counters from {} in their Personal Workshop".format(me,uniCredit(count),reduceTXT,count,card))         
-      if key[0] == 'Awakening Center' and action == 'USE':
+      if key[0] == 'Awakening Center' and action == 'USE' and not card.isFaceUp:
          foundSpecial = True
          host = chkHostType(card) 
          hostCards = eval(getGlobalVariable('Host Cards'))
