@@ -791,6 +791,7 @@ def executeTraceEffects(card,Autoscript,count = 0):
 def remoteAutoscript(card = None, Autoscript = ''):
    debugNotify('>>> remoteAutoscript')
    debugNotify("Autoscript sent: {}".format(Autoscript))
+   mute()
    if re.search(r'-isOptional', Autoscript):
       if not confirm("The runner has accessed {} and you can choose to activate it at this point. Do you want to do so?".format(fetchProperty(card, 'name'))):
          notify("{} opts not to activate {}'s optional ability".format(me,card))
