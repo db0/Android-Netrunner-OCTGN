@@ -1244,7 +1244,7 @@ def RDaccessX(group = table, x = 0, y = 0): # A function which looks at the top 
       Autoscripts = CardsAS.get(RDtop[iter].model,'').split('||')
       for autoS in Autoscripts:
          if re.search(r'onAccess:',autoS):
-            if re.search(r'-ifInstalled',autoS) and RDtop[iter].group != table: continue # -ifInstalled cards work only while on the table.
+            if re.search(r'-ifInstalled',autoS): continue # -ifInstalled cards work only while on the table.
             debugNotify(" accessRegex found!")
             notify("{} has just accessed a {}!".format(me,RDtop[iter].name))
             remoteCall(RDtop[iter].owner, 'remoteAutoscript', [RDtop[iter],autoS])
@@ -1371,7 +1371,7 @@ def HQaccess(group=table, x=0,y=0, silent = False):
       Autoscripts = CardsAS.get(revealedCard.model,'').split('||')
       for autoS in Autoscripts:
          if re.search(r'onAccess:',autoS):
-            if re.search(r'-ifInstalled',autoS) and revealedCard.group != table: continue # -ifInstalled cards work only while on the table.
+            if re.search(r'-ifInstalled',autoS): continue # -ifInstalled cards work only while on the table.
             debugNotify(" accessRegex found!")
             notify("{} has just accessed a {}!".format(me,revealedCard.name))
             remoteCall(revealedCard.owner, 'remoteAutoscript', [revealedCard,autoS])
