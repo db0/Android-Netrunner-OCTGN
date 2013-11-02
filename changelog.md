@@ -5,6 +5,11 @@ Changelog - Android:Netrunner LCG OCTGN Game Definition
 
 * Should not be able to access face-down ICE anymore if you have them targeted.
 * Brain DMG Flatline should now happen only at end of turn.
+* Added warning when corp approaches decking
+* Card draw effects can now deck the corp, as long as they initiated the effect themselves.
+* Advanceable trap assets should now not trigger from R&D or H&Q
+* Amazon industrial zone can rez ICE now (Target the ICE you just installed and double click on the industrial zone to rez it at a reduced cost.)
+
 
 ### 3.4.2.x
 

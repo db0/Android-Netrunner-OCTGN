@@ -1527,7 +1527,15 @@ def ModifyStatus(Autoscript, announceText, card, targetCards = None, notificatio
       if re.search(r'-ifEmpty',Autoscript) and targetCard.markers[mdict['Credits']] and targetCard.markers[mdict['Credits']] > 0: 
          if len(targetCards) > 1: continue #If the modification only happens when the card runs out of credits, then we abort if it still has any
          else: return announceText # If there's only 1 card and it's not supposed to be trashed yet, do nothing.
-      if action.group(1) == 'Rez' and intRez(targetCard, cost = 'free', silent = True) != 'ABORT': pass
+      if action.group(1) == 'Rez':
+         if re.search(r'-payCost',Autoscript): # This modulator means the script is going to pay for the card normally
+            preReducRegex = re.search(r'-reduc([0-9])',Autoscript) # this one means its going to reduce the cost a bit.
+            if preReducRegex: preReduc = num(preReducRegex.group(1))
+            else: preReduc = 0
+            intRez(targetCard, cost = 'not free', preReduction = preReduc)
+         else: 
+            preReduc = 0
+            intRez(targetCard, cost = 'free', silent = True)
       elif action.group(1) == 'Derez' and derez(targetCard, silent = True) != 'ABORT': pass
       elif action.group(1) == 'Expose': 
          exposeResult = expose(targetCard, silent = True)

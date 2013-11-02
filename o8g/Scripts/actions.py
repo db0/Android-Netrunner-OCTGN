@@ -1437,7 +1437,7 @@ def isRezzable (card):
    if Type == "ICE" or Type == "Asset" or Type == "Upgrade": return True
    else: return False
 
-def intRez (card, x=0, y=0, cost = 'not free', silent = False, silentCost = False):
+def intRez (card, x=0, y=0, cost = 'not free', silent = False, silentCost = False, preReduction = 0):
    debugNotify(">>> intRez(){}".format(extraASDebug())) #Debug
    mute()
    rc = ''
@@ -1452,8 +1452,8 @@ def intRez (card, x=0, y=0, cost = 'not free', silent = False, silentCost = Fals
    if chkTargeting(card) == 'ABORT':
       notify("{} cancels their action".format(me))
       return 'ABORT'
-   if cost != 'free': reduction = reduceCost(card, 'REZ', num(fetchProperty(card, 'Cost')))
-   else: reduction = 0
+   if cost != 'free': reduction = reduceCost(card, 'REZ', num(fetchProperty(card, 'Cost'))) + preReduction
+   else: reduction = preReduction
    if reduction > 0: extraText = " (reduced by {})".format(uniCredit(reduction))
    elif reduction < 0: extraText = " (increased by {})".format(uniCredit(abs(reduction)))
    else: extraText = ''
