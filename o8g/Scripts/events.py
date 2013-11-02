@@ -191,4 +191,23 @@ def checkBoardFlip(name,oldValue,value):
          flipBoard = 1
          flipModX = 0
          flipModY = 0
-         table.setBoardImage("table\\Tabletop.png") # If they had already reversed the table before, we set it back proper again      
+         table.setBoardImage("table\\Tabletop.png") # If they had already reversed the table before, we set it back proper again   
+
+def reconnectMe(group, x,y):
+   reconnect()
+   
+def reconnect():
+# An event which takes care to properly reset all the player variables after they reconnect to the game.
+   global identName, Identity, lastKnownNrClicks, PriorityInform, ds
+   for card in me.hand: storeProperties(card)
+   for card in table:
+      storeProperties(card)
+      if card.Type == 'Identity' and card.owner == me:
+         identName = card.name # The name of our current identity
+         Identity = card
+         ds = card.Side.lower()
+   lastKnownNrClicks = me.Clicks
+   PriorityInform = False # Explains what the "prioritize card" action does.
+   chkSideFlip()
+   notify("::> {} has reconnected to the session!".format(me))
+   

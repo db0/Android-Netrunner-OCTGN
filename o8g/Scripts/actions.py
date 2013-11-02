@@ -35,22 +35,15 @@ scriptedPlay = 0 # Attempt to work with the OnMoveCard event. Doesn't work atm
 gatheredCardList = False # A variable used in reduceCost to avoid scanning the table too many times.
 costModifiers = [] # used in reduceCost to store the cards that might hold potential cost-modifying effects. We store them globally so that we only scan the table once per execution
 
-DifficultyLevels = { }
-
 installedCount = {} # A dictionary which keeps track how many of each card type have been installed by the player.
 
-MemoryRequirements = {}
-InstallationCosts = {}
 autoRezFlags = [] # A dictionary which holds cards that the corp has set to Auto Rez at the start of their turn.
-#maxClicks = 3
-scoredAgendas = 0
 currClicks = 0
 
 PriorityInform = True # Explains what the "prioritize card" action does.
 newturn = True #We use this variable to track whether a player has yet to do anything this turn.
 endofturn = False #We use this variable to know if the player is in the end-of-turn phase.
 lastKnownNrClicks = 0 # A Variable keeping track of what the engine thinks our action counter should be, in case we change it manually.
-SuccessfulRun = False # Set by the runner when a run is successful, in order to avoid asking the player every time.
 
 #---------------------------------------------------------------------------
 # Clicks indication
@@ -1138,6 +1131,7 @@ def accessTarget(group = table, x = 0, y = 0):
                and not c.markers[mdict['Scored']]
                and c.Type != 'Server'
                and c.Type != 'ICE' # To prevent mistakes
+               and (c.orientation != Rot90 and not c.isFaceUp)
                and c.Type != 'Remote Server']
    for card in cardList:
       cFaceD = False
