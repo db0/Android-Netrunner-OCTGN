@@ -10,6 +10,7 @@ Changelog - Android:Netrunner LCG OCTGN Game Definition
 * Advanceable trap assets should now not trigger from R&D or H&Q
 * Amazon industrial zone can rez ICE now (Target the ICE you just installed and double click on the industrial zone to rez it at a reduced cost.)
 * Plascrete will now be trashed when emptied of Tokens
+* Rezzed Awakening Center ICE now works correctly when used 
 
 
 ### 3.4.2.x
