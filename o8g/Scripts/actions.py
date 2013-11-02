@@ -2179,6 +2179,7 @@ def draw(group):
       notify("{} to draw a card.".format(ClickCost))
       playClickDrawSound()
       autoscriptOtherPlayers('CardDrawnClicked',card)
+   if len(group) <= 3 and ds == 'corp': notify(":::WARNING::: {} is about to be decked! R&D down to {} cards.".format(me,len(group)))
    storeProperties(card)
 
 def drawMany(group, count = None, destination = None, silent = False):
@@ -2191,20 +2192,23 @@ def drawMany(group, count = None, destination = None, silent = False):
    if SSize == 0: return 0
    if count == None: count = askInteger("Draw how many cards?", 5)
    if count == None: return 0
-   if count > SSize :
-      count = SSize
-      whisper("You do not have enough cards in your deck to complete this action. Will draw as many as possible")
+   if count > SSize:
+      if group.player == me and group == me.piles['R&D/Stack'] and destination == me.hand and ds == 'corp':
+         if confirm("You do not have enough cards in your R&D to draw. Continuing with this action will lose you the game. Proceed?"):
+            notify(":::ATTENTION::: {} cannot draw the full amount of cards. {} loses the game!".format(me,me))
+            reportGame('DeckDefeat')
+            return count
+         else: 
+            notify(":::WARNING::: {} canceled the card draw effect to avoid decking themselves".format(me))
+            return 0
+      else: 
+         count = SSize
+         whisper("You do not have enough cards in your deck to complete this action. Will draw as many as possible")
    for c in group.top(count):
       c.moveTo(destination)
-      if debugVerbosity >= 1:
-         if Stored_Type.get(c._id,None): notify("++++ Stored Type: {}".format(fetchProperty(c, 'Type')))
-         else: notify("++++ No Stored Type Found for {}".format(c))
-         if Stored_Keywords.get(c._id,None): notify("++++ Stored Keywords: {}".format(fetchProperty(c, 'Keywords')))
-         else: notify("++++ No Stored Keywords Found for {}".format(c))
-         if Stored_Cost.get(c._id,None): notify("++++ Stored Cost: {}".format(fetchProperty(c, 'Cost')))
-         else: notify("++++ No Stored Cost Found for {}".format(c))
       storeProperties(c)
    if not silent: notify("{} draws {} cards.".format(me, count))
+   if len(group) <= 3 and group.player.getGlobalVariable('ds') == 'corp': notify(":::WARNING::: {} is about to be decked! R&D down to {} cards.".format(group.player,len(group)))
    debugNotify("<<< drawMany() with return: {}".format(count), 3)
    return count
 
