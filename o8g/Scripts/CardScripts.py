@@ -1034,7 +1034,7 @@ Plascrete Carapace
 -----
 bc0f047c-01b1-427f-a439-d451eda02009
 -----
-onInstall:Put4protectionMeatDMG
+onInstall:Put4protectionMeatDMG-trashCost-ifEmpty
 +++++
 
 .....

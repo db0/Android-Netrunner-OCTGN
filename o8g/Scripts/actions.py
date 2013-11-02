@@ -975,12 +975,12 @@ def findDMGProtection(DMGdone, DMGtype, targetPL): # Find out if the player has 
                protectionFound += 1
                DMGdone -= 1
                card.markers[mdict['protectionAllDMG']] -= 1
-         if re.search(r'trashCost',CardsAS.get(card.model,'')) and card.highlight == DummyColor:
-            debugNotify("{} has with trashCost".format(card), 3)
-            ModifyStatus('TrashMyself', targetPL.name, card, notification = 'Quick') # If the modulator -trashCost is there, the card trashes itself in order to use it's damage prevention ability
+         if re.search(r'trashCost',CardsAS.get(card.model,'')):
+            if not re.search(r'trashCost-ifEmpty',CardsAS.get(card.model,'')) or (re.search(r'trashCost-ifEmpty',CardsAS.get(card.model,'')) and card.markers[mdict['protectionAllDMG']] == 0):
+               debugNotify("{} has with trashCost".format(card), 3)
+               ModifyStatus('TrashMyself', targetPL.name, card, notification = 'Quick') # If the modulator -trashCost is there, the card trashes itself in order to use it's damage prevention ability
          if DMGdone == 0: break
    for card in cardList:
-      protectionType
       if card.markers[mdict[protectionType]]:
          if card.markers[mdict[protectionType]] == 100: # If we have 100 markers of damage prevention, the card is trying to prevent all Damage.
             protectionFound += DMGdone
@@ -991,7 +991,9 @@ def findDMGProtection(DMGdone, DMGtype, targetPL): # Find out if the player has 
                protectionFound += 1 # We increase the protection found by 1
                DMGdone -= 1 # We reduce how much damage we still need to prevent by 1
                card.markers[mdict[protectionType]] -= 1 # We reduce the card's damage protection counters by 1
-         if re.search(r'trashCost',CardsAS.get(card.model,'')) and card.highlight == DummyColor: ModifyStatus('TrashMyself', targetPL.name, card, notification = 'Quick') # If the modulator -trashCost is there, the card trashes itself in order to use it's damage prevention ability
+         if re.search(r'trashCost',CardsAS.get(card.model,'')): 
+            if not re.search(r'trashCost-ifEmpty',CardsAS.get(card.model,'')) or (re.search(r'trashCost-ifEmpty',CardsAS.get(card.model,'')) and card.markers[mdict[protectionType]] == 0):
+               ModifyStatus('TrashMyself', targetPL.name, card, notification = 'Quick') # If the modulator -trashCost is there, the card trashes itself in order to use it's damage prevention ability
          if DMGdone == 0: break # If we've found enough protection to alleviate all damage, stop the search.
    if DMGtype == 'Net' or DMGtype == 'Brain': altprotectionType = 'protectionNetBrainDMG' # To check for the combined Net & Brain protection counter as well.
    else: altprotectionType = None
@@ -1006,7 +1008,9 @@ def findDMGProtection(DMGdone, DMGtype, targetPL): # Find out if the player has 
                protectionFound += 1 #
                DMGdone -= 1
                card.markers[mdict[altprotectionType]] -= 1
-         if re.search(r'trashCost',CardsAS.get(card.model,'')) and card.highlight == DummyColor: ModifyStatus('TrashMyself', targetPL.name, card, notification = 'Quick') # If the modulator -trashCost is there, the card trashes itself in order to use it's damage prevention ability
+         if re.search(r'trashCost',CardsAS.get(card.model,'')): 
+            if not re.search(r'trashCost-ifEmpty',CardsAS.get(card.model,'')) or (re.search(r'trashCost-ifEmpty',CardsAS.get(card.model,'')) and card.markers[mdict[altprotectionType]] == 0):
+               ModifyStatus('TrashMyself', targetPL.name, card, notification = 'Quick') # If the modulator -trashCost is there, the card trashes itself in order to use it's damage prevention ability
          if DMGdone == 0: break
    debugNotify("<<< findDMGProtection() by returning: {}".format(protectionFound), 3)
    return protectionFound

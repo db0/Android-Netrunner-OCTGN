@@ -9,6 +9,7 @@ Changelog - Android:Netrunner LCG OCTGN Game Definition
 * Card draw effects can now deck the corp, as long as they initiated the effect themselves.
 * Advanceable trap assets should now not trigger from R&D or H&Q
 * Amazon industrial zone can rez ICE now (Target the ICE you just installed and double click on the industrial zone to rez it at a reduced cost.)
+* Plascrete will now be trashed when emptied of Tokens
 
 
 ### 3.4.2.x
