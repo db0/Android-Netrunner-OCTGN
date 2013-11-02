@@ -4,7 +4,7 @@ Changelog - Android:Netrunner LCG OCTGN Game Definition
 ### 3.4.3.x
 
 * Should not be able to access face-down ICE anymore if you have them targeted.
-
+* Brain DMG Flatline should now happen only at end of turn.
 
 ### 3.4.2.x
 

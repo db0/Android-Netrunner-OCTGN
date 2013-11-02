@@ -120,6 +120,10 @@ def goToEndTurn(group, x = 0, y = 0):
    if re.search(r'running',getGlobalVariable('status')): jackOut() # If the player forgot to end the run, we do it for them now.
    if me.Clicks > 0: # If the player has not used all their clicks for this turn, remind them, just in case.
       if debugVerbosity <= 0 and not confirm("You have not taken all your clicks for this turn, are you sure you want to declare end of turn"): return
+   if currentHandSize(me) < 0: 
+      notify(":::Warning:::{} goes to sleep, never to wake up again (flatlined due to excessive brain damage.)".format(me)) #If the target does not have any more cards in their hand, inform they've flatlined.
+      reportGame('Flatlined')
+      return
    atTimedEffects('PreEnd')
    if len(me.hand) > currentHandSize(): #If the player is holding more cards than their hand max. remind them that they need to discard some
                                         # and put them in the end of turn to allow them to do so.
@@ -857,34 +861,38 @@ def reduceCost(card, action = 'REZ', fullCost = 0, dryRun = False, reversePlayer
    debugNotify("<<< reduceCost() with return {}".format(reduction))
    return reduction
 
-def intdamageDiscard(group,x=0,y=0):
-   debugNotify(">>> intdamageDiscard(){}".format(extraASDebug())) #Debug
+def intdamageDiscard(count = 1):
+   debugNotify(">>> intdamageDiscard()") #Debug
    mute()
-   if len(group) == 0:
-      notify ("{} has flatlined.".format(me))
-      reportGame('Flatlined')
-   else:
-      card = group.random()
-      if ds == 'corp': card.moveTo(me.piles['Archives(Hidden)'])
-      else: card.moveTo(me.piles['Heap/Archives(Face-up)'])
-      notify("{} discards {} at random.".format(me,card))
+   for DMGpt in range(count): #Start applying the damage
+      notify("+++ Applying damage {} of {}...".format(DMGpt+1,count))
+      if len(me.hand) == 0:
+         notify ("{} has flatlined.".format(me))
+         reportGame('Flatlined')
+      else:
+         card = me.hand.random()
+         if ds == 'corp': card.moveTo(me.piles['Archives(Hidden)']) # For testing.
+         else: card.moveTo(me.piles['Heap/Archives(Face-up)'])
+         notify("--DMG: {} discarded.".format(card))
 
 def addBrainDmg(group, x = 0, y = 0):
    mute()
-   debugNotify(">>> addBrainDmg(){}".format(extraASDebug())) #Debug
+   debugNotify(">>> addBrainDmg()") #Debug
    if Automations['Damage Prevention'] and confirm("Is this damage preventable?") and findDMGProtection(1, 'Brain', me): # If we find any defense against it, inform that it was prevented
       notify ("{} prevents 1 Brain Damage.".format(me))
    else:
       applyBrainDmg()
       notify ("{} suffers 1 Brain Damage.".format(me))
-      intdamageDiscard(me.hand)    
+      intdamageDiscard()
+      #intdamageDiscard(me.hand)    
       playDMGSound('Brain')
       autoscriptOtherPlayers('BrainDMGInflicted',getSpecial('Identity',fetchRunnerPL()))
+   debugNotify("<<< addBrainDmg()") #Debug
 
-def applyBrainDmg(player = me):
+def applyBrainDmg(player = me, count = 1):
    debugNotify(">>> applyBrainDmg(){}".format(extraASDebug())) #Debug
    specialCard = getSpecial('Identity', player)
-   specialCard.markers[mdict['BrainDMG']] += 1
+   specialCard.markers[mdict['BrainDMG']] += count
 
 def addMeatDmg(group, x = 0, y = 0):
    mute()
@@ -893,7 +901,8 @@ def addMeatDmg(group, x = 0, y = 0):
       notify ("{} prevents 1 Meat Damage.".format(me))
    else:
       notify ("{} suffers 1 Meat Damage.".format(me))
-      intdamageDiscard(me.hand)
+      intdamageDiscard()
+      #intdamageDiscard(me.hand)
       playDMGSound('Meat')
       autoscriptOtherPlayers('MeatDMGInflicted',getSpecial('Identity',fetchRunnerPL()))
 
@@ -904,7 +913,8 @@ def addNetDmg(group, x = 0, y = 0):
       notify ("{} prevents 1 Net Damage.".format(me))
    else:
       notify ("{} suffers 1 Net Damage.".format(me))
-      intdamageDiscard(me.hand)
+      intdamageDiscard()
+      #intdamageDiscard(me.hand)
       playDMGSound('Net')
       autoscriptOtherPlayers('NetDMGInflicted',getSpecial('Identity',fetchRunnerPL()))
 

@@ -1618,22 +1618,10 @@ def InflictX(Autoscript, announceText, card, targetCards = None, notification = 
       elif DMGprevented > 0:
          preventTXT = ' ({} prevented)'.format(DMGprevented)
          DMG -= DMGprevented
-      for DMGpt in range(DMG): #Start applying the damage
-         if len(targetPL.hand) == 0 or currentHandSize(targetPL) == 0: 
-            notify(":::Warning:::{} has flatlined!".format(targetPL)) #If the target does not have any more cards in their hand, inform they've flatlined.
-            if targetPL != me: reportGame('FlatlineVictory') # In case of an effect like the Jinteki's ability
-            else: reportGame('Flatlined')
-            break
-         else: #Otherwise, warn the player doing it for the first time
-            whisper("+++ Applying damage {} of {}...".format(DMGpt+1,DMG))
-            DMGcard = targetPL.hand.random() # Pick a random card from their hand
-            if targetPL.getGlobalVariable('ds') == 'corp': DMGcard.moveTo(targetPL.piles['Archives(Hidden)']) # If they're a corp, move it to the hidden archive
-            else: DMGcard.moveTo(targetPL.piles['Heap/Archives(Face-up)']) #If they're a runner, move it to trash.
-            notify("--DMG: {} discarded".format(DMGcard))
-            if action.group(3) == 'Brain':  
-               #targetPL.counters['Hand Size'].value -= 1 # If it's brain damage, also reduce the player's maximum handsize.               
-               applyBrainDmg(targetPL)
-      if DMG: playDMGSound(action.group(3))
+      if DMG: 
+         remoteCall(targetPL, 'intdamageDiscard',[DMG])
+         if action.group(3) == 'Brain': applyBrainDmg(targetPL, DMG)
+         playDMGSound(action.group(3))
       autoscriptOtherPlayers('{}DMGInflicted'.format(action.group(3)),getSpecial('Identity',targetPL),DMG) # We also trigger any script for damage
    if targetPL == me: targetPL = 'theirself' # Just changing the announcement to fit better.
    if re.search(r'isRequirement', Autoscript) and DMG < 1: failedRequirement = True # Requirement means that the cost is still paid but other clicks are not going to follow.
