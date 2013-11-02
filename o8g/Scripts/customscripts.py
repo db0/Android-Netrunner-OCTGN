@@ -339,7 +339,7 @@ def CustomScript(card, action = 'PLAY', origin_card = None, original_action = No
       if len(StackTop) < 2:
          whisper("Your Stack is does not have enough cards. You cannot take this action")
          return 'ABORT'
-      notify("--> {} is visiting Mr. Li...")
+      notify("--> {} is visiting Mr. Li...".format(me))
       for c in StackTop:
          debugNotify("Pulling cards to hand", 3) #Debug
          c.moveTo(me.hand)
