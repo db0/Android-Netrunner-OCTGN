@@ -1,6 +1,13 @@
 Changelog - Android:Netrunner LCG OCTGN Game Definition
 ===============================================
 
+### 3.4.4.x
+
+* Added code that gracefully handles players manually moving cards into or out of the table.
+* Because of the above, now moving your ID to the table at the start of the game, will trigger the game setup, which should make things easier to remember.
+* Freelance coding contract can now target only programs
+* Fixed bug where you couldn't access face-up corp assets and upgrades.
+
 ### 3.4.3.x
 
 * Should not be able to access face-down ICE anymore if you have them targeted.

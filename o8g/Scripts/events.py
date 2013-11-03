@@ -157,21 +157,31 @@ def parseNewCounters(player,counter,oldValue):
    if counter.name == 'Bad Publicity' and oldValue < counter.value and player == me: playSound('Gain-Bad_Publicity')
    debugNotify("<<< parseNewCounters()")
 
-def checkMovedCard(player,card,fromGroup,toGroup,oldIndex,index,oldX,oldY,x,y,scriptedMove):
+def checkMovedCard(player,card,fromGroup,toGroup,oldIndex,index,oldX,oldY,x,y,isScriptMove):
    mute()
-   global scriptedPlay 
-   #debugNotify("scriptedPlay = {}".format(scriptedPlay))
+   debugNotify("isScriptMove = {}".format(isScriptMove))
+   if isScriptMove: return # If the card move happened via a script, then all automations should have happened already.
    if fromGroup == me.hand and toGroup == table: 
-      return # Doesn't work. Too many outlier scenarios. See https://github.com/kellyelton/OCTGN/issues/984
-      if not scriptedPlay: 
-         intPlay(card)
-         scriptedPlay -= 1
+      if card.Type == 'Identity': intJackin(manual = True)
       else: 
-         scriptedPlay -= 1
-         if scriptedPlay < 0: scriptedPlay = 0 # Just in case
-   if fromGroup == table and toGroup != table and card.owner == me: # If the player dragged a card manually from the table to their discard pile...
-      debugNotify("Clearing card attachments")
-      clearAttachLinks(card)
+         if not card.isFaceUp: card.peek()
+         intPlay(card, retainPos = True)
+   elif fromGroup != table and toGroup == table: # If the player moves a card into the table from Deck or Trash, we assume they are installing it for free.
+      if not card.isFaceUp: card.peek()
+      if confirm("Play this card from {} for free?".format(pileName(fromGroup))):
+         intPlay(card, cost = 'free', scripted = True, retainPos = True)
+   elif fromGroup == table and toGroup != table and card.owner == me: # If the player dragged a card manually from the table to their discard pile...
+      if card.isFaceUp and card.Type == 'Program': 
+         chkRAM(card, 'UNINSTALL')
+         notify(":> {} frees up {} MU".format(player,card.Requirement))
+      if toGroup == player.piles['Archives(Hidden)'] or toGroup == player.piles['Heap/Archives(Face-up)']:
+         if ds == 'runner': sendToTrash(card, player.piles['Heap/Archives(Face-up)']) # The runner cards always go to face-up archives
+         else: sendToTrash(card, toGroup)
+      else: 
+         executePlayScripts(card,'UNINSTALL')
+         autoscriptOtherPlayers('CardUninstalled',card)
+         clearAttachLinks(card) # If the card was manually uninstalled or moved elsewhere than trash, then we simply take care of the MU and the attachments
+         
       
 def checkGlobalVars(name,oldValue,value):
    mute()

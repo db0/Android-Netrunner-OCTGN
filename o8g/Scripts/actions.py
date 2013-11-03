@@ -49,7 +49,7 @@ lastKnownNrClicks = 0 # A Variable keeping track of what the engine thinks our a
 # Clicks indication
 #---------------------------------------------------------------------------
 
-def useClick(group = table, x=0, y=0, count = 1):
+def useClick(group = table, x=0, y=0, count = 1, manual = False):
    debugNotify(">>> useClick(){}".format(extraASDebug())) #Debug
    global currClicks, lastKnownNrClicks
    mute()
@@ -68,13 +68,14 @@ def useClick(group = table, x=0, y=0, count = 1):
    currClicks += count + lastKnownNrClicks - me.Clicks# If the player modified their click counter manually, the last two will increase/decreate our current click accordingly.
    me.Clicks -= count
    lastKnownNrClicks = me.Clicks
-   debugNotify("About to clear all events from table")
-   for card in table: # We discard all events on the table when the player tries to use another click.
-      debugNotify("Processing {}".format(card))
-      hostCards = eval(getGlobalVariable('Host Cards'))
-      debugNotify("hostCards eval = {}".format(hostCards))
-      if card.isFaceUp and (card.Type == 'Operation' or card.Type == 'Event') and card.highlight != DummyColor and card.highlight != RevealedColor and card.highlight != InactiveColor and not card.markers[mdict['Scored']] and not hostCards.has_key(card._id): # We do not trash "scored" events (e.g. see Notoriety) or cards hosted on others card (e.g. see Oversight AI)
-         intTrashCard(card,0,"free") # Clearing all Events and operations for players who keep forgeting to clear them.   
+   if not manual: # We don't clear all event when manually dragging events to the table, or it will clear the one we just played as well
+      debugNotify("About to clear all events from table")
+      for card in table: # We discard all events on the table when the player tries to use another click.
+         debugNotify("Processing {}".format(card))
+         hostCards = eval(getGlobalVariable('Host Cards'))
+         debugNotify("hostCards eval = {}".format(hostCards))
+         if card.isFaceUp and (card.Type == 'Operation' or card.Type == 'Event') and card.highlight != DummyColor and card.highlight != RevealedColor and card.highlight != InactiveColor and not card.markers[mdict['Scored']] and not hostCards.has_key(card._id): # We do not trash "scored" events (e.g. see Notoriety) or cards hosted on others card (e.g. see Oversight AI)
+            intTrashCard(card,0,"free") # Clearing all Events and operations for players who keep forgeting to clear them.   
    debugNotify("<<< useClick", 3) #Debug
    if count == 2: return "{} {} {} uses Double Click #{} and #{}{}".format(uniClick(),uniClick(),me,currClicks - 1, currClicks,extraText)
    elif count == 3: return "{} {} {} {} uses Triple Click #{}, #{} and #{}{}".format(uniClick(),uniClick(),uniClick(),me,currClicks - 2, currClicks - 1, currClicks,extraText)
@@ -261,7 +262,7 @@ def createStartingCards():
    except: notify("!!!ERROR!!! {} - In createStartingCards()\n!!! PLEASE INSTALL MARKERS SET FILE !!!".format(me))
 
 
-def intJackin(group, x = 0, y = 0):
+def intJackin(group = table, x = 0, y = 0, manual = False):
    debugNotify(">>> intJackin(){}".format(extraASDebug())) #Debug
    mute()
    global scriptedPlay
@@ -269,7 +270,7 @@ def intJackin(group, x = 0, y = 0):
       information("::: ERROR::: No identify found! Please load a deck which contains an identity card.")
       return
    else:
-      if Identity.group == table and not confirm("Are you sure you want to setup for a new game? (This action should only be done after a table reset)"): return
+      if Identity.group == table and not manual and not confirm("Are you sure you want to setup for a new game? (This action should only be done after a table reset)"): return
    #for type in Automations: switchAutomation(type,'Announce') # Too much spam.
    deck = me.piles['R&D/Stack']
    debugNotify("Checking Deck", 3)
@@ -1851,7 +1852,7 @@ def currentHandSize(player = me):
    else: currHandSize = player.counters['Hand Size'].value
    return currHandSize
 
-def intPlay(card, cost = 'not free', scripted = False, preReduction = 0):
+def intPlay(card, cost = 'not free', scripted = False, preReduction = 0, retainPos = False):
    debugNotify(">>> intPlay(){}".format(extraASDebug())) #Debug
    global gatheredCardList
    gatheredCardList = False # We reset this variable because we can call intPlay from other scripts. And at that point we want to re-scan the table.
@@ -1861,16 +1862,19 @@ def intPlay(card, cost = 'not free', scripted = False, preReduction = 0):
    if not scripted: whisper("+++ Processing. Please Hold...")
    storeProperties(card)
    random = rnd(10,100)
-   if not checkNotHardwareConsole(card): return	#If player already has a Console in play and doesnt want to play that card, do nothing.
+   if not checkNotHardwareConsole(card, manual = retainPos): return	#If player already has a Console in play and doesnt want to play that card, do nothing.
    if card.Type != 'ICE' and card.Type != 'Agenda' and card.Type != 'Upgrade' and card.Type != 'Asset': # We only check for uniqueness on install, against cards that install face-up
-      if not checkUnique(card): return #If the player has the unique card and opted not to trash it, do nothing.
+      if not checkUnique(card, manual = retainPos): return #If the player has the unique card and opted not to trash it, do nothing.
    if re.search(r'Double', getKeywords(card)): NbReq = 2 # Some cards require two clicks to play. This variable is passed to the useClick() function.
    elif scripted: NbReq = 0
    else: NbReq = 1 #In case it's not a "Double" card. Then it only uses one click to play.
-   ClickCost = useClick(count = NbReq)
-   if ClickCost == 'ABORT': return  #If the player didn't have enough clicks and opted not to proceed, do nothing.
+   ClickCost = useClick(count = NbReq, manual = retainPos)
+   if ClickCost == 'ABORT': 
+      if retainPos: card.moveTo(me.hand)
+      return  #If the player didn't have enough clicks and opted not to proceed, do nothing.
    if (card.Type == 'Operation' or card.Type == 'Event') and chkTargeting(card) == 'ABORT': 
       me.Clicks += NbReq # We return any used clicks in case of aborting due to missing target
+      card.moveTo(me.hand)
       return 'ABORT'# If it's an Operation or Event and has targeting requirements, check with the user first.
    host = chkHostType(card)
    debugNotify("host received: {}".format(host), 4)
@@ -1878,6 +1882,7 @@ def intPlay(card, cost = 'not free', scripted = False, preReduction = 0):
       try:
          if host == 'ABORT':
             me.Clicks += NbReq
+            if retainPos: card.moveTo(me.hand)
             return 'ABORT'
       except: # If there's an exception, it means that the host is a card object which cannot be compared to a string
          debugNotify("Found Host", 2)
@@ -1895,14 +1900,14 @@ def intPlay(card, cost = 'not free', scripted = False, preReduction = 0):
    expectedCost = num(card.Cost) - preReduction
    if expectedCost < 0: expectedCost = 0
    if card.Type == 'ICE' or card.Type == 'Agenda' or card.Type == 'Asset' or card.Type == 'Upgrade':
-      placeCard(card, action)
+      placeCard(card, action, retainPos = retainPos)
       if fetchProperty(card, 'Type') == 'ICE': card.orientation ^= Rot90 # Ice are played sideways.
       notify("{} to install a card.".format(ClickCost))
       #card.isFaceUp = False # Now Handled by placeCard()
    elif card.Type == 'Program' or card.Type == 'Event' or card.Type == 'Resource' or card.Type == 'Hardware':
       MUtext = chkRAM(card)
       if card.Type == 'Resource' and hiddenresource == 'yes':
-         placeCard(card, action)
+         placeCard(card, action, retainPos = retainPos)
          executePlayScripts(card,action)
          card.isFaceUp = False
          notify("{} to install a hidden resource.".format(ClickCost))
@@ -1915,12 +1920,15 @@ def intPlay(card, cost = 'not free', scripted = False, preReduction = 0):
       rc = payCost(expectedCost - reduction, cost)
       if rc == "ABORT":
          me.Clicks += NbReq # If the player didn't notice they didn't have enough credits, we give them back their click
+         if retainPos: card.moveTo(me.hand)
          return 'ABORT' # If the player didn't have enough money to pay and aborted the function, then do nothing.
-      elif rc == "free": extraText = " at no cost"
+      elif rc == "free": 
+         extraText = " at no cost"
+         rc = ''
       elif rc != 0: rc = " and pays {}".format(rc)
       else: rc = ''
       if cost == 'not free': reduction = reduceCost(card, action, expectedCost) # Now we go ahead and actually remove any markers from cards
-      placeCard(card, action)
+      placeCard(card, action, retainPos = retainPos)
       if card.Type == 'Program':
          for targetLookup in table: # We check if we're targeting a daemon to install the program in.
             if targetLookup.targetedBy and targetLookup.targetedBy == me and (re.search(r'Daemon',getKeywords(targetLookup)) or re.search(r'CountsAsDaemon', CardsAS.get(targetLookup.model,''))) and possess(targetLookup, card, silent = True) != 'ABORT':
@@ -1940,12 +1948,15 @@ def intPlay(card, cost = 'not free', scripted = False, preReduction = 0):
       rc = payCost(expectedCost - reduction, cost)
       if rc == "ABORT":
          me.Clicks += NbReq # If the player didn't notice they didn't have enough credits, we give them back their click
+         if retainPos: card.moveTo(me.hand)
          return 'ABORT' # If the player didn't have enough money to pay and aborted the function, then do nothing.
-      elif rc == "free": extraText = " at no cost"
+      elif rc == "free": 
+         extraText = " at no cost"
+         rc = ''
       elif rc != 0: rc = " and pays {}".format(rc)
       else: rc = '' # When the cast costs nothing, we don't include the cost.
       if cost == 'not free': reduction = reduceCost(card, action, expectedCost)
-      placeCard(card, action)
+      placeCard(card, action, retainPos = retainPos)
       if card.Type == 'Operation': notify("{}{} to initiate {}{}.".format(ClickCost, rc, card, extraText))
       else: notify("{}{} to play {}{}.".format(ClickCost, rc, card, extraText))
    playInstallSound(card)
@@ -2002,15 +2013,15 @@ def chkTargeting(card):
          whisper(":::Warning::: This card effect requires that you have one of more cards targeted from your hand. Aborting!")
          return 'ABORT'
 
-def checkNotHardwareConsole (card):
+def checkNotHardwareConsole (card, manual = False):
    debugNotify(">>> checkNotHardwareConsole(){}".format(extraASDebug())) #Debug
    mute()
    if card.Type != "Hardware" or not re.search(r'Console', getKeywords(card)): return True
    ExistingConsoles = [ c for c in table
          if c.owner == me and c.isFaceUp and re.search(r'Console', getKeywords(c)) ]
-   if len(ExistingConsoles) != 0 and not confirm("You already have at least one console in play. Are you sure you want to install {}?\n\n(If you do, your installed Consoles will be automatically trashed at no cost)".format(fetchProperty(card, 'name'))): return False
-   else:
-      for HWDeck in ExistingConsoles: trashForFree(HWDeck)
+   if ((not manual and len(ExistingConsoles) != 0) or (manual and len(ExistingConsoles) != 1)) and not confirm("You already have at least one console in play and you're not normally allowed to install a second. Are you sure you want to install {}?".format(fetchProperty(card, 'name'))): return False
+   #else:
+      #for HWDeck in ExistingConsoles: trashForFree(HWDeck)
    debugNotify(">>> checkNotHardwareConsole()") #Debug
    return True
 

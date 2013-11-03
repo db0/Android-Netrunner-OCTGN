@@ -2167,7 +2167,7 @@ Freelance Coding Contract
 -----
 bc0f047c-01b1-427f-a439-d451eda03033
 -----
-onPlay:Discard0Card-Targeted-fromHand$$Gain2Credits-perX
+onPlay:Discard0Card-Targeted-atProgram-fromHand$$Gain2Credits-perX
 +++++
 
 .....

@@ -312,7 +312,7 @@ def scanTable(group = table, x=0,y=0):
    for c in me.hand: storeProperties(c)
    notify("{} has re-scanned the table and refreshed their internal variables.".format(me))
  
-def checkUnique (card):
+def checkUnique (card, manual = False):
    debugNotify(">>> checkUnique(){}".format(extraASDebug())) #Debug
    mute()
    if not re.search(r'Unique', getKeywords(card)): 
@@ -324,9 +324,13 @@ def checkUnique (card):
                        and c.controller == me 
                        and c.isFaceUp 
                        and c.name == cName ]
-   if len(ExistingUniques) != 0 and not confirm("This unique card is already in play. Are you sure you want to play {}?\n\n(If you do, your existing unique card will be Trashed at no cost)".format(fetchProperty(card, 'name'))) : return False
+   if ((not manual and len(ExistingUniques) != 0) or (manual and len(ExistingUniques) != 1)) and not confirm("This unique card is already in play. Are you sure you want to play {}?\n\n(If you do, your existing unique card will be Trashed at no cost)".format(fetchProperty(card, 'name'))) : return False
    else:
-      for uniqueC in ExistingUniques: trashForFree(uniqueC)
+      count = len(ExistingUniques)
+      for uniqueC in ExistingUniques: 
+         if manual and count == 1: break # If it's a manual, the new unique card is already on the table, so we do not want to trash it as well.
+         trashForFree(uniqueC)
+         count -= 1
    debugNotify("<<< checkUnique() - Returning True", 3) #Debug
    return True   
    
@@ -447,7 +451,7 @@ def resetAll(): # Clears all the global variables in order to start a new game.
 # Card Placement
 #---------------------------------------------------------------------------
 
-def placeCard(card, action = 'INSTALL', hostCard = None, type = None):
+def placeCard(card, action = 'INSTALL', hostCard = None, type = None, retainPos = False):
    debugNotify(">>> placeCard() with action: {}".format(action)) #Debug
    global scriptedPlay
    scriptedPlay += 1
@@ -479,7 +483,7 @@ def placeCard(card, action = 'INSTALL', hostCard = None, type = None):
       if loopsNR and place[type][3] != 1: offset = 15 * (loopsNR % 3) # This means that in one loop the offset is going to be 0 and in another 15.
       else: offset = 0
       debugNotify("installedCount[type] is: {}.\nLoopsNR is: {}.\nLoopback is: {}\nOffset is: {}".format(installedCount[type],offset, loopback, offset), 3) #Debug
-      card.moveToTable(((place[type][0] + (((cwidth(card,0) + place[type][2]) * (installedCount[type] - loopback)) + offset) * place[type][4]) * flipBoard) + flipModX,(place[type][1] * flipBoard) + flipModY,CfaceDown) 
+      if not retainPos: card.moveToTable(((place[type][0] + (((cwidth(card,0) + place[type][2]) * (installedCount[type] - loopback)) + offset) * place[type][4]) * flipBoard) + flipModX,(place[type][1] * flipBoard) + flipModY,CfaceDown) 
       # To explain the above, we place the card at: Its original location
       #                                             + the width of the card
       #                                             + a predefined distance from each other times the number of other cards of the same type
