@@ -1,6 +1,10 @@
 =====Message of the Day======
 
-New: Ambush assets such as Snare or Junebug will now immediately pop-up a question window to the corporation asking if they want to trigger their effects. 
+After 3.4.4.x you can now manually drag cards to or out of the table for installation/trashing. 
+Doing so will automatically take care of costs and card restrictions but will retain the card location.
 
-This should hopefully stop mistakes of the runner trashing the asset before one had a chance to use it.
+Dragging your ID to the table at the start of the game will also trigger the game setup, which should be more intuitive.
+
+Still, the preferred method is to use double clicks to play cards from your hand and 'del' to trash them. 
+But at least the new methods should prevent your MUs from getting messed up in the future.
 =============================
