@@ -1145,7 +1145,7 @@ def accessTarget(group = table, x = 0, y = 0):
                and not c.markers[mdict['Scored']]
                and c.Type != 'Server'
                and c.Type != 'ICE' # To prevent mistakes
-               and (c.orientation != Rot90 and not c.isFaceUp)
+               and not (c.orientation == Rot90 and not c.isFaceUp)
                and c.Type != 'Remote Server']
    for card in cardList:
       cFaceD = False
