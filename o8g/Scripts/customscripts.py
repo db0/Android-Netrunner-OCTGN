@@ -89,7 +89,7 @@ def UseCustomAbility(Autoscript, announceText, card, targetCards = None, notific
       debugNotify("Turning Pile Face Down", 2)
       rnd(1,100) # Delay to be able to announce names.
       for c in targetPL.piles['R&D/Stack']: c.isFaceUp = False # We hide again the source pile cards.
-      cover.moveTo(shared.exile) # we cannot delete cards so we just hide it.
+      cover.moveTo(me.piles['Removed from Game']) # we cannot delete cards so we just hide it.
       announceString = ':=> Sniff'
          #      __
          # (___()'`;   *Sniff*
@@ -374,7 +374,7 @@ def CustomScript(card, action = 'PLAY', origin_card = None, original_action = No
       debugNotify("Turning Pile Face Down", 2)
       rnd(1,100) # Delay to be able to announce names.
       for c in targetPL.piles['R&D/Stack']: c.isFaceUp = False # We hide again the source pile cards.
-      cover.moveTo(shared.exile) # we cannot delete cards so we just hide it.
+      cover.moveTo(me.piles['Removed from Game']) # we cannot delete cards so we just hide it.
       notify("{} has successfully indexed {}'s R&D".format(me,targetPL))
    elif fetchProperty(card, 'name') == "Deep Thought" and action == 'Start':
       if card.markers[mdict['Virus']] and card.markers[mdict['Virus']] >= 3:

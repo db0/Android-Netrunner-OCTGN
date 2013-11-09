@@ -588,7 +588,7 @@ def fetchProperty(card, property):
 def clearCovers(): # Functions which goes through the table and clears any cover cards
    debugNotify(">>> clearCovers()") #Debug
    for cover in table:
-      if cover.model == 'ac3a3d5d-7e3a-4742-b9b2-7f72596d9c1b': cover.moveTo(shared.exile)
+      if cover.model == 'ac3a3d5d-7e3a-4742-b9b2-7f72596d9c1b': cover.moveTo(me.piles['Removed from Game'])
 
 def findOpponent():
    # Just a quick function to make the code more readable
@@ -687,7 +687,7 @@ def restorePile(group, cover): # This pile returns a pike visibility to the defa
    debugNotify("Turning {} Face Down".format(group.name), 2)
    for c in group: c.isFaceUp = False # We hide again the source pile cards.
    rnd(1,100) # Small delay to allow OCTGN to finish 
-   cover.moveTo(shared.exile) # we cannot delete cards so we just hide it.
+   cover.moveTo(me.piles['Removed from Game']) # we cannot delete cards so we just hide it.
    debugNotify("<<< restorePile()") #Debug
    
 def chkModulator(card, modulator, scriptType = 'onPlay'): # Checks the card's autoscripts for the existence of a specific modulator

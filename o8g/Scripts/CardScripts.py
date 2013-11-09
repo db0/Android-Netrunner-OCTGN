@@ -1044,7 +1044,7 @@ bc0f047c-01b1-427f-a439-d451eda02018
 -----
 onScore:Put1Agenda-perMarker{Advancement}-ignore3
 +++++
-A0B0G0T0:Remove1Agenda-isCost$$SimplyAnnounce{Retrieve one card from R&D}
+A0B0G0T0:Remove1Agenda-isCost$$Retrieve1Card-doNotReveal$$ShuffleStack
 .....
 Restructured Datapool
 -----
@@ -1388,7 +1388,7 @@ bc0f047c-01b1-427f-a439-d451eda02051
 -----
 onScore:Put1Agenda-perMarker{Advancement}-ignore3
 +++++
-A0B0G0T0:Remove1Agenda-isCost$$SimplyAnnounce{Retrieve one card from their Archives to their HQ}
+A0B0G0T0:Remove1Agenda-isCost$$onPlay:Retrieve1Cards-fromArchives-doNotReveal
 .....
 Test Run
 -----
