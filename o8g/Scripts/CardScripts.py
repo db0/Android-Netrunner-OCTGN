@@ -1388,7 +1388,7 @@ bc0f047c-01b1-427f-a439-d451eda02051
 -----
 onScore:Put1Agenda-perMarker{Advancement}-ignore3
 +++++
-A0B0G0T0:Remove1Agenda-isCost$$onPlay:Retrieve1Cards-fromArchives-doNotReveal
+A0B0G0T0:Remove1Agenda-isCost$$Retrieve1Cards-fromArchives-doNotReveal
 .....
 Test Run
 -----
