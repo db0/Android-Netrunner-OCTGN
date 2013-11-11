@@ -423,6 +423,7 @@ def resetAll(): # Clears all the global variables in order to start a new game.
    global installedCount, debugVerbosity, newturn,endofturn, currClicks, turn, autoRezFlags
    debugNotify(">>> resetAll(){}".format(extraASDebug())) #Debug
    mute()
+   if len(table) > 0: return # This function should only ever run after game start or reset. We abort in case it's a reconnect.
    me.counters['Credits'].value = 5
    me.counters['Hand Size'].value = 5
    me.counters['Tags'].value = 0
