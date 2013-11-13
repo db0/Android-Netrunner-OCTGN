@@ -1,6 +1,12 @@
 Changelog - Android:Netrunner LCG OCTGN Game Definition
 ===============================================
 
+### 3.4.5.x
+
+* Can now derez Agendas
+* Reconnect() will now return ICE to their normal position, in case they get screwed.
+
+
 ### 3.4.4.x
 
 * Added code that gracefully handles players manually moving cards into or out of the table.

@@ -216,6 +216,7 @@ def reconnect():
          identName = card.name # The name of our current identity
          Identity = card
          ds = card.Side.lower()
+      if card.Type == 'ICE': card.orientation == Rot90         
    lastKnownNrClicks = me.Clicks
    PriorityInform = False # Explains what the "prioritize card" action does.
    chkSideFlip()

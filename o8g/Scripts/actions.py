@@ -1439,7 +1439,7 @@ def isRezzable (card):
    debugNotify(">>> isRezzable(){}".format(extraASDebug())) #Debug
    mute()
    Type = fetchProperty(card, 'Type')
-   if Type == "ICE" or Type == "Asset" or Type == "Upgrade": return True
+   if Type = "ICE" or Type == "Asset" or Type == "Upgrade" or Type == "Agenda": return True
    else: return False
 
 def intRez (card, x=0, y=0, cost = 'not free', silent = False, silentCost = False, preReduction = 0):
