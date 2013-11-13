@@ -1,10 +1,8 @@
 =====Message of the Day======
 
-After 3.4.4.x you can now manually drag cards to or out of the table for installation/trashing. 
-Doing so will automatically take care of costs and card restrictions but will retain the card location.
+Plascrete carapace now comes with power tokens and their use is optional. 
 
-Dragging your ID to the table at the start of the game will also trigger the game setup, which should be more intuitive.
+When you're about to receive meat damage, double click the carapace to use a token and create a damage-prevention effect on the table. 
 
-Still, the preferred method is to use double clicks to play cards from your hand and 'del' to trash them. 
-But at least the new methods should prevent your MUs from getting messed up in the future.
+That damage prevention will disappear once you receive any amount of meat damage, so don't use the carapace all at the same time just to prevent the 3 incoming PSF damage.
 =============================
