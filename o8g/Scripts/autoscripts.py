@@ -1433,7 +1433,9 @@ def CreateDummy(Autoscript, announceText, card, targetCards = None, notification
       dummyCard.highlight = DummyColor
       storeProperties(dummyCard)
    #confirm("Dummy ID: {}\n\nList Dummy ID: {}".format(dummyCard._id,passedlist[0]._id)) #Debug
-   if not re.search(r'doNotTrash',Autoscript): card.moveTo(card.owner.piles['Heap/Archives(Face-up)'])
+   if not re.search(r'doNotTrash',Autoscript):
+      debugNotify("Did not find string 'doNotTrash' in {}. Trashing Card".format(Autoscript))
+      card.moveTo(card.owner.piles['Heap/Archives(Face-up)'])
    if action: announceString = TokensX('Put{}'.format(action.group(2)), announceText,dummyCard, n = n) # If we have a -with in our autoscript, this is meant to put some tokens on the dummy card.
    else: announceString = announceText + 'create a lingering effect for {}'.format(targetPL)
    debugNotify("<<< CreateDummy()", 3)
@@ -1524,9 +1526,12 @@ def ModifyStatus(Autoscript, announceText, card, targetCards = None, notificatio
       else: targetCardlist += '{},'.format(targetCard)
    targetCardlist = targetCardlist.strip(',') # Re remove the trailing comma
    for targetCard in targetCards:
-      if re.search(r'-ifEmpty',Autoscript) and targetCard.markers[mdict['Credits']] and targetCard.markers[mdict['Credits']] > 0: 
-         if len(targetCards) > 1: continue #If the modification only happens when the card runs out of credits, then we abort if it still has any
-         else: return announceText # If there's only 1 card and it's not supposed to be trashed yet, do nothing.
+      if re.search(r'-ifEmpty',Autoscript):
+         debugNotify("Checking if card with {} credits and {} power is empty".format(targetCard.markers[mdict['Credits']],targetCard.markers[mdict['Power']]))
+         if targetCard.markers[mdict['Credits']] or targetCard.markers[mdict['Power']]:
+            debugNotify("Card is not Empty")
+            if len(targetCards) > 1: continue #If the modification only happens when the card runs out of credits or power, then we abort if it still has any
+            else: return announceText # If there's only 1 card and it's not supposed to be trashed yet, do nothing.
       if action.group(1) == 'Rez':
          if re.search(r'-payCost',Autoscript): # This modulator means the script is going to pay for the card normally
             preReducRegex = re.search(r'-reduc([0-9])',Autoscript) # this one means its going to reduce the cost a bit.

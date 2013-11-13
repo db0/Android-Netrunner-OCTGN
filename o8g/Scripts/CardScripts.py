@@ -1034,9 +1034,9 @@ Plascrete Carapace
 -----
 bc0f047c-01b1-427f-a439-d451eda02009
 -----
-onInstall:Put4protectionMeatDMG-trashCost-ifEmpty
+onInstall:Put4Power||onDamage:Remove1Power-isCost$$TrashMyself-ifEmpty$$CreateDummy-with1protectionMeatDMG-doNotTrash-trashCost
 +++++
-
+A0B0G0T0:Remove1Power-isCost$$TrashMyself-ifEmpty$$CreateDummy-with1protectionMeatDMG-doNotTrash-trashCost
 .....
 Project Atlas
 -----
