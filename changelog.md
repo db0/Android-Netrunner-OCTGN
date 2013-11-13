@@ -5,6 +5,7 @@ Changelog - Android:Netrunner LCG OCTGN Game Definition
 
 * Can now derez Agendas
 * Reconnect() will now return ICE to their normal position, in case they get screwed.
+* Plascrete carapace now comes with power tokens and their use is optional. When you're about to receive meat damage, double click the carapace to use a token and create a damage-prevention effect on the table. That damage prevention will disappear once you receive any amount of meat damage, so don't use the carapace all at the same time just to prevent the 3 incoming PSF damage.
 
 
 ### 3.4.4.x
