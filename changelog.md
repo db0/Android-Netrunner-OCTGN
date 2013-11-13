@@ -1,6 +1,10 @@
 Changelog - Android:Netrunner LCG OCTGN Game Definition
 ===============================================
 
+### 3.4.6.x
+
+* Server access will now be blocked until the corp gives the OK. After 3 requests to access, the runner has a chance to bypass an unresponsive corp (but don't do this unless you're sure the corp is not still thinking about it). Second attempt will also directly prompt the corp to acknowledge the run or inform that they're working on their reacts.
+
 ### 3.4.5.x
 
 * Can now derez Agendas
