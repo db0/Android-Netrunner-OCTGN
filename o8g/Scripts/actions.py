@@ -396,6 +396,8 @@ def jackOut(group=table,x=0,y=0, silent = False):
       setGlobalVariable('status','idle') # Clear the run variable
       setGlobalVariable('feintTarget','None') # Clear any feinted targets
       setGlobalVariable('SuccessfulRun','False') # Set the variable which tells the code if the run was successful or not, to false.
+      setGlobalVariable('Access','DENIED')
+      setGlobalVariable('accessAttempts','0')
       debugNotify("About to announce end of Run", 2) #Debug
       if not silent: # Announce the end of run from the perspective of each player.
          if targetPL != me: 
@@ -406,10 +408,14 @@ def jackOut(group=table,x=0,y=0, silent = False):
    debugNotify("<<< jackOut()", 3) # Debug
 
 def runSuccess(group=table,x=0,y=0, silent = False):
+   mute()
    debugNotify(">>> runSuccess(). Current status:{}".format(getGlobalVariable('status'))) #Debug
    opponent = ofwhom('-ofOpponent') # First we check if our opponent is a runner or a corp.
    if ds == 'corp': 
-      notify("{} acknowledges a successful run.".format(me))
+      if re.search(r'running',getGlobalVariable('status')):
+         notify("{} acknowledges a successful run.".format(me))
+         setGlobalVariable('Access','GRANTED')
+      else: whisper("Nobody is running your servers at the moment!")
    else:
       runTargetRegex = re.search(r'running([A-Za-z&]+)',getGlobalVariable('status'))
       if not runTargetRegex: # If the runner is not running at the moment, do nothing
@@ -417,6 +423,10 @@ def runSuccess(group=table,x=0,y=0, silent = False):
       elif getGlobalVariable('SuccessfulRun') == 'True':
          whisper(":::Error::: You have already completed this run succesfully. Jacking out instead...")
          jackOut()
+      elif getGlobalVariable('Access') == 'DENIED' and (num(getGlobalVariable('accessAttempts')) < 2 or (num(getGlobalVariable('accessAttempts')) >= 2 and not confirm("Corp has not yet acknowledged your successful run. Bypass their reaction window?"))):
+         notify(":::WARNING::: {} is about to access the server and is waiting for final corporation reacts.\n(Corp must now press the [OK] button F3 to acknowledge the access.)".format(me))
+         setGlobalVariable('accessAttempts',str(num(getGlobalVariable('accessAttempts')) + 1))
+         return 'DENIED'
       else:
          setGlobalVariable('SuccessfulRun','True')
          if getGlobalVariable('feintTarget') != 'None': runTarget = getGlobalVariable('feintTarget') #If the runner is feinting, now change the target server to the right one
@@ -1144,7 +1154,9 @@ def accessTarget(group = table, x = 0, y = 0):
    debugNotify(">>> accessTarget()") #Debug
    mute()
    targetPL = ofwhom('-ofOpponent')
-   if getGlobalVariable('SuccessfulRun') != 'True': runSuccess() # If the player is trying to access, then we assume the run was a success.
+   if getGlobalVariable('SuccessfulRun') != 'True':
+      if not re.search(r'running',getGlobalVariable('status')) and not confirm("You're not currently running. Are you sure you're allowed to access this card?"): return
+      if runSuccess() == 'DENIED': return # If the player is trying to access, then we assume the run was a success.
    cardList = [c for c in table
                if c.targetedBy
                and c.targetedBy == me

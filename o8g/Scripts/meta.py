@@ -439,6 +439,8 @@ def resetAll(): # Clears all the global variables in order to start a new game.
    setGlobalVariable('CurrentTraceEffect','None')
    setGlobalVariable('CorpTraceValue','None')
    setGlobalVariable('League','')
+   setGlobalVariable('Access','DENIED')
+   setGlobalVariable('accessAttempts','0')
    newturn = False 
    endofturn = False
    currClicks = 0
@@ -685,6 +687,7 @@ def BUTTON_Access(group = None,x=0,y=0):
                  "--- Alert: Intrusion in progress!"]
    AccessTXT = AccessMsgs[rnd(0,len(AccessMsgs) - 1)]
    notify(AccessTXT + "\n-- {} is about to gain access. Corporate React?".format(me))
+   setGlobalVariable('accessAttempts',str(num(getGlobalVariable('accessAttempts')) + 1))  # The runner using the Button counts for an access Attempt. After 3 of them, the runner can bypass an unresponsive corp.
    playButtonSound('Access')
 
 def BUTTON_NoRez(group = None,x=0,y=0):  
@@ -693,6 +696,7 @@ def BUTTON_NoRez(group = None,x=0,y=0):
 
 def BUTTON_OK(group = None,x=0,y=0):
    notify("--- {} has no further reactions.".format(me))
+   if re.search(r'running',getGlobalVariable('status')) and ds == 'corp': setGlobalVariable('Access','GRANTED')
    playButtonSound('OK')
 
 def BUTTON_Wait(group = None,x=0,y=0):  

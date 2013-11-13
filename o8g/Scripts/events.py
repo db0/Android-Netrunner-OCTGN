@@ -185,24 +185,30 @@ def checkMovedCard(player,card,fromGroup,toGroup,oldIndex,index,oldX,oldY,x,y,is
       
 def checkGlobalVars(name,oldValue,value):
    mute()
-   checkBoardFlip(name,oldValue,value)
+   if name == 'boardFlipState': checkBoardFlip(name,oldValue,value)
+   if name == 'accessAttempts': checkAccessAttempts(name,oldValue,value)
 
 def checkBoardFlip(name,oldValue,value):   
    global flipBoard, flipModX, flipModY
-   if name == 'boardFlipState':
-      if value == 'True':
-         debugNotify("Flipping Board")
-         flipBoard = -1
-         flipModX = -61
-         flipModY = -77
-         table.setBoardImage("table\\Tabletop_flipped.png")
-      else:
-         debugNotify("Restoring Board Orientation")
-         flipBoard = 1
-         flipModX = 0
-         flipModY = 0
-         table.setBoardImage("table\\Tabletop.png") # If they had already reversed the table before, we set it back proper again   
+   if value == 'True':
+      debugNotify("Flipping Board")
+      flipBoard = -1
+      flipModX = -61
+      flipModY = -77
+      table.setBoardImage("table\\Tabletop_flipped.png")
+   else:
+      debugNotify("Restoring Board Orientation")
+      flipBoard = 1
+      flipModX = 0
+      flipModY = 0
+      table.setBoardImage("table\\Tabletop.png") # If they had already reversed the table before, we set it back proper again   
 
+def checkAccessAttempts(name,oldValue,value):
+   if ds == 'corp' and num(value) >= 2:
+      if confirm("The runner is currently waiting for final corporate reactions before proceeding to access the server. Do you have any cards to rez or paid abilities to use at this moment?"):
+         notify(":::WARNING::: The Corporation delays access while they deliberate which reacts to trigger...")
+      else: runSuccess()
+         
 def reconnectMe(group, x,y):
    reconnect()
    
