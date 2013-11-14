@@ -1,6 +1,10 @@
 Changelog - Android:Netrunner LCG OCTGN Game Definition
 ===============================================
 
+### 3.5.1.x
+
+* Fixed bug where trashing face-down cards would send them in the face-up archives.
+
 ### 3.5.0.x
 
 * New game definition for **Second Thoughts**. As always, almost every card scripted!
