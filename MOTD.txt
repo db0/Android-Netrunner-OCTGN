@@ -1,8 +1,6 @@
 =====Message of the Day======
 
-Plascrete carapace now comes with power tokens and their use is optional. 
+Second Thoughts is now Rezzed and all cards are automated!
 
-When you're about to receive meat damage, double click the carapace to use a token and create a damage-prevention effect on the table. 
-
-That damage prevention will disappear once you receive any amount of meat damage, so don't use the carapace all at the same time just to prevent the 3 incoming PSF damage.
+Yes this one got a bit delayed, but we're finally here!
 =============================
