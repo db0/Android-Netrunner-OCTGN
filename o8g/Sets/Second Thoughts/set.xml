@@ -95,7 +95,7 @@
 		<property name="Stat" value="3" />	
 		<property name="Rules" value="3 [Credits]: Break up to 3 code gate subroutines.&#xD;3 [Credits]: +5 strength." />
 		<property name="Flavor" value="It&#39;s efficient as all hell, for certain very large values of &quot;efficient.&quot; The whale avatar is either a nice touch or a tragic misapplication of programmer man-hours, depending on who you ask. -BT&#39;s Guide to Icebreaking" />
-		<property name="Instructions" value="3 [Credits]: Break up to 3 code gate subroutines.||3 [Credits]: +3 strength" />
+		<property name="Instructions" value="3 [Credits]: Break up to 3 code gate subroutines.||3 [Credits]: +5 strength" />
 		<property name="Faction" value="Criminal" />
 		<property name="Influence" value="2" />
 		<property name="Side" value="Runner" />
