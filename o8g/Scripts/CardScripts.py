@@ -180,7 +180,7 @@ bc0f047c-01b1-427f-a439-d451eda01042
 -----
 
 +++++
-A0B2G0T0:SimplyAnnounce{break up to 2 barrier subroutines}||A0B1G0T0:Put1PlusOne	
+A0B2G0T0:SimplyAnnounce{break up to 2 barrier subroutines}||A0B1G0T0:Put1PlusOne
 .....
 Beanstalk Royalties
 -----
@@ -1106,7 +1106,7 @@ ZU.13 Key Master
 -----
 bc0f047c-01b1-427f-a439-d451eda02007
 -----
-constantAbility:Cloud2Link
+ConstantAbility:Cloud2Link
 +++++
 A0B1G0T0:SimplyAnnounce{break code gate subroutine}||A0B1G0T0:Put1PlusOne
 .....
@@ -1650,7 +1650,7 @@ Creeper
 -----
 bc0f047c-01b1-427f-a439-d451eda02089
 -----
-constantAbility:Cloud2Link
+ConstantAbility:Cloud2Link
 +++++
 A0B2G0T0:SimplyAnnounce{break sentry subroutine}||A0B1G0T0:Put1PlusOne
 .....
@@ -2527,23 +2527,24 @@ Bishop
 -----
 bc0f047c-01b1-427f-a439-d451eda04021
 -----
-
+CaissaPlace:ICE
 +++++
+A1B0G0T0:RehostMyself-Targeted-isICE
 
 .....
 Scheherazade
 -----
 bc0f047c-01b1-427f-a439-d451eda04022
 -----
-
+onInstall:Put99Scheherazade Hosted-isSilent||ConstantAbility:CountsAsDaemon||onHost:Gain1Credits
 +++++
-
+A0B0G0T0:PossessTarget-Targeted-atProgram-targetMine
 .....
 Hard at Work
 -----
 bc0f047c-01b1-427f-a439-d451eda04023
 -----
-
+atTurnStart:Gain2Credits-duringMyTurn$$Lose1Clicks
 +++++
 
 .....
@@ -2551,7 +2552,7 @@ Recon
 -----
 bc0f047c-01b1-427f-a439-d451eda04024
 -----
-
+onPlay:RunGeneric
 +++++
 
 .....
@@ -2561,7 +2562,7 @@ bc0f047c-01b1-427f-a439-d451eda04025
 -----
 
 +++++
-
+A0B0G0T1:CustomScript
 .....
 Leviathan
 -----
@@ -2569,13 +2570,13 @@ bc0f047c-01b1-427f-a439-d451eda04026
 -----
 
 +++++
-
+A0B3G0T0:SimplyAnnounce{break up to 3 code gate subroutines}||A0B3G0T0:Put3PlusOne
 .....
-Eureka&#33;
+Eureka!
 -----
 bc0f047c-01b1-427f-a439-d451eda04027
 -----
-
+onPlay:CustomScript
 +++++
 
 .....
@@ -2583,7 +2584,7 @@ Record Reconstructor
 -----
 bc0f047c-01b1-427f-a439-d451eda04028
 -----
-
+atSuccessfulRun:Retrieve1Cards-fromArchives-faceUpOnly-toDeck-onOpponent-ifSuccessfulRunArchives-isOptional-isAlternativeRunResult
 +++++
 
 .....
@@ -2591,7 +2592,7 @@ Prepaid VoicePAD
 -----
 bc0f047c-01b1-427f-a439-d451eda04029
 -----
-
+onInstall:Put1Credits-isSilent||atTurnPreStart:Refill1Credits-duringMyTurn||whileInstalled:Reduce#CostPlay-affectsEvent-forMe
 +++++
 
 .....
@@ -2601,21 +2602,21 @@ bc0f047c-01b1-427f-a439-d451eda04030
 -----
 
 +++++
-
+A0B0G0T0:RunEnd-isSubroutine
 .....
 Hellion Alpha Test
 -----
 bc0f047c-01b1-427f-a439-d451eda04031
 -----
-
+onPlay:Trace2-traceEffects<SimplyAnnounce{add 1 installed resource to the top of the Runner stack},Gain1Bad Publicity>
 +++++
-
+A0B0G0T0:UninstallTarget-toStack-Targeted-atResource
 .....
 Clone Retirement
 -----
 bc0f047c-01b1-427f-a439-d451eda04032
 -----
-
+onScore:Lose1Bad Publicity||onLiberation:Gain1Bad Publicity
 +++++
 
 .....
@@ -2625,13 +2626,14 @@ bc0f047c-01b1-427f-a439-d451eda04033
 -----
 
 +++++
+A0B0G0T0:TrashTarget-Targeted-atProgram_and_AI-isSubroutine||A0B0G0T0:Inflict1NetDamage-onOpponent-isSubroutine
 
 .....
 Shipment from SanSan
 -----
 bc0f047c-01b1-427f-a439-d451eda04034
 -----
-
+onPlay:Put2Advancement-Targeted
 +++++
 
 .....
@@ -2641,13 +2643,13 @@ bc0f047c-01b1-427f-a439-d451eda04035
 -----
 
 +++++
-
+A0B0G0T0:Trace1-isSubroutine-traceEffects<Gain1Tags-onOpponent,None>||A0B0G0T0:Trace2-isSubroutine-traceEffects<Gain1Tags-onOpponent,None>||A0B0G0T0:Trace3-isSubroutine-traceEffects<Gain1Tags-onOpponent,None>||A0B0G0T0:RunEnd-isSubroutine
 .....
 The Cleaners
 -----
 bc0f047c-01b1-427f-a439-d451eda04036
 -----
-
+ConstantAbility:Enhance1MeatDamage
 +++++
 
 .....
@@ -2655,15 +2657,15 @@ Elizabeth Mills
 -----
 bc0f047c-01b1-427f-a439-d451eda04037
 -----
-
+onRez:Lose1Bad Publicity
 +++++
-
+A0B0G0T1:TrashTarget-Targeted-atLocation$$Gain1Bad Publicity
 .....
 Off the Grid
 -----
 bc0f047c-01b1-427f-a439-d451eda04038
 -----
-
+atSuccessfulRun:TrashMyself-ifSuccessfulRunHQ
 +++++
 
 .....
@@ -2671,7 +2673,7 @@ Profiteering
 -----
 bc0f047c-01b1-427f-a439-d451eda04039
 -----
-
+onScore:RequestInt-Msg{How much bad publicity do you want to take? (max 3)}$$Gain1Bad Publicity-perX$$Gain5Credits-perX
 +++++
 
 .....
@@ -2679,7 +2681,7 @@ Restructure
 -----
 bc0f047c-01b1-427f-a439-d451eda04040
 -----
-
+onPlay:Gain15Credits
 +++++
 
 .....

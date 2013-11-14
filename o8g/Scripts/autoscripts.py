@@ -64,7 +64,7 @@ def executePlayScripts(card, action):
           re.search(r'Placement', autoS) or 
           re.search(r'CaissaPlace', autoS) or 
           re.search(r'whileInPlay', autoS) or 
-          re.search(r'constantAbility', autoS) or 
+          re.search(r'ConstantAbility', autoS) or 
           re.search(r'onPay', autoS) or # onPay effects are only useful before we go to the autoscripts, for the cost reduction.
           re.search(r'triggerNoisy', autoS) or # Trigger Noisy are used automatically during action use.
           re.search(r'-isTrigger', autoS)): Autoscripts.remove(autoS)
@@ -1555,7 +1555,7 @@ def ModifyStatus(Autoscript, announceText, card, targetCards = None, notificatio
          if re.search(r'Caissa', targetCard.Keywords): newHost = chkHostType(targetCard,'DemiAutoTargeted', caissa = True)
          else: newHost = chkHostType(targetCard,'DemiAutoTargeted')
          if not newHost: 
-            delayed_whisper("Not a card that card rehost. Bad script?!")
+            delayed_whisper("Not a card that {} can rehost on. Bad script?!".format(targetCard))
             return 'ABORT'
          else:
             try:
@@ -1683,7 +1683,7 @@ def RetrieveX(Autoscript, announceText, card, targetCards = None, notification =
       if checkCardRestrictions(gatherCardProperties(c), restrictions) and checkSpecialRestrictions(Autoscript,c):
          cardList.append(c)
          if re.search(r'-isTopmost', Autoscript) and len(cardList) == count: break # If we're selecting only the topmost cards, we select only the first matches we get.         
-   if re.search(r'-fromArchives', Autoscript): # If the card is being retrieved from archives, we need to also check hidden archives.
+   if re.search(r'-fromArchives', Autoscript) and not re.search(r'-faceUpOnly', Autoscript): # If the card is being retrieved from archives, we need to also check hidden archives.
       for c in targetPL.piles['Archives(Hidden)']:
          debugNotify("Checking Hidden Arc card: {}".format(c), 4)
          if checkCardRestrictions(gatherCardProperties(c), restrictions) and checkSpecialRestrictions(Autoscript,c):
@@ -1735,7 +1735,7 @@ def RetrieveX(Autoscript, announceText, card, targetCards = None, notification =
       for c in chosenCList:
          if destination == table: 
             if re.search(r'-payCost',Autoscript): # This modulator means the script is going to pay for the card normally
-               preReducRegex = re.search(r'-reduc([0-9])',Autoscript) # this one means its going to reduce the cost a bit.
+               preReducRegex = re.search(r'-reduc([0-9]+)',Autoscript) # this one means its going to reduce the cost a bit.
                if preReducRegex: preReduc = num(preReducRegex.group(1))
                else: preReduc = 0
                payCost = 'not free'

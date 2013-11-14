@@ -658,6 +658,48 @@ def CustomScript(card, action = 'PLAY', origin_card = None, original_action = No
                notify(":> {} has streamlined their processes and gained 1 extra {}.".format(card,uniClick()))
       elif action == 'Start': del collectiveSequence[:]
       debugNotify("Exiting with collectiveSequence = {}".format(collectiveSequence))
+   elif fetchProperty(card, 'name') == 'Copycat' and action == 'USE':
+      runTargetRegex = re.search(r'running([A-Za-z&]+)',getGlobalVariable('status'))
+      if not runTargetRegex: 
+         whisper(":::ERROR::: You need to be currently running to use Copycat!")
+         return 'ABORT'
+      choice = SingleChoice("Which server are you continuing the run from?",['Remote Server','HQ','R&D','Archives'])
+      if choice != None: # Just in case the player didn't just close the askInteger window.
+         if choice == 0: Name = 'Remote'
+         elif choice == 1: Name = 'HQ'
+         elif choice == 2: Name = 'R&D'
+         elif choice == 3: Name = 'Archives'
+         else: return 'ABORT'
+      myIdent = getSpecial('Identity',me)
+      myIdent.target(False)
+      if Name != 'Remote':
+         enemyIdent = getSpecial('Identity',findOpponent())
+         targetServer = getSpecial(Name,enemyIdent.controller)
+         if targetServer: myIdent.arrow(targetServer, True) # If for some reason we can't find the relevant central server card (e.g. during debug), we abort gracefully
+      setGlobalVariable('status','running{}'.format(Name))
+      notify("{} trashes {} to switch runs to the {} server".format(me,card,Name))
+      intTrashCard(card, fetchProperty(card,'Stat'), "free", silent = True)
+   elif fetchProperty(card, 'name') == 'Eureka!' and action == 'PLAY':
+      c = me.piles['R&D/Stack'].top()
+      c.moveTo(me.piles['Heap/Archives(Face-up)'])
+      rnd(0,5)
+      if c.Type != 'Event':
+         extraCost = num(c.Cost) - 10
+         if extraCost < 0: extraCost = 0
+         reduction = reduceCost(c, 'TRASH', extraCost, dryRun = True)
+         if reduction > 0:
+            extraText = " ({} - {})".format(extraCost,reduction)
+            extraText2 = " (reduced by {})".format(uniCredit(reduction))
+         elif reduction < 0:
+            extraText = " ({} + {})".format(extraCost,abs(reduction))
+            extraText2 = " (increased by {})".format(uniCredit(reduction))
+         else:
+            extraText = ''
+            extraText2 = ''
+         if confirm("The top card of your Stack is {}. It will cost you {}{} to install and you have {} credits. Install?".format(c.Name,extraCost - reduction,extraText,me.Credits)):
+            intPlay(c, 'not free', True, 10)
+         else: notify("{} almost had a breakthrough while working on {}, but didn't have the funds or willpower to follow through.".format(me,c))
+      else: notify("{} went for a random breakthrough, but only remembered they should have {}'d instead.".format(me,c))
    elif action == 'USE': useCard(card)
    debugNotify("<<< CustomScript()", 3) #Debug
    

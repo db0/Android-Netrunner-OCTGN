@@ -337,7 +337,7 @@ def intRun(aCost = 1, Name = 'R&D', silent = False):
       else: announceTXT = Name
       notify ("{} to start a run on {}.".format(ClickCost,announceTXT))
    debugNotify("Setting bad publicity", 2)
-   targetPL = ofwhom('-ofOpponent')
+   targetPL = findOpponent()
    BadPub = targetPL.counters['Bad Publicity'].value
    enemyIdent = getSpecial('Identity',targetPL)
    myIdent = getSpecial('Identity',me)

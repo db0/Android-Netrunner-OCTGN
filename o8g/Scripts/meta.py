@@ -366,7 +366,13 @@ def clearAttachLinks(card):
          if hostCardSnapshot[attachment] == card._id:
             if Card(attachment) in table: intTrashCard(Card(attachment),0,cost = "host removed")
             del hostCards[attachment]
-   debugNotify("Checking if the card is attached to unlink.", 2)      
+      setGlobalVariable('Host Cards',str(hostCards))
+   unlinkHosts(card)
+   debugNotify("<<< clearAttachLinks()", 3) #Debug   
+
+def unlinkHosts(card): #Checking if the card is attached to unlink.
+   debugNotify(">>> returnHostTokens()") #Debug
+   hostCards = eval(getGlobalVariable('Host Cards'))
    if hostCards.has_key(card._id):
       hostCard = Card(hostCards[card._id])
       if (re.search(r'Daemon',getKeywords(hostCard)) or re.search(r'CountsAsDaemon', CardsAS.get(hostCard.model,''))) and hostCard.group == table: 
@@ -379,13 +385,13 @@ def clearAttachLinks(card):
       debugNotify("customMU = {}".format(customMU))
       if customMU and hostCard.group == table: # If the card has a custom hosting marker (e.g. Dinosaurus)
          hostCard.markers[customMU] += 1 # Then we return the custom hosting marker to its original card to signifiy it's free to host another program.
+         card.markers[customMU] -= 1
       del hostCards[card._id] # If the card was an attachment, delete the link
       setGlobalVariable('Host Cards',str(hostCards)) # We need to store again before orgAttachments takes over
       if not re.search(r'Daemon',getKeywords(hostCard)) and not customMU: 
          orgAttachments(hostCard) # Reorganize the attachments if the parent is not a daemon-type card.
-   else: setGlobalVariable('Host Cards',str(hostCards))
-   debugNotify("<<< clearAttachLinks()", 3) #Debug   
-
+   debugNotify("<<< returnHostTokens()", 3) #Debug   
+   
 def sendToTrash(card, pile = None): # A function which takes care of sending a card to the right trash pile and running the appropriate scripts. Doesn't handle costs.
    debugNotify(">>> sendToTrash()") #Debug   
    if not pile: pile = card.owner.piles['Heap/Archives(Face-up)'] # I can't pass it as a function variable. OCTGN doesn't like it.
@@ -504,6 +510,7 @@ def placeCard(card, action = 'INSTALL', hostCard = None, type = None, retainPos 
 
 def hostMe(card,hostCard):
    debugNotify(">>> hostMe()") #Debug
+   unlinkHosts(card) # First we make sure we clear any previous hosting and return any markers to their right place.
    hostCards = eval(getGlobalVariable('Host Cards'))
    hostCards[card._id] = hostCard._id
    setGlobalVariable('Host Cards',str(hostCards))
@@ -597,9 +604,12 @@ def possess(daemonCard, programCard, silent = False, force = False):
             markersRegex = re.search(r'onHost:(.*)',autoS)            
             if markersRegex:
                debugNotify("markersRegex groups = {}".format(markersRegex.groups()))
-               TokensX(markersRegex.group(1),'',programCard)
+               for autoS in markersRegex.group(1).split('$$'):
+                  redirect(autoS, programCard, announceText = None, notificationType = 'Quick', X = 0)
+                  #TokensX(markersRegex.group(1),'',programCard)
             else: debugNotify("No onHost scripts found in {}".format(autoS))
-      programCard.owner.MU += count # We return the MUs the card would be otherwise using.
+      if customHostMarker and customHostMarker[1] == 'Scheherazade Hosted': pass
+      else: programCard.owner.MU += count # We return the MUs the card would be otherwise using.
       if not silent: notify("{} installs {} into {}".format(me,programCard,daemonCard))
    debugNotify("<<< possess(){}", 3) #Debug   
 #------------------------------------------------------------------------------
@@ -990,8 +1000,25 @@ def TrialError(group, x=0, y=0): # Debugging
    ###### End Testing Corner ######
    delayed_whisper("## Defining Test Cards")
    testcards = [
-                "bc0f047c-01b1-427f-a439-d451eda02048", 
-                "bc0f047c-01b1-427f-a439-d451eda04020"
+                "bc0f047c-01b1-427f-a439-d451eda04021", 
+                "bc0f047c-01b1-427f-a439-d451eda04022",
+                "bc0f047c-01b1-427f-a439-d451eda04023",
+                "bc0f047c-01b1-427f-a439-d451eda04024",
+                "bc0f047c-01b1-427f-a439-d451eda04025",
+                "bc0f047c-01b1-427f-a439-d451eda04026",
+                "bc0f047c-01b1-427f-a439-d451eda04027",
+                "bc0f047c-01b1-427f-a439-d451eda04028",
+                "bc0f047c-01b1-427f-a439-d451eda04029",
+                "bc0f047c-01b1-427f-a439-d451eda04030",
+                "bc0f047c-01b1-427f-a439-d451eda04031",
+                "bc0f047c-01b1-427f-a439-d451eda04032",
+                "bc0f047c-01b1-427f-a439-d451eda04033",
+                "bc0f047c-01b1-427f-a439-d451eda04034",
+                "bc0f047c-01b1-427f-a439-d451eda04035",
+                "bc0f047c-01b1-427f-a439-d451eda04036",
+                "bc0f047c-01b1-427f-a439-d451eda04037",
+                "bc0f047c-01b1-427f-a439-d451eda04038",
+                "bc0f047c-01b1-427f-a439-d451eda04039"
                 ] 
    if not ds: 
       if confirm("corp?"): ds = "corp"

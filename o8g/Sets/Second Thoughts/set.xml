@@ -95,7 +95,7 @@
 		<property name="Stat" value="3" />	
 		<property name="Rules" value="3 [Credits]: Break up to 3 code gate subroutines.&#xD;3 [Credits]: +5 strength." />
 		<property name="Flavor" value="It&#39;s efficient as all hell, for certain very large values of &quot;efficient.&quot; The whale avatar is either a nice touch or a tragic misapplication of programmer man-hours, depending on who you ask. -BT&#39;s Guide to Icebreaking" />
-		<property name="Instructions" value="" />
+		<property name="Instructions" value="3 [Credits]: Break up to 3 code gate subroutines.||3 [Credits]: +3 strength" />
 		<property name="Faction" value="Criminal" />
 		<property name="Influence" value="2" />
 		<property name="Side" value="Runner" />
@@ -207,7 +207,7 @@
 		<property name="Stat" value="2" />	
 		<property name="Rules" value="The Runner cannot use AI programs to break subroutines on Swordsman.&#xD;[Subroutine] Trash 1 AI program.&#xD;[Subroutine] Do 1 net damage." />
 		<property name="Flavor" value="Writing a program that can pass the Turing test is easy. The Gibson-Akamatsu test is a higher bar, and the only AIs to clear it thus far have been the androids. Even some humans have been known to fail." />
-		<property name="Instructions" value="" />
+		<property name="Instructions" value="[Subroutine] Trash 1 AI Program.||[Subroutine] Inflict 1 Net Damage" />
 		<property name="Faction" value="Jinteki" />
 		<property name="Influence" value="1" />
 		<property name="Side" value="Corp" />
@@ -239,7 +239,7 @@
 		<property name="Stat" value="3" />	
 		<property name="Rules" value="When you rez Muckraker, take 1 bad publicity.&#xD;[Subroutine] Trace1 - If successful, give the Runner 1 tag.&#xD;[Subroutine] Trace2 - If successful, give the Runner 1 tag.&#xD;[Subroutine] Trace3 - If successful, give the Runner 1 tag.&#xD;[Subroutine] End the run if the Runner is tagged." />
 		<property name="Flavor" value="" />
-		<property name="Instructions" value="" />
+		<property name="Instructions" value="[Subroutine] Trace 1. If successful, give the Runner 1 Tag.||[Subroutine] Trace 2. If successful, give the Runner 1 Tag.||[Subroutine] Trace 3. If successful, give the Runner 1 Tag.||End the Run if the runner is tagged" />
 		<property name="Faction" value="NBN" />
 		<property name="Influence" value="3" />
 		<property name="Side" value="Corp" />
