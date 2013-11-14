@@ -1,6 +1,18 @@
 Changelog - Android:Netrunner LCG OCTGN Game Definition
 ===============================================
 
+### 3.5.0.x
+
+* New game definition for **Second Thoughts**. As always, almost every card scripted!
+
+* ##### Trickier Automations
+  * Bishop: Its placement is not restricted. To rehost it, just target an appropriate ICE and double click it. 
+  * CopyCat: It won't check for the duplicate ICE. Just make sure you're using it when you're allowed to.
+  * Wotan: Since the runner decides which routines fire, they've not been put at options. The runner can simply trash their progs, lose money and so on.
+  * Hellion Alpha Test: When the trace succeeds, the card will just remain on the table. Just target the resource and double click The Helion Alpha Test to return that card to R&D
+  * Off the Grid won't actually prevent runs automatically. Just don't do it.
+  * Profiteering will allow you to put >3 BP. Just don't do it.
+
 ### 3.4.6.x
 
 * Server access will now be blocked until the corp gives the OK. After 3 requests to access, the runner has a chance to bypass an unresponsive corp (but don't do this unless you're sure the corp is not still thinking about it). Second attempt will also directly prompt the corp to acknowledge the run or inform that they're working on their reacts.

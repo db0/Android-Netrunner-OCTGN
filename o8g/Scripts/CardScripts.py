@@ -2536,7 +2536,7 @@ Scheherazade
 -----
 bc0f047c-01b1-427f-a439-d451eda04022
 -----
-onInstall:Put99Scheherazade Hosted-isSilent||ConstantAbility:CountsAsDaemon||onHost:Gain1Credits
+onInstall:Put1001Scheherazade Hosted-isSilent||ConstantAbility:CountsAsDaemon||onHost:Gain1Credits
 +++++
 A0B0G0T0:PossessTarget-Targeted-atProgram-targetMine
 .....
@@ -2610,7 +2610,7 @@ bc0f047c-01b1-427f-a439-d451eda04031
 -----
 onPlay:Trace2-traceEffects<SimplyAnnounce{add 1 installed resource to the top of the Runner stack},Gain1Bad Publicity>
 +++++
-A0B0G0T0:UninstallTarget-toStack-Targeted-atResource
+A0B0G0T0:UninstallTarget-toStack-Targeted-atResource$$TrashMyself
 .....
 Clone Retirement
 -----
