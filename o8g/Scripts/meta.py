@@ -393,7 +393,7 @@ def unlinkHosts(card): #Checking if the card is attached to unlink.
    debugNotify("<<< returnHostTokens()", 3) #Debug   
    
 def sendToTrash(card, pile = None): # A function which takes care of sending a card to the right trash pile and running the appropriate scripts. Doesn't handle costs.
-   debugNotify(">>> sendToTrash() on pile {}".format(pile.name)) #Debug   
+   debugNotify(">>> sendToTrash()") #Debug   
    if pile == None: pile = card.owner.piles['Heap/Archives(Face-up)'] # I can't pass it as a function variable. OCTGN doesn't like it.
    debugNotify("Now Pile = {}".format(pile.name))
    debugNotify("sendToTrash says previous group = {} and highlight = {}".format(card.group.name,card.highlight))
