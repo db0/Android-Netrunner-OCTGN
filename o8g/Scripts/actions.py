@@ -1037,17 +1037,20 @@ def findEnhancements(Autoscript): #Find out if the player has any cards increasi
    enhancer = 0
    DMGtype = re.search(r'\bInflict[0-9]+(Meat|Net|Brain)Damage', Autoscript)
    if DMGtype:
-      enhancerMarker = 'enhanceDamage:{}'.format(DMGtype.group(1))
-      debugNotify(' encancerMarker: {}'.format(enhancerMarker), 3)
       for card in table:
-         debugNotify("Checking {}".format(card), 2) #Debug
-         cardENH = re.search(r'Enhance([0-9]+){}Damage'.format(DMGtype.group(1)), CardsAS.get(card.model,''))
-         if card.controller == me and card.isFaceUp and cardENH: enhancer += num(cardENH.group(1))
          if card.controller == me and card.isFaceUp:
-            foundMarker = findMarker(card, enhancerMarker)
-            if foundMarker:
-               enhancer += card.markers[foundMarker]
-               card.markers[foundMarker] = 0
+            debugNotify("Checking {}".format(card), 2) #Debug
+            Autoscripts = CardsAS.get(card.model,'').split('||')
+            for autoS in Autoscripts:
+               if re.search(r'-isScored', autoS) and card.controller.getGlobalVariable('ds') != 'corp': continue
+               cardENH = re.search(r'Enhance([0-9]+){}Damage'.format(DMGtype.group(1)), autoS)
+               if cardENH: enhancer += num(cardENH.group(1))
+               enhancerMarker = 'enhanceDamage:{}'.format(DMGtype.group(1))
+               debugNotify(' encancerMarker: {}'.format(enhancerMarker), 3)
+               foundMarker = findMarker(card, enhancerMarker)
+               if foundMarker:
+                  enhancer += card.markers[foundMarker]
+                  card.markers[foundMarker] = 0
    debugNotify("<<< findEnhancements() by returning: {}".format(enhancer), 3)
    return enhancer
 

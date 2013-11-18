@@ -2649,7 +2649,7 @@ The Cleaners
 -----
 bc0f047c-01b1-427f-a439-d451eda04036
 -----
-ConstantAbility:Enhance1MeatDamage
+ConstantAbility:Enhance1MeatDamage-isScored
 +++++
 
 .....

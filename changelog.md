@@ -1,6 +1,10 @@
 Changelog - Android:Netrunner LCG OCTGN Game Definition
 ===============================================
 
+### 3.5.2.x
+
+* The Cleaners should not enhance meat damage when liberated by the runner.
+
 ### 3.5.1.x
 
 * Fixed bug where trashing face-down cards would send them in the face-up archives.
