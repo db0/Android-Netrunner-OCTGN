@@ -187,6 +187,7 @@ def CustomScript(card, action = 'PLAY', origin_card = None, original_action = No
             c.orientation ^= Rot90
             iter +=1
             notify(" -- {} Beta Tested!".format(c))
+            executePlayScripts(c,'REZ')
             autoscriptOtherPlayers('CardInstall',c)
             autoscriptOtherPlayers('CardRezzed',c)
       if iter: # If we found any ice in the top 3
