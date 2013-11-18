@@ -4,6 +4,8 @@ Changelog - Android:Netrunner LCG OCTGN Game Definition
 ### 3.5.2.x
 
 * The Cleaners should not enhance meat damage when liberated by the runner.
+* ABT should execute onRez automations now
+* Damage enhancers (e.g. The Cleaners) now also affect manual damage.
 
 ### 3.5.1.x
 

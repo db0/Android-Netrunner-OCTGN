@@ -889,12 +889,14 @@ def intdamageDiscard(count = 1):
 def addBrainDmg(group, x = 0, y = 0):
    mute()
    debugNotify(">>> addBrainDmg()") #Debug
-   if Automations['Damage Prevention'] and confirm("Is this damage preventable?") and findDMGProtection(1, 'Brain', me): # If we find any defense against it, inform that it was prevented
+   enhancer = findEnhancements("Inflict1BrainDamage")
+   DMG = 1 + enhancer
+   if Automations['Damage Prevention'] and confirm("Is this damage preventable?") and findDMGProtection(DMG, 'Brain', me): # If we find any defense against it, inform that it was prevented
       notify ("{} prevents 1 Brain Damage.".format(me))
    else:
       applyBrainDmg()
       notify ("{} suffers 1 Brain Damage.".format(me))
-      intdamageDiscard()
+      intdamageDiscard(DMG)
       #intdamageDiscard(me.hand)    
       playDMGSound('Brain')
       autoscriptOtherPlayers('BrainDMGInflicted',getSpecial('Identity',fetchRunnerPL()))
@@ -908,11 +910,13 @@ def applyBrainDmg(player = me, count = 1):
 def addMeatDmg(group, x = 0, y = 0):
    mute()
    debugNotify(">>> addMeatDmg(){}".format(extraASDebug())) #Debug
-   if Automations['Damage Prevention'] and confirm("Is this damage preventable?") and findDMGProtection(1, 'Meat', me):
+   enhancer = findEnhancements("Inflict1MeatDamage")
+   DMG = 1 + enhancer
+   if Automations['Damage Prevention'] and confirm("Is this damage preventable?") and findDMGProtection(DMG, 'Meat', me):
       notify ("{} prevents 1 Meat Damage.".format(me))
    else:
       notify ("{} suffers 1 Meat Damage.".format(me))
-      intdamageDiscard()
+      intdamageDiscard(DMG)
       #intdamageDiscard(me.hand)
       playDMGSound('Meat')
       autoscriptOtherPlayers('MeatDMGInflicted',getSpecial('Identity',fetchRunnerPL()))
@@ -920,11 +924,13 @@ def addMeatDmg(group, x = 0, y = 0):
 def addNetDmg(group, x = 0, y = 0):
    mute()
    debugNotify(">>> addNetDmg(){}".format(extraASDebug())) #Debug
-   if Automations['Damage Prevention'] and confirm("Is this damage preventable?") and findDMGProtection(1, 'Net', me):
+   enhancer = findEnhancements("Inflict1MeatDamage")
+   DMG = 1 + enhancer
+   if Automations['Damage Prevention'] and confirm("Is this damage preventable?") and findDMGProtection(DMG, 'Net', me):
       notify ("{} prevents 1 Net Damage.".format(me))
    else:
       notify ("{} suffers 1 Net Damage.".format(me))
-      intdamageDiscard()
+      intdamageDiscard(DMG)
       #intdamageDiscard(me.hand)
       playDMGSound('Net')
       autoscriptOtherPlayers('NetDMGInflicted',getSpecial('Identity',fetchRunnerPL()))
