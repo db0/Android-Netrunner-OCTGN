@@ -1,6 +1,8 @@
 =====Message of the Day======
 
-Second Thoughts is now Rezzed and all cards are automated!
+Latest OCTGN updates disabled custom fonts by default. 
 
-Yes this one got a bit delayed, but we're finally here!
+If you want to see credit, click and other ANR icons, please go to the OCTGN options and enable custom fonts
+
+Do not do this if you're running OCTGN with Wine under Mac/Linux.
 =============================
