@@ -1737,6 +1737,7 @@ def exileCard(card, silent = False):
          me.counters['Agenda Points'].value -= APloss # Trashing Agendas for any reason, now takes they value away as well.
          notify("--> {} loses {} Agenda Points".format(me, APloss))
       executePlayScripts(card,'TRASH') # We don't want to run automations on simply revealed cards.
+      clearAttachLinks(card)
       card.moveTo(card.owner.piles['Removed from Game'])
    if not silent: notify("{} exiled {}{}.".format(me,card,MUtext))
 
@@ -1756,6 +1757,7 @@ def uninstall(card, x=0, y=0, destination = 'hand', silent = False):
       else: MUtext = ''
       executePlayScripts(card,'UNINSTALL')
       autoscriptOtherPlayers('CardUninstalled',card)
+      clearAttachLinks(card)
       card.moveTo(group)
    if not silent: notify("{} uninstalled {}{}.".format(me,card,MUtext))
 
