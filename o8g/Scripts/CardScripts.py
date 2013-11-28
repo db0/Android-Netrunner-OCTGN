@@ -2641,7 +2641,7 @@ Muckraker
 -----
 bc0f047c-01b1-427f-a439-d451eda04035
 -----
-
+onRez:Gain1Bad Publicity
 +++++
 A0B0G0T0:Trace1-isSubroutine-traceEffects<Gain1Tags-onOpponent,None>||A0B0G0T0:Trace2-isSubroutine-traceEffects<Gain1Tags-onOpponent,None>||A0B0G0T0:Trace3-isSubroutine-traceEffects<Gain1Tags-onOpponent,None>||A0B0G0T0:RunEnd-isSubroutine
 .....
