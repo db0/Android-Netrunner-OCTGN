@@ -1044,7 +1044,7 @@ bc0f047c-01b1-427f-a439-d451eda02018
 -----
 onScore:Put1Agenda-perMarker{Advancement}-ignore3
 +++++
-A0B0G0T0:Remove1Agenda-isCost$$Retrieve1Card-doNotReveal$$ShuffleStack
+A0B0G0T0:Remove1Agenda-isCost$$Retrieve1Card$$ShuffleStack
 .....
 Restructured Datapool
 -----
