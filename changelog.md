@@ -1,6 +1,10 @@
 Changelog - Android:Netrunner LCG OCTGN Game Definition
 ===============================================
 
+### 3.5.3.x
+
+* Resampled all sounds to 44100:2 to stop errors
+
 ### 3.5.2.x
 
 * The Cleaners should not enhance meat damage when liberated by the runner.
