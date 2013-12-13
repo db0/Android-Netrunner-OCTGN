@@ -132,10 +132,10 @@ def UseCustomAbility(Autoscript, announceText, card, targetCards = None, notific
       announceString = ''
    if fetchProperty(card, 'name') == "Snoop":
       if re.search(r'-isFirstCustom',Autoscript): 
-         Snoop('Simply Reveal')
+         remoteCall(findOpponent(),"Snoop",['Simply Reveal'])
          announceString = announceText + " reveal the runner's hand"
       else: 
-         Snoop('Reveal and Trash')
+         remoteCall(findOpponent(),"Snoop",['Reveal and Trash'])
          announceString = announceText + " reveal the runner's hand and trash a card"
    return announceString
    
@@ -708,25 +708,24 @@ def CustomScript(card, action = 'PLAY', origin_card = None, original_action = No
             intPlay(c, 'not free', True, 10)
          else: notify("{} almost had a breakthrough while working on {}, but didn't have the funds or willpower to follow through.".format(me,c))
       else: notify("{} went for a random breakthrough, but only remembered they should have {}'d instead.".format(me,c))
-   elif fetchProperty(card, 'name') == 'Expert Schedule Analyzer':
-      if action == 'SuccessfulRun': remoteCall(findOpponent(),"ESA",[True])
-      if action == 'JackOut': remoteCall(findOpponent(),"ESA",[False])
+   elif fetchProperty(card, 'name') == 'Expert Schedule Analyzer' and action == 'SuccessfulRun':
+      remoteCall(findOpponent(),"ESA",[])
    elif fetchProperty(card, 'name') == "Woman in the Red Dress" and action == 'Start':
-      remoteCall(findOpponent(),"WitRD")
+      remoteCall(findOpponent(),"WitRD",[])
    elif fetchProperty(card, 'name') == 'Accelerated Diagnostics' and action == 'PLAY':
       if len(me.piles['R&D/Stack']) < 3: count = len(me.piles['R&D/Stack'])
       else: count = 3
-      cardList = me.piles['R&D/Stack'].top(count)
+      cardList = []
       trashedList = []
       debugNotify("Moving all cards to the scripting pile")
-      cardListSnapshot = list(cardList)
-      for c in cardListSnapshot: 
+      for c in me.piles['R&D/Stack'].top(count): 
          c.moveTo(me.ScriptingPile)
          if fetchProperty(c, 'Type') != 'Operation': # We move all cards in execution limbo (see http://boardgamegeek.com/thread/1086167/double-accelerated-diagnostics)
             debugNotify("Appending to trashedList")
             trashedList.append(c)
-            debugNotify("Removing from cardList")
-            cardList.remove(c)
+         else: 
+            debugNotify("Appending to cardList")
+            cardList.append(c)
       debugNotify("Finished checing Types")
       if len(cardList) == 0: notify("{} initiated an Accelerated Diagnostics but their beta team was incompetent".format(me))
       else:
@@ -737,10 +736,11 @@ def CustomScript(card, action = 'PLAY', origin_card = None, original_action = No
             if choice == None: break
             intPlay(cardList[choice], 'not free', True)
             debugNotify("Card Played, trashing it")
-            cardList[choice].moveTo(me.piles['Archives(Hidden)'])
+            cardList[choice].moveTo(me.piles['Heap/Archives(Face-up)'])
             cardList.remove(cardList[choice])
+         notify("{} initiated an {} for {} operations and trashed {} other cards".format(me,card,3 - len(cardList) - len(trashedList), len(cardList) + len(trashedList)))
       for c in trashedList: c.moveTo(me.piles['Archives(Hidden)']) 
-      for c in cardList: c.moveTo(me.piles['Archives(Hidden)']) 
+      for c in cardList: c.moveTo(me.piles['Archives(Hidden)'])
    elif fetchProperty(card, 'name') == "City Surveillance" and action == 'Start': # We don't need a remote call, since it's going to be the runner pressing F1 anyway in this case.
       reduction = reduceCost(card, 'Force', 1, dryRun = True)
       if reduction > 0: extraText = " (reduced by {})".format(uniCredit(reduction)) #If it is, make sure to inform.
@@ -884,29 +884,26 @@ def markerScripts(card, action = 'USE'):
 # Custom Remote Functions
 #------------------------------------------------------------------------------
 
-def ESA(reveal = True): # Expert Schedule Analyzer
-   debugNotify(">>> Remote Script ESA() with reveal = {}".format(reveal)) #Debug
+def ESA(): # Expert Schedule Analyzer
+   debugNotify(">>> Remote Script ESA()") #Debug
    mute()
-   if reveal:
-      revealedCards = []
-      for c in me.hand: revealedCards.append(c)
-      iter = 0
-      for c in revealedCards:
-         c.moveToTable(playerside * iter * cwidth(c) - (len(revealedCards) * cwidth(c) / 2), 0 - yaxisMove(c), False)
-         c.highlight = RevealedColor
-         iter += 1
-      notify("The Expert Schedule Analyzer reveals {}".format([c.name for c in revealedCards]))
-      notify(":::INFO::: The cards will be returned to HQ when the runner jacks out.")
-   else: 
-      for c in table:
-         if c.highlight == RevealedColor and c.controller == me: 
-            c.moveTo(me.hand)
-            c.highlight = None # Just in case
+   revealedCards = []
+   for c in me.hand: revealedCards.append(c)
+   iter = 0
+   for c in revealedCards:
+      c.moveToTable(playerside * iter * cwidth(c) - (len(revealedCards) * cwidth(c) / 2), 0 - yaxisMove(c), False)
+      c.highlight = RevealedColor
+      iter += 1
+   notify("The Expert Schedule Analyzer reveals {}".format([c.name for c in revealedCards]))
+   while not confirm("You have revealed your hand to your opponent. Return them to HQ?\n\n(Pressing 'No' will send a ping to your opponent to see if they're done reading them)"):
+      notify("{} would like to know if it's OK to return their remaining cards to their HQ.".format(me))
+   for c in revealedCards: c.moveTo(me.hand)
          
 def WitRD(): # Woman in the Red Dress   
    debugNotify(">>> Remote Script WitRD()") #Debug     
-   mute()
+   mute()   
    cardView = me.piles['R&D/Stack'].top()
+   debugNotify("Flipping top R&D card")
    cardView.isFaceUp = True
    rnd(1,10)
    notify(":> The Woman in the Red Dress has revealed {}".format(cardView))
@@ -920,7 +917,7 @@ def Snoop(scenario = 'Simply Reveal', cardList = None):
    if not cardList: cardList = []
    if scenario == 'Remote Corp Trash Select':
       choice = SingleChoice("Choose one card to trash", makeChoiceListfromCardList(cardList,True))
-      if choice: 
+      if choice != None: 
          cardList[choice].moveTo(cardList[choice].owner.piles['Heap/Archives(Face-up)'])
          notify("{} decided to trash {} from the cards snooped at".format(me,cardList[choice]))
          cardList.remove(cardList[choice])
@@ -939,6 +936,7 @@ def Snoop(scenario = 'Simply Reveal', cardList = None):
          c.moveToTable(playerside * iter * cwidth(c) - (count * cwidth(c) / 2), 0 - yaxisMove(c), False)
          c.highlight = RevealedColor
          iter += 1
+      notify("Snoop reveals {}".format([c.name for c in cardList]))
       if scenario == 'Simply Reveal':
          while not confirm("You have revealed your hand to your opponent. Return them to Grip?\n\n(Pressing 'No' will send a ping to your opponent to see if they're done reading them)"):
             notify("{} would like to know if it's OK to return their remaining cards to their Grip.".format(me))

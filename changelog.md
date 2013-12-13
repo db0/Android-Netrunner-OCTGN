@@ -1,6 +1,21 @@
 Changelog - Android:Netrunner LCG OCTGN Game Definition
 ===============================================
 
+### 3.6.0.x
+
+* New game definition for **Mala Tempora**. As always, almost every card scripted!
+
+* ##### Trickier Automations
+  * Deep Red: All Caissas will gain a little marker when they come into play. When you rehost that Caissa that marker will give you one click. If you don't rehost, that Marker will go away at the end of your turn. You should always rehost that Caissa immediately if you need to.
+  * Hudson 1.0: Doesn't enforce it. Just make sure you only access one card.
+  * Accelerated Diagnostics: *Phew*, OK, this card is kinda ambiguous of how it works (see http://boardgamegeek.com/thread/1086167/double-accelerated-diagnostics). At the moment this treats allcard being "looked at" as being in some sort of execution limbo. As such any further ADs you draw with AD, will draw fresh cards.
+    Due to the nature of scripting in OCTGN this will cause problem with cards which need a target. In those cases you need to ignore the error and replay the card afterwards, or just look at your top 3 cards before you play AD and see if any card will require targeting and do it before you play AD.
+    Same is true for some sort of SEA Source + Scorched Earth combo. You'll need to wait until the trace is complete before playing the SE or it will fail if the runner doesn't have a tag. And so on. 
+    Please understand that this scripting cannot be perfect and don't request miracles.
+  * Unorthodox Predictions: It's not going to enforce it, but it will put a token to remind you what you've chosen.
+  * Sundew: Not automated. Just double-click on it to gain 2 credits.
+  
+
 ### 3.5.3.x
 
 * Resampled all sounds to 44100:2 to stop errors

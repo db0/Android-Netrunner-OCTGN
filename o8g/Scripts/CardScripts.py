@@ -2721,7 +2721,7 @@ Expert Schedule Analyzer
 -----
 bc0f047c-01b1-427f-a439-d451eda04045
 -----
-atSuccessfulRun:CustomScript-isOptional-isAlternativeRunResult-ifSuccessfulRunHQ||atJackOut:CustomScript
+atSuccessfulRun:CustomScript-isOptional-isAlternativeRunResult-ifSuccessfulRunHQ
 +++++
 A1B0G0T0:RunHQ
 .....
@@ -2729,7 +2729,7 @@ Grifter
 -----
 bc0f047c-01b1-427f-a439-d451eda04046
 -----
-atSuccessfulRun:Put1Grifting||atTurnEnd:Gain1Credits-hasOrigMarker{Grifting}||atTurnEnd:TrashMyself-hasntOrigMarker{Grifting}||atTurnEnd:Remove1Grifting-isSilent
+atSuccessfulRun:Put1Grifting-isSilent||atTurnEnd:Gain1Credits-hasOrigMarker{Grifting}||atTurnEnd:TrashMyself-hasntOrigMarker{Grifting}-duringMyTurn||atTurnEnd:Remove1Grifting-isSilent-duringMyTurn
 +++++
 
 .....
@@ -2841,7 +2841,7 @@ Interns
 -----
 bc0f047c-01b1-427f-a439-d451eda04060
 -----
-onPlay:Retrieve1Card-grabnonOperation-fromArchives-toTable||onPlay:Retrieve1Card-grabnonOperation-fromHQ-toTable
+onPlay:Retrieve1Card-grabnonOperation-fromArchives-toTable-doNotReveal||onPlay:InstallTarget-DemiAutoTargeted-atnonOperation-fromHand-choose1
 +++++
 
 .....
