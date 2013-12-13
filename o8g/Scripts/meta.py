@@ -1002,15 +1002,15 @@ def TrialError(group, x=0, y=0): # Debugging
    delayed_whisper("## Defining Test Cards")
    testcards = [
                 "bc0f047c-01b1-427f-a439-d451eda04041", 
-                "bc0f047c-01b1-427f-a439-d451eda04042",
-                "bc0f047c-01b1-427f-a439-d451eda04043",
+                #"bc0f047c-01b1-427f-a439-d451eda04042",
+                #c0f047c-01b1-427f-a439-d451eda04043",
                 "bc0f047c-01b1-427f-a439-d451eda04044",
                 "bc0f047c-01b1-427f-a439-d451eda04045",
                 "bc0f047c-01b1-427f-a439-d451eda04046",
-                "bc0f047c-01b1-427f-a439-d451eda04047",
+                #"bc0f047c-01b1-427f-a439-d451eda04047",
                 "bc0f047c-01b1-427f-a439-d451eda04048",
                 "bc0f047c-01b1-427f-a439-d451eda04049",
-                "bc0f047c-01b1-427f-a439-d451eda04050",
+                #"bc0f047c-01b1-427f-a439-d451eda04050",
                 "bc0f047c-01b1-427f-a439-d451eda04051",
                 "bc0f047c-01b1-427f-a439-d451eda04052",
                 "bc0f047c-01b1-427f-a439-d451eda04053",
@@ -1019,7 +1019,8 @@ def TrialError(group, x=0, y=0): # Debugging
                 "bc0f047c-01b1-427f-a439-d451eda04056",
                 "bc0f047c-01b1-427f-a439-d451eda04057",
                 "bc0f047c-01b1-427f-a439-d451eda04058",
-                "bc0f047c-01b1-427f-a439-d451eda04059"
+                "bc0f047c-01b1-427f-a439-d451eda04059",
+                "bc0f047c-01b1-427f-a439-d451eda04060"
                 ] 
    if not ds: 
       if confirm("corp?"): ds = "corp"

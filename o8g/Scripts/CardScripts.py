@@ -2713,7 +2713,7 @@ Running Interference
 -----
 bc0f047c-01b1-427f-a439-d451eda04044
 -----
-whileInPlay:IncreaseSCostRez-affectsAll-isICE-forOpponent||atJackOut:TrashMyself
+onPlay:RunGeneric||whileInPlay:IncreaseSCostRez-affectsAll-isICE-forOpponent||atJackOut:TrashMyself
 +++++
 
 .....
@@ -2721,15 +2721,15 @@ Expert Schedule Analyzer
 -----
 bc0f047c-01b1-427f-a439-d451eda04045
 -----
-onPlay:RunHQ||atSuccessfulRun:CustomScript-isOptional-isAlternativeRunResult-ifSuccessfulRunHQ||atJackOut:CustomScript$$TrashMyself
+atSuccessfulRun:CustomScript-isOptional-isAlternativeRunResult-ifSuccessfulRunHQ||atJackOut:CustomScript
 +++++
-
+A1B0G0T0:RunHQ
 .....
 Grifter
 -----
 bc0f047c-01b1-427f-a439-d451eda04046
 -----
-atSuccessfulRun:Put1Grifting||atTurnEnd:Gain1Credits-hasOrigMarker{Grifting}$$TrashMyself-hasntOrigMarker{Grifting}
+atSuccessfulRun:Put1Grifting||atTurnEnd:Gain1Credits-hasOrigMarker{Grifting}||atTurnEnd:TrashMyself-hasntOrigMarker{Grifting}||atTurnEnd:Remove1Grifting-isSilent
 +++++
 
 .....

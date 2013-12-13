@@ -156,11 +156,10 @@ def parseNewCounters(player,counter,oldValue):
    if counter.name == 'Tags' and player == me: chkTags()
    if counter.name == 'Bad Publicity' and oldValue < counter.value:
       if player == me: playSound('Gain-Bad_Publicity')
-      else:
-         for c in table: # Looking for cards which trigger off the corp gaining Bad Publicity
-            if c.name == "Raymond Flint":
-               if confirm("Do you want to activate Raymont Flint's ability at this point?\n\n(Make sure your opponent does not have a way to cancel this effect before continuing)"):
-                  HQaccess(Silent = True)
+      for c in table: # Looking for cards which trigger off the corp gaining Bad Publicity
+         if c.name == "Raymond Flint" and c.controller == me:
+            if confirm("Do you want to activate Raymont Flint's ability at this point?\n\n(Make sure your opponent does not have a way to cancel this effect before continuing)"):
+               HQaccess(silent = True)
    debugNotify("<<< parseNewCounters()")
 
 def checkMovedCard(player,card,fromGroup,toGroup,oldIndex,index,oldX,oldY,x,y,isScriptMove):

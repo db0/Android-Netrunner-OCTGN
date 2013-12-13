@@ -131,8 +131,12 @@ def UseCustomAbility(Autoscript, announceText, card, targetCards = None, notific
          notify(":> {} trashes {}".format(card,prog))
       announceString = ''
    if fetchProperty(card, 'name') == "Snoop":
-      if re.search(r'-isFirstCustom',Autoscript): Snoop(scenario = 'Simply Reveal')
-      else: Snoop(scenario = 'Reveal and Trash')
+      if re.search(r'-isFirstCustom',Autoscript): 
+         Snoop('Simply Reveal')
+         announceString = announceText + " reveal the runner's hand"
+      else: 
+         Snoop('Reveal and Trash')
+         announceString = announceText + " reveal the runner's hand and trash a card"
    return announceString
    
 def CustomScript(card, action = 'PLAY', origin_card = None, original_action = None): # Scripts that are complex and fairly unique to specific cards, not worth making a whole generic function for them.
@@ -715,11 +719,15 @@ def CustomScript(card, action = 'PLAY', origin_card = None, original_action = No
       cardList = me.piles['R&D/Stack'].top(count)
       trashedList = []
       debugNotify("Moving all cards to the scripting pile")
-      for c in cardList: 
+      cardListSnapshot = list(cardList)
+      for c in cardListSnapshot: 
          c.moveTo(me.ScriptingPile)
          if fetchProperty(c, 'Type') != 'Operation': # We move all cards in execution limbo (see http://boardgamegeek.com/thread/1086167/double-accelerated-diagnostics)
-            cardList.remove(c)
+            debugNotify("Appending to trashedList")
             trashedList.append(c)
+            debugNotify("Removing from cardList")
+            cardList.remove(c)
+      debugNotify("Finished checing Types")
       if len(cardList) == 0: notify("{} initiated an Accelerated Diagnostics but their beta team was incompetent".format(me))
       else:
          debugNotify("Starting to play operations")
@@ -741,10 +749,10 @@ def CustomScript(card, action = 'PLAY', origin_card = None, original_action = No
       if me.Credits >= 1 - reduction and confirm("City Surveilance: Pay 1 Credit?"): 
          payCost(1 - reduction, 'not free')
          reduction = reduceCost(card, 'Force', 1)
-         notify("{} paid {} {} to avoid the {} tag".format(me,1 - reduction, extraText, card))
+         notify(":> {} paid {} {} to avoid the {} tag".format(me,1 - reduction, extraText, card))
       else: 
          me.Tags += 1
-         notify("{} has been caught on {} and received 1 tag".format(me,card))
+         notify(":> {} has been caught on {} and received 1 tag".format(me,card))
    elif fetchProperty(card, 'name') == 'Power Shutdown' and action == 'PLAY':
       count = askInteger("Trash How many cards from R&D (max {})".format(len(me.piles['R&D/Stack'])),0)
       if count > len(me.piles['R&D/Stack']): count = len(me.piles['R&D/Stack'])
@@ -878,6 +886,7 @@ def markerScripts(card, action = 'USE'):
 
 def ESA(reveal = True): # Expert Schedule Analyzer
    debugNotify(">>> Remote Script ESA() with reveal = {}".format(reveal)) #Debug
+   mute()
    if reveal:
       revealedCards = []
       for c in me.hand: revealedCards.append(c)
@@ -887,6 +896,7 @@ def ESA(reveal = True): # Expert Schedule Analyzer
          c.highlight = RevealedColor
          iter += 1
       notify("The Expert Schedule Analyzer reveals {}".format([c.name for c in revealedCards]))
+      notify(":::INFO::: The cards will be returned to HQ when the runner jacks out.")
    else: 
       for c in table:
          if c.highlight == RevealedColor and c.controller == me: 
@@ -894,7 +904,8 @@ def ESA(reveal = True): # Expert Schedule Analyzer
             c.highlight = None # Just in case
          
 def WitRD(): # Woman in the Red Dress   
-   debugNotify(">>> Remote Script WitRD()") #Debug       
+   debugNotify(">>> Remote Script WitRD()") #Debug     
+   mute()
    cardView = me.piles['R&D/Stack'].top()
    cardView.isFaceUp = True
    rnd(1,10)
@@ -904,7 +915,8 @@ def WitRD(): # Woman in the Red Dress
    else: cardView.isFaceUp = False      
 
 def Snoop(scenario = 'Simply Reveal', cardList = None):
-   debugNotify(">>> Remote Script Snoop() with Scenario = {}".format(scenario)) #Debug       
+   debugNotify(">>> Remote Script Snoop() with Scenario = {}".format(scenario)) #Debug     
+   mute()
    if not cardList: cardList = []
    if scenario == 'Remote Corp Trash Select':
       choice = SingleChoice("Choose one card to trash", makeChoiceListfromCardList(cardList,True))
