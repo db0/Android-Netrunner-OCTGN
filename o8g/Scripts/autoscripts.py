@@ -662,6 +662,7 @@ def atTimedEffects(Time = 'Start'): # Function which triggers card effects at th
             else: continue
          if chkPlayer(effect.group(2), card.controller,False) == 0: continue # Check that the effect's origninator is valid. 
          if not ifHave(autoS,card.controller,silent = True): continue # If the script requires the playet to have a specific counter value and they don't, do nothing.
+         if not checkOrigSpecialRestrictions(autoS,card): continue
          if chkTagged(autoS, True) == 'ABORT': continue
          if effect.group(1) != Time: continue # If the effect trigger we're checking (e.g. start-of-run) does not match the period trigger we're in (e.g. end-of-turn)
          debugNotify("split Autoscript: {}".format(autoS), 3)
@@ -1451,11 +1452,15 @@ def ChooseKeyword(Autoscript, announceText, card, targetCards = None, notificati
    if len(targetCards) == 0: targetCards.append(card) # If there's been to target card given, assume the target is the card itself.
    for targetCard in targetCards: targetCardlist += '{},'.format(targetCard)
    targetCardlist = targetCardlist.strip(',') # Re remove the trailing comma
+   if re.search(r'-simpleAnnounce', Autoscript): simpleAnnounce = True # This is needed for cards which select a keyword but it's not meant to assign it to themselves exactly, but we just recycle this function.
+   else: simpleAnnounce = False
    action = re.search(r'\bChooseKeyword{([A-Za-z\| ]+)}', Autoscript)
    keywords = action.group(1).split('|')
    if len(keywords) == 1: choice = 0
    else:
-      choice = SingleChoice("Choose one of the following keywords to assign to this card", keywords, type = 'button', default = 0)
+      if simpleAnnounce: choiceTXT = 'Please choose keyword'
+      else: choiceTXT = 'Choose one of the following keywords to assign to this card'
+      choice = SingleChoice(choiceTXT, keywords, type = 'button', default = 0)
       if choice == None: return 'ABORT'
    for targetCard in targetCards:
       if targetCard.markers:
@@ -1472,8 +1477,12 @@ def ChooseKeyword(Autoscript, announceText, card, targetCards = None, notificati
             targetCard.markers[existingKeyword] = 0 
             TokensX('Put1Keyword:{}'.format(keywords[choice]), '', targetCard)
       else: TokensX('Put1Keyword:{}'.format(keywords[choice]), '', targetCard)
-   if notification == 'Quick': announceString = "{} marks {} as being {} now".format(announceText, targetCardlist, keywords[choice])
-   else: announceString = "{} mark {} as being {} now".format(announceText, targetCardlist, keywords[choice])
+   if notification == 'Quick': 
+      if simpleAnnounce: announceString = "{} selects {} for {}".format(announceText, keywords[choice], targetCardlist)
+      else: announceString = "{} marks {} as being {} now".format(announceText, targetCardlist, keywords[choice])
+   else: 
+      if simpleAnnounce: announceString = "{} select {} for {}".format(announceText, keywords[choice], targetCardlist)
+      else: announceString = "{} mark {} as being {} now".format(announceText, targetCardlist, keywords[choice])
    if notification: notify('--> {}.'.format(announceString))
    debugNotify("<<< ChooseKeyword()", 3)
    return announceString
@@ -2027,6 +2036,33 @@ def checkSpecialRestrictions(Autoscript,card):
       if propertyReq.group(2) == 'lt' and num(card.properties[propertyReq.group(1)]) >= num(propertyReq.group(3)): validCard = False
       if propertyReq.group(2) == 'gt' and num(card.properties[propertyReq.group(1)]) <= num(propertyReq.group(3)): validCard = False
    debugNotify("<<< checkSpecialRestrictions() with return {}".format(validCard)) #Debug
+   return validCard
+
+def checkOrigSpecialRestrictions(Autoscript,card):
+# Check the autoscript for special restrictions of a originator card
+# If the card does not validate all the restrictions included in the autoscript, we reject it
+   debugNotify(">>> checkOrigSpecialRestrictions() {}".format(extraASDebug(Autoscript))) #Debug
+   debugNotify("Card: {}".format(card)) #Debug
+   validCard = True
+   if not chkPlayer(Autoscript, card.controller, False, True): validCard = False
+   markerName = re.search(r'-hasOrigMarker{([\w ]+)}',Autoscript) # Checking if we need specific markers on the card.
+   if markerName: #If we're looking for markers, then we go through originator's markers any relevant ones
+      debugNotify("Checking marker restrictions", 2)# Debug
+      debugNotify("Marker Name: {}".format(markerName.group(1)), 2)# Debug
+      marker = findMarker(card, markerName.group(1))
+      if not marker: 
+         debugNotify("Rejecting Originator because marker not found")
+         validCard = False
+   markerNeg = re.search(r'-hasntOrigMarker{([\w ]+)}',Autoscript) # Checking if we need to not have specific markers on the card.
+   if markerNeg: #If we're looking for markers, then we go through each targeted card and check if it has any relevant markers
+      debugNotify("Checking negative marker restrictions", 2)# Debug
+      debugNotify("Marker Name: {}".format(markerNeg.group(1)), 2)# Debug
+      marker = findMarker(card, markerNeg.group(1))
+      if marker: 
+         debugNotify("Rejecting Originator because marker was found")
+         validCard = False
+   else: debugNotify("No marker restrictions.", 4)
+   debugNotify("<<< checkOrigSpecialRestrictions() with return {}".format(validCard)) #Debug
    return validCard
 
 def makeChoiceListfromCardList(cardList,includeText = False, includeGroup = False):

@@ -1,0 +1,330 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<set xmlns:noNamespaceSchemaLocation="CardSet.xsd" 
+     name="Mala Tempora" 
+     id="08c831e8-8920-4fc0-b08e-f6dedbd2bcc4" 
+     gameId="0f38e453-26df-4c04-9d67-6d43de939c77" 
+     gameVersion="3.0.0.0" 
+     version="3.0.0.0">
+<cards>
+	<card id="bc0f047c-01b1-427f-a439-d451eda04041" name="Reina Roja">
+		<property name="Subtitle" value="Freedom Fighter" />
+		<property name="Type" value="Identity" />
+		<property name="Keywords" value="Cyborg-G-mod" />
+		<property name="Cost" value="1" />
+		<property name="Requirement" value="45" />	
+		<property name="Stat" value="15" />	
+		<property name="Rules" value="The rez cost of the first piece of ice rezzed each turn is increased by 1." />
+		<property name="Flavor" value="&quot;Analyzing the board won&#39;t help. Your mistake was thinking we&#39;re playing the same game.&quot;" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Anarch" />
+		<property name="Influence" value="" />
+		<property name="Side" value="Runner" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda04042" name="Deep Red">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Hardware" />
+		<property name="Keywords" value="Console-Unique" />
+		<property name="Cost" value="2" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="" />	
+		<property name="Rules" value="+3 [Memory Units]&#xD;Use the MU on Deep Red only for Caissa programs.&#xD;Whenever you install a Caissa program, you may trigger its [Click] ability without spending [Click].&#xD;Limit 1 console per player." />
+		<property name="Flavor" value="" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Anarch" />
+		<property name="Influence" value="1" />
+		<property name="Side" value="Runner" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda04043" name="Knight">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Program" />
+		<property name="Keywords" value="Icebreaker-AI-Caissa" />
+		<property name="Cost" value="2" />
+		<property name="Requirement" value="1" />	
+		<property name="Stat" value="7" />	
+		<property name="Rules" value="2 [Credits]: Break subroutine on host ice.&#xD;[Click]: Host Knight on a piece of ice not hosting a Caissa. If already hosted, Knight can be hosted only on ice that is not installed directly before or after the current piece of ice hosting Knight." />
+		<property name="Flavor" value="&#39;Maneuver warfare&#39; is a doctrine that advocates keeping an enemy off-balance. It works just as well in cyberspace as in reality." />
+		<property name="Instructions" value="2 [Credits]: Break subroutine on host ice.||[Click]: Host Knight on a piece of ice not hosting a Caissa." />
+		<property name="Faction" value="Anarch" />
+		<property name="Influence" value="2" />
+		<property name="Side" value="Runner" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda04044" name="Running Interference">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Event" />
+		<property name="Keywords" value="Double-Run" />
+		<property name="Cost" value="4" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="" />	
+		<property name="Rules" value="As an additional cost to play this event, spend [Click].&#xD;Make a run. During this run, the Corp must pay X [Credits] as an additional cost to rez each piece of ice, where X is the rez cost of that ice." />
+		<property name="Flavor" value="" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Criminal" />
+		<property name="Influence" value="" />
+		<property name="Side" value="Runner" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda04045" name="Expert Schedule Analyzer">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Program" />
+		<property name="Keywords" value="" />
+		<property name="Cost" value="1" />
+		<property name="Requirement" value="1" />	
+		<property name="Stat" value="-" />	
+		<property name="Rules" value="[Click]: Make a run on HQ. If successful, instead of accessing cards, you may reveal all cards in HQ." />
+		<property name="Flavor" value="Knowing is half the battle. The easy half, anyway." />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Criminal" />
+		<property name="Influence" value="2" />
+		<property name="Side" value="Runner" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda04046" name="Grifter">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Resource" />
+		<property name="Keywords" value="Virtual" />
+		<property name="Cost" value="2" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="" />	
+		<property name="Rules" value="When your turn ends, gain 1 [Credits] if you made a successful run this turn; otherwise, trash Grifter." />
+		<property name="Flavor" value="With modern secretaries, incoming data can be filtered, sorted, tagged, and even sold without the intervention of a human user. In fact, given the zettabytes of data that might flood into a rig on a successful run, a human user could be considered useless ornamentation." />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Criminal" />
+		<property name="Influence" value="1" />
+		<property name="Side" value="Runner" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda04047" name="Torch">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Program" />
+		<property name="Keywords" value="Icebreaker-Decoder" />
+		<property name="Cost" value="9" />
+		<property name="Requirement" value="1" />	
+		<property name="Stat" value="4" />	
+		<property name="Rules" value="1 [Credits]: Break code gate subroutine.&#xD;1 [Credits]: +1 strength." />
+		<property name="Flavor" value="The core of the grid. A blinding sphere of light, teeming with energy, crackling with flame. Beyond were only twinkling bits of data in a field of darkness. No hacker dared approach the core, except one. He came back with a flare of code, a torch that burned with the fire of the core itself. The dark places of cyberspace were dark no more, and the legend of g00ru was born." />
+		<property name="Instructions" value="1 [Credits]: Break code gate subroutine.||1 [Credits]: +1 strength" />
+		<property name="Faction" value="Shaper" />
+		<property name="Influence" value="4" />
+		<property name="Side" value="Runner" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda04048" name="Woman in the Red Dress">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Resource" />
+		<property name="Keywords" value="Connection-Virtual-Unique" />
+		<property name="Cost" value="3" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="" />	
+		<property name="Rules" value="When your turn begins, reveal the top card of R&amp;D. The Corp may draw that card." />
+		<property name="Flavor" value="Looks can be deceiving." />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Shaper" />
+		<property name="Influence" value="4" />
+		<property name="Side" value="Runner" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda04049" name="Raymond Flint">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Resource" />
+		<property name="Keywords" value="Connection-Unique" />
+		<property name="Cost" value="2" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="" />	
+		<property name="Rules" value="Whenever the Corp takes a least 1 bad publicity, access 1 card from HQ.&#xD;[Trash]: Expose 1 card." />
+		<property name="Flavor" value="&quot;Flint? He&#39;s a burnout. A useless, alcoholic waste of Department time and money.&quot; - Louis Blaine, NAPD Detective &quot;One of the best detectives on my PI list.&quot; - Richard Harrison, NAPD Captain" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Neutral" />
+		<property name="Influence" value="0" />
+		<property name="Side" value="Runner" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda04050" name="Isabel McGuire">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Asset" />
+		<property name="Keywords" value="Executive-Unique" />
+		<property name="Cost" value="0" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="3" />	
+		<property name="Rules" value="[Click]: Add 1 of your installed cards to HQ." />
+		<property name="Flavor" value="Even with a virtual ball, it is considered rude not to yell &quot;Fore&#33;&quot;" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Haas-Bioroid" />
+		<property name="Influence" value="1" />
+		<property name="Side" value="Corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda04051" name="Hudson 1.0">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="ICE" />
+		<property name="Keywords" value="Code Gate-Bioroid" />
+		<property name="Cost" value="3" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="5" />	
+		<property name="Rules" value="The Runner may spend [Click] to break any subroutine on Hudson 1.0.&#xD;[Subroutine] The Runner cannot access more than 1 card during this run.&#xD;[Subroutine] The Runner cannot access more than 1 card during this run." />
+		<property name="Flavor" value="I&#39;m not here to play games. The game is over." />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Haas-Bioroid" />
+		<property name="Influence" value="1" />
+		<property name="Side" value="Corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda04052" name="Accelerated Diagnostics">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Operation" />
+		<property name="Keywords" value="" />
+		<property name="Cost" value="1" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="" />	
+		<property name="Rules" value="Look at the top 3 cards of R&amp;D. If any of those cards are operations, you may play them (paying their play cost), ignoring any additional costs. Trash the rest of the unplayed cards you looked at." />
+		<property name="Flavor" value="&quot;I&#39;m getting a reading that is...off the charts. No, it crashed the charts. That counts as off, right?&quot;" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Haas-Bioroid" />
+		<property name="Influence" value="1" />
+		<property name="Side" value="Corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda04053" name="Unorthodox Predictions">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Agenda" />
+		<property name="Keywords" value="Security" />
+		<property name="Cost" value="3" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="1" />	
+		<property name="Rules" value="When you score Unorthodox Predictions, choose sentry, code gate, or barrier.&#xD;Subroutines on ice of the chosen subtype cannot be broken until the beginning of your next turn." />
+		<property name="Flavor" value="" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Jinteki" />
+		<property name="Influence" value="" />
+		<property name="Side" value="Corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda04054" name="Sundew">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Asset" />
+		<property name="Keywords" value="" />
+		<property name="Cost" value="2" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="2" />	
+		<property name="Rules" value="The first time the Runner spends at least 1 [Click] on his or her turn, gain 2 [Credits] unless the Runner just initiated a run on this server." />
+		<property name="Flavor" value="As beautiful as it is dangerous. And it&#39;s plenty dangerous." />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Jinteki" />
+		<property name="Influence" value="3" />
+		<property name="Side" value="Corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda04055" name="City Surveillance">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Asset" />
+		<property name="Keywords" value="" />
+		<property name="Cost" value="5" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="3" />	
+		<property name="Rules" value="When the Runner&#39;s turn begins, give the Runner 1 tag unless he or she pays 1 [Credits]." />
+		<property name="Flavor" value="Who watches the watcher? Probably another camera." />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="NBN" />
+		<property name="Influence" value="4" />
+		<property name="Side" value="Corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda04056" name="Snoop">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="ICE" />
+		<property name="Keywords" value="Sentry-Tracer" />
+		<property name="Cost" value="6" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="6" />	
+		<property name="Rules" value="When the Runner encounters Snoop, reveal all cards in the Runner&#39;s grip.&#xD;Hosted power counter: Reveal all cards in the Runner&#39;s grip. Trash 1 of those cards.&#xD;[Subroutine] Trace3 - If successful, place 1 power counter on Snoop." />
+		<property name="Flavor" value="" />
+		<property name="Instructions" value="Reveal all cards in the Runner&#39;s grip||Hosted power counter: Reveal all cards in the Runner&#39;s grip and trash 1 of those cards.||[Subroutine] Trace3 - If successful, place 1 power counter on Snoop." />
+		<property name="Faction" value="NBN" />
+		<property name="Influence" value="2" />
+		<property name="Side" value="Corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda04057" name="Ireress">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="ICE" />
+		<property name="Keywords" value="Code Gate" />
+		<property name="Cost" value="0" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="2" />	
+		<property name="Rules" value="Ireress gains &quot;[Subroutine] The Runner loses 1 [Credits].&quot; for each bad publicity you have." />
+		<property name="Flavor" value="Say it really fast." />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="The Weyland Consortium" />
+		<property name="Influence" value="1" />
+		<property name="Side" value="Corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda04058" name="Power Shutdown">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Operation" />
+		<property name="Keywords" value="Gray Ops" />
+		<property name="Cost" value="1" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="" />	
+		<property name="Rules" value="Play only if the Runner made a run during his or her last turn.&#xD;Trash X cards from the top of R&amp;D. The Runner trashes 1 installed program or piece of hardware with an install cost of X or less." />
+		<property name="Flavor" value="" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="The Weyland Consortium" />
+		<property name="Influence" value="2" />
+		<property name="Side" value="Corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda04059" name="Paper Wall">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="ICE" />
+		<property name="Keywords" value="Barrier" />
+		<property name="Cost" value="0" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="1" />	
+		<property name="Rules" value="If all subroutines on Paper Wall are broken during a single encounter, trash Paper Wall.&#xD;[Subroutine] End the run." />
+		<property name="Flavor" value="It folds under pressure." />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Neutral" />
+		<property name="Influence" value="0" />
+		<property name="Side" value="Corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda04060" name="Interns">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Operation" />
+		<property name="Keywords" value="Double" />
+		<property name="Cost" value="0" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="" />	
+		<property name="Rules" value="As an additional cost to play this operation, spend [Click].&#xD;Install a card from Archives or HQ, ignoring the install cost." />
+		<property name="Flavor" value="&quot;They&#39;re the only labor cheaper than clones.&quot;" />
+		<property name="Instructions" value="onPlay[Install a card from Archives|-|Install a card from HQ]" />
+		<property name="Faction" value="Neutral" />
+		<property name="Influence" value="0" />
+		<property name="Side" value="Corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+</cards>
+</set>

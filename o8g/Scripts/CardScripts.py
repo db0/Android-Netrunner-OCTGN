@@ -2685,7 +2685,166 @@ onPlay:Gain15Credits
 +++++
 
 .....
+Reina Roja
+-----
+bc0f047c-01b1-427f-a439-d451eda04041
+-----
+whileInstalled:Increase1CostRez-affectsAll-isICE-forOpponent-onlyOnce
++++++
 
+.....
+Deep Red
+-----
+bc0f047c-01b1-427f-a439-d451eda04042
+-----
+whileInstalled:Gain3MU||whileInPlay:Put1Deep Red-foreachCardInstall-onTriggerCard-typeCaissa
++++++
+
+.....
+Knight
+-----
+bc0f047c-01b1-427f-a439-d451eda04043
+-----
+CaissaPlace:ICE
++++++
+A0B2G0T0:SimplyAnnounce{break ICE subroutine}||A1B0G0T0:RehostMyself-Targeted-isICE
+.....
+Running Interference
+-----
+bc0f047c-01b1-427f-a439-d451eda04044
+-----
+whileInPlay:IncreaseSCostRez-affectsAll-isICE-forOpponent||atJackOut:TrashMyself
++++++
+
+.....
+Expert Schedule Analyzer
+-----
+bc0f047c-01b1-427f-a439-d451eda04045
+-----
+onPlay:RunHQ||atSuccessfulRun:CustomScript-isOptional-isAlternativeRunResult-ifSuccessfulRunHQ||atJackOut:CustomScript$$TrashMyself
++++++
+
+.....
+Grifter
+-----
+bc0f047c-01b1-427f-a439-d451eda04046
+-----
+atSuccessfulRun:Put1Grifting||atTurnEnd:Gain1Credits-hasOrigMarker{Grifting}$$TrashMyself-hasntOrigMarker{Grifting}
++++++
+
+.....
+Torch
+-----
+bc0f047c-01b1-427f-a439-d451eda04047
+-----
+
++++++
+A0B1G0T0:SimplyAnnounce{break code gate subroutine}||A0B1G0T0:Put1PlusOne
+.....
+Woman in the Red Dress
+-----
+bc0f047c-01b1-427f-a439-d451eda04048
+-----
+atTurnStart:CustomScript-duringMyTurn
++++++
+
+.....
+Raymond Flint (Script in parseNewCounters())
+-----
+bc0f047c-01b1-427f-a439-d451eda04049
+-----
+
++++++
+A0B0G0T1:ExposeTarget-Targeted-isUnrezzed
+.....
+Isabel McGuire
+-----
+bc0f047c-01b1-427f-a439-d451eda04050
+-----
+
++++++
+A1B0G0T0:UninstallTarget-Targeted
+.....
+Hudson 1.0
+-----
+bc0f047c-01b1-427f-a439-d451eda04051
+-----
+
++++++
+A0B0G0T0:SimplyAnnounce{stop the Runner from accessing more than 1 card during this run}-isSubroutine
+.....
+Accelerated Diagnostics
+-----
+bc0f047c-01b1-427f-a439-d451eda04052
+-----
+onPlay:CustomScript
++++++
+
+.....
+Unorthodox Predictions
+-----
+bc0f047c-01b1-427f-a439-d451eda04053
+-----
+onScore:ChooseKeyword{Code Gate|Barrier|Sentry}-simpleAnnounce||atTurnStart:Remove1Keyword:Sentry-isSilent$$Remove1Keyword:Barrier-isSilent$$Remove1Keyword:Code Gate-isSilent
++++++
+
+.....
+Sundew
+-----
+bc0f047c-01b1-427f-a439-d451eda04054
+-----
+
++++++
+A0B0G0T0:Gain2Credits
+.....
+City Surveillance
+-----
+bc0f047c-01b1-427f-a439-d451eda04055
+-----
+atTurnStart:CustomScript-duringOpponentTurn
++++++
+
+.....
+Snoop
+-----
+bc0f047c-01b1-427f-a439-d451eda04056
+-----
+
++++++
+A0B0G0T0:UseCustomAbility-isFirstCustom||A0B0G0T0:Remove1Power-isCost$$UseCustomAbility-isSecondCustom||A0B0G0T0:Trace3-isSubroutine-traceEffects<Put1Power,None>
+.....
+Ireress
+-----
+bc0f047c-01b1-427f-a439-d451eda04057
+-----
+
++++++
+A0B0G0T0:Lose1Credits-ofOpponent-isSubroutine
+.....
+Power Shutdown
+-----
+bc0f047c-01b1-427f-a439-d451eda04058
+-----
+onPlay:CustomScript
++++++
+
+.....
+Paper Wall
+-----
+bc0f047c-01b1-427f-a439-d451eda04059
+-----
+
++++++
+A0B0G0T0:RunEnd-isSubroutine
+.....
+Interns
+-----
+bc0f047c-01b1-427f-a439-d451eda04060
+-----
+onPlay:Retrieve1Card-grabnonOperation-fromArchives-toTable||onPlay:Retrieve1Card-grabnonOperation-fromHQ-toTable
++++++
+
+.....
 ENDSCRIPTS
 =====
 '''

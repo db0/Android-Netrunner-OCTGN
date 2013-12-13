@@ -1001,25 +1001,25 @@ def TrialError(group, x=0, y=0): # Debugging
    ###### End Testing Corner ######
    delayed_whisper("## Defining Test Cards")
    testcards = [
-                "bc0f047c-01b1-427f-a439-d451eda04021", 
-                "bc0f047c-01b1-427f-a439-d451eda04022",
-                "bc0f047c-01b1-427f-a439-d451eda04023",
-                "bc0f047c-01b1-427f-a439-d451eda04024",
-                "bc0f047c-01b1-427f-a439-d451eda04025",
-                "bc0f047c-01b1-427f-a439-d451eda04026",
-                "bc0f047c-01b1-427f-a439-d451eda04027",
-                "bc0f047c-01b1-427f-a439-d451eda04028",
-                "bc0f047c-01b1-427f-a439-d451eda04029",
-                "bc0f047c-01b1-427f-a439-d451eda04030",
-                "bc0f047c-01b1-427f-a439-d451eda04031",
-                "bc0f047c-01b1-427f-a439-d451eda04032",
-                "bc0f047c-01b1-427f-a439-d451eda04033",
-                "bc0f047c-01b1-427f-a439-d451eda04034",
-                "bc0f047c-01b1-427f-a439-d451eda04035",
-                "bc0f047c-01b1-427f-a439-d451eda04036",
-                "bc0f047c-01b1-427f-a439-d451eda04037",
-                "bc0f047c-01b1-427f-a439-d451eda04038",
-                "bc0f047c-01b1-427f-a439-d451eda04039"
+                "bc0f047c-01b1-427f-a439-d451eda04041", 
+                "bc0f047c-01b1-427f-a439-d451eda04042",
+                "bc0f047c-01b1-427f-a439-d451eda04043",
+                "bc0f047c-01b1-427f-a439-d451eda04044",
+                "bc0f047c-01b1-427f-a439-d451eda04045",
+                "bc0f047c-01b1-427f-a439-d451eda04046",
+                "bc0f047c-01b1-427f-a439-d451eda04047",
+                "bc0f047c-01b1-427f-a439-d451eda04048",
+                "bc0f047c-01b1-427f-a439-d451eda04049",
+                "bc0f047c-01b1-427f-a439-d451eda04050",
+                "bc0f047c-01b1-427f-a439-d451eda04051",
+                "bc0f047c-01b1-427f-a439-d451eda04052",
+                "bc0f047c-01b1-427f-a439-d451eda04053",
+                "bc0f047c-01b1-427f-a439-d451eda04054",
+                "bc0f047c-01b1-427f-a439-d451eda04055",
+                "bc0f047c-01b1-427f-a439-d451eda04056",
+                "bc0f047c-01b1-427f-a439-d451eda04057",
+                "bc0f047c-01b1-427f-a439-d451eda04058",
+                "bc0f047c-01b1-427f-a439-d451eda04059"
                 ] 
    if not ds: 
       if confirm("corp?"): ds = "corp"

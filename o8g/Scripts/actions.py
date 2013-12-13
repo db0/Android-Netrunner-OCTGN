@@ -778,7 +778,7 @@ def reduceCost(card, action = 'REZ', fullCost = 0, dryRun = False, reversePlayer
                               and c.highlight != RevealedColor
                               and c.highlight != StealthColor # Cards reserved for stealth do not give the credits elsewhere. Stealth cards like dagger use those credits via TokensX
                               and c.highlight != InactiveColor])
-      reductionRegex = re.compile(r'(Reduce|Increase)([0-9#X]+)Cost({}|All)-affects([A-Z][A-Za-z ]+)(-not[A-Za-z_& ]+)?'.format(type)) # Doing this now, to reduce load.
+      reductionRegex = re.compile(r'(Reduce|Increase)([0-9#XS]+)Cost({}|All)-affects([A-Z][A-Za-z ]+)(-not[A-Za-z_& ]+)?'.format(type)) # Doing this now, to reduce load.
       for c in RC_cardList: # Then check if there's other cards in the table that reduce its costs.
          debugNotify("Checking {}".format(c), 2) #Debug
          Autoscripts = CardsAS.get(c.model,'').split('||')
@@ -860,6 +860,11 @@ def reduceCost(card, action = 'REZ', fullCost = 0, dryRun = False, reversePlayer
                         reduction -= 1
                         fullCost += 1
             except: notify("!!!ERROR!!! ReduceXCost - Bad Script")
+         elif reductionSearch.group(2) == 'S':
+            if c.name == 'Running Interference':
+               if card.Type == 'ICE':  
+                  reduction -= num(card.Cost)
+                  fullCost += num(card.Cost)
          else:
             for iter in range(num(reductionSearch.group(2))):  # if there is a match, the total reduction for this card's cost is increased.
                if reductionSearch.group(1) == 'Reduce':
