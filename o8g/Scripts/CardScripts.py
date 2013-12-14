@@ -2536,7 +2536,7 @@ Scheherazade
 -----
 bc0f047c-01b1-427f-a439-d451eda04022
 -----
-onInstall:Put1001Scheherazade Hosted-isSilent||ConstantAbility:CountsAsDaemon||onHost:Gain1Credits
+onInstall:Put1001Scheherazade Hosted-isSilent||onHost:Gain1Credits
 +++++
 A0B0G0T0:PossessTarget-Targeted-atProgram-targetMine
 .....

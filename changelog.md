@@ -1,6 +1,10 @@
 Changelog - Android:Netrunner LCG OCTGN Game Definition
 ===============================================
 
+### 3.6.1.x
+
+* Scheherazade-hosted program should now use MU properly.
+
 ### 3.6.0.x
 
 * New game definition for **Mala Tempora**. As always, almost every card scripted!

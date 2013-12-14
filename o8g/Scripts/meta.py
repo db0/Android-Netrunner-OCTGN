@@ -229,7 +229,7 @@ def chkRAM(card, action = 'INSTALL', silent = False):
          and not (card.markers[mdict['DaemonMU']] and not re.search(r'Daemon',getKeywords(card)))
          and not findMarker(card,'Daemon Hosted MU')
          and not (card.markers[mdict['Cloud']] and card.markers[mdict['Cloud']] >= 1) # If the card is already in the cloud, we do not want to modify the player's MUs
-         and not (hostC and findMarker(card, '{} Hosted'.format(hostC.name))) # No idea if this will work.
+         and not (hostC and findMarker(card, '{} Hosted'.format(hostC.name)) and hostC.name != "Scheherazade") # No idea if this will work.
          and card.highlight != InactiveColor 
          and card.highlight != RevealedColor):
       if action == 'INSTALL':
@@ -609,7 +609,7 @@ def possess(daemonCard, programCard, silent = False, force = False):
                   redirect(autoS, programCard, announceText = None, notificationType = 'Quick', X = 0)
                   #TokensX(markersRegex.group(1),'',programCard)
             else: debugNotify("No onHost scripts found in {}".format(autoS))
-      if customHostMarker and customHostMarker[1] == 'Scheherazade Hosted': pass
+      if customHostMarker and customHostMarker[0] == 'Scheherazade Hosted': pass
       else: programCard.owner.MU += count # We return the MUs the card would be otherwise using.
       if not silent: notify("{} installs {} into {}".format(me,programCard,daemonCard))
    debugNotify("<<< possess(){}", 3) #Debug   
@@ -1001,26 +1001,26 @@ def TrialError(group, x=0, y=0): # Debugging
    ###### End Testing Corner ######
    delayed_whisper("## Defining Test Cards")
    testcards = [
-                "bc0f047c-01b1-427f-a439-d451eda04041", 
+                #"bc0f047c-01b1-427f-a439-d451eda04041", 
                 #"bc0f047c-01b1-427f-a439-d451eda04042",
                 #c0f047c-01b1-427f-a439-d451eda04043",
-                "bc0f047c-01b1-427f-a439-d451eda04044",
-                "bc0f047c-01b1-427f-a439-d451eda04045",
-                "bc0f047c-01b1-427f-a439-d451eda04046",
+                #"bc0f047c-01b1-427f-a439-d451eda04044",
+                #"bc0f047c-01b1-427f-a439-d451eda04045",
+                #"bc0f047c-01b1-427f-a439-d451eda04046",
                 #"bc0f047c-01b1-427f-a439-d451eda04047",
-                "bc0f047c-01b1-427f-a439-d451eda04048",
-                "bc0f047c-01b1-427f-a439-d451eda04049",
+                #"bc0f047c-01b1-427f-a439-d451eda04048",
+                #"bc0f047c-01b1-427f-a439-d451eda04049",
                 #"bc0f047c-01b1-427f-a439-d451eda04050",
                 #"bc0f047c-01b1-427f-a439-d451eda04051",
-                "bc0f047c-01b1-427f-a439-d451eda04052",
-                "bc0f047c-01b1-427f-a439-d451eda04052",
-                "bc0f047c-01b1-427f-a439-d451eda04052",
-                "bc0f047c-01b1-427f-a439-d451eda04055",
-                "bc0f047c-01b1-427f-a439-d451eda04056",
+                #"bc0f047c-01b1-427f-a439-d451eda04052",
+                #"bc0f047c-01b1-427f-a439-d451eda04052",
+                #"bc0f047c-01b1-427f-a439-d451eda04052",
+                #"bc0f047c-01b1-427f-a439-d451eda04055",
+                #"bc0f047c-01b1-427f-a439-d451eda04056",
                 #"bc0f047c-01b1-427f-a439-d451eda04057",
-                "bc0f047c-01b1-427f-a439-d451eda04058",
+                #"bc0f047c-01b1-427f-a439-d451eda04058",
                 #"bc0f047c-01b1-427f-a439-d451eda04059",
-                "bc0f047c-01b1-427f-a439-d451eda04060"
+                "bc0f047c-01b1-427f-a439-d451eda04022"
                 ] 
    if not ds: 
       if confirm("corp?"): ds = "corp"
