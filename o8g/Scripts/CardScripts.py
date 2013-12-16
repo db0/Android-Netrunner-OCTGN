@@ -2423,7 +2423,7 @@ Project Ares
 -----
 bc0f047c-01b1-427f-a439-d451eda04010
 -----
-onScore:Put1Agenda-perMarker{Advancement}-ignore4
+onScore:Put1Agenda-perMarker{Advancement}-ignore4$$Gain1Bad Publicity-hasOrigMarker{Agenda}
 +++++
 
 .....

@@ -134,6 +134,7 @@ def executePlayScripts(card, action):
          debugNotify("Second Processing: {}".format(activeAutoscript), 2) # Debug
          if chkWarn(card, activeAutoscript) == 'ABORT': return
          if not ifHave(activeAutoscript): continue # If the script requires the playet to have a specific counter value and they don't, do nothing.
+         if not checkOrigSpecialRestrictions(activeAutoscript,card): continue  
          if not chkRunStatus(activeAutoscript): continue
          if re.search(r'-ifAccessed', activeAutoscript) and ds != 'runner': 
             debugNotify("!!! Failing script because card is not being accessed")
