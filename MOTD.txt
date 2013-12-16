@@ -1,8 +1,9 @@
 =====Message of the Day======
 
-Latest OCTGN updates disabled custom fonts by default. 
+Mala Tempora is now available, but you've probably noticed already :)
+(Don't ask for miracles on Accelerated Diagnostic please)
 
-If you want to see credit, click and other ANR icons, please go to the OCTGN options and enable custom fonts
+As a sidenote, now the game will check for central server run validity for Jinteki:RP and Data Leak Reversal.
 
-Do not do this if you're running OCTGN with Wine under Mac/Linux.
+If you find out you cannot run or install, check the game log for any error messages I'm sending you ;)
 =============================
