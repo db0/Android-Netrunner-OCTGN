@@ -65,7 +65,7 @@
 		<property name="Flavor" value="" />
 		<property name="Instructions" value="" />
 		<property name="Faction" value="Criminal" />
-		<property name="Influence" value="" />
+		<property name="Influence" value="4" />
 		<property name="Side" value="Runner" />
 		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	

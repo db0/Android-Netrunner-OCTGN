@@ -134,6 +134,7 @@ def executePlayScripts(card, action):
          debugNotify("Second Processing: {}".format(activeAutoscript), 2) # Debug
          if chkWarn(card, activeAutoscript) == 'ABORT': return
          if not ifHave(activeAutoscript): continue # If the script requires the playet to have a specific counter value and they don't, do nothing.
+         if not chkRunStatus(activeAutoscript): continue
          if re.search(r'-ifAccessed', activeAutoscript) and ds != 'runner': 
             debugNotify("!!! Failing script because card is not being accessed")
             continue # These scripts are only supposed to fire from the runner (when they access a card)         
@@ -565,6 +566,7 @@ def autoscriptOtherPlayers(lookup, origin_card = Identity, count = 1): # Functio
          if not ifHave(autoS,card.controller,silent = True): continue # If the script requires the playet to have a specific counter value and they don't, do nothing.
          if re.search(r'whileScored',autoS) and card.controller.getGlobalVariable('ds') != 'corp': continue # If the card is only working while scored, then its controller has to be the corp.
          if chkTagged(autoS, True) == 'ABORT': continue
+         if not chkRunStatus(autoS): continue
          if not checkCardRestrictions(gatherCardProperties(origin_card), prepareRestrictions(autoS, 'type')): continue #If we have the '-type' modulator in the script, then need ot check what type of property it's looking for
          if not checkSpecialRestrictions(autoS,origin_card): continue #If we fail the special restrictions on the trigger card, we also abort.
          if re.search(r'onlyOnce',autoS) and oncePerTurn(card, silent = True, act = 'automatic') == 'ABORT': continue # If the card's ability is only once per turn, use it or silently abort if it's already been used
@@ -663,6 +665,7 @@ def atTimedEffects(Time = 'Start'): # Function which triggers card effects at th
          if chkPlayer(effect.group(2), card.controller,False) == 0: continue # Check that the effect's origninator is valid. 
          if not ifHave(autoS,card.controller,silent = True): continue # If the script requires the playet to have a specific counter value and they don't, do nothing.
          if not checkOrigSpecialRestrictions(autoS,card): continue
+         if not chkRunStatus(autoS): continue
          if chkTagged(autoS, True) == 'ABORT': continue
          if effect.group(1) != Time: continue # If the effect trigger we're checking (e.g. start-of-run) does not match the period trigger we're in (e.g. end-of-turn)
          debugNotify("split Autoscript: {}".format(autoS), 3)
@@ -2044,7 +2047,6 @@ def checkOrigSpecialRestrictions(Autoscript,card):
    debugNotify(">>> checkOrigSpecialRestrictions() {}".format(extraASDebug(Autoscript))) #Debug
    debugNotify("Card: {}".format(card)) #Debug
    validCard = True
-   if not chkPlayer(Autoscript, card.controller, False, True): validCard = False
    markerName = re.search(r'-hasOrigMarker{([\w ]+)}',Autoscript) # Checking if we need specific markers on the card.
    if markerName: #If we're looking for markers, then we go through originator's markers any relevant ones
       debugNotify("Checking marker restrictions", 2)# Debug
@@ -2351,3 +2353,49 @@ def chkTagged(Autoscript, silent = False):
          else: whisper("The Runner needs to be tagged {} times for you to to use this action".format(regexTag.group(1)))
       return 'ABORT'
    return 'OK'
+
+def chkRunStatus(Autoscript): # Function for figuring out if an autoscript is supposed to work only when a central or remote was run or not.
+   debugNotify(">>> chkRunStatus(). Autoscript is: {}".format(Autoscript)) #Debug
+   runCentral = getGlobalVariable('Central Run')
+   runRemote = getGlobalVariable('Remote Run')
+   debugNotify("runCentral = {}, runRemote = {}".format(runCentral,runRemote))
+   validCard = True
+   if re.search(r'-ifHasRunAny',Autoscript) and runCentral == 'False' and runRemote == 'False': 
+      debugNotify("Rejecting because no server was run")
+      validCard = False
+   if re.search(r'-ifHasRunCentral',Autoscript) and runCentral == 'False': 
+      debugNotify("Rejecting because Central Server not run")
+      validCard = False
+   if re.search(r'-ifHasRunRemote',Autoscript) and runRemote == 'False': 
+      debugNotify("Rejecting because Remote Server not run")
+      validCard = False
+   if re.search(r'-ifHasSucceededAny',Autoscript) and runCentral != 'Success' and runRemote != 'Success': 
+      debugNotify("Rejecting because no server was run successfully")
+      validCard = False
+   if re.search(r'-ifHasSucceededCentral',Autoscript) and runCentral != 'Success': 
+      debugNotify("Rejecting because Central Server not run successfully")
+      validCard = False
+   if re.search(r'-ifHasSucceededRemote',Autoscript) and runRemote != 'Success': 
+      debugNotify("Rejecting because Remote Server not run successfully")
+      validCard = False
+   if re.search(r'-ifHasnotRunAny',Autoscript) and (runCentral != 'False' or runRemote != 'False'): 
+      debugNotify("Rejecting because any server was run")
+      validCard = False
+   if re.search(r'-ifHasnotRunCentral',Autoscript) and runCentral != 'False': 
+      debugNotify("Rejecting because Central Server was run")
+      validCard = False
+   if re.search(r'-ifHasnotRunRemote',Autoscript) and runRemote != 'False': 
+      debugNotify("Rejecting because Remote Server was run")
+      validCard = False
+   if re.search(r'-ifHasnotSucceededAny',Autoscript) and (runCentral == 'Success' or runRemote == 'Success'): 
+      debugNotify("Rejecting because any server was run successfully")
+      validCard = False
+   if re.search(r'-ifHhasnotSucceededCentral',Autoscript) and runCentral == 'Success': 
+      debugNotify("Rejecting because Central Server was run successfully")
+      validCard = False
+   if re.search(r'-ifHasnotSucceededRemote',Autoscript) and runRemote == 'Success': 
+      debugNotify("Rejecting because Remote Server was run successfully")
+      validCard = False
+   debugNotify("<<< chkRunStatus(). validCard is: {}".format(validCard)) #Debug
+   return validCard
+   

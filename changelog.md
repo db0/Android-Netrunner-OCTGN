@@ -1,6 +1,11 @@
 Changelog - Android:Netrunner LCG OCTGN Game Definition
 ===============================================
 
+### 3.6.2.x
+
+* Fixed Running Interference Influence cost
+* Grifter will now work without counters and will give 1 credit if you play it after you run (fixes #355)
+
 ### 3.6.1.x
 
 * Scheherazade-hosted program should now use MU properly.

@@ -198,6 +198,9 @@ def goToSot (group, x=0,y=0):
    newturn = True
    turn += 1
    autoRez()
+   if ds == 'runner':
+      setGlobalVariable('Remote Run','False')
+      setGlobalVariable('Central Run','False')
    atTimedEffects('Start') # Check all our cards to see if there's any Start of Turn effects active.
    if ds == "corp": notify("=> The offices of {} ({}) are now open for business. They have {} and {} {} for this turn.".format(identName,me,uniCredit(me.Credits),me.Clicks,uniClick()))
    else:
@@ -349,10 +352,12 @@ def intRun(aCost = 1, Name = 'R&D', silent = False):
    if Name != 'Remote':
       targetServer = getSpecial(Name,enemyIdent.controller)
       if not targetServer: abortArrow = True # If for some reason we can't find the relevant central server card (e.g. during debug), we abort gracefully
+      setGlobalVariable('Central Run','True')
    else:
       targetRemote = findTarget("Targeted-atRemote Server-isMutedTarget") # We try to see if the player had a remote targeted, if so we make it the target.
       if len(targetRemote) > 0: targetServer = targetRemote[0] # If there's no remote targeted, we paint no arrow.
       else: abortArrow = True # If we cannot figure out which remote the runner is running on,
+      setGlobalVariable('Remote Run','True')
    if not abortArrow:
       targetServer.target(False)
       myIdent.arrow(targetServer, True)
@@ -433,6 +438,8 @@ def runSuccess(group=table,x=0,y=0, silent = False):
          else: runTarget = runTargetRegex.group(1) # If the runner is not feinting, then extract the target from the shared variable
          atTimedEffects('SuccessfulRun')
          notify("{} has successfully run the {} server".format(identName,runTarget))
+         if runTarget == 'Remote': setGlobalVariable('Remote Run','Success')
+         else: setGlobalVariable('Central Run','Success')
    debugNotify("<<< runSuccess()", 3) # Debug
 #------------------------------------------------------------------------------
 # Tags...

@@ -2729,7 +2729,7 @@ Grifter
 -----
 bc0f047c-01b1-427f-a439-d451eda04046
 -----
-atSuccessfulRun:Put1Grifting-isSilent||atTurnEnd:Gain1Credits-hasOrigMarker{Grifting}||atTurnEnd:TrashMyself-hasntOrigMarker{Grifting}-duringMyTurn||atTurnEnd:Remove1Grifting-isSilent-duringMyTurn
+atTurnEnd:Gain1Credits-ifHasSucceededAny-duringMyTurn||atTurnEnd:TrashMyself-ifHasnotSucceededAny-duringMyTurn
 +++++
 
 .....
