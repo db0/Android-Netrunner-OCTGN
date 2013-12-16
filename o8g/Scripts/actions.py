@@ -324,15 +324,22 @@ def intRun(aCost = 1, Name = 'R&D', silent = False):
    if ds != 'runner':
       whisper(":::ERROR:::Corporations can't run!")
       return 'ABORT'
-   ClickCost = useClick(count = aCost)
-   if ClickCost == 'ABORT': return 'ABORT'
    if re.search(r'running',getGlobalVariable('status')):
       whisper(":::ERROR:::You are already jacked-in. Please end the previous run (press [Esc] or [F3]) before starting a new one")
       return
-   #CounterHold = getSpecial('Counter Hold') # Old code from Netrunner. Not sure if the new one will do stuff like that
-   #if findMarker(CounterHold,'Fang') or findMarker(CounterHold,'Rex') or findMarker(CounterHold,'Fragmentation Storm'): # These are counters which prevent the runner from running.
-   #   notify(":::Warning:::{} attempted to run but was prevented by a resident Sentry effect in their Rig. They will have to remove all such effects before attempting a run".format(me))
-   #   return 'ABORT'
+   targetPL = findOpponent()
+   BadPub = targetPL.counters['Bad Publicity'].value
+   enemyIdent = getSpecial('Identity',targetPL)
+   myIdent = getSpecial('Identity',me)
+   abortArrow = False
+   ### Custom Run Prevention Cards ###
+   if enemyIdent.Subtitle == "Replicating Perfection":
+      debugNotify("Checking Jinteki: Replicating Perfection restriction")
+      if getGlobalVariable('Central Run') == 'False' and Name == 'Remote': 
+         whisper(":::ERROR::: Your opponent is playing {}. You cannot run a remote server until you've first run on a central server".format(enemyIdent))
+         return
+   ClickCost = useClick(count = aCost)
+   if ClickCost == 'ABORT': return 'ABORT'
    playRunStartSound()
    if not silent:
       if Name == 'Archives': announceTXT = 'the Archives'
@@ -340,11 +347,6 @@ def intRun(aCost = 1, Name = 'R&D', silent = False):
       else: announceTXT = Name
       notify ("{} to start a run on {}.".format(ClickCost,announceTXT))
    debugNotify("Setting bad publicity", 2)
-   targetPL = findOpponent()
-   BadPub = targetPL.counters['Bad Publicity'].value
-   enemyIdent = getSpecial('Identity',targetPL)
-   myIdent = getSpecial('Identity',me)
-   abortArrow = False
    if BadPub > 0:
          myIdent.markers[mdict['BadPublicity']] += BadPub
          notify("--> The Bad Publicity of {} allows {} to secure {} for this run".format(enemyIdent,myIdent,uniCredit(BadPub)))

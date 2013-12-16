@@ -1766,7 +1766,7 @@ Data Leak Reversal
 -----
 bc0f047c-01b1-427f-a439-d451eda02103
 -----
-
+onInstall:UninstallMyself-ifHasnotSucceededCentral$$Gain1Clicks-isSilent-ifHasnotSucceededCentral
 +++++
 A1B0G0T0:Draw1Card-toTrash-ofOpponent-ifTagged1
 .....

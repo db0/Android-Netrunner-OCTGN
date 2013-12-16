@@ -2390,7 +2390,7 @@ def chkRunStatus(Autoscript): # Function for figuring out if an autoscript is su
    if re.search(r'-ifHasnotSucceededAny',Autoscript) and (runCentral == 'Success' or runRemote == 'Success'): 
       debugNotify("Rejecting because any server was run successfully")
       validCard = False
-   if re.search(r'-ifHhasnotSucceededCentral',Autoscript) and runCentral == 'Success': 
+   if re.search(r'-ifHasnotSucceededCentral',Autoscript) and runCentral == 'Success': 
       debugNotify("Rejecting because Central Server was run successfully")
       validCard = False
    if re.search(r'-ifHasnotSucceededRemote',Autoscript) and runRemote == 'Success': 
