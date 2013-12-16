@@ -6,6 +6,7 @@ Changelog - Android:Netrunner LCG OCTGN Game Definition
 * Fixed Running Interference Influence cost
 * Grifter will now work without counters and will give 1 credit if you play it after you run (fixes #355)
 * Jinteki and Data Leak Reversal now check for central server run validity
+* Project Ares will now give BP when overcharged
 
 ### 3.6.1.x
 
