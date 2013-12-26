@@ -932,7 +932,7 @@ def fetchCardScripts(group = table, x=0, y=0): # Creates 2 dictionaries with all
       ScriptsDownload = None
    debugNotify("code:{}, text: {}".format(code, ScriptsDownload), 4) #Debug
    if code != 200 or not ScriptsDownload or (ScriptsDownload and not re.search(r'ANR CARD SCRIPTS', ScriptsDownload)) or debugVerbosity >= 0: 
-      whisper(":::WARNING::: Cannot download card scripts at the moment. Will use localy stored ones.")
+      whisper(":::WARNING::: Cannot download card scripts at the moment. Will use locally stored ones.")
       Split_Main = ScriptsLocal.split('=====') # Split_Main is separating the file description from the rest of the code
    else: 
       #WHAT THE FUUUUUCK? Why does it gives me a "value cannot be null" when it doesn't even come into this path with a broken connection?!
@@ -1005,7 +1005,7 @@ def TrialError(group, x=0, y=0): # Debugging
                 #"bc0f047c-01b1-427f-a439-d451eda04042",
                 #c0f047c-01b1-427f-a439-d451eda04043",
                 #"bc0f047c-01b1-427f-a439-d451eda04044",
-                "bc0f047c-01b1-427f-a439-d451eda02103",
+                "bc0f047c-01b1-427f-a439-d451eda04045",
                 "bc0f047c-01b1-427f-a439-d451eda04046",
                 #"bc0f047c-01b1-427f-a439-d451eda04047",
                 #"bc0f047c-01b1-427f-a439-d451eda04048",

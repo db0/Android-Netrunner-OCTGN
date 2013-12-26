@@ -2721,9 +2721,9 @@ Expert Schedule Analyzer
 -----
 bc0f047c-01b1-427f-a439-d451eda04045
 -----
-atSuccessfulRun:CustomScript-isOptional-isAlternativeRunResult-ifSuccessfulRunHQ
+atSuccessfulRun:CustomScript-isOptional-isAlternativeRunResult-ifSuccessfulRunHQ-hasOrigMarker{Running}||atJackOut:Remove1Running-isSilent
 +++++
-A1B0G0T0:RunHQ
+A1B0G0T0:RunHQ$$Put1Running
 .....
 Grifter
 -----

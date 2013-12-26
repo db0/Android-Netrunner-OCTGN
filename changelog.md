@@ -1,6 +1,11 @@
 Changelog - Android:Netrunner LCG OCTGN Game Definition
 ===============================================
 
+### 3.6.3.x
+
+* Expert Schedule Analyzer now only works if the HQ run was initiated by that.
+* Woman in the Red Dress now will announce if the corp drew the card.
+
 ### 3.6.2.x
 
 * Fixed Running Interference Influence cost

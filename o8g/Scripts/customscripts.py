@@ -908,6 +908,7 @@ def WitRD(): # Woman in the Red Dress
    rnd(1,10)
    notify(":> The Woman in the Red Dress has revealed {}".format(cardView))
    if confirm("Do you want to draw {} to your HQ?".format(cardView.name)):
+      notify("{} decided to take {} to their hand".format(me,cardView))
       cardView.moveTo(me.hand)
    else: cardView.isFaceUp = False      
 
