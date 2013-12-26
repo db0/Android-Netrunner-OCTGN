@@ -68,19 +68,19 @@ specialHostPlacementAlgs = { # A Dictionary which holds tuples of X and Y placem
 automatedMarkers = [] #Used in the Inspect() command to let the player know if the card has automations based on the markers it puts out.
 
 place = dict( # A table holding tuples with the original location various card types are expected to start their setup
-            Hardware =              (106, -207, 10, 8, 1),  # 1st value is X, second is Y third is Offset (i.e. how far from the other cards (in pixel size) each extra copy should be played. Negative values means it will fall on top of the previous ones slightly) 
-            Program =               (-6, -207, 10, 9, -1), # 4th value is Loop Limit (i.e. at how many cards after the first do we loop back to the first position. Loop is always slightly offset, so as not to hide the previous ones completely)
-            Resource =              (-6, -337, 10, 9, -1), # Last value is wether the cards will be placed towards the right or left. -1 means to the left.
-            Event =                 (435, -331, 10, 3, 1),
-            Console =               (221, -331, 0, 1, 1),
-            scoredAgenda =          (477, 54, -30, 6, 1),
-            liberatedAgenda =       (477, -79, -30, 6, 1),
-            Server =                (54, 188, 45, 7, -1),
-            Operation =             (463, 256, 10, 3, 1),
-            ICE =                   (157, 110, 30, 7, -1), # Temporary. ICE, Upgrades, Assets and Agendas will be special
-            Upgrade =               (54, 255, -30, 13, -1), # Temporary.
-            Asset =                 (54, 255, -30, 13, -1), # Temporary.
-            Agenda =                (54, 255, -30, 13, -1) # Temporary.
+            Hardware =              (51, -217, 10, 8, 1),  # 1st value is X, second is Y third is Offset (i.e. how far from the other cards (in pixel size) each extra copy should be played. Negative values means it will fall on top of the previous ones slightly) 
+            Program =               (-61, -217, 10, 9, -1), # 4th value is Loop Limit (i.e. at how many cards after the first do we loop back to the first position. Loop is always slightly offset, so as not to hide the previous ones completely)
+            Resource =              (-61, -347, 10, 9, -1), # Last value is wether the cards will be placed towards the right or left. -1 means to the left.
+            Event =                 (380, -341, 10, 3, 1),
+            Console =               (166, -341, 0, 1, 1),
+            scoredAgenda =          (422, 44, -30, 6, 1),
+            liberatedAgenda =       (422, -89, -30, 6, 1),
+            Server =                (-1, 178, 45, 7, -1),
+            Operation =             (408, 246, 10, 3, 1),
+            ICE =                   (102, 100, 30, 7, -1), # Temporary. ICE, Upgrades, Assets and Agendas will be special
+            Upgrade =               (-1, 245, -30, 13, -1), # Temporary.
+            Asset =                 (-1, 245, -30, 13, -1), # Temporary.
+            Agenda =                (-1, 245, -30, 13, -1) # Temporary.
             )
                
 markerRemovals = { # A dictionary which holds the costs to remove various special markers.
