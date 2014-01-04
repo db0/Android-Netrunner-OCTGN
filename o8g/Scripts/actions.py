@@ -310,6 +310,7 @@ def intJackin(group = table, x = 0, y = 0, manual = False):
    executePlayScripts(Identity,'STARTUP')
    initGame()
    setleague(manual = False) # Check if this is a league match
+   announceSupercharge()
 
 def createRemoteServer(group,x=0,y=0):
    debugNotify(">>> createSDF(){}".format(extraASDebug())) #Debug

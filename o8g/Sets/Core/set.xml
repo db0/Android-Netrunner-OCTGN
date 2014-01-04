@@ -19,7 +19,7 @@
 		<property name="Faction" value="Haas-Bioroid" />
 		<property name="Influence" value="" />
 		<property name="Side" value="corp" />
-		<property name="AutoScript" value="onScore:CustomScript" />
+		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
 	</card>
 	<card id="bc0f047c-01b1-427f-a439-d451eda01052" name="Access to Globalsec">
@@ -35,7 +35,7 @@
 		<property name="Faction" value="Neutral" />
 		<property name="Influence" value="0" />
 		<property name="Side" value="runner" />
-		<property name="AutoScript" value="whileRezzed:Gain1Base Link" />
+		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
 	</card>
 	<card id="bc0f047c-01b1-427f-a439-d451eda01018" name="Account Siphon">
@@ -51,7 +51,7 @@
 		<property name="Faction" value="Criminal" />
 		<property name="Influence" value="4" />
 		<property name="Side" value="runner" />
-		<property name="AutoScript" value="onPlay:RunHQ||atJackOut:Lose5Credits-ofOpponent-isOptional$$Gain2Credits-perX$$Gain2Tags$$TrashMyself-ifSuccessfulRunHQ" />
+		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
 	</card>
 	<card id="bc0f047c-01b1-427f-a439-d451eda01056" name="Adonis Campaign">
@@ -67,8 +67,24 @@
 		<property name="Faction" value="Haas-Bioroid" />
 		<property name="Influence" value="2" />
 		<property name="Side" value="corp" />
-		<property name="AutoScript" value="onRez:Put12Credits||atTurnStart:Transfer3Credits-byMe$$TrashMyself-ifEmpty" />
+		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
+      <alternate name="Adonis Campaign" type="Supercharged">
+         <property name="Subtitle" value="" />
+         <property name="Type" value="Asset" />
+         <property name="Keywords" value="Advertisement" />
+         <property name="Cost" value="4" />
+         <property name="Requirement" value="" />	
+         <property name="Stat" value="3" />	
+         <property name="Rules" value="Put 12 [Credits] from the bank on Adonis Campaign when rezzed. When there are no credits left on this card, trash it.&#xD;&#xA;Take 3 [Credits] from Adonis Campaign when your turn begins." />
+         <property name="Flavor" value="" />
+         <property name="Instructions" value="" />
+         <property name="Faction" value="Haas-Bioroid" />
+         <property name="Influence" value="2" />
+         <property name="Side" value="corp" />
+         <property name="AutoScript" value="" />
+         <property name="AutoAction" value="" />	
+      </alternate>
 	</card>
 	<card id="bc0f047c-01b1-427f-a439-d451eda01047" name="Aesop&#39;s Pawnshop">
 		<property name="Subtitle" value="" />
@@ -84,7 +100,7 @@
 		<property name="Influence" value="2" />
 		<property name="Side" value="runner" />
 		<property name="AutoScript" value="" />
-		<property name="AutoAction" value="A0B0G0T2:TrashTarget-Targeted-byMe$$Gain3Credits" />	
+		<property name="AutoAction" value="" />	
 	</card>
 	<card id="bc0f047c-01b1-427f-a439-d451eda01097" name="Aggressive Negotiation">
 		<property name="Subtitle" value="" />
@@ -116,7 +132,7 @@
 		<property name="Influence" value="2" />
 		<property name="Side" value="corp" />
 		<property name="AutoScript" value="" />
-		<property name="AutoAction" value="A0B2G0T0:Remove1Advancement-perTargetAny-isCost-onAccess$$TrashMulti-Targeted-atProgram" />	
+		<property name="AutoAction" value="" />	
 	</card>
 	<card id="bc0f047c-01b1-427f-a439-d451eda01038" name="Akamatsu Mem Chip">
 		<property name="Subtitle" value="" />
@@ -131,7 +147,7 @@
 		<property name="Faction" value="Shaper" />
 		<property name="Influence" value="1" />
 		<property name="Side" value="runner" />
-		<property name="AutoScript" value="whileRezzed:Gain1MU" />
+		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
 	</card>
 	<card id="bc0f047c-01b1-427f-a439-d451eda01079" name="Akitaro Watanabe">
@@ -163,7 +179,7 @@
 		<property name="Faction" value="NBN" />
 		<property name="Influence" value="1" />
 		<property name="Side" value="corp" />
-		<property name="AutoScript" value="onPlay:Draw3Cards" />
+		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
 	</card>
 	<card id="bc0f047c-01b1-427f-a439-d451eda01101" name="Archer">
@@ -179,8 +195,8 @@
 		<property name="Faction" value="The Weyland Consortium" />
 		<property name="Influence" value="2" />
 		<property name="Side" value="corp" />
-		<property name="AutoScript" value="onRez:ExileTarget-Targeted-atAgenda" />
-		<property name="AutoAction" value="A0B0G0T0:Gain2Credits-isSubroutine||A0B0G0T0:TrashTarget-Targeted-atProgram-isSubroutine||A0B0G0T0:RunEnd-isSubroutine" />	
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
 	</card>
 	<card id="bc0f047c-01b1-427f-a439-d451eda01058" name="Archived Memories">
 		<property name="Subtitle" value="" />
@@ -211,8 +227,8 @@
 		<property name="Faction" value="Neutral" />
 		<property name="Influence" value="0" />
 		<property name="Side" value="runner" />
-		<property name="AutoScript" value="onInstall:Put12Credits" />
-		<property name="AutoAction" value="A1B0G0T0:Transfer2Credits$$TrashMyself-ifEmpty" />	
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
 	</card>
 	<card id="bc0f047c-01b1-427f-a439-d451eda01081" name="AstroScript Pilot Program">
 		<property name="Subtitle" value="" />
@@ -227,8 +243,8 @@
 		<property name="Faction" value="NBN" />
 		<property name="Influence" value="" />
 		<property name="Side" value="corp" />
-		<property name="AutoScript" value="onScore:Put1Agenda" />
-		<property name="AutoAction" value="A0B0G0T0:Remove1Agenda-isCost$$Put1Advancement-Targeted" />	
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
 	</card>
 	<card id="bc0f047c-01b1-427f-a439-d451eda01025" name="Aurora">
 		<property name="Subtitle" value="" />
@@ -244,7 +260,7 @@
 		<property name="Influence" value="1" />
 		<property name="Side" value="runner" />
 		<property name="AutoScript" value="" />
-		<property name="AutoAction" value="A0B2G0T0:SimplyAnnounce{break barrier subroutine}||A0B2G0T0:Put3PlusOne" />	
+		<property name="AutoAction" value="" />	
 	</card>
 	<card id="bc0f047c-01b1-427f-a439-d451eda01029" name="Bank Job">
 		<property name="Subtitle" value="" />
@@ -259,7 +275,7 @@
 		<property name="Faction" value="Criminal" />
 		<property name="Influence" value="2" />
 		<property name="Side" value="runner" />
-		<property name="AutoScript" value="onInstall:Put8Credits||atJackOut:RequestInt$$Transfer1Credits-perX-ifSuccessfulRunRemote$$TrashMyself-ifEmpty" />
+		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
 	</card>
 	<card id="bc0f047c-01b1-427f-a439-d451eda01042" name="Battering Ram">
@@ -276,7 +292,7 @@
 		<property name="Influence" value="2" />
 		<property name="Side" value="runner" />
 		<property name="AutoScript" value="" />
-		<property name="AutoAction" value="A0B2G0T0:SimplyAnnounce{break up to 2 barrier subroutines}||A0B1G0T0:Put1PlusOne" />	
+		<property name="AutoAction" value="" />	
 	</card>
 	<card id="bc0f047c-01b1-427f-a439-d451eda01098" name="Beanstalk Royalties">
 		<property name="Subtitle" value="" />
@@ -291,7 +307,7 @@
 		<property name="Faction" value="The Weyland Consortium" />
 		<property name="Influence" value="1" />
 		<property name="Side" value="corp" />
-		<property name="AutoScript" value="onPlay:Gain3Credits" />
+		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
 	</card>
 	<card id="bc0f047c-01b1-427f-a439-d451eda01059" name="Biotic Labor">
@@ -307,7 +323,7 @@
 		<property name="Faction" value="Haas-Bioroid" />
 		<property name="Influence" value="4" />
 		<property name="Side" value="corp" />
-		<property name="AutoScript" value="onPlay:Gain2Clicks" />
+		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
 	</card>
 	<card id="bc0f047c-01b1-427f-a439-d451eda01082" name="Breaking News">
@@ -323,7 +339,7 @@
 		<property name="Faction" value="NBN" />
 		<property name="Influence" value="" />
 		<property name="Side" value="corp" />
-		<property name="AutoScript" value="onScore:Gain2Tags-onOpponent$$Put1BreakingNews||atTurnEnd:Remove1BreakingNews-isCost-byMe$$Lose2Tags-onOpponent" />
+		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
 	</card>
 	<card id="bc0f047c-01b1-427f-a439-d451eda01074" name="Cell Portal">
@@ -340,7 +356,7 @@
 		<property name="Influence" value="2" />
 		<property name="Side" value="corp" />
 		<property name="AutoScript" value="" />
-		<property name="AutoAction" value="A0B0G0T0:SimplyAnnounce{deflects the runner to the outermost piece of ice}-isSubroutine$$DerezMyself" />	
+		<property name="AutoAction" value="" />	
 	</card>
 	<card id="bc0f047c-01b1-427f-a439-d451eda01075" name="Chum">
 		<property name="Subtitle" value="" />
@@ -356,7 +372,7 @@
 		<property name="Influence" value="1" />
 		<property name="Side" value="corp" />
 		<property name="AutoScript" value="" />
-		<property name="AutoAction" value="A0B0G0T0:Put2PlusOne-Targeted-atICE-isSubroutine||A0B0G0T0:Inflict3NetDamage-onOpponent-isSubroutine" />	
+		<property name="AutoAction" value="" />	
 	</card>
 	<card id="bc0f047c-01b1-427f-a439-d451eda01084" name="Closed Accounts">
 		<property name="Subtitle" value="" />
@@ -371,7 +387,7 @@
 		<property name="Faction" value="NBN" />
 		<property name="Influence" value="1" />
 		<property name="Side" value="corp" />
-		<property name="AutoScript" value="onPlay:Lose999Credits-onOpponent-ifTagged1" />
+		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
 	</card>
 	<card id="bc0f047c-01b1-427f-a439-d451eda01065" name="Corporate Troubleshooter">
@@ -388,7 +404,7 @@
 		<property name="Influence" value="1" />
 		<property name="Side" value="corp" />
 		<property name="AutoScript" value="" />
-		<property name="AutoAction" value="A0B0G0T1:RequestInt$$Put1PlusOne-perX-Targeted-atICE-isRezzed" />	
+		<property name="AutoAction" value="" />	
 	</card>
 	<card id="bc0f047c-01b1-427f-a439-d451eda01007" name="Corroder">
 		<property name="Subtitle" value="" />
@@ -404,7 +420,7 @@
 		<property name="Influence" value="2" />
 		<property name="Side" value="runner" />
 		<property name="AutoScript" value="" />
-		<property name="AutoAction" value="A0B1G0T0:SimplyAnnounce{break barrier subroutine}||A0B1G0T0:Put1PlusOne" />	
+		<property name="AutoAction" value="" />	
 	</card>
 	<card id="bc0f047c-01b1-427f-a439-d451eda01030" name="Crash Space">
 		<property name="Subtitle" value="" />
@@ -419,8 +435,8 @@
 		<property name="Faction" value="Criminal" />
 		<property name="Influence" value="2" />
 		<property name="Side" value="runner" />
-		<property name="AutoScript" value="onInstall:Put2Credits||whileRezzed:Reduce#CostDelTag-forAll-excludeDummy||atTurnStart:Refill2Credits-excludeDummy-byMe" />
-		<property name="AutoAction" value="A0B0G0T1:CreateDummy-with3protectionMeatDMG" />	
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
 	</card>
 	<card id="bc0f047c-01b1-427f-a439-d451eda01051" name="Crypsis">
 		<property name="Subtitle" value="" />
@@ -436,7 +452,23 @@
 		<property name="Influence" value="0" />
 		<property name="Side" value="runner" />
 		<property name="AutoScript" value="" />
-		<property name="AutoAction" value="A0B1G0T0:SimplyAnnounce{break ice subroutine}||A0B1G0T0:Put1PlusOne||A1B0G0T0:Put1Virus" />	
+		<property name="AutoAction" value="" />	
+      <alternate name="Crypsis" type="Supercharged">
+         <property name="Subtitle" value="" />
+         <property name="Type" value="Program" />
+         <property name="Keywords" value="Icebreaker-AI-Virus" />
+         <property name="Cost" value="5" />
+         <property name="Requirement" value="1" />	
+         <property name="Stat" value="0" />	
+         <property name="Rules" value="1 [Credits]: Break ice subroutine.&#xD;&#xA;1 [Credits]: +1 strength.&#xD;&#xA;[Click]: Place 1 virus counter on Crypsis.&#xD;&#xA;When an encounter with a piece of ice in which you used Crypsis to break a subroutine ends, remove 1 hosted virus counter or trash Crypsis." />
+         <property name="Flavor" value="" />
+         <property name="Instructions" value="1 [Credits]: Break ice subroutine.||1 [Credits]: +1 strength.||Remove 1 Virus (use only once per ice)||[Click]: Place 1 Virus counter on Crypsis" />
+         <property name="Faction" value="Neutral" />
+         <property name="Influence" value="0" />
+         <property name="Side" value="runner" />
+         <property name="AutoScript" value="" />
+         <property name="AutoAction" value="" />	
+      </alternate>
 	</card>
 	<card id="bc0f047c-01b1-427f-a439-d451eda01005" name="Cyberfeeder">
 		<property name="Subtitle" value="" />
@@ -451,7 +483,7 @@
 		<property name="Faction" value="Anarch" />
 		<property name="Influence" value="1" />
 		<property name="Side" value="runner" />
-		<property name="AutoScript" value="onInstall:Put1Credits||whileRezzed:Reduce#CostUse-forIcebreaker||whileRezzed:Reduce#CostInstall-forVirus||atTurnStart:Refill1Credits-byMe" />
+		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
 	</card>
 	<card id="bc0f047c-01b1-427f-a439-d451eda01031" name="Data Dealer">
@@ -468,7 +500,7 @@
 		<property name="Influence" value="2" />
 		<property name="Side" value="runner" />
 		<property name="AutoScript" value="" />
-		<property name="AutoAction" value="A1B0G0T0:ExileTarget-Targeted-atAgenda-byMe$$Gain9Credits" />	
+		<property name="AutoAction" value="" />	
 	</card>
 	<card id="bc0f047c-01b1-427f-a439-d451eda01076" name="Data Mine">
 		<property name="Subtitle" value="" />
@@ -484,7 +516,7 @@
 		<property name="Influence" value="2" />
 		<property name="Side" value="corp" />
 		<property name="AutoScript" value="" />
-		<property name="AutoAction" value="A0B0G0T1:Inflict1NetDamage-onOpponent-isSubroutine" />	
+		<property name="AutoAction" value="" />	
 	</card>
 	<card id="bc0f047c-01b1-427f-a439-d451eda01088" name="Data Raven">
 		<property name="Subtitle" value="" />
@@ -500,7 +532,7 @@
 		<property name="Influence" value="2" />
 		<property name="Side" value="corp" />
 		<property name="AutoScript" value="" />
-		<property name="AutoAction" value="A0B0G0T0:Trace3-isSubroutine||A0B0G0T0:Put1Power||A0B0G0T0:Remove1Power-isCost$$Gain1Tags-onOpponent" />	
+		<property name="AutoAction" value="" />	
 	</card>
 	<card id="bc0f047c-01b1-427f-a439-d451eda01008" name="Datasucker">
 		<property name="Subtitle" value="" />
@@ -515,8 +547,24 @@
 		<property name="Faction" value="Anarch" />
 		<property name="Influence" value="1" />
 		<property name="Side" value="runner" />
-		<property name="AutoScript" value="atJackOut:Put1Virus-ifSuccessfulRunHQ||atJackOut:Put1Virus-ifSuccessfulRunR&amp;D||atJackOut:Put1Virus-ifSuccessfulRunArchives" />
-		<property name="AutoAction" value="A0B0G0T0:Remove1Virus-isCost$$Put1MinusOne-Targeted-atICE" />	
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+      <alternate name="Datasucker" type="Supercharged">
+         <property name="Subtitle" value="" />
+         <property name="Type" value="Program" />
+         <property name="Keywords" value="Virus" />
+         <property name="Cost" value="1" />
+         <property name="Requirement" value="1" />	
+         <property name="Stat" value="-" />	
+         <property name="Rules" value="Whenever you make a successful run on a central server, place 1 virus counter on Datasucker.&#xD;&#xA;&#xD;&#xA;Hosted virus counter: Rezzed piece of ice currently being encountered has -1 strength until the end of the encounter." />
+         <property name="Flavor" value="" />
+         <property name="Instructions" value="" />
+         <property name="Faction" value="Anarch" />
+         <property name="Influence" value="1" />
+         <property name="Side" value="runner" />
+         <property name="AutoScript" value="" />
+         <property name="AutoAction" value="" />	
+      </alternate>
 	</card>
 	<card id="bc0f047c-01b1-427f-a439-d451eda01032" name="Decoy">
 		<property name="Subtitle" value="" />
@@ -532,7 +580,7 @@
 		<property name="Influence" value="2" />
 		<property name="Side" value="runner" />
 		<property name="AutoScript" value="" />
-		<property name="AutoAction" value="A0B0G0T1:Lose1Tags-isPenalty" />	
+		<property name="AutoAction" value="" />	
 	</card>
 	<card id="bc0f047c-01b1-427f-a439-d451eda01002" name="Deja Vu">
 		<property name="Subtitle" value="" />
@@ -563,7 +611,7 @@
 		<property name="Faction" value="Anarch" />
 		<property name="Influence" value="2" />
 		<property name="Side" value="runner" />
-		<property name="AutoScript" value="onPlay:RunGeneric" />
+		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
 	</card>
 	<card id="bc0f047c-01b1-427f-a439-d451eda01024" name="Desperado">
@@ -579,7 +627,7 @@
 		<property name="Faction" value="Criminal" />
 		<property name="Influence" value="3" />
 		<property name="Side" value="runner" />
-		<property name="AutoScript" value="whileRezzed:Gain1MU||atJackOut:Gain1Credits-ifSuccessfulRunAny" />
+		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
 	</card>
 	<card id="bc0f047c-01b1-427f-a439-d451eda01034" name="Diesel">
@@ -595,7 +643,7 @@
 		<property name="Faction" value="Shaper" />
 		<property name="Influence" value="2" />
 		<property name="Side" value="runner" />
-		<property name="AutoScript" value="onPlay:Draw3Cards" />
+		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
 	</card>
 	<card id="bc0f047c-01b1-427f-a439-d451eda01009" name="Djinn">
@@ -611,8 +659,8 @@
 		<property name="Faction" value="Anarch" />
 		<property name="Influence" value="2" />
 		<property name="Side" value="runner" />
-		<property name="AutoScript" value="onInstall:Put3DaemonMU" />
-		<property name="AutoAction" value="A0B0G0T0:PossessTarget-Targeted-atProgram_and_nonIcebreaker-byMe||A1B1G0T0:SimplyAnnounce{look through his deck for a virus program}" />	
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
 	</card>
 	<card id="bc0f047c-01b1-427f-a439-d451eda01019" name="Easy Mark">
 		<property name="Subtitle" value="" />
@@ -627,7 +675,7 @@
 		<property name="Faction" value="Criminal" />
 		<property name="Influence" value="1" />
 		<property name="Side" value="runner" />
-		<property name="AutoScript" value="onPlay:Gain3Credits" />
+		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
 	</card>
 	<card id="bc0f047c-01b1-427f-a439-d451eda01111" name="Enigma">
@@ -644,7 +692,7 @@
 		<property name="Influence" value="0" />
 		<property name="Side" value="corp" />
 		<property name="AutoScript" value="" />
-		<property name="AutoAction" value="A0B0G0T0:Lose1Clicks-onOpponent-isSubroutine||A0B0G0T0:RunEnd-isSubroutine" />	
+		<property name="AutoAction" value="" />	
 	</card>
 	<card id="bc0f047c-01b1-427f-a439-d451eda01066" name="Experiential Data">
 		<property name="Subtitle" value="" />
@@ -675,8 +723,8 @@
 		<property name="Faction" value="Criminal" />
 		<property name="Influence" value="1" />
 		<property name="Side" value="runner" />
-		<property name="AutoScript" value="onInstall:Put1Femme Fatale-Targeted-atICE-isOptional" />
-		<property name="AutoAction" value="A0B1G0T0:SimplyAnnounce{break sentry subroutine}||A0B2G0T0:Put1PlusOne||A0B0G0T0:RequestInt-Msg{How many subroutines does the target ice have?}-Targeted-atICE$$Lose1Credits-perX-isCost$$SimplyAnnounce{bypass target ice}" />	
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
 	</card>
 	<card id="bc0f047c-01b1-427f-a439-d451eda01020" name="Forged Activation Orders">
 		<property name="Subtitle" value="" />
@@ -707,8 +755,24 @@
 		<property name="Faction" value="Criminal" />
 		<property name="Influence" value="" />
 		<property name="Side" value="runner" />
-		<property name="AutoScript" value="atJackOut:Gain2Credits-ifSuccessfulRunHQ-onlyOnce" />
+		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
+      <alternate name="Gabriel Santiago" type="Supercharged">
+         <property name="Subtitle" value="Consummate Professional" />
+         <property name="Type" value="Identity" />
+         <property name="Keywords" value="Cyborg" />
+         <property name="Cost" value="0" />
+         <property name="Requirement" value="45" />	
+         <property name="Stat" value="15" />	
+         <property name="Rules" value="The first time you make a successful run on HQ each turn, gain 2 [Credits]." />
+         <property name="Flavor" value="&quot;Of course I steal from the rich. They&#39;re the ones with all the money.&quot;" />
+         <property name="Instructions" value="" />
+         <property name="Faction" value="Criminal" />
+         <property name="Influence" value="" />
+         <property name="Side" value="runner" />
+         <property name="AutoScript" value="" />
+         <property name="AutoAction" value="" />
+     </alternate>
 	</card>
 	<card id="bc0f047c-01b1-427f-a439-d451eda01087" name="Ghost Branch">
 		<property name="Subtitle" value="" />
@@ -724,7 +788,7 @@
 		<property name="Influence" value="1" />
 		<property name="Side" value="corp" />
 		<property name="AutoScript" value="" />
-		<property name="AutoAction" value="A0B0G0T0:Gain1Tags-onOpponent-perMarker{Advancement}-onAccess" />	
+		<property name="AutoAction" value="" />	
 	</card>
 	<card id="bc0f047c-01b1-427f-a439-d451eda01043" name="Gordian Blade">
 		<property name="Subtitle" value="" />
@@ -740,7 +804,7 @@
 		<property name="Influence" value="3" />
 		<property name="Side" value="runner" />
 		<property name="AutoScript" value="" />
-		<property name="AutoAction" value="A0B1G0T0:SimplyAnnounce{break code gate subroutine}||A0B1G0T0:Put1PlusOne" />	
+		<property name="AutoAction" value="" />	
 	</card>
 	<card id="bc0f047c-01b1-427f-a439-d451eda01006" name="Grimoire">
 		<property name="Subtitle" value="" />
@@ -755,8 +819,8 @@
 		<property name="Faction" value="Anarch" />
 		<property name="Influence" value="2" />
 		<property name="Side" value="runner" />
-		<property name="AutoScript" value="whileRezzed:Gain2MU" />
-		<property name="AutoAction" value="A0B0G0T0:Put1Virus-Targeted-atProgram_and_Virus" />	
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
 	</card>
 	<card id="bc0f047c-01b1-427f-a439-d451eda01054" name="Haas-Bioroid">
 		<property name="Subtitle" value="Engineering the Future" />
@@ -771,7 +835,7 @@
 		<property name="Faction" value="Haas-Bioroid" />
 		<property name="Influence" value="" />
 		<property name="Side" value="corp" />
-		<property name="AutoScript" value="whileRezzed:Gain1Credits-perCardInstall-byMe-onlyOnce" />
+		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
 	</card>
 	<card id="bc0f047c-01b1-427f-a439-d451eda01102" name="Hadrian&#39;s Wall">
@@ -788,7 +852,7 @@
 		<property name="Influence" value="3" />
 		<property name="Side" value="corp" />
 		<property name="AutoScript" value="" />
-		<property name="AutoAction" value="A0B0G0T0:RunEnd-isSubroutine" />	
+		<property name="AutoAction" value="" />	
 	</card>
 	<card id="bc0f047c-01b1-427f-a439-d451eda01110" name="Hedge Fund">
 		<property name="Subtitle" value="" />
@@ -803,7 +867,7 @@
 		<property name="Faction" value="Neutral" />
 		<property name="Influence" value="0" />
 		<property name="Side" value="corp" />
-		<property name="AutoScript" value="onPlay:Gain9Credits" />
+		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
 	</card>
 	<card id="bc0f047c-01b1-427f-a439-d451eda01061" name="Heimdall 1.0">
@@ -820,7 +884,7 @@
 		<property name="Influence" value="2" />
 		<property name="Side" value="corp" />
 		<property name="AutoScript" value="" />
-		<property name="AutoAction" value="A0B0G0T0:Inflict1BrainDamage-onOpponent-isSubroutine||A0B0G0T0:RunEnd-isSubroutine" />	
+		<property name="AutoAction" value="" />	
 	</card>
 	<card id="bc0f047c-01b1-427f-a439-d451eda01094" name="Hostile Takeover">
 		<property name="Subtitle" value="" />
@@ -835,7 +899,7 @@
 		<property name="Faction" value="The Weyland Consortium" />
 		<property name="Influence" value="" />
 		<property name="Side" value="corp" />
-		<property name="AutoScript" value="onScore:Gain7Credits$$Gain1Bad Publicity" />
+		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
 	</card>
 	<card id="bc0f047c-01b1-427f-a439-d451eda01112" name="Hunter">
@@ -852,7 +916,7 @@
 		<property name="Influence" value="0" />
 		<property name="Side" value="corp" />
 		<property name="AutoScript" value="" />
-		<property name="AutoAction" value="A0B0G0T0:Trace3-isSubroutine||A0B0G0T0:Gain1Tags-onOpponent" />	
+		<property name="AutoAction" value="" />	
 	</card>
 	<card id="bc0f047c-01b1-427f-a439-d451eda01015" name="Ice Carver">
 		<property name="Subtitle" value="" />
@@ -884,7 +948,7 @@
 		<property name="Influence" value="1" />
 		<property name="Side" value="corp" />
 		<property name="AutoScript" value="" />
-		<property name="AutoAction" value="A0B0G0T0:RunEnd-isSubroutine" />	
+		<property name="AutoAction" value="" />	
 	</card>
 	<card id="bc0f047c-01b1-427f-a439-d451eda01062" name="Ichi 1.0">
 		<property name="Subtitle" value="" />
@@ -900,7 +964,7 @@
 		<property name="Influence" value="2" />
 		<property name="Side" value="corp" />
 		<property name="AutoScript" value="" />
-		<property name="AutoAction" value="A0B0G0T0:TrashTarget-Targeted-atProgram-isSubroutine||A0B0G0T0:Trace1-isSubroutine||A0B0G0T0:Gain1Tags-onOpponent$$Inflict1BrainDamage-onOpponent" />	
+		<property name="AutoAction" value="" />	
 	</card>
 	<card id="bc0f047c-01b1-427f-a439-d451eda01049" name="Infiltration">
 		<property name="Subtitle" value="" />
@@ -915,7 +979,7 @@
 		<property name="Faction" value="Neutral" />
 		<property name="Influence" value="0" />
 		<property name="Side" value="runner" />
-		<property name="AutoScript" value="onPlay:CustomScript" />
+		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
 	</card>
 	<card id="bc0f047c-01b1-427f-a439-d451eda01021" name="Inside Job">
@@ -931,7 +995,7 @@
 		<property name="Faction" value="Criminal" />
 		<property name="Influence" value="3" />
 		<property name="Side" value="runner" />
-		<property name="AutoScript" value="onPlay:RunGeneric" />
+		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
 	</card>
 	<card id="bc0f047c-01b1-427f-a439-d451eda01067" name="Jinteki">
@@ -947,7 +1011,7 @@
 		<property name="Faction" value="Jinteki" />
 		<property name="Influence" value="" />
 		<property name="Side" value="corp" />
-		<property name="AutoScript" value="whileRezzed:Inflict1NetDamage-onOpponent-perAgendaScored||whileRezzed:Inflict1NetDamage-onOpponent-perAgendaLiberated" />
+		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
 	</card>
 	<card id="bc0f047c-01b1-427f-a439-d451eda01033" name="Kate &quot;Mac&quot; McCaffrey">
@@ -963,8 +1027,24 @@
 		<property name="Faction" value="Shaper" />
 		<property name="Influence" value="" />
 		<property name="Side" value="runner" />
-		<property name="AutoScript" value="whileRezzed:Reduce1CostInstall-forHardware-onlyOnce||whileRezzed:Reduce1CostInstall-forProgram-onlyOnce" />
+		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
+      <alternate name="Kate &quot;Mac&quot; McCaffrey" type="Supercharged">
+         <property name="Subtitle" value="Digital Tinker" />
+         <property name="Type" value="Identity" />
+         <property name="Keywords" value="Natural" />
+         <property name="Cost" value="1" />
+         <property name="Requirement" value="45" />	
+         <property name="Stat" value="15" />	
+         <property name="Rules" value="Lower the install cost of the first program or piece of hardware you install each turn by 1." />
+         <property name="Flavor" value="&quot;Are you listening?&quot;" />
+         <property name="Instructions" value="" />
+         <property name="Faction" value="Shaper" />
+         <property name="Influence" value="" />
+         <property name="Side" value="runner" />
+         <property name="AutoScript" value="" />
+         <property name="AutoAction" value="" />	
+      </alternate>
 	</card>
 	<card id="bc0f047c-01b1-427f-a439-d451eda01023" name="Lemuria Codecracker">
 		<property name="Subtitle" value="" />
@@ -980,7 +1060,7 @@
 		<property name="Influence" value="1" />
 		<property name="Side" value="runner" />
 		<property name="AutoScript" value="" />
-		<property name="AutoAction" value="A1B1G0T0:ExposeTarget-Targeted" />	
+		<property name="AutoAction" value="" />	
 	</card>
 	<card id="bc0f047c-01b1-427f-a439-d451eda01044" name="Magnum Opus">
 		<property name="Subtitle" value="" />
@@ -996,7 +1076,7 @@
 		<property name="Influence" value="2" />
 		<property name="Side" value="runner" />
 		<property name="AutoScript" value="" />
-		<property name="AutoAction" value="A1B0G0T0:Gain2Credits" />	
+		<property name="AutoAction" value="" />	
 	</card>
 	<card id="bc0f047c-01b1-427f-a439-d451eda01089" name="Matrix Analyzer">
 		<property name="Subtitle" value="" />
@@ -1012,7 +1092,7 @@
 		<property name="Influence" value="2" />
 		<property name="Side" value="corp" />
 		<property name="AutoScript" value="" />
-		<property name="AutoAction" value="A0B1G0T0:Put1Advancement-Targeted||A0B0G0T0:Trace2-isSubroutine||A0B0G0T0:Gain1Tags-onOpponent" />	
+		<property name="AutoAction" value="" />	
 	</card>
 	<card id="bc0f047c-01b1-427f-a439-d451eda01010" name="Medium">
 		<property name="Subtitle" value="" />
@@ -1027,7 +1107,7 @@
 		<property name="Faction" value="Anarch" />
 		<property name="Influence" value="3" />
 		<property name="Side" value="runner" />
-		<property name="AutoScript" value="atJackOut:Put1Virus-ifSuccessfulRunR&amp;D" />
+		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
 	</card>
 	<card id="bc0f047c-01b1-427f-a439-d451eda01108" name="Melange Mining Corp">
@@ -1044,7 +1124,23 @@
 		<property name="Influence" value="0" />
 		<property name="Side" value="corp" />
 		<property name="AutoScript" value="" />
-		<property name="AutoAction" value="A3B0G0T0:Gain7Credits" />	
+		<property name="AutoAction" value="" />	
+      <alternate name="Melange Mining Corp" type="Supercharged">
+         <property name="Subtitle" value="" />
+         <property name="Type" value="Asset" />
+         <property name="Keywords" value="" />
+         <property name="Cost" value="1" />
+         <property name="Requirement" value="" />	
+         <property name="Stat" value="1" />	
+         <property name="Rules" value="[Click], [Click], [Click]: Gain 7 [Credits]." />
+         <property name="Flavor" value="&quot;The mining bosses are worse than any downstalk crime lords. Tri-Maf, 4K, Yak, I don&#39;t care what gangs you got down there. In Heinlein there&#39;s just one law: the He3 must flow.&quot; - &quot;Old&quot; Rick Henry, escaped clone." />
+         <property name="Instructions" value="" />
+         <property name="Faction" value="Neutral" />
+         <property name="Influence" value="0" />
+         <property name="Side" value="corp" />
+         <property name="AutoScript" value="" />
+         <property name="AutoAction" value="" />	
+      </alternate>
 	</card>
 	<card id="bc0f047c-01b1-427f-a439-d451eda01011" name="Mimic">
 		<property name="Subtitle" value="" />
@@ -1060,7 +1156,7 @@
 		<property name="Influence" value="1" />
 		<property name="Side" value="runner" />
 		<property name="AutoScript" value="" />
-		<property name="AutoAction" value="A0B1G0T0:SimplyAnnounce{break sentry subroutine}" />	
+		<property name="AutoAction" value="" />	
 	</card>
 	<card id="bc0f047c-01b1-427f-a439-d451eda01035" name="Modded">
 		<property name="Subtitle" value="" />
@@ -1075,7 +1171,7 @@
 		<property name="Faction" value="Shaper" />
 		<property name="Influence" value="2" />
 		<property name="Side" value="runner" />
-		<property name="AutoScript" value="onPlay:Put3Credits$$Put1Click||whileRezzed:Reduce#CostInstall-forHardware||whileRezzed:Reduce#CostInstall-forProgram||whileRezzed:Transfer1Click-perCardInstall" />
+		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
 	</card>
 	<card id="bc0f047c-01b1-427f-a439-d451eda01080" name="NBN">
@@ -1091,7 +1187,7 @@
 		<property name="Faction" value="NBN" />
 		<property name="Influence" value="" />
 		<property name="Side" value="corp" />
-		<property name="AutoScript" value="atTurnStart:Refill2Credits-byMe||whileRezzed:Reduce#CostTrace-forAll" />
+		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
 	</card>
 	<card id="bc0f047c-01b1-427f-a439-d451eda01045" name="Net Shield">
@@ -1108,7 +1204,7 @@
 		<property name="Influence" value="1" />
 		<property name="Side" value="runner" />
 		<property name="AutoScript" value="" />
-		<property name="AutoAction" value="A0B1G0T2:Put1protectionNetDMG" />	
+		<property name="AutoAction" value="" />	
 	</card>
 	<card id="bc0f047c-01b1-427f-a439-d451eda01072" name="Neural EMP">
 		<property name="Subtitle" value="" />
@@ -1123,7 +1219,7 @@
 		<property name="Faction" value="Jinteki" />
 		<property name="Influence" value="2" />
 		<property name="Side" value="corp" />
-		<property name="AutoScript" value="onPlay:Inflict1NetDamage-onOpponent" />
+		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
 	</card>
 	<card id="bc0f047c-01b1-427f-a439-d451eda01077" name="Neural Katana">
@@ -1140,7 +1236,7 @@
 		<property name="Influence" value="2" />
 		<property name="Side" value="corp" />
 		<property name="AutoScript" value="" />
-		<property name="AutoAction" value="A0B0G0T0:Inflict3NetDamage-onOpponent-isSubroutine" />	
+		<property name="AutoAction" value="" />	
 	</card>
 	<card id="bc0f047c-01b1-427f-a439-d451eda01027" name="Ninja">
 		<property name="Subtitle" value="" />
@@ -1156,7 +1252,7 @@
 		<property name="Influence" value="2" />
 		<property name="Side" value="runner" />
 		<property name="AutoScript" value="" />
-		<property name="AutoAction" value="A0B1G0T0:SimplyAnnounce{break sentry subroutine}||A0B3G0T0:Put5PlusOne" />	
+		<property name="AutoAction" value="" />	
 	</card>
 	<card id="bc0f047c-01b1-427f-a439-d451eda01068" name="Nisei MK II">
 		<property name="Subtitle" value="" />
@@ -1171,8 +1267,8 @@
 		<property name="Faction" value="Jinteki" />
 		<property name="Influence" value="" />
 		<property name="Side" value="corp" />
-		<property name="AutoScript" value="onScore:Put1Agenda" />
-		<property name="AutoAction" value="A0B0G0T0:Remove1Agenda-isCost$$RunEnd" />	
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
 	</card>
 	<card id="bc0f047c-01b1-427f-a439-d451eda01001" name="Noise">
 		<property name="Subtitle" value="Hacker Extraordinaire" />
@@ -1187,7 +1283,7 @@
 		<property name="Faction" value="Anarch" />
 		<property name="Influence" value="" />
 		<property name="Side" value="runner" />
-		<property name="AutoScript" value="whileRezzed:Draw1Card-toTrash-ofOpponent-perCardInstall-typeVirus-byMe" />
+		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
 	</card>
 	<card id="bc0f047c-01b1-427f-a439-d451eda01109" name="PAD Campaign">
@@ -1203,7 +1299,7 @@
 		<property name="Faction" value="Neutral" />
 		<property name="Influence" value="0" />
 		<property name="Side" value="corp" />
-		<property name="AutoScript" value="atTurnStart:Gain1Credits-byMe" />
+		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
 	</card>
 	<card id="bc0f047c-01b1-427f-a439-d451eda01012" name="Parasite">
@@ -1219,7 +1315,7 @@
 		<property name="Faction" value="Anarch" />
 		<property name="Influence" value="2" />
 		<property name="Side" value="runner" />
-		<property name="AutoScript" value="atTurnStart:Put1Virus-byMe" />
+		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
 	</card>
 	<card id="bc0f047c-01b1-427f-a439-d451eda01046" name="Pipeline">
@@ -1236,7 +1332,7 @@
 		<property name="Influence" value="1" />
 		<property name="Side" value="runner" />
 		<property name="AutoScript" value="" />
-		<property name="AutoAction" value="A0B1G0T0:SimplyAnnounce{break sentry subroutine}||A0B2G0T0:Put1PlusOne" />	
+		<property name="AutoAction" value="" />	
 	</card>
 	<card id="bc0f047c-01b1-427f-a439-d451eda01095" name="Posted Bounty">
 		<property name="Subtitle" value="" />
@@ -1251,7 +1347,7 @@
 		<property name="Faction" value="The Weyland Consortium" />
 		<property name="Influence" value="" />
 		<property name="Side" value="corp" />
-		<property name="AutoScript" value="onScore:Gain1Bad Publicity-isOptional$$Gain1Tags-onOpponent$$ExileMyself" />
+		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
 	</card>
 	<card id="bc0f047c-01b1-427f-a439-d451eda01073" name="Precognition">
@@ -1283,7 +1379,7 @@
 		<property name="Faction" value="Neutral" />
 		<property name="Influence" value="0" />
 		<property name="Side" value="corp" />
-		<property name="AutoScript" value="onScore:RezTarget-Targeted-atICE" />
+		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
 	</card>
 	<card id="bc0f047c-01b1-427f-a439-d451eda01107" name="Private Security Force">
@@ -1300,7 +1396,23 @@
 		<property name="Influence" value="0" />
 		<property name="Side" value="corp" />
 		<property name="AutoScript" value="" />
-		<property name="AutoAction" value="A1B0G0T0:Inflict1MeatDamage-onOpponent-ifTagged1" />	
+		<property name="AutoAction" value="" />	
+      <alternate name="Private Security Force" type="Supercharged">
+         <property name="Subtitle" value="" />
+         <property name="Type" value="Agenda" />
+         <property name="Keywords" value="Security" />
+         <property name="Cost" value="4" />
+         <property name="Requirement" value="" />	
+         <property name="Stat" value="2" />	
+         <property name="Rules" value="If the Runner is tagged, Private Security Force gains: &quot;[Click]: Do 1 meat damage.&quot;" />
+         <property name="Flavor" value="&quot;Expensive? Not when you&#39;re protecting a fortune as large as ours.&quot;" />
+         <property name="Instructions" value="" />
+         <property name="Faction" value="Neutral" />
+         <property name="Influence" value="0" />
+         <property name="Side" value="corp" />
+         <property name="AutoScript" value="" />
+         <property name="AutoAction" value="" />	
+      </alternate>
 	</card>
 	<card id="bc0f047c-01b1-427f-a439-d451eda01069" name="Project Junebug">
 		<property name="Subtitle" value="" />
@@ -1316,7 +1428,7 @@
 		<property name="Influence" value="1" />
 		<property name="Side" value="corp" />
 		<property name="AutoScript" value="" />
-		<property name="AutoAction" value="A0B1G0T0:Inflict2NetDamage-onOpponent-perMarker{Advancement}-onAccess" />	
+		<property name="AutoAction" value="" />	
 	</card>
 	<card id="bc0f047c-01b1-427f-a439-d451eda01085" name="Psychographics">
 		<property name="Subtitle" value="" />
@@ -1331,7 +1443,7 @@
 		<property name="Faction" value="NBN" />
 		<property name="Influence" value="3" />
 		<property name="Side" value="corp" />
-		<property name="AutoScript" value="onPlay:RequestInt$$Lose1Credits-perX-isCost$$Put1Advancement-perX-Targeted" />
+		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
 	</card>
 	<card id="bc0f047c-01b1-427f-a439-d451eda01039" name="Rabbit Hole">
@@ -1347,7 +1459,7 @@
 		<property name="Faction" value="Shaper" />
 		<property name="Influence" value="1" />
 		<property name="Side" value="runner" />
-		<property name="AutoScript" value="whileRezzed:Gain1Base Link" />
+		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
 	</card>
 	<card id="bc0f047c-01b1-427f-a439-d451eda01091" name="Red Herrings">
@@ -1379,7 +1491,7 @@
 		<property name="Faction" value="The Weyland Consortium" />
 		<property name="Influence" value="1" />
 		<property name="Side" value="corp" />
-		<property name="AutoScript" value="whileRezzed:Gain2Hand Size" />
+		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
 	</card>
 	<card id="bc0f047c-01b1-427f-a439-d451eda01064" name="Rototurret">
@@ -1396,7 +1508,7 @@
 		<property name="Influence" value="1" />
 		<property name="Side" value="corp" />
 		<property name="AutoScript" value="" />
-		<property name="AutoAction" value="A0B0G0T0:TrashTarget-Targeted-atProgram-isSubroutine||A0B0G0T0:RunEnd-isSubroutine" />	
+		<property name="AutoAction" value="" />	
 	</card>
 	<card id="bc0f047c-01b1-427f-a439-d451eda01048" name="Sacrificial Construct">
 		<property name="Subtitle" value="" />
@@ -1412,7 +1524,7 @@
 		<property name="Influence" value="1" />
 		<property name="Side" value="runner" />
 		<property name="AutoScript" value="" />
-		<property name="AutoAction" value="A0B0G0T1:SimplyAnnounce{prevent an installed program or hardware from being trashed}" />	
+		<property name="AutoAction" value="" />	
 	</card>
 	<card id="bc0f047c-01b1-427f-a439-d451eda01092" name="SanSan City Grid">
 		<property name="Subtitle" value="" />
@@ -1443,8 +1555,24 @@
 		<property name="Faction" value="The Weyland Consortium" />
 		<property name="Influence" value="4" />
 		<property name="Side" value="corp" />
-		<property name="AutoScript" value="onPlay:Inflict4MeatDamage-onOpponent-ifTagged1" />
+		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
+      <alternate name="Scorched Earth" type="Supercharged">
+         <property name="Subtitle" value="" />
+         <property name="Type" value="Operation" />
+         <property name="Keywords" value="Black Ops" />
+         <property name="Cost" value="3" />
+         <property name="Requirement" value="" />	
+         <property name="Stat" value="" />	
+         <property name="Rules" value="Play only if the runner is tagged.&#xD;&#xA;Do 4 meat damage." />
+         <property name="Flavor" value="&quot;I&#39;d like to remind the ladies and gentlemen of the press that several of the buildings damaged in the blast were owned by Weyland Consortium subsidiaries...&quot;" />
+         <property name="Instructions" value="" />
+         <property name="Faction" value="The Weyland Consortium" />
+         <property name="Influence" value="4" />
+         <property name="Side" value="corp" />
+         <property name="AutoScript" value="" />
+         <property name="AutoAction" value="" />	
+      </alternate>
 	</card>
 	<card id="bc0f047c-01b1-427f-a439-d451eda01086" name="SEA Source">
 		<property name="Subtitle" value="" />
@@ -1459,8 +1587,8 @@
 		<property name="Faction" value="NBN" />
 		<property name="Influence" value="2" />
 		<property name="Side" value="corp" />
-		<property name="AutoScript" value="onPlay:Trace3-warnAfterTrace" />
-		<property name="AutoAction" value="A0B0G0T0:Gain1Tags-onOpponent$$TrashMyself" />	
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
 	</card>
 	<card id="bc0f047c-01b1-427f-a439-d451eda01096" name="Security Subcontract">
 		<property name="Subtitle" value="" />
@@ -1476,7 +1604,7 @@
 		<property name="Influence" value="1" />
 		<property name="Side" value="corp" />
 		<property name="AutoScript" value="" />
-		<property name="AutoAction" value="A1B0G0T0:TrashTarget-Targeted-atICE-byMe-isRezzed$$Gain4Credits" />	
+		<property name="AutoAction" value="" />	
 	</card>
 	<card id="bc0f047c-01b1-427f-a439-d451eda01104" name="Shadow">
 		<property name="Subtitle" value="" />
@@ -1492,7 +1620,7 @@
 		<property name="Influence" value="1" />
 		<property name="Side" value="corp" />
 		<property name="AutoScript" value="" />
-		<property name="AutoAction" value="A0B0G0T0:Gain2Credits-isSubroutine||A0B0G0T0:Trace3-isSubroutine||A0B0G0T0:Gain1Tags-onOpponent" />	
+		<property name="AutoAction" value="" />	
 	</card>
 	<card id="bc0f047c-01b1-427f-a439-d451eda01100" name="Shipment from Kaguya">
 		<property name="Subtitle" value="" />
@@ -1507,7 +1635,7 @@
 		<property name="Faction" value="The Weyland Consortium" />
 		<property name="Influence" value="1" />
 		<property name="Side" value="corp" />
-		<property name="AutoScript" value="onPlay:Put1Advancement-Targeted" />
+		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
 	</card>
 	<card id="bc0f047c-01b1-427f-a439-d451eda01060" name="Shipment from Mirrormorph">
@@ -1523,7 +1651,7 @@
 		<property name="Faction" value="Haas-Bioroid" />
 		<property name="Influence" value="2" />
 		<property name="Side" value="corp" />
-		<property name="AutoScript" value="onPlay:Put3Click||whileRezzed:Transfer1Click-perCardInstall" />
+		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
 	</card>
 	<card id="bc0f047c-01b1-427f-a439-d451eda01070" name="Snare&#33;">
@@ -1539,8 +1667,8 @@
 		<property name="Faction" value="Jinteki" />
 		<property name="Influence" value="2" />
 		<property name="Side" value="corp" />
-		<property name="AutoScript" value="onAccess:Reveal" />
-		<property name="AutoAction" value="A0B4G0T0:Inflict3NetDamage-onOpponent-onAccess$$Gain1Tags-onOpponent" />	
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
 	</card>
 	<card id="bc0f047c-01b1-427f-a439-d451eda01028" name="Sneakdoor Beta">
 		<property name="Subtitle" value="" />
@@ -1556,7 +1684,7 @@
 		<property name="Influence" value="3" />
 		<property name="Side" value="runner" />
 		<property name="AutoScript" value="" />
-		<property name="AutoAction" value="A1B0G0T0:RunArchives-feintToHQ" />	
+		<property name="AutoAction" value="" />	
 	</card>
 	<card id="bc0f047c-01b1-427f-a439-d451eda01022" name="Special Order">
 		<property name="Subtitle" value="" />
@@ -1587,7 +1715,7 @@
 		<property name="Faction" value="Anarch" />
 		<property name="Influence" value="1" />
 		<property name="Side" value="runner" />
-		<property name="AutoScript" value="onPlay:RunGeneric$$Put9Credits||whileRunning:Reduce#CostUse-forAll||whileRunning:Reduce#CostPlay-forAll||whileRunning:Reduce#CostTrash-forAll||atJackOut:Inflict1BrainDamage-nonPreventable$$TrashMyself" />
+		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
 	</card>
 	<card id="bc0f047c-01b1-427f-a439-d451eda01050" name="Sure Gamble">
@@ -1603,7 +1731,7 @@
 		<property name="Faction" value="Neutral" />
 		<property name="Influence" value="0" />
 		<property name="Side" value="runner" />
-		<property name="AutoScript" value="onPlay:Gain9Credits" />
+		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
 	</card>
 	<card id="bc0f047c-01b1-427f-a439-d451eda01036" name="The Maker&#39;s Eye">
@@ -1619,7 +1747,7 @@
 		<property name="Faction" value="Shaper" />
 		<property name="Influence" value="2" />
 		<property name="Side" value="runner" />
-		<property name="AutoScript" value="onPlay:RunR&amp;D" />
+		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
 	</card>
 	<card id="bc0f047c-01b1-427f-a439-d451eda01040" name="The Personal Touch">
@@ -1635,7 +1763,7 @@
 		<property name="Faction" value="Shaper" />
 		<property name="Influence" value="2" />
 		<property name="Side" value="runner" />
-		<property name="AutoScript" value="onInstall:Put1PlusOnePerm-Targeted-atIcebreaker" />
+		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
 	</card>
 	<card id="bc0f047c-01b1-427f-a439-d451eda01041" name="The Toolbox">
@@ -1651,7 +1779,7 @@
 		<property name="Faction" value="Shaper" />
 		<property name="Influence" value="2" />
 		<property name="Side" value="runner" />
-		<property name="AutoScript" value="whileRezzed:Gain2MU$$Gain2Base Link||onInstall:Put2Credits||atTurnStart:Refill2Credits-byMe||whileRezzed:Reduce#CostUse-forIcebreaker" />
+		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
 	</card>
 	<card id="bc0f047c-01b1-427f-a439-d451eda01037" name="Tinkering">
@@ -1667,7 +1795,7 @@
 		<property name="Faction" value="Shaper" />
 		<property name="Influence" value="4" />
 		<property name="Side" value="runner" />
-		<property name="AutoScript" value="onPlay:ChooseKeyword{Sentry|Code Gate|Barrier}-Targeted-atICE" />
+		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
 	</card>
 	<card id="bc0f047c-01b1-427f-a439-d451eda01090" name="Tollbooth">
@@ -1684,7 +1812,7 @@
 		<property name="Influence" value="2" />
 		<property name="Side" value="corp" />
 		<property name="AutoScript" value="" />
-		<property name="AutoAction" value="A0B0G0T0:UseCustomAbility||A0B0G0T0:RunEnd-isSubroutine" />	
+		<property name="AutoAction" value="" />	
 	</card>
 	<card id="bc0f047c-01b1-427f-a439-d451eda01063" name="Viktor 1.0">
 		<property name="Subtitle" value="" />
@@ -1700,7 +1828,7 @@
 		<property name="Influence" value="2" />
 		<property name="Side" value="corp" />
 		<property name="AutoScript" value="" />
-		<property name="AutoAction" value="A0B0G0T0:Inflict1BrainDamage-onOpponent-isSubroutine||A0B0G0T0:RunEnd-isSubroutine" />	
+		<property name="AutoAction" value="" />	
 	</card>
 	<card id="bc0f047c-01b1-427f-a439-d451eda01113" name="Wall of Static">
 		<property name="Subtitle" value="" />
@@ -1716,7 +1844,7 @@
 		<property name="Influence" value="0" />
 		<property name="Side" value="corp" />
 		<property name="AutoScript" value="" />
-		<property name="AutoAction" value="A0B0G0T0:RunEnd-isSubroutine" />	
+		<property name="AutoAction" value="" />	
 	</card>
 	<card id="bc0f047c-01b1-427f-a439-d451eda01078" name="Wall of Thorns">
 		<property name="Subtitle" value="" />
@@ -1732,7 +1860,7 @@
 		<property name="Influence" value="1" />
 		<property name="Side" value="corp" />
 		<property name="AutoScript" value="" />
-		<property name="AutoAction" value="A0B0G0T0:Inflict2NetDamage-onOpponent-isSubroutine||A0B0G0T0:RunEnd-isSubroutine" />	
+		<property name="AutoAction" value="" />	
 	</card>
 	<card id="bc0f047c-01b1-427f-a439-d451eda01093" name="Weyland Consortium">
 		<property name="Subtitle" value="Building a Better World" />
@@ -1747,7 +1875,7 @@
 		<property name="Faction" value="The Weyland Consortium" />
 		<property name="Influence" value="" />
 		<property name="Side" value="corp" />
-		<property name="AutoScript" value="whileRezzed:Gain1Credits-perCardPlay-typeTransaction-byMe" />
+		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
 	</card>
 	<card id="bc0f047c-01b1-427f-a439-d451eda01016" name="Wyldside">
@@ -1763,7 +1891,7 @@
 		<property name="Faction" value="Anarch" />
 		<property name="Influence" value="3" />
 		<property name="Side" value="runner" />
-		<property name="AutoScript" value="atTurnStart:Draw2Cards-byMe$$Lose1Clicks" />
+		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
 	</card>
 	<card id="bc0f047c-01b1-427f-a439-d451eda01013" name="Wyrm">
@@ -1780,7 +1908,7 @@
 		<property name="Influence" value="2" />
 		<property name="Side" value="runner" />
 		<property name="AutoScript" value="" />
-		<property name="AutoAction" value="A0B3G0T0:SimplyAnnounce{break ice subroutine}||A0B1G0T0:Put1MinusOne-Targeted-atICE||A0B1G0T0:Put1PlusOne" />	
+		<property name="AutoAction" value="" />	
 	</card>
 	<card id="bc0f047c-01b1-427f-a439-d451eda01014" name="Yog.0">
 		<property name="Subtitle" value="" />
@@ -1796,7 +1924,7 @@
 		<property name="Influence" value="1" />
 		<property name="Side" value="runner" />
 		<property name="AutoScript" value="" />
-		<property name="AutoAction" value="A0B0G0T0:SimplyAnnounce{break code gate subroutine}" />	
+		<property name="AutoAction" value="" />	
 	</card>
 	<card id="bc0f047c-01b1-427f-a439-d451eda01071" name="Zaibatsu Loyalty">
 		<property name="Subtitle" value="" />
@@ -1812,7 +1940,7 @@
 		<property name="Influence" value="1" />
 		<property name="Side" value="corp" />
 		<property name="AutoScript" value="" />
-		<property name="AutoAction" value="A0B1G0T1:SimplyAnnounce{prevent card from being exposed}" />	
+		<property name="AutoAction" value="" />	
 	</card>
 </cards>
 </set>

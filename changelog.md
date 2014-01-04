@@ -1,6 +1,10 @@
 Changelog - Android:Netrunner LCG OCTGN Game Definition
 ===============================================
 
+### 3.6.4.x
+
+* Added code for Supercharging Patrons
+
 ### 3.6.3.x
 
 * Expert Schedule Analyzer now only works if the HQ run was initiated by that.

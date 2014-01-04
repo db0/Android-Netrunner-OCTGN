@@ -166,7 +166,8 @@ def parseNewCounters(player,counter,oldValue):
 def checkMovedCard(player,card,fromGroup,toGroup,oldIndex,index,oldX,oldY,x,y,isScriptMove):
    mute()
    debugNotify("isScriptMove = {}".format(isScriptMove))
-   if isScriptMove: return # If the card move happened via a script, then all automations should have happened already.
+   if toGroup != me.piles['R&D/Stack'] and card.owner == me: superCharge(card) # First we check if we should supercharge the card, but only if the card is still on the same group at the time of execution.  
+   if isScriptMove: return # If the card move happened via a script, then all further automations should have happened already.
    if fromGroup == me.hand and toGroup == table: 
       if card.Type == 'Identity': intJackin(manual = True)
       else: 

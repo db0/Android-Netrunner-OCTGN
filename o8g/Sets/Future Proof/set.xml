@@ -165,6 +165,22 @@
 		<property name="Side" value="corp" />
 		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
+      <alternate name="Eli 1.0" type="Supercharged">
+         <property name="Subtitle" value="" />
+         <property name="Type" value="ICE" />
+         <property name="Keywords" value="Barrier-Bioroid" />
+         <property name="Cost" value="3" />
+         <property name="Requirement" value="" />
+         <property name="Stat" value="4" />
+         <property name="Rules" value="The Runner may spend [Click] to break any subroutine on Eli 1.0.&#xD;&#xA;[Subroutine] End the run.&#xD;&#xA;[Subroutine] End the run." />
+         <property name="Flavor" value="&quot;That's against the rules. The Creators will be angry.&quot;" />
+         <property name="Instructions" value="" />
+         <property name="Faction" value="Haas-Bioroid" />
+         <property name="Influence" value="1" />
+         <property name="Side" value="corp" />
+         <property name="AutoScript" value="" />
+         <property name="AutoAction" value="" />	
+      </alternate>
 	</card>
 	<card id="bc0f047c-01b1-427f-a439-d451eda02111" name="Ruhr Valley">
 		<property name="Subtitle" value="" />

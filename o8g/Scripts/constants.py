@@ -164,7 +164,7 @@ knownLeagues = {'BGG-L02'        : 'Acceletated Beta League', # The known league
                }
                
 #---------------------------------------------------------------------------
-# Supporters
+# Patreon stuff (http://www.patreon.com/db0)
 #---------------------------------------------------------------------------
 
 SuperchargedSubs = ['stevehouston', 
@@ -174,6 +174,16 @@ SuperchargedSubs = ['stevehouston',
 CustomSubs = ['Dovian'
              ] # $5 Tier
 
-CardSubs = ['susuexp'
+CardSubs = ['susuexp',
+            'db0',
+            'dbzer0'
            ] # $10 Tier
 
+
+SuperchargedMsg = "{} is Supercharging their systems.\
+             \n+=+ Their presence on the grid is enhanced!".format(me)
+           
+CustomMsgs = dict( # Dictionary holding the messages requested by people on the 5$ tier and above
+                 Dovian          = "Dovian wants YOU to support A:NR on OCTGN! - http://www.patreon.com/db0",
+                 db0             = "Please consider supporting A:NR development via Patreon - http://www.patreon.com/db0"
+                  )

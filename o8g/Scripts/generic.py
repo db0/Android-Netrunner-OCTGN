@@ -761,3 +761,10 @@ def prepPatronLists():
    supercharged = SuperchargedSubs + CustomSubs + CardSubs
    customized = CustomSubs + CardSubs
    debugNotify("supercharged = {}".format(supercharged))
+   
+def superCharge(card):
+   if me.name in supercharged: card.switchTo('Supercharged')
+      
+def announceSupercharge():
+   if me.name in supercharged:
+      notify("\n+=+ {}\n".format(CustomMsgs.get(me.name,SuperchargedMsg))) # We either announce a player's custom message, or the generic supercharged one
