@@ -42,6 +42,11 @@ Stored_Cost = {}
 Stored_AutoActions = {}
 Stored_AutoScripts = {}
 
+### Subscriber lists.
+
+supercharged = []
+customized = []
+
 #---------------------------------------------------------------------------
 # Custom Windows Forms
 #---------------------------------------------------------------------------
@@ -746,3 +751,13 @@ def yaxisMove(card):
    if me.hasInvertedTable(): cardmove = cheight(card)
    else: cardmove = cardmove = 0
    return cardmove
+
+#---------------------------------------------------------------------------
+# Patron Functions
+#---------------------------------------------------------------------------   
+
+def prepPatronLists():
+   global supercharged,customized
+   supercharged = SuperchargedSubs + CustomSubs + CardSubs
+   customized = CustomSubs + CardSubs
+   debugNotify("supercharged = {}".format(supercharged))

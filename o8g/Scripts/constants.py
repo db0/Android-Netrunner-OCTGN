@@ -162,3 +162,18 @@ knownLeagues = {'BGG-L02'        : 'Acceletated Beta League', # The known league
                 'BGG-L03'        : 'BGG Third League',
                 'OGO L1'         : 'RPGnet OGO League'
                }
+               
+#---------------------------------------------------------------------------
+# Supporters
+#---------------------------------------------------------------------------
+
+SuperchargedSubs = ['stevehouston', 
+                    'x3r0h0ur'
+                   ] # 3$ Tier
+
+CustomSubs = ['Dovian'
+             ] # $5 Tier
+
+CardSubs = ['susuexp'
+           ] # $10 Tier
+

@@ -1,9 +1,12 @@
 =====Message of the Day======
 
-Mala Tempora is now available, but you've probably noticed already :)
-(Don't ask for miracles on Accelerated Diagnostic please)
+Do you like playing A:NR on OCTGN? If so, please consider supporting the developer's efforts
 
-As a sidenote, now the game will check for central server run validity for Jinteki:RP and Data Leak Reversal.
+You can not become a patron for the development of this game definition on Patreon and in the process claim some nice rewards like alt-art for your cards or even customized art for a card of your choosing!
 
-If you find out you cannot run or install, check the game log for any error messages I'm sending you ;)
+And most important of all, you'll be part of helping make A:NR on OCTGN even better.
+
+Would you like to learn more?
 =============================
+&&
+http://www.patreon.com/db0
