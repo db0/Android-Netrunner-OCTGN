@@ -168,6 +168,7 @@ knownLeagues = {'BGG-L02'        : 'Acceletated Beta League', # The known league
 #---------------------------------------------------------------------------
 
 SuperchargedSubs = ['stevehouston', 
+                    'emlun',
                     'x3r0h0ur'
                    ] # 3$ Tier
 
