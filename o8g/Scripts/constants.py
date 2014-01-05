@@ -171,10 +171,11 @@ SuperchargedSubs = ['stevehouston', # Brendan - http://www.patreon.com/user?u=66
                     'emlun', # Emil Lundberg - http://www.patreon.com/user?u=52834
                     '0sum', # Yongqian Li - http://www.patreon.com/user?u=66506 
                     'DrTall2', # Sean Fellows - http://www.patreon.com/user?u=50373
+                    'hoopjones' # Brian Kupcheck - http://www.patreon.com/user?u=66678&msg=1
                     'x3r0h0ur' # Brian Cassidy - http://www.patreon.com/user?u=66217
                    ] # 3$ Tier
 
-CustomSubs = ['Dovian' # Daniel DeBoer - http://www.patreon.com/user?u=66260
+CustomSubs = ['dovian' # Daniel DeBoer - http://www.patreon.com/user?u=66260 # Doesn't work.
              ] # $5 Tier
 
 CardSubs = ['susuexp', # Simon Gunkel - http://www.patreon.com/user?u=66210
