@@ -167,14 +167,16 @@ knownLeagues = {'BGG-L02'        : 'Acceletated Beta League', # The known league
 # Patreon stuff (http://www.patreon.com/db0)
 #---------------------------------------------------------------------------
 
+# All names need to be lowercase as I convert the player's name to lowercase in order to do a case-insensitive search.
+
 SuperchargedSubs = ['stevehouston',       # Brendan            - http://www.patreon.com/user?u=66164
                     'emlun',              # Emil Lundberg      - http://www.patreon.com/user?u=52834
                     '0sum',               # Yongqian Li        - http://www.patreon.com/user?u=66506 
-                    'DrTall2',            # Sean Fellows       - http://www.patreon.com/user?u=50373
+                    'drtall2',            # Sean Fellows       - http://www.patreon.com/user?u=50373
                     'hoopjones'           # Brian Kupcheck     - http://www.patreon.com/user?u=66678
                     'x3r0h0ur'            # Brian Cassidy      - http://www.patreon.com/user?u=66217
                     'davidcarlton'        # David Carlton      - http://www.patreon.com/davidcarlton
-                    'Conduit23'           # Matt               - http://www.patreon.com/user?u=66664
+                    'conduit23'           # Matt               - http://www.patreon.com/user?u=66664
                    ] # 3$ Tier
 
 CustomSubs = ['dovian'                    # Daniel DeBoer      - http://www.patreon.com/user?u=66260
