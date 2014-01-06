@@ -173,6 +173,8 @@ SuperchargedSubs = ['stevehouston', # Brendan - http://www.patreon.com/user?u=66
                     'DrTall2', # Sean Fellows - http://www.patreon.com/user?u=50373
                     'hoopjones' # Brian Kupcheck - http://www.patreon.com/user?u=66678&msg=1
                     'x3r0h0ur' # Brian Cassidy - http://www.patreon.com/user?u=66217
+                    'davidcarlton' # David Carlton - http://www.patreon.com/davidcarlton
+                    'Conduit23' # Matt - http://www.patreon.com/user?u=66664
                    ] # 3$ Tier
 
 CustomSubs = ['dovian' # Daniel DeBoer - http://www.patreon.com/user?u=66260 # Doesn't work.
