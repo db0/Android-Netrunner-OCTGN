@@ -364,7 +364,7 @@
             </link>
          </textblocks>
       </template>
-      <template src="Proxy/Operations/Operation_Neutral.png">
+      <template src="Proxy/Operations/Operation_Neutral.jpg">
          <matches>
             <match name="Faction" value="Neutral" />
             <match name="Type" value="Operation" />
@@ -758,7 +758,7 @@
          </textblocks>
       </template>
    <!-- Upgrade Templates -->
-      <template src="Proxy/Upgrades/Upgrade_Weyland.png">
+      <template src="Proxy/Upgrades/Upgrade_Weyland.jpg">
          <matches>
             <match name="Faction" value="The Weyland Consortium" />
             <match name="Type" value="Upgrade" />
@@ -781,7 +781,7 @@
             </link>
          </textblocks>
       </template>
-      <template src="Proxy/Upgrades/Upgrade_Hasbro.png">
+      <template src="Proxy/Upgrades/Upgrade_Hasbro.jpg">
          <matches>
             <match name="Faction" value="Haas-Bioroid" />
             <match name="Type" value="Upgrade" />
@@ -804,7 +804,7 @@
             </link>
          </textblocks>
       </template>
-      <template src="Proxy/Upgrades/Upgrade_Jinteki.png">
+      <template src="Proxy/Upgrades/Upgrade_Jinteki.jpg">
          <matches>
             <match name="Faction" value="Jinteki" />
             <match name="Type" value="Upgrade" />
@@ -827,7 +827,7 @@
             </link>
          </textblocks>
       </template>
-      <template src="Proxy/Upgrades/Upgrade_NBN.png">
+      <template src="Proxy/Upgrades/Upgrade_NBN.jpg">
          <matches>
             <match name="Faction" value="NBN" />
             <match name="Type" value="Upgrade" />

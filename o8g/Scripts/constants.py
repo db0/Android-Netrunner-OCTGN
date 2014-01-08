@@ -173,17 +173,19 @@ SuperchargedSubs = ['stevehouston',       # Brendan            - http://www.patr
                     'emlun',              # Emil Lundberg      - http://www.patreon.com/user?u=52834
                     '0sum',               # Yongqian Li        - http://www.patreon.com/user?u=66506 
                     'drtall2',            # Sean Fellows       - http://www.patreon.com/user?u=50373
-                    'hoopjones'           # Brian Kupcheck     - http://www.patreon.com/user?u=66678
-                    'x3r0h0ur'            # Brian Cassidy      - http://www.patreon.com/user?u=66217
-                    'davidcarlton'        # David Carlton      - http://www.patreon.com/davidcarlton
-                    'conduit23'           # Matt               - http://www.patreon.com/user?u=66664
+                    'hoopjones',          # Brian Kupcheck     - http://www.patreon.com/user?u=66678
+                    'x3r0h0ur',           # Brian Cassidy      - http://www.patreon.com/user?u=66217
+                    'davidcarlton',       # David Carlton      - http://www.patreon.com/davidcarlton
+                    'conduit23',          # Matt               - http://www.patreon.com/user?u=66664
                     'failtech'            # Hesy               - http://www.patreon.com/user?u=66835
                    ] # 3$ Tier
 
-CustomSubs = ['dovian'                    # Daniel DeBoer      - http://www.patreon.com/user?u=66260
+CustomSubs = ['dovian',                   # Daniel DeBoer      - http://www.patreon.com/user?u=66260
+              'demarko'                   # Dannel Jurado      - http://www.patreon.com/demarko
              ] # $5 Tier
 
 CardSubs = ['susuexp',                    # Simon Gunkel       - http://www.patreon.com/user?u=66210
+            'reverendanthony',            # Anthony Burch      - http://www.patreon.com/user?u=66843 # Not verified username
             'db0',
             'dbzer0'
            ] # $10 Tier
@@ -194,5 +196,6 @@ SuperchargedMsg = "{} is Supercharging their systems.\
            
 CustomMsgs = dict( # Dictionary holding the messages requested by people on the 5$ tier and above
                  Dovian          = "Dovian wants YOU to support A:NR on OCTGN! - http://www.patreon.com/db0",
+                 reverendanthony = "When Anthony makes a run on your HQ he stops to kiss you on the cheek real quick",
                  db0             = "Please consider supporting A:NR development via Patreon - http://www.patreon.com/db0"
                   )

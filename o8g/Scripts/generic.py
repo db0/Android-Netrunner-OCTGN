@@ -764,6 +764,7 @@ def prepPatronLists():
    
 def superCharge(card):
    if me.name.lower() in supercharged: card.switchTo('Supercharged')
+   if me.name.lower() in CardSubs: card.switchTo(me.name.lower())
       
 def announceSupercharge():
    if me.name.lower() in supercharged:
