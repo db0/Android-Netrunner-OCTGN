@@ -1,12 +1,8 @@
 =====Message of the Day======
 
-Do you like playing A:NR on OCTGN? If so, please consider supporting the developer's efforts
+We've been hearing reports about people's OCTGN crashing after the game ends.
 
-You can not become a patron for the development of this game definition on Patreon and in the process claim some nice rewards like alt-art for your cards or even customized art for a card of your choosing!
+If you're such a player, can you please contact the developers in IRC (#octgn in irc.freenode.net) or the octgn chat in order to debug this?
 
-And most important of all, you'll be part of helping make A:NR on OCTGN even better.
-
-Would you like to learn more (Will open in a new window)?
+You'll need to provide the logs which you can find in the OCTGN menu.
 =============================
-&&
-http://www.patreon.com/db0
