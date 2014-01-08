@@ -185,7 +185,7 @@ CustomSubs = ['dovian',                   # Daniel DeBoer      - http://www.patr
              ] # $5 Tier
 
 CardSubs = ['susuexp',                    # Simon Gunkel       - http://www.patreon.com/user?u=66210
-            'reverendanthony',            # Anthony Burch      - http://www.patreon.com/user?u=66843 # Not verified username
+            'reverendanthony',            # Anthony Burch      - http://www.patreon.com/user?u=66843
             'db0',
             'dbzer0'
            ] # $10 Tier
