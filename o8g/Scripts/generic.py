@@ -769,3 +769,31 @@ def superCharge(card):
 def announceSupercharge():
    if me.name.lower() in supercharged:
       notify("\n+=+ {}\n".format(CustomMsgs.get(me.name.lower(),SuperchargedMsg))) # We either announce a player's custom message, or the generic supercharged one
+      
+def announceSoT():
+   statsTXT = "They have {} and {} {} for this turn.".format(uniCredit(me.Credits),me.Clicks,uniClick())
+   if ds == "corp": 
+      announceTXT = "The offices of {} ({}) are now open for business.".format(identName,me)
+      if corpStartMsgs.get(me.name.lower(),None): customTXT = "\n\n{}\n".format(corpStartMsgs[me.name.lower()])
+      else: customTXT = ''
+      #notify("=> The offices of {} ({}) are now open for business.\n They have {} and {} {} for this turn.".format(identName,me,uniCredit(me.Credits),me.Clicks,uniClick()))
+   else:
+      announceTXT = "{} ({}) has woken up.".format(identName,me)
+      if runnerStartMsgs.get(me.name.lower(),None): customTXT = "\n\n{}\n".format(runnerStartMsgs[me.name.lower()])
+      else: customTXT = ''
+      #notify ("=> {} ({}) has woken up. They have {} and {} {} for this turn.".format(identName,me,uniCredit(me.Credits),me.Clicks,uniClick()))
+   notify("=> {}{}".format(announceTXT,customTXT)) 
+   notify("=> {}".format(statsTXT))
+   if ds == 'runner' and chkTags(): notify(":::Reminder::: {} is Tagged!".format(identName))
+
+def announceEoT():
+   if ds == "corp": 
+      announceTXT = "{} ({}) has reached CoB.".format(identName, me)
+      if corpEndMsgs.get(me.name.lower(),None): customTXT = "\n\n{}\n".format(corpEndMsgs[me.name.lower()])
+      else: customTXT = ''
+   else:
+      announceTXT = "{} ({}) has gone to sleep for the day.".format(identName,me)
+      if runnerEndMsgs.get(me.name.lower(),None): customTXT = "\n\n{}\n".format(runnerEndMsgs[me.name.lower()])
+      else: customTXT = ''
+   notify("=> {}{}".format(announceTXT,customTXT)) 
+      

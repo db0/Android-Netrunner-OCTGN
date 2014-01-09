@@ -53,6 +53,22 @@
 		<property name="Side" value="Runner" />
 		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
+      <alternate name="Andromeda" type="rediknight">
+         <property name="Subtitle" value="Dispossessed Ristie" />
+         <property name="Type" value="Identity" />
+         <property name="Keywords" value="Natural" />
+         <property name="Cost" value="1" />
+         <property name="Requirement" value="45" />	
+         <property name="Stat" value="15" />	
+         <property name="Rules" value="You draw a starting hand of 9 cards." />
+         <property name="Flavor" value="&quot;I run with the best.&quot;" />
+         <property name="Instructions" value="" />
+         <property name="Faction" value="Criminal" />
+         <property name="Influence" value="" />
+         <property name="Side" value="Runner" />
+         <property name="AutoScript" value="" />
+         <property name="AutoAction" value="" />	
+     </alternate>
 	</card>
 	<card id="bc0f047c-01b1-427f-a439-d451eda02084" name="Networking">
 		<property name="Subtitle" value="" />

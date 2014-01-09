@@ -173,7 +173,6 @@ SuperchargedSubs = ['stevehouston',       # Brendan            - http://www.patr
                     'emlun',              # Emil Lundberg      - http://www.patreon.com/user?u=52834
                     '0sum',               # Yongqian Li        - http://www.patreon.com/user?u=66506 
                     'drtall2',            # Sean Fellows       - http://www.patreon.com/user?u=50373
-                    'hoopjones',          # Brian Kupcheck     - http://www.patreon.com/user?u=66678
                     'x3r0h0ur',           # Brian Cassidy      - http://www.patreon.com/user?u=66217
                     'davidcarlton',       # David Carlton      - http://www.patreon.com/davidcarlton
                     'conduit23',          # Matt               - http://www.patreon.com/user?u=66664
@@ -186,6 +185,7 @@ CustomSubs = ['dovian',                   # Daniel DeBoer      - http://www.patr
 
 CardSubs = ['susuexp',                    # Simon Gunkel       - http://www.patreon.com/user?u=66210
             'reverendanthony',            # Anthony Burch      - http://www.patreon.com/user?u=66843
+            'rediknight'                  # Jeremy Espinosa    - http://www.patreon.com/user?u=68437
             'db0',
             'dbzer0'
            ] # $10 Tier
@@ -200,3 +200,18 @@ CustomMsgs = dict( # Dictionary holding the messages requested by people on the 
                  reverendanthony = "When Anthony makes a run on your HQ he stops to kiss you on the cheek real quick",
                  db0             = "Please consider supporting A:NR development via Patreon - http://www.patreon.com/db0"
                   )
+                  
+corpStartMsgs = dict( # Dictionary holding the messages requested by people on the 5$ tier and for corp turn start
+                    rediknight         = "\"When I advance my agendas you'll never know if it is safe to proceed or if the damage you will take will bleed you dry.\"",
+                    )
+                    
+corpEndMsgs = dict( # Dictionary holding the messages requested by people on the 5$ tier and for corp turn end
+                    )                    
+                    
+runnerStartMsgs = dict( # Dictionary holding the messages requested by people on the 5$ tier and for runner turn start
+                    rediknight         = "\"When I run no server is safe. Is it crime to take what is mine?\""
+                    )
+                    
+runnerEndMsgs = dict( # Dictionary holding the messages requested by people on the 5$ tier and for runner turn end
+                    )                                        
+                    

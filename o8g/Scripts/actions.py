@@ -147,8 +147,7 @@ def goToEndTurn(group, x = 0, y = 0):
    clearRestrictionMarkers()
    atTimedEffects('End')
    clearAll() # Just in case the player has forgotten to remove their temp markers.
-   if ds == "corp": notify ("=> {} ({}) has reached CoB (Close of Business hours).".format(identName, me))
-   else: notify ("=> {} ({}) has gone to sleep for the day.".format(identName,me))
+   announceEoT()
    opponent = ofwhom('onOpponent')
    opponent.setActivePlayer() # new in OCTGN 3.0.5.47
 
@@ -202,10 +201,7 @@ def goToSot (group, x=0,y=0):
       setGlobalVariable('Remote Run','False')
       setGlobalVariable('Central Run','False')
    atTimedEffects('Start') # Check all our cards to see if there's any Start of Turn effects active.
-   if ds == "corp": notify("=> The offices of {} ({}) are now open for business. They have {} and {} {} for this turn.".format(identName,me,uniCredit(me.Credits),me.Clicks,uniClick()))
-   else:
-      notify ("=> {} ({}) has woken up. They have {} and {} {} for this turn.".format(identName,me,uniCredit(me.Credits),me.Clicks,uniClick()))
-      if chkTags(): notify(":::Reminder::: {} is Tagged!".format(identName))
+   announceSoT()
    opponent = ofwhom('onOpponent')
 
 def autoRez():
