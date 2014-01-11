@@ -721,6 +721,7 @@ def fetchHost(card):
    if hostID: host = Card(hostID) 
    debugNotify("<<< fetchHost() with return {}".format(host)) #Debug
    return host
+   
 #---------------------------------------------------------------------------
 # Card Placement functions
 #---------------------------------------------------------------------------
@@ -752,6 +753,49 @@ def yaxisMove(card):
    else: cardmove = cardmove = 0
    return cardmove
 
+  
+#---------------------------------------------------------------------------
+# Remote Calls
+#---------------------------------------------------------------------------   
+
+def grabPileControl(pile):
+   debugNotify(">>> grabPileControl(){}".format(extraASDebug())) #Debug
+   if pile.controller != me: remoteCall(pile.controller,'passPileControl',[pile,me])
+   count = 0
+   while pile.controller != me: 
+      rnd(1,100)
+      count += 1
+      if count >= 10: 
+         notify(":::ERROR::: Pilke Control not passed! Will see errors.")
+         break   
+   debugNotify("<<< grabPileControl(){}".format(extraASDebug())) #Debug
+
+def passPileControl(pile,player):
+   debugNotify(">>> passPileControl(){}".format(extraASDebug())) #Debug
+   mute()
+   update()
+   pile.setController(player)
+   debugNotify("<<< passPileControl(){}".format(extraASDebug())) #Debug
+      
+def grabCardControl(card):
+   debugNotify(">>> grabCardControl(){}".format(extraASDebug())) #Debug
+   if card.controller != me: remoteCall(card.controller,'passCardControl',[card,me])
+   count = 0
+   while card.controller != me: 
+      rnd(1,100)
+      count += 1
+      if count >= 10: 
+         notify(":::ERROR::: Card Control not passed! Will see errors.")
+         break   
+   debugNotify("<<< grabCardControl(){}".format(extraASDebug())) #Debug
+   
+def passCardControl(card,player):
+   debugNotify(">>> passCardControl(){}".format(extraASDebug())) #Debug
+   mute()
+   update()
+   card.setController(player)
+   debugNotify("<<< passCardControl(){}".format(extraASDebug())) #Debug
+      
 #---------------------------------------------------------------------------
 # Patron Functions
 #---------------------------------------------------------------------------   

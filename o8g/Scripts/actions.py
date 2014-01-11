@@ -1187,6 +1187,7 @@ def accessTarget(group = table, x = 0, y = 0):
                and not (c.orientation == Rot90 and not c.isFaceUp)
                and c.Type != 'Remote Server']
    for card in cardList:
+      grabCardControl(card)
       cFaceD = False
       if not card.isFaceUp:
          card.isFaceUp = True
@@ -1256,6 +1257,7 @@ def accessTarget(group = table, x = 0, y = 0):
       else: pass
       if cFaceD and card.group == table and not card.markers[mdict['Scored']]: card.isFaceUp = False
       card.highlight = None
+      if card.group == table: passCardControl(card,card.owner)
 
 def RDaccessX(group = table, x = 0, y = 0): # A function which looks at the top X cards of the corp's deck and then asks the runner what to do with each one.
    debugNotify(">>> RDaccessX()") #Debug
@@ -1270,6 +1272,7 @@ def RDaccessX(group = table, x = 0, y = 0): # A function which looks at the top 
    if count == None: return
    playAccessSound('RD')
    targetPL = ofwhom('-ofOpponent')
+   grabPileControl(targetPL.piles['R&D/Stack'])
    debugNotify("Found opponent. Storing the top {} as a list".format(count), 3) #Debug
    RDtop = list(targetPL.piles['R&D/Stack'].top(count))
    if len(RDtop) == 0:
@@ -1285,6 +1288,7 @@ def RDaccessX(group = table, x = 0, y = 0): # A function which looks at the top 
       debugNotify(" Looping...", 4)
       loopChk(RDtop[iter],'Type')
       Autoscripts = CardsAS.get(RDtop[iter].model,'').split('||')
+      debugNotify("Grabbed AutoScripts", 4)
       for autoS in Autoscripts:
          if re.search(r'onAccess:',autoS):
             if re.search(r'-ifInstalled',autoS): continue # -ifInstalled cards work only while on the table.
@@ -1356,9 +1360,10 @@ def RDaccessX(group = table, x = 0, y = 0): # A function which looks at the top 
          debugNotify("Selected doing nothing. About to move back...", 4)
          RDtop[iter].moveTo(targetPL.piles['R&D/Stack'],iter - removedCards)
    notify("{} has finished accessing {}'s R&D".format(me,targetPL))
+   passPileControl(targetPL.piles['R&D/Stack'],targetPL)
    gatheredCardList = False  # We set this variable to False, so that reduceCost() calls from other functions can start scanning the table again.
    debugNotify("<<< RDaccessX()", 3)
-
+   
 def ARCscore(group=table, x=0,y=0):
    mute()
    debugNotify(">>> ARCscore(){}".format(extraASDebug())) #Debug
@@ -1370,7 +1375,10 @@ def ARCscore(group=table, x=0,y=0):
    targetPL = ofwhom('-ofOpponent')
    debugNotify("Found opponent.", 3) #Debug
    ARC = targetPL.piles['Heap/Archives(Face-up)']
+   grabPileControl(ARC)
+   grabPileControl(targetPL.piles['Archives(Hidden)'])
    for card in targetPL.piles['Archives(Hidden)']: card.moveTo(ARC) # When the runner accesses the archives, all  cards of the face up archives.
+   passPileControl(targetPL.piles['Archives(Hidden)'],targetPL)
    if len(ARC) == 0:
       whisper("Corp's Archives are empty. You cannot take this action")
       return
@@ -1386,6 +1394,7 @@ def ARCscore(group=table, x=0,y=0):
          scrAgenda(card) # We don't want it silent, as it needs to ask the runner to score, in case of agendas like Fetal AI for which they have to pay as well.
          if card.highlight == RevealedColor: card.moveTo(ARC) # If the runner opted not to score the agenda, put it back into the deck.
    if not agendaFound: notify("{} has rumaged through {}'s archives but found no Agendas".format(Identity,targetPL))
+   passPileControl(ARC,targetPL)
    debugNotify("<<< ARCscore()")
 
 def HQaccess(group=table, x=0,y=0, silent = False):
@@ -1402,6 +1411,7 @@ def HQaccess(group=table, x=0,y=0, silent = False):
    playAccessSound('HQ')
    targetPL = ofwhom('-ofOpponent')
    debugNotify("Found opponent.", 3) #Debug
+   grabPileControl(targetPL.hand)
    revealedCards = showatrandom(count = count, targetPL = targetPL, covered = True)
    for revealedCard in revealedCards:
       loopChk(revealedCard)
@@ -1470,6 +1480,7 @@ def HQaccess(group=table, x=0,y=0, silent = False):
       else: revealedCard.moveTo(targetPL.hand)
    rnd(1,10) # a little pause
    for c in revealedCards: c.highlight = None # We make sure no card remains highlighted for some reason.
+   passPileControl(targetPL.hand,targetPL)
    clearCovers() # Finally we clear any remaining cover cards.
    debugNotify("<<< HQAccess()", 3)
 

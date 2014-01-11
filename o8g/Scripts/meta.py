@@ -397,6 +397,9 @@ def sendToTrash(card, pile = None): # A function which takes care of sending a c
    if pile == None: pile = card.owner.piles['Heap/Archives(Face-up)'] # I can't pass it as a function variable. OCTGN doesn't like it.
    debugNotify("Now Pile = {}".format(pile.name))
    debugNotify("sendToTrash says previous group = {} and highlight = {}".format(card.group.name,card.highlight))
+   if pile.controller != me:
+      debugNotify("We don't control the discard pile. Taking it over.")
+      grabPileControl(pile)
    playTrashSound(card)
    executePlayScripts(card,'TRASH') # We don't want to run automations on simply revealed cards.
    autoscriptOtherPlayers('CardTrashed',card)
@@ -404,6 +407,7 @@ def sendToTrash(card, pile = None): # A function which takes care of sending a c
    if chkModulator(card, 'preventTrash', 'onTrash'): # IF the card has the preventTrash modulator, it's not supposed to be trashed.
       if chkModulator(card, 'ifAccessed', 'onTrash') and ds != 'runner': card.moveTo(pile) # Unless it only has that modulator active during runner access. Then when the corp trashes it, it should trash normally.
    else: card.moveTo(pile)
+   if pile.player != pile.controller: remoteCall(pile.controller,'passPileControl',[pile,pile.player])
    debugNotify("<<< sendToTrash()", 3) #Debug   
    
 def findAgendaRequirement(card):
@@ -1006,7 +1010,7 @@ def TrialError(group, x=0, y=0): # Debugging
                 #"bc0f047c-01b1-427f-a439-d451eda04042",
                 #c0f047c-01b1-427f-a439-d451eda04043",
                 #"bc0f047c-01b1-427f-a439-d451eda04044",
-                "bc0f047c-01b1-427f-a439-d451eda04045",
+                "bc0f047c-01b1-427f-a439-d451eda02007",
                 "bc0f047c-01b1-427f-a439-d451eda04046",
                 #"bc0f047c-01b1-427f-a439-d451eda04047",
                 #"bc0f047c-01b1-427f-a439-d451eda04048",
