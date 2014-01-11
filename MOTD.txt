@@ -1,8 +1,8 @@
 =====Message of the Day======
 
-We've been hearing reports about people's OCTGN crashing after the game ends.
+New version made some changes to prevent the red errors during access. 
 
-If you're such a player, can you please contact the developers in IRC (#octgn in irc.freenode.net) or the octgn chat in order to debug this?
+Unfortunately this means that the latest version is not anymore compatible with older versions. Both players need to be over 3.6.5 for the game to work.
 
-You'll need to provide the logs which you can find in the OCTGN menu.
+If you encounter any issues please make sure both players are at v3.6.5+ and then let me know.
 =============================
