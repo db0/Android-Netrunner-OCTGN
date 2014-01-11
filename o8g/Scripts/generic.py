@@ -812,7 +812,7 @@ def superCharge(card):
       
 def announceSupercharge():
    if me.name.lower() in supercharged:
-      notify("\n+=+ {}\n".format(CustomMsgs.get(me.name.lower(),SuperchargedMsg))) # We either announce a player's custom message, or the generic supercharged one
+      notify("   \n+=+ {}\n".format(CustomMsgs.get(me.name.lower(),SuperchargedMsg))) # We either announce a player's custom message, or the generic supercharged one
       
 def announceSoT():
    statsTXT = "They have {} and {} {} for this turn.".format(uniCredit(me.Credits),me.Clicks,uniClick())

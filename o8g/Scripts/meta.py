@@ -891,7 +891,7 @@ def reportGame(result = 'AgendaVictory'): # This submits the game results online
       (EreportTXT, EreportCode) = webRead('http://84.205.248.92/slaghund/game.slag?g={}&u={}&id={}&r={}&s={}&i={}&t={}&cnr={}&anr={}&v={}&w={}&lid={}&gname={}'.format(GUID,ENEMY,E_IDENTITY,E_RESULT,E_SCORE,E_INFLUENCE,E_TURNS,E_CARDSNR,E_AGENDASNR,VERSION,E_WIN,LEAGUE,GNAME),10000)
    setGlobalVariable('gameEnded','True')
    notify("Thanks for playing. Please submit any bugs or feature requests on github.\n-- https://github.com/db0/Android-Netrunner-OCTGN/issues")
-   notify("\n =+= Please consider supporting the development of this plugin\n =+= http://www.patreon.com/db0\n")
+   notify("   \n =+= Please consider supporting the development of this plugin\n =+= http://www.patreon.com/db0\n")
    debugNotify("<<< reportGame()", 3) #Debug
 
 def setleague(group = table, x=0,y=0, manual = True):
