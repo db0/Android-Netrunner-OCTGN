@@ -1,6 +1,10 @@
 Changelog - Android:Netrunner LCG OCTGN Game Definition
 ===============================================
 
+### 3.6.5.x
+
+Changed code to take controllership of piles when manipulating their cards,to avoid errors
+
 ### 3.6.4.x
 
 * Added code for Supercharging Patrons
