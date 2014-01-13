@@ -179,7 +179,7 @@
       <cardaction menu="Debug Card" default="False" execute="DebugCard" /> 
       <groupactions menu="Turns/Clicks...">
          <groupaction menu="Declare Start of Turn" default="False" shortcut="F1" execute="goToSot" />
-         <groupaction menu="&#8986; Declare Click" default="False" shortcut="Enter" execute="useClick" />
+         <!-- <groupaction menu="&#8986; Declare Click" default="False" shortcut="Enter" execute="useClick" /> Not used anymore -->
          <groupaction menu="Declare End of Turn" default="False" shortcut="F12" execute="goToEndTurn" />
       </groupactions>
       <groupactions menu="Runner Actions...">

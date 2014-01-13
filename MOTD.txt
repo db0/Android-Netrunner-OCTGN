@@ -1,8 +1,4 @@
 =====Message of the Day======
 
-New version made some changes to prevent the red errors during access. 
-
-Unfortunately this means that the latest version is not anymore compatible with older versions. Both players need to be over 3.6.5 for the game to work.
-
-If you encounter any issues please make sure both players are at v3.6.5+ and then let me know.
+Notice: The new chat system is not my idea or under my control. -- Db0
 =============================
