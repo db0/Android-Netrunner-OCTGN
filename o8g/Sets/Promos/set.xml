@@ -38,5 +38,37 @@
          <property name="AutoScript" value="" />
          <property name="AutoAction" value="" />	
 		</card>
+		<card id="bc0f047c-01b1-427f-a439-d451eda00003" name="Chronos Protocol">
+         <property name="Subtitle" value="Selective Mind-Mapping (J)" />
+         <property name="Type" value="Identity" />
+         <property name="Keywords" value="Division" />
+         <property name="Cost" value="0" />
+         <property name="Requirement" value="45" />	
+         <property name="Stat" value="15" />	
+         <property name="Rules" value="For the first net damage the runner suffers each turn, you may look at the runner's grip and select the card that is trashed." />
+         <property name="Flavor" value="" />
+         <property name="Instructions" value="" />
+         <property name="Faction" value="Jinteki" />
+         <property name="Influence" value="" />
+         <property name="Side" value="corp" />
+         <property name="AutoScript" value="" />
+         <property name="AutoAction" value="" />	
+		</card>
+		<card id="bc0f047c-01b1-427f-a439-d451eda00004" name="Chronos Protocol">
+         <property name="Subtitle" value="Selective Mind-Mapping (HB)" />
+         <property name="Type" value="Identity" />
+         <property name="Keywords" value="Division" />
+         <property name="Cost" value="0" />
+         <property name="Requirement" value="45" />	
+         <property name="Stat" value="15" />	
+         <property name="Rules" value="Whenever the Runner trashes a card for brain damage, he or she removes all copies of that card from the game (installed, in the heap, stack,or grip). The Runner shuffles his or her stack." />
+         <property name="Flavor" value="" />
+         <property name="Instructions" value="" />
+         <property name="Faction" value="Haas-Bioroid" />
+         <property name="Influence" value="" />
+         <property name="Side" value="corp" />
+         <property name="AutoScript" value="" />
+         <property name="AutoAction" value="" />	
+		</card>
 	</cards>
 </set>

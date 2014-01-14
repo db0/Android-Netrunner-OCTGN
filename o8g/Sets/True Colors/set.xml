@@ -111,7 +111,7 @@
 		<property name="Stat" value="3" />	
 		<property name="Rules" value="[Trash]: Break any number of destroyer subroutines.&#xD;&#xA;1[Credits]: +2 strength." />
 		<property name="Flavor" value="&quot;One-shot icebreakers are popular among many of my protégés. They don&apos;t have the patience for the hunt.&quot; -The Professor" />
-		<property name="Instructions" value="" />
+		<property name="Instructions" value="[Trash]: Break any number of destroyer subroutines.||1 [Credits]: +2 strength." />
 		<property name="Faction" value="Shaper" />
 		<property name="Influence" value="1" />
 		<property name="Side" value="runner" />
