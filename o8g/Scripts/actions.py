@@ -552,6 +552,7 @@ def addAgendaCounter(card, x = 0, y = 0):
 def advanceCardP(card, x = 0, y = 0):
    debugNotify(">>> advanceCardP(){}".format(extraASDebug())) #Debug
    mute()
+   update()
    ClickCost = useClick()
    if ClickCost == 'ABORT': return
    reduction = reduceCost(card, 'ADVANCEMENT', 1)
@@ -948,6 +949,8 @@ def addNetDmg(group, x = 0, y = 0):
 
 def getCredit(group, x = 0, y = 0):
    debugNotify(">>> getCredit(){}".format(extraASDebug())) #Debug
+   mute()
+   update()
    ClickCost = useClick()
    if ClickCost == 'ABORT': return
    creditsReduce = findCounterPrevention(1, 'Credits', me)
