@@ -176,7 +176,8 @@ SuperchargedSubs = ['stevehouston',       # Brendan            - http://www.patr
                     'x3r0h0ur',           # Brian Cassidy      - http://www.patreon.com/user?u=66217
                     'davidcarlton',       # David Carlton      - http://www.patreon.com/davidcarlton
                     'conduit23',          # Matt               - http://www.patreon.com/user?u=66664
-                    'failtech'            # Hesy               - http://www.patreon.com/user?u=66835
+                    'failtech',           # Hesy               - http://www.patreon.com/user?u=66835
+                    'alsciende'           # Cedric             - http://netrunnerdb.com/
                    ] # 3$ Tier
 
 CustomSubs = ['dovian',                   # Daniel DeBoer      - http://www.patreon.com/user?u=66260
