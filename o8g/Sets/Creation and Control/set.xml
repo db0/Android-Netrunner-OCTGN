@@ -18,7 +18,7 @@
 		<property name="Instructions" value="" />
 		<property name="Faction" value="Haas-Bioroid" />
 		<property name="Influence" value="" />
-		<property name="Side" value="Corp" />
+		<property name="Side" value="corp" />
 		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
 	</card>
@@ -34,7 +34,7 @@
 		<property name="Instructions" value="" />
 		<property name="Faction" value="Haas-Bioroid" />
 		<property name="Influence" value="" />
-		<property name="Side" value="Corp" />
+		<property name="Side" value="corp" />
 		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
 	</card>
@@ -50,7 +50,7 @@
 		<property name="Instructions" value="Install up to three targeted ICE from hand||Refill hand to 5" />
 		<property name="Faction" value="Haas-Bioroid" />
 		<property name="Influence" value="" />
-		<property name="Side" value="Corp" />
+		<property name="Side" value="corp" />
 		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
 	</card>
@@ -66,7 +66,7 @@
 		<property name="Instructions" value="" />
 		<property name="Faction" value="Haas-Bioroid" />
 		<property name="Influence" value="" />
-		<property name="Side" value="Corp" />
+		<property name="Side" value="corp" />
 		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
 	</card>
@@ -82,7 +82,7 @@
 		<property name="Instructions" value="" />
 		<property name="Faction" value="Haas-Bioroid" />
 		<property name="Influence" value="" />
-		<property name="Side" value="Corp" />
+		<property name="Side" value="corp" />
 		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
 	</card>
@@ -98,7 +98,7 @@
 		<property name="Instructions" value="" />
 		<property name="Faction" value="Haas-Bioroid" />
 		<property name="Influence" value="" />
-		<property name="Side" value="Corp" />
+		<property name="Side" value="corp" />
 		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
 	</card>
@@ -114,7 +114,7 @@
 		<property name="Instructions" value="" />
 		<property name="Faction" value="Haas-Bioroid" />
 		<property name="Influence" value="" />
-		<property name="Side" value="Corp" />
+		<property name="Side" value="corp" />
 		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
 	</card>
@@ -130,7 +130,7 @@
 		<property name="Instructions" value="" />
 		<property name="Faction" value="Haas-Bioroid" />
 		<property name="Influence" value="1" />
-		<property name="Side" value="Corp" />
+		<property name="Side" value="corp" />
 		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
 	</card>
@@ -146,7 +146,7 @@
 		<property name="Instructions" value="" />
 		<property name="Faction" value="Haas-Bioroid" />
 		<property name="Influence" value="2" />
-		<property name="Side" value="Corp" />
+		<property name="Side" value="corp" />
 		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
 	</card>
@@ -162,7 +162,7 @@
 		<property name="Instructions" value="" />
 		<property name="Faction" value="Haas-Bioroid" />
 		<property name="Influence" value="5" />
-		<property name="Side" value="Corp" />
+		<property name="Side" value="corp" />
 		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
 	</card>
@@ -178,7 +178,7 @@
 		<property name="Instructions" value="" />
 		<property name="Faction" value="Haas-Bioroid" />
 		<property name="Influence" value="4" />
-		<property name="Side" value="Corp" />
+		<property name="Side" value="corp" />
 		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
 	</card>
@@ -194,7 +194,7 @@
 		<property name="Instructions" value="" />
 		<property name="Faction" value="Haas-Bioroid" />
 		<property name="Influence" value="1" />
-		<property name="Side" value="Corp" />
+		<property name="Side" value="corp" />
 		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
 	</card>
@@ -210,7 +210,7 @@
 		<property name="Instructions" value="" />
 		<property name="Faction" value="Haas-Bioroid" />
 		<property name="Influence" value="2" />
-		<property name="Side" value="Corp" />
+		<property name="Side" value="corp" />
 		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
 	</card>
@@ -226,7 +226,7 @@
 		<property name="Instructions" value="" />
 		<property name="Faction" value="Haas-Bioroid" />
 		<property name="Influence" value="1" />
-		<property name="Side" value="Corp" />
+		<property name="Side" value="corp" />
 		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
 	</card>
@@ -242,7 +242,7 @@
 		<property name="Instructions" value="[Subroutine] Do 1 brain damage.||[Subroutine] Do 1 brain damage and end the run.||[Subroutine] End the run." />
 		<property name="Faction" value="Haas-Bioroid" />
 		<property name="Influence" value="3" />
-		<property name="Side" value="Corp" />
+		<property name="Side" value="corp" />
 		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
 	</card>
@@ -258,7 +258,7 @@
 		<property name="Instructions" value="" />
 		<property name="Faction" value="Haas-Bioroid" />
 		<property name="Influence" value="1" />
-		<property name="Side" value="Corp" />
+		<property name="Side" value="corp" />
 		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
 	</card>
@@ -274,7 +274,7 @@
 		<property name="Instructions" value="[Subroutine] Trash target program.||[Subroutine] Trace 3. If successful give the Runner 1 Tag and inflict 1 brain damage." />
 		<property name="Faction" value="Haas-Bioroid" />
 		<property name="Influence" value="3" />
-		<property name="Side" value="Corp" />
+		<property name="Side" value="corp" />
 		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
 	</card>
@@ -290,7 +290,7 @@
 		<property name="Instructions" value="" />
 		<property name="Faction" value="Haas-Bioroid" />
 		<property name="Influence" value="1" />
-		<property name="Side" value="Corp" />
+		<property name="Side" value="corp" />
 		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
 	</card>
@@ -306,7 +306,7 @@
 		<property name="Instructions" value="[Subroutine] Trace 2 – If successful, place 1 power counter on Viktor 2.0.||[Subroutine] End the run.||Remove a power counter to inflict 1 Brain Damage" />
 		<property name="Faction" value="Haas-Bioroid" />
 		<property name="Influence" value="3" />
-		<property name="Side" value="Corp" />
+		<property name="Side" value="corp" />
 		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
 	</card>
@@ -322,7 +322,7 @@
 		<property name="Instructions" value="" />
 		<property name="Faction" value="Haas-Bioroid" />
 		<property name="Influence" value="2" />
-		<property name="Side" value="Corp" />
+		<property name="Side" value="corp" />
 		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
 	</card>
@@ -338,7 +338,7 @@
 		<property name="Instructions" value="" />
 		<property name="Faction" value="Haas-Bioroid" />
 		<property name="Influence" value="1" />
-		<property name="Side" value="Corp" />
+		<property name="Side" value="corp" />
 		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
 	</card>
@@ -354,7 +354,7 @@
 		<property name="Instructions" value="" />
 		<property name="Faction" value="Haas-Bioroid" />
 		<property name="Influence" value="1" />
-		<property name="Side" value="Corp" />
+		<property name="Side" value="corp" />
 		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
 	</card>
@@ -370,7 +370,7 @@
 		<property name="Instructions" value="" />
 		<property name="Faction" value="Neutral" />
 		<property name="Influence" value="" />
-		<property name="Side" value="Corp" />
+		<property name="Side" value="corp" />
 		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
 	</card>
@@ -386,7 +386,7 @@
 		<property name="Instructions" value="" />
 		<property name="Faction" value="Neutral" />
 		<property name="Influence" value="0" />
-		<property name="Side" value="Corp" />
+		<property name="Side" value="corp" />
 		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
 	</card>
@@ -402,7 +402,7 @@
 		<property name="Instructions" value="" />
 		<property name="Faction" value="Neutral" />
 		<property name="Influence" value="0" />
-		<property name="Side" value="Corp" />
+		<property name="Side" value="corp" />
 		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
 	</card>
@@ -418,7 +418,7 @@
 		<property name="Instructions" value="" />
 		<property name="Faction" value="Neutral" />
 		<property name="Influence" value="0" />
-		<property name="Side" value="Corp" />
+		<property name="Side" value="corp" />
 		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
 	</card>
@@ -434,7 +434,7 @@
 		<property name="Instructions" value="[Subroutine] Force the runner to lose exactly 2 [Credits] or end the run||[Subroutine] End the run." />
 		<property name="Faction" value="Neutral" />
 		<property name="Influence" value="0" />
-		<property name="Side" value="Corp" />
+		<property name="Side" value="corp" />
 		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
 	</card>
@@ -450,7 +450,7 @@
 		<property name="Instructions" value="" />
 		<property name="Faction" value="Shaper" />
 		<property name="Influence" value="" />
-		<property name="Side" value="Runner" />
+		<property name="Side" value="runner" />
 		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
 	</card>
@@ -466,7 +466,7 @@
 		<property name="Instructions" value="" />
 		<property name="Faction" value="Shaper" />
 		<property name="Influence" value="" />
-		<property name="Side" value="Runner" />
+		<property name="Side" value="runner" />
 		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
 	</card>
@@ -482,7 +482,7 @@
 		<property name="Instructions" value="" />
 		<property name="Faction" value="Shaper" />
 		<property name="Influence" value="" />
-		<property name="Side" value="Runner" />
+		<property name="Side" value="runner" />
 		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
 	</card>
@@ -498,7 +498,7 @@
 		<property name="Instructions" value="" />
 		<property name="Faction" value="Shaper" />
 		<property name="Influence" value="5" />
-		<property name="Side" value="Runner" />
+		<property name="Side" value="runner" />
 		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
 	</card>
@@ -514,7 +514,7 @@
 		<property name="Instructions" value="" />
 		<property name="Faction" value="Shaper" />
 		<property name="Influence" value="2" />
-		<property name="Side" value="Runner" />
+		<property name="Side" value="runner" />
 		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
 	</card>
@@ -530,7 +530,7 @@
 		<property name="Instructions" value="" />
 		<property name="Faction" value="Shaper" />
 		<property name="Influence" value="1" />
-		<property name="Side" value="Runner" />
+		<property name="Side" value="runner" />
 		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
 	</card>
@@ -546,7 +546,7 @@
 		<property name="Instructions" value="" />
 		<property name="Faction" value="Shaper" />
 		<property name="Influence" value="2" />
-		<property name="Side" value="Runner" />
+		<property name="Side" value="runner" />
 		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
 	</card>
@@ -562,7 +562,7 @@
 		<property name="Instructions" value="" />
 		<property name="Faction" value="Shaper" />
 		<property name="Influence" value="3" />
-		<property name="Side" value="Runner" />
+		<property name="Side" value="runner" />
 		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
 	</card>
@@ -578,7 +578,7 @@
 		<property name="Instructions" value="" />
 		<property name="Faction" value="Shaper" />
 		<property name="Influence" value="3" />
-		<property name="Side" value="Runner" />
+		<property name="Side" value="runner" />
 		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
 	</card>
@@ -594,7 +594,7 @@
 		<property name="Instructions" value="3 [Credits]: Prevent 1 net damage.||[Trash]: Prevent up to 2 brain damage." />
 		<property name="Faction" value="Shaper" />
 		<property name="Influence" value="1" />
-		<property name="Side" value="Runner" />
+		<property name="Side" value="runner" />
 		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
 	</card>
@@ -610,7 +610,7 @@
 		<property name="Instructions" value="" />
 		<property name="Faction" value="Shaper" />
 		<property name="Influence" value="2" />
-		<property name="Side" value="Runner" />
+		<property name="Side" value="runner" />
 		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
 	</card>
@@ -626,7 +626,7 @@
 		<property name="Instructions" value="" />
 		<property name="Faction" value="Shaper" />
 		<property name="Influence" value="3" />
-		<property name="Side" value="Runner" />
+		<property name="Side" value="runner" />
 		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
 	</card>
@@ -642,7 +642,7 @@
 		<property name="Instructions" value="" />
 		<property name="Faction" value="Shaper" />
 		<property name="Influence" value="3" />
-		<property name="Side" value="Runner" />
+		<property name="Side" value="runner" />
 		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
 	</card>
@@ -658,7 +658,7 @@
 		<property name="Instructions" value="" />
 		<property name="Faction" value="Shaper" />
 		<property name="Influence" value="2" />
-		<property name="Side" value="Runner" />
+		<property name="Side" value="runner" />
 		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
 	</card>
@@ -674,7 +674,7 @@
 		<property name="Instructions" value="1 [Credits]: Break sentry subroutine.||1 [Credits]: +5 strength. Must have credits on a stealth card." />
 		<property name="Faction" value="Shaper" />
 		<property name="Influence" value="2" />
-		<property name="Side" value="Runner" />
+		<property name="Side" value="runner" />
 		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
 	</card>
@@ -690,7 +690,7 @@
 		<property name="Instructions" value="" />
 		<property name="Faction" value="Shaper" />
 		<property name="Influence" value="2" />
-		<property name="Side" value="Runner" />
+		<property name="Side" value="runner" />
 		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
 	</card>
@@ -706,7 +706,7 @@
 		<property name="Instructions" value="" />
 		<property name="Faction" value="Shaper" />
 		<property name="Influence" value="3" />
-		<property name="Side" value="Runner" />
+		<property name="Side" value="runner" />
 		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
 	</card>
@@ -722,7 +722,7 @@
 		<property name="Instructions" value="" />
 		<property name="Faction" value="Shaper" />
 		<property name="Influence" value="1" />
-		<property name="Side" value="Runner" />
+		<property name="Side" value="runner" />
 		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
 	</card>
@@ -738,7 +738,7 @@
 		<property name="Instructions" value="" />
 		<property name="Faction" value="Shaper" />
 		<property name="Influence" value="3" />
-		<property name="Side" value="Runner" />
+		<property name="Side" value="runner" />
 		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
 	</card>
@@ -754,7 +754,7 @@
 		<property name="Instructions" value="" />
 		<property name="Faction" value="Shaper" />
 		<property name="Influence" value="2" />
-		<property name="Side" value="Runner" />
+		<property name="Side" value="runner" />
 		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
 	</card>
@@ -770,7 +770,7 @@
 		<property name="Instructions" value="1 [Credit]: Break a barrier subroutine.||2 [Credits]: +1 strength for the remainder of this run." />
 		<property name="Faction" value="Shaper" />
 		<property name="Influence" value="1" />
-		<property name="Side" value="Runner" />
+		<property name="Side" value="runner" />
 		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
 	</card>
@@ -786,7 +786,7 @@
 		<property name="Instructions" value="" />
 		<property name="Faction" value="Shaper" />
 		<property name="Influence" value="2" />
-		<property name="Side" value="Runner" />
+		<property name="Side" value="runner" />
 		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
 	</card>
@@ -802,7 +802,7 @@
 		<property name="Instructions" value="" />
 		<property name="Faction" value="Shaper" />
 		<property name="Influence" value="2" />
-		<property name="Side" value="Runner" />
+		<property name="Side" value="runner" />
 		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
 	</card>
@@ -818,7 +818,7 @@
 		<property name="Instructions" value="" />
 		<property name="Faction" value="Shaper" />
 		<property name="Influence" value="1" />
-		<property name="Side" value="Runner" />
+		<property name="Side" value="runner" />
 		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
 	</card>
@@ -834,7 +834,7 @@
 		<property name="Instructions" value="" />
 		<property name="Faction" value="Neutral" />
 		<property name="Influence" value="0" />
-		<property name="Side" value="Runner" />
+		<property name="Side" value="runner" />
 		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
 	</card>
@@ -850,7 +850,7 @@
 		<property name="Instructions" value="" />
 		<property name="Faction" value="Neutral" />
 		<property name="Influence" value="0" />
-		<property name="Side" value="Runner" />
+		<property name="Side" value="runner" />
 		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
 	</card>
@@ -866,7 +866,7 @@
 		<property name="Instructions" value="" />
 		<property name="Faction" value="Neutral" />
 		<property name="Influence" value="0" />
-		<property name="Side" value="Runner" />
+		<property name="Side" value="runner" />
 		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
 	</card>
@@ -882,7 +882,7 @@
 		<property name="Instructions" value="" />
 		<property name="Faction" value="Neutral" />
 		<property name="Influence" value="2" />
-		<property name="Side" value="Runner" />
+		<property name="Side" value="runner" />
 		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
 	</card>

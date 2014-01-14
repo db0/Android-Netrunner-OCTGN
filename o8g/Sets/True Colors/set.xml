@@ -79,7 +79,7 @@
 		<property name="Stat" value="2" />	
 		<property name="Rules" value="1[Credits]: Break sentry subroutine.&#xD;&#xA;1[Credits]: +1 strength." />
 		<property name="Flavor" value="The first credited icebreaker was nothing more than a unique script to bypass the security calls on a Gibson 3 Data Sentry. Garrote has over 20,000 times the data as that first breaker, but the idea remains the same: cut off the power source from the network, and then smash on through." />
-		<property name="Instructions" value="" />
+		<property name="Instructions" value="1 [Credits]: Break sentry subroutine.||1 [Credits]: +1 strength." />
 		<property name="Faction" value="Criminal" />
 		<property name="Influence" value="3" />
 		<property name="Side" value="runner" />

@@ -2857,7 +2857,7 @@ Activist Support
 -----
 bc0f047c-01b1-427f-a439-d451eda04062
 -----
-
+atTurnStart:Gain1Tag-ifIHasnt1Tags-duringMyTurn$$atTurnStart:Gain1Bad Publicity-onOpponent-ifOpponentHasnt1Bad Publicity-duringOpponentTurn
 +++++
 
 .....
@@ -2865,7 +2865,7 @@ Lawyer Up
 -----
 bc0f047c-01b1-427f-a439-d451eda04063
 -----
-
+onPlay:Lose2Tags$$Draw3Cards
 +++++
 
 .....
@@ -2873,7 +2873,7 @@ Leverage
 -----
 bc0f047c-01b1-427f-a439-d451eda04064
 -----
-
+onPlay:CustomScript
 +++++
 
 .....
@@ -2883,13 +2883,13 @@ bc0f047c-01b1-427f-a439-d451eda04065
 -----
 
 +++++
-
+A0B1G0T0:SimplyAnnounce{break sentry subroutine}||A0B1G0T0:Put1PlusOne	
 .....
 LLDS Processor
 -----
 bc0f047c-01b1-427f-a439-d451eda04066
 -----
-
+whileInPlay:Put1LLDS Processor-foreachCardInstall-onTriggerCard-typeIcebreaker
 +++++
 
 .....
@@ -2899,7 +2899,7 @@ bc0f047c-01b1-427f-a439-d451eda04067
 -----
 
 +++++
-
+A0B0G0T1:SimplyAnnounce{break any number of destroyer subroutines}||A0B1G0T0:Put2PlusOne
 .....
 Capstone
 -----
@@ -2907,13 +2907,13 @@ bc0f047c-01b1-427f-a439-d451eda04068
 -----
 
 +++++
-
+A1B0G0T0:CustomScript
 .....
 Starlight Crusade Funding
 -----
 bc0f047c-01b1-427f-a439-d451eda04069
 -----
-
+atTurnStart:Lose1Clicks
 +++++
 
 .....

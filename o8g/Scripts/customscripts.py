@@ -787,6 +787,8 @@ def markerEffects(Time = 'Start'):
             ModifyStatus('UninstallMyself-toStack', 'Test Run:', card)
          if re.search(r'Deep Red',marker[0]) and Time == 'End': # We silently remove deep red effects
             TokensX('Remove1Deep Red-isSilent', "Deep Red:", card)
+         if re.search(r'LLDS Processor',marker[0]) and Time == 'End': # We silently remove LLDS Processor bonus
+            TokensX('Remove1LLDS Processor-isSilent', "LLDS Processor:", card)
 
 def markerScripts(card, action = 'USE'):
    debugNotify(">>> markerScripts() with action: {}".format(action)) #Debug
