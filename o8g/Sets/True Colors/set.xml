@@ -1,0 +1,330 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<set xmlns:noNamespaceSchemaLocation="CardSet.xsd" 
+     name="True Colors" 
+     id="3655b61a-9514-41b2-858c-f271ed898556" 
+     gameId="0f38e453-26df-4c04-9d67-6d43de939c77" 
+     gameVersion="3.0.0.0" 
+     version="3.0.0.0">
+<cards>
+	<card id="bc0f047c-01b1-427f-a439-d451eda04061" name="Keyhole">
+		<property name="Subtitle" value=""/>
+		<property name="Type" value="Program"/>
+		<property name="Keywords" value=""/>
+		<property name="Cost" value="4"/>
+		<property name="Requirement" value="2"/>	
+		<property name="Stat" value="-"/>	
+		<property name="Rules" value="[Click]: Make a run on R&amp;D. If successful, instead of accessing cards, look at the top 3 cards of R&amp;D. Trash 1 of those cards at no cost (even if it cannot normally be trashed) and the Corp shuffles R&amp;D."/>
+		<property name="Flavor" value="The instructions claim that it sifts the most important data. 'Important', it has been found, is a highly relative term."/>
+		<property name="Instructions" value=""/>
+		<property name="Faction" value="Anarch"/>
+		<property name="Influence" value="3"/>
+		<property name="Side" value="Runner"/>
+		<property name="AutoScript" value=""/>
+		<property name="AutoAction" value=""/>	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda04062" name="Activist Support">
+		<property name="Subtitle" value=""/>
+		<property name="Type" value="Resource"/>
+		<property name="Keywords" value=""/>
+		<property name="Cost" value="1"/>
+		<property name="Requirement" value=""/>	
+		<property name="Stat" value=""/>	
+		<property name="Rules" value="When the Corp turn begins, take 1 tag if you have no tags.&#xD;&#xA;When your turn begins, give the Corp 1 bad publicity if he or she has no bad publicity."/>
+		<property name="Flavor" value="&quot;They call me a terrorist to scare people. If they want to find terrorists, maybe they should start by looking in the mirror.&quot; -Reina Roja"/>
+		<property name="Instructions" value=""/>
+		<property name="Faction" value="Anarch"/>
+		<property name="Influence" value="2"/>
+		<property name="Side" value="Runner"/>
+		<property name="AutoScript" value=""/>
+		<property name="AutoAction" value=""/>	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda04063" name="Lawyer Up">
+		<property name="Subtitle" value=""/>
+		<property name="Type" value="Event"/>
+		<property name="Keywords" value="Double"/>
+		<property name="Cost" value="2"/>
+		<property name="Requirement" value=""/>	
+		<property name="Stat" value=""/>	
+		<property name="Rules" value="As an additional cost to play this event, spend [Click]. &#xD;&#xA;Remove up to 2 tags and draw 3 cards."/>
+		<property name="Flavor" value="Pros don't need to call their lawyer. Pros have their secretary rigged to do it for them if they ever go off-grid."/>
+		<property name="Instructions" value=""/>
+		<property name="Faction" value="Criminal"/>
+		<property name="Influence" value="1"/>
+		<property name="Side" value="Runner"/>
+		<property name="AutoScript" value=""/>
+		<property name="AutoAction" value=""/>	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda04064" name="Leverage">
+		<property name="Subtitle" value=""/>
+		<property name="Type" value="Event"/>
+		<property name="Keywords" value=""/>
+		<property name="Cost" value="1"/>
+		<property name="Requirement" value=""/>	
+		<property name="Stat" value=""/>	
+		<property name="Rules" value="Play only if you made a successful run on HQ this turn. &#xD;&#xA;Prevent all damage until the beginning of your next turn unless the Corp takes 2 bad publicity."/>
+		<property name="Flavor" value="&quot;Care to have a look?&quot;"/>
+		<property name="Instructions" value=""/>
+		<property name="Faction" value="Criminal"/>
+		<property name="Influence" value="2"/>
+		<property name="Side" value="Runner"/>
+		<property name="AutoScript" value=""/>
+		<property name="AutoAction" value=""/>	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda04065" name="Garrote">
+		<property name="Subtitle" value=""/>
+		<property name="Type" value="Program"/>
+		<property name="Keywords" value="Icebreaker-Killer"/>
+		<property name="Cost" value="7"/>
+		<property name="Requirement" value="2"/>	
+		<property name="Stat" value="2"/>	
+		<property name="Rules" value="1[Credits]: Break sentry subroutine. &#xD;&#xA;1[Credits]: +1 strength."/>
+		<property name="Flavor" value="The first credited icebreaker was nothing more than a unique script to bypass the security calls on a Gibson 3 Data Sentry. Garrote has over 20,000 times the data as that first breaker, but the idea remains the same: cut off the power source from the network, and then smash on through."/>
+		<property name="Instructions" value=""/>
+		<property name="Faction" value="Criminal"/>
+		<property name="Influence" value="3"/>
+		<property name="Side" value="Runner"/>
+		<property name="AutoScript" value=""/>
+		<property name="AutoAction" value=""/>	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda04066" name="LLDS Processor">
+		<property name="Subtitle" value=""/>
+		<property name="Type" value="Hardware"/>
+		<property name="Keywords" value="Chip"/>
+		<property name="Cost" value="1"/>
+		<property name="Requirement" value=""/>	
+		<property name="Stat" value=""/>	
+		<property name="Rules" value="Whenever you install an icebreaker, that icebreaker has +1 strength until the end of the turn."/>
+		<property name="Flavor" value="LLDS Unlimited was born the day two designers answered the question &quot;Why doesn't anyone make Diesel for computers?&quot;"/>
+		<property name="Instructions" value=""/>
+		<property name="Faction" value="Shaper"/>
+		<property name="Influence" value="1"/>
+		<property name="Side" value="Runner"/>
+		<property name="AutoScript" value=""/>
+		<property name="AutoAction" value=""/>	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda04067" name="Sharpshooter">
+		<property name="Subtitle" value=""/>
+		<property name="Type" value="Program"/>
+		<property name="Keywords" value="Icebreaker"/>
+		<property name="Cost" value="1"/>
+		<property name="Requirement" value="1"/>	
+		<property name="Stat" value="3"/>	
+		<property name="Rules" value="[Trash]: Break any number of destroyer subroutines.&#xD;&#xA;1[Credits]: +2 strength."/>
+		<property name="Flavor" value="&quot;One-shot icebreakers are popular among many of my protégés. They don't have the patience for the hunt.&quot; -The Professor"/>
+		<property name="Instructions" value=""/>
+		<property name="Faction" value="Shaper"/>
+		<property name="Influence" value="1"/>
+		<property name="Side" value="Runner"/>
+		<property name="AutoScript" value=""/>
+		<property name="AutoAction" value=""/>	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda04068" name="Capstone">
+		<property name="Subtitle" value=""/>
+		<property name="Type" value="Hardware"/>
+		<property name="Keywords" value="Unique"/>
+		<property name="Cost" value="2"/>
+		<property name="Requirement" value=""/>	
+		<property name="Stat" value=""/>	
+		<property name="Rules" value="[Click]: Trash any number of cards from your grip. For each trashed card of which you have another copy installed, draw 1 card."/>
+		<property name="Flavor" value="&quot;Once you have achieved perfection, what's next?&quot; -The Professor"/>
+		<property name="Instructions" value=""/>
+		<property name="Faction" value="Shaper"/>
+		<property name="Influence" value="3"/>
+		<property name="Side" value="Runner"/>
+		<property name="AutoScript" value=""/>
+		<property name="AutoAction" value=""/>	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda04069" name="Starlight Crusade Funding">
+		<property name="Subtitle" value=""/>
+		<property name="Type" value="Resource"/>
+		<property name="Keywords" value=""/>
+		<property name="Cost" value="1"/>
+		<property name="Requirement" value=""/>	
+		<property name="Stat" value=""/>	
+		<property name="Rules" value="When your turn begins, lose [Click]. &#xD;&#xA;Ignore any additional costs on each double event you play."/>
+		<property name="Flavor" value="&quot;I like to say 'Traditional values for a modern time.' War in space and life made by human hands, machines smart enough to ask if they have souls... Religion is as important and relevent now as at any time in human history. We must rise to meet the new challenges. And we must have faith.&quot;"/>
+		<property name="Instructions" value=""/>
+		<property name="Faction" value="Neutral"/>
+		<property name="Influence" value="0"/>
+		<property name="Side" value="Runner"/>
+		<property name="AutoScript" value=""/>
+		<property name="AutoAction" value=""/>	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda04070" name="Rex Campaign">
+		<property name="Subtitle" value=""/>
+		<property name="Type" value="Asset"/>
+		<property name="Keywords" value="Advertisement"/>
+		<property name="Cost" value="1"/>
+		<property name="Requirement" value=""/>	
+		<property name="Stat" value="3"/>	
+		<property name="Rules" value="Place 3 power counters on Rex Campaign when it is rezzed. When there are no power counters left on Rex Campaign, trash it and either remove 1 bad publicity or gain 5[Credits]. &#xD;&#xA;When your turn begins, remove 1 power counter from Rex Campaign."/>
+		<property name="Flavor" value=""/>
+		<property name="Instructions" value=""/>
+		<property name="Faction" value="Haas-Bioroid"/>
+		<property name="Influence" value="2"/>
+		<property name="Side" value="Corp"/>
+		<property name="AutoScript" value=""/>
+		<property name="AutoAction" value=""/>	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda04071" name="Fenris">
+		<property name="Subtitle" value=""/>
+		<property name="Type" value="ICE"/>
+		<property name="Keywords" value="Sentry-AP-Illicit"/>
+		<property name="Cost" value="4"/>
+		<property name="Requirement" value=""/>	
+		<property name="Stat" value="2"/>	
+		<property name="Rules" value="When you rez Fenris, take 1 bad publicity. &#xD;&#xA;[Subroutine] Do 1 brain damage. &#xD;&#xA;[Subroutine] End the run."/>
+		<property name="Flavor" value="As reported cases of brain damage in veterans rise, mind/machine interface devices are subject to increased public scrutiny. That certain programs can cause irreparable harm to users has gone from fringe theory to accepted truth."/>
+		<property name="Instructions" value=""/>
+		<property name="Faction" value="Haas-Bioroid"/>
+		<property name="Influence" value="2"/>
+		<property name="Side" value="Corp"/>
+		<property name="AutoScript" value=""/>
+		<property name="AutoAction" value=""/>	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda04072" name="Panic Button">
+		<property name="Subtitle" value=""/>
+		<property name="Type" value="Upgrade"/>
+		<property name="Keywords" value=""/>
+		<property name="Cost" value="1"/>
+		<property name="Requirement" value=""/>	
+		<property name="Stat" value="2"/>	
+		<property name="Rules" value="Install only in the root of HQ. &#xD;&#xA;1[Credits]: Draw 1 card. Use this ability only during a run on HQ."/>
+		<property name="Flavor" value="The button didn't seem to do anything. So he pushed it again. And again. And again."/>
+		<property name="Instructions" value=""/>
+		<property name="Faction" value="Haas-Bioroid"/>
+		<property name="Influence" value="1"/>
+		<property name="Side" value="Corp"/>
+		<property name="AutoScript" value=""/>
+		<property name="AutoAction" value=""/>	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda04073" name="Shock!">
+		<property name="Subtitle" value=""/>
+		<property name="Type" value="Asset"/>
+		<property name="Keywords" value="Ambush"/>
+		<property name="Cost" value="0"/>
+		<property name="Requirement" value=""/>	
+		<property name="Stat" value="2"/>	
+		<property name="Rules" value="If Shock! is accessed from R&amp;D, the Runner must reveal it. &#xD;&#xA;When the Runner accesses Shock!, do 1 net damage, even if it is not installed."/>
+		<property name="Flavor" value=""/>
+		<property name="Instructions" value=""/>
+		<property name="Faction" value="Jinteki"/>
+		<property name="Influence" value="2"/>
+		<property name="Side" value="Corp"/>
+		<property name="AutoScript" value=""/>
+		<property name="AutoAction" value=""/>	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda04074" name="Tsurugi">
+		<property name="Subtitle" value=""/>
+		<property name="Type" value="ICE"/>
+		<property name="Keywords" value="Sentry-AP"/>
+		<property name="Cost" value="6"/>
+		<property name="Requirement" value=""/>	
+		<property name="Stat" value="2"/>	
+		<property name="Rules" value="[Subroutine] End the run unless the Corp pays 1[Credits]. &#xD;&#xA;[Subroutine] Do 1 net damage. &#xD;&#xA;[Subroutine] Do 1 net damage. &#xD;&#xA;[Subroutine] Do 1 net damage."/>
+		<property name="Flavor" value="&quot;It's ice so dangerous it has safety protocols. Think about that.&quot; -g00ru"/>
+		<property name="Instructions" value=""/>
+		<property name="Faction" value="Jinteki"/>
+		<property name="Influence" value="2"/>
+		<property name="Side" value="Corp"/>
+		<property name="AutoScript" value=""/>
+		<property name="AutoAction" value=""/>	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda04075" name="TGTBT">
+		<property name="Subtitle" value=""/>
+		<property name="Type" value="Agenda"/>
+		<property name="Keywords" value="Ambush"/>
+		<property name="Cost" value="0"/>
+		<property name="Requirement" value=""/>	
+		<property name="Stat" value="1"/>	
+		<property name="Rules" value="If TGTBT is accessed from R&amp;D, the Runner must reveal it. &#xD;&#xA;When the Runner accesses TGTBT, give the Runner 1 tag."/>
+		<property name="Flavor" value="&quot;The damn raven just kind of cawed at me as I went past. I should have known it was too good to be true.&quot;"/>
+		<property name="Instructions" value=""/>
+		<property name="Faction" value="NBN"/>
+		<property name="Influence" value=""/>
+		<property name="Side" value="Corp"/>
+		<property name="AutoScript" value=""/>
+		<property name="AutoAction" value=""/>	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda04076" name="Sweeps Week">
+		<property name="Subtitle" value=""/>
+		<property name="Type" value="Operation"/>
+		<property name="Keywords" value=""/>
+		<property name="Cost" value="1"/>
+		<property name="Requirement" value=""/>	
+		<property name="Stat" value=""/>	
+		<property name="Rules" value="Gain 1[Credits] for each card in the Runner's grip."/>
+		<property name="Flavor" value="&quot;Let me get this straight. Your target market is 15-19 year old g-modded immigrants with one parent, a discretionary income over 2k a month, B+ or higher grades, an outgoing personality, and have a friend who owns a g-monkey?&quot; &#xD;&#xA;&quot;Yes. Is that a problem?&quot; &#xD;&#xA;&quot;No, not at all. I just don't get why your list is so short.&quot;"/>
+		<property name="Instructions" value=""/>
+		<property name="Faction" value="NBN"/>
+		<property name="Influence" value="2"/>
+		<property name="Side" value="Corp"/>
+		<property name="AutoScript" value=""/>
+		<property name="AutoAction" value=""/>	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda04077" name="RSVP">
+		<property name="Subtitle" value=""/>
+		<property name="Type" value="ICE"/>
+		<property name="Keywords" value="Code Gate"/>
+		<property name="Cost" value="3"/>
+		<property name="Requirement" value=""/>	
+		<property name="Stat" value="4"/>	
+		<property name="Rules" value="[Subroutine] The Runner cannot spend any credits for the remainder of this run."/>
+		<property name="Flavor" value="This ice disguises itself as a series of electronic transactions, tying up the runner's funds in a thousand or so non-existent purchases and refunds. The banks' system of holds and checks means that while not a single credit ever leaves their servers the runner has no available funds. RSVP also has the unfortunate side effect of being entirely legal...strictly speaking."/>
+		<property name="Instructions" value=""/>
+		<property name="Faction" value="NBN"/>
+		<property name="Influence" value="2"/>
+		<property name="Side" value="Corp"/>
+		<property name="AutoScript" value=""/>
+		<property name="AutoAction" value=""/>	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda04078" name="Curtain Wall">
+		<property name="Subtitle" value=""/>
+		<property name="Type" value="ICE"/>
+		<property name="Keywords" value="Barrier"/>
+		<property name="Cost" value="14"/>
+		<property name="Requirement" value=""/>	
+		<property name="Stat" value="6"/>	
+		<property name="Rules" value="If Curtain Wall is the outermost piece of ice protecting a server, it has +4 strength. &#xD;&#xA;[Subroutine] End the run. &#xD;&#xA;[Subroutine] End the run. &#xD;&#xA;[Subroutine] End the run."/>
+		<property name="Flavor" value="[Subroutine] End the game. &#xD;&#xA;Just kidding."/>
+		<property name="Instructions" value=""/>
+		<property name="Faction" value="The Weyland Consortium"/>
+		<property name="Influence" value="2"/>
+		<property name="Side" value="Corp"/>
+		<property name="AutoScript" value=""/>
+		<property name="AutoAction" value=""/>	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda04079" name="Punitive Counterstrike">
+		<property name="Subtitle" value=""/>
+		<property name="Type" value="Operation"/>
+		<property name="Keywords" value="Black Ops"/>
+		<property name="Cost" value="3"/>
+		<property name="Requirement" value=""/>	
+		<property name="Stat" value=""/>	
+		<property name="Rules" value="Trace5 - If successful, do meat damage to the Runner equal to the number of agenda points on agendas he or she stole during his or her last turn."/>
+		<property name="Flavor" value="&quot;I'd say it's nothing personal, but corporations are people, too.&quot;"/>
+		<property name="Instructions" value=""/>
+		<property name="Faction" value="The Weyland Consortium"/>
+		<property name="Influence" value="2"/>
+		<property name="Side" value="Corp"/>
+		<property name="AutoScript" value=""/>
+		<property name="AutoAction" value=""/>	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda04080" name="Veterans Program">
+		<property name="Subtitle" value=""/>
+		<property name="Type" value="Agenda"/>
+		<property name="Keywords" value="Initiative"/>
+		<property name="Cost" value="0"/>
+		<property name="Requirement" value=""/>	
+		<property name="Stat" value="1"/>	
+		<property name="Rules" value="When you score Veterans Program, you may remove up to 2 bad publicity."/>
+		<property name="Flavor" value="It's easy to replace limbs. It's more difficult to replace memories."/>
+		<property name="Instructions" value=""/>
+		<property name="Faction" value="Neutral"/>
+		<property name="Influence" value="0"/>
+		<property name="Side" value="Corp"/>
+		<property name="AutoScript" value=""/>
+		<property name="AutoAction" value=""/>	
+	</card>
+</cards>
+</set>
