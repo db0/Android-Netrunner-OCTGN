@@ -289,6 +289,14 @@ def chkHostType(card, seek = 'Targeted', caissa = False):
    debugNotify("<<< chkHostType() with result {}".format(result), 3)
    return result
    
+def chkDoublePrevention():
+   # This function checks for various cards which, if present prevent extra costs from double cards.
+   debugNotify(">>> chkDoublePrevention(){}".format(extraASDebug())) #Debug
+   fullCost = True
+   for c in table: 
+      if c.name == 'Starlight Crusade Funding' and c.controller == me: fullCost = False
+   return fullCost
+   debugNotify("<<< chkDoublePrevention(){}".format(extraASDebug())) #Debug
  
 def scanTable(group = table, x=0,y=0):
    debugNotify(">>> scanTable(){}".format(extraASDebug())) #Debug
@@ -1006,26 +1014,26 @@ def TrialError(group, x=0, y=0): # Debugging
    ###### End Testing Corner ######
    delayed_whisper("## Defining Test Cards")
    testcards = [
-                #"bc0f047c-01b1-427f-a439-d451eda04041", 
-                #"bc0f047c-01b1-427f-a439-d451eda04042",
-                #c0f047c-01b1-427f-a439-d451eda04043",
-                #"bc0f047c-01b1-427f-a439-d451eda04044",
-                "bc0f047c-01b1-427f-a439-d451eda02007",
-                "bc0f047c-01b1-427f-a439-d451eda04046",
-                #"bc0f047c-01b1-427f-a439-d451eda04047",
-                #"bc0f047c-01b1-427f-a439-d451eda04048",
-                #"bc0f047c-01b1-427f-a439-d451eda04049",
-                #"bc0f047c-01b1-427f-a439-d451eda04050",
-                #"bc0f047c-01b1-427f-a439-d451eda04051",
-                #"bc0f047c-01b1-427f-a439-d451eda04052",
-                #"bc0f047c-01b1-427f-a439-d451eda04052",
-                #"bc0f047c-01b1-427f-a439-d451eda04052",
-                #"bc0f047c-01b1-427f-a439-d451eda04055",
-                #"bc0f047c-01b1-427f-a439-d451eda04056",
-                #"bc0f047c-01b1-427f-a439-d451eda04057",
-                #"bc0f047c-01b1-427f-a439-d451eda04058",
-                #"bc0f047c-01b1-427f-a439-d451eda04059",
-                "bc0f047c-01b1-427f-a439-d451eda04022"
+                "bc0f047c-01b1-427f-a439-d451eda04061", 
+                "bc0f047c-01b1-427f-a439-d451eda04062",
+                "bc0f047c-01b1-427f-a439-d451eda04063",
+                "bc0f047c-01b1-427f-a439-d451eda04064",
+                "bc0f047c-01b1-427f-a439-d451eda04065",
+                "bc0f047c-01b1-427f-a439-d451eda04066",
+                "bc0f047c-01b1-427f-a439-d451eda04067",
+                "bc0f047c-01b1-427f-a439-d451eda04068",
+                "bc0f047c-01b1-427f-a439-d451eda04069",
+                "bc0f047c-01b1-427f-a439-d451eda04070",
+                "bc0f047c-01b1-427f-a439-d451eda04071",
+                "bc0f047c-01b1-427f-a439-d451eda04072",
+                "bc0f047c-01b1-427f-a439-d451eda04072",
+                "bc0f047c-01b1-427f-a439-d451eda04072",
+                "bc0f047c-01b1-427f-a439-d451eda04075",
+                "bc0f047c-01b1-427f-a439-d451eda04076",
+                "bc0f047c-01b1-427f-a439-d451eda04077",
+                "bc0f047c-01b1-427f-a439-d451eda04078",
+                "bc0f047c-01b1-427f-a439-d451eda04079",
+                "bc0f047c-01b1-427f-a439-d451eda04080"
                 ] 
    if not ds: 
       if confirm("corp?"): ds = "corp"

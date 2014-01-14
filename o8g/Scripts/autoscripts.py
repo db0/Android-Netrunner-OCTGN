@@ -735,9 +735,9 @@ def atTimedEffects(Time = 'Start'): # Function which triggers card effects at th
                X = numberTuple[1] 
             elif regexHooks['SimplyAnnounce'].search(passedScript):
                SimplyAnnounce(passedScript, announceText, card, notification = 'Automatic', n = X)
-            elif regexHooks['CustomScript'].search(passedScript):
+            elif regexHooks['CustomScript'].search(passedScript): # Some cards just have a fairly unique effect and there's no use in trying to make them work in the generic framework.
                customScriptResult = CustomScript(card, Time, original_action = Time)
-               if customScriptResult == 'CLICK USED': autoscriptOtherPlayers('CardAction', card)  # Some cards just have a fairly unique effect and there's no use in trying to make them work in the generic framework.
+               if customScriptResult == 'CLICK USED': autoscriptOtherPlayers('CardAction', card)  
                if customScriptResult == 'ABORT': break
             if failedRequirement: break # If one of the Autoscripts was a cost that couldn't be paid, stop everything else.
    markerEffects(Time) 

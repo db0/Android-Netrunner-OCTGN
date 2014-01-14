@@ -2857,7 +2857,7 @@ Activist Support
 -----
 bc0f047c-01b1-427f-a439-d451eda04062
 -----
-atTurnStart:Gain1Tag-ifIHasnt1Tags-duringMyTurn$$atTurnStart:Gain1Bad Publicity-onOpponent-ifOpponentHasnt1Bad Publicity-duringOpponentTurn
+atTurnStart:Gain1Tags-ifIHasnt1Tags-duringMyTurn$$atTurnStart:Gain1Bad Publicity-onOpponent-ifOpponentHasnt1Bad Publicity-duringOpponentTurn
 +++++
 
 .....
@@ -2921,7 +2921,7 @@ Rex Campaign
 -----
 bc0f047c-01b1-427f-a439-d451eda04070
 -----
-
+onRez:Put3Power||atTurnStart:Remove1Power$$CustomScript
 +++++
 
 .....
@@ -2931,7 +2931,7 @@ bc0f047c-01b1-427f-a439-d451eda04071
 -----
 
 +++++
-
+A0B0G0T0:Inflict1BrainDamage-onOpponent-isSubroutine||A0B0G0T0:RunEnd-isSubroutine	
 .....
 Panic Button
 -----
@@ -2939,13 +2939,13 @@ bc0f047c-01b1-427f-a439-d451eda04072
 -----
 
 +++++
-
+A0B1G0T0:Draw1Card
 .....
 Shock!
 -----
 bc0f047c-01b1-427f-a439-d451eda04073
 -----
-
+onAccess:Inflict1NetDamage-onOpponent
 +++++
 
 .....
@@ -2955,13 +2955,13 @@ bc0f047c-01b1-427f-a439-d451eda04074
 -----
 
 +++++
-
+A0B0G0T0:RunEnd-isSubroutine||A0B0G0T0:Lose1Credit-isSubroutine||A0B0G0T0:Inflict1NetDamage-isSubroutine
 .....
 TGTBT
 -----
 bc0f047c-01b1-427f-a439-d451eda04075
 -----
-
+onAccess:Gain1Tags-onOpponent
 +++++
 
 .....
@@ -2969,7 +2969,7 @@ Sweeps Week
 -----
 bc0f047c-01b1-427f-a439-d451eda04076
 -----
-
+onPlay:CustomScript
 +++++
 
 .....
@@ -2979,7 +2979,7 @@ bc0f047c-01b1-427f-a439-d451eda04077
 -----
 
 +++++
-
+A0B0G0T0:SimplyAnnounce{prevent the Runner from spending any credits for the remainder of this run}
 .....
 Curtain Wall
 -----
@@ -2987,13 +2987,13 @@ bc0f047c-01b1-427f-a439-d451eda04078
 -----
 
 +++++
-
+A0B0G0T0:RunEnd-isSubroutine
 .....
 Punitive Counterstrike
 -----
 bc0f047c-01b1-427f-a439-d451eda04079
 -----
-
+onPlay:Trace5-traceEffects<RequestInt-Msg{How many agenda points did the runner steal last turn?}++Inflict1MeatDamage-onOpponent-perX,None>
 +++++
 
 .....
@@ -3001,7 +3001,7 @@ Veterans Program
 -----
 bc0f047c-01b1-427f-a439-d451eda04080
 -----
-
+onScore:Lose2Bad Publicity
 +++++
 
 .....

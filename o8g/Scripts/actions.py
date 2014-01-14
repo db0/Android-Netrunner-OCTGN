@@ -1920,7 +1920,8 @@ def intPlay(card, cost = 'not free', scripted = False, preReduction = 0, retainP
    if card.Type != 'ICE' and card.Type != 'Agenda' and card.Type != 'Upgrade' and card.Type != 'Asset': # We only check for uniqueness on install, against cards that install face-up
       if not checkUnique(card, manual = retainPos): return #If the player has the unique card and opted not to trash it, do nothing.
    if scripted: NbReq = 0
-   elif re.search(r'Double', getKeywords(card)): NbReq = 2 # Some cards require two clicks to play. This variable is passed to the useClick() function.
+   elif re.search(r'Double', getKeywords(card)) and not chkDoublePrevention():
+      NbReq = 2 # Some cards require two clicks to play. This variable is passed to the useClick() function.
    else: NbReq = 1 #In case it's not a "Double" card. Then it only uses one click to play.
    ClickCost = useClick(count = NbReq, manual = retainPos)
    if ClickCost == 'ABORT': 

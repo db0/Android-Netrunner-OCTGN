@@ -175,7 +175,7 @@
 		<property name="Stat" value="2" />	
 		<property name="Rules" value="When you rez Fenris, take 1 bad publicity.&#xD;&#xA;[Subroutine] Do 1 brain damage.&#xD;&#xA;[Subroutine] End the run." />
 		<property name="Flavor" value="As reported cases of brain damage in veterans rise, mind/machine interface devices are subject to increased public scrutiny. That certain programs can cause irreparable harm to users has gone from fringe theory to accepted truth." />
-		<property name="Instructions" value="" />
+		<property name="Instructions" value="[Subroutine] Do 1 brain damage.||[Subroutine] End the run." />
 		<property name="Faction" value="Haas-Bioroid" />
 		<property name="Influence" value="2" />
 		<property name="Side" value="corp" />
@@ -223,7 +223,7 @@
 		<property name="Stat" value="2" />	
 		<property name="Rules" value="[Subroutine] End the run unless the Corp pays 1[Credits].&#xD;&#xA;[Subroutine] Do 1 net damage.&#xD;&#xA;[Subroutine] Do 1 net damage.&#xD;&#xA;[Subroutine] Do 1 net damage." />
 		<property name="Flavor" value="&quot;It&apos;s ice so dangerous it has safety protocols. Think about that.&quot; -g00ru" />
-		<property name="Instructions" value="" />
+		<property name="Instructions" value="[Subroutine] End the run.||[Subroutine] Pay 1 Credit to let runner encounter rest of subroutines.||[Subroutine] Do 1 net damage." />
 		<property name="Faction" value="Jinteki" />
 		<property name="Influence" value="2" />
 		<property name="Side" value="corp" />
