@@ -137,6 +137,10 @@ def UseCustomAbility(Autoscript, announceText, card, targetCards = None, notific
       else: 
          remoteCall(findOpponent(),"Snoop",['Reveal and Trash'])
          announceString = announceText + " reveal the runner's hand and trash a card"
+   if fetchProperty(card, 'name') == "Punitive Counterstrike":
+      count = askInteger("How many agenda points did you steal last turn?", 0)
+      if count: InflictX('Inflict{}MeatDamage'.format(count), '', card)
+      notify("--> {} is punished for their shenanigans with {} meat damage".format(me,count))
    return announceString
    
 def CustomScript(card, action = 'PLAY', origin_card = None, original_action = None): # Scripts that are complex and fairly unique to specific cards, not worth making a whole generic function for them.
@@ -770,7 +774,7 @@ def CustomScript(card, action = 'PLAY', origin_card = None, original_action = No
       debugNotify("Peeking at Corp's Stack.", 2)
       for c in targetPL.piles['R&D/Stack']: c.peek()
       update() # Delay to be able to read card info
-      choice = SingleChoice("Choose a card to trash", makeChoiceListfromCardList(cardList), type = 'button')
+      choice = SingleChoice("Choose a card to trash", makeChoiceListfromCardList(cardList, True), type = 'button')
       trashedC = cardList[choice]
       sendToTrash(trashedC)
       debugNotify("Shuffling Pile")
@@ -778,6 +782,39 @@ def CustomScript(card, action = 'PLAY', origin_card = None, original_action = No
       notify("{} has peeked through the {} at R&D and trashed {}".format(me,card,trashedC))
       passPileControl(targetPL.piles['R&D/Stack'],targetPL)
       passPileControl(targetPL.piles['Heap/Archives(Face-up)'],targetPL)
+   elif fetchProperty(card, 'name') == 'Leverage' and action == 'PLAY':
+      remoteCall(findOpponent(),"Leverage",[card])
+   elif fetchProperty(card, 'name') == 'Capstone' and action == 'USE':
+      trashTargets = findTarget('Targeted-fromHand')
+      if len(trashTargets) == 0: whisper("Capstone cannot function without at least some juice!")
+      else:
+         actionCost = useClick(count = 1)
+         if actionCost == 'ABORT': return 'ABORT'
+         count = 0
+         for c in trashTargets:
+            foundDuplicate = False
+            for seek in table:
+               if c.name == seek.name: foundDuplicate = True
+            if foundDuplicate: count += 1
+            c.moveTo(me.piles['Heap/Archives(Face-up)'])
+         drawMany(me.piles['R&D/Stack'], count, silent = False)
+         notify("{} to activate {} in order to trash {} from their hand and draw {} new cards".format(actionCost,card,[c.name for c in trashTargets],count))
+         return 'CLICK USED'
+   elif fetchProperty(card, 'name') == 'Rex Campaign' and action == 'Start':
+      debugNotify("Checking Rex Campaign")
+      if not card.markers[mdict['Power']]:
+         if confirm("Your Rex Campaign has concluded. Do you want to gain 5 credits?\
+                 \n\n(Pressing 'No' will remove 1 Bad Publicity instead)"):
+            me.Credits += 5
+            notify("--> The Rex Campaign concludes and provides {} with {}".format(me,uniCredit(5)))
+         else:
+            me.counters['Bad Publicity'].value -= 1
+            notify("=> The Rex Campaign concludes and reduces {}'s Bad Publicity by 1".format(me))     
+         sendToTrash(card)
+   elif fetchProperty(card, 'name') == 'Sweeps Week' and action == 'PLAY':
+      targetPL = findOpponent()
+      me.Credits += len(targetPL.hand)
+      notify("--> {} uses {}'s ability to gain {}".format(me,card,uniCredit(len(targetPL.hand))))
    elif action == 'USE': useCard(card)
    debugNotify("<<< CustomScript()", 3) #Debug
    
@@ -967,3 +1004,14 @@ def Snoop(scenario = 'Simply Reveal', cardList = None):
       elif scenario == 'Reveal and Trash':
          for c in cardList: c.setController(findOpponent())
          remoteCall(findOpponent(),"Snoop",['Remote Corp Trash Select',cardList])
+         
+def Leverage(card): # Leverage
+   mute()
+   notifyBar('#FF0000',"The corporation is deliberating if the runner's leverage is sufficient.")
+   notify("{} is deliberating if the runner's leverage is sufficient.".format(me))
+   if confirm("Your opponent has just played Leverage. Do you want to take 2 Bad Publicity in order to allow them to still suffer damage until their next turn?"):
+      me.counters['Bad Publicity'].value += 2
+      notify("The corporation has decided to take 2 Bad Publicity. Beware!")
+   else:
+      CreateDummy('CreateDummy-with100protectionAllDMG-onOpponent', '', card)
+      notify("The corporation has caved in to the runner's leverage. The runner cannot take any damage until the start of their next turn.")

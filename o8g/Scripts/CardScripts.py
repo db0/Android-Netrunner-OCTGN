@@ -2873,7 +2873,7 @@ Leverage
 -----
 bc0f047c-01b1-427f-a439-d451eda04064
 -----
-onPlay:CustomScript
+onPlay:CustomScript||atTurnStart:TrashMyself-onlyforDummy-duringMyTurn
 +++++
 
 .....
@@ -2993,7 +2993,7 @@ Punitive Counterstrike
 -----
 bc0f047c-01b1-427f-a439-d451eda04079
 -----
-onPlay:Trace5-traceEffects<CustomScript,None>
+onPlay:Trace5-traceEffects<UseCustomAbility,None>
 +++++
 
 .....

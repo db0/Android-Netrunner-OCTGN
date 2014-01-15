@@ -735,9 +735,9 @@ def atTimedEffects(Time = 'Start'): # Function which triggers card effects at th
                X = numberTuple[1] 
             elif regexHooks['SimplyAnnounce'].search(passedScript):
                SimplyAnnounce(passedScript, announceText, card, notification = 'Automatic', n = X)
-            elif regexHooks['CustomScript'].search(passedScript): # Some cards just have a fairly unique effect and there's no use in trying to make them work in the generic framework.
+            elif regexHooks['CustomScript'].search(passedScript): 
                customScriptResult = CustomScript(card, Time, original_action = Time)
-               if customScriptResult == 'CLICK USED': autoscriptOtherPlayers('CardAction', card)  
+               if customScriptResult == 'CLICK USED': autoscriptOtherPlayers('CardAction', card)   # Some cards (I.e. Collective) just have a fairly unique effect and there's no use in trying to make them work in the generic framework.
                if customScriptResult == 'ABORT': break
             if failedRequirement: break # If one of the Autoscripts was a cost that couldn't be paid, stop everything else.
    markerEffects(Time) 
@@ -1433,10 +1433,10 @@ def CreateDummy(Autoscript, announceText, card, targetCards = None, notification
                        \nFor this reason we've created a dummy card on the table and marked it with a special highlight so that you know that it's just a token.\
                      \n\nSome cards provide you with an ability that you can activate after they're been trashed. If this card has one, you can activate it by double clicking on the dummy. Very often, this will often remove the dummy since its effect will disappear.\
                      \n\nDo you want to see this warning again?"): setSetting('Dummywarn',False)
-      elif re.search(r'onOpponent', Autoscript): information('The dummy card just created is meant for your opponent. Please right-click on it and select "Pass control to {}"'.format(targetPL))
       dummyCard = table.create(card.model, -680, 200 * playerside, 1) # This will create a fake card like the one we just created.
       dummyCard.highlight = DummyColor
       storeProperties(dummyCard)
+      if re.search(r'onOpponent', Autoscript): passCardControl(dummyCard,findOpponent())
    #confirm("Dummy ID: {}\n\nList Dummy ID: {}".format(dummyCard._id,passedlist[0]._id)) #Debug
    if not re.search(r'doNotTrash',Autoscript):
       debugNotify("Did not find string 'doNotTrash' in {}. Trashing Card".format(Autoscript))

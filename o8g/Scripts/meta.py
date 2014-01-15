@@ -295,8 +295,8 @@ def chkDoublePrevention():
    fullCost = True
    for c in table: 
       if c.name == 'Starlight Crusade Funding' and c.controller == me: fullCost = False
+   debugNotify("<<< chkDoublePrevention() with fullCost = {}".format(fullCost)) #Debug
    return fullCost
-   debugNotify("<<< chkDoublePrevention(){}".format(extraASDebug())) #Debug
  
 def scanTable(group = table, x=0,y=0):
    debugNotify(">>> scanTable(){}".format(extraASDebug())) #Debug
@@ -409,9 +409,10 @@ def sendToTrash(card, pile = None): # A function which takes care of sending a c
       debugNotify("We don't control the discard pile. Taking it over.")
       grabPileControl(pile)
    if card.controller != me and card.group == table: grabCardControl(card) # We take control of the card in order to avoid errors
-   playTrashSound(card)
-   executePlayScripts(card,'TRASH') # We don't want to run automations on simply revealed cards.
-   autoscriptOtherPlayers('CardTrashed',card)
+   if card.group == table: 
+      playTrashSound(card)
+      executePlayScripts(card,'TRASH') # We don't want to run automations on simply revealed cards.
+      autoscriptOtherPlayers('CardTrashed',card)
    clearAttachLinks(card)
    if chkModulator(card, 'preventTrash', 'onTrash'): # IF the card has the preventTrash modulator, it's not supposed to be trashed.
       if chkModulator(card, 'ifAccessed', 'onTrash') and ds != 'runner': card.moveTo(pile) # Unless it only has that modulator active during runner access. Then when the corp trashes it, it should trash normally.
@@ -1019,10 +1020,10 @@ def TrialError(group, x=0, y=0): # Debugging
                 "bc0f047c-01b1-427f-a439-d451eda04061", 
                 "bc0f047c-01b1-427f-a439-d451eda04062",
                 # "bc0f047c-01b1-427f-a439-d451eda04063",
-                # "bc0f047c-01b1-427f-a439-d451eda04064",
+                 "bc0f047c-01b1-427f-a439-d451eda04064",
                 # "bc0f047c-01b1-427f-a439-d451eda04065",
                 #"bc0f047c-01b1-427f-a439-d451eda04066",
-                "bc0f047c-01b1-427f-a439-d451eda04067",
+                #"bc0f047c-01b1-427f-a439-d451eda04067",
                 "bc0f047c-01b1-427f-a439-d451eda04068",
                 "bc0f047c-01b1-427f-a439-d451eda04069",
                 "bc0f047c-01b1-427f-a439-d451eda04070",
