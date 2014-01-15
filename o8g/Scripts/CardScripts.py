@@ -2849,15 +2849,15 @@ Keyhole
 -----
 bc0f047c-01b1-427f-a439-d451eda04061
 -----
-atSuccessfulRun:CustomScript-isAlternativeRunResult-isOptional-ifSuccessfulRunR&D
+atSuccessfulRun:CustomScript-isAlternativeRunResult-ifSuccessfulRunR&D-hasOrigMarker{Running}||atJackOut:Remove1Running-isSilent
 +++++
-A0B0G0T0:RunR&D
+A0B0G0T0:RunR&D$$Put1Running
 .....
 Activist Support
 -----
 bc0f047c-01b1-427f-a439-d451eda04062
 -----
-atTurnStart:Gain1Tags-ifIHasnt1Tags-duringMyTurn$$atTurnStart:Gain1Bad Publicity-onOpponent-ifOpponentHasnt1Bad Publicity-duringOpponentTurn
+atTurnStart:Gain1Tags-ifIHasnt1Tags-duringOpponentTurn$$atTurnStart:Gain1Bad Publicity-onOpponent-ifOpponentHasnt1Bad Publicity-duringMyTurn
 +++++
 
 .....
@@ -2993,7 +2993,7 @@ Punitive Counterstrike
 -----
 bc0f047c-01b1-427f-a439-d451eda04079
 -----
-onPlay:Trace5-traceEffects<RequestInt-Msg{How many agenda points did the runner steal last turn?}++Inflict1MeatDamage-onOpponent-perX,None>
+onPlay:Trace5-traceEffects<CustomScript,None>
 +++++
 
 .....

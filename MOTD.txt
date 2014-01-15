@@ -1,4 +1,6 @@
 =====Message of the Day======
 
-Notice: The new chat system is not my idea or under my control. -- Db0
+Note: The recent version of OCTGN added new flood of error messages without warning.
+
+I'm working for a fix -- Db0.
 =============================

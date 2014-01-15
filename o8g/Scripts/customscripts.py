@@ -364,6 +364,7 @@ def CustomScript(card, action = 'PLAY', origin_card = None, original_action = No
       return 'CLICK USED'
    elif fetchProperty(card, 'name') == "Indexing" and action == 'SuccessfulRun':
       targetPL = findOpponent()
+      grabPileControl(targetPL.piles['R&D/Stack'])
       if len(targetPL.piles['R&D/Stack']) < 5: count = len(targetPL.piles['R&D/Stack'])
       else: count = 5
       cardList = list(targetPL.piles['R&D/Stack'].top(count)) # We make a list of the top 5 cards the runner can look at.
@@ -384,6 +385,7 @@ def CustomScript(card, action = 'PLAY', origin_card = None, original_action = No
       for c in targetPL.piles['R&D/Stack']: c.isFaceUp = False # We hide again the source pile cards.
       cover.moveTo(me.piles['Removed from Game']) # we cannot delete cards so we just hide it.
       notify("{} has successfully indexed {}'s R&D".format(me,targetPL))
+      passPileControl(targetPL.piles['R&D/Stack'],targetPL)
    elif fetchProperty(card, 'name') == "Deep Thought" and action == 'Start':
       if card.markers[mdict['Virus']] and card.markers[mdict['Virus']] >= 3:
          targetPL = findOpponent()
@@ -758,6 +760,24 @@ def CustomScript(card, action = 'PLAY', origin_card = None, original_action = No
       if count > len(me.piles['R&D/Stack']): count = len(me.piles['R&D/Stack'])
       for c in me.piles['R&D/Stack'].top(count): c.moveTo(me.piles['Archives(Hidden)'])
       notify("{} has initiated a power shutdown. The runner must trash 1 installed program or hardware with an install cost of {} or less".format(me,count))
+   elif fetchProperty(card, 'name') == 'Keyhole' and action == 'SuccessfulRun':
+      targetPL = findOpponent()
+      grabPileControl(targetPL.piles['R&D/Stack'])
+      grabPileControl(targetPL.piles['Heap/Archives(Face-up)'])
+      if len(targetPL.piles['R&D/Stack']) < 3: count = len(targetPL.piles['R&D/Stack'])
+      else: count = 3
+      cardList = list(targetPL.piles['R&D/Stack'].top(count)) # We make a list of the top 3 cards the runner can look at.
+      debugNotify("Peeking at Corp's Stack.", 2)
+      for c in targetPL.piles['R&D/Stack']: c.peek()
+      update() # Delay to be able to read card info
+      choice = SingleChoice("Choose a card to trash", makeChoiceListfromCardList(cardList), type = 'button')
+      trashedC = cardList[choice]
+      sendToTrash(trashedC)
+      debugNotify("Shuffling Pile")
+      shuffle(targetPL.piles['R&D/Stack'])
+      notify("{} has peeked through the {} at R&D and trashed {}".format(me,card,trashedC))
+      passPileControl(targetPL.piles['R&D/Stack'],targetPL)
+      passPileControl(targetPL.piles['Heap/Archives(Face-up)'],targetPL)
    elif action == 'USE': useCard(card)
    debugNotify("<<< CustomScript()", 3) #Debug
    

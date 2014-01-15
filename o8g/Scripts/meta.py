@@ -408,6 +408,7 @@ def sendToTrash(card, pile = None): # A function which takes care of sending a c
    if pile.controller != me:
       debugNotify("We don't control the discard pile. Taking it over.")
       grabPileControl(pile)
+   if card.controller != me and card.group == table: grabCardControl(card) # We take control of the card in order to avoid errors
    playTrashSound(card)
    executePlayScripts(card,'TRASH') # We don't want to run automations on simply revealed cards.
    autoscriptOtherPlayers('CardTrashed',card)
@@ -416,6 +417,7 @@ def sendToTrash(card, pile = None): # A function which takes care of sending a c
       if chkModulator(card, 'ifAccessed', 'onTrash') and ds != 'runner': card.moveTo(pile) # Unless it only has that modulator active during runner access. Then when the corp trashes it, it should trash normally.
    else: card.moveTo(pile)
    if pile.player != pile.controller: remoteCall(pile.controller,'passPileControl',[pile,pile.player])
+   update()
    debugNotify("<<< sendToTrash()", 3) #Debug   
    
 def findAgendaRequirement(card):
@@ -1002,7 +1004,7 @@ def TrialError(group, x=0, y=0): # Debugging
       whisper("Debug verbosity is now: {}".format(debugVerbosity))
       return
    delayed_whisper("## Checking my Name")
-   if me.name == 'db0' or me.name == 'dbzer0': 
+   if me.name == 'db0' or me.name == 'dbzer0' or me.name == 'null': 
       debugVerbosity = 0
       fetchCardScripts()
    delayed_whisper("## Checking players array size")
