@@ -343,7 +343,7 @@ def intRun(aCost = 1, Name = 'R&D', silent = False):
       elif Name == 'Remote': announceTXT = 'a remote server'
       else: announceTXT = Name
       notify ("{} to start a run on {}.".format(ClickCost,announceTXT))
-      notifyBar('#000000',"The runner starts a run on {}.".format(announceTXT))
+      notifyBar('#000000',"{} starts a run on {}.".format(fetchRunnerPL(),announceTXT))
    debugNotify("Setting bad publicity", 2)
    if BadPub > 0:
          myIdent.markers[mdict['BadPublicity']] += BadPub
@@ -409,7 +409,7 @@ def jackOut(group=table,x=0,y=0, silent = False):
             notify("{} has kicked {} out of their corporate grid".format(myIdent,enemyIdent))
             playCorpEndSound()
          else: notify("{} has jacked out of their run on the {} server".format(myIdent,runTarget))
-         notifyBar('#000000',"The runner has jacked out.")
+         notifyBar('#000000',"{} has jacked out.".format(fetchRunnerPL()))
       clearAll(True, True) # On jack out we clear all player's counters, but don't discard cards from the table.
    debugNotify("<<< jackOut()", 3) # Debug
 
@@ -439,7 +439,7 @@ def runSuccess(group=table,x=0,y=0, silent = False):
          else: runTarget = runTargetRegex.group(1) # If the runner is not feinting, then extract the target from the shared variable
          atTimedEffects('SuccessfulRun')
          notify("{} has successfully run the {} server".format(identName,runTarget))
-         notifyBar('#000000',"The runner succeeded the run.")
+         notifyBar('#000000',"{} has run succesfully.".format(fetchRunnerPL()))
          if runTarget == 'Remote': setGlobalVariable('Remote Run','Success')
          else: setGlobalVariable('Central Run','Success')
    debugNotify("<<< runSuccess()", 3) # Debug
