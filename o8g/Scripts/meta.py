@@ -1122,11 +1122,7 @@ def ShowPosC(card, x=0,y=0):
       notify(">>> ShowPosC(){}".format(extraASDebug())) #Debug
       x,y = card.position
       notify('card x={}, y={}'.format(x,y))      
-      
-def controlChange(card,x,y):
-   if card.controller != me: card.setController(me)
-   else: card.setController(findOpponent())
-   
+        
 def testHandRandom():
    if confirm("Run Hand random alg?"):
       randomsList = []

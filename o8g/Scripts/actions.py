@@ -193,7 +193,7 @@ def goToSot (group, x=0,y=0):
    except: notify(":::ERROR::: When trying to refresh cards. Please report at: https://github.com/db0/Android-Netrunner-OCTGN/issues/275")
    clearRestrictionMarkers()
    remoteServers = (card for card in table if card.Name == 'Remote Server')
-   for card in remoteServers: card.setController(me) # At the start of each player's turn, we swap the ownership of all remote server, to allow them to double-click them (If they're a runner) or manipulate them (if they're a corp)
+   for card in remoteServers: grabCardControl(card) # At the start of each player's turn, we swap the ownership of all remote server, to allow them to double-click them (If they're a runner) or manipulate them (if they're a corp)
    newturn = True
    turn += 1
    autoRez()
@@ -1137,6 +1137,7 @@ def scrAgenda(card, x = 0, y = 0,silent = False):
             currentAdv = card.markers[mdict['Advancement']]
          else: return
       elif not silent and not confirm("Do you want to {} agenda {}?".format(agendaTxt.lower(),fetchProperty(card, 'name'))): return
+      grabCardControl(card) # Taking control of the agenda for the one that scored it.
       card.isFaceUp = True
       if agendaTxt == 'SCORE' and chkTargeting(card) == 'ABORT':
          card.isFaceUp = False
@@ -1144,7 +1145,6 @@ def scrAgenda(card, x = 0, y = 0,silent = False):
          return
       ap = num(fetchProperty(card,'Stat'))
       card.markers[mdict['Scored']] += 1
-      card.setController(me)
       apReduce = findCounterPrevention(ap, 'Agenda Points', me)
       if apReduce: extraTXT = " ({} forfeited)".format(apReduce)
       else: extraTXT = ''
@@ -1161,7 +1161,6 @@ def scrAgenda(card, x = 0, y = 0,silent = False):
          reportGame()
       card.highlight = None # In case the card was highlighted as revealed, we remove that now.
       card.markers[mdict['Advancement']] = 0 # We only want to clear the advance counters after the automations, as they may still be used.
-      card.setController(me) # Taking control of the agenda for the one that scored it.
    else:
       whisper ("You can't score this card")
 
@@ -1615,18 +1614,20 @@ def clear(card, x = 0, y = 0, silent = False):
 
 def clearAll(markersOnly = False, allPlayers = False): # Just clears all the player's cards.
    debugNotify(">>> clearAll()") #Debug
+   if allPlayers: 
+      for player in getPlayers():
+         if player != me: remoteCall(player,'clearAll',[markersOnly, False])
    for card in table:
-      if allPlayers: clear(card,silent = True)
-      if card.name == 'Trace': card.highlight = None # We clear the card in case a tracing is pending that was not done.
-      elif card.controller == me: clear(card,silent = True)
-      if not markersOnly:
-         hostCards = eval(getGlobalVariable('Host Cards'))
-         if card.isFaceUp and (card.Type == 'Operation' or card.Type == 'Event') and card.highlight != DummyColor and card.highlight != RevealedColor and card.highlight != InactiveColor and not card.markers[mdict['Scored']] and not hostCards.has_key(card._id): # We do not trash "scored" events (e.g. see Notoriety) or cards hosted on others card (e.g. see Oversight AI)
-            intTrashCard(card,0,"free") # Clearing all Events and operations for players who keep forgeting to clear them.
-      if card.owner == me and card.Type == 'Identity' and Stored_Type.get(card._id,'NULL') == 'NULL':
-         delayed_whisper(":::DEBUG::: Identity was NULL. Re-storing as an attempt to fix")
-         storeProperties(card, True)
-
+      if card.controller == me: 
+         if card.name == 'Trace': card.highlight = None # We clear the card in case a tracing is pending that was not done.
+         clear(card,silent = True)
+         if not markersOnly:
+            hostCards = eval(getGlobalVariable('Host Cards'))
+            if card.isFaceUp and (card.Type == 'Operation' or card.Type == 'Event') and card.highlight != DummyColor and card.highlight != RevealedColor and card.highlight != InactiveColor and not card.markers[mdict['Scored']] and not hostCards.has_key(card._id): # We do not trash "scored" events (e.g. see Notoriety) or cards hosted on others card (e.g. see Oversight AI)
+               intTrashCard(card,0,"free") # Clearing all Events and operations for players who keep forgeting to clear them.
+         if card.owner == me and card.Type == 'Identity' and Stored_Type.get(card._id,'NULL') == 'NULL':
+            delayed_whisper(":::DEBUG::: Identity was NULL. Re-storing as an attempt to fix")
+            storeProperties(card, True)
    debugNotify("<<< clearAll()", 3)
 
 def intTrashCard(card, stat, cost = "not free",  ClickCost = '', silent = False):

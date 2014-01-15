@@ -663,14 +663,18 @@ def chkRestrictionMarker(card, Autoscript, silent = False, act = 'manual'): # An
       if act != 'dryRun': TokensX('Put1{}-isSilent'.format(restrictedMarkerRegex.group(1)), '', card)
    debugNotify("<<< chkRestrictionMarker()") #Debug
 
-def clearRestrictionMarkers():
+def clearRestrictionMarkers(remoted = False):
    debugNotify(">>> clearRestrictionMarkers(){}".format(extraASDebug())) #Debug
+   if not remoted:
+      for player in getPlayers():
+         remoteCall(player,'clearRestrictionMarkers',[True])
    for card in table:
-      for Autoscript in CardsAS.get(card.model,'').split('||'):
-         restrictedMarkerRegex  = re.search(r"restrictionMarker([A-Za-z0-9_:' ]+)",Autoscript)
-         if restrictedMarkerRegex:
-            restrictedMarker = findMarker(card, restrictedMarkerRegex.group(1))
-            if restrictedMarker: card.markers[restrictedMarker] = 0
+      if card.controller == me: 
+         for Autoscript in CardsAS.get(card.model,'').split('||'):
+            restrictedMarkerRegex  = re.search(r"restrictionMarker([A-Za-z0-9_:' ]+)",Autoscript)
+            if restrictedMarkerRegex:
+               restrictedMarker = findMarker(card, restrictedMarkerRegex.group(1))
+               if restrictedMarker: card.markers[restrictedMarker] = 0
    debugNotify("<<< clearRestrictionMarkers()") #Debug
          
 def delayed_whisper(text): # Because whispers for some reason execute before notifys
@@ -828,7 +832,7 @@ def announceSoT():
       if runnerStartMsgs.get(me.name.lower(),None): customTXT = "\n\n{}\n".format(runnerStartMsgs[me.name.lower()])
       else: customTXT = ''
       #notify ("=> {} ({}) has woken up. They have {} and {} {} for this turn.".format(identName,me,uniCredit(me.Credits),me.Clicks,uniClick()))
-   notifyBar('#FF0000',"{} has started their turn".format(me))
+   notifyBar('#AA0000',"{} has started their turn".format(me))
    notify("=> {}{}".format(announceTXT,customTXT)) 
    notify("=> {}".format(statsTXT))
    if ds == 'runner' and chkTags(): notify(":::Reminder::: {} is Tagged!".format(identName))
