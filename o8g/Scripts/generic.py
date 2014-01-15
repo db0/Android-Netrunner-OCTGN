@@ -828,7 +828,7 @@ def announceSoT():
       if runnerStartMsgs.get(me.name.lower(),None): customTXT = "\n\n{}\n".format(runnerStartMsgs[me.name.lower()])
       else: customTXT = ''
       #notify ("=> {} ({}) has woken up. They have {} and {} {} for this turn.".format(identName,me,uniCredit(me.Credits),me.Clicks,uniClick()))
-   notifyBar('#FF0000',announceTXT)
+   notifyBar('#FF0000',"{} has started their turn".format(me))
    notify("=> {}{}".format(announceTXT,customTXT)) 
    notify("=> {}".format(statsTXT))
    if ds == 'runner' and chkTags(): notify(":::Reminder::: {} is Tagged!".format(identName))
@@ -842,6 +842,6 @@ def announceEoT():
       announceTXT = "{} ({}) has gone to sleep for the day.".format(identName,me)
       if runnerEndMsgs.get(me.name.lower(),None): customTXT = "\n\n{}\n".format(runnerEndMsgs[me.name.lower()])
       else: customTXT = ''
-   notifyBar('#0000FF',announceTXT)
+   notifyBar('#0000FF',"{} has ended their turn".format(me))
    notify("=> {}{}".format(announceTXT,customTXT)) 
       

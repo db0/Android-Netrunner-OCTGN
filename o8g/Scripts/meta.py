@@ -292,11 +292,14 @@ def chkHostType(card, seek = 'Targeted', caissa = False):
 def chkDoublePrevention():
    # This function checks for various cards which, if present prevent extra costs from double cards.
    debugNotify(">>> chkDoublePrevention(){}".format(extraASDebug())) #Debug
-   fullCost = True
+   fullCostPrev = False
    for c in table: 
-      if c.name == 'Starlight Crusade Funding' and c.controller == me: fullCost = False
-   debugNotify("<<< chkDoublePrevention() with fullCost = {}".format(fullCost)) #Debug
-   return fullCost
+      if fullCostPrev: break # If we already prevented the full cost, let's break out of the loop.
+      if c.name == 'Starlight Crusade Funding' and c.controller == me: 
+         notify("--> {} has allowed {} to ignore the additional costs".format(c,me))
+         fullCostPrev = True
+   debugNotify("<<< chkDoublePrevention() with fullCostPrev = {}".format(fullCostPrev)) #Debug
+   return fullCostPrev
  
 def scanTable(group = table, x=0,y=0):
    debugNotify(">>> scanTable(){}".format(extraASDebug())) #Debug
@@ -1020,19 +1023,19 @@ def TrialError(group, x=0, y=0): # Debugging
                 "bc0f047c-01b1-427f-a439-d451eda04061", 
                 "bc0f047c-01b1-427f-a439-d451eda04062",
                 # "bc0f047c-01b1-427f-a439-d451eda04063",
-                 "bc0f047c-01b1-427f-a439-d451eda04064",
+                # "bc0f047c-01b1-427f-a439-d451eda04064",
                 # "bc0f047c-01b1-427f-a439-d451eda04065",
                 #"bc0f047c-01b1-427f-a439-d451eda04066",
                 #"bc0f047c-01b1-427f-a439-d451eda04067",
-                "bc0f047c-01b1-427f-a439-d451eda04068",
+                #"bc0f047c-01b1-427f-a439-d451eda04068",
                 "bc0f047c-01b1-427f-a439-d451eda04069",
-                "bc0f047c-01b1-427f-a439-d451eda04070",
+                #"bc0f047c-01b1-427f-a439-d451eda04070",
                 #"bc0f047c-01b1-427f-a439-d451eda04071",
                 #"bc0f047c-01b1-427f-a439-d451eda04072",
-                "bc0f047c-01b1-427f-a439-d451eda04073",
-                "bc0f047c-01b1-427f-a439-d451eda04074",
-                "bc0f047c-01b1-427f-a439-d451eda04075",
-                "bc0f047c-01b1-427f-a439-d451eda04076",
+                #"bc0f047c-01b1-427f-a439-d451eda04073",
+                #"bc0f047c-01b1-427f-a439-d451eda04074",
+                #"bc0f047c-01b1-427f-a439-d451eda04075",
+                #"bc0f047c-01b1-427f-a439-d451eda04076",
                 #"bc0f047c-01b1-427f-a439-d451eda04077",
                 #"bc0f047c-01b1-427f-a439-d451eda04078",
                 "bc0f047c-01b1-427f-a439-d451eda04079",

@@ -2857,7 +2857,7 @@ Activist Support
 -----
 bc0f047c-01b1-427f-a439-d451eda04062
 -----
-atTurnStart:Gain1Tags-ifIHasnt1Tags-duringOpponentTurn$$atTurnStart:Gain1Bad Publicity-onOpponent-ifOpponentHasnt1Bad Publicity-duringMyTurn
+atTurnStart:Gain1Tags-ifIHasnt1Tags-duringOpponentTurn||atTurnStart:Gain1Bad Publicity-onOpponent-ifOpponentHasnt1Bad Publicity-duringMyTurn
 +++++
 
 .....
