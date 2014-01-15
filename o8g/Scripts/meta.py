@@ -719,12 +719,12 @@ def switchQuickAccess(group = table,x=0,y=0,forced = False, remoted = False):
          if QA == 'False':
             if remoted and not confirm("The runner would like to turn Quick Access on (i.e. not requiring corp confirmation before accessing a server). Do you accept?"): return
             setGlobalVariable('Quick Access','True')
-            if QAgame: notifyBar("#008800",":::INFO::: This is a [Quick Access] Game!") 
-            else: notifyBar("#00AA00",":::INFO::: Quick Access has been activated!")
+            if QAgame: notifyBar("#009900",":::INFO::: This is a [Quick Access] Game!") 
+            else: notifyBar("#009900",":::INFO::: Quick Access has been activated!")
          else: 
             if remoted and not confirm("The runner would like to turn Quick Access off. Accept?"): return
             setGlobalVariable('Quick Access','False')
-            notifyBar("#008800",":::INFO::: Quick Access has been de-activated!")
+            notifyBar("#009900",":::INFO::: Quick Access has been de-activated!")
       else:
          whisper(":::INFO::: Asking for corporation confirmation to activate Quick Access...")
          targetPL = findOpponent()
