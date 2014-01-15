@@ -343,6 +343,7 @@ def intRun(aCost = 1, Name = 'R&D', silent = False):
       elif Name == 'Remote': announceTXT = 'a remote server'
       else: announceTXT = Name
       notify ("{} to start a run on {}.".format(ClickCost,announceTXT))
+      notifyBar('#000000',"The runner starts a run on {}.".format(announceTXT))
    debugNotify("Setting bad publicity", 2)
    if BadPub > 0:
          myIdent.markers[mdict['BadPublicity']] += BadPub
@@ -408,6 +409,7 @@ def jackOut(group=table,x=0,y=0, silent = False):
             notify("{} has kicked {} out of their corporate grid".format(myIdent,enemyIdent))
             playCorpEndSound()
          else: notify("{} has jacked out of their run on the {} server".format(myIdent,runTarget))
+         notifyBar('#000000',"The runner has jacked out.")
       clearAll(True, True) # On jack out we clear all player's counters, but don't discard cards from the table.
    debugNotify("<<< jackOut()", 3) # Debug
 
@@ -437,6 +439,7 @@ def runSuccess(group=table,x=0,y=0, silent = False):
          else: runTarget = runTargetRegex.group(1) # If the runner is not feinting, then extract the target from the shared variable
          atTimedEffects('SuccessfulRun')
          notify("{} has successfully run the {} server".format(identName,runTarget))
+         notifyBar('#000000',"The runner succeeded the run.")
          if runTarget == 'Remote': setGlobalVariable('Remote Run','Success')
          else: setGlobalVariable('Central Run','Success')
    debugNotify("<<< runSuccess()", 3) # Debug
@@ -1273,6 +1276,7 @@ def RDaccessX(group = table, x = 0, y = 0): # A function which looks at the top 
    if ds == 'corp':
       whisper("This action is only for the use of the runner. Use the 'Look at top X cards' function on your R&D's context manu to access your own deck")
       return
+   notifyBar('#000000',"{} is initiating R&D Access".format(me))
    count = askInteger("How many files are you able to access from the corporation's R&D?",1)
    if count == None: return
    playAccessSound('RD')
@@ -1411,6 +1415,7 @@ def HQaccess(group=table, x=0,y=0, silent = False):
    if not silent and not confirm("You are about to access a random card from the corp's HQ.\
                                 \nPlease make sure your opponent is not manipulating their hand, and does not have a way to cancel this effect before continuing\
                               \n\nProceed?"): return
+   notifyBar('#000000',"{} is initiating HQ Access".format(me))
    count = askInteger("How many files are you able to access from the corporation's HQ?",1)
    if count == None: return
    playAccessSound('HQ')
