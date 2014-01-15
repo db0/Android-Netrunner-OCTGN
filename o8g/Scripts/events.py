@@ -34,6 +34,7 @@ def chkTwoSided():
    fetchCardScripts() # We only download the scripts at the very first setup of each play session.
    versionCheck()
    prepPatronLists()
+   checkQuickAccess()
 
 def checkDeck(player,groups):
    debugNotify(">>> checkDeck(){}".format(extraASDebug())) #Debug
@@ -211,7 +212,7 @@ def checkBoardFlip(name,oldValue,value):
       table.setBoardImage("table\\Tabletop.png") # If they had already reversed the table before, we set it back proper again   
 
 def checkAccessAttempts(name,oldValue,value):
-   if ds == 'corp' and num(value) >= 2:
+   if ds == 'corp' and num(value) >= 3:
       if confirm("The runner is currently waiting for final corporate reactions before proceeding to access the server. Do you have any cards to rez or paid abilities to use at this moment?"):
          notify(":::WARNING::: The Corporation delays access while they deliberate which reacts to trigger...")
       else: runSuccess()

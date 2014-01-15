@@ -42,6 +42,7 @@ Automations = {'Play, Score and Rez'    : True, # If True, game will automatical
                'Damage Prevention'      : True, # If True, game will automatically use damage prevention counters from card they control.
                'Triggers'               : True, # If True, game will search the table for triggers based on player's actions, such as installing a card, or trashing one.
                'WinForms'               : True, # If True, game will use the custom Windows Forms for displaying multiple-choice menus and information pop-ups
+               'Quick Access'           : False,# If True, game will enable quick access
                'Damage'                 : True}
 
 UniCode = True # If True, game will display credits, clicks, trash, memory as unicode characters
@@ -54,6 +55,7 @@ gameGUID = None # A Unique Game ID that is fetched during game launch.
 #totalInfluence = 0 # Used when reporting online
 #gameEnded = False # A variable keeping track if the players have submitted the results of the current game already.
 turn = 0 # used during game reporting to report how many turns the game lasted
+AccessBtnNextChoice = 0
 
 CardsAA = {} # Dictionary holding all the AutoAction scripts for all cards
 CardsAS = {} # Dictionary holding all the AutoScript scripts for all cards
@@ -475,6 +477,21 @@ def resetAll(): # Clears all the global variables in order to start a new game.
    if len(players) > 1: debugVerbosity = -1 # Reset means normal game.
    elif debugVerbosity != -1 and confirm("Reset Debug Verbosity?"): debugVerbosity = -1    
    debugNotify("<<< resetAll()") #Debug   
+   
+def checkQuickAccess():
+   #if len(players) == 1: 
+      #notify(">>> checkQuickAccess") # Debug
+      #notify("## currentGameName = {}".format(currentGameName())) # Debug
+   if len(players) == 1 or re.search(r'(\[Quick Access\]|\[QA\])',currentGameName()):
+      #if len(players) == 1: notify("## About to get QuickAccessInfo Setting") # Debug
+      if getSetting('QuickAccessInfo',True):
+         information(":::INFO::: You have joined a [Quick Access] game for the first time.\
+                 \n\n'[Quick Access]' or '[QA]' games allow the runners to access servers without needing a confirmation from the corp that it's OK to access (i.e. using the OK button or F3)\
+                    \nAs such the game expects the runner to make use of the 'Access Imminent' button before pressing F3 to allow the corporation a chance to react.\
+                  \n\nThe mode was made to facilitate faster play on behalf of the runner. Please run responsibly.")
+         setSetting('QuickAccessInfo',False)
+      #if len(players) == 1: notify("## About to switchQuickAccess()") # Debug
+      switchQuickAccess(forced = True)
 #---------------------------------------------------------------------------
 # Card Placement
 #---------------------------------------------------------------------------
@@ -688,6 +705,33 @@ def switchSounds(group,x=0,y=0):
       setSetting('Sounds', True)
       whisper("Sound effects have been switched on")
         
+def switchQuickAccess(group = table,x=0,y=0,forced = False, remoted = False):
+   #if len(players) == 1: notify(">>> switchQuickAccess()") # Debug
+   debugNotify(">>> switchQuickAccess(){}".format(extraASDebug())) #Debug
+   QAgame = re.search(r'(\[Quick Access\]|\[QA\])',currentGameName()) # If the game has [Quick Access] in the title, we don't allow to turn QA off.
+   if not forced and QAgame:
+      whisper(":::ERROR::: Sorry, you cannot cancel Quick Access in a [Quick Access] game.")
+   elif not forced and ds == None:
+      whisper(":::ERROR::: Please load a deck first.")
+   else:
+      QA = getGlobalVariable('Quick Access')
+      if ds == 'corp' or forced or len(players) == 1: # Checking that this is not a single-player game to avoid an infinite loop
+         if QA == 'False':
+            if remoted and not confirm("The runner would like to turn Quick Access on (i.e. not requiring corp confirmation before accessing a server). Do you accept?"): return
+            setGlobalVariable('Quick Access','True')
+            if QAgame: notifyBar("#008800",":::INFO::: This is a [Quick Access] Game!") 
+            else: notifyBar("#00AA00",":::INFO::: Quick Access has been activated!")
+         else: 
+            if remoted and not confirm("The runner would like to turn Quick Access off. Accept?"): return
+            setGlobalVariable('Quick Access','False')
+            notifyBar("#008800",":::INFO::: Quick Access has been de-activated!")
+      else:
+         whisper(":::INFO::: Asking for corporation confirmation to activate Quick Access...")
+         targetPL = findOpponent()
+         if targetPL != me: remoteCall(targetPL,'remoteAskQA',[]) # Checking player just in case we end up in an infinite loop.
+            
+def remoteAskQA():
+   switchQuickAccess(remoted = True)
 #------------------------------------------------------------------------------
 # Help functions
 #------------------------------------------------------------------------------
@@ -709,12 +753,16 @@ def HELP_RunStructure(group,x=0,y=0):
 #------------------------------------------------------------------------------
 
 def BUTTON_Access(group = None,x=0,y=0):
+   global AccessBtnNextChoice # Using a global var to avoid running the slow random function
    mute()
    AccessMsgs = ["--- Alert: Unauthorized Access Imminent!", 
                  "--- Alert: Runner entry detected!",
                  "--- Alert: Firewalls breached!",
                  "--- Alert: Intrusion in progress!"]
-   AccessTXT = AccessMsgs[rnd(0,len(AccessMsgs) - 1)]
+   #AccessTXT = AccessMsgs[rnd(0,len(AccessMsgs) - 1)]
+   AccessTXT = AccessMsgs[AccessBtnNextChoice]
+   AccessBtnNextChoice += 1
+   if AccessBtnNextChoice >= len(AccessMsgs): AccessBtnNextChoice = 0
    notify(AccessTXT + "\n-- {} is about to gain access. Corporate React?".format(me))
    setGlobalVariable('accessAttempts',str(num(getGlobalVariable('accessAttempts')) + 1))  # The runner using the Button counts for an access Attempt. After 3 of them, the runner can bypass an unresponsive corp.
    playButtonSound('Access')
