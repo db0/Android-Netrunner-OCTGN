@@ -2121,13 +2121,14 @@ def handDiscard(card, scripted = False):
    if ds == "runner":
       card.moveTo(me.piles['Heap/Archives(Face-up)'])
       if endofturn:
-         if card.Type == 'Program': notify("{} has killed a hanging process.".format(me))
-         elif card.Type == 'Event': notify("{} has thrown away some notes.".format(me))
-         elif card.Type == 'Hardware': notify("{} has deleted some spam mail.".format(me))
-         elif card.Type == 'Resource': notify("{} has reconfigured some net protocols.".format(me))
+         if card.Type == 'Program': notify("{} has killed a hanging process ({}).".format(me,card))
+         elif card.Type == 'Event': notify("{} has thrown away some notes ({}).".format(me,card))
+         elif card.Type == 'Hardware': notify("{} has deleted some spam mail ({}).".format(me,card))
+         elif card.Type == 'Resource': notify("{} has reconfigured some net protocols ({}).".format(me,card))
          else: notify("{} has power cycled some hardware.".format(me))
          if len(me.hand) == currentHandSize():
             notify("{} has now discarded down to their max handsize of {}".format(me, currentHandSize()))
+            goToEndTurn(table, 0, 0)
       else: notify("{} discards {}.".format(me,card))
    else:
       card.moveTo(me.piles['Archives(Hidden)'])
@@ -2140,6 +2141,7 @@ def handDiscard(card, scripted = False):
          if random == 5: notify("{} has liquidated some assets.".format(me))
          if len(me.hand) == currentHandSize():
             notify("{} has now discarded down to their max handsize of {}".format(me, currentHandSize()))
+            goToEndTurn(table, 0, 0)
       else: notify("{} discards a card.".format(me))
 
 def handRandomDiscard(group, count = None, player = None, destination = None, silent = False):
