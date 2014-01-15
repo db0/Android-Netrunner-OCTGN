@@ -154,6 +154,7 @@ RevealedColor = "#ffffff"
 PriorityColor = "#ffd700"
 InactiveColor = "#888888" # Cards which are in play but not active yer (e.g. see the shell traders)
 StealthColor = "#000000" # Cards which are in play but not active yer (e.g. see the shell traders)
+NewCardColor = "#FFA500" # Cards which came into play just this turn
 
 Xaxis = 'x'
 Yaxis = 'y'

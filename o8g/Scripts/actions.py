@@ -1625,6 +1625,7 @@ def clearAll(markersOnly = False, allPlayers = False): # Just clears all the pla
    for card in table:
       if card.controller == me: 
          if card.name == 'Trace': card.highlight = None # We clear the card in case a tracing is pending that was not done.
+         if card.highlight == NewCardColor and not markersOnly: card.highlight = None  # We clear all new cards as well.
          clear(card,silent = True)
          if not markersOnly:
             hostCards = eval(getGlobalVariable('Host Cards'))
@@ -2024,6 +2025,7 @@ def intPlay(card, cost = 'not free', scripted = False, preReduction = 0, retainP
       if card.Type == 'Operation': notify("{}{} to initiate {}{}.".format(ClickCost, rc, card, extraText))
       else: notify("{}{} to play {}{}.".format(ClickCost, rc, card, extraText))
    playInstallSound(card)
+   card.highlight = NewCardColor # We give all new cards an orange highlight to make them easiet to see.
    playEvOpSound(card)
    executePlayScripts(card,action)
    autoscriptOtherPlayers('Card'+action.capitalize(),card) # we tell the autoscriptotherplayers that we installed/played a card. (e.g. See Haas-Bioroid ability)
