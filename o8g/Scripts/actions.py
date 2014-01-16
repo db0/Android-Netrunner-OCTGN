@@ -92,21 +92,22 @@ def modClicks(group = table,x=0,y=0,targetPL = me, count = 1, action = 'interact
          notify(":::ERROR::: cannot check out the max clicks variable. Try again later")
          return 'ABORT'
    maxClicksDict = eval(getGlobalVariable('Max Clicks'))
+   debugNotify("maxClicksDict = {}".format(maxClicksDict))
    setGlobalVariable('Max Clicks','CHECKED OUT')
    if action == 'interactive': # If we're silent and at count 0, we're just looking to grab how many maxclicks we have at the end.
-      count = askInteger("What is your new current maximum Clicks per turn?", maxClicksDict[targetPL.name])
+      count = askInteger("What is your new current maximum Clicks per turn?", maxClicksDict[targetPL._id])
       if count == None: return
-      maxClicksDict[targetPL.name] = count
+      maxClicksDict[targetPL._id] = count
       notify("{} has set their Max Clicks to {} per turn".format(me,count))
-   elif action == 'increment': maxClicksDict[targetPL.name] += count 
-   elif action == 'set to': maxClicksDict[targetPL.name] = count
-   if maxClicksDict.get(targetPL.name,'NULL') == 'NULL': # If the value has not been set, we reset it to avoid a crash.
+   elif action == 'increment': maxClicksDict[targetPL._id] += count 
+   elif action == 'set to': maxClicksDict[targetPL._id] = count
+   if maxClicksDict.get(targetPL._id,'NULL') == 'NULL': # If the value has not been set, we reset it to avoid a crash.
       notify(":::WARNING::: {}'s Max Clicks were not set. Setting at the default value".format(targetPL))
-      if targetPL.getGlobalVariable('ds') == 'corp': maxClicksDict[targetPL.name] = 3
-      else: maxClicksDict[targetPL.name] = 4
+      if targetPL.getGlobalVariable('ds') == 'corp': maxClicksDict[targetPL._id] = 3
+      else: maxClicksDict[targetPL._id] = 4
    setGlobalVariable('Max Clicks',str(maxClicksDict)) # Clear any feinted targets
-   debugNotify("<<< modClicks() with return {}".format(maxClicksDict[targetPL.name])) #Debug
-   return maxClicksDict[targetPL.name]
+   debugNotify("<<< modClicks() with return {}".format(maxClicksDict[targetPL._id])) #Debug
+   return maxClicksDict[targetPL._id]
 
 #---------------------------------------------------------------------------
 # Start/End of turn

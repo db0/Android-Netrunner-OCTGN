@@ -54,9 +54,9 @@ def checkDeck(player,groups):
          continue
       else:
          ds = card.Side.lower()
+         me.setGlobalVariable('ds', ds)
          storeSpecial(card)
          Identity = card
-         me.setGlobalVariable('ds', ds)
    debugNotify("About to fetch Identity card", 4) #Debug
    if not Identity: 
       delayed_whisper(":::ERROR::: Please Reset and load a deck with an Identity included. Aborting!")
