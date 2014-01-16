@@ -1007,7 +1007,7 @@ def Snoop(scenario = 'Simply Reveal', cardList = None):
          
 def Leverage(card): # Leverage
    mute()
-   notifyBar('#000000',"The corporation is deliberating if the runner's leverage is sufficient.")
+   barNotifyAll('#000000',"The corporation is deliberating if the runner's leverage is sufficient.")
    #notify(" - {} is deliberating if the runner's leverage is sufficient.".format(me))
    if confirm("Your opponent has just played Leverage. Do you want to take 2 Bad Publicity in order to allow them to still suffer damage until their next turn?"):
       me.counters['Bad Publicity'].value += 2

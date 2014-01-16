@@ -496,6 +496,12 @@ def debugNotify(msg = 'Debug Ping!', level = 2):
    else: level = 1
    if debugVerbosity >= level: notify(msg)
 
+def barNotifyAll(color, msg, remote = False): # A function that takes care to send barNotifyAll() messages to all players
+   mute()
+   for player in getPlayers():
+      if player != me and not remote: remoteCall(player,'barNotifyAll',[color,msg,True])
+   notifyBar(color,msg)
+   
 def num (s):
    #debugNotify(">>> num(){}".format(extraASDebug())) #Debug
    if not s: return 0
@@ -832,8 +838,8 @@ def announceSoT():
       if runnerStartMsgs.get(me.name.lower(),None): customTXT = "\n\n{}\n".format(runnerStartMsgs[me.name.lower()])
       else: customTXT = ''
       #notify ("=> {} ({}) has woken up. They have {} and {} {} for this turn.".format(identName,me,uniCredit(me.Credits),me.Clicks,uniClick()))
-   if ds == 'runner': notifyBar('#AA0000',"{} has started their turn".format(me))
-   else: notifyBar('#0000FF',"{} has started their turn".format(me))
+   if ds == 'runner': barNotifyAll('#AA0000',"{} has started their turn".format(me))
+   else: barNotifyAll('#0000FF',"{} has started their turn".format(me))
    notify("=> {}{}".format(announceTXT,customTXT)) 
    notify("=> {}".format(statsTXT))
    if ds == 'runner' and chkTags(): notify(":::Reminder::: {} is Tagged!".format(identName))
@@ -847,7 +853,7 @@ def announceEoT():
       announceTXT = "{} ({}) has gone to sleep for the day.".format(identName,me)
       if runnerEndMsgs.get(me.name.lower(),None): customTXT = "\n\n{}\n".format(runnerEndMsgs[me.name.lower()])
       else: customTXT = ''
-   if ds == 'runner': notifyBar('#880000',"{} has ended their turn".format(me))
-   else: notifyBar('#0000AA',"{} has ended their turn".format(me))
+   if ds == 'runner': barNotifyAll('#880000',"{} has ended their turn".format(me))
+   else: barNotifyAll('#0000AA',"{} has ended their turn".format(me))
    notify("=> {}{}".format(announceTXT,customTXT)) 
       
