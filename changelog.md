@@ -14,7 +14,7 @@ Changelog - Android:Netrunner LCG OCTGN Game Definition
   If the corp has not pressed OK or F3 yet, the first time you press F3, the game will automatically use the Access Imminent button. The second time it will proceed to access.
   Obviously, you're expected to give the corp time to react so don't go pressing F3 2 times, all the time just to rush through.  
   To activate Quick Access, simply add the **[Quick Access]** tag in you game name (including [square brackers] (**[QA]** also works) or enable it from the Game menu. 
-  If the game is not tagged as **[Quick Access]** then only the corp can set it as such. The runner can only request it.
+  If the game is not tagged as **[Quick Access]** then only the corp can set it as such. The runner can only request it from the corp, and only once.
   If the game is tagged as **[Quick Access]** via the game name, then Quick Access cannot be disabled. This is to allow runners who want to play this way to do so, without being thwarted by the opposing corp. 
   
 * Started using notifyBars. These should provide a notification about the flow of the game on the top to all players. Let me know if you like them.  
