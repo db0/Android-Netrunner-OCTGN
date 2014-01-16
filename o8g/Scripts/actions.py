@@ -197,6 +197,7 @@ def goToSot (group, x=0,y=0):
    newturn = True
    turn += 1
    autoRez()
+   clearAllNewCards()
    if ds == 'runner':
       setGlobalVariable('Remote Run','False')
       setGlobalVariable('Central Run','False')
@@ -338,12 +339,11 @@ def intRun(aCost = 1, Name = 'R&D', silent = False):
    ClickCost = useClick(count = aCost)
    if ClickCost == 'ABORT': return 'ABORT'
    playRunStartSound()
-   if not silent:
-      if Name == 'Archives': announceTXT = 'the Archives'
-      elif Name == 'Remote': announceTXT = 'a remote server'
-      else: announceTXT = Name
-      notify ("{} to start a run on {}.".format(ClickCost,announceTXT))
-      notifyBar('#000000',"{} starts a run on {}.".format(fetchRunnerPL(),announceTXT))
+   if Name == 'Archives': announceTXT = 'the Archives'
+   elif Name == 'Remote': announceTXT = 'a remote server'
+   else: announceTXT = Name
+   if not silent: notify ("{} to start a run on {}.".format(ClickCost,announceTXT))
+   notifyBar('#000000',"{} starts a run on {}.".format(fetchRunnerPL(),announceTXT))
    debugNotify("Setting bad publicity", 2)
    if BadPub > 0:
          myIdent.markers[mdict['BadPublicity']] += BadPub
@@ -409,7 +409,7 @@ def jackOut(group=table,x=0,y=0, silent = False):
             notify("{} has kicked {} out of their corporate grid".format(myIdent,enemyIdent))
             playCorpEndSound()
          else: notify("{} has jacked out of their run on the {} server".format(myIdent,runTarget))
-         notifyBar('#000000',"{} has jacked out.".format(fetchRunnerPL()))
+      notifyBar('#000000',"{} has jacked out.".format(fetchRunnerPL()))
       clearAll(True, True) # On jack out we clear all player's counters, but don't discard cards from the table.
    debugNotify("<<< jackOut()", 3) # Debug
 
@@ -1535,7 +1535,7 @@ def intRez (card, x=0, y=0, cost = 'not free', silent = False, silentCost = Fals
       if card.Type == 'Asset': notify("{} has acquired {} {}{}.".format(me, card, rc, extraText))
       if card.Type == 'Upgrade': notify("{} has installed {} {}{}.".format(me, card, rc, extraText))
    playRezSound(card)
-   random = rnd(10,100) # Bug workaround.
+   update() # Bug workaround.
    executePlayScripts(card,'REZ')
    autoscriptOtherPlayers('CardRezzed',card)
 
@@ -1612,7 +1612,9 @@ def clear(card, x = 0, y = 0, silent = False):
    debugNotify(">>> clear() card: {}".format(card), ) #Debug
    mute()
    if not silent: notify("{} clears {}.".format(me, card))
-   if card.highlight != DummyColor and card.highlight != RevealedColor and card.highlight != InactiveColor and card.highlight != StealthColor and card.highlight != PriorityColor: card.highlight = None
+   if card.highlight != DummyColor and card.highlight != RevealedColor and card.highlight != NewCardColor and card.highlight != InactiveColor and card.highlight != StealthColor and card.highlight != PriorityColor: 
+      debugNotify("Clearing {} Highlight for {}".format(card.highlight,card))
+      card.highlight = None
    card.markers[mdict['BaseLink']] = 0
    card.markers[mdict['PlusOne']] = 0
    card.markers[mdict['MinusOne']] = 0
@@ -1627,7 +1629,6 @@ def clearAll(markersOnly = False, allPlayers = False): # Just clears all the pla
    for card in table:
       if card.controller == me: 
          if card.name == 'Trace': card.highlight = None # We clear the card in case a tracing is pending that was not done.
-         if card.highlight == NewCardColor and not markersOnly: card.highlight = None  # We clear all new cards as well.
          clear(card,silent = True)
          if not markersOnly:
             hostCards = eval(getGlobalVariable('Host Cards'))
@@ -1638,6 +1639,17 @@ def clearAll(markersOnly = False, allPlayers = False): # Just clears all the pla
             storeProperties(card, True)
    debugNotify("<<< clearAll()", 3)
 
+def clearAllNewCards(remoted = False): # Clears all highlights from new cards.
+   debugNotify(">>> clearAllNewCards(){}".format(extraASDebug())) #Debug
+   if not remoted:
+      for player in getPlayers():
+         if player != me: remoteCall(player,'clearAllNewCards',[True])
+   for card in table:
+      if card.highlight == NewCardColor and card.controller == me: 
+         debugNotify("Clearing New card {}".format(card))
+         card.highlight = None  
+   debugNotify(">>> clearAllNewCards(){}".format(extraASDebug())) #Debug
+   
 def intTrashCard(card, stat, cost = "not free",  ClickCost = '', silent = False):
    debugNotify(">>> intTrashCard(){}".format(extraASDebug())) #Debug
    global trashEasterEggIDX

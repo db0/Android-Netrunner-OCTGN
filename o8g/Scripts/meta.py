@@ -355,12 +355,16 @@ def chkTags():
    else: 
       player = findOpponent()
       ID = getSpecial('Identity',player)
-   if player.Tags:
-      ID.markers[mdict['Tag']] = player.Tags
-      return True
-   else:
-      ID.markers[mdict['Tag']] = 0
-      return False
+   remoteCall(player,'syncTags',[]) # We send the tag update as a remote call, so as not to get complaints from OCTGN
+   if player.Tags: return True      
+   else: return False
+      
+def syncTags():
+   mute()
+   ID = getSpecial('Identity',me)
+   if me.Tags: ID.markers[mdict['Tag']] = me.Tags
+   else: ID.markers[mdict['Tag']] = 0
+   
 
 def fetchRunnerPL():
    if ds == 'runner': return me
@@ -717,20 +721,24 @@ def switchQuickAccess(group = table,x=0,y=0,forced = False, remoted = False):
       QA = getGlobalVariable('Quick Access')
       if ds == 'corp' or forced or len(players) == 1: # Checking that this is not a single-player game to avoid an infinite loop
          if QA == 'False':
-            if remoted and not confirm("The runner would like to turn Quick Access on (i.e. not requiring corp confirmation before accessing a server). Do you accept?"): return
+            if remoted and not confirm("The runner would like to turn Quick Access on (i.e. not requiring corp confirmation before accessing a server). Do you accept?"): 
+               notify(":::INFO::: {} rejected the request to activate Quick Access!".format(me))
             setGlobalVariable('Quick Access','True')
             if QAgame: notifyBar("#009900",":::INFO::: This is a [Quick Access] Game!") 
             else: notifyBar("#009900",":::INFO::: Quick Access has been activated!")
          else: 
-            if remoted and not confirm("The runner would like to turn Quick Access off. Accept?"): return
+            if remoted and not confirm("The runner would like to turn Quick Access off. Accept?"): 
+               notify(":::INFO::: {} rejected the request to disable Quick Access!".format(me))
+               return
             setGlobalVariable('Quick Access','False')
-            notifyBar("#009900",":::INFO::: Quick Access has been de-activated!")
+            notifyBar("#009900",":::INFO::: Quick Access has been disabled!")
       else:
          whisper(":::INFO::: Asking for corporation confirmation to activate Quick Access...")
          targetPL = findOpponent()
          if targetPL != me: remoteCall(targetPL,'remoteAskQA',[]) # Checking player just in case we end up in an infinite loop.
             
 def remoteAskQA():
+   mute()
    switchQuickAccess(remoted = True)
 #------------------------------------------------------------------------------
 # Help functions
