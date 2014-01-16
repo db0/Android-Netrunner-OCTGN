@@ -1596,10 +1596,12 @@ def ModifyStatus(Autoscript, announceText, card, targetCards = None, notificatio
          intPlay(targetCard, payCost, True, preReduc)
       elif action.group(1) == 'Score': # Score takes a card and claims it as an agenda
          targetPL = ofwhom(Autoscript, targetCard.owner)
-         grabCardControl(targetCard,targetPL)
+         grabCardControl(targetCard)
          if targetPL.getGlobalVariable('ds') == 'corp': scoreType = 'scoredAgenda'
          else: scoreType = 'liberatedAgenda'
          placeCard(targetCard, 'SCORE', type = scoreType)
+         debugNotify("Current card group before scoring = {}".format(targetCard.group.name))
+         grabCardControl(targetCard,targetPL)
          # We do not autoscript other players (see http://boardgamegeek.com/thread/914076/personal-evolution-and-notoriety)
          if targetPL.counters['Agenda Points'].value >= 7 :
             notify("{} wins the game!".format(targetPL))

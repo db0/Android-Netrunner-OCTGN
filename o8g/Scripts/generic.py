@@ -770,13 +770,14 @@ def yaxisMove(card):
 
 def grabPileControl(pile, player = me):
    debugNotify(">>> grabPileControl(){}".format(extraASDebug())) #Debug
+   debugNotify("Grabbing control of {}'s {} on behalf of {}".format(pile.player,pile.name,player))
    if pile.controller != player: remoteCall(pile.controller,'passPileControl',[pile,player])
    count = 0
    while pile.controller != player: 
       rnd(1,100)
       count += 1
       if count >= 10: 
-         notify(":::ERROR::: Pilke Control not passed! Will see errors.")
+         notify(":::ERROR::: Pile Control not passed! Will see errors.")
          break   
    debugNotify("<<< grabPileControl(){}".format(extraASDebug())) #Debug
 
@@ -789,6 +790,7 @@ def passPileControl(pile,player):
       
 def grabCardControl(card, player = me):
    debugNotify(">>> grabCardControl(){}".format(extraASDebug())) #Debug
+   debugNotify("Grabbing control of {} on behalf of {}".format(card,player))
    if card.group != table: debugNotify(":::WARNING::: Cannot grab card control while in a pile. Aborting!")
    else:
       if card.controller != player: remoteCall(card.controller,'passCardControl',[card,player])

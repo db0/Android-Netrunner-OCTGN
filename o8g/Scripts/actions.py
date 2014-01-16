@@ -1271,7 +1271,7 @@ def accessTarget(group = table, x = 0, y = 0):
       else: pass
       if cFaceD and card.group == table and not card.markers[mdict['Scored']]: card.isFaceUp = False
       card.highlight = None
-      if card.group == table: passCardControl(card,card.owner)
+      if card.group == table and not card.markers[mdict['Scored']]: passCardControl(card,card.owner) # We pass control back to the corp, but only if we didn't steal the card.
 
 def RDaccessX(group = table, x = 0, y = 0): # A function which looks at the top X cards of the corp's deck and then asks the runner what to do with each one.
    debugNotify(">>> RDaccessX()") #Debug
@@ -2272,7 +2272,7 @@ def draw(group):
    else:
       ClickCost = useClick()
       if ClickCost == 'ABORT': return
-      card.moveTo(me.hand)
+      changeCardGroup(card,me.hand)
       notify("{} to draw a card.".format(ClickCost))
       playClickDrawSound()
       autoscriptOtherPlayers('CardDrawnClicked',card)

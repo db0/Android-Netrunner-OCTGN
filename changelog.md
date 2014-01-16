@@ -1,6 +1,12 @@
 Changelog - Android:Netrunner LCG OCTGN Game Definition
 ===============================================
 
+### 3.7.1.x
+
+* Keyhole now uses a click and hopefully made it so that you don't see "???" anymore
+* Attachments will now follow their host when it's moved on the table
+* Fenris now gived Bad Pub.
+
 ### 3.7.0.x
 
 * New game definition for **True Colors**. As always, almost every card scripted!
