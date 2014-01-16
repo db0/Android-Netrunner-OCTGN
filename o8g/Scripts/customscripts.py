@@ -139,7 +139,7 @@ def UseCustomAbility(Autoscript, announceText, card, targetCards = None, notific
          announceString = announceText + " reveal the runner's hand and trash a card"
    if fetchProperty(card, 'name') == "Punitive Counterstrike":
       count = askInteger("How many agenda points did you steal last turn?", 0)
-      if count: InflictX('Inflict{}MeatDamage'.format(count), '', card)
+      if count: InflictX('Inflict{}MeatDamage-onOpponent'.format(count), '', card)
       notify("--> {} is punished for their shenanigans with {} meat damage".format(me,count))
    return announceString
    
