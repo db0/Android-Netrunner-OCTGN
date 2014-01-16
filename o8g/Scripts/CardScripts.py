@@ -2921,7 +2921,7 @@ Rex Campaign
 -----
 bc0f047c-01b1-427f-a439-d451eda04070
 -----
-onRez:Put3Power||atTurnStart:Remove1Power$$CustomScript
+onRez:Put3Power||atTurnStart:Remove1Power-duringMyTurn$$CustomScript
 +++++
 
 .....
