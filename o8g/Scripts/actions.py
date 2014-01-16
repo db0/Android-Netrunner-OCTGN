@@ -1408,6 +1408,13 @@ def ARCscore(group=table, x=0,y=0):
          card.highlight = RevealedColor
          scrAgenda(card) # We don't want it silent, as it needs to ask the runner to score, in case of agendas like Fetal AI for which they have to pay as well.
          if card.highlight == RevealedColor: card.moveTo(ARC) # If the runner opted not to score the agenda, put it back into the deck.
+      Autoscripts = CardsAS.get(card.model,'').split('||')
+      debugNotify("Grabbed AutoScripts", 4)
+      for autoS in Autoscripts:
+         if chkModulator(card, 'worksInArchives', 'onAccess'):
+            debugNotify("-worksInArchives accessRegex found!")
+            notify("{} has just accessed a {}!".format(me,card.name))
+            remoteCall(card.owner, 'remoteAutoscript', [card,autoS])
    if not agendaFound: notify("{} has rumaged through {}'s archives but found no Agendas".format(Identity,targetPL))
    passPileControl(ARC,targetPL)
    debugNotify("<<< ARCscore()")

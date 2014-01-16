@@ -1090,7 +1090,7 @@ def TrialError(group, x=0, y=0): # Debugging
                 #"bc0f047c-01b1-427f-a439-d451eda04070",
                 #"bc0f047c-01b1-427f-a439-d451eda04071",
                 #"bc0f047c-01b1-427f-a439-d451eda04072",
-                #"bc0f047c-01b1-427f-a439-d451eda04073",
+                "bc0f047c-01b1-427f-a439-d451eda04073",
                 #"bc0f047c-01b1-427f-a439-d451eda04074",
                 #"bc0f047c-01b1-427f-a439-d451eda04075",
                 #"bc0f047c-01b1-427f-a439-d451eda04076",

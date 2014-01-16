@@ -2945,7 +2945,7 @@ Shock!
 -----
 bc0f047c-01b1-427f-a439-d451eda04073
 -----
-onAccess:Inflict1NetDamage-onOpponent
+onAccess:Inflict1NetDamage-onOpponent-worksInArchives
 +++++
 
 .....
