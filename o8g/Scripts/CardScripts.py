@@ -2851,7 +2851,7 @@ bc0f047c-01b1-427f-a439-d451eda04061
 -----
 atSuccessfulRun:CustomScript-isAlternativeRunResult-ifSuccessfulRunR&D-hasOrigMarker{Running}||atJackOut:Remove1Running-isSilent
 +++++
-A0B0G0T0:RunR&D$$Put1Running
+A1B0G0T0:RunR&D$$Put1Running
 .....
 Activist Support
 -----
@@ -2929,7 +2929,7 @@ Fenris
 -----
 bc0f047c-01b1-427f-a439-d451eda04071
 -----
-
+onRez:Gain1Bad Publicity
 +++++
 A0B0G0T0:Inflict1BrainDamage-onOpponent-isSubroutine||A0B0G0T0:RunEnd-isSubroutine	
 .....
