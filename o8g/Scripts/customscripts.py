@@ -774,6 +774,7 @@ def CustomScript(card, action = 'PLAY', origin_card = None, original_action = No
       debugNotify("Peeking at Corp's Stack.", 2)
       for c in targetPL.piles['R&D/Stack']: c.peek()
       update() # Delay to be able to read card info
+      rnd(1,100) # More delay because apparently it wasn't enough.
       choice = SingleChoice("Choose a card to trash", makeChoiceListfromCardList(cardList, True), type = 'button')
       trashedC = cardList[choice]
       sendToTrash(trashedC)
