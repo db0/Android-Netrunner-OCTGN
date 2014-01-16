@@ -6,6 +6,10 @@ Changelog - Android:Netrunner LCG OCTGN Game Definition
 * Keyhole now uses a click and hopefully made it so that you don't see "???" anymore
 * Attachments will now follow their host when it's moved on the table
 * Fenris now gived Bad Pub.
+* Director Haas now doesn't trash scored Director Haas when rezzed.
+* Director Haas can now be properly scored when trashed from R&D
+* If both players have the same alias (local game?), game should not be confused about runner/corp clicks anymore.
+
 
 ### 3.7.0.x
 
