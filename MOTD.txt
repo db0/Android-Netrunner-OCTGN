@@ -1,6 +1,8 @@
 =====Message of the Day======
 
-Note: The recent version of OCTGN added new flood of error messages without warning.
+True Color is now rezzed and scripted!
 
-I'm working for a fix -- Db0.
+Also the majority of the red errors should be removed now. Only a few may remain still.
+
+Enjoy!
 =============================

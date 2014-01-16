@@ -56,6 +56,7 @@ gameGUID = None # A Unique Game ID that is fetched during game launch.
 #gameEnded = False # A variable keeping track if the players have submitted the results of the current game already.
 turn = 0 # used during game reporting to report how many turns the game lasted
 AccessBtnNextChoice = 0
+askedQA = False
 
 CardsAA = {} # Dictionary holding all the AutoAction scripts for all cards
 CardsAS = {} # Dictionary holding all the AutoScript scripts for all cards
@@ -712,6 +713,7 @@ def switchSounds(group,x=0,y=0):
 def switchQuickAccess(group = table,x=0,y=0,forced = False, remoted = False):
    #if len(players) == 1: notify(">>> switchQuickAccess()") # Debug
    debugNotify(">>> switchQuickAccess(){}".format(extraASDebug())) #Debug
+   global askedQA
    QAgame = re.search(r'(\[Quick Access\]|\[QA\])',currentGameName()) # If the game has [Quick Access] in the title, we don't allow to turn QA off.
    if not forced and QAgame:
       whisper(":::ERROR::: Sorry, you cannot cancel Quick Access in a [Quick Access] game.")
@@ -733,9 +735,12 @@ def switchQuickAccess(group = table,x=0,y=0,forced = False, remoted = False):
             setGlobalVariable('Quick Access','False')
             barNotifyAll("#009900",":::INFO::: Quick Access has been disabled!")
       else:
-         whisper(":::INFO::: Asking for corporation confirmation to activate Quick Access...")
-         targetPL = findOpponent()
-         if targetPL != me: remoteCall(targetPL,'remoteAskQA',[]) # Checking player just in case we end up in an infinite loop.
+         if askedQA: whisper(":::ERROR::: You've already asked the corp to enable QA once already. Please don't spam them.")
+         else:
+            whisper(":::INFO::: Asking for corporation confirmation to activate Quick Access...")
+            targetPL = findOpponent()
+            if targetPL != me: remoteCall(targetPL,'remoteAskQA',[]) # Checking player just in case we end up in an infinite loop.
+            askedQA = True # The runner can only ask once for QA in order not to spam the corp
             
 def remoteAskQA():
    mute()

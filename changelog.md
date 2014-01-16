@@ -1,6 +1,26 @@
 Changelog - Android:Netrunner LCG OCTGN Game Definition
 ===============================================
 
+### 3.7.0.x
+
+* New game definition for **True Colors**. As always, almost every card scripted!
+
+* ##### Trickier Automations
+  * RSVP: Not automated. Just don't spend any credits afterwards.
+  * Curtain Wall: Does not update its str visibly in any way.
+  * Capstone: Target the cards in your hand then use.
+  
+* Added Quick Access mode. When this mode is activated, as a runner you do not need to wait for the OK from the corp before you succeed a run and access cards. 
+  If the corp has not pressed OK or F3 yet, the first time you press F3, the game will automatically use the Access Imminent button. The second time it will proceed to access.
+  Obviously, you're expected to give the corp time to react so don't go pressing F3 2 times, all the time just to rush through.  
+  To activate Quick Access, simply add the **[Quick Access]** tag in you game name (including [square brackers] (**[QA]** also works) or enable it from the Game menu. 
+  If the game is not tagged as **[Quick Access]** then only the corp can set it as such. The runner can only request it.
+  If the game is tagged as **[Quick Access]** via the game name, then Quick Access cannot be disabled. This is to allow runners who want to play this way to do so, without being thwarted by the opposing corp. 
+  
+* Started using notifyBars. These should provide a notification about the flow of the game on the top to all players. Let me know if you like them.  
+* Did a bunch of recoding to stop the error spam that was triggered lately. It's not perfect but things should be much better now.  
+* New cards coming into play will now have an orange highlight. This is to allow the other player to easily see what is coming in-play, especially if the corp played a bunch of face-down cards.
+
 ### 3.6.5.x
 
 Changed code to take controllership of piles when manipulating their cards,to avoid errors
