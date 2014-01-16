@@ -20,6 +20,7 @@ Changelog - Android:Netrunner LCG OCTGN Game Definition
 * Started using notifyBars. These should provide a notification about the flow of the game on the top to all players. Let me know if you like them.  
 * Did a bunch of recoding to stop the error spam that was triggered lately. It's not perfect but things should be much better now.  
 * New cards coming into play will now have an orange highlight. This is to allow the other player to easily see what is coming in-play, especially if the corp played a bunch of face-down cards.
+* Discarding down to your max size after pressing F12, will automatically end your turn (because people kept forgetting to press F12 again)
 
 ### 3.6.5.x
 
