@@ -826,9 +826,12 @@ def placeOnTable(card,x,y,facedownStatus = False): # A function that asks the cu
    else: remoteCall(card.controller,'placeOnTable',[card,x,y,facedownStatus])
    
 def indexSet(card,index): # A function that asks the current card controller to move the card to a specific index.
-   if card.controller == me: card.setIndex(index) 
+   if card.controller == me: 
+      if index == 'front': card.sendToFront()
+      elif index == 'back': card.sendToBack()
+      else: card.setIndex(index) 
    else: remoteCall(card.controller,'indexSet',[card,index])
-   
+      
 #---------------------------------------------------------------------------
 # Patron Functions
 #---------------------------------------------------------------------------   

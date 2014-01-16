@@ -189,6 +189,9 @@ def checkMovedCard(player,card,fromGroup,toGroup,oldIndex,index,oldX,oldY,x,y,is
          executePlayScripts(card,'UNINSTALL')
          autoscriptOtherPlayers('CardUninstalled',card)
          clearAttachLinks(card) # If the card was manually uninstalled or moved elsewhere than trash, then we simply take care of the MU and the attachments
+   elif fromGroup == table and toGroup == table and card.owner == me: 
+      orgAttachments(card)
+         
          
       
 def checkGlobalVars(name,oldValue,value):

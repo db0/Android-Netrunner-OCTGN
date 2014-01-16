@@ -1741,10 +1741,6 @@ def trashTargetFree(group, x=0, y=0):
                  if c.targetedBy
                  and c.targetedBy == me]
    if len(targetCards) == 0: return
-   if not confirm("You are about to trash your opponent's cards. This may cause issue if your opponent is currently manipulating them\
-             \nPlease ask your opponent to wait until the notification appears before doing anything else\
-           \n\n:::Warning:::Confirm:::Also confirm that your opponent does not have any reaction to you trashing one his cards\
-           \n\nProceed?"): return
    for card in targetCards:
       storeProperties(card)
       intTrashCard(card, fetchProperty(card, 'Stat'), "free")
@@ -2305,7 +2301,8 @@ def drawMany(group, count = None, destination = None, silent = False):
          count = SSize
          whisper("You do not have enough cards in your deck to complete this action. Will draw as many as possible")
    for c in group.top(count):
-      c.moveTo(destination)
+      changeCardGroup(c,destination)
+      #c.moveTo(destination)
       storeProperties(c)
    if not silent: notify("{} draws {} cards.".format(me, count))
    if len(group) <= 3 and group.player.getGlobalVariable('ds') == 'corp': notify(":::WARNING::: {} is about to be decked! R&D down to {} cards.".format(group.player,len(group)))

@@ -556,8 +556,6 @@ def hostMe(card,hostCard):
    hostCards[card._id] = hostCard._id
    setGlobalVariable('Host Cards',str(hostCards))
    orgAttachments(hostCard)
-   if card.name != 'Parasite': # Parasites we want on top of the host ICE, so that the counters can be seen
-      card.sendToBack()
    debugNotify("<<< hostMe()") #Debug
 
 def orgAttachments(card):
@@ -600,7 +598,7 @@ def orgAttachments(card):
       debugNotify("{} index = {}".format(attachment,attachment.getIndex), 4) # Debug
       attNR += 1
       debugNotify("Moving {}, Iter = {}".format(attachment,attNR), 4)
-   card.sendToFront() # Because things don't work as they should :(
+   indexSet(card,'front') # Because things don't work as they should :(
    if debugVerbosity >= 4: # Checking Final Indices
       for attachment in cardAttachements: notify("{} index = {}".format(attachment,attachment.getIndex)) # Debug
    debugNotify("<<< orgAttachments()", 3) #Debug      
