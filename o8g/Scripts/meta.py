@@ -588,13 +588,11 @@ def orgAttachments(card):
          debugNotify("attachment.isFaceUp = {}".format(attachment.isFaceUp))
          cFaceDown = False # If we're moving corp cards to the table, we generally move them face down
       placeOnTable(attachment,x + ((xAlg * attNR) * flipBoard), y + ((yAlg * attNR) * flipBoard),cFaceDown)
-      #attachment.moveToTable(x + ((xAlg * attNR) * flipBoard), y + ((yAlg * attNR) * flipBoard),cFaceDown)
       if cFaceDown and attachment.owner == me: 
          debugNotify("Peeking() at orgAttachments()")
          attachment.peek() # If we moved our own card facedown to the table, we peek at it.
       if fetchProperty(attachment, 'Type') == 'ICE': attachment.orientation = Rot90 # If we just moved an ICE to the table, we make sure it's turned sideways.
       indexSet(attachment,len(cardAttachements) - attNR) # This whole thing has become unnecessary complicated because sendToBack() does not work reliably
-      #attachment.setIndex(len(cardAttachements) - attNR) # This whole thing has become unnecessary complicated because sendToBack() does not work reliably
       debugNotify("{} index = {}".format(attachment,attachment.getIndex), 4) # Debug
       attNR += 1
       debugNotify("Moving {}, Iter = {}".format(attachment,attNR), 4)
