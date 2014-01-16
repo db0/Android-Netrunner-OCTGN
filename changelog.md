@@ -9,7 +9,7 @@ Changelog - Android:Netrunner LCG OCTGN Game Definition
 * Director Haas now doesn't trash scored Director Haas when rezzed.
 * Director Haas can now be properly scored when trashed from R&D
 * If both players have the same alias (local game?), game should not be confused about runner/corp clicks anymore.
-
+* Shock works from the archives as well now.
 
 ### 3.7.0.x
 
