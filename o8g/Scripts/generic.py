@@ -768,11 +768,11 @@ def yaxisMove(card):
 # Remote Calls
 #---------------------------------------------------------------------------   
 
-def grabPileControl(pile):
+def grabPileControl(pile, player = me):
    debugNotify(">>> grabPileControl(){}".format(extraASDebug())) #Debug
-   if pile.controller != me: remoteCall(pile.controller,'passPileControl',[pile,me])
+   if pile.controller != player: remoteCall(pile.controller,'passPileControl',[pile,player])
    count = 0
-   while pile.controller != me: 
+   while pile.controller != player: 
       rnd(1,100)
       count += 1
       if count >= 10: 
@@ -787,16 +787,18 @@ def passPileControl(pile,player):
    pile.setController(player)
    debugNotify("<<< passPileControl(){}".format(extraASDebug())) #Debug
       
-def grabCardControl(card):
+def grabCardControl(card, player = me):
    debugNotify(">>> grabCardControl(){}".format(extraASDebug())) #Debug
-   if card.controller != me: remoteCall(card.controller,'passCardControl',[card,me])
-   count = 0
-   while card.controller != me: 
-      rnd(1,100)
-      count += 1
-      if count >= 10: 
-         notify(":::ERROR::: Card Control not passed! Will see errors.")
-         break   
+   if card.group != table: debugNotify(":::WARNING::: Cannot grab card control while in a pile. Aborting!")
+   else:
+      if card.controller != player: remoteCall(card.controller,'passCardControl',[card,player])
+      count = 0
+      while card.controller != player: 
+         rnd(1,100)
+         count += 1
+         if count >= 10: 
+            notify(":::ERROR::: Card Control not passed! Will see errors.")
+            break   
    debugNotify("<<< grabCardControl(){}".format(extraASDebug())) #Debug
    
 def passCardControl(card,player):
@@ -808,6 +810,25 @@ def passCardControl(card,player):
    if card.controller != player: card.setController(player)
    debugNotify("<<< passCardControl()") #Debug
       
+def changeCardGroup(card, group): # A cumulative function to take care for handling card and group control when moving a card from one group to another.
+   debugNotify(">>> changeCardGroup(){}".format(extraASDebug())) #Debug
+   prevGroup = card.group
+   if prevGroup == table: grabCardControl(card) # We take control of the card, but only if it's on the table, otherwise we can't.
+   else: grabPileControl(prevGroup)
+   grabPileControl(group) # We take control of the target pile
+   card.moveTo(group) # We move the card into the target pile
+   if group.player != group.controller: grabPileControl(group,group.player) # We return control of the target pile to its original owner.
+   if prevGroup.player != prevGroup.controller: grabPileControl(prevGroup,prevGroup.player) # If we took control of a whole pile to allow us to move the card, we return it now
+   debugNotify(">>> changeCardGroup(){}".format(extraASDebug())) #Debug
+
+def placeOnTable(card,x,y,facedownStatus = False): # A function that asks the current card controller to move a card to another table position
+   if card.controller == me: card.moveToTable(x, y, facedownStatus)
+   else: remoteCall(card.controller,'placeOnTable',[card,x,y,facedownStatus])
+   
+def indexSet(card,index): # A function that asks the current card controller to move the card to a specific index.
+   if card.controller == me: card.setIndex(index) 
+   else: remoteCall(card.controller,'indexSet',[card,index])
+   
 #---------------------------------------------------------------------------
 # Patron Functions
 #---------------------------------------------------------------------------   

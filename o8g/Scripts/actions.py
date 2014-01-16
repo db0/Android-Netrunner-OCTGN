@@ -1790,7 +1790,7 @@ def exileCard(card, silent = False):
          notify("--> {} loses {} Agenda Points".format(me, APloss))
       executePlayScripts(card,'TRASH') # We don't want to run automations on simply revealed cards.
       clearAttachLinks(card)
-      card.moveTo(card.owner.piles['Removed from Game'])
+      changeCardGroup(card,card.owner.piles['Removed from Game'])
    if not silent: notify("{} exiled {}{}.".format(me,card,MUtext))
 
 def uninstall(card, x=0, y=0, destination = 'hand', silent = False):

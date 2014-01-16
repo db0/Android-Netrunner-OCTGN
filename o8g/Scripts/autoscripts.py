@@ -1582,7 +1582,8 @@ def ModifyStatus(Autoscript, announceText, card, targetCards = None, notificatio
          elif trashResult == 'COUNTERED': extraText = " (Countered!)"
       elif action.group(1) == 'Exile' and exileCard(targetCard, silent = True) != 'ABORT': pass
       elif action.group(1) == 'Rework': # Rework puts a card on top of R&D (usually shuffling afterwards)
-         targetCard.moveTo(targetCard.controller.piles['R&D/Stack'])
+         changeCardGroup(targetCard,targetCard.controller.piles['R&D/Stack'])
+         #targetCard.moveTo(targetCard.controller.piles['R&D/Stack'])
       elif action.group(1) == 'Install': # Install simply plays a cast on the table unrezzed without paying any costs.
          if re.search(r'-payCost',Autoscript): # This modulator means the script is going to pay for the card normally
             preReducRegex = re.search(r'-reduc([0-9])',Autoscript) # this one means its going to reduce the cost a bit.
@@ -1595,7 +1596,7 @@ def ModifyStatus(Autoscript, announceText, card, targetCards = None, notificatio
          intPlay(targetCard, payCost, True, preReduc)
       elif action.group(1) == 'Score': # Score takes a card and claims it as an agenda
          targetPL = ofwhom(Autoscript, targetCard.owner)
-         targetCard.setController(targetPL)
+         grabCardControl(targetCard,targetPL)
          if targetPL.getGlobalVariable('ds') == 'corp': scoreType = 'scoredAgenda'
          else: scoreType = 'liberatedAgenda'
          placeCard(targetCard, 'SCORE', type = scoreType)
