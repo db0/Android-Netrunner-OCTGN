@@ -421,8 +421,9 @@ def sendToTrash(card, pile = None): # A function which takes care of sending a c
    if card.controller != me and card.group == table: grabCardControl(card) # We take control of the card in order to avoid errors
    if card.group == table: 
       playTrashSound(card)
-      executePlayScripts(card,'TRASH') # We don't want to run automations on simply revealed cards.
       autoscriptOtherPlayers('CardTrashed',card)
+   if card.group == table or chkModulator(card, 'runTrashScriptWhileInactive', 'onTrash'): 
+      executePlayScripts(card,'TRASH') # We don't want to run automations on simply revealed cards, but some of them will like Director Haas.
    clearAttachLinks(card)
    if chkModulator(card, 'preventTrash', 'onTrash'): # IF the card has the preventTrash modulator, it's not supposed to be trashed.
       if chkModulator(card, 'ifAccessed', 'onTrash') and ds != 'runner': card.moveTo(pile) # Unless it only has that modulator active during runner access. Then when the corp trashes it, it should trash normally.
