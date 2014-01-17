@@ -233,6 +233,7 @@ def executePlayScripts(card, action):
 def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
    debugNotify(">>> useAbility(){}".format(extraASDebug())) #Debug
    mute()
+   update() # Make sure all other effects have finished resolving.
    global failedRequirement,gatheredCardList
    AutoscriptsList = [] # An empty list which we'll put the AutoActions to execute.
    storeProperties(card) # Just in case
