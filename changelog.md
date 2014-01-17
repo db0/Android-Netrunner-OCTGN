@@ -1,6 +1,12 @@
 Changelog - Android:Netrunner LCG OCTGN Game Definition
 ===============================================
 
+### 3.7.2.x
+
+* Fix for start of turn slowness
+* Added message if changing pile control takes too long
+* Using a custom card ability multiple times rapidly should hopefully work better now.
+
 ### 3.7.1.x
 
 * Keyhole now uses a click and hopefully made it so that you don't see "???" anymore

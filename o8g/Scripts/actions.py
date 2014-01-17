@@ -87,6 +87,7 @@ def modClicks(group = table,x=0,y=0,targetPL = me, count = 1, action = 'interact
    loopWait = 0
    while getGlobalVariable('Max Clicks') == 'CHECKED OUT':
       rnd(1,10)
+      if loopWait >= 3 and not count % 3: notify("=> {} is still checking Max Clicks...".format(me))
       loopWait += 1
       if loopWait == 15: 
          notify(":::ERROR::: cannot check out the max clicks variable. Try again later")
@@ -105,7 +106,7 @@ def modClicks(group = table,x=0,y=0,targetPL = me, count = 1, action = 'interact
       notify(":::WARNING::: {}'s Max Clicks were not set. Setting at the default value".format(targetPL))
       if targetPL.getGlobalVariable('ds') == 'corp': maxClicksDict[targetPL._id] = 3
       else: maxClicksDict[targetPL._id] = 4
-   setGlobalVariable('Max Clicks',str(maxClicksDict)) # Clear any feinted targets
+   setGlobalVariable('Max Clicks',str(maxClicksDict)) 
    debugNotify("<<< modClicks() with return {}".format(maxClicksDict[targetPL._id])) #Debug
    return maxClicksDict[targetPL._id]
 
@@ -193,8 +194,10 @@ def goToSot (group, x=0,y=0):
             card.peek() # We also peek at all our facedown cards which the runner accessed last turn (because they left them unpeeked)
    except: notify(":::ERROR::: When trying to refresh cards. Please report at: https://github.com/db0/Android-Netrunner-OCTGN/issues/275")
    clearRestrictionMarkers()
-   remoteServers = (card for card in table if card.Name == 'Remote Server')
-   for card in remoteServers: grabCardControl(card) # At the start of each player's turn, we swap the ownership of all remote server, to allow them to double-click them (If they're a runner) or manipulate them (if they're a corp)
+   remoteServers = (card for card in table if card.Name == 'Remote Server' and card.controller != me)
+   for card in remoteServers: remoteCall(card.controller,'passCardControl',[card,me]) 
+   # At the start of each player's turn, we swap the ownership of all remote server, to allow them to double-click them (If they're a runner) or manipulate them (if they're a corp)
+   # We do not use grabCardControl as that may take a while, as it's waiting for control change to resolve.                                                                                    
    newturn = True
    turn += 1
    autoRez()
