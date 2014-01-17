@@ -774,6 +774,7 @@ def grabPileControl(pile, player = me):
    if pile.controller != player: remoteCall(pile.controller,'passPileControl',[pile,player])
    count = 0
    while pile.controller != player: 
+      if count >= 2 and not count % 2: notify("=> {} is still trying to take control of {}...".format(player,pileName(pile)))
       rnd(1,100)
       count += 1
       if count >= 10: 
@@ -796,6 +797,7 @@ def grabCardControl(card, player = me):
       if card.controller != player: remoteCall(card.controller,'passCardControl',[card,player])
       count = 0
       while card.controller != player: 
+         if count >= 2 and not count % 2: notify("=> {} is still trying to take control of {}...".format(player,card))
          rnd(1,100)
          count += 1
          if count >= 10: 
