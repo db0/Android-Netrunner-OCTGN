@@ -164,7 +164,7 @@ def parseNewCounters(player,counter,oldValue):
                HQaccess(silent = True)
    debugNotify("<<< parseNewCounters()")
 
-def checkMovedCard(player,card,fromGroup,toGroup,oldIndex,index,oldX,oldY,x,y,isScriptMove):
+def checkMovedCard(player,card,fromGroup,toGroup,oldIndex,index,oldX,oldY,x,y,isScriptMove,highlight = None, markers = []):
    mute()
    debugNotify("isScriptMove = {}".format(isScriptMove))
    if toGroup != me.piles['R&D/Stack'] and card.owner == me: superCharge(card) # First we check if we should supercharge the card, but only if the card is still on the same group at the time of execution.  
