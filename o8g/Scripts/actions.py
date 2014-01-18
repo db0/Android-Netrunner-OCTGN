@@ -2314,7 +2314,6 @@ def drawMany(group, count = None, destination = None, silent = False):
    for c in group.top(count):
       changeCardGroup(c,destination)
       #c.moveTo(destination)
-      storeProperties(c)
    if not silent: notify("{} draws {} cards.".format(me, count))
    if len(group) <= 3 and group.player.getGlobalVariable('ds') == 'corp': notify(":::WARNING::: {} is about to be decked! R&D down to {} cards.".format(group.player,len(group)))
    debugNotify("<<< drawMany() with return: {}".format(count), 3)

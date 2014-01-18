@@ -2183,7 +2183,7 @@ Levy AR Lab Access
 -----
 bc0f047c-01b1-427f-a439-d451eda03035
 -----
-onPlay:ReshuffleHeap$$ReshuffleStack$$Draw5Cards$$ExileMyself
+onPlay:ReshuffleHeap-warnReshuffle$$ReshuffleStack$$Draw5Cards$$ExileMyself
 +++++
 
 .....

@@ -821,6 +821,7 @@ def changeCardGroup(card, group): # A cumulative function to take care for handl
    if prevGroup == table: grabCardControl(card) # We take control of the card, but only if it's on the table, otherwise we can't.
    else: grabPileControl(prevGroup)
    grabPileControl(group) # We take control of the target pile
+   storeProperties(card) # Since we're at it, we might as well store its properties for later
    card.moveTo(group) # We move the card into the target pile
    if group.player != group.controller: grabPileControl(group,group.player) # We return control of the target pile to its original owner.
    if prevGroup != table and prevGroup.player != prevGroup.controller: grabPileControl(prevGroup,prevGroup.player) # If we took control of a whole pile to allow us to move the card, we return it now
