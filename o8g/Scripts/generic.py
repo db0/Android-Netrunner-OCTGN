@@ -771,13 +771,15 @@ def yaxisMove(card):
 def grabPileControl(pile, player = me):
    debugNotify(">>> grabPileControl(){}".format(extraASDebug())) #Debug
    debugNotify("Grabbing control of {}'s {} on behalf of {}".format(pile.player,pile.name,player))
-   if pile.controller != player: remoteCall(pile.controller,'passPileControl',[pile,player])
+   if pile.controller != player:
+      if pile.controller != me: remoteCall(pile.controller,'passPileControl',[pile,player])
+      else: passPileControl(pile,player) # We don't want to do a remote call if the current controller is ourself, as the call we go out after we finish all scripts, which will end up causing a delay later while the game is checking if control pass is done.
    count = 0
    while pile.controller != player: 
       if count >= 2 and not count % 2: notify("=> {} is still trying to take control of {}...".format(player,pileName(pile)))
       rnd(1,100)
       count += 1
-      if count >= 10: 
+      if count >= 6: 
          notify(":::ERROR::: Pile Control not passed! Will see errors.")
          break   
    debugNotify("<<< grabPileControl(){}".format(extraASDebug())) #Debug
@@ -794,13 +796,15 @@ def grabCardControl(card, player = me):
    debugNotify("Grabbing control of {} on behalf of {}".format(card,player))
    if card.group != table: debugNotify(":::WARNING::: Cannot grab card control while in a pile. Aborting!")
    else:
-      if card.controller != player: remoteCall(card.controller,'passCardControl',[card,player])
+      if card.controller != player: 
+         if card.controller != me: remoteCall(card.controller,'passCardControl',[card,player])
+         else: passCardControl(card,player) # We don't want to do a remote call if the current controller is ourself, as the call we go out after we finish all scripts, which will end up causing a delay later while the game is checking if control pass is done.
       count = 0
       while card.controller != player: 
          if count >= 2 and not count % 2: notify("=> {} is still trying to take control of {}...".format(player,card))
          rnd(1,100)
          count += 1
-         if count >= 10: 
+         if count >= 6: 
             notify(":::ERROR::: Card Control not passed! Will see errors.")
             break   
    debugNotify("<<< grabCardControl(){}".format(extraASDebug())) #Debug
@@ -822,6 +826,7 @@ def changeCardGroup(card, group): # A cumulative function to take care for handl
    else: grabPileControl(prevGroup)
    grabPileControl(group) # We take control of the target pile
    storeProperties(card) # Since we're at it, we might as well store its properties for later
+   debugNotify("Finished Taking Control. Moving card to different group",1)
    card.moveTo(group) # We move the card into the target pile
    if group.player != group.controller: grabPileControl(group,group.player) # We return control of the target pile to its original owner.
    if prevGroup != table and prevGroup.player != prevGroup.controller: grabPileControl(prevGroup,prevGroup.player) # If we took control of a whole pile to allow us to move the card, we return it now
