@@ -1,6 +1,11 @@
 Changelog - Android:Netrunner LCG OCTGN Game Definition
 ===============================================
 
+### 3.7.3.x
+
+* Fixed Oversight AI and Bioroid Efficiency Research.
+* Removed some notify tickers as they're not that useful.
+
 ### 3.7.2.x
 
 * Fix for start of turn slowness
