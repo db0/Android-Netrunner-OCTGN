@@ -583,7 +583,7 @@ def orgAttachments(card):
    for attachment in cardAttachements:
       debugNotify("Checking group of {}".format(attachment))
       debugNotify("group name = {}".format(attachment.group.name))
-      if attachment.owner.getGlobalVariable('ds') == 'corp' and pileName(attachment.group) in ['R&D','Face-up Archives','HQ']:
+      if attachment.owner.getGlobalVariable('ds') == 'corp' and pileName(attachment.group) in ['R&D','Face-up Archives','HQ'] and attachment.Type != 'Operation':
          debugNotify("card is faceDown")
          cFaceDown = True
       else: 
