@@ -68,14 +68,8 @@ def useClick(group = table, x=0, y=0, count = 1, manual = False):
    currClicks += count + lastKnownNrClicks - me.Clicks# If the player modified their click counter manually, the last two will increase/decreate our current click accordingly.
    me.Clicks -= count
    lastKnownNrClicks = me.Clicks
-   if not manual: # We don't clear all event when manually dragging events to the table, or it will clear the one we just played as well
-      debugNotify("About to clear all events from table")
-      for card in table: # We discard all events on the table when the player tries to use another click.
-         debugNotify("Processing {}".format(card))
-         hostCards = eval(getGlobalVariable('Host Cards'))
-         debugNotify("hostCards eval = {}".format(hostCards))
-         if card.isFaceUp and (card.Type == 'Operation' or card.Type == 'Event') and card.highlight != DummyColor and card.highlight != RevealedColor and card.highlight != InactiveColor and not card.markers[mdict['Scored']] and not hostCards.has_key(card._id): # We do not trash "scored" events (e.g. see Notoriety) or cards hosted on others card (e.g. see Oversight AI)
-            intTrashCard(card,0,"free") # Clearing all Events and operations for players who keep forgeting to clear them.   
+   #if not manual: clearLeftoverEvents() # We don't clear all event when manually dragging events to the table, or it will clear the one we just played as well. 
+   # Removed above for speed. Now done only in turn end.
    debugNotify("<<< useClick", 3) #Debug
    if count == 2: return "{} {} {} uses Double Click #{} and #{}{}".format(uniClick(),uniClick(),me,currClicks - 1, currClicks,extraText)
    elif count == 3: return "{} {} {} {} uses Triple Click #{}, #{} and #{}{}".format(uniClick(),uniClick(),uniClick(),me,currClicks - 2, currClicks - 1, currClicks,extraText)
@@ -1101,7 +1095,8 @@ def findVirusProtection(card, targetPL, VirusInfected): # Find out if the player
    return protectionFound
 
 def findCounterPrevention(count, counter, targetPL): # Find out if the player has any markers preventing them form gaining specific counters (Credits, Agenda Points etc)
-   debugNotify(">>> findCounterPrevention() for {}.".format(counter)) #Debug
+   debugNotify(">>> findCounterPrevention() for {}. Return immediately <<<".format(counter)) #Debug
+   return 0
    preventionFound = 0
    forfeit = None
    preventionType = 'preventCounter:{}'.format(counter)
@@ -1644,13 +1639,10 @@ def clearAll(markersOnly = False, allPlayers = False): # Just clears all the pla
       if card.controller == me: 
          if card.name == 'Trace': card.highlight = None # We clear the card in case a tracing is pending that was not done.
          clear(card,silent = True)
-         if not markersOnly:
-            hostCards = eval(getGlobalVariable('Host Cards'))
-            if card.isFaceUp and (card.Type == 'Operation' or card.Type == 'Event') and card.highlight != DummyColor and card.highlight != RevealedColor and card.highlight != InactiveColor and not card.markers[mdict['Scored']] and not hostCards.has_key(card._id): # We do not trash "scored" events (e.g. see Notoriety) or cards hosted on others card (e.g. see Oversight AI)
-               intTrashCard(card,0,"free") # Clearing all Events and operations for players who keep forgeting to clear them.
          if card.owner == me and card.Type == 'Identity' and Stored_Type.get(card._id,'NULL') == 'NULL':
             delayed_whisper(":::DEBUG::: Identity was NULL. Re-storing as an attempt to fix")
             storeProperties(card, True)
+   if not markersOnly: clearLeftoverEvents()
    debugNotify("<<< clearAll()", 3)
 
 def clearAllNewCards(remoted = False): # Clears all highlights from new cards.
