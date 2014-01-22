@@ -2,6 +2,8 @@
 
 I've done some optimization on the script execution. I hope the game now plays less laggy and with less counter mess.
 
+--- Please restart your OCTGN to get the updates! ---
+
 However as a result, events and operations will stay on the table until your end of turn, unless you clear them manually.
 
 Hopefully it will all run better now. Enjoy!
