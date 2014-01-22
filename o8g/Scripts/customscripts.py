@@ -138,6 +138,7 @@ def UseCustomAbility(Autoscript, announceText, card, targetCards = None, notific
          remoteCall(findOpponent(),"Snoop",['Reveal and Trash'])
          announceString = announceText + " reveal the runner's hand and trash a card"
    if fetchProperty(card, 'name') == "Punitive Counterstrike":
+      barNotifyAll("000000","--The runner is setting how many agenda points they stole last turn.")
       count = askInteger("How many agenda points did you steal last turn?", 0)
       if count: InflictX('Inflict{}MeatDamage-onOpponent'.format(count), '', card)
       notify("--> {} is punished for their shenanigans with {} meat damage".format(me,count))
