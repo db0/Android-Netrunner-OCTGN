@@ -238,6 +238,7 @@ def chkRAM(card, action = 'INSTALL', silent = False):
       if action == 'INSTALL':
          card.owner.MU -= MUreq
          chkCloud(card)
+         update()
          if not card.markers[mdict['Cloud']]:
             MUtext = ", using up  {}".format(uniMU(MUreq))
          else: MUtext = ''
@@ -570,8 +571,6 @@ def clearLeftoverEvents():
 
 def placeCard(card, action = 'INSTALL', hostCard = None, type = None, retainPos = False):
    debugNotify(">>> placeCard() with action: {}".format(action)) #Debug
-   global scriptedPlay
-   scriptedPlay += 1
    if not hostCard:
       hostCard = chkHostType(card, seek = 'DemiAutoTargeted')
       if hostCard:

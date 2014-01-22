@@ -30,7 +30,6 @@ import time
 identName = None # The name of our current identity
 Identity = None
 ModifyDraw = 0 #if True the audraw should warn the player to look at r&D instead
-scriptedPlay = 0 # Attempt to work with the OnMoveCard event. Doesn't work atm
 
 gatheredCardList = False # A variable used in reduceCost to avoid scanning the table too many times.
 costModifiers = [] # used in reduceCost to store the cards that might hold potential cost-modifying effects. We store them globally so that we only scan the table once per execution
@@ -263,7 +262,6 @@ def createStartingCards():
 def intJackin(group = table, x = 0, y = 0, manual = False):
    debugNotify(">>> intJackin(){}".format(extraASDebug())) #Debug
    mute()
-   global scriptedPlay
    if not Identity:
       information("::: ERROR::: No identify found! Please load a deck which contains an identity card.")
       return
@@ -278,14 +276,12 @@ def intJackin(group = table, x = 0, y = 0, manual = False):
    debugNotify("Placing Identity", 3)
    debugNotify("Identity is: {}".format(Identity), 3)
    if ds == "corp":
-      scriptedPlay += 1
       Identity.moveToTable((169 * flipBoard) + flipModX, (255 * flipBoard) + flipModY)
       rnd(1,10) # Allow time for the ident to be recognised
       modClicks(count = 3, action = 'set to')
       me.MU = 0
       notify("{} is the CEO of the {} Corporation".format(me,Identity))
    else:
-      scriptedPlay += 1
       Identity.moveToTable((106 * flipBoard) + flipModX, (-331 * flipBoard) + flipModY)
       rnd(1,10)  # Allow time for the ident to be recognised
       modClicks(count = 4, action = 'set to')
