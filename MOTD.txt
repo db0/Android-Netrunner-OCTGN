@@ -1,8 +1,8 @@
 =====Message of the Day======
 
-True Color is now rezzed and scripted!
+I've done some optimization on the script execution. I hope the game now plays less laggy and with less counter mess.
 
-Also the majority of the red errors should be removed now. Only a few may remain still.
+However as a result, events and operations will stay on the table until your end of turn, unless you clear them manually.
 
-Enjoy!
+Hopefully it will all run better now. Enjoy!
 =============================

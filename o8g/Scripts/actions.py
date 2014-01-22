@@ -727,7 +727,6 @@ def findExtraCosts(card, action = 'REZ'):
    debugNotify("<<< findExtraCosts(). Increase: {}.".format(increase), 3) #Debug
    return increase
 
-
 def reduceCost(card, action = 'REZ', fullCost = 0, dryRun = False, reversePlayer = False): 
    # reversePlayer is a variable that holds if we're looking for cost reducing effects affecting our opponent, rather than the one running the script.
    type = action.capitalize()
