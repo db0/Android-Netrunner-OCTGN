@@ -1941,7 +1941,7 @@ def intPlay(card, cost = 'not free', scripted = False, preReduction = 0, retainP
    chooseSide() # Just in case...
    if not scripted: whisper("+++ Processing. Please Hold...")
    storeProperties(card)
-   random = rnd(10,100)
+   update()
    if not checkNotHardwareConsole(card, manual = retainPos): return	#If player already has a Console in play and doesnt want to play that card, do nothing.
    if card.Type != 'ICE' and card.Type != 'Agenda' and card.Type != 'Upgrade' and card.Type != 'Asset': # We only check for uniqueness on install, against cards that install face-up
       if not checkUnique(card, manual = retainPos): return #If the player has the unique card and opted not to trash it, do nothing.
@@ -2053,59 +2053,6 @@ def intPlay(card, cost = 'not free', scripted = False, preReduction = 0, retainP
       else: notify("++++ No Stored Keywords Found for {}".format(card))
       if Stored_Cost.get(card._id,None): notify("++++ Stored Cost: {}".format(fetchProperty(card, 'Cost')))
       else: notify("++++ No Stored Cost Found for {}".format(card))
-
-
-def chkTargeting(card):
-   debugNotify(">>> chkTargeting(){}".format(extraASDebug())) #Debug
-   if (re.search(r'on(Rez|Play|Install)[^|]+(?<!Auto)Targeted', CardsAS.get(card.model,''))
-         and len(findTarget(CardsAS.get(card.model,''))) == 0
-         and not re.search(r'isOptional', CardsAS.get(card.model,''))
-         and not confirm("This card requires a valid target for it to work correctly.\
-                        \nIf you proceed without a target, strange things might happen.\
-                      \n\nProceed anyway?")):
-      return 'ABORT'
-   if ds == 'corp': runnerPL = findOpponent()
-   else: runnerPL = me
-   if re.search(r'ifTagged', CardsAS.get(card.model,'')) and runnerPL.Tags == 0 and not re.search(r'isOptional', CardsAS.get(card.model,'')):
-      whisper("{} must be tagged in order to use this card".format(runnerPL))
-      return 'ABORT'
-   if re.search(r'isExposeTarget', CardsAS.get(card.model,'')) and getSetting('ExposeTargetsWarn',True):
-      if confirm("This card will automatically provide a bonus depending on how many non-exposed derezzed cards you've selected.\
-                \nMake sure you've selected all the cards you wish to expose and have peeked at them before taking this action\
-                \nSince this is the first time you take this action, you have the opportunity now to abort and select your targets before traying it again.\
-              \n\nDo you want to abort this action?\
-                \n(This message will not appear again)"):
-         setSetting('ExposeTargetsWarn',False)
-         return 'ABORT'
-      else: setSetting('ExposeTargetsWarn',False) # Whatever happens, we don't show this message again.
-   if re.search(r'Reveal&Shuffle', CardsAS.get(card.model,'')) and getSetting('RevealandShuffleWarn',True):
-      if confirm("This card will automatically provide a bonus depending on how many cards you selected to reveal (i.e. place on the table) from your hand.\
-                \nMake sure you've selected all the cards (of any specific type required) you wish to reveal to the other players\
-                \nSince this is the first time you take this action, you have the opportunity now to abort and select your targets before trying it again.\
-              \n\nDo you want to abort this action?\
-                \n(This message will not appear again)"):
-         setSetting('RevealandShuffleWarn',False)
-         return 'ABORT'
-      else: setSetting('RevealandShuffleWarn',False) # Whatever happens, we don't show this message again.
-   if re.search(r'HandTarget', CardsAS.get(card.model,'')) or re.search(r'HandTarget', CardsAA.get(card.model,'')):
-      hasTarget = False
-      for c in me.hand:
-         if c.targetedBy and c.targetedBy == me: hasTarget = True
-      if not hasTarget:
-         whisper(":::Warning::: This card effect requires that you have one of more cards targeted from your hand. Aborting!")
-         return 'ABORT'
-
-def checkNotHardwareConsole (card, manual = False):
-   debugNotify(">>> checkNotHardwareConsole(){}".format(extraASDebug())) #Debug
-   mute()
-   if card.Type != "Hardware" or not re.search(r'Console', getKeywords(card)): return True
-   ExistingConsoles = [ c for c in table
-         if c.owner == me and c.isFaceUp and re.search(r'Console', getKeywords(c)) ]
-   if ((not manual and len(ExistingConsoles) != 0) or (manual and len(ExistingConsoles) != 1)) and not confirm("You already have at least one console in play and you're not normally allowed to install a second. Are you sure you want to install {}?".format(fetchProperty(card, 'name'))): return False
-   #else:
-      #for HWDeck in ExistingConsoles: trashForFree(HWDeck)
-   debugNotify(">>> checkNotHardwareConsole()") #Debug
-   return True
 
 def playForFree(card, x = 0, y = 0):
    debugNotify(">>> playForFree(){}".format(extraASDebug())) #Debug
