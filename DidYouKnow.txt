@@ -9,10 +9,10 @@ You can target a card by holding shift and left-clicking on it. You clear the ta
 When a card effect requires that you have one or more cards as targets, first target them, and then use the card effect.
 ||
 Your Ice can end a run and trigger all the effects from a Jack-Out, such as a Stimhack. 
+To do that, double-click on your Ice and select the "End the Run" option. If your ice has only this subroutine, it will be used automatically.
 
-To do that, double-click on your Ice and select the "RunEnd" ability. If your ice has only this ability, it will be used automatically.
 ||
-You can start a run via the shortcuts [F5], [F6], [F7], [F8]
+You can start a run by simply double clicking on a server.
 
 You end your run by other Jacking Out [Esc], or by Succeeding [F3]. When you use on of these actions, cards which have effects from them will automatically trigger (i.e. Desperado or Stimhack)
 ||
@@ -45,10 +45,6 @@ If you're a corp, double-clicking on your 'virus scan' will automatically remove
 
 It will cost you 3 actions in that turn though, so make sure you absolutely need to do it.
 ||
-Make sure you always update your sets if there is a new version. Not doing so might make your cards malfunction!
-
-We provide a patch to allow you to retain your uncensored version, so you don't need to recreate your core set again.
-||
 We have a Guild in Board Game Geek. Join us and discuss all things ANR/OCTGN
 
 Would you like to learn more?
@@ -61,11 +57,9 @@ Simply press F3 to finish your run successfully, and the game will then inquire 
 
 This will show the cards only to you and will prompt you for an appropriate action.
 ||
-You do not have to take control of a card in order to score or trash it.
+As a runner, you do not have to take control of a card in order to score or trash it.
 
-Simply target it with Shift+Left-Click, then:
-* If you want to trash a card, right click on the table and select "Pay and Trash Target" or "Trash Target for Free"
-* If you want to score an opponent's agenda, select Runner Actions > "Score Target Agenda"
+Simply target it with Shift+Left-Click, then press [Ctrl] + [Enter]
 ||
 You can spawn some helpful cards on the table, to remind you of the timing structure of the turn or run, or what actions you can take per turn
 
@@ -96,10 +90,12 @@ Would you like to learn more?
 https://github.com/db0/Android-Netrunner-OCTGN/issues
 ||
 If you're a Corp and you have an unrezzed "PAD Campaign", your best tactic is to rez it, just before you press [F1] to start your turn.
-||
-Some actions will affect your opponent's cards, such as Trashing or Exposing them, or trying to inflict damage.
 
-In such cases, a message will pop-up to inform you what you need to do. Please read that carefully and press "Yes" or "No" accordingly.
+If you keep forgetting right click on the card and go to Rez > Auto-Rez at start of turn.
+||
+Some actions will affect your opponent's cards, such trying to inflict damage.
+
+In such cases, a message will pop-up to inform you if your opponent has a chance to react. Please read that carefully and press "Yes" or "No" accordingly.
 
 This message gives your opponent an opportunity to play reactions to your event. Let them know what you are about to do so that they can activate their cards, if they have any.
 ||
@@ -121,14 +117,13 @@ Doing Damage will discard your opponent's cards at random and Brain Damage will 
 ||
 The game keeps track of your handsize and will complain if you're trying to end your turn [F12] with more cards than you're allowed to hold.
 
-If that happens, make sure you press [F12] once again after you've discarded down to your maximum hand size.
+If that happens, just discard down to your handsize, and the game will automatically end your turn.
 
 Remember: Unless the game tells that the Corps has reached CoB, or the Runner has gone to sleep, your turn has not yet ended properly as far as OCTGN is concerned.
 ||
 It's easy!
 * Press [F1] to start your turn.
 * Press [F12] to end your turn.
-* (Optional) After you end your turn, press the little play button on your opponent's tab, to give them the GO signal to start their turn.
 ||
 You can prioritize your cards.
 
@@ -143,12 +138,6 @@ And if you want an extra level of priority, you can target a card with shift+cli
 Making Credits is Easy. Just press Ctrl+C
 
 Putting Advancements is also Easy. Move your mouse cursor over the card to advance and press Alt+A
-||
-If the OCTGN server ever goes down and you cannot login, you can still play games "offline" via direct IP connection.
-
-Would you like to learn more?
-&&
-http://octgn.gamersjudgement.com/viewtopic.php?f=52&t=513
 ||
 Learning the shortcuts will make the game go faster for you.
 
@@ -214,11 +203,7 @@ Right-Click on the Table and go into "Runner Actions".
 
 All your stuff is in there. Remember their shortcuts!
 ||
-Due to engine limitations, you cannot switch sides within the same game.
-
-If you want to swap sides, you'll have to exit and start a new game.
-
-Remember, Corp needs to be player [A]
+You cannot switch sides within the same game. Simply load a deck of the appropriate side and the table board will flip.
 ||
 People can observe games.
 
@@ -248,9 +233,9 @@ If you're the Corp, you can Expose and Unexpose your cards with the same action
 
 Right Click on the Table > (Un)Expose
 
-Use this action when the runner exposes or accesses an unrezzed card.
+Use this action when the runner uses an effect that exposes an unrezzed card.
 
-Once they're done looking, hide it again.
+Once they're done looking, hide it again using the same shortcut
 
 Exposed cards have a white highlight.
 ||
@@ -284,7 +269,7 @@ Almost anything important that happens in the game is announced there.
 
 Keep an eye on it, in case your opponent does a mistake.
 ||
-If you modify your clicks manually, the game will take that into account when announcing which action you're taking.
+If you modify your available clicks manually, the game will take that into account when announcing which action you're taking.
 ||
 You can clear your cards of Temporary +1 and -1 counters
 
@@ -329,25 +314,11 @@ Would you like to learn more?
 &&
 http://84.205.248.92/slaghund/slagview.aspx
 ||
-The Developer of this plugin provides a voice chat server.
+The developer has been recording their better games and posting them on youtube. 
 
-We provide a Mumble server to allow ANR players to be able to effortlessly connect and voice communicate with others.
-
-Voice communication not only improves the speed of the game significantly, but it also makes it actually _feel_ like a boardgame, of which an important aspect if the player interaction outside of the game rules.
-
-Even if you don't own a mic, take the time to install the mumble client and setup a connection to the server, so that you can connect easily. Even with one side being able to talk, it helps.
-
-Would you like to learn more?
+Check them out for some interesting plays.
 &&
-http://octgn.gamersjudgement.com/viewtopic.php?f=52&t=545
-||
-The player Tragic, has been making awesome videos showing both how to play ANR and how to use OCTGN at the same time, along with the developer of this plugin.
-
-The videos show gameplay from both sides of the table, with accompanying commentary from both players on their strategy
-
-Check them out, they're really cool!
-&&
-http://boardgamegeek.com/video/21462/android-netrunner/tragic-vs-db0-core-set-starter-decks
+https://www.youtube.com/channel/UCQ80vlQbsHK7bv2fxirRmxg
 ||
 You can have all the keyboard shortcuts in a single-page cheat sheet
 
@@ -365,18 +336,16 @@ This means that the effects of failed traces will happen as soon as the runner f
 Because of the way this works THE RUNNER MUST USE THE TRACE CARD to calculate, compare and announce their base link strength. 
 This applies even if you already exceed the current trace!
 
-What this means for eveyrone is less abilities per card and less clicking around after traces to being their effects.
+What this means for everyone is less abilities per card and less clicking around after traces to being their effects.
 It also means that I can now also automate abilities such as the one from Spinal Modem.
 ||
 You do not need to take control of opponent's cards when accessing in a remote server.
 
 The game provides a way to properly access cards in an opponent's central server. 
-After you have pressed F3 to signify that a successful run on that server, simply target the cards you are about to access and press Ctrl+Enter (Or use 'Access Target' from the table menu)
+Simply target the cards you are about to access and press Ctrl+Enter (Or use 'Access Target' from the table menu)
 
 The card will be flipped up and you will be presented with any relevant options depending on the card type. 
 This will also trigger any automations on the card, such as Fetal AI's ability and give your opponent an opportunity to activate any traps.
-
-So don't rush to click 'Yes' when you hit an ambush.
 ||
 We have an instructional video available!
 
@@ -385,6 +354,12 @@ It contains everything you need to know and were always afraid to ask, about pla
 Would you like to learn more?
 &&
 http://www.youtube.com/watch?v=nGGECL7nom0
+||
+You can support the developer of this here fine plugin by becoming their patron.
+
+Would you like to learn more?
+&&
+http://www.patreon.com/db0
 ||
 You can secretly flag one of your cards to be rezzed automatically at the start of your turn. 
 
