@@ -565,7 +565,8 @@ def advanceCardP(card, x = 0, y = 0):
       me.Clicks += 1 # If the player didn't notice they didn't have enough credits, we give them back their click
       return # If the player didn't have enough money to pay and aborted the function, then do nothing.
    card.markers[mdict['Advancement']] += 1
-   playSound('Advance-Card')
+   remoteCall(findOpponent(),'playSound',['Advance-Card']) # Attempt to fix lag
+   #playSound('Advance-Card')
    if card.isFaceUp: notify("{} and paid {}{} to advance {}.".format(ClickCost,uniCredit(1 - reduction),extraText,card))
    else: notify("{} and paid {}{} to advance a card.".format(ClickCost,uniCredit(1 - reduction),extraText))
 

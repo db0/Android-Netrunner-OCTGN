@@ -16,19 +16,21 @@
 
 import re
 
-def playInstallSound(card):
+def playInstallSound(card, remoted = False):
    debugNotify(">>> playInstallSound()") #Debug
    if getSetting('Sounds', True) == 'False': return
-   if re.search(r'Daemon',getKeywords(card)): playSound('Install-Daemon')
-   elif re.search(r'Chip',getKeywords(card)): playSound('Install-Chip')
-   elif re.search(r'Gear',getKeywords(card)): playSound('Install-Gear')
-   elif re.search(r'Console',getKeywords(card)): playSound('Install-Console')
-   elif re.search(r'Virus',getKeywords(card)): playSound('Install-Virus')
-   elif fetchProperty(card, 'Type') == 'Program': playSound('Install-Program')
-   elif fetchProperty(card, 'Type') == 'Hardware': playSound('Install-Hardware')
-   elif fetchProperty(card, 'Type') == 'Resource': playSound('Install-Resource')
-   elif fetchProperty(card, 'Type') == 'ICE': playSound('Install-ICE')
-   elif fetchProperty(card, 'Type') == 'Asset' or fetchProperty(card, 'Type') == 'Upgrade' or fetchProperty(card, 'Type') == 'Agenda': playSound('Install-Root')
+   if not remoted: remoteCall(findOpponent(),'playInstallSound',[card,True]) # Attempt to fix lag
+   else: 
+      if re.search(r'Daemon',getKeywords(card)): playSound('Install-Daemon')
+      elif re.search(r'Chip',getKeywords(card)): playSound('Install-Chip')
+      elif re.search(r'Gear',getKeywords(card)): playSound('Install-Gear')
+      elif re.search(r'Console',getKeywords(card)): playSound('Install-Console')
+      elif re.search(r'Virus',getKeywords(card)): playSound('Install-Virus')
+      elif fetchProperty(card, 'Type') == 'Program': playSound('Install-Program')
+      elif fetchProperty(card, 'Type') == 'Hardware': playSound('Install-Hardware')
+      elif fetchProperty(card, 'Type') == 'Resource': playSound('Install-Resource')
+      elif fetchProperty(card, 'Type') == 'ICE': playSound('Install-ICE')
+      elif fetchProperty(card, 'Type') == 'Asset' or fetchProperty(card, 'Type') == 'Upgrade' or fetchProperty(card, 'Type') == 'Agenda': playSound('Install-Root')
 
 def playEvOpSound(card):
    debugNotify(">>> playEvOpSound()") #Debug
@@ -171,15 +173,17 @@ def playVirusPurgeSound():
    if getSetting('Sounds', True) == 'False': return
    playSound('Purge-Viruses')
    
-def playClickCreditSound():
+def playClickCreditSound(remoted = False):
    debugNotify(">>> playClickCreditSound()") #Debug
    if getSetting('Sounds', True) == 'False': return
-   playSound('Credit-Click')
+   if remoted: playSound('Credit-Click')
+   else: remoteCall(findOpponent(),'playClickCreditSound',[True]) # Attempt to fix lag
    
-def playClickDrawSound():
+def playClickDrawSound(remoted = False):
    debugNotify(">>> playClickDrawSound()") #Debug
    if getSetting('Sounds', True) == 'False': return
-   playSound('Draw-Card')
+   if remoted: playSound('Draw-Card')
+   else: remoteCall(findOpponent(),'playClickDrawSound',[True]) # Attempt to fix lag
    
 def playDiscardHandCardSound():
    debugNotify(">>> playDiscardHandCardSound()") #Debug
