@@ -2961,7 +2961,7 @@ TGTBT
 -----
 bc0f047c-01b1-427f-a439-d451eda04075
 -----
-onAccess:Gain1Tags-onOpponent
+onAccess:Gain1Tags-onOpponent-worksInArchives
 +++++
 
 .....
