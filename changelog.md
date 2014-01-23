@@ -1,6 +1,10 @@
 Changelog - Android:Netrunner LCG OCTGN Game Definition
 ===============================================
 
+### 3.7.5.x
+
+* More script speed optimizations.
+
 ### 3.7.4.x
 
 * Script speed optimizations
