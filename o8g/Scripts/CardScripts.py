@@ -2183,7 +2183,7 @@ Levy AR Lab Access
 -----
 bc0f047c-01b1-427f-a439-d451eda03035
 -----
-onPlay:ReshuffleHeap-warnReshuffle$$ReshuffleStack$$Draw5Cards$$ExileMyself
+onPlay:ReshuffleHeap$$ReshuffleStack$$Draw5Cards$$ExileMyself
 +++++
 
 .....
@@ -2955,7 +2955,7 @@ bc0f047c-01b1-427f-a439-d451eda04074
 -----
 
 +++++
-A0B0G0T0:RunEnd-isSubroutine||A0B0G0T0:Lose1Credit-isSubroutine||A0B0G0T0:Inflict1NetDamage-onOpponent-isSubroutine
+A0B0G0T0:RunEnd-isSubroutine||A0B0G0T0:Lose1Credits-isSubroutine||A0B0G0T0:Inflict1NetDamage-onOpponent-isSubroutine
 .....
 TGTBT
 -----
