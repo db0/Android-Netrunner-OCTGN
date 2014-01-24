@@ -234,7 +234,7 @@
 		<property name="Subtitle" value="" />
 		<property name="Type" value="Agenda" />
 		<property name="Keywords" value="Ambush" />
-		<property name="Cost" value="0" />
+		<property name="Cost" value="3" />
 		<property name="Requirement" value="" />	
 		<property name="Stat" value="1" />	
 		<property name="Rules" value="If TGTBT is accessed from R&amp;D, the Runner must reveal it.&#xD;&#xA;When the Runner accesses TGTBT, give the Runner 1 tag." />
@@ -314,7 +314,7 @@
 		<property name="Subtitle" value="" />
 		<property name="Type" value="Agenda" />
 		<property name="Keywords" value="Initiative" />
-		<property name="Cost" value="0" />
+		<property name="Cost" value="3" />
 		<property name="Requirement" value="" />	
 		<property name="Stat" value="1" />	
 		<property name="Rules" value="When you score Veterans Program, you may remove up to 2 bad publicity." />
