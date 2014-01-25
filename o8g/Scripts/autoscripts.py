@@ -1390,7 +1390,7 @@ def RunX(Autoscript, announceText, card, targetCards = None, notification = None
       if feint:
          setGlobalVariable('feintTarget',feint.group(1)) # If the card script is feinting to a different fort, set a shared variable so that the corp knows it.
       runTarget = ' on {}'.format(targetServer)
-      intRun(0,targetServer,True)
+      if intRun(0,targetServer,True) == 'ABORT': return 'ABORT'
       if notification == 'Quick': announceString = "{} starts a run{}".format(announceText, runTarget)
       else: announceString = "{} start a run{}".format(announceText, runTarget)
    if notification and not re.search(r'isSilent', Autoscript): notify('--> {}.'.format(announceString))

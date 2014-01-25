@@ -329,7 +329,7 @@ def intRun(aCost = 1, Name = 'R&D', silent = False):
       debugNotify("Checking Jinteki: Replicating Perfection restriction")
       if getGlobalVariable('Central Run') == 'False' and Name == 'Remote': 
          whisper(":::ERROR::: Your opponent is playing {}:{}. You cannot run a remote server until you've first run on a central server".format(enemyIdent,enemyIdent.Subtitle))
-         return
+         return 'ABORT'
    ClickCost = useClick(count = aCost)
    if ClickCost == 'ABORT': return 'ABORT'
    playRunStartSound()
