@@ -962,7 +962,7 @@ Braintrust
 -----
 bc0f047c-01b1-427f-a439-d451eda02014
 -----
-onScore:Put1Agenda-perMarker{Advancement}-ignore3-div2||whileScored:ReduceXCostRez-forICE-perMarker{Agenda}-forMe
+onScore:Put1Agenda-perMarker{Advancement}-ignore3-div2||whileScored:ReduceXCostRez-affectsICE-perMarker{Agenda}-forMe
 +++++
 
 .....

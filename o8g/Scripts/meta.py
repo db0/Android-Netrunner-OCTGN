@@ -1059,10 +1059,10 @@ def setleague(group = table, x=0,y=0, manual = True):
    setGlobalVariable('League',league)
    debugNotify(">>> setleague() with league: {}".format(league)) #Debug
          
-def fetchCardScripts(group = table, x=0, y=0): # Creates 2 dictionaries with all scripts for all cards stored, based on a web URL or the local version if that doesn't exist.
+def fetchCardScripts(group = table, x=0, y=0, silent = False): # Creates 2 dictionaries with all scripts for all cards stored, based on a web URL or the local version if that doesn't exist.
    debugNotify(">>> fetchCardScripts()") #Debug
    global CardsAA, CardsAS # Global dictionaries holding Card AutoActions and Card AutoScripts for all cards.
-   whisper("+++ Fetching fresh scripts. Please Wait...")
+   if not silent: whisper("+++ Fetching fresh scripts. Please Wait...")
    if (len(players) > 1 or debugVerbosity == 0) and me.name != 'dbzer0': # I put my debug account to always use local scripts.
       try: (ScriptsDownload, code) = webRead('https://raw.github.com/db0/Android-Netrunner-OCTGN/master/o8g/Scripts/CardScripts.py',5000)
       except: 

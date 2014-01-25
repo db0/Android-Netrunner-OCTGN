@@ -328,7 +328,7 @@ def intRun(aCost = 1, Name = 'R&D', silent = False):
    if enemyIdent.Subtitle == "Replicating Perfection":
       debugNotify("Checking Jinteki: Replicating Perfection restriction")
       if getGlobalVariable('Central Run') == 'False' and Name == 'Remote': 
-         whisper(":::ERROR::: Your opponent is playing {}. You cannot run a remote server until you've first run on a central server".format(enemyIdent))
+         whisper(":::ERROR::: Your opponent is playing {}:{}. You cannot run a remote server until you've first run on a central server".format(enemyIdent,enemyIdent.Subtitle))
          return
    ClickCost = useClick(count = aCost)
    if ClickCost == 'ABORT': return 'ABORT'
@@ -1810,7 +1810,7 @@ def uninstall(card, x=0, y=0, destination = 'hand', silent = False):
 
 def useCard(card,x=0,y=0):
    debugNotify(">>> useCard(){}".format(extraASDebug())) #Debug
-   if card.highlight == None:
+   if card.highlight == None or card.highlight == NewCardColor:
       card.highlight = SelectColor
       notify ( "{} uses the ability of {}.".format(me,card) )
    else:
