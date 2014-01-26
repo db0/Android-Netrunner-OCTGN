@@ -717,6 +717,8 @@ def possess(daemonCard, programCard, silent = False, force = False):
    debugNotify("<<< possess()", 3) #Debug   
    
 def chkDmgSpecialEffects(dmgType, count):
+# This function checks for special card effects on the table that hijack normal damage effects and do something extra or differently
+# At the moment it's used for the two Chronos Protocol IDs.
    debugNotify(">>> chkDmgSpecialEffects()") #Debug
    usedDMG = 0
    for card in table:
@@ -725,16 +727,21 @@ def chkDmgSpecialEffects(dmgType, count):
             debugNotify("Jinteki Chronos Protocol", 2) #Debug
             targetPL = findOpponent()
             grabPileControl(targetPL.hand)
+            targetPL.hand.setVisibility('all')
             handList = [c for c in targetPL.hand]
-            for c in handList: c.isFaceUp = True
             rnd(1,10)
             choice = SingleChoice("Choose a card to trash for your first Net Damage", makeChoiceListfromCardList(handList))
             sendToTrash(handList[choice])
             usedDMG += 1
-            notify("{} uses {}'s ability to trash {} with the first net damage".format(me,card,handList[choice]))
-            for c in handList: c.isFaceUp = False
-   debugNotify("<<< chkDmgSpecialEffects() with return {}".format(usedDMG)) #Debug   
+            notify("=> {} uses {}'s ability to trash {} with the first net damage".format(me,card,handList[choice]))
+            passPileControl(targetPL.hand,targetPL)
+            remoteCall(targetPL,'grabVisibility',[targetPL.hand])
+   debugNotify("<<< chkDmgSpecialEffects() with return {}".format(usedDMG)) #Debug
+   return usedDMG
    
+def grabVisibility(group):
+   mute()
+   group.setVisibility('me')
 #------------------------------------------------------------------------------
 # Switches
 #------------------------------------------------------------------------------

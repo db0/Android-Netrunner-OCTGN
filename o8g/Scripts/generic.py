@@ -652,9 +652,6 @@ def oncePerTurn(card, x = 0, y = 0, silent = False, act = 'manual'):
    if act != 'dryRun': remoteCall(card.controller,'rotCard',card)
    debugNotify("<<< oncePerTurn() exit OK", 3) #Debug
 
-def rotCard(card):
-   card.orientation = Rot90
-    
 def chkRestrictionMarker(card, Autoscript, silent = False, act = 'manual'): # An additional oncePerTurn restriction, that works with markers (with cards that have two different once-per-turn abilities)
    debugNotify(">>> chkRestrictionMarker(){}".format(extraASDebug())) #Debug
    mute()
@@ -845,6 +842,10 @@ def indexSet(card,index): # A function that asks the current card controller to 
       elif index == 'back': card.sendToBack()
       else: card.setIndex(index) 
    else: remoteCall(card.controller,'indexSet',[card,index])
+   
+def rotCard(card):
+   mute()
+   card.orientation = Rot90
       
 #---------------------------------------------------------------------------
 # Patron Functions
