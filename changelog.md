@@ -1,6 +1,12 @@
 Changelog - Android:Netrunner LCG OCTGN Game Definition
 ===============================================
 
+### 3.7.6.x
+
+* Cost increasing effects now activate before BP, which takes effect before recurring credits (unless cards are prioritized)
+* Fixed Encryption protocol not increasing its own trash cost when accessed while rezzed
+
+
 ### 3.7.5.x
 
 * More script speed optimizations.
