@@ -218,7 +218,7 @@ def checkAccessAttempts(name,oldValue,value):
          notify(":::WARNING::: The Corporation delays access while they deliberate which reacts to trigger...")
       else: runSuccess()
          
-def reconnectMe(group, x,y):
+def reconnectMe(group=table, x=0,y=0):
    reconnect()
    
 def reconnect():

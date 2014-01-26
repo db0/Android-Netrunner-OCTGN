@@ -847,6 +847,9 @@ def rotCard(card):
    mute()
    card.orientation = Rot90
       
+def grabVisibility(group):
+   mute()
+   group.setVisibility('me')      
 #---------------------------------------------------------------------------
 # Patron Functions
 #---------------------------------------------------------------------------   

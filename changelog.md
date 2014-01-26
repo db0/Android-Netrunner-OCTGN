@@ -1,6 +1,10 @@
 Changelog - Android:Netrunner LCG OCTGN Game Definition
 ===============================================
 
+### 3.7.7.x
+
+* Scripted Chronos Protocol IDs
+
 ### 3.7.6.x
 
 * Cost increasing effects now activate before BP, which takes effect before recurring credits (unless cards are prioritized)

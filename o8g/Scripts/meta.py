@@ -724,24 +724,57 @@ def chkDmgSpecialEffects(dmgType, count):
    for card in table:
       if card.name == 'Chronos Protocol':
          if card.Faction == 'Jinteki' and dmgType == 'Net' and oncePerTurn(card, silent = True, act = 'automatic') != 'ABORT':
-            debugNotify("Jinteki Chronos Protocol", 2) #Debug
-            targetPL = findOpponent()
-            grabPileControl(targetPL.hand)
-            targetPL.hand.setVisibility('all')
-            handList = [c for c in targetPL.hand]
-            rnd(1,10)
-            choice = SingleChoice("Choose a card to trash for your first Net Damage", makeChoiceListfromCardList(handList))
-            sendToTrash(handList[choice])
-            usedDMG += 1
-            notify("=> {} uses {}'s ability to trash {} with the first net damage".format(me,card,handList[choice]))
-            passPileControl(targetPL.hand,targetPL)
-            remoteCall(targetPL,'grabVisibility',[targetPL.hand])
+            if card.controller == me: JintekiCP(card,count)
+            else: remoteCall(card.controller,'JintekiCP',[card,count]) # It needs to be the Jinteki player who selects the card.
+            usedDMG = count # After this, we don't want any autoscripts to be doing any more damage
+         if card.Faction == 'Haas-Bioroid' and dmgType == 'Brain':
+            remoteCall(fetchRunnerPL(),'HasbroCP',[card,count])
+            usedDMG = count # After this, we don't want any autoscripts to be doing any more damage
    debugNotify("<<< chkDmgSpecialEffects() with return {}".format(usedDMG)) #Debug
    return usedDMG
-   
-def grabVisibility(group):
+
+def JintekiCP(card,count): # Function which takes care that the Jinteki Chronos Protocol ID properly asks the Jinteki player for the choice before doing more damage.
+   debugNotify(">>> JintekiCP()") #Debug
    mute()
-   group.setVisibility('me')
+   targetPL = findOpponent()
+   grabPileControl(targetPL.hand)
+   targetPL.hand.setVisibility('all')
+   handList = [c for c in targetPL.hand]
+   rnd(1,10)
+   choice = SingleChoice("Choose a card to trash for your first Net Damage", makeChoiceListfromCardList(handList))
+   sendToTrash(handList[choice])
+   notify("=> {} uses {}'s ability to trash {} with the first net damage".format(me,card,handList[choice]))
+   passPileControl(targetPL.hand,targetPL)
+   remoteCall(targetPL,'grabVisibility',[targetPL.hand])
+   if count - 1: remoteCall(targetPL, 'intdamageDiscard',[count - 1]) # If there's any leftover damage, we inflict it now.
+   debugNotify("<<< JintekiCP()") #Debug
+   
+def HasbroCP(card,count): # A Function called remotely for the runner player which takes care to wipe all cards of the same type as the one trashed from the game.
+   debugNotify(">>> HasbroCP()") #Debug
+   mute()
+   for iter in range(count):
+      exiledC = me.hand.random()
+      exiledC.moveTo(me.piles['Removed from Game'])
+      notify("--DMG: {} is removed from the game due to {}!".format(exiledC,card))
+      me.piles['R&D/Stack'].setVisibility('me')
+      for c in me.piles['R&D/Stack']:
+         if c.model == exiledC.model: 
+            c.moveTo(me.piles['Removed from Game'])
+            notify("=> Extra {} scrubbed from Stack".format(exiledC))
+      me.piles['R&D/Stack'].setVisibility('none')    
+      for c in me.piles['Heap/Archives(Face-up)']:
+         if c.model == exiledC.model: 
+            c.moveTo(me.piles['Removed from Game'])      
+            notify("=> Extra {} scrubbed from Heap".format(exiledC))
+      for c in table:
+         if c.model == exiledC.model:
+            exileCard(c, True)
+            notify("=> Extra {} scrubbed from the table".format(exiledC))
+      for c in me.hand:
+         if c.model == exiledC.model: 
+            c.moveTo(me.piles['Removed from Game'])      
+            notify("=> Extra {} scrubbed from Grip".format(exiledC))
+   debugNotify("<<< HasbroCP()") #Debug
 #------------------------------------------------------------------------------
 # Switches
 #------------------------------------------------------------------------------
