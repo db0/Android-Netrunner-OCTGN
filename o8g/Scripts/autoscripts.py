@@ -1649,6 +1649,7 @@ def InflictX(Autoscript, announceText, card, targetCards = None, notification = 
          preventTXT = ' ({} prevented)'.format(DMGprevented)
          DMG -= DMGprevented
       if DMG:
+         DMG -= chkDmgSpecialEffects(action.group(3) ,DMG)
          remoteCall(targetPL, 'intdamageDiscard',[DMG])
          if action.group(3) == 'Brain': applyBrainDmg(targetPL, DMG)
          playDMGSound(action.group(3))

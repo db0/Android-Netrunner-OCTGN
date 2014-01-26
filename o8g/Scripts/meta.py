@@ -714,7 +714,27 @@ def possess(daemonCard, programCard, silent = False, force = False):
       if customHostMarker and customHostMarker[0] == 'Scheherazade Hosted': pass
       else: programCard.owner.MU += count # We return the MUs the card would be otherwise using.
       if not silent: notify("{} installs {} into {}".format(me,programCard,daemonCard))
-   debugNotify("<<< possess(){}", 3) #Debug   
+   debugNotify("<<< possess()", 3) #Debug   
+   
+def chkDmgSpecialEffects(dmgType, count):
+   debugNotify(">>> chkDmgSpecialEffects()") #Debug
+   usedDMG = 0
+   for card in table:
+      if card.name == 'Chronos Protocol':
+         if card.Faction == 'Jinteki' and dmgType == 'Net' and oncePerTurn(card, silent = True, act = 'automatic') != 'ABORT':
+            debugNotify("Jinteki Chronos Protocol", 2) #Debug
+            targetPL = findOpponent()
+            grabPileControl(targetPL.hand)
+            handList = [c for c in targetPL.hand]
+            for c in handList: c.isFaceUp = True
+            rnd(1,10)
+            choice = SingleChoice("Choose a card to trash for your first Net Damage", makeChoiceListfromCardList(handList))
+            sendToTrash(handList[choice])
+            usedDMG += 1
+            notify("{} uses {}'s ability to trash {} with the first net damage".format(me,card,handList[choice]))
+            for c in handList: c.isFaceUp = False
+   debugNotify("<<< chkDmgSpecialEffects() with return {}".format(usedDMG)) #Debug   
+   
 #------------------------------------------------------------------------------
 # Switches
 #------------------------------------------------------------------------------

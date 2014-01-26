@@ -649,9 +649,12 @@ def oncePerTurn(card, x = 0, y = 0, silent = False, act = 'manual'):
          if not silent and act != 'dryRun': notify('{} activates the once-per-turn ability of {} another time'.format(me, card))
    else:
       if not silent and act != 'dryRun': notify('{} activates the once-per-turn ability of {}'.format(me, card))
-   if act != 'dryRun': card.orientation = Rot90
+   if act != 'dryRun': remoteCall(card.controller,'rotCard',card)
    debugNotify("<<< oncePerTurn() exit OK", 3) #Debug
 
+def rotCard(card):
+   card.orientation = Rot90
+    
 def chkRestrictionMarker(card, Autoscript, silent = False, act = 'manual'): # An additional oncePerTurn restriction, that works with markers (with cards that have two different once-per-turn abilities)
    debugNotify(">>> chkRestrictionMarker(){}".format(extraASDebug())) #Debug
    mute()
