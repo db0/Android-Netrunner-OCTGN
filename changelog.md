@@ -5,6 +5,8 @@ Changelog - Android:Netrunner LCG OCTGN Game Definition
 
 * Cost increasing effects now activate before BP, which takes effect before recurring credits (unless cards are prioritized)
 * Fixed Encryption protocol not increasing its own trash cost when accessed while rezzed
+* Fixed Braintrust not reducing ICE costs.
+* Jinteki:RP now doesn't cost a click when it cancels the run after the runner double-clicks to to run a remote without running a central first.
 
 
 ### 3.7.5.x
