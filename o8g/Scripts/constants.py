@@ -188,6 +188,7 @@ CustomSubs = ['dovian',                   # Daniel DeBoer      - http://www.patr
 CardSubs = ['susuexp',                    # Simon Gunkel       - http://www.patreon.com/user?u=66210
             'reverendanthony',            # Anthony Burch      - http://www.patreon.com/user?u=66843
             'rediknight',                 # Jeremy Espinosa    - http://www.patreon.com/user?u=68437
+            'wimpgod',                    # Gary Bergeron       - Old time supporter
             'db0',
             'dbzer0'
            ] # $10 Tier
