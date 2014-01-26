@@ -1651,7 +1651,7 @@ def InflictX(Autoscript, announceText, card, targetCards = None, notification = 
       if DMG:
          finalDMG = DMG - chkDmgSpecialEffects(action.group(3),DMG) # We check if any effect hijacks the normal damage effect, but we don't want to change the number of damage we announce is being done.
          remoteCall(targetPL, 'intdamageDiscard',[finalDMG])
-         if action.group(3) == 'Brain': applyBrainDmg(targetPL, finalDMG)
+         if action.group(3) == 'Brain': applyBrainDmg(targetPL, DMG)
          playDMGSound(action.group(3))
       autoscriptOtherPlayers('{}DMGInflicted'.format(action.group(3)),getSpecial('Identity',targetPL),DMG) # We also trigger any script for damage
    if targetPL == me: targetPL = 'theirself' # Just changing the announcement to fit better.
