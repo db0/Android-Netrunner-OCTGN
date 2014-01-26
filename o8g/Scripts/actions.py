@@ -979,7 +979,8 @@ def addBrainDmg(group, x = 0, y = 0):
    else:
       applyBrainDmg()
       notify ("{} suffers 1 Brain Damage.".format(me))
-      intdamageDiscard(DMG)
+      finalDMG = DMG - chkDmgSpecialEffects('Brain', DMG)
+      intdamageDiscard(finalDMG)
       #intdamageDiscard(me.hand)    
       playDMGSound('Brain')
       autoscriptOtherPlayers('BrainDMGInflicted',getSpecial('Identity',fetchRunnerPL()))
@@ -999,7 +1000,8 @@ def addMeatDmg(group, x = 0, y = 0):
       notify ("{} prevents 1 Meat Damage.".format(me))
    else:
       notify ("{} suffers 1 Meat Damage.".format(me))
-      intdamageDiscard(DMG)
+      finalDMG = DMG - chkDmgSpecialEffects('Meat', DMG)
+      intdamageDiscard(finalDMG)
       #intdamageDiscard(me.hand)
       playDMGSound('Meat')
       autoscriptOtherPlayers('MeatDMGInflicted',getSpecial('Identity',fetchRunnerPL()))
@@ -1013,7 +1015,8 @@ def addNetDmg(group, x = 0, y = 0):
       notify ("{} prevents 1 Net Damage.".format(me))
    else:
       notify ("{} suffers 1 Net Damage.".format(me))
-      intdamageDiscard(DMG)
+      finalDMG = DMG - chkDmgSpecialEffects('Net', DMG)
+      intdamageDiscard(finalDMG)
       #intdamageDiscard(me.hand)
       playDMGSound('Net')
       autoscriptOtherPlayers('NetDMGInflicted',getSpecial('Identity',fetchRunnerPL()))

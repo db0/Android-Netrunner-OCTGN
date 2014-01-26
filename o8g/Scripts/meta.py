@@ -767,7 +767,7 @@ def HasbroCP(card,count): # A Function called remotely for the runner player whi
             c.moveTo(me.piles['Removed from Game'])      
             notify("=> Extra {} scrubbed from Heap".format(exiledC))
       for c in table:
-         if c.model == exiledC.model:
+         if c.model == exiledC.model and not c.markers[mdict['Scored']] and c.highlight != DummyColor: # Scored cards like Notoriety are not removed, nor are resident effects.
             exileCard(c, True)
             notify("=> Extra {} scrubbed from the table".format(exiledC))
       for c in me.hand:
