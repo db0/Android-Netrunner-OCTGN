@@ -3005,6 +3005,22 @@ onScore:Lose2Bad Publicity
 +++++
 
 .....
+Chronos Protocol (Jinteki)
+-----
+bc0f047c-01b1-427f-a439-d451eda00003
+-----
+
++++++
+
+.....
+Chronos Protocol (HB)
+-----
+bc0f047c-01b1-427f-a439-d451eda00004
+-----
+
++++++
+
+.....
 ENDSCRIPTS
 =====
 '''

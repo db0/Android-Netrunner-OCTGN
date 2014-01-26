@@ -1231,6 +1231,13 @@ def DebugCard(card, x=0, y=0):
       notify("Card's AA: {}".format(CardsAA.get(card.model,'???')))
    storeProperties(card, True)
    if Stored_Type.get(card._id,'?') != 'ICE': card.orientation = Rot0
+
+def addC(cardModel,count = 1): # Quick function to add custom cards on the table depending on their GUID
+# Use the following to spawn a card
+# remoteCall(me,'addC',['<cardGUID>'])
+   card = table.create(cardModel, 0,0, count, False)
+   storeProperties(card)
+   if card.Type == 'ICE' or card.Type == 'Agenda' or card.Type == 'Asset': card.isFaceUp = False   
    
 def extraASDebug(Autoscript = None):
    if Autoscript and debugVerbosity >= 3: return ". Autoscript:{}".format(Autoscript)
@@ -1245,7 +1252,8 @@ def ShowPosC(card, x=0,y=0):
       notify(">>> ShowPosC(){}".format(extraASDebug())) #Debug
       x,y = card.position
       notify('card x={}, y={}'.format(x,y))      
-        
+
+   
 def testHandRandom():
    if confirm("Run Hand random alg?"):
       randomsList = []
