@@ -737,16 +737,21 @@ def JintekiCP(card,count): # Function which takes care that the Jinteki Chronos 
    debugNotify(">>> JintekiCP()") #Debug
    mute()
    targetPL = findOpponent()
-   grabPileControl(targetPL.hand)
-   targetPL.hand.setVisibility('all')
-   handList = [c for c in targetPL.hand]
-   rnd(1,10)
-   choice = SingleChoice("Choose a card to trash for your first Net Damage", makeChoiceListfromCardList(handList))
-   sendToTrash(handList[choice])
-   notify("=> {} uses {}'s ability to trash {} with the first net damage".format(me,card,handList[choice]))
-   passPileControl(targetPL.hand,targetPL)
-   remoteCall(targetPL,'grabVisibility',[targetPL.hand])
-   if count - 1: remoteCall(targetPL, 'intdamageDiscard',[count - 1]) # If there's any leftover damage, we inflict it now.
+   if not len(targetPL.hand): remoteCall(targetPL, 'intdamageDiscard',[count]) # If their hand is empty we need to flatline them
+   else:
+      grabPileControl(targetPL.hand)
+      targetPL.hand.setVisibility('all')
+      update()
+      handList = [c for c in targetPL.hand]
+      for c in handList: loopChk(c,'Type') # Make sure we can see each card's details
+      choice = SingleChoice("Choose a card to trash for your first Net Damage", makeChoiceListfromCardList(handList))
+      if choice != None: # If the player cancels the choice for some reason, abort the rest of the damage.
+         sendToTrash(handList[choice])
+         notify("=> {} uses {}'s ability to trash {} with the first net damage".format(me,card,handList[choice]))
+      passPileControl(targetPL.hand,targetPL)
+      remoteCall(targetPL,'grabVisibility',[targetPL.hand])
+      if choice != None: 
+         if count - 1: remoteCall(targetPL, 'intdamageDiscard',[count - 1]) # If there's any leftover damage, we inflict it now.
    debugNotify("<<< JintekiCP()") #Debug
    
 def HasbroCP(card,count): # A Function called remotely for the runner player which takes care to wipe all cards of the same type as the one trashed from the game.
