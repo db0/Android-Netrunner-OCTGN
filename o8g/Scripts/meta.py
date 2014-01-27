@@ -740,16 +740,18 @@ def JintekiCP(card,count): # Function which takes care that the Jinteki Chronos 
    if not len(targetPL.hand): remoteCall(targetPL, 'intdamageDiscard',[count]) # If their hand is empty we need to flatline them
    else:
       grabPileControl(targetPL.hand)
-      targetPL.hand.setVisibility('all')
-      update()
+      #targetPL.hand.setVisibility('all')
+      #update()
       handList = [c for c in targetPL.hand]
+      for c in handList: c.moveToTable(0,0)
       for c in handList: loopChk(c,'Type') # Make sure we can see each card's details
       choice = SingleChoice("Choose a card to trash for your first Net Damage", makeChoiceListfromCardList(handList))
       if choice != None: # If the player cancels the choice for some reason, abort the rest of the damage.
          sendToTrash(handList[choice])
          notify("=> {} uses {}'s ability to trash {} with the first net damage".format(me,card,handList[choice]))
+      for c in handList: c.moveTo(targetPL.hand)
       passPileControl(targetPL.hand,targetPL)
-      remoteCall(targetPL,'grabVisibility',[targetPL.hand])
+      #remoteCall(targetPL,'grabVisibility',[targetPL.hand])
       if choice != None: 
          if count - 1: remoteCall(targetPL, 'intdamageDiscard',[count - 1]) # If there's any leftover damage, we inflict it now.
    debugNotify("<<< JintekiCP()") #Debug
@@ -761,12 +763,16 @@ def HasbroCP(card,count): # A Function called remotely for the runner player whi
       exiledC = me.hand.random()
       exiledC.moveTo(me.piles['Removed from Game'])
       notify("--DMG: {} is removed from the game due to {}!".format(exiledC,card))
-      me.piles['R&D/Stack'].setVisibility('me')
+      #me.piles['R&D/Stack'].setVisibility('me')
+      for c in me.piles['R&D/Stack']: c.peek()
       for c in me.piles['R&D/Stack']:
-         if c.model == exiledC.model: 
+         loopChk(c,'Name')
+         #notify("### {} c.model == {}".format(c.Name,c.model))
+         if c.Name == exiledC.Name: 
             c.moveTo(me.piles['Removed from Game'])
             notify("=> Extra {} scrubbed from Stack".format(exiledC))
-      me.piles['R&D/Stack'].setVisibility('none')    
+      #me.piles['R&D/Stack'].setVisibility('none')      
+      shuffle(me.piles['R&D/Stack'])
       for c in me.piles['Heap/Archives(Face-up)']:
          if c.model == exiledC.model: 
             c.moveTo(me.piles['Removed from Game'])      
