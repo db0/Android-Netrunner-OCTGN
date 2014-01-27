@@ -1,10 +1,10 @@
 =====Message of the Day======
 
-I've done some optimization on the script execution. I hope the game now plays less laggy and with less counter mess.
+The Chronos Protocols are now rezzed in OCTGN. 
 
---- Please restart your OCTGN to get the updates! ---
+You probably won't find them in online deckbuilders so you'll have to use the OCTGN deck-editor to replace a standard ID in your deck with them.
 
-However as a result, events and operations will stay on the table until your end of turn, unless you clear them manually.
+They're fully scripted, so they should be easy to handle in online play.
 
-Hopefully it will all run better now. Enjoy!
+Enjoy!
 =============================
