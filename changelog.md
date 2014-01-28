@@ -1,6 +1,10 @@
 Changelog - Android:Netrunner LCG OCTGN Game Definition
 ===============================================
 
+### 3.7.8.x
+
+* Fixed Whizzard trashing R&D Cards
+
 ### 3.7.7.x
 
 * Scripted Chronos Protocol IDs. You can now play with their weird effects normally!
