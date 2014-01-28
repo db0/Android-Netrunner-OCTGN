@@ -739,7 +739,6 @@ def reduceCost(card, action = 'REZ', fullCost = 0, dryRun = False, reversePlayer
    fullCost = abs(fullCost)
    reduction = 0
    status = getGlobalVariable('status')
-   costReducers = []
    debugNotify("Status: {}".format(status), 3)
    ### First we check if the card has an innate reduction.
    Autoscripts = fetchProperty(card, 'AutoScripts').split('||')
@@ -1250,7 +1249,7 @@ def scrTargetAgenda(group = table, x = 0, y = 0):
 def accessTarget(group = table, x = 0, y = 0):
    debugNotify(">>> accessTarget()") #Debug
    mute()
-   global tempControl
+   global origController
    targetPL = ofwhom('-ofOpponent')
    if getGlobalVariable('SuccessfulRun') != 'True':
       if not re.search(r'running',getGlobalVariable('status')) and not confirm("You're not currently running. Are you sure you're allowed to access this card?"): return
@@ -1344,7 +1343,7 @@ def accessTarget(group = table, x = 0, y = 0):
 def RDaccessX(group = table, x = 0, y = 0): # A function which looks at the top X cards of the corp's deck and then asks the runner what to do with each one.
    debugNotify(">>> RDaccessX()") #Debug
    mute()
-   global gatheredCardList
+   global gatheredCardList, origController
    RDtop = []
    removedCards = 0
    if ds == 'corp':
@@ -1367,6 +1366,7 @@ def RDaccessX(group = table, x = 0, y = 0): # A function which looks at the top 
    for iter in range(len(RDtop)):
       debugNotify("Moving card {}".format(iter), 3) #Debug
       notify(" -- {} is now accessing the {} card".format(me,numOrder(iter)))
+      origController[RDtop[iter]._id] = targetPL # We store the card's original controller to know against whom to check for scripts (e.g. when accessing a rezzed encryption protocol)
       RDtop[iter].moveToBottom(me.ScriptingPile)
       debugNotify(" Looping...", 4)
       loopChk(RDtop[iter],'Type')
@@ -1442,6 +1442,8 @@ def RDaccessX(group = table, x = 0, y = 0): # A function which looks at the top 
       else: 
          debugNotify("Selected doing nothing. About to move back...", 4)
          RDtop[iter].moveTo(targetPL.piles['R&D/Stack'],iter - removedCards)
+      try: del origController[RDtop[iter]._id] # We use a try: just in case...
+      except: pass         
    notify("{} has finished accessing {}'s R&D".format(me,targetPL))
    passPileControl(targetPL.piles['R&D/Stack'],targetPL)
    gatheredCardList = False  # We set this variable to False, so that reduceCost() calls from other functions can start scanning the table again.
@@ -1449,6 +1451,7 @@ def RDaccessX(group = table, x = 0, y = 0): # A function which looks at the top 
    
 def ARCscore(group=table, x=0,y=0):
    mute()
+   global origController
    debugNotify(">>> ARCscore(){}".format(extraASDebug())) #Debug
    removedCards = 0
    ARCHcards = []
@@ -1470,6 +1473,7 @@ def ARCscore(group=table, x=0,y=0):
    agendaFound = False
    for card in ARC:
       debugNotify("Checking: {}.".format(card), 3) #Debug
+      origController[card._id] = targetPL # We store the card's original controller to know against whom to check for scripts (e.g. when accessing a rezzed encryption protocol)
       if card.Type == 'Agenda': 
          agendaFound = True
          card.moveToTable(0,0)
@@ -1483,12 +1487,15 @@ def ARCscore(group=table, x=0,y=0):
             debugNotify("-worksInArchives accessRegex found!")
             notify("{} has just accessed a {}!".format(me,card.name))
             remoteCall(card.owner, 'remoteAutoscript', [card,autoS])
+      try: del origController[card._id] # We use a try: just in case...
+      except: pass
    if not agendaFound: notify("{} has rumaged through {}'s archives but found no Agendas".format(Identity,targetPL))
    passPileControl(ARC,targetPL)
    debugNotify("<<< ARCscore()")
 
 def HQaccess(group=table, x=0,y=0, silent = False):
    mute()
+   global origController
    debugNotify(">>> HQAccess(){}".format(extraASDebug())) #Debug
    if ds == 'corp':
       whisper("This action is only for the use of the runner.")
@@ -1506,6 +1513,7 @@ def HQaccess(group=table, x=0,y=0, silent = False):
    revealedCards = showatrandom(count = count, targetPL = targetPL, covered = True)
    for revealedCard in revealedCards:
       loopChk(revealedCard)
+      origController[revealedCard._id] = targetPL # We store the card's original controller to know against whom to check for scripts (e.g. when accessing a rezzed encryption protocol)
       #storeProperties(revealedCard) # So as not to crash reduceCost() later
       revealedCard.sendToFront() # We send our currently accessed card to the front, so that the corp can see it. The rest are covered up.
       accessRegex = re.search(r'onAccess:([^|]+)',CardsAS.get(revealedCard.model,''))
@@ -1569,6 +1577,8 @@ def HQaccess(group=table, x=0,y=0, silent = False):
             loopChk(revealedCard,'Type')
             notify("{} paid {}{} to {} {}".format(me,uniCredit(num(revealedCard.Stat) - reduction),extraText2,uniTrash(),revealedCard))
       else: revealedCard.moveTo(targetPL.hand)
+      try: del origController[revealedCard._id] # We use a try: just in case...
+      except: pass
    rnd(1,10) # a little pause
    for c in revealedCards: c.highlight = None # We make sure no card remains highlighted for some reason.
    passPileControl(targetPL.hand,targetPL)
