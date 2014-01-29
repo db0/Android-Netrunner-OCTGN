@@ -1,10 +1,5 @@
 =====Message of the Day======
 
-The Chronos Protocols are now rezzed in OCTGN. 
-
-You probably won't find them in online deckbuilders so you'll have to use the OCTGN deck-editor to replace a standard ID in your deck with them.
-
-They're fully scripted, so they should be easy to handle in online play.
-
-Enjoy!
+Do not forget to enable custom fonts in your OCTGN options to see credit and click symbols properly in the chat.
+(Instead of Yen and clocks)
 =============================
