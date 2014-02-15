@@ -62,13 +62,11 @@ def UseCustomAbility(Autoscript, announceText, card, targetCards = None, notific
    if fetchProperty(card, 'name') == "Data Hound":
       count = askInteger("By which amount of trace strength did you exceeded the runner's link strength?",1)
       if not count: return 'ABORT'
-      if count > 5 and confirm("If you are sniffing at more than 5 cards from the opponent's deck, we suggest you take this action manually, by right clicking on their Stack, taking control and then looking at the top X cards.\n\bTrying to use the Data Hound automatically with a large number of cards can be very unwiedly.\n\nAbort Now?"): return 'ABORT'      
       targetPL = findOpponent()
+      grabPileControl(targetPL.piles['R&D/Stack'])
+      targetPL.piles['R&D/Stack'].setVisibility('me')
       cardList = list(targetPL.piles['R&D/Stack'].top(count)) # We make a list of the top cards the corp can look at.
       debugNotify("Turning Runner's Stack Face Up", 2)
-      cover = table.create("ac3a3d5d-7e3a-4742-b9b2-7f72596d9c1b",0,0,1,True) 
-      cover.moveTo(targetPL.piles['R&D/Stack']) 
-      for c in targetPL.piles['R&D/Stack']: c.isFaceUp = True 
       rnd(1,100) # Delay to be able to read card info
       if len(cardList) > 1:
          notify(":> {}'s Data Hound is sniffing through {}'s Stack".format(me,targetPL))
@@ -76,7 +74,7 @@ def UseCustomAbility(Autoscript, announceText, card, targetCards = None, notific
          trashedC = cardList.pop(choice)
       else: trashedC = cardList.pop(0)
       debugNotify("Trashing {}".format(trashedC), 2)
-      trashedC.moveTo(targetPL.piles['Heap/Archives(Face-up)'])
+      sendToTrash(trashedC)
       if len(cardList) > 1: notify("{}'s Data Hound has sniffed out and trashed {} and is now reorganizing {}'s Stack".format(me,trashedC,targetPL))
       else: notify("{} has sniffed out and trashed {}".format(me,trashedC))
       idx = 0 # The index where we're going to be placing each card.
@@ -84,12 +82,12 @@ def UseCustomAbility(Autoscript, announceText, card, targetCards = None, notific
          if len(cardList) == 1: choice = 0
          else: choice = SingleChoice("Choose card put on the {} position of the Stack".format(numOrder(idx)), makeChoiceListfromCardList(cardList))
          movedC = cardList.pop(choice)
-         movedC.moveTo(targetPL.piles['R&D/Stack'],idx + 1) # If there's only one card left, we put it in the last available index location in the Stack. We always put the card one index position deeper, because the first card is the cover.
+         movedC.moveTo(targetPL.piles['R&D/Stack'],idx) # If there's only one card left, we put it in the last available index location in the Stack. We always put the card one index position deeper, because the first card is the cover.
          idx += 1
-      debugNotify("Turning Pile Face Down", 2)
+      debugNotify("Removing Visibility", 2)
       rnd(1,100) # Delay to be able to announce names.
-      for c in targetPL.piles['R&D/Stack']: c.isFaceUp = False # We hide again the source pile cards.
-      cover.moveTo(me.piles['Removed from Game']) # we cannot delete cards so we just hide it.
+      targetPL.piles['R&D/Stack'].setVisibility('None')
+      passPileControl(targetPL.piles['R&D/Stack'],targetPL)
       announceString = ':=> Sniff'
          #      __
          # (___()'`;   *Sniff*
