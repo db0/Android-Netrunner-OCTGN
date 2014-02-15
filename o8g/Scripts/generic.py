@@ -687,24 +687,6 @@ def delayed_whisper(text): # Because whispers for some reason execute before not
    rnd(1,10)
    whisper(text)   
    
-def prepPile(group): # This function prepares a pile for scripting by turning all cards face up so that they can be read by python
-   debugNotify(">>> prepPile()") #Debug
-   cover = table.create("ac3a3d5d-7e3a-4742-b9b2-7f72596d9c1b",0,0,1,True) # Creating a dummy card to cover that player's source pile
-   cover.moveTo(group) # Moving that dummy card on top of their source pile
-   debugNotify("Turning {} Face Up".format(group.name), 2)
-   for c in group: c.isFaceUp = True # We flip all cards in the player's deck face up so that we can grab their properties
-   rnd(1,100) # Small delay to allow OCTGN to read properties
-   debugNotify("<<< prepPile()") #Debug
-   return cover # we return the cover card so that we can pass it to restorePile() to delete it afterwards
-
-def restorePile(group, cover): # This pile returns a pike visibility to the default, by turning all cards face down again.
-   debugNotify(">>> restorePile()") #Debug
-   debugNotify("Turning {} Face Down".format(group.name), 2)
-   for c in group: c.isFaceUp = False # We hide again the source pile cards.
-   rnd(1,100) # Small delay to allow OCTGN to finish 
-   cover.moveTo(me.piles['Removed from Game']) # we cannot delete cards so we just hide it.
-   debugNotify("<<< restorePile()") #Debug
-   
 def chkModulator(card, modulator, scriptType = 'onPlay'): # Checks the card's autoscripts for the existence of a specific modulator
    debugNotify(">>> chkModulator() looking for {}".format(modulator)) #Debug
    debugNotify("scriptType = {}".format(scriptType)) #Debug
