@@ -817,6 +817,9 @@ def CustomScript(card, action = 'PLAY', origin_card = None, original_action = No
       targetPL = findOpponent()
       me.Credits += len(targetPL.hand)
       notify("--> {} uses {}'s ability to gain {}".format(me,card,uniCredit(len(targetPL.hand))))
+   elif fetchProperty(card, 'name') == 'Precognition' and action == 'PLAY':
+      notify("{} foresees the future...".format(me))
+      me.piles['R&D/Stack'].lookAt(5)
    elif action == 'USE': useCard(card)
    debugNotify("<<< CustomScript()", 3) #Debug
    
