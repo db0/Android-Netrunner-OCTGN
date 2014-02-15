@@ -71,14 +71,16 @@ def checkDeck(player,groups):
    loInf = 0
    loRunner = False
    agendasCount = 0
-   debugNotify("About to move cards into me.ScriptingPile", 4) #Debug
-   for card in group: card.moveTo(me.ScriptingPile)
-   if len(players) > 1: random = rnd(1,100) # Fix for multiplayer only. Makes Singleplayer setup very slow otherwise.
+   #debugNotify("About to move cards into me.ScriptingPile", 4) #Debug
+   debugNotify("About to get visibility", 4) #Debug
+   group.setVisibility('me')
+   #for card in group: card.moveTo(me.ScriptingPile)
+   #if len(players) > 1: random = rnd(1,100) # Fix for multiplayer only. Makes Singleplayer setup very slow otherwise.
    debugNotify("About to check each card in the deck", 4) #Debug
    counts = collections.defaultdict(int)
    CardLimit = {}
    professorsRig = [] # This is used by "The Professor" to avoid counting influence for the first instance of a program.
-   for card in me.ScriptingPile:
+   for card in group:
       counts[card.name] += 1
       if counts[card.name] > 3:
          notify(":::ERROR::: Only 3 copies of {} allowed.".format(card.name))
@@ -119,8 +121,9 @@ def checkDeck(player,groups):
          if CardLimit[card.model] > 1: 
             notify(":::ERROR::: Duplicate Limited card ({}) found in {}'s {}.".format(card,me,pileName(group)))
             ok = False
-   if len(players) > 1: random = rnd(1,100) # Fix for multiplayer only. Makes Singleplayer setup very slow otherwise.
-   for card in me.ScriptingPile: card.moveToBottom(group) # We use a second loop because we do not want to pause after each check
+   #if len(players) > 1: random = rnd(1,100) # Fix for multiplayer only. Makes Singleplayer setup very slow otherwise.
+   #for card in me.ScriptingPile: card.moveToBottom(group) # We use a second loop because we do not want to pause after each check
+   group.setVisibility('None')
    if ds == 'corp':
       requiredAP = 2 + 2 * int(loDeckCount / 5)
       if loAP not in (requiredAP, requiredAP + 1):
