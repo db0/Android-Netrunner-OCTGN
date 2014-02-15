@@ -371,23 +371,18 @@ def CustomScript(card, action = 'PLAY', origin_card = None, original_action = No
       if len(targetPL.piles['R&D/Stack']) < 5: count = len(targetPL.piles['R&D/Stack'])
       else: count = 5
       cardList = list(targetPL.piles['R&D/Stack'].top(count)) # We make a list of the top 5 cards the runner can look at.
-      debugNotify("Turning Corp's Stack Face Up", 2)
-      cover = table.create("ac3a3d5d-7e3a-4742-b9b2-7f72596d9c1b",0,0,1,True) 
-      cover.moveTo(targetPL.piles['R&D/Stack']) 
-      for c in targetPL.piles['R&D/Stack']: c.isFaceUp = True 
+      debugNotify("Taking R&D Visibility", 2)
+      targetPL.piles['R&D/Stack'].setVisibility('me')
       rnd(1,100) # Delay to be able to read card info
       idx = 0 # The index where we're going to be placing each card.
       while len(cardList) > 0:
          if len(cardList) == 1: choice = 0
          else: choice = SingleChoice("Choose card put on the {} position of the Stack".format(numOrder(idx)), makeChoiceListfromCardList(cardList), type = 'button')
          movedC = cardList.pop(choice)
-         movedC.moveTo(targetPL.piles['R&D/Stack'],idx + 1) # If there's only one card left, we put it in the last available index location in the Stack. We always put the card one index position deeper, because the first card is the cover.
+         movedC.moveTo(targetPL.piles['R&D/Stack'],idx) # If there's only one card left, we put it in the last available index location in the Stack. 
          idx += 1
-      debugNotify("Turning Pile Face Down", 2)
-      rnd(1,100) # Delay to be able to announce names.
-      for c in targetPL.piles['R&D/Stack']: c.isFaceUp = False # We hide again the source pile cards.
-      cover.moveTo(me.piles['Removed from Game']) # we cannot delete cards so we just hide it.
       notify("{} has successfully indexed {}'s R&D".format(me,targetPL))
+      targetPL.piles['R&D/Stack'].setVisibility('None')
       passPileControl(targetPL.piles['R&D/Stack'],targetPL)
    elif fetchProperty(card, 'name') == "Deep Thought" and action == 'Start':
       if card.markers[mdict['Virus']] and card.markers[mdict['Virus']] >= 3:

@@ -1306,7 +1306,7 @@ def DebugCard(card, x=0, y=0):
 def addC(cardModel,count = 1): # Quick function to add custom cards on the table depending on their GUID
 # Use the following to spawn a card
 # remoteCall(me,'addC',['<cardGUID>'])
-   card = table.create(cardModel, 0,0, count, False)
+   card = table.create(cardModel, 0,0, count, True)
    storeProperties(card)
    if card.Type == 'ICE' or card.Type == 'Agenda' or card.Type == 'Asset': card.isFaceUp = False   
    
