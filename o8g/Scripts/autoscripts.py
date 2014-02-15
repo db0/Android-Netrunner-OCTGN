@@ -805,8 +805,9 @@ def remoteAutoscript(card = None, Autoscript = ''):
       else: notify("{} activates {}'s ability".format(me,card))
    selectedAutoscripts = Autoscript.split('$$')
    debugNotify ('selectedAutoscripts: {}'.format(selectedAutoscripts)) # Debug
+   X = 0
    for passedScript in selectedAutoscripts: 
-      X = redirect(passedScript, card, "{} triggers to".format(card), 'Quick', 0)
+      X = redirect(passedScript, card, "{} triggers to".format(card), 'Quick', X)
       if X == 'ABORT': return
    debugNotify('<<< remoteAutoscript')
 
@@ -866,6 +867,7 @@ def redirect(Autoscript, card, announceText = None, notificationType = 'Quick', 
       if UseCustomAbility(Autoscript, announceText, card, targetC, notification = notificationType, n = X) == 'ABORT': return 'ABORT'
    else: debugNotify(" No regexhook match! :(") # Debug
    debugNotify("Loop for scipt {} finished".format(Autoscript), 2)
+   debugNotify("<<< redirect with X = {}".format(X))
    return X
 
 #------------------------------------------------------------------------------
@@ -1349,7 +1351,7 @@ def RequestInt(Autoscript, announceText, card, targetCards = None, notification 
       if number == None: 
          whisper("Aborting Function")
          return 'ABORT'
-   debugNotify("<<< RequestInt()", 3)
+   debugNotify("<<< RequestInt() with return into = {}".format(number), 3)
    return (announceText, number) # We do not modify the announcement with this function.
    
 def RunX(Autoscript, announceText, card, targetCards = None, notification = None, n = 0): # Core Command for drawing X Cards from the house deck to your hand.
