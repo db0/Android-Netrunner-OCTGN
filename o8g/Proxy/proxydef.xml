@@ -21,11 +21,11 @@
            <text color="#000000" size="12" />
            <wordwrap height="86" width="209" shrinktofit="True" />
          </block>
-         <block type="text" id="corpIdent_influence">
+         <block type="text" id="corpIdent_deck">
            <location x="19" y="386"/>
            <text color="#000000" size="17" />
          </block>
-         <block type="text" id="corpIdent_deck">
+         <block type="text" id="corpIdent_influence">
            <location x="19" y="411"/>
            <text color="#FFFFFF" size="17" />
            <border color="#000000" size="1" />
@@ -183,11 +183,11 @@
            <text color="#000000" size="12" />
            <wordwrap height="86" width="209" shrinktofit="True" />
          </block>
-         <block type="text" id="runIdent_influence">
+         <block type="text" id="runIdent_deck">
            <location x="269" y="384"/>
            <text color="#000000" size="17" />
          </block>
-         <block type="text" id="runIdent_deck">
+         <block type="text" id="runIdent_influence">
            <location x="269" y="409"/>
            <text color="#FFFFFF" size="17" />
            <border color="#000000" size="1" />
