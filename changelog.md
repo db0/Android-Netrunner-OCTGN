@@ -1,6 +1,14 @@
 Changelog - Android:Netrunner LCG OCTGN Game Definition
 ===============================================
 
+### 3.7.9.x
+
+* Fixed Proxy IDs Influence/Deck Size being reversed
+* Sped Up Deck checking
+* Automated Precognition
+* Fixed Edge of World
+* Fixed Data Hound
+
 ### 3.7.8.x
 
 * Fixed Whizzard trashing R&D Cards
