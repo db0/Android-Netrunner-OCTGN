@@ -67,7 +67,8 @@ def UseCustomAbility(Autoscript, announceText, card, targetCards = None, notific
       targetPL.piles['R&D/Stack'].setVisibility('me')
       cardList = list(targetPL.piles['R&D/Stack'].top(count)) # We make a list of the top cards the corp can look at.
       debugNotify("Turning Runner's Stack Face Up", 2)
-      rnd(1,100) # Delay to be able to read card info
+      #rnd(1,100) # Delay to be able to read card info
+      if len(cardList): loopChk(cardList[len(cardList) - 1])
       if len(cardList) > 1:
          notify(":> {}'s Data Hound is sniffing through {}'s Stack".format(me,targetPL))
          choice = SingleChoice("Choose card to trash", makeChoiceListfromCardList(cardList))
@@ -373,7 +374,8 @@ def CustomScript(card, action = 'PLAY', origin_card = None, original_action = No
       cardList = list(targetPL.piles['R&D/Stack'].top(count)) # We make a list of the top 5 cards the runner can look at.
       debugNotify("Taking R&D Visibility", 2)
       targetPL.piles['R&D/Stack'].setVisibility('me')
-      rnd(1,100) # Delay to be able to read card info
+      if len(cardList): loopChk(cardList[len(cardList) - 1])
+      #rnd(1,100) # Delay to be able to read card info
       idx = 0 # The index where we're going to be placing each card.
       while len(cardList) > 0:
          if len(cardList) == 1: choice = 0
