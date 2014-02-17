@@ -25,7 +25,6 @@
       <script src="Scripts/generic.py" />
       <script src="Scripts/meta.py" />
       <script src="Scripts/CardScripts.py" />
-      <script src="Scripts/w0nk0.py"/>
    </scripts>
    <events>
        <event name="OnTableLoad" action="chkTwoSided" />

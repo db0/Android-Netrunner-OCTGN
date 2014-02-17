@@ -290,35 +290,5 @@
          <property name="AutoScript" value="" />
          <property name="AutoAction" value="" />	
 		</card>
-		<card id="5f7ff64b-1df3-4ce8-9153-7d4370fc32b3" name="Start Turn">
-         <property name="Subtitle" value="" />
-         <property name="Type" value="Button" />
-         <property name="Keywords" value="" />
-         <property name="Cost" value="" />
-         <property name="Requirement" value="" />	
-         <property name="Stat" value="" />	
-         <property name="Rules" value="" />
-         <property name="Flavor" value="" />
-         <property name="Instructions" value="" />
-         <property name="Faction" value="" />
-         <property name="Influence" value="" />
-         <property name="AutoScript" value="" />
-         <property name="AutoAction" value="BUTTON_StartTurn" />	
-		</card>
-		<card id="cfc45a19-54ab-46c3-9e51-9b4e01b1bed0" name="End Turn">
-         <property name="Subtitle" value="" />
-         <property name="Type" value="Button" />
-         <property name="Keywords" value="" />
-         <property name="Cost" value="" />
-         <property name="Requirement" value="" />	
-         <property name="Stat" value="" />	
-         <property name="Rules" value="" />
-         <property name="Flavor" value="" />
-         <property name="Instructions" value="" />
-         <property name="Faction" value="" />
-         <property name="Influence" value="" />
-         <property name="AutoScript" value="" />
-         <property name="AutoAction" value="goToEndTurn" />	
-		</card>
 	</cards>
 </set>

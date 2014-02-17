@@ -2014,10 +2014,6 @@ def currentHandSize(player = me):
 
 def intPlay(card, cost = 'not free', scripted = False, preReduction = 0, retainPos = False):
    debugNotify(">>> intPlay(){}".format(extraASDebug())) #Debug
-   # w0nk0 - this might be welcome by noobs and fat-fingered ppl, I liked it when I was new
-   #choice = confirm("w0: Are you sure you want to play {}?".format(card.name))
-   #if not choice:
-   #  return 
    global gatheredCardList
    gatheredCardList = False # We reset this variable because we can call intPlay from other scripts. And at that point we want to re-scan the table.
    extraText = '' # We set this here, because the if clause that may modify this variable will not be reached in all cases. So we need to set it to null here to avoid a python error later.
@@ -2379,12 +2375,3 @@ def moveXtopCardtoBottomStack(group):
    for c in group.top(count): c.moveToBottom(group)
    notify("{} moves the top {} cards from their {} to the bottom of {}.".format(me, count,pileName(group),pileName(group)))
 
-def VirusScan(group_dummy=None,x=0,y=0):
-    clickCost = useClick(count = 3)
-    if clickCost == 'ABORT': return 'ABORT'
-    playVirusPurgeSound()
-    for c in table:
-     foundMarker = findMarker(c,'Virus')
-     if foundMarker: c.markers[foundMarker] = 0
-    notify("{} to clean all viruses from their corporate grid".format(clickCost))
-    return 'CLICK USED'

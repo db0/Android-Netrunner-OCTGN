@@ -243,19 +243,7 @@ def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
       if card.name == 'Access Imminent': BUTTON_Access()
       elif card.name == 'No Rez': BUTTON_NoRez()
       elif card.name == 'Wait!': BUTTON_Wait()
-      elif card.name == 'Start Turn':
-          debugNotify('Start Turn button pressed')
-          debugNotify('trying goToSot')
-          goToSot(1,0,0) #TODO Does this work? isn't it out of scope? it's in actions.py
-          #notify('trying BUTTON_StartTurn')
-          #BUTTON_StartTurn()
-      elif card.name == 'End Turn':
-          debugNotify('End Turn button pressed')
-          debugNotify('trying goToEndTurn')
-          goToEndTurn(1,0,0) #TODO see above
-      else:
-          debugNotify('Unknown button pressed, assuming it\'s "OK"')
-          BUTTON_OK()
+      else: BUTTON_OK()
       return
    if (card._id in Stored_Type and fetchProperty(card, 'Type') == 'Tracing') or card.model == 'eb7e719e-007b-4fab-973c-3fe228c6ce20': # If the player double clicks on the Tracing card...
       debugNotify("+++ Confirmed tacting card. Checking Status...", 5)

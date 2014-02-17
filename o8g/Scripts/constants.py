@@ -145,7 +145,7 @@ trashEasterEgg = [
    "Shit's just got real!",
    "Careful what you wish for..."]
 trashEasterEggIDX = 0
-
+ 
 ScoredColor = "#00ff44"
 SelectColor = "#009900"
 EmergencyColor = "#fff600"

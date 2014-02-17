@@ -892,21 +892,6 @@ def HELP_RunAnatomy(group,x=0,y=0):
    table.create('db60308d-0d0e-4891-9954-7c600a7389e1', x, y, 1)
 def HELP_RunStructure(group,x=0,y=0):
    table.create('51c3a293-3923-49ee-8c6f-b8c41aaba5f3', x, y, 1)
-def HELP_StartEndTurnButtons(group,x=0,y=0): ##TODO w0nk0: implement respective cards -->execute="goToSot",execute="goToEndTurn"
-    """
-    ##TODO: create GUIDs 5f7ff64b-1df3-4ce8-9153-7d4370fc32b3 / cfc45a19-54ab-46c3-9e51-9b4e01b1bed0
-    pngs to /sets-markers-cards
-    create cards with ability
-    make cards trigger start/end run
-    """
-    try:
-        table.create('5f7ff64b-1df3-4ce8-9153-7d4370fc32b3', (197 * flipBoard) + flipModX, (248 * flipBoard) + flipModY, 1) #Start turn
-        table.create('cfc45a19-54ab-46c3-9e51-9b4e01b1bed0',(138 * flipBoard) + flipModX, (248 * flipBoard) + flipModY, 1) # end turn
-    except Exception:
-        table.create('5f7ff64b-1df3-4ce8-9153-7d4370fc32b3', -60,0,1 ) #Start turn
-        table.create('cfc45a19-54ab-46c3-9e51-9b4e01b1bed0', 60, 0, 1) # end turn
-        debugNotify('Creating Start/End cards non-flipped because flipBoard not defined in meta.py')
-
 
 
 #------------------------------------------------------------------------------
@@ -940,9 +925,6 @@ def BUTTON_OK(group = None,x=0,y=0):
 def BUTTON_Wait(group = None,x=0,y=0):  
    notify("--- Wait! {} wants to react.".format(me))
    playButtonSound('Wait')
-
-def BUTTON_StartTurn(group=None,x=0,y=0):
-    goToSot()
 #------------------------------------------------------------------------------
 #  Online Functions
 #------------------------------------------------------------------------------
