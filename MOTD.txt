@@ -3,4 +3,6 @@
 Indexing has been fixed, but now will spam a bunch of [RevealTo] messages. Please do not message me about those as there's nothing I can do atm.
 
 To avoid them, simply click in the chatbox to hide error messages.
+
+Also, The Access Imminent button now also doubles as F3, so you can use it if the F# keys are not as convenient.
 =============================

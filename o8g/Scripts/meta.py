@@ -950,7 +950,9 @@ def BUTTON_NoRez(group = None,x=0,y=0):
 
 def BUTTON_OK(group = None,x=0,y=0):
    notify("--- {} has no further reactions.".format(me))
-   if re.search(r'running',getGlobalVariable('status')) and ds == 'corp': setGlobalVariable('Access','GRANTED')
+   if re.search(r'running',getGlobalVariable('status')) and ds == 'corp': 
+      setGlobalVariable('Access','GRANTED')
+      notify("--- ACCESS GRANTED ---")
    playButtonSound('OK')
 
 def BUTTON_Wait(group = None,x=0,y=0):  
