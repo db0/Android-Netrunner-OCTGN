@@ -63,11 +63,11 @@ def UseCustomAbility(Autoscript, announceText, card, targetCards = None, notific
       count = askInteger("By which amount of trace strength did you exceeded the runner's link strength?",1)
       if not count: return 'ABORT'
       targetPL = findOpponent()
+      addGroupVisibility(targetPL.piles['R&D/Stack'],me) # Workaround for OCTGN bug #1242
       grabPileControl(targetPL.piles['R&D/Stack'])
-      targetPL.piles['R&D/Stack'].setVisibility('me')
+      targetPL.piles['R&D/Stack'].addViewer(me)
       cardList = list(targetPL.piles['R&D/Stack'].top(count)) # We make a list of the top cards the corp can look at.
       debugNotify("Turning Runner's Stack Face Up", 2)
-      #rnd(1,100) # Delay to be able to read card info
       if len(cardList): loopChk(cardList[len(cardList) - 1])
       if len(cardList) > 1:
          notify(":> {}'s Data Hound is sniffing through {}'s Stack".format(me,targetPL))
@@ -87,8 +87,9 @@ def UseCustomAbility(Autoscript, announceText, card, targetCards = None, notific
          idx += 1
       debugNotify("Removing Visibility", 2)
       rnd(1,100) # Delay to be able to announce names.
-      targetPL.piles['R&D/Stack'].setVisibility('None')
+      targetPL.piles['R&D/Stack'].removeViewer(me)
       passPileControl(targetPL.piles['R&D/Stack'],targetPL)
+      delGroupVisibility(targetPL.piles['R&D/Stack'],me) # Workaround for OCTGN bug #1242
       announceString = ':=> Sniff'
          #      __
          # (___()'`;   *Sniff*
@@ -368,24 +369,26 @@ def CustomScript(card, action = 'PLAY', origin_card = None, original_action = No
       return 'CLICK USED'
    elif fetchProperty(card, 'name') == "Indexing" and action == 'SuccessfulRun':
       targetPL = findOpponent()
+      addGroupVisibility(targetPL.piles['R&D/Stack'],me) # Workaround for OCTGN bug #1242
+      debugNotify("Taking R&D Control")
       grabPileControl(targetPL.piles['R&D/Stack'])
       if len(targetPL.piles['R&D/Stack']) < 5: count = len(targetPL.piles['R&D/Stack'])
       else: count = 5
       cardList = list(targetPL.piles['R&D/Stack'].top(count)) # We make a list of the top 5 cards the runner can look at.
-      debugNotify("Taking R&D Visibility", 2)
-      targetPL.piles['R&D/Stack'].setVisibility('me')
+      debugNotify("Taking R&D Visibility")
+      targetPL.piles['R&D/Stack'].addViewer(me)
       if len(cardList): loopChk(cardList[len(cardList) - 1])
-      #rnd(1,100) # Delay to be able to read card info
       idx = 0 # The index where we're going to be placing each card.
       while len(cardList) > 0:
          if len(cardList) == 1: choice = 0
-         else: choice = SingleChoice("Choose card put on the {} position of the Stack".format(numOrder(idx)), makeChoiceListfromCardList(cardList), type = 'button')
+         else: choice = SingleChoice("Choose card put on the {} position of the Stack".format(numOrder(idx)), makeChoiceListfromCardList(cardList), cancelButton = False, type = 'button')
          movedC = cardList.pop(choice)
          movedC.moveTo(targetPL.piles['R&D/Stack'],idx) # If there's only one card left, we put it in the last available index location in the Stack. 
          idx += 1
       notify("{} has successfully indexed {}'s R&D".format(me,targetPL))
-      targetPL.piles['R&D/Stack'].setVisibility('None')
+      targetPL.piles['R&D/Stack'].removeViewer(me)
       passPileControl(targetPL.piles['R&D/Stack'],targetPL)
+      delGroupVisibility(targetPL.piles['R&D/Stack'],me) # Workaround for OCTGN bug #1242
    elif fetchProperty(card, 'name') == "Deep Thought" and action == 'Start':
       if card.markers[mdict['Virus']] and card.markers[mdict['Virus']] >= 3:
          targetPL = findOpponent()

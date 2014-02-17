@@ -591,7 +591,7 @@
 		<property name="Stat" value="" />	
 		<property name="Rules" value="Add 1 card (or up to 2 virus cards) from your heap to your grip." />
 		<property name="Flavor" value="Anything worth doing is worth doing twice." />
-		<property name="Instructions" value="" />
+		<property name="Instructions" value="onPlay[Add 1 card from your heap to your grip|-|Add 2 virus cards from your heap to your grip]" />
 		<property name="Faction" value="Anarch" />
 		<property name="Influence" value="2" />
 		<property name="Side" value="runner" />

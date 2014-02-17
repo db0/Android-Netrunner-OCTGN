@@ -314,7 +314,7 @@ Deja Vu
 -----
 bc0f047c-01b1-427f-a439-d451eda01002
 -----
-onPlay:Retrieve1Card-fromHeap
+onPlay:Retrieve1Card-fromHeap||onPlay:Retrieve2Cards-fromHeap-Virus
 +++++
 	
 .....

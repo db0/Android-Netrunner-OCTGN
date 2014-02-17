@@ -878,6 +878,35 @@ def switchQuickAccess(group = table,x=0,y=0,forced = False, remoted = False):
 def remoteAskQA():
    mute()
    switchQuickAccess(remoted = True)
+   
+def addGroupVisibility(group,player):
+   mute()
+   if group.controller != me: 
+      remoteCall(group.controller,'addGroupVisibility',[group,player])
+   else:    
+      debugNotify("{} giving {} visibility to {}. Current Controller == {}".format(me,group.name,player,group.controller))
+      group.addViewer(player)
+   update()
+   debugNotify("<<< addGroupVisibility. {} Viewers == {}".format(group,[pl.name for pl in group.viewers]))
+   
+def delGroupVisibility(group,player):
+   mute()
+   if group.controller != me: remoteCall(group.controller,'delGroupVisibility',[group,player])
+   else: group.removeViewer(player)
+   update()
+   debugNotify("<<< delGroupVisibility. {} Viewers == {}".format(group,[pl.name for pl in group.viewers]))
+
+def modGroupVisibility(group,setting):
+   mute()
+   if group.controller != me: 
+      remoteCall(group.controller,'modGroupVisibility',[group,setting])
+   else:    
+      debugNotify("{} setting {} visibility to {}. Current Controller == {}".format(me,group.name,setting,group.controller))
+      group.setVisibility(setting)
+   update()
+   debugNotify("<<< modGroupVisibility. {} group.visibility == {}".format(group,group.visibility))
+
+   
 #------------------------------------------------------------------------------
 # Help functions
 #------------------------------------------------------------------------------

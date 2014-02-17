@@ -290,7 +290,7 @@ def SingleChoice(title, options, type = 'button', default = 0, cancelButton = Tr
       optChunks=[options[x:x+7] for x in xrange(0, len(options), 7)]
       optCurrent = 0
       choice = "New"
-      while choice == "New" or choice == "Next Page" or (not choice and not cancelButton):
+      while choice == "New" or choice == "Next Page" or (choice == None and not cancelButton):
          Application.EnableVisualStyles()
          form = SingleChoiceWindow(title, optChunks[optCurrent], type, default, pages = len(optChunks), cancelButtonBool = cancelButton, cancelName = cancelName)
          form.BringToFront()
@@ -614,7 +614,7 @@ def loopChk(card,property = 'Type'):
       if loopcount == 5:
          whisper(":::Error::: Card property can't be grabbed. Aborting!")
          return 'ABORT'
-   debugNotify("<<< loopChk()", 4) #Debug
+   debugNotify("<<< loopChk()", 3) #Debug
    return 'OK'         
    
 def sortPriority(cardList):
