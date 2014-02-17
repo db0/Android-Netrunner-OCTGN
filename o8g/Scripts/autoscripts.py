@@ -2230,9 +2230,6 @@ def per(Autoscript, card = None, count = 0, targetCards = None, notification = N
       else: #If we're not looking for a particular target, then we check for everything else.
          debugNotify("Doing no table lookup", 2) # Debug.
          if per.group(3) == 'X': multiplier = count # Probably not needed and the next elif can handle alone anyway.
-         elif count: multiplier = num(count) * chkPlayer(Autoscript, card.controller, False) # All non-special-rules per<somcething> requests use this formula.
-                                                                                              # Usually there is a count sent to this function (eg, number of favour purchased) with which to multiply the end result with
-                                                                                              # and some cards may only work when a rival owns or does something.
          elif re.search(r'Marker',per.group(3)):
             markerName = re.search(r'Marker{([\w ]+)}',per.group(3)) # I don't understand why I had to make the curly brackets optional, but it seens atTurnStart/End completely eats them when it parses the CardsAS.get(card.model,'')
             debugNotify("found per Marker requirement: {}".format(markerName.group(1)),4)
@@ -2256,6 +2253,9 @@ def per(Autoscript, card = None, count = 0, targetCards = None, notification = N
                if card.controller == me: player = findOpponent()
                else: player = me
             multiplier = player.counters[counter.group(1)].value
+         elif count: multiplier = num(count) * chkPlayer(Autoscript, card.controller, False) # All non-special-rules per<somcething> requests use this formula.
+                                                                                              # Usually there is a count sent to this function (eg, number of favour purchased) with which to multiply the end result with
+                                                                                              # and some cards may only work when a rival owns or does something.
       debugNotify("Checking ignore", 2) # Debug.            
       ignS = re.search(r'-ignore([0-9]+)',Autoscript)
       if ignS: ignore = num(ignS.group(1))
