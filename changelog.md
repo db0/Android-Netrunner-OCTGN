@@ -6,6 +6,8 @@ Changelog - Android:Netrunner LCG OCTGN Game Definition
 * Access Granted Button now doubles as F3
 * Fixed Indexing and Data Hound. Now spam RevealTo messages :(
 * Fixed Junebug etc.
+* Automated Deja Vu
+* Added info when a retrieve script is ongoing.
 
 ### 3.7.9.x
 

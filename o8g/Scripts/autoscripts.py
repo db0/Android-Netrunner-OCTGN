@@ -1721,8 +1721,8 @@ def RetrieveX(Autoscript, announceText, card, targetCards = None, notification =
       cardChoices = []
       cardTexts = []
       if count > len(cardList): count = len(cardList) # To avoid crashing if the pile has less cards than the amount we want to retrieve.
+      notify(":> {} starts retrieving cards with {}...".format(me,card,count))
       for iter in range(count):
-         debugNotify(" iter: {}/{}".format(iter,count), 4)
          del cardChoices[:]
          del cardTexts[:]
          for c in cardList:
@@ -1741,6 +1741,7 @@ def RetrieveX(Autoscript, announceText, card, targetCards = None, notification =
          else:
             chosenCList.append(cardChoices[choice])
             cardList.remove(cardChoices[choice])
+            if iter + 1 != count: notify(":-> {} out of {} chosen...".format(iter + 1,count))
    else: chosenCList = cardList
    debugNotify("Generating cardNames", 2)
    if re.search(r'doNotReveal',Autoscript): # If we do not reveal the cards, we still want to tell which cards from the face-up archives were taken
