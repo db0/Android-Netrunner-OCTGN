@@ -1,5 +1,6 @@
 =====Message of the Day======
 
-Do not forget to enable custom fonts in your OCTGN options to see credit and click symbols properly in the chat.
-(Instead of Yen and clocks) 
+Indexing has been fixed, but now will spam a bunch of [RevealTo] messages. Please do not message me about those as there's nothing I can do atm.
+
+To avoid them, simply click in the chatbox to hide error messages.
 =============================
