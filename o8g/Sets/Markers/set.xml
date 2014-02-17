@@ -33,6 +33,7 @@
 		<marker id="efbfabaa-384d-4139-8be1-7f1d706b3dd8" name="Personal Workshop" />
 		<marker id="867864c4-7d68-4279-823f-100f747aa6f8" name="Awakening Center" />
 		<marker id="5f58fb37-e44d-4620-8093-3b7378fb5f57" name="Cloud" />
+
 	</markers>
 	<cards>
 		<card id="eb7e719e-007b-4fab-973c-3fe228c6ce20" name="Trace">
@@ -276,6 +277,51 @@
          <property name="AutoAction" value="" />	
 		</card>
 		<card id="fb146e53-714b-4b29-861a-d58ca9840c00" name="No Rez">
+         <property name="Subtitle" value="" />
+         <property name="Type" value="Button" />
+         <property name="Keywords" value="" />
+         <property name="Cost" value="" />
+         <property name="Requirement" value="" />	
+         <property name="Stat" value="" />	
+         <property name="Rules" value="" />
+         <property name="Flavor" value="" />
+         <property name="Instructions" value="" />
+         <property name="Faction" value="" />
+         <property name="Influence" value="" />
+         <property name="AutoScript" value="" />
+         <property name="AutoAction" value="" />	
+		</card>
+		<card id="5f7ff64b-1df3-4ce8-9153-7d4370fc32b3" name="Start Turn">
+         <property name="Subtitle" value="" />
+         <property name="Type" value="Button" />
+         <property name="Keywords" value="" />
+         <property name="Cost" value="" />
+         <property name="Requirement" value="" />	
+         <property name="Stat" value="" />	
+         <property name="Rules" value="" />
+         <property name="Flavor" value="" />
+         <property name="Instructions" value="" />
+         <property name="Faction" value="" />
+         <property name="Influence" value="" />
+         <property name="AutoScript" value="" />
+         <property name="AutoAction" value="" />	
+		</card>
+		<card id="cfc45a19-54ab-46c3-9e51-9b4e01b1bed0" name="End Turn">
+         <property name="Subtitle" value="" />
+         <property name="Type" value="Button" />
+         <property name="Keywords" value="" />
+         <property name="Cost" value="" />
+         <property name="Requirement" value="" />	
+         <property name="Stat" value="" />	
+         <property name="Rules" value="" />
+         <property name="Flavor" value="" />
+         <property name="Instructions" value="" />
+         <property name="Faction" value="" />
+         <property name="Influence" value="" />
+         <property name="AutoScript" value="" />
+         <property name="AutoAction" value="" />	
+		</card>
+		<card id="1ce4f50d-2604-4afe-8d8c-551ce0623d70" name="Grant Access">
          <property name="Subtitle" value="" />
          <property name="Type" value="Button" />
          <property name="Keywords" value="" />

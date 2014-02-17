@@ -759,7 +759,7 @@ def CustomScript(card, action = 'PLAY', origin_card = None, original_action = No
       count = askInteger("Trash How many cards from R&D (max {})".format(len(me.piles['R&D/Stack'])),0)
       if count > len(me.piles['R&D/Stack']): count = len(me.piles['R&D/Stack'])
       for c in me.piles['R&D/Stack'].top(count): c.moveTo(me.piles['Archives(Hidden)'])
-      notify("{} has initiated a power shutdown. The runner must trash 1 installed program or hardware with an install cost of {} or less".format(me,count))
+      notify("{} has initiated a power shutdown and trashed {} cards. The runner must trash 1 installed program or hardware with an install cost of {} or less".format(me,count,count))
    elif fetchProperty(card, 'name') == 'Keyhole' and action == 'SuccessfulRun':
       targetPL = findOpponent()
       grabPileControl(targetPL.piles['R&D/Stack'])

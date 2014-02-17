@@ -25,6 +25,7 @@
       <script src="Scripts/generic.py" />
       <script src="Scripts/meta.py" />
       <script src="Scripts/CardScripts.py" />
+      <script src="Scripts/w0nk0.py" />
    </scripts>
    <events>
        <event name="OnTableLoad" action="chkTwoSided" />
@@ -243,6 +244,7 @@
          <groupaction menu="Runner Actions Reminder" default="False" execute="HELP_RunnerActions" />
          <groupaction menu="The Anatomy of a Run" default="False" execute="HELP_RunAnatomy" />
          <groupaction menu="The Timing Structure of a Run" default="False" execute="HELP_RunStructure" />
+         <groupaction menu="Add Start turn / End turn / Access buttons" default="False" execute="HELP_AddStartEndButtons" />
       </groupactions>
       <groupactions menu="Announcements">
          <groupaction menu="Announce Imminent Access" default="False" execute="BUTTON_Access" shortcut="Ctrl+1"/>
