@@ -930,17 +930,19 @@ def HELP_RunStructure(group,x=0,y=0):
 def BUTTON_Access(group = None,x=0,y=0):
    global AccessBtnNextChoice # Using a global var to avoid running the slow random function
    mute()
-   AccessMsgs = ["--- Alert: Unauthorized Access Imminent!", 
-                 "--- Alert: Runner entry detected!",
-                 "--- Alert: Firewalls breached!",
-                 "--- Alert: Intrusion in progress!"]
-   #AccessTXT = AccessMsgs[rnd(0,len(AccessMsgs) - 1)]
-   AccessTXT = AccessMsgs[AccessBtnNextChoice]
-   AccessBtnNextChoice += 1
-   if AccessBtnNextChoice >= len(AccessMsgs): AccessBtnNextChoice = 0
-   notify(AccessTXT + "\n-- {} is about to gain access. Corporate React?".format(me))
-   setGlobalVariable('accessAttempts',str(num(getGlobalVariable('accessAttempts')) + 1))  # The runner using the Button counts for an access Attempt. After 3 of them, the runner can bypass an unresponsive corp.
-   playButtonSound('Access')
+   if num(getGlobalVariable('accessAttempts')) == 0:
+      AccessMsgs = ["--- Alert: Unauthorized Access Imminent!", 
+                    "--- Alert: Runner entry detected!",
+                    "--- Alert: Firewalls breached!",
+                    "--- Alert: Intrusion in progress!"]
+      #AccessTXT = AccessMsgs[rnd(0,len(AccessMsgs) - 1)]
+      AccessTXT = AccessMsgs[AccessBtnNextChoice]
+      AccessBtnNextChoice += 1
+      if AccessBtnNextChoice >= len(AccessMsgs): AccessBtnNextChoice = 0
+      notify(AccessTXT + "\n-- {} is about to gain access. Corporate React?".format(me))
+      setGlobalVariable('accessAttempts',str(num(getGlobalVariable('accessAttempts')) + 1))  # The runner using the Button counts for an access Attempt. After 3 of them, the runner can bypass an unresponsive corp.
+      playButtonSound('Access')
+   else: runSuccess()
 
 def BUTTON_NoRez(group = None,x=0,y=0):  
    notify("--- {} does not rez approached ICE".format(me))
