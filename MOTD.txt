@@ -1,8 +1,8 @@
 =====Message of the Day======
 
-Indexing has been fixed, but now will spam a bunch of [RevealTo] messages. Please do not message me about those as there's nothing I can do atm.
+Fear & Loathing is now rezzed! 
 
-To avoid them, simply click in the chatbox to hide error messages.
+As always almost all cards are automated. 
 
-Also, The Access Imminent button now also doubles as F3, so you can use it if the F# keys are not as convenient.
+Enjoy!
 =============================
