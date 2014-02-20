@@ -1,6 +1,10 @@
 Changelog - Android:Netrunner LCG OCTGN Game Definition
 ===============================================
 
+### 3.8.1.x
+
+* Added Fucking Quick Access [FQA] because dear gawd...
+
 ### 3.8.0.x
 
 * New game definition for **Fear & Loathing**. As always, almost every card scripted!

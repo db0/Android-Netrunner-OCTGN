@@ -542,7 +542,7 @@ def checkQuickAccess():
    #if len(players) == 1: 
       #notify(">>> checkQuickAccess") # Debug
       #notify("## currentGameName = {}".format(currentGameName())) # Debug
-   if len(players) == 1 or re.search(r'(\[Quick Access\]|\[QA\])',currentGameName()):
+   if len(players) == 1 or re.search(r'(\[Quick Access\]|\[QA\]|\[FQA\])',currentGameName()):
       #if len(players) == 1: notify("## About to get QuickAccessInfo Setting") # Debug
       if getSetting('QuickAccessInfo',True):
          information(":::INFO::: You have joined a [Quick Access] game for the first time.\
@@ -847,7 +847,7 @@ def switchQuickAccess(group = table,x=0,y=0,forced = False, remoted = False):
    #if len(players) == 1: notify(">>> switchQuickAccess()") # Debug
    debugNotify(">>> switchQuickAccess(){}".format(extraASDebug())) #Debug
    global askedQA
-   QAgame = re.search(r'(\[Quick Access\]|\[QA\])',currentGameName()) # If the game has [Quick Access] in the title, we don't allow to turn QA off.
+   QAgame = re.search(r'(\[Quick Access\]|\[QA\]|\[FQA\])',currentGameName()) # If the game has [Quick Access] in the title, we don't allow to turn QA off.
    if not forced and QAgame:
       whisper(":::ERROR::: Sorry, you cannot cancel Quick Access in a [Quick Access] game.")
    elif not forced and ds == None:
@@ -858,9 +858,13 @@ def switchQuickAccess(group = table,x=0,y=0,forced = False, remoted = False):
          if QA == 'False':
             if remoted and not confirm("The runner would like to turn Quick Access on (i.e. not requiring corp confirmation before accessing a server). Do you accept?"): 
                notify(":::INFO::: {} rejected the request to activate Quick Access!".format(me))
-            setGlobalVariable('Quick Access','True')
-            if QAgame: barNotifyAll("#009900",":::INFO::: This is a [Quick Access] Game!") 
-            else: barNotifyAll("#009900",":::INFO::: Quick Access has been activated!")
+            elif re.search(r'\[FQA\]',currentGameName()): 
+               setGlobalVariable('Quick Access','Fucking')
+               if QAgame: barNotifyAll("#009900",":::INFO::: This is a [Fucking Quick Access] Game!") 
+            else: 
+               setGlobalVariable('Quick Access','True')
+               if QAgame: barNotifyAll("#009900",":::INFO::: This is a [Quick Access] Game!") 
+               else: barNotifyAll("#009900",":::INFO::: Quick Access has been activated!")
          else: 
             if remoted and not confirm("The runner would like to turn Quick Access off. Accept?"): 
                notify(":::INFO::: {} rejected the request to disable Quick Access!".format(me))
