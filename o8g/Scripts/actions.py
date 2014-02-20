@@ -1246,12 +1246,12 @@ def scrTargetAgenda(group = table, x = 0, y = 0):
             return
    notify("You need to target an unscored agenda in order to use this action")
 
-def accessTarget(group = table, x = 0, y = 0):
+def accessTarget(group = table, x = 0, y = 0, noQuestionsAsked = False):
    debugNotify(">>> accessTarget()") #Debug
    mute()
    global origController
    targetPL = ofwhom('-ofOpponent')
-   if getGlobalVariable('SuccessfulRun') != 'True':
+   if getGlobalVariable('SuccessfulRun') != 'True' and not noQuestionsAsked:
       if not re.search(r'running',getGlobalVariable('status')) and not confirm("You're not currently running. Are you sure you're allowed to access this card?"): return
       if runSuccess() == 'DENIED': return # If the player is trying to access, then we assume the run was a success.
    cardList = [c for c in table
@@ -1281,6 +1281,7 @@ def accessTarget(group = table, x = 0, y = 0):
             debugNotify("Doing Remote Call with player = {}. card = {}, autoS = {}".format(me,card,autoS))
             remoteCall(card.owner, 'remoteAutoscript', [card,autoS])
             if re.search(r'-pauseRunner',autoS): # If the -pauseRunner modulator exists, we need to prevent the runner form trashing or scoring cards, as the amount of advancement tokens they have will be wiped and those may be important for the ambush effect.
+               passCardControl(card,card.owner) # We pass control back to the original owner in case of a trap, to allow them to manipulate their own card (e.g. Toshiyuki Sakai)
                while not confirm("Ambush! You have stumbled into a {}\
                                \n(This card activates even when inactive. You need to wait for the corporation now.)\
                              \n\nHas the corporation decided whether or not to the effects of this ambush?\
@@ -1288,57 +1289,60 @@ def accessTarget(group = table, x = 0, y = 0):
                                  ".format(card.name)):
                   rnd(1,1000)
                   notify(":::NOTICE::: {} is still waiting for {} to decide whether to use {} or not".format(me,card.owner,card))
-      if card.Type == 'ICE':
-         cStatTXT = '\nStrength: {}.'.format(card.Stat)
-      elif card.Type == 'Asset' or card.Type == 'Upgrade':
-         cStatTXT = '\nTrash Cost: {}.'.format(card.Stat)
-      elif card.Type == 'Agenda':
-         cStatTXT = '\nAgenda Points: {}.'.format(card.Stat)
-      else: cStatTXT = ''
-      title = "Card: {}.\
-             \nType: {}.\
-             \nKeywords: {}.\
-             \nCost: {}.\
-               {}\n\nCard Text: {}\
-           \n\nWhat do you want to do with this card?".format(fetchProperty(card, 'name'),fetchProperty(card, 'Type'),fetchProperty(card, 'Keywords'),fetchProperty(card, 'Cost'),cStatTXT,fetchProperty(card, 'Rules'))
-      if card.Type == 'Agenda' or card.Type == 'Asset' or card.Type == 'Upgrade':
-         if card.Type == 'Agenda': action1TXT = 'Liberate for {} Agenda Points.'.format(card.Stat)
-         else:
-            reduction = reduceCost(card, 'TRASH', num(card.Stat), dryRun = True)
-            if reduction > 0:
-               extraText = " ({} - {})".format(card.Stat,reduction)
-               extraText2 = " (reduced by {})".format(uniCredit(reduction))
-            elif reduction < 0:
-               extraText = " ({} + {})".format(card.Stat,abs(reduction))
-               extraText2 = " (increased by {})".format(uniCredit(abs(reduction)))
-            else:
-               extraText = ''
-               extraText2 = '' # I only set this here, even though it's used in line 1190 later, because to reach that part, it will have to pass through this if clause always.
-            action1TXT = 'Pay {}{} to Trash.'.format(num(card.Stat) - reduction,extraText)
-         options = ["Leave where it is.","Force trash at no cost.\n(Only through card effects)",action1TXT]
+      if card.group != table: whisper(":::Access Aborted::: Card has left the table!")
       else:
-         options = ["Leave where it is.","Force trash at no cost.\n(Only through card effects)"]
-      choice = SingleChoice(title, options, 'button')
-      if choice == None: choice = 0
-      if choice == 1:
-         sendToTrash(card)
-         notify("{} {} {} at no cost".format(me,uniTrash(),card))
-      elif choice == 2:
-         if card.Type == 'Agenda':
-            scrAgenda(card,silent = True)
+         grabCardControl(card) # If the card is still in the table after any trap option resolves...
+         if card.Type == 'ICE':
+            cStatTXT = '\nStrength: {}.'.format(card.Stat)
+         elif card.Type == 'Asset' or card.Type == 'Upgrade':
+            cStatTXT = '\nTrash Cost: {}.'.format(card.Stat)
+         elif card.Type == 'Agenda':
+            cStatTXT = '\nAgenda Points: {}.'.format(card.Stat)
+         else: cStatTXT = ''
+         title = "Card: {}.\
+                \nType: {}.\
+                \nKeywords: {}.\
+                \nCost: {}.\
+                  {}\n\nCard Text: {}\
+              \n\nWhat do you want to do with this card?".format(fetchProperty(card, 'name'),fetchProperty(card, 'Type'),fetchProperty(card, 'Keywords'),fetchProperty(card, 'Cost'),cStatTXT,fetchProperty(card, 'Rules'))
+         if card.Type == 'Agenda' or card.Type == 'Asset' or card.Type == 'Upgrade':
+            if card.Type == 'Agenda': action1TXT = 'Liberate for {} Agenda Points.'.format(card.Stat)
+            else:
+               reduction = reduceCost(card, 'TRASH', num(card.Stat), dryRun = True)
+               if reduction > 0:
+                  extraText = " ({} - {})".format(card.Stat,reduction)
+                  extraText2 = " (reduced by {})".format(uniCredit(reduction))
+               elif reduction < 0:
+                  extraText = " ({} + {})".format(card.Stat,abs(reduction))
+                  extraText2 = " (increased by {})".format(uniCredit(abs(reduction)))
+               else:
+                  extraText = ''
+                  extraText2 = '' # I only set this here, even though it's used in line 1190 later, because to reach that part, it will have to pass through this if clause always.
+               action1TXT = 'Pay {}{} to Trash.'.format(num(card.Stat) - reduction,extraText)
+            options = ["Leave where it is.","Force trash at no cost.\n(Only through card effects)",action1TXT]
          else:
-            reduction = reduceCost(card, 'TRASH', num(card.Stat))
-            rc = payCost(num(card.Stat) - reduction, "not free")
-            if rc == "ABORT": pass # If the player couldn't pay to trash the card, we leave it where it is.
+            options = ["Leave where it is.","Force trash at no cost.\n(Only through card effects)"]
+         choice = SingleChoice(title, options, 'button')
+         if choice == None: choice = 0
+         if choice == 1:
             sendToTrash(card)
-            notify("{} paid {}{} to {} {}".format(me,uniCredit(num(card.Stat) - reduction),extraText2,uniTrash(),card))
-      else: pass
-      if cFaceD and card.group == table and not card.markers[mdict['Scored']]: card.isFaceUp = False
-      card.highlight = None
-      if card.group == table and not card.markers[mdict['Scored']]: 
-         passCardControl(card,card.owner) # We pass control back to the corp, but only if we didn't steal the card.
-         try: del origController[card._id] # We use a try: just in case...
-         except: pass
+            notify("{} {} {} at no cost".format(me,uniTrash(),card))
+         elif choice == 2:
+            if card.Type == 'Agenda':
+               scrAgenda(card,silent = True)
+            else:
+               reduction = reduceCost(card, 'TRASH', num(card.Stat))
+               rc = payCost(num(card.Stat) - reduction, "not free")
+               if rc == "ABORT": pass # If the player couldn't pay to trash the card, we leave it where it is.
+               sendToTrash(card)
+               notify("{} paid {}{} to {} {}".format(me,uniCredit(num(card.Stat) - reduction),extraText2,uniTrash(),card))
+         else: pass
+         if cFaceD and card.group == table and not card.markers[mdict['Scored']]: card.isFaceUp = False
+         card.highlight = None
+         if card.group == table and not card.markers[mdict['Scored']]: 
+            passCardControl(card,card.owner) # We pass control back to the corp, but only if we didn't steal the card.
+            try: del origController[card._id] # We use a try: just in case...
+            except: pass
 
 def RDaccessX(group = table, x = 0, y = 0): # A function which looks at the top X cards of the corp's deck and then asks the runner what to do with each one.
    debugNotify(">>> RDaccessX()") #Debug

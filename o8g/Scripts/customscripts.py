@@ -142,6 +142,32 @@ def UseCustomAbility(Autoscript, announceText, card, targetCards = None, notific
       count = askInteger("How many agenda points did you steal last turn?", 0)
       if count: InflictX('Inflict{}MeatDamage-onOpponent'.format(count), '', card)
       notify("--> {} is punished for their shenanigans with {} meat damage".format(me,count))
+   if fetchProperty(card, 'name') == "Yagura":
+      me.piles['R&D/Stack'].setVisibility('me')
+      topC = me.piles['R&D/Stack'][0]
+      cardDetails = makeChoiceListfromCardList([topC])[0]
+      me.piles['R&D/Stack'].setVisibility('none')
+      #notify("{}".format(topCard))
+      notify("{} is looking at the top card in their R&D...".format(me))
+      if confirm("The top card is:\n{}\n\nDo you want to send it to the bottom of your deck?".format(cardDetails)):
+         topC.moveToBottom(me.piles['R&D/Stack'])
+         announceString = announceText + " send the top card of their R&D to the bottom".format(me)
+      else:
+         announceString = announceText + " look at the top card of their R&D and leave it where it is".format(me)   
+   if fetchProperty(card, 'name') == "Toshiyuki Sakai":
+      handTargets = [c for c in me.hand if c.Type == 'Agenda' or c.Type == 'Asset']
+      debugNotify("Found {} Assets / Agendas in hand".format(len(handTargets)))
+      if not len(handTargets): 
+         notify("{} can find no assets or agendas in your hand".format(card))
+         return
+      chosenInstall = SingleChoice('Please choose one asset/agenda from your hand with which to replace Toshiyuki Sakai', makeChoiceListfromCardList(handTargets))
+      if chosenInstall == 'ABORT': return
+      x,y = card.position
+      handTargets[chosenInstall].moveToTable(x, y, True)
+      handTargets[chosenInstall].markers[mdict['Advancement']] = card.markers[mdict['Advancement']]
+      card.moveTo(me.hand)
+      notify(":> {} replaces {} with a new card from their hand".format(me,card))
+      announceString = ''
    return announceString
    
 def CustomScript(card, action = 'PLAY', origin_card = None, original_action = None): # Scripts that are complex and fairly unique to specific cards, not worth making a whole generic function for them.
@@ -818,7 +844,13 @@ def CustomScript(card, action = 'PLAY', origin_card = None, original_action = No
    elif fetchProperty(card, 'name') == 'Precognition' and action == 'PLAY':
       notify("{} foresees the future...".format(me))
       me.piles['R&D/Stack'].lookAt(5)
+   elif fetchProperty(card, 'name') == 'Quest Completed' and action == 'PLAY':
+      accessC = findTarget('Targeted-targetOpponents')
+      if len(accessC): accessTarget(accessC[0], noQuestionsAsked = True)
+      else: whisper("You need to target an card to access before playing this event")      
    elif action == 'USE': useCard(card)
+   if fetchProperty(card, 'name') == "Executive Wiretaps" and action == 'PLAY':
+      remoteCall(findOpponent(),"ExecWire",[])
    debugNotify("<<< CustomScript()", 3) #Debug
    
 def markerEffects(Time = 'Start'):
@@ -849,6 +881,14 @@ def markerEffects(Time = 'Start'):
             TokensX('Remove1Deep Red-isSilent', "Deep Red:", card)
          if re.search(r'LLDS Processor',marker[0]) and Time == 'End': # We silently remove LLDS Processor bonus
             TokensX('Remove1LLDS Processor-isSilent', "LLDS Processor:", card)
+
+def ASVarEffects(Time = 'Start'):
+   mute()
+   debugNotify(">>> ASVarEffects() at time: {}".format(Time)) #Debug
+   ### Checking triggers from AutoScript Variables
+   ASVars = eval(getGlobalVariable('AutoScript Variables'))
+   if Time == 'Start': ASVars['Subliminal'] = 'False' # At the very start of each turn, we set the Subliminal var to False to signify no Subliminal has been played yet.
+   setGlobalVariable('AutoScript Variables',str(ASVars))
 
 def markerScripts(card, action = 'USE'):
    debugNotify(">>> markerScripts() with action: {}".format(action)) #Debug
@@ -940,6 +980,9 @@ def markerScripts(card, action = 'USE'):
          me.Clicks += 1
          card.markers[key] = 0
          # We do not return True on foundSpecial as we want the rest of the script to run its course as well.
+      if key[0] == 'Blackmail' and action == 'USE' and not card.isFaceUp:
+         foundSpecial = True
+         whisper(":::ERROR::: You cannot rez ICE during this run, you are being Blackmailed!")
    return foundSpecial
    
 #------------------------------------------------------------------------------
@@ -1018,3 +1061,20 @@ def Leverage(card): # Leverage
    else:
       CreateDummy('CreateDummy-with99protectionAllDMG-onOpponent', '', card)
       notify("--> The corporation has caved in to the runner's leverage. The runner cannot take any damage until the start of their next turn.")
+      
+def ExecWire(): # Expert Schedule Analyzer
+   debugNotify(">>> Remote Script ExecWire()") #Debug
+   mute()
+   revealedCards = []
+   for c in me.hand: revealedCards.append(c)
+   iter = 0
+   for c in revealedCards:
+      c.moveToTable(playerside * iter * cwidth(c) - (len(revealedCards) * cwidth(c) / 2), 0 - yaxisMove(c), False)
+      c.highlight = RevealedColor
+      iter += 1
+   notify("The Executive Wiretaps reveal {}".format([c.name for c in revealedCards]))
+   while not confirm("You have revealed your hand to your opponent. Return them to HQ?\n\n(Pressing 'No' will send a ping to your opponent to see if they're done reading them)"):
+      notify("{} would like to know if it's OK to return their remaining cards to their HQ.".format(me))
+   for c in revealedCards: c.moveTo(me.hand)
+         
+      

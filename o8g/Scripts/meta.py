@@ -360,7 +360,7 @@ def chkTargeting(card):
       return 'ABORT'
    if ds == 'corp': runnerPL = findOpponent()
    else: runnerPL = me
-   if re.search(r'ifTagged', CardsAS.get(card.model,'')) and runnerPL.Tags == 0 and not re.search(r'isOptional', CardsAS.get(card.model,'')):
+   if re.search(r'ifTagged', CardsAS.get(card.model,'')) and runnerPL.Tags == 0 and not re.search(r'isOptional', CardsAS.get(card.model,'')) and not re.search(r'doesNotBlock', CardsAS.get(card.model,'')):
       whisper("{} must be tagged in order to use this card".format(runnerPL))
       return 'ABORT'
    if re.search(r'isExposeTarget', CardsAS.get(card.model,'')) and getSetting('ExposeTargetsWarn',True):
@@ -1286,7 +1286,7 @@ def TrialError(group, x=0, y=0): # Debugging
       notify("About to create starting cards.") #Debug   
       createStartingCards()
    notify("<<< TrialError()") #Debug
-   if confirm("Spawn Test Cards?"):
+   if debugVerbosity >= 0 and confirm("Spawn Test Cards?"):
       for idx in range(len(testcards)):
          test = table.create(testcards[idx], (70 * idx) - 650, 0, 1, True)
          storeProperties(test)

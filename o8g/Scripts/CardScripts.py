@@ -3021,6 +3021,168 @@ bc0f047c-01b1-427f-a439-d451eda00004
 +++++
 
 .....
+Quest Completed
+-----
+bc0f047c-01b1-427f-a439-d451eda04081
+-----
+onPlay:CustomScript-Targeted-targetOpponents
++++++
+
+.....
+Hemorrhage
+-----
+bc0f047c-01b1-427f-a439-d451eda04082
+-----
+atSuccessfulRun:Put1Virus
++++++
+A1B0G0T0:Remove2Virus-isCost$$TrashTarget-AutoTargeted-randomTarget-fromHand
+.....
+Tallie Perrault
+-----
+bc0f047c-01b1-427f-a439-d451eda04083
+-----
+
++++++
+A0B0G0T0:Gain1Bad Publicity-onOpponent$$Gain1Tags||A0B0G0T1:Draw1Cards-perOpponentCounter{Bad Publicity}
+.....
+Executive Wiretaps
+-----
+bc0f047c-01b1-427f-a439-d451eda04084
+-----
+onPlay:CustomScript
++++++
+
+.....
+Blackguard
+-----
+bc0f047c-01b1-427f-a439-d451eda04085
+-----
+whileInstalled:Gain2MU
++++++
+A0B0G0T0:SimplyAnnounce{force the corp to rez the accessed card by paying its rez cost, if able.}
+.....
+CyberSolutions Mem Chip
+-----
+bc0f047c-01b1-427f-a439-d451eda04086
+-----
+whileInstalled:Gain2MU
++++++
+
+.....
+Alpha
+-----
+bc0f047c-01b1-427f-a439-d451eda04087
+-----
+
++++++
+A0B1G0T0:SimplyAnnounce{break ICE subroutine}||A0B1G0T0:Put1PlusOne	
+.....
+Omega
+-----
+bc0f047c-01b1-427f-a439-d451eda04088
+-----
+
++++++
+A0B1G0T0:SimplyAnnounce{break ICE subroutine}||A0B1G0T0:Put1PlusOne	
+.....
+Blackmail
+-----
+bc0f047c-01b1-427f-a439-d451eda04089
+-----
+onPlay:Put1Blackmail-AutoTargeted-isUnrezzed-isIce$$RunGeneric||atJackOut:Remove1Blackmail-AutoTargeted-isUnrezzed-isIce
++++++
+
+.....
+Blue Level Clearance
+-----
+bc0f047c-01b1-427f-a439-d451eda04090
+-----
+onPlay:Gain5Credits$$Draw2Card
++++++
+
+.....
+Strongbox
+-----
+bc0f047c-01b1-427f-a439-d451eda04091
+-----
+
++++++
+
+.....
+Toshiyuki Sakai
+-----
+bc0f047c-01b1-427f-a439-d451eda04092
+-----
+onAccess:UseCustomAbility-ifInstalled-isOptional-pauseRunner
++++++
+A0B0G0T0:UseCustomAbility-ifInstalled
+.....
+Yagura
+-----
+bc0f047c-01b1-427f-a439-d451eda04093
+-----
+
++++++
+A0B0G0T0:UseCustomAbility-isSubroutine||A0B0G0T0:Inflict1NetDamage-onOpponent-isSubroutine
+.....
+Restoring Face
+-----
+bc0f047c-01b1-427f-a439-d451eda04094
+-----
+onPlay:TrashTarget-Targeted-atSysop_or_Executive_or_Clone$$Lose2Bad Publicity
++++++
+ 
+.....
+Market Research
+-----
+bc0f047c-01b1-427f-a439-d451eda04095
+-----
+onScore:Put1Agenda-ifOpponentHave1Tags-isSilentHaveChk||whileScored:Gain1Agenda Points-perMarker{Agenda}
++++++
+
+.....
+Wraparound
+-----
+bc0f047c-01b1-427f-a439-d451eda04096
+-----
+
++++++
+A0B0G0T0:RunEnd-isSubroutine
+.....
+GRNDL
+-----
+bc0f047c-01b1-427f-a439-d451eda04097
+-----
+onStartup:Gain5Credits-isSilent$$Gain1Bad Publicity-isSilent
++++++
+
+.....
+Vulcan Coverup
+-----
+bc0f047c-01b1-427f-a439-d451eda04098
+-----
+onScore:Inflict2MeatDamage-onOpponent||onLiberation:Gain1Bad Publicity
++++++
+
+.....
+GRNDL Refinery
+-----
+bc0f047c-01b1-427f-a439-d451eda04099
+-----
+
++++++
+A1B0G0T1:Gain4Credits-perMarker{Advancement}
+.....
+Subliminal Messaging
+-----
+bc0f047c-01b1-427f-a439-d451eda04100
+-----
+onPlay:Gain1Credits$$Gain1Clicks-ifVarSubliminal_SetTo_False$$SetVarSubliminal-ToTrue
++++++
+
+.....
+
+
 ENDSCRIPTS
 =====
 '''

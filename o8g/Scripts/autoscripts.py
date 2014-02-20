@@ -134,6 +134,7 @@ def executePlayScripts(card, action):
          debugNotify("Second Processing: {}".format(activeAutoscript), 2) # Debug
          if chkWarn(card, activeAutoscript) == 'ABORT': return
          if not ifHave(activeAutoscript): continue # If the script requires the playet to have a specific counter value and they don't, do nothing.
+         if not ifVarSet(activeAutoscript): continue # If the script requires a shared AutoScript variable to be set to a specific value.
          if not checkOrigSpecialRestrictions(activeAutoscript,card): continue  
          if not chkRunStatus(activeAutoscript): continue
          if re.search(r'-ifAccessed', activeAutoscript) and ds != 'runner': 
@@ -153,6 +154,9 @@ def executePlayScripts(card, action):
             continue 
          if re.search(r':Pass\b', activeAutoscript): continue # Pass is a simple command of doing nothing ^_^
          effect = re.search(r'\b([A-Z][A-Za-z]+)([0-9]*)([A-Za-z& ]*)\b([^:]?[A-Za-z0-9_&{}\|:,<>+ -]*)', activeAutoscript)
+         if not effect: 
+            whisper(":::ERROR::: In AutoScript: {}".format(activeAutoscript))
+            continue
          debugNotify('effects: {}'.format(effect.groups()), 2) #Debug
          if effectType.group(1) == 'whileRezzed' or effectType.group(1) == 'whileInstalled' or effectType.group(1) == 'whileScored' or effectType.group(1) == 'whileLiberated':
             if action == 'STARTUP' or action == 'MULLIGAN': 
@@ -217,6 +221,8 @@ def executePlayScripts(card, action):
                if ChooseKeyword(passedScript, announceText, card, targetC, notification = 'Quick', n = X) == 'ABORT': return
             elif regexHooks['InflictX'].search(passedScript): 
                if InflictX(passedScript, announceText, card, targetC, notification = 'Quick', n = X) == 'ABORT': return
+            elif regexHooks['SetVarX'].search(passedScript): 
+               if SetVarX(passedScript, announceText, card, targetC, notification = 'Quick', n = X) == 'ABORT': return
             elif regexHooks['RetrieveX'].search(passedScript): 
                retrieveTuple = RetrieveX(passedScript, announceText, card, targetC, notification = 'Quick', n = X)
                if retrieveTuple == 'ABORT': return # Retrieve also returns the cards it found in a tuple. But we're not using those here.
@@ -496,6 +502,7 @@ def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
          elif regexHooks['SimplyAnnounce'].search(activeAutoscript):    announceText = SimplyAnnounce(activeAutoscript, announceText, card, targetC, n = X)
          elif regexHooks['ChooseKeyword'].search(activeAutoscript):     announceText = ChooseKeyword(activeAutoscript, announceText, card, targetC, n = X)
          elif regexHooks['UseCustomAbility'].search(activeAutoscript):  announceText = UseCustomAbility(activeAutoscript, announceText, card, targetC, n = X)
+         elif regexHooks['SetVarX'].search(activeAutoscript):           SetVarX(activeAutoscript, announceText, card, targetC, n = X) # Setting a variable does not change the announcement text.
          else: timesNothingDone += 1
          debugNotify("<<< useAbility() choice. TXT = {}".format(announceText), 3) # Debug
          if announceText == 'ABORT': 
@@ -601,6 +608,8 @@ def autoscriptOtherPlayers(lookup, origin_card = Identity, count = 1): # Functio
             if DrawX(autoS, costText, card, targetCard, notification = 'Automatic', n = count) == 'ABORT': break
          elif regexHooks['ModifyStatus'].search(autoS):
             if ModifyStatus(autoS, costText, card, targetCard, notification = 'Automatic', n = count) == 'ABORT': break
+         elif regexHooks['SetVarX'].search(autoS):
+            if SetVarX(autoS, costText, card, targetCard, notification = 'Automatic', n = count) == 'ABORT': break
          elif regexHooks['UseCustomAbility'].search(autoS):
             if UseCustomAbility(autoS, costText, card, targetCard, notification = 'Automatic', n = count) == 'ABORT': break
    debugNotify("<<< autoscriptOtherPlayers()", 3) # Debug
@@ -741,12 +750,15 @@ def atTimedEffects(Time = 'Start'): # Function which triggers card effects at th
                X = numberTuple[1] 
             elif regexHooks['SimplyAnnounce'].search(passedScript):
                SimplyAnnounce(passedScript, announceText, card, notification = 'Automatic', n = X)
+            elif regexHooks['SetVarX'].search(passedScript):
+               SetVarX(passedScript, announceText, card, notification = 'Automatic', n = X)
             elif regexHooks['CustomScript'].search(passedScript): 
                customScriptResult = CustomScript(card, Time, original_action = Time)
                if customScriptResult == 'CLICK USED': autoscriptOtherPlayers('CardAction', card)   # Some cards (I.e. Collective) just have a fairly unique effect and there's no use in trying to make them work in the generic framework.
                if customScriptResult == 'ABORT': break
             if failedRequirement: break # If one of the Autoscripts was a cost that couldn't be paid, stop everything else.
    markerEffects(Time) 
+   ASVarEffects(Time) 
    if me.counters['Credits'].value < 0: 
       if Time == 'Run': notify(":::Warning::: {}'s Start-of-run effects cost more Credits than {} had in their Credit Pool!".format(me,me))
       elif Time == 'JackOut': notify(":::Warning::: {}'s Jacking-Out effects cost more Credits than {} had in their Credit Pool!".format(me,me))
@@ -868,6 +880,8 @@ def redirect(Autoscript, card, announceText = None, notificationType = 'Quick', 
       if ModifyStatus(Autoscript, announceText, card, targetC, notification = notificationType, n = X) == 'ABORT': return 'ABORT'
    elif regexHooks['SimplyAnnounce'].search(Autoscript):
       SimplyAnnounce(Autoscript, announceText, card, targetC, notification = notificationType, n = X)
+   elif regexHooks['SetVarX'].search(Autoscript):
+      SetVarX(Autoscript, announceText, card, targetC, notification = notificationType, n = X)
    elif regexHooks['UseCustomAbility'].search(Autoscript):
       if UseCustomAbility(Autoscript, announceText, card, targetC, notification = notificationType, n = X) == 'ABORT': return 'ABORT'
    else: debugNotify(" No regexhook match! :(") # Debug
@@ -1419,6 +1433,20 @@ def SimplyAnnounce(Autoscript, announceText, card, targetCards = None, notificat
    debugNotify("<<< SimplyAnnounce()", 3)
    return announceString
 
+def SetVarX(Autoscript, announceText, card, targetCards = None, notification = None, n = 0): # Core Command for drawing X Cards from the house deck to your hand.
+   debugNotify(">>> SetVarX(){}".format(extraASDebug())) #Debug
+   if targetCards is None: targetCards = []
+   action = re.search(r'\bSetVar([A-Za-z0-9 ]+)-To([A-Za-z0-9 ]+)', Autoscript)
+   if debugVerbosity >= 2: #Debug
+      if action: notify("!!! regex: {}".format(action.groups()))
+      else: notify("!!! regex failed :(") 
+   ASVars = eval(getGlobalVariable('AutoScript Variables'))
+   ASVars[action.group(1)] = action.group(2)
+   setGlobalVariable('AutoScript Variables',str(ASVars))
+   debugNotify("ASVars = {}".format(str(ASVars)),4)
+   debugNotify("<<< SetVarX()", 3)
+   return ''
+
 def CreateDummy(Autoscript, announceText, card, targetCards = None, notification = None, n = 0): # Core Command for creating dummy cards.
    debugNotify(">>> CreateDummy(){}".format(extraASDebug(Autoscript))) #Debug
    if targetCards is None: targetCards = []
@@ -1918,6 +1946,10 @@ def findTarget(Autoscript, fromHand = False, card = None): # Function for findin
                else: choice = SingleChoice(choiceTitle, targetChoices, type = 'button', default = 0)
                if choice == 'ABORT': del foundTargets[:]
                else: foundTargets = [foundTargets.pop(choice)] # if we select the target we want, we make our list only hold that target
+         elif re.search(r'-randomTarget',Autoscript): # This modulator randomly selects one card from the valid cards as the single target. Usually paired with AutoTargeted
+            debugNotify("Going for a random choice menu")# Debug
+            rndChoice = rnd(0,len(foundTargets) - 1)
+            foundTargets = [foundTargets[rndChoice]]
       if debugVerbosity >= 3: # Debug
          tlist = [] 
          for foundTarget in foundTargets: tlist.append(foundTarget.name) # Debug
@@ -2303,6 +2335,18 @@ def ifHave(Autoscript,controller = me,silent = False):
    debugNotify("<<< ifHave() with Result: {}".format(Result), 3) # Debug
    return Result # If we don't have an ifHave clause, then the result is always True      
       
+def ifVarSet(Autoscript):
+# A functions that checks if a shared variable has been set to a certain value before allowing a script to proceed.
+   debugNotify(">>> ifVarSet(){}".format(extraASDebug(Autoscript))) #Debug
+   Result = True
+   ifVar = re.search(r"\bifVar([0-9A-Za-z ]+)_SetTo_([0-9A-Za-z ]+)",Autoscript)
+   if ifVar:
+      debugNotify("ifVar groups: {}".format(ifVar.groups()), 3)
+      ASVars = eval(getGlobalVariable('AutoScript Variables'))
+      if ASVars.get(ifVar.group(1),'NULL') != ifVar.group(2): Result = False
+   debugNotify("<<< ifVarSet() with Result: {}".format(Result), 3) # Debug
+   return Result # If we don't have an ifHave clause, then the result is always True      
+      
 def chkRunningStatus(autoS): # Checks a script to see if it requires a run to be in progress and returns True or False if it passes the check.
    debugNotify(">>> chkRunningStatus() with autoS = {}".format(autoS)) #Debug
    Result = True
@@ -2357,11 +2401,11 @@ def chkPlayer(Autoscript, controller, manual, targetChk = False, reversePlayerCh
    
 def chkTagged(Autoscript, silent = False):
 ### Check if the action needs the player or his opponent to be targeted
+   debugNotify(">>> chkTagged(). Autoscript is: {}".format(Autoscript))
    if ds == 'corp': runnerPL = findOpponent()
    else: runnerPL = me
-
    regexTag = re.search(r'ifTagged([0-9]+)', Autoscript)
-   if regexTag and runnerPL.Tags < num(regexTag.group(1)): #See if the target needs to be tagged a specific number of times.
+   if regexTag and runnerPL.Tags < num(regexTag.group(1)) and not re.search(r'doesNotBlock', Autoscript): #See if the target needs to be tagged a specific number of times.
       if not silent:
          if regexTag.group(1) == '1': whisper("The runner needs to be tagged for you to use this action")
          else: whisper("The Runner needs to be tagged {} times for you to to use this action".format(regexTag.group(1)))

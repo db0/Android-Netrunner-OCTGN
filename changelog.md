@@ -1,6 +1,16 @@
 Changelog - Android:Netrunner LCG OCTGN Game Definition
 ===============================================
 
+### 3.7.11.x
+
+* New game definition for **Fear & Loathing**. As always, almost every card scripted!
+
+* ##### Trickier Automations
+  * Quest Completed: Target the card you want to access before playing it.
+  * Tallie Perrault: Not automated on playing Operations. Just double click her when appropriate
+  * Blackguard: Rez not automated. Corp has to manually do it after exposing.
+  * Blackmail: Does not check for BP. 
+
 ### 3.7.10.x
 
 * Access Granted Button now doubles as F3

@@ -32,6 +32,7 @@ mdict = dict( # A dictionary which holds all the hard coded markers (in the mark
              DaemonMU =                ("Daemon MU", "17844835-3140-4555-b592-0f711048eabd"),
              PersonalWorkshop =        ("Personal Workshop", "efbfabaa-384d-4139-8be1-7f1d706b3dd8"),
              AwakeningCenter =         ("Awakening Center", "867864c4-7d68-4279-823f-100f747aa6f8"),
+             Blackmail =               ("Blackmail", "e11a0cf8-25b4-4b5e-9a27-397cc934e890"),
              Cloud =                   ("Cloud", "5f58fb37-e44d-4620-8093-3b7378fb5f57"),
              BaseLink =                ("Base Link", "2fb5b6bb-31c5-409c-8aa6-2c46e971a8a5"))
 
@@ -57,7 +58,8 @@ regexHooks = dict( # A dictionary which holds the regex that then trigger each c
                   SimplyAnnounce =     re.compile(r'(?<![<,+-])SimplyAnnounce'),
                   ChooseKeyword =      re.compile(r'(?<![<,+-])ChooseKeyword'),
                   CustomScript =       re.compile(r'(?<![<,+-])CustomScript'),
-                  UseCustomAbility =   re.compile(r'(?<![<,+-])UseCustomAbility'))
+                  UseCustomAbility =   re.compile(r'(?<![<,+-])UseCustomAbility'),
+                  SetVarX =            re.compile(r'(?<![<,+-])SetVar'))
 
 specialHostPlacementAlgs = { # A Dictionary which holds tuples of X and Y placement offsets, for cards which place their hosted cards differently to normal, such as Personal Workshop
                               'Personal Workshop' :            (-32,0),
