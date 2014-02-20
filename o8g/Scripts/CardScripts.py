@@ -3181,8 +3181,6 @@ onPlay:Gain1Credits$$Gain1Clicks-ifVarSubliminal_SetTo_False$$SetVarSubliminal-T
 +++++
 
 .....
-
-
 ENDSCRIPTS
 =====
 '''
