@@ -81,6 +81,7 @@ def checkDeck(player,groups):
    CardLimit = {}
    professorsRig = [] # This is used by "The Professor" to avoid counting influence for the first instance of a program.
    for card in group:
+      #setAwareness(card)
       counts[card.name] += 1
       if counts[card.name] > 3:
          notify(":::ERROR::: Only 3 copies of {} allowed.".format(card.name))

@@ -890,6 +890,35 @@ def ASVarEffects(Time = 'Start'):
    if Time == 'Start': ASVars['Subliminal'] = 'False' # At the very start of each turn, we set the Subliminal var to False to signify no Subliminal has been played yet.
    setGlobalVariable('AutoScript Variables',str(ASVars))
 
+def CustomEffects(Time = 'Start'):
+   mute()
+   debugNotify(">>> CustomEffects() at time: {}".format(Time)) #Debug
+   ### Checking for specific effects that require special card awareness.
+   #AwarenessList = eval(me.getGlobalVariable('Awareness'))
+   if Time == 'Start': #and 'Subliminal Messaging' in AwarenessList: 
+      count = sum(1 for card in me.piles['Heap/Archives(Face-up)'] if card.name == 'Subliminal Messaging')
+      count += sum(1 for card in me.piles['Archives(Hidden)'] if card.name == 'Subliminal Messaging')
+      if count and getGlobalVariable('Central Run') == 'False' and getGlobalVariable('Remote Run') == 'False':
+         choice = 4
+         while count < choice: 
+            choice = askInteger("How much Subliminal Messaging do you want to take back into your HQ (Max {})?\
+                             \n\n(We'll start taking from Face-Up Archives)".format(count), 1)
+         grabbed = 0
+         if grabbed < choice:
+            for card in me.piles['Heap/Archives(Face-up)']:      
+               if card.name == 'Subliminal Messaging': 
+                  grabbed += 1
+                  card.moveTo(me.hand)
+                  notify(":> {} takes one Subliminal Messaging from Face-Up Archives to their HQ".format(me))
+               if grabbed == choice: break
+         if grabbed < choice:
+            for card in me.piles['Archives(Hidden)']:
+               if card.name == 'Subliminal Messaging': 
+                  grabbed += 1
+                  card.moveTo(me.hand)
+                  notify(":> {} takes one Subliminal Messaging from Hidden Archives to their HQ".format(me))
+               if grabbed == choice: break
+
 def markerScripts(card, action = 'USE'):
    debugNotify(">>> markerScripts() with action: {}".format(action)) #Debug
    foundSpecial = False
@@ -984,6 +1013,13 @@ def markerScripts(card, action = 'USE'):
          foundSpecial = True
          whisper(":::ERROR::: You cannot rez ICE during this run, you are being Blackmailed!")
    return foundSpecial
+   
+def setAwareness(card):
+# A function which stores if a special card exists in a player's deck, and activates extra scripts only then (to avoid unnecessary load)
+   if card.name == 'Subliminal Messaging': # For now we only have subliminal. In the future we might get more card names separated by OR clauses.
+      AwarenessList = eval(me.getGlobalVariable('Awareness'))
+      if card.name not in AwarenessList: AwarenessList.append(card.name)
+      me.setGlobalVariable('Awareness',str(AwarenessList))
    
 #------------------------------------------------------------------------------
 # Custom Remote Functions

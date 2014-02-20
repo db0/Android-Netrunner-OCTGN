@@ -759,6 +759,7 @@ def atTimedEffects(Time = 'Start'): # Function which triggers card effects at th
             if failedRequirement: break # If one of the Autoscripts was a cost that couldn't be paid, stop everything else.
    markerEffects(Time) 
    ASVarEffects(Time) 
+   CustomEffects(Time)
    if me.counters['Credits'].value < 0: 
       if Time == 'Run': notify(":::Warning::: {}'s Start-of-run effects cost more Credits than {} had in their Credit Pool!".format(me,me))
       elif Time == 'JackOut': notify(":::Warning::: {}'s Jacking-Out effects cost more Credits than {} had in their Credit Pool!".format(me,me))
