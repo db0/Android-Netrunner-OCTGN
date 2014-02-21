@@ -14,6 +14,7 @@ Changelog - Android:Netrunner LCG OCTGN Game Definition
   * Tallie Perrault: Not triggered automatically when Operations are trashed. Just double click her when appropriate
   * Blackguard: Rez not automated. Corp has to manually do it after exposing.
   * Blackmail: Does not check for BP. 
+  * Hemorrhage: Does not trash the card since the corp has to choose it. It just announces that the corp has to do it now.
 
 ### 3.7.10.x
 
