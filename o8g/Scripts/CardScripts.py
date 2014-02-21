@@ -3035,7 +3035,7 @@ bc0f047c-01b1-427f-a439-d451eda04082
 -----
 atSuccessfulRun:Put1Virus
 +++++
-A1B0G0T0:Remove2Virus-isCost$$TrashTarget-AutoTargeted-randomTarget-fromHand
+A1B0G0T0:Remove2Virus-isCost$$SimplyAnnounce{force the corp to trash one card from their hand}
 .....
 Tallie Perrault
 -----
