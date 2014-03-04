@@ -4,8 +4,8 @@ Changelog - Android:Netrunner LCG OCTGN Game Definition
 ### 3.8.2.x
 
 * Added Alt-Art for HB:EtF and Kati Jones
-
-
+* Levy Lab Access will now trash events on the table (fixes #410)
+* Blackmail now goes only on ICE
 
 ### 3.8.1.x
 

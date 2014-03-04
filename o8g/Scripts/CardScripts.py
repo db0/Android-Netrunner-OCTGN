@@ -3089,7 +3089,7 @@ Blackmail
 -----
 bc0f047c-01b1-427f-a439-d451eda04089
 -----
-onPlay:Put1Blackmail-AutoTargeted-isUnrezzed-isIce$$RunGeneric||atJackOut:Remove1Blackmail-AutoTargeted-isUnrezzed-isIce
+onPlay:Put1Blackmail-AutoTargeted-isUnrezzed-isICE$$RunGeneric||atJackOut:Remove1Blackmail-AutoTargeted-isUnrezzed-isICE
 +++++
 
 .....
