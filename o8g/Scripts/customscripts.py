@@ -880,7 +880,7 @@ def markerEffects(Time = 'Start'):
          if re.search(r'Deep Red',marker[0]) and Time == 'End': # We silently remove deep red effects
             TokensX('Remove1Deep Red-isSilent', "Deep Red:", card)
          if re.search(r'LLDS Processor',marker[0]) and Time == 'End': # We silently remove LLDS Processor bonus
-            TokensX('Remove1LLDS Processor-isSilent', "LLDS Processor:", card)
+            TokensX('Remove999LLDS Processor-isSilent', "LLDS Processor:", card)
 
 def ASVarEffects(Time = 'Start'):
    mute()
