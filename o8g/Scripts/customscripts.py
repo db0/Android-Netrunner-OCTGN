@@ -217,19 +217,27 @@ def CustomScript(card, action = 'PLAY', origin_card = None, original_action = No
    elif fetchProperty(card, 'name') == 'Accelerated Beta Test' and action == 'SCORE':
       if not confirm("Would you like to initiate an accelerated beta test?"): return 'ABORT'
       iter = 0
-      for c in deck.top(3):
+      foundICE = []
+      allCards = list(deck.top(3))
+      for c in allCards:
          c.moveTo(arcH)
          loopChk(c,'Type')
-         if c.type == 'ICE':
-            placeCard(c,'InstallRezzed')
-            c.orientation ^= Rot90
-            iter +=1
-            notify(" -- {} Beta Tested!".format(c))
-            executePlayScripts(c,'REZ')
-            autoscriptOtherPlayers('CardInstall',c)
-            autoscriptOtherPlayers('CardRezzed',c)
-      if iter: # If we found any ice in the top 3
-         notify("{} initiates an Accelerated Beta Test and reveals {} Ice from the top of their R&D. These Ice are automatically installed and rezzed".format(me, iter))
+         if c.type == 'ICE': foundICE.append(c)
+      information("You have beta tested the following cards.\n\n{}\n\n\n(This dialogue is a pause so that your opponent does not know if you saw any ICE or not)\n\nPress OK to continue.".format([c.name for c in allCards]))
+      installedICE = 0
+      while len(foundICE):
+         choice = SingleChoice("Chose an ICE to install or press Cancel to trash all remaining ICE", makeChoiceListfromCardList(foundICE, True))
+         if choice != None:
+            chosenC = foundICE.pop(choice)
+            placeCard(chosenC,'InstallRezzed')
+            chosenC.orientation ^= Rot90
+            notify(" -- {} Beta Tested!".format(chosenC))
+            executePlayScripts(chosenC,'REZ')
+            autoscriptOtherPlayers('CardInstall',chosenC)
+            autoscriptOtherPlayers('CardRezzed',chosenC)
+            installedICE += 1
+         else: break
+      if installedICE: notify("{} initiates an Accelerated Beta Test and reveals {} Ice from the top of their R&D. These Ice are automatically installed and rezzed".format(me, installedICE))
       else: notify("{} initiates a Accelerated Beta Test but their beta team was incompetent.".format(me))
    elif fetchProperty(card, 'name') == 'Infiltration' and action == 'PLAY':
       tCards = [c for c in table if c.targetedBy and c.targetedBy == me and c.isFaceUp == False]
