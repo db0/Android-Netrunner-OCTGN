@@ -7,6 +7,7 @@ Changelog - Android:Netrunner LCG OCTGN Game Definition
 * Levy Lab Access will now trash events on the table (fixes #410)
 * Blackmail now goes only on ICE (fixes #409)
 * All LLDS Processor tokens will now be removed at turn end (fixes #404)
+* Beta Test will now provide an option to not rez the ICE when having the opportunity (fixes $401)
 
 ### 3.8.1.x
 
