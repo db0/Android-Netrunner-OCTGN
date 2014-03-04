@@ -192,6 +192,7 @@ CardSubs = ['susuexp',                    # Simon Gunkel       - http://www.patr
             'reverendanthony',            # Anthony Burch      - http://www.patreon.com/user?u=66843
             'rediknight',                 # Jeremy Espinosa    - http://www.patreon.com/user?u=68437
             'wimpgod',                    # Gary Bergeron       - Old time supporter
+            'Kethran',                    # Marius Ødegård     - http://www.patreon.com/user?u=90737
             'db0',
             'dbzer0'
            ] # $10 Tier

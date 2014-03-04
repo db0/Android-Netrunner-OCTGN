@@ -853,6 +853,22 @@
 		<property name="Side" value="corp" />
 		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
+      <alternate name="Haas-Bioroid" type="Supercharged">
+         <property name="Subtitle" value="Engineering the Future" />
+         <property name="Type" value="Identity" />
+         <property name="Keywords" value="Megacorp" />
+         <property name="Cost" value="0" />
+         <property name="Requirement" value="45" />	
+         <property name="Stat" value="15" />	
+         <property name="Rules" value="The first time you install a card each turn, gain 1 [Credits]." />
+         <property name="Flavor" value="Effective. Reliable. Humane." />
+         <property name="Instructions" value="" />
+         <property name="Faction" value="Haas-Bioroid" />
+         <property name="Influence" value="" />
+         <property name="Side" value="corp" />
+         <property name="AutoScript" value="" />
+         <property name="AutoAction" value="" />	
+     </alternate>
 	</card>
 	<card id="bc0f047c-01b1-427f-a439-d451eda01102" name="Hadrian&#39;s Wall">
 		<property name="Subtitle" value="" />

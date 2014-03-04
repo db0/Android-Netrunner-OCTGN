@@ -213,6 +213,22 @@
 		<property name="Side" value="runner" />
 		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
+      <alternate name="Kati Jones" type="Supercharged">
+         <property name="Subtitle" value="" />
+         <property name="Type" value="Resource" />
+         <property name="Keywords" value="Connection-Unique" />
+         <property name="Cost" value="2" />
+         <property name="Requirement" value="" />	
+         <property name="Stat" value="" />	
+         <property name="Rules" value="You cannot use Kati Jones more than once per turn.&#xD;&#xA;[Click]: Place 3 [Credits] from the bank on Kati Jones.&#xD;&#xA;[Click]: Take all credits from Kati Jones." />
+         <property name="Flavor" value="&quot;You aren&#39;t the only type of runner in New Angeles.&quot;" />
+         <property name="Instructions" value="[Click]: Place 3 [Credits] from the bank on Kati Jones.||[Click]: Take all credits from Kati Jones." />
+         <property name="Faction" value="Neutral" />
+         <property name="Influence" value="0" />
+         <property name="Side" value="runner" />
+         <property name="AutoScript" value="" />
+         <property name="AutoAction" value="" />	
+     </alternate>
 	</card>
 	<card id="bc0f047c-01b1-427f-a439-d451eda02092" name="Eve Campaign">
 		<property name="Subtitle" value="" />

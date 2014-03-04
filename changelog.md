@@ -1,6 +1,12 @@
 Changelog - Android:Netrunner LCG OCTGN Game Definition
 ===============================================
 
+### 3.8.2.x
+
+* Added Alt-Art for HB:EtF and Kati Jones
+
+
+
 ### 3.8.1.x
 
 * Added Fucking Quick Access [FQA] because dear gawd...
