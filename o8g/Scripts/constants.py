@@ -181,6 +181,8 @@ SuperchargedSubs = ['stevehouston',       # Brendan            - http://www.patr
                     'davidcarlton',       # David Carlton      - http://www.patreon.com/davidcarlton
                     'conduit23',          # Matt               - http://www.patreon.com/user?u=66664
                     'failtech',           # Hesy               - http://www.patreon.com/user?u=66835
+                    'renewal',            # Goetzmann          - http://www.patreon.com/user?u=78431
+                    'wrathofmine',        # wrathofmine        - http://www.patreon.com/user?u=98478
                     'alsciende'           # Cedric             - http://netrunnerdb.com/
                    ] # 3$ Tier
 
@@ -190,8 +192,8 @@ CustomSubs = ['dovian',                   # Daniel DeBoer      - http://www.patr
 
 CardSubs = ['susuexp',                    # Simon Gunkel       - http://www.patreon.com/user?u=66210
             'reverendanthony',            # Anthony Burch      - http://www.patreon.com/user?u=66843
-            'rediknight',                 # Jeremy Espinosa    - http://www.patreon.com/user?u=68437
-            'wimpgod',                    # Gary Bergeron       - Old time supporter
+            #'rediknight',                 # Jeremy Espinosa    - http://www.patreon.com/user?u=68437 # Declined to pay
+            'wimpgod',                    # Gary Bergeron      - Old time supporter
             'Kethran',                    # Marius Ødegård     - http://www.patreon.com/user?u=90737
             'db0',
             'dbzer0'
