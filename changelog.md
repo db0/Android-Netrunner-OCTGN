@@ -1,6 +1,11 @@
 Changelog - Android:Netrunner LCG OCTGN Game Definition
 ===============================================
 
+### 3.8.3.x
+
+* Fixed Scavenge MUs
+* Fixed Alt-Kati Art
+
 ### 3.8.2.x
 
 * Added Alt-Art for HB:EtF and Kati Jones

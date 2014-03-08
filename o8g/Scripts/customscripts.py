@@ -633,12 +633,13 @@ def CustomScript(card, action = 'PLAY', origin_card = None, original_action = No
       reduceCost(newProgram, 'INSTALL', cardCost) # If the cost could be paid, we finally take the credits out from cost reducing cards.
       if reduction: reduceTXT = ' (reduced by {})'.format(reduction)
       else: reduceTXT = ''
+      MUtext = chkRAM(newProgram)
       placeCard(newProgram)
       debugNotify("Executing newProgram triggers")
       executePlayScripts(newProgram,'INSTALL')
       autoscriptOtherPlayers('CardInstall',newProgram)
       debugNotify("About to announce")
-      notify("{} has trashed {} and {}d through their {} finding and installing {} for {}{}.".format(me,trashProgram,card,targetPile,newProgram,uniCredit(cardCost),reduceTXT))
+      notify("{} has trashed {} and {}d through their {} finding and installing {} for {}{}{}.".format(me,trashProgram,card,targetPile,newProgram,uniCredit(cardCost),reduceTXT,MUtext))
    elif fetchProperty(card, 'name') == 'Same Old Thing' and action == 'USE':
       ClickCost = useClick(count = 2)
       if ClickCost == 'ABORT': return  #If the player didn't have enough clicks and opted not to proceed, do nothing.
