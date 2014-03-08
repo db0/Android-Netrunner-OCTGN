@@ -183,6 +183,7 @@ SuperchargedSubs = ['stevehouston',       # Brendan            - http://www.patr
                     'failtech',           # Hesy               - http://www.patreon.com/user?u=66835
                     'renewal',            # Goetzmann          - http://www.patreon.com/user?u=78431
                     'wrathofmine',        # wrathofmine        - http://www.patreon.com/user?u=98478
+                    'esurnir',            # Jean-Baptiste      - http://www.patreon.com/user?u=100387
                     'alsciende'           # Cedric             - http://netrunnerdb.com/
                    ] # 3$ Tier
 
