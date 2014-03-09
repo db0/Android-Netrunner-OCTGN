@@ -1925,6 +1925,22 @@
 		<property name="Side" value="runner" />
 		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
+      <alternate name="Wyldside" type="Supercharged">
+         <property name="Subtitle" value="" />
+         <property name="Type" value="Resource" />
+         <property name="Keywords" value="Location-Seedy-Unique" />
+         <property name="Cost" value="3" />
+         <property name="Requirement" value="" />	
+         <property name="Stat" value="" />	
+         <property name="Rules" value="When your turn begins, draw 2 cards and lose [Click]." />
+         <property name="Flavor" value="&quot;Best place to go when you want to get your mind out of the gutter and take it inside.&quot; - Ji &quot;Noise&quot; Reilly" />
+         <property name="Instructions" value="" />
+         <property name="Faction" value="Anarch" />
+         <property name="Influence" value="3" />
+         <property name="Side" value="runner" />
+         <property name="AutoScript" value="" />
+         <property name="AutoAction" value="" />	
+     </alternate>
 	</card>
 	<card id="bc0f047c-01b1-427f-a439-d451eda01013" name="Wyrm">
 		<property name="Subtitle" value="" />
