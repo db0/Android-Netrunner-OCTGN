@@ -31,7 +31,7 @@
 		<property name="Stat" value="-" />	
 		<property name="Rules" value="[Click]: Host Pawn on an outermost piece of ice protecting a central server.&#xD;Whenever you make a successful run, move Pawn to the piece of ice directly after the current ice hosting Pawn, if able; otherwise, trash Pawn instead and install a Ca&#239;ssa program from your grip or heap, ignoring all costs." />
 		<property name="Flavor" value="" />
-		<property name="Instructions" value="[Click] Host Pawn at the outermost ICE of a server||Move pawn to targeted ICE directly after the current ICE hosting Pawn||Trash Pawn and install a Caissa program from your Grip||Trash Pawn and install a Caissa program from your Heap" />
+		<property name="Instructions" value="[Click] Host Pawn at the outermost ICE of a server||Move pawn to targeted ICE directly after the current ICE hosting Pawn||Trash Pawn and install a Caissa program from your Grip||Trash Pawn and install a Caissa program from your Heap||The Exile Combo (Use only if you know what you're doing)" />
 		<property name="Faction" value="Anarch" />
 		<property name="Influence" value="1" />
 		<property name="Side" value="runner" />
