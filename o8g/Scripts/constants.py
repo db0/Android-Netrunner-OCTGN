@@ -164,6 +164,8 @@ Yaxis = 'y'
 knownLeagues = {'BGG-L02'        : 'Acceletated Beta League', # The known leagues. Now the game will confirm this was a league match before submitting.
                 'BGG-L03'        : 'BGG Third League',
                 'BGG-L04'        : 'Show Your True Colors League',
+                'BGG-L05'        : 'Fear and Loathing in New Angeles League',
+                'HOL'            : 'Honor and OCTGN League',
                 'OGO L1'         : 'RPGnet OGO League'
                }
                
