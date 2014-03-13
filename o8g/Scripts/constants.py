@@ -175,29 +175,30 @@ knownLeagues = {'BGG-L02'        : 'Acceletated Beta League', # The known league
 
 # All names need to be lowercase as I convert the player's name to lowercase in order to do a case-insensitive search.
 
-SuperchargedSubs = ['stevehouston',       # Brendan            - http://www.patreon.com/user?u=66164
-                    'emlun',              # Emil Lundberg      - http://www.patreon.com/user?u=52834
-                    '0sum',               # Yongqian Li        - http://www.patreon.com/user?u=66506 
-                    'drtall2',            # Sean Fellows       - http://www.patreon.com/user?u=50373
-                    'x3r0h0ur',           # Brian Cassidy      - http://www.patreon.com/user?u=66217
-                    'davidcarlton',       # David Carlton      - http://www.patreon.com/davidcarlton
-                    'conduit23',          # Matt               - http://www.patreon.com/user?u=66664
-                    'failtech',           # Hesy               - http://www.patreon.com/user?u=66835
-                    'renewal',            # Goetzmann          - http://www.patreon.com/user?u=78431
-                    'wrathofmine',        # wrathofmine        - http://www.patreon.com/user?u=98478
-                    'esurnir',            # Jean-Baptiste      - http://www.patreon.com/user?u=100387
-                    'alsciende'           # Cedric             - http://netrunnerdb.com/
+SuperchargedSubs = ['stevehouston',       # Brendan               - http://www.patreon.com/user?u=66164
+                    'emlun',              # Emil Lundberg         - http://www.patreon.com/user?u=52834
+                    '0sum',               # Yongqian Li           - http://www.patreon.com/user?u=66506 
+                    'drtall2',            # Sean Fellows          - http://www.patreon.com/user?u=50373
+                    'x3r0h0ur',           # Brian Cassidy         - http://www.patreon.com/user?u=66217
+                    'davidcarlton',       # David Carlton         - http://www.patreon.com/davidcarlton
+                    'conduit23',          # Matt                  - http://www.patreon.com/user?u=66664
+                    'failtech',           # Hesy                  - http://www.patreon.com/user?u=66835
+                    'renewal',            # Goetzmann             - http://www.patreon.com/user?u=78431
+                    'wrathofmine',        # wrathofmine           - http://www.patreon.com/user?u=98478
+                    'esurnir',            # Jean-Baptiste         - http://www.patreon.com/user?u=100387
+                    'sly',                # Anthony Giovannetti   - http://www.patreon.com/StimHack
+                    'alsciende'           # Cedric                - http://netrunnerdb.com/
                    ] # 3$ Tier
 
-CustomSubs = ['dovian',                   # Daniel DeBoer      - http://www.patreon.com/user?u=66260
-              'demarko'                   # Dannel Jurado      - http://www.patreon.com/demarko
-             ] # $5 Tier
-
-CardSubs = ['susuexp',                    # Simon Gunkel       - http://www.patreon.com/user?u=66210
-            'reverendanthony',            # Anthony Burch      - http://www.patreon.com/user?u=66843
-            #'rediknight',                 # Jeremy Espinosa    - http://www.patreon.com/user?u=68437 # Declined to pay
-            'wimpgod',                    # Gary Bergeron      - Old time supporter
-            'Kethran',                    # Marius Ødegård     - http://www.patreon.com/user?u=90737
+CustomSubs = ['dovian',                   # Daniel DeBoer         - http://www.patreon.com/user?u=66260
+              'demarko'                   # Dannel Jurado         - http://www.patreon.com/demarko
+             ] # $5 Tier   
+   
+CardSubs = ['susuexp',                    # Simon Gunkel          - http://www.patreon.com/user?u=66210
+            'reverendanthony',            # Anthony Burch         - http://www.patreon.com/user?u=66843
+            #'rediknight',                # Jeremy Espinosa       - http://www.patreon.com/user?u=68437 # Declined all payments
+            'wimpgod',                    # Gary Bergeron         - Old time supporter
+            'Kethran',                    # Marius Ødegård        - http://www.patreon.com/user?u=90737
             'db0',
             'dbzer0'
            ] # $10 Tier
