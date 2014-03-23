@@ -59,6 +59,7 @@ regexHooks = dict( # A dictionary which holds the regex that then trigger each c
                   ChooseKeyword =      re.compile(r'(?<![<,+-])ChooseKeyword'),
                   CustomScript =       re.compile(r'(?<![<,+-])CustomScript'),
                   UseCustomAbility =   re.compile(r'(?<![<,+-])UseCustomAbility'),
+                  PsiX =               re.compile(r'(?<![<,+-])Psi'),
                   SetVarX =            re.compile(r'(?<![<,+-])SetVar'))
 
 specialHostPlacementAlgs = { # A Dictionary which holds tuples of X and Y placement offsets, for cards which place their hosted cards differently to normal, such as Personal Workshop

@@ -229,6 +229,8 @@ def executePlayScripts(card, action):
                X = len(retrieveTuple[1])
             elif regexHooks['ModifyStatus'].search(passedScript): 
                if ModifyStatus(passedScript, announceText, card, targetC, notification = 'Quick', n = X) == 'ABORT': return
+            elif regexHooks['UseCustomAbility'].search(passedScript):
+               if UseCustomAbility(passedScript, announceText, card, targetC, notification = 'Quick', n = X) == 'ABORT': break
          if failedRequirement: break # If one of the Autoscripts was a cost that couldn't be paid, stop everything else.
          debugNotify("Loop for scipt {} finished".format(passedScript), 2)
 
@@ -391,7 +393,7 @@ def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
       for activeAutoscript in selectedAutoscripts:
          #confirm("Active Autoscript: {}".format(activeAutoscript)) #Debug
          ### Checking if any of the card's effects requires one or more targets first
-         if re.search(r'Targeted', activeAutoscript) and findTarget(activeAutoscript) == []: return
+         if re.search(r'Targeted', activeAutoscript) and findTarget(activeAutoscript, dryRun = True) == []: return
       CardAction = False # A boolean which stores if the card's ability required a click or not.
       for activeAutoscript in selectedAutoscripts:
          debugNotify("Reached ifHave chk", 3)
@@ -502,6 +504,7 @@ def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
          elif regexHooks['SimplyAnnounce'].search(activeAutoscript):    announceText = SimplyAnnounce(activeAutoscript, announceText, card, targetC, n = X)
          elif regexHooks['ChooseKeyword'].search(activeAutoscript):     announceText = ChooseKeyword(activeAutoscript, announceText, card, targetC, n = X)
          elif regexHooks['UseCustomAbility'].search(activeAutoscript):  announceText = UseCustomAbility(activeAutoscript, announceText, card, targetC, n = X)
+         elif regexHooks['PsiX'].search(activeAutoscript):              announceText = PsiX(activeAutoscript, announceText, card, targetC, n = X)
          elif regexHooks['SetVarX'].search(activeAutoscript):           SetVarX(activeAutoscript, announceText, card, targetC, n = X) # Setting a variable does not change the announcement text.
          else: timesNothingDone += 1
          debugNotify("<<< useAbility() choice. TXT = {}".format(announceText), 3) # Debug
@@ -793,19 +796,19 @@ def atTimedEffects(Time = 'Start'): # Function which triggers card effects at th
    debugNotify("<<< atTimedEffects()", 3) # Debug
 
 #------------------------------------------------------------------------------
-# Post-Trace Trigger
+# Post-Trace/Psi Trigger
 #------------------------------------------------------------------------------
 
-def executeTraceEffects(card,Autoscript,count = 0):
-   debugNotify(">>> executeTraceEffects(){}".format(extraASDebug(Autoscript))) #Debug
+def executePostEffects(card,Autoscript,count = 0,type = 'Trace'):
+   debugNotify(">>> executePostEffects(){}".format(extraASDebug(Autoscript))) #Debug
    global failedRequirement
    failedRequirement = False
-   X = count # The X Starts as the "count" passed variable, which in turn is the difference between the corp's trace and the runner's link
+   X = count # The X Starts as the "count" passed variable, which in traces is the difference between the corp's trace and the runner's link
    Autoscripts = Autoscript.split('||')
    for autoS in Autoscripts:
       selectedAutoscripts = autoS.split('++')
       if debugVerbosity >= 2: notify ('selectedAutoscripts: {}'.format(selectedAutoscripts)) # Debug
-      for passedScript in selectedAutoscripts: X = redirect(passedScript, card, "{}'s trace succeeds to".format(card), 'Quick', X)
+      for passedScript in selectedAutoscripts: X = redirect(passedScript, card, "{}'s {} succeeds to".format(card,type), 'Quick', X)
       if failedRequirement: break # If one of the Autoscripts was a cost that couldn't be paid, stop everything else.
          
 #------------------------------------------------------------------------------
@@ -883,6 +886,8 @@ def redirect(Autoscript, card, announceText = None, notificationType = 'Quick', 
       SimplyAnnounce(Autoscript, announceText, card, targetC, notification = notificationType, n = X)
    elif regexHooks['SetVarX'].search(Autoscript):
       SetVarX(Autoscript, announceText, card, targetC, notification = notificationType, n = X)
+   elif regexHooks['PsiX'].search(Autoscript):
+      PsiX(Autoscript, announceText, card, targetC, notification = notificationType, n = X)
    elif regexHooks['UseCustomAbility'].search(Autoscript):
       if UseCustomAbility(Autoscript, announceText, card, targetC, notification = notificationType, n = X) == 'ABORT': return 'ABORT'
    else: debugNotify(" No regexhook match! :(") # Debug
@@ -1021,9 +1026,6 @@ def GainX(Autoscript, announceText, card, targetCards = None, notification = Non
    elif re.match(r'Hand Size', action.group(3)): 
       if action.group(1) == 'SetTo': targetPL.counters['Hand Size'].value = 0 # If we're setting to a specific value, we wipe what it's currently.
       targetPL.counters['Hand Size'].value += gain * multiplier
-      if targetPL.counters['Hand Size'].value < 0: 
-         if re.search(r'isCost', Autoscript): notify(":::Warning:::{} did not have enough {} to pay the cost of this action".format(action.group(3)))
-         else: targetPL.counters['Hand Size'].value = 0
    else: 
       whisper("Gain what?! (Bad autoscript)")
       return 'ABORT'
@@ -1338,7 +1340,7 @@ def RollX(Autoscript, announceText, card, targetCards = None, notification = Non
 def RequestInt(Autoscript, announceText, card, targetCards = None, notification = None, n = 0): # Core Command for drawing X Cards from the house deck to your hand.
    debugNotify(">>> RequestInt(){}".format(extraASDebug(Autoscript))) #Debug
    if targetCards is None: targetCards = []
-   action = re.search(r'\bRequestInt(-Min)?([0-9]*)(-div)?([0-9]*)(-Max)?([0-9]*)(-Msg)?\{?([A-Za-z0-9?$& ]*)\}?', Autoscript)
+   action = re.search(r'\bRequestInt(-Min)?([0-9]*)(-div)?([0-9]*)(-Max)?([0-9]*)(-Msg)?\{?([A-Za-z0-9?$&\(\) ]*)\}?', Autoscript)
    if debugVerbosity >= 2:
       if action: notify('!!! regex: {}'.format(action.groups()))
       else: notify("!!! No regex match :(")
@@ -1550,6 +1552,56 @@ def TraceX(Autoscript, announceText, card, targetCards = None, notification = No
    if notification: notify('--> {}.'.format(announceString))
    debugNotify("<<< TraceX()", 3)
    return announceString
+
+def PsiX(Autoscript, announceText, card, targetCards = None, notification = None, n = 0): # Core Command for setting up a Psi Struggle.
+   debugNotify(">>> PsiX(){}".format(extraASDebug(Autoscript))) #Debug
+   if targetCards is None: targetCards = []
+   action = re.search(r'\bPsi', Autoscript)
+   psiEffects = re.search(r'-psiEffects<(.*?),(.*?)>', Autoscript)
+   debugNotify("Checking for Psi Effects", 2) #Debug
+   if psiEffects:
+      psiEffectTuple = (psiEffects.group(1),psiEffects.group(2))
+      debugNotify("psiEffectsTuple: {}".format(psiEffectTuple), 2) #Debug
+      setGlobalVariable('CurrentPsiEffect',str(psiEffectTuple))
+   else: psiEffectTuple = None
+   barNotifyAll('#000000',"{} is initiating a Psi struggle...".format(me))
+   secretCred = askInteger("How many credits do you want to secretly spend for the Psi effect of {}?".format(card.name),0)
+   while secretCred and (secretCred > me.Credits) or (secretCred > 2):
+      if secretCred > me.Credits and confirm("You do not have that many credits to spend. Bypass?"): break
+      if secretCred > 2: warn = ":::ERROR::: You cannot spend more than 2 credits!\n"
+      else: warn = ''
+      secretCred = askInteger("{}How many credits do you want to secretly spend?".format(warn),0)
+   if secretCred != None: 
+      notify("{} has spent a hidden amount of credits for {}.".format(me,card))
+      remoteCall(findOpponent(),'runnerPsi',[secretCred,psiEffectTuple,card,me])
+   else: return 'ABORT'
+   if notification == 'Quick': announceString = "{} sets their hidden Psi value".format(announceText)
+   else: announceString = "{} set their hidden Psi value".format(announceText)
+   if notification: notify('--> {}.'.format(announceString))
+   debugNotify("<<< PsiX()", 3)
+   return announceString
+
+def runnerPsi(CorpPsiCount,psiEffectTuple,card,corpPlayer):
+   debugNotify(">>> runnerPsi()") #Debug
+   barNotifyAll('#000000',"{} is guessing the correct Psi value.".format(me))
+   secretCred = askInteger("How many credits do you want to spend for the Psi effect of {}?".format(card.name),0)
+   while secretCred and (secretCred > me.Credits) or (secretCred > 2):
+      if secretCred > me.Credits and confirm("You do not have that many credits to spend. Bypass?"): break
+      if secretCred > 2: warn = ":::ERROR::: You cannot spend more than 2 credits!\n"
+      else: warn = ''
+      secretCred = askInteger("{}How many credits do you want to spend?".format(warn),0)
+   if secretCred == None: secretCred = 0
+   me.Credits -= secretCred
+   corpPlayer.Credits -= CorpPsiCount
+   if psiEffectTuple: # If the tuple is None, then there's no effects specified for this psi effect.
+      debugNotify("Found currentPsiEffectTuple")
+      if secretCred != CorpPsiCount:
+         notify("-- {} has failed the Psi struggle!\n   ({}: {} VS {}: {})".format(Identity,corpPlayer,uniCredit(CorpPsiCount),me,uniCredit(secretCred)))
+         if psiEffectTuple[0] != 'None': executePostEffects(card,psiEffectTuple[0], 0,'Psi')
+      else:
+         notify("-- {} has succeeded the Psi struggle!\n   ({}: {} VS {}: {})".format(Identity,corpPlayer,uniCredit(CorpPsiCount),me,uniCredit(secretCred)))
+         if psiEffectTuple[1] != 'None': executePostEffects(card,psiEffectTuple[1], 0,'Psi') 
+   debugNotify("<<< runnerPsi()") #Debug
 
 def ModifyStatus(Autoscript, announceText, card, targetCards = None, notification = None, n = 0): # Core Command for modifying the status of a card on the table.
    debugNotify(">>> ModifyStatus(){}".format(extraASDebug(Autoscript))) #Debug
@@ -1863,7 +1915,7 @@ def autoscriptCostUndo(card, Autoscript): # Function for undoing the cost of an 
       random = rnd(10,5000) # A little wait...
       card.orientation = Rot0
 
-def findTarget(Autoscript, fromHand = False, card = None): # Function for finding the target of an autoscript
+def findTarget(Autoscript, fromHand = False, card = None, dryRun = False): # Function for finding the target of an autoscript
    debugNotify(">>> findTarget(){}".format(extraASDebug(Autoscript))) #Debug
    try:
       if fromHand == True or re.search(r'-fromHand',Autoscript): group = me.hand
@@ -1936,17 +1988,19 @@ def findTarget(Autoscript, fromHand = False, card = None): # Function for findin
             if re.search(r'isUnrezzed',Autoscript): targetsText += "\n -- Card Status: Unrezzed"
             if not re.search(r'isMutedTarget', Autoscript): delayed_whisper(":::ERROR::: You need to target a valid card before using this action{}.".format(targetsText))
          elif len(foundTargets) >= 1 and re.search(r'-choose',Autoscript):
-            debugNotify("Going for a choice menu", 2)# Debug
-            choiceType = re.search(r'-choose([0-9]+)',Autoscript)
-            targetChoices = makeChoiceListfromCardList(foundTargets)
-            if not card: choiceTitle = "Choose one of the valid targets for this effect"
-            else: choiceTitle = "Choose one of the valid targets for {}".format(fetchProperty(card, 'name'))
-            debugNotify("Checking for SingleChoice", 2)# Debug
-            if choiceType.group(1) == '1':
-               if len(foundTargets) == 1: choice = 0 # If we only have one valid target, autoselect it.
-               else: choice = SingleChoice(choiceTitle, targetChoices, type = 'button', default = 0)
-               if choice == 'ABORT': del foundTargets[:]
-               else: foundTargets = [foundTargets.pop(choice)] # if we select the target we want, we make our list only hold that target
+            if dryRun: pass # In dry runs we just want to check we have valid targets
+            else:
+               debugNotify("Going for a choice menu", 2)# Debug
+               choiceType = re.search(r'-choose([0-9]+)',Autoscript)
+               targetChoices = makeChoiceListfromCardList(foundTargets)
+               if not card: choiceTitle = "Choose one of the valid targets for this effect"
+               else: choiceTitle = "Choose one of the valid targets for {}".format(fetchProperty(card, 'name'))
+               debugNotify("Checking for SingleChoice", 2)# Debug
+               if choiceType.group(1) == '1':
+                  if len(foundTargets) == 1: choice = 0 # If we only have one valid target, autoselect it.
+                  else: choice = SingleChoice(choiceTitle, targetChoices, type = 'button', default = 0)
+                  if choice == 'ABORT': del foundTargets[:]
+                  else: foundTargets = [foundTargets.pop(choice)] # if we select the target we want, we make our list only hold that target
          elif re.search(r'-randomTarget',Autoscript): # This modulator randomly selects one card from the valid cards as the single target. Usually paired with AutoTargeted
             debugNotify("Going for a random choice menu")# Debug
             rndChoice = rnd(0,len(foundTargets) - 1)

@@ -1060,7 +1060,7 @@ bc0f047c-01b1-427f-a439-d451eda02015
 -----
 
 +++++
-A0B0G0T0:CustomScript
+A0B0G0T0:Psi-psiEffects<RunEnd,None>-isSubroutine
 .....
 Spinal Modem
 -----
@@ -1524,7 +1524,7 @@ bc0f047c-01b1-427f-a439-d451eda02073
 -----
 
 +++++
-A0B0G0T0:CustomScript
+A0B0G0T0:Psi-psiEffects<UseCustomAbility,None>-isSubroutine
 .....
 Uroboros
 -----
@@ -3181,6 +3181,167 @@ onPlay:Gain1Credits$$Gain1Clicks-ifVarSubliminal_SetTo_False$$SetVarSubliminal-T
 +++++
 
 .....
+Singularity
+-----
+bc0f047c-01b1-427f-a439-d451eda04101
+-----
+onPlay:RunRemote||atSuccessfulRun:SimplyAnnounce{trash all cards in the server}-isAlternativeRunResult
++++++
+
+.....
+Queen&#039;s Gambit
+-----
+bc0f047c-01b1-427f-a439-d451eda04102
+-----
+onPlay:RequestInt-Max3-Msg{How many advancement counters do you want to put on target card?}$$Put1Advancement-perX-Targeted-isUnrezzed$$Gain2Credits-perX
++++++
+
+.....
+Dyson Fractal Generator
+-----
+bc0f047c-01b1-427f-a439-d451eda04103
+-----
+onInstall:Put1Credits-isSilent||whileInstalled:Reduce#CostUse-affectsFracter-forMe||atTurnPreStart:Refill1Credits-duringMyTurn
++++++
+
+.....
+Silencer
+-----
+bc0f047c-01b1-427f-a439-d451eda04104
+-----
+onInstall:Put1Credits-isSilent||whileInstalled:Reduce#CostUse-affectsKiller-forMe||atTurnPreStart:Refill1Credits-duringMyTurn
++++++
+
+.....
+Savoir-faire
+-----
+bc0f047c-01b1-427f-a439-d451eda04105
+-----
+
++++++
+A0B2G0T0:InstallTarget-DemiAutoTargeted-atProgram-fromHand-payCost-choose1-onlyOnce
+.....
+Fall Guy
+-----
+bc0f047c-01b1-427f-a439-d451eda04106
+-----
+
++++++
+A0B0G0T1:SimplyAnnounce{prevent an installed resource from being trashed}||A0B0G0T1:Gain2Credits
+.....
+Power Nap
+-----
+bc0f047c-01b1-427f-a439-d451eda04107
+-----
+onPlay:Gain2Credits$$UseCustomAbility
++++++
+
+.....
+Paintbrush
+-----
+bc0f047c-01b1-427f-a439-d451eda04108
+-----
+
++++++
+A1B0G0T0:Put1Keyword:Sentry-Targeted-isICE-isRezzed-isSilent$$Put1Keyword:Code Gate-Targeted-isICE-isSilent-isRezzed$$Put1Keyword:Barrier-Targeted-isICE-isSilent-isRezzed$$Put1Paintbrush-Targeted-isICE-isRezzed
+.....
+Lucky Find
+-----
+bc0f047c-01b1-427f-a439-d451eda04109
+-----
+onPlay:Gain9Credits
++++++
+
+.....
+Gyri Labyrinth
+-----
+bc0f047c-01b1-427f-a439-d451eda04110
+-----
+
++++++
+A0B0G0T0:Lose2Hand Size-onOpponent-isSubroutine$$Put1Gyri Labyrinth-AutoTargeted-atIdentity-targetOpponents
+.....
+Reclamation Order
+-----
+bc0f047c-01b1-427f-a439-d451eda04111
+-----
+onPlay:CustomScript
++++++
+
+.....
+Broadcast Square
+-----
+bc0f047c-01b1-427f-a439-d451eda04112
+-----
+A0B0G0T0:Trace3-traceEffects<Lose1Bad Publicity,None>
++++++
+
+.....
+Corporate Shuffle
+-----
+bc0f047c-01b1-427f-a439-d451eda04113
+-----
+onPlay:ReshuffleHQ$$Draw5Cards
++++++
+
+.....
+Caprice Nisei
+-----
+bc0f047c-01b1-427f-a439-d451eda04114
+-----
+
++++++
+A0B0G0T0:Psi-psiEffects<RunEnd,None>
+.....
+Shinobi
+-----
+bc0f047c-01b1-427f-a439-d451eda04115
+-----
+
++++++
+
+.....
+Marker
+-----
+bc0f047c-01b1-427f-a439-d451eda04116
+-----
+
++++++
+
+.....
+Hive
+-----
+bc0f047c-01b1-427f-a439-d451eda04117
+-----
+
++++++
+
+.....
+Witness Tampering
+-----
+bc0f047c-01b1-427f-a439-d451eda04118
+-----
+
++++++
+
+.....
+NAPD Contract
+-----
+bc0f047c-01b1-427f-a439-d451eda04119
+-----
+
++++++
+
+.....
+Quandary
+-----
+bc0f047c-01b1-427f-a439-d451eda04120
+-----
+
++++++
+
+.....
+
 ENDSCRIPTS
 =====
 '''

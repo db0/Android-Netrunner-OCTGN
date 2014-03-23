@@ -168,6 +168,15 @@ def UseCustomAbility(Autoscript, announceText, card, targetCards = None, notific
       card.moveTo(me.hand)
       notify(":> {} replaces {} with a new card from their hand".format(me,card))
       announceString = ''
+   if fetchProperty(card, 'name') == "Power Nap":
+      doubles = len([c for c in me.piles['Heap/Archives(Face-up)'] if re.search(r'Double',c.Keywords)])
+      if doubles:
+         me.Credits += doubles
+         notify('--> {} gains {} extra credits for the double events in their Heap'.format(me,uniCredit(doubles)))
+      announceString = ''
+   if fetchProperty(card, 'name') == "Bullfrog":
+      remoteCall(findOpponent(),"Bullfrog",[card])
+      announceString = ''
    return announceString
    
 def CustomScript(card, action = 'PLAY', origin_card = None, original_action = None): # Scripts that are complex and fairly unique to specific cards, not worth making a whole generic function for them.
@@ -279,47 +288,6 @@ def CustomScript(card, action = 'PLAY', origin_card = None, original_action = No
          me.counters['Base Link'].value += rabbits
          notify("{} has extended the Rabbit Hole by {} {} by paying {}{}".format(me,rabbits,uniLink(),uniCredit(totalCost),extraText))
       else: notify("{} does not find enough rabbits.".format(me))
-   elif fetchProperty(card, 'name') == 'Snowflake' and action == 'USE':
-      if secretCred == None:
-         secretCred = askInteger("How many credits do you want to secretly spend?\n\nOnce you have selected your total, ask your opponent to spend their own amount visibly, then re-use this card.",0)
-         while secretCred and (secretCred > me.Credits) or (secretCred > 2):
-            if secretCred > me.Credits and confirm("You do not have that many credits to spend. Bypass?"): break
-            if secretCred > 2: warn = ":::ERROR::: You cannot spend more than 2 credits!\n"
-            else: warn = ''
-            secretCred = askInteger("{}How many credits do you want to secretly spend?".format(warn),0)
-         if secretCred != None: notify("{} has spent a hidden amount of credits for {}. Runner must now declare how many credits to spend".format(me,card))
-      else: 
-         notify("{} has spent {} in secret for {}'s subroutine".format(me,uniCredit(secretCred),card))
-         me.Credits -= secretCred
-         secretCred = None
-   elif fetchProperty(card, 'name') == 'Bullfrog' and action == 'USE':
-      choice = SingleChoice('Select Ability to use', ['Spend/Reveal 0-2 Credits','Move Bullfrog and runner to another server and continue run from there'], type = 'button')
-      if choice == 0:
-         if secretCred == None:
-            secretCred = askInteger("How many credits do you want to secretly spend?\n\nOnce you have selected your total, ask your opponent to spend their own amount visibly, then re-use this card.",0)
-            while secretCred and (secretCred > me.Credits) or (secretCred > 2):
-               if secretCred > me.Credits and confirm("You do not have that many credits to spend. Bypass?"): break
-               if secretCred > 2: warn = ":::ERROR::: You cannot spend more than 2 credits!\n"
-               else: warn = ''
-               secretCred = askInteger("{}How many credits do you want to secretly spend?".format(warn),0)
-            if secretCred != None: notify("{} has spent a hidden amount of credits for {}. Runner must now declare how many credits to spend".format(me,card))
-         else: 
-            notify("{} has spent {} in secret for {}'s subroutine".format(me,uniCredit(secretCred),card))
-            me.Credits -= secretCred
-            secretCred = None
-      else:
-         choice = SingleChoice("Which server are you going to redirect the run at?", ['Remote Server','HQ','R&D','Archives'])
-         if choice != None: # Just in case the player didn't just close the askInteger window.
-            if choice == 0: targetServer = 'Remote'
-            elif choice == 1: targetServer = 'HQ'
-            elif choice == 2: targetServer = 'R&D'
-            elif choice == 3: targetServer = 'Archives'
-            else: return 'ABORT'
-         else: return 'ABORT'
-         setGlobalVariable('status','running{}'.format(targetServer)) # We change the global variable which holds on which server the runner is currently running on
-         if targetServer == 'Remote': announceText = 'a remote server'
-         else: announceText = 'the ' + targetServer
-         notify("Bullfrog's Ability triggers and redirects the runner to {}.".format(announceText))
    elif fetchProperty(card, 'name') == 'Personal Workshop':
       if action == 'USE':
          targetList = [c for c in me.hand  # First we see if they've targeted a card from their hand
@@ -860,6 +828,20 @@ def CustomScript(card, action = 'PLAY', origin_card = None, original_action = No
    elif action == 'USE': useCard(card)
    if fetchProperty(card, 'name') == "Executive Wiretaps" and action == 'PLAY':
       remoteCall(findOpponent(),"ExecWire",[])
+   elif fetchProperty(card, 'name') == 'Reclamation Order' and action == 'PLAY':
+      retrieveTuple = RetrieveX('Retrieve1Card-fromArchives', '', card)
+      count = 0
+      if retrieveTuple == 'ABORT': return 'ABORT'
+      else:
+         arcPiles = list(me.piles['Heap/Archives(Face-up)'])
+         arcPiles.extend(me.piles['Archives(Hidden)'])
+         foundMore = []
+         for c in arcPiles:
+            if c.name == retrieveTuple[1][0].name: foundMore.append(c)
+         if len(foundMore):
+            count = askInteger("There's {} more copies of {} in your Archives. Retrieve how many?\n\n(We'll retrieve from Open Archives first)".format(len(foundMore),retrieveTuple[1][0].name),len(foundMore))
+            for iter in range(count): foundMore.pop(0).moveTo(me.hand)
+      notify("{} retrieved {} copies of {} from their Archives".format(me,len(retrieveTuple[1]) + count,retrieveTuple[1][0].name))
    debugNotify("<<< CustomScript()", 3) #Debug
    
 def markerEffects(Time = 'Start'):
@@ -869,12 +851,16 @@ def markerEffects(Time = 'Start'):
    cardList = [c for c in table if c.markers]
    for card in cardList:
       for marker in card.markers:
-         if re.search(r'Tinkering',marker[0]) and Time == 'End':
-            TokensX('Remove1Keyword:Code Gate-isSilent', "Tinkering:", card)
-            TokensX('Remove1Keyword:Sentry-isSilent', "Tinkering:", card)
-            TokensX('Remove1Keyword:Barrier-isSilent', "Tinkering:", card)
-            TokensX('Remove1Tinkering', "Tinkering:", card)
-            notify("--> {} removes tinkering effect from {}".format(me,card))
+         if (re.search(r'Tinkering',marker[0]) or re.search(r'Paintbrush',marker[0])) and Time == 'End':
+            TokensX('Remove999Keyword:Code Gate-isSilent', "Tinkering:", card)
+            TokensX('Remove999Keyword:Sentry-isSilent', "Tinkering:", card)
+            TokensX('Remove999Keyword:Barrier-isSilent', "Tinkering:", card)
+            if re.search(r'Tinkering',marker[0]): 
+               TokensX('Remove999Tinkering', "Tinkering:", card)
+               notify("--> {} removes tinkering effect from {}".format(me,card))
+            else: 
+               TokensX('Remove999Paintbrush', "Paintbrush:", card)
+               notify("--> {} removes Paintbrush effect from {}".format(me,card))
          if re.search(r'Cortez Chip',marker[0]) and Time == 'End':
             TokensX('Remove1Cortez Chip-isSilent', "Cortez Chip:", card)
             notify("--> {} removes Cortez Chip effect from {}".format(me,card))
@@ -890,6 +876,11 @@ def markerEffects(Time = 'Start'):
             TokensX('Remove1Deep Red-isSilent', "Deep Red:", card)
          if re.search(r'LLDS Processor',marker[0]) and Time == 'End': # We silently remove LLDS Processor bonus
             TokensX('Remove999LLDS Processor-isSilent', "LLDS Processor:", card)
+         if re.search(r'Gyri Labyrinth',marker[0]) and Time == 'Start' and (card.controller != me or len(getPlayers()) == 1): 
+            opponentPL = findOpponent()
+            opponentPL.counters['Hand Size'].value += card.markers[marker] * 2
+            notify(":> Gyri Labyrinth's effect expires and {} recovers {} hand size".format(card,card.markers[marker] * 2))
+            card.markers[marker] = 0
 
 def ASVarEffects(Time = 'Start'):
    mute()
@@ -1122,4 +1113,16 @@ def ExecWire(): # Expert Schedule Analyzer
       notify("{} would like to know if it's OK to return their remaining cards to their HQ.".format(me))
    for c in revealedCards: c.moveTo(me.hand)
          
-      
+def Bullfrog(card): # Bullfrog
+   choice = SingleChoice("Which server are you going to redirect the run at?", ['Remote Server','HQ','R&D','Archives'])
+   if choice != None: # Just in case the player didn't just close the askInteger window.
+      if choice == 0: targetServer = 'Remote'
+      elif choice == 1: targetServer = 'HQ'
+      elif choice == 2: targetServer = 'R&D'
+      elif choice == 3: targetServer = 'Archives'
+      else: return 'ABORT'
+   else: return 'ABORT'
+   setGlobalVariable('status','running{}'.format(targetServer)) # We change the global variable which holds on which server the runner is currently running on
+   if targetServer == 'Remote': announceText = 'a remote server'
+   else: announceText = 'the ' + targetServer
+   notify("--> {}'s Ability triggers and redirects the runner to {}.".format(card,announceText))
