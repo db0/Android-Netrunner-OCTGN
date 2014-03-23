@@ -239,7 +239,7 @@
 		<property name="Stat" value="5" />	
 		<property name="Rules" value="When you rez Shinobi, take 1 bad publicity.&#xD;&#xA;[Subroutine] Trace1 - If successful, do 1 net damage.&#xD;&#xA;[Subroutine] Trace2 - If successful, do 2 net damage.&#xD;&#xA;[Subroutine] Trace3 - If successful, do 3 net damage and end the run." />
 		<property name="Flavor" value="" />
-		<property name="Instructions" value="" />
+		<property name="Instructions" value="[Subroutine] Trace 1. If successful, do 1 net damage.||[Subroutine] Trace 2. If successful, do 2 net damage.||[Subroutine] Trace 3. If successful, do 3 net damage and end the run." />
 		<property name="Faction" value="Jinteki" />
 		<property name="Influence" value="3" />
 		<property name="Side" value="corp" />

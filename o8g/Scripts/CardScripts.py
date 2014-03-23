@@ -3297,9 +3297,9 @@ Shinobi
 -----
 bc0f047c-01b1-427f-a439-d451eda04115
 -----
-
+onRez:Gain1Bad Publicity
 +++++
-
+A0B0G0T0:Trace1-isSubroutine-traceEffects<Inflict1NetDamage-onOpponent,None>||A0B0G0T0:Trace2-isSubroutine-traceEffects<Inflict2NetDamage-onOpponent,None>||A0B0G0T0:Trace3-isSubroutine-traceEffects<Inflict3NetDamage-onOpponent++RunEnd,None>
 .....
 Marker
 -----
@@ -3307,7 +3307,7 @@ bc0f047c-01b1-427f-a439-d451eda04116
 -----
 
 +++++
-
+A0B0G0T0:SimplyAnnounce{give the next piece of ICE an End the Run subroutine}-isSubroutine
 .....
 Hive
 -----
@@ -3315,13 +3315,13 @@ bc0f047c-01b1-427f-a439-d451eda04117
 -----
 
 +++++
-
+A0B0G0T0:RunEnd-isSubroutine
 .....
 Witness Tampering
 -----
 bc0f047c-01b1-427f-a439-d451eda04118
 -----
-
+onPlay:Lose2Bad Publicity
 +++++
 
 .....
@@ -3329,7 +3329,7 @@ NAPD Contract
 -----
 bc0f047c-01b1-427f-a439-d451eda04119
 -----
-
+onLiberation:Lose4Credits-isCost-onOpponent
 +++++
 
 .....
@@ -3339,7 +3339,7 @@ bc0f047c-01b1-427f-a439-d451eda04120
 -----
 
 +++++
-
+A0B0G0T0:RunEnd-isSubroutine
 .....
 
 ENDSCRIPTS
