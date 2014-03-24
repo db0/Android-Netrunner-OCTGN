@@ -3273,9 +3273,9 @@ Broadcast Square
 -----
 bc0f047c-01b1-427f-a439-d451eda04112
 -----
-A0B0G0T0:Trace3-traceEffects<Lose1Bad Publicity,None>
-+++++
 
++++++
+A0B0G0T0:Trace3-traceEffects<Lose1Bad Publicity,None>
 .....
 Corporate Shuffle
 -----

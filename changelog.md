@@ -1,6 +1,17 @@
 Changelog - Android:Netrunner LCG OCTGN Game Definition
 ===============================================
 
+### 3.9.0.x
+
+* New game definition for **Double Time**. As always, almost every card scripted!
+
+* ##### Trickier Automations
+  * NAPD Contract: Will allow you to steal it if you don't have enough money. Just don't.
+  * Marker: Not automated.
+  * Fall Guy: Not automated, just trash it instead
+  * Singularity: Does not autotrash, so just ask the corp to trash all
+  
+
 ### 3.8.3.x
 
 * Fixed Scavenge MUs
