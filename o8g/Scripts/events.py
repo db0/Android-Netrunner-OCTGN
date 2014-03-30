@@ -110,7 +110,7 @@ def checkDeck(player,groups):
          if card.Type == 'Identity':
             notify(":::ERROR::: Extra Identity Cards found in {}'s {}.".format(me, pileName(group)))
             ok = False
-         elif card.Faction != Identity.Faction and card.Faction != 'Neutral':
+         elif card.Faction != Identity.Faction and card.Faction != 'Neutral' and Identity.Faction != 'Neutral':
             notify(":::ERROR::: Faction-restricted card ({}) found in {}'s {}.".format(fetchProperty(card, 'name'), me, pileName(group)))
             ok = False
       if Identity.model == 'bc0f047c-01b1-427f-a439-d451eda03002' and card.Faction == 'Jinteki':
@@ -130,7 +130,7 @@ def checkDeck(player,groups):
       if loAP not in (requiredAP, requiredAP + 1):
          notify(":::ERROR::: {} cards requires {} or {} Agenda Points, found {}.".format(loDeckCount, requiredAP, requiredAP + 1, loAP))
          ok = False
-   if loInf > num(Identity.Stat):
+   if loInf > num(Identity.Stat) and Identity.Faction != 'Neutral':
       notify(":::ERROR::: Too much rival faction influence in {}'s R&D. {} found with a max of {}".format(me, loInf, num(Identity.Stat)))
       ok = False
    deckStats = (loInf,loDeckCount,agendasCount) # The deck stats is a tuple that we stored shared, and stores how much influence is in the player's deck, how many cards it has and how many agendas

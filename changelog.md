@@ -1,6 +1,10 @@
 Changelog - Android:Netrunner LCG OCTGN Game Definition
 ===============================================
 
+### 3.9.1.x
+
+* Added the Draft IDs under the Promos set. Now people can use decks they've drafted elsewhere to play.
+
 ### 3.9.0.x
 
 * New game definition for **Double Time**. As always, almost every card scripted!

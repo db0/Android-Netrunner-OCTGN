@@ -70,5 +70,37 @@
          <property name="AutoScript" value="" />
          <property name="AutoAction" value="" />	
 		</card>
+		<card id="bc0f047c-01b1-427f-a439-d451eda00005" name="The Shadow">
+         <property name="Subtitle" value="Cyber Criminal" />
+         <property name="Type" value="Identity" />
+         <property name="Keywords" value="Megacorp" />
+         <property name="Cost" value="0" />
+         <property name="Requirement" value="30" />	
+         <property name="Stat" value="-" />	
+         <property name="Rules" value="Draft format only.&#xD;&#xA;You can use agendas from all factions in this deck" />
+         <property name="Flavor" value="Tge past is the future." />
+         <property name="Instructions" value="" />
+         <property name="Faction" value="Neutral" />
+         <property name="Influence" value="" />
+         <property name="Side" value="corp" />
+         <property name="AutoScript" value="" />
+         <property name="AutoAction" value="" />	
+		</card>
+		<card id="bc0f047c-01b1-427f-a439-d451eda00006" name="The Masque">
+         <property name="Subtitle" value="Cyber General" />
+         <property name="Type" value="Identity" />
+         <property name="Keywords" value="Natural" />
+         <property name="Cost" value="0" />
+         <property name="Requirement" value="30" />	
+         <property name="Stat" value="-" />	
+         <property name="Rules" value="Draft format only." />
+         <property name="Flavor" value="&quot;This was is far from over.&quot;" />
+         <property name="Instructions" value="" />
+         <property name="Faction" value="Neutral" />
+         <property name="Influence" value="" />
+         <property name="Side" value="runner" />
+         <property name="AutoScript" value="" />
+         <property name="AutoAction" value="" />	
+		</card>
 	</cards>
 </set>

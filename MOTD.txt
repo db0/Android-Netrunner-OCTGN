@@ -1,6 +1,6 @@
 =====Message of the Day======
 
-Double Time is now rezzed!
+Draft IDs have been added under the promos Set.
 
-As always almost all are automated. Check the changelog for details on those who are not.
+You can now build the decks you've drafted elsewhere and play them on OCTGN.
 =============================
