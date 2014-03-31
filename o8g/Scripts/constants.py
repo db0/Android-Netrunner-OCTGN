@@ -189,6 +189,7 @@ SuperchargedSubs = ['stevehouston',       # Brendan               - http://www.p
                     'wrathofmine',        # wrathofmine           - http://www.patreon.com/user?u=98478
                     'esurnir',            # Jean-Baptiste         - http://www.patreon.com/user?u=100387
                     'sly',                # Anthony Giovannetti   - http://www.patreon.com/StimHack
+                    'Prentice78',         # Mathias Fleck         - http://www.patreon.com/user?u=120373
                     'alsciende'           # Cedric                - http://netrunnerdb.com/
                    ] # 3$ Tier
 
