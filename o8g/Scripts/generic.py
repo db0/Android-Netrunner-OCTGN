@@ -649,7 +649,9 @@ def oncePerTurn(card, x = 0, y = 0, silent = False, act = 'manual'):
          if not silent and act != 'dryRun': notify('{} activates the once-per-turn ability of {} another time'.format(me, card))
    else:
       if not silent and act != 'dryRun': notify('{} activates the once-per-turn ability of {}'.format(me, card))
-   if act != 'dryRun': remoteCall(card.controller,'rotCard',card)
+   if act != 'dryRun': 
+      if card.controller != me: remoteCall(card.controller,'rotCard',card) # Cannot remote call this or ABT installing more than 1 ICE will trigger HB:ETF ability 3 times
+      else: card.orientation = Rot90
    debugNotify("<<< oncePerTurn() exit OK", 3) #Debug
 
 def chkRestrictionMarker(card, Autoscript, silent = False, act = 'manual'): # An additional oncePerTurn restriction, that works with markers (with cards that have two different once-per-turn abilities)
