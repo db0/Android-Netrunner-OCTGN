@@ -1,6 +1,14 @@
 Changelog - Android:Netrunner LCG OCTGN Game Definition
 ===============================================
 
+### 3.9.2.x
+
+* ABT will not trigger HB:ETF more than once
+* Liz Mills will now use a click for her ability
+* PSI can now use BP
+* Paintbrush will clear its markers on Jackout.
+* Stopped Corp pressing F1 too fast and drawing too many cards.
+
 ### 3.9.1.x
 
 * Added the Draft IDs under the Promos set. Now people can use decks they've drafted elsewhere to play.

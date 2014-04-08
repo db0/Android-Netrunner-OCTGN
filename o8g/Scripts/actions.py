@@ -152,7 +152,7 @@ def goToSot (group, x=0,y=0):
    debugNotify(">>> goToSot(){}".format(extraASDebug())) #Debug
    global newturn, endofturn, lastKnownNrClicks, currClicks, turn
    mute()
-   if endofturn or currClicks or newturn:
+   if endofturn or currClicks or newturn or me.Clicks != 0:
       if debugVerbosity <= 0 and not confirm("You have not yet properly ended you previous turn. You need to use F12 after you've finished all your clicks.\n\nAre you sure you want to continue?"): return
       else:
          if len(me.hand) > currentHandSize(): # Just made sure to notify of any shenanigans
