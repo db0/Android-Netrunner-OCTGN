@@ -455,6 +455,8 @@ def CustomScript(card, action = 'PLAY', origin_card = None, original_action = No
          debugNotify("choice = {}".format(choice))
          if choice == None: break
          chosenCList.append(cardChoices[choice])
+         if cardChoices[choice].group == me.piles['Heap/Archives(Face-up)']: notify("--> {} selected their {} card ({}) from their {}".format(me, numOrder(iter), cardChoices[choice], pileName(cardChoices[choice].group)))
+         else: notify("--> {} selected their {} card from their {}".format(me, numOrder(iter), pileName(cardChoices[choice].group))         )
          installableCards.remove(cardChoices[choice])
          if cardChoices[choice].Type == 'Asset' or cardChoices[choice].Type == 'Agenda': # If we install an asset or agenda, we can't install any more of those so we remove them from the choice list.
             for rootC in installableCards:
