@@ -851,7 +851,7 @@ def markerEffects(Time = 'Start'):
    cardList = [c for c in table if c.markers]
    for card in cardList:
       for marker in card.markers:
-         if (re.search(r'Tinkering',marker[0]) or re.search(r'Paintbrush',marker[0])) and Time == 'End':
+         if (re.search(r'Tinkering',marker[0]) and Time == 'End') or (re.search(r'Paintbrush',marker[0])) and Time == 'JackOut':
             TokensX('Remove999Keyword:Code Gate-isSilent', "Tinkering:", card)
             TokensX('Remove999Keyword:Sentry-isSilent', "Tinkering:", card)
             TokensX('Remove999Keyword:Barrier-isSilent', "Tinkering:", card)
