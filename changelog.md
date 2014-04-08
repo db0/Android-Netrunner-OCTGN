@@ -8,6 +8,7 @@ Changelog - Android:Netrunner LCG OCTGN Game Definition
 * PSI can now use BP
 * Paintbrush will clear its markers on Jackout.
 * Stopped Corp pressing F1 too fast and drawing too many cards.
+* Dir. Haas Pet Project now announces origin groups  
 
 ### 3.9.1.x
 
