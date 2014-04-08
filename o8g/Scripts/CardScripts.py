@@ -2659,7 +2659,7 @@ bc0f047c-01b1-427f-a439-d451eda04037
 -----
 onRez:Lose1Bad Publicity
 +++++
-A0B0G0T1:TrashTarget-Targeted-atLocation$$Gain1Bad Publicity
+A1B0G0T1:TrashTarget-Targeted-atLocation$$Gain1Bad Publicity
 .....
 Off the Grid
 -----
