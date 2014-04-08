@@ -1566,8 +1566,8 @@ def PsiX(Autoscript, announceText, card, targetCards = None, notification = None
    else: psiEffectTuple = None
    barNotifyAll('#000000',"{} is initiating a Psi struggle...".format(me))
    secretCred = askInteger("How many credits do you want to secretly spend for the Psi effect of {}?".format(card.name),0)
-   while secretCred and (secretCred > me.Credits) or (secretCred > 2):
-      if secretCred > me.Credits and confirm("You do not have that many credits to spend. Bypass?"): break
+   while secretCred and (secretCred - reduceCost(card, 'PSI', secretCred, dryRun = True) > me.Credits) or (secretCred > 2):
+      if secretCred - reduceCost(card, 'PSI', secretCred, dryRun = True) > me.Credits and confirm("You do not have that many credits to spend. Bypass?"): break
       if secretCred > 2: warn = ":::ERROR::: You cannot spend more than 2 credits!\n"
       else: warn = ''
       secretCred = askInteger("{}How many credits do you want to secretly spend?".format(warn),0)
@@ -1585,14 +1585,14 @@ def runnerPsi(CorpPsiCount,psiEffectTuple,card,corpPlayer):
    debugNotify(">>> runnerPsi()") #Debug
    barNotifyAll('#000000',"{} is guessing the correct Psi value.".format(me))
    secretCred = askInteger("How many credits do you want to spend for the Psi effect of {}?".format(card.name),0)
-   while secretCred and (secretCred > me.Credits) or (secretCred > 2):
-      if secretCred > me.Credits and confirm("You do not have that many credits to spend. Bypass?"): break
+   while secretCred and (secretCred - reduceCost(card, 'PSI', secretCred, dryRun = True) > me.Credits) or (secretCred > 2):
+      if secretCred - reduceCost(card, 'PSI', secretCred, dryRun = True) > me.Credits and confirm("You do not have that many credits to spend. Bypass?"): break
       if secretCred > 2: warn = ":::ERROR::: You cannot spend more than 2 credits!\n"
       else: warn = ''
       secretCred = askInteger("{}How many credits do you want to spend?".format(warn),0)
    if secretCred == None: secretCred = 0
-   me.Credits -= secretCred
-   corpPlayer.Credits -= CorpPsiCount
+   me.Credits -= secretCred - reduceCost(card, 'PSI', secretCred)
+   corpPlayer.Credits -= CorpPsiCount - reduceCost(card, 'PSI', CorpPsiCount, reversePlayer = True)
    if psiEffectTuple: # If the tuple is None, then there's no effects specified for this psi effect.
       debugNotify("Found currentPsiEffectTuple")
       if secretCred != CorpPsiCount:
