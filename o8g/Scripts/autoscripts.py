@@ -959,7 +959,7 @@ def GainX(Autoscript, announceText, card, targetCards = None, notification = Non
       if action.group(1) == 'SetTo': targetPL.counters['Agenda Points'].value = 0 # If we're setting to a specific value, we wipe what it's currently.
       if gain == -999: targetPL.counters['Agenda Points'].value = 0
       else: targetPL.counters['Agenda Points'].value += (gain * multiplier) - gainReduce
-      if me.counters['Agenda Points'].value >= 7: 
+      if me.counters['Agenda Points'].value >= 7 or (getSpecial('Identity',fetchCorpPL()).name == "Harmony Medtech" and me.counters['Agenda Points'].value >= 6): 
          notify("{} wins the game!".format(me))
          reportGame()      
       if targetPL.counters['Agenda Points'].value < 0: 
@@ -1692,7 +1692,7 @@ def ModifyStatus(Autoscript, announceText, card, targetCards = None, notificatio
          debugNotify("Current card group before scoring = {}".format(targetCard.group.name))
          grabCardControl(targetCard,targetPL)
          # We do not autoscript other players (see http://boardgamegeek.com/thread/914076/personal-evolution-and-notoriety)
-         if targetPL.counters['Agenda Points'].value >= 7 :
+         if targetPL.counters['Agenda Points'].value >= 7 or (getSpecial('Identity',fetchCorpPL()).name == "Harmony Medtech" and targetPL.counters['Agenda Points'].value >= 6):
             notify("{} wins the game!".format(targetPL))
             if targetPL == me: reportGame()         
             else: reportGame('AgendaDefeat')

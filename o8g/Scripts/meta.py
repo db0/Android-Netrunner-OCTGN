@@ -418,10 +418,13 @@ def syncTags():
    ID = getSpecial('Identity',me)
    if me.Tags: ID.markers[mdict['Tag']] = me.Tags
    else: ID.markers[mdict['Tag']] = 0
-   
 
 def fetchRunnerPL():
    if ds == 'runner': return me
+   else: return findOpponent()
+   
+def fetchCorpPL():
+   if ds == 'corp': return me
    else: return findOpponent()
    
 def clearAttachLinks(card):

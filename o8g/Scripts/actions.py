@@ -1227,7 +1227,7 @@ def scrAgenda(card, x = 0, y = 0,silent = False):
       playScoreAgendaSound(card)
       executePlayScripts(card,agendaTxt)
       autoscriptOtherPlayers('Agenda'+agendaTxt.capitalize()+'d',card) # The autoscripts triggered by this effect are using AgendaLiberated and AgendaScored as the hook
-      if me.counters['Agenda Points'].value >= 7 :
+      if me.counters['Agenda Points'].value >= 7 or (getSpecial('Identity',fetchCorpPL()).name == "Harmony Medtech" and me.counters['Agenda Points'].value >= 6):
          notify("{} wins the game!".format(me))
          reportGame()
       card.highlight = None # In case the card was highlighted as revealed, we remove that now.
