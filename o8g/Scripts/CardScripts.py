@@ -3353,7 +3353,7 @@ Nisei Division
 -----
 bc0f047c-01b1-427f-a439-d451eda05002
 -----
-
+whileInPlay:Gain1Credits-foreachRevealedPSI
 +++++
 
 .....
@@ -3363,21 +3363,21 @@ bc0f047c-01b1-427f-a439-d451eda05003
 -----
 
 +++++
-
+A0B0G0T0:Put1Advancement-Targeted
 .....
 House of Knives
 -----
 bc0f047c-01b1-427f-a439-d451eda05004
 -----
-
+onScore:Put3Agenda
 +++++
-
+A0B0G0T0:Remove1Agenda-isCost$$Inflict1NetDamage-onOpponent
 .....
 Medical Breakthrough
 -----
 bc0f047c-01b1-427f-a439-d451eda05005
 -----
-
+whileScored:Decrease1Advancement-affectsMedical Breakthrough||whileLiberated:Decrease1Advancement-affectsMedical Breakthrough
 +++++
 
 .....
@@ -3385,7 +3385,7 @@ Philotic Entanglement
 -----
 bc0f047c-01b1-427f-a439-d451eda05006
 -----
-
+onScore:Inflict1NetDamage-perEveryCard-atAgenda-targetOpponents
 +++++
 
 .....
@@ -3393,7 +3393,7 @@ The Future Perfect
 -----
 bc0f047c-01b1-427f-a439-d451eda05007
 -----
-
+onAccess:Psi-psiEffects<ScoreMyself,None>-ifNotInstalled-pauseRunner
 +++++
 
 .....
@@ -3401,7 +3401,7 @@ Chairman Hiro
 -----
 bc0f047c-01b1-427f-a439-d451eda05008
 -----
-
+onRez:Lose2Hand Size-onOpponent||onTrash:Gain2Hand Size-onOpponent-ifActive-ifUnscored$$ScoreMyself-onOpponent-ifAccessed-ifUnscored-preventTrash-runTrashScriptWhileInactive$$Gain2Agenda Points-onOpponent-ifAccessed-ifUnscored$$Put2Scored-isSilent-ifAccessed-ifUnscored
 +++++
 
 .....
@@ -3409,7 +3409,7 @@ Psychiatric Clinic
 -----
 bc0f047c-01b1-427f-a439-d451eda05009
 -----
-
+onRez:Gain1Hand Size-onOpponent||onTrash:Lose1Hand Size-onOpponent-ifActive||atTurnStart:Gain1Credits-duringMyTurn
 +++++
 
 .....
@@ -3417,15 +3417,15 @@ Psychic Field
 -----
 bc0f047c-01b1-427f-a439-d451eda05010
 -----
-
+onAccess:Psi-psiEffects<Inflict1NetDamage-perEvery-fromHand-onOppponent,None>-ifInstalled
 +++++
-
+A0B0G0T0:Psi-psiEffects<Inflict1NetDamage-perEvery-fromHand-onOppponent,None>
 .....
 Shi.Kyu
 -----
 bc0f047c-01b1-427f-a439-d451eda05011
 -----
-
+onAccess:UseCustomAbility-ifNotAccessedInRD
 +++++
 
 .....

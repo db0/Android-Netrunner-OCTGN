@@ -1259,6 +1259,7 @@ def accessTarget(group = table, x = 0, y = 0, noQuestionsAsked = False):
                and c.targetedBy == me
                and c.controller == targetPL
                and not c.markers[mdict['Scored']]
+               and not c.markers[mdict['ScorePenalty']]
                and c.Type != 'Server'
                and c.Type != 'ICE' # To prevent mistakes
                and not (c.orientation == Rot90 and not c.isFaceUp)
@@ -1277,6 +1278,7 @@ def accessTarget(group = table, x = 0, y = 0, noQuestionsAsked = False):
       for autoS in Autoscripts:
          if re.search(r'onAccess:',autoS):
             debugNotify(" accessRegex found!")
+            if re.search(r'-ifNotInstalled',autoS): continue # -ifNotInstalled effects don't work with the Access Card shortcut.
             notify("{} has just accessed a {}!".format(me,card.name))
             debugNotify("Doing Remote Call with player = {}. card = {}, autoS = {}".format(me,card,autoS))
             remoteCall(card.owner, 'remoteAutoscript', [card,autoS])
@@ -1337,9 +1339,9 @@ def accessTarget(group = table, x = 0, y = 0, noQuestionsAsked = False):
                sendToTrash(card)
                notify("{} paid {}{} to {} {}".format(me,uniCredit(num(card.Stat) - reduction),extraText2,uniTrash(),card))
          else: pass
-         if cFaceD and card.group == table and not card.markers[mdict['Scored']]: card.isFaceUp = False
+         if cFaceD and card.group == table and not card.markers[mdict['Scored']] and not card.markers[mdict['ScorePenalty']]: card.isFaceUp = False
          card.highlight = None
-         if card.group == table and not card.markers[mdict['Scored']]: 
+         if card.group == table and not card.markers[mdict['Scored']] and not card.markers[mdict['ScorePenalty']]: 
             passCardControl(card,card.owner) # We pass control back to the corp, but only if we didn't steal the card.
             try: del origController[card._id] # We use a try: just in case...
             except: pass
@@ -1379,6 +1381,7 @@ def RDaccessX(group = table, x = 0, y = 0): # A function which looks at the top 
       for autoS in Autoscripts:
          if re.search(r'onAccess:',autoS):
             if re.search(r'-ifInstalled',autoS): continue # -ifInstalled cards work only while on the table.
+            if re.search(r'-ifNotAccessedInRD',autoS): continue # -ifNotInRD cards work only while not accessed from R&D.
             debugNotify(" accessRegex found!")
             notify("{} has just accessed a {}!".format(me,RDtop[iter].name))
             remoteCall(RDtop[iter].owner, 'remoteAutoscript', [RDtop[iter],autoS])
@@ -1749,7 +1752,7 @@ def intTrashCard(card, stat, cost = "not free",  ClickCost = '', silent = False)
    storeProperties(card)
    if card.group.name == 'Heap/Archives(Face-up)' or card.group.name == 'Archives(Hidden)': # If the card is already trashed (say from a previous script), we don't want to try and trash it again
       return # We don't return abort, otherwise scripts will stop executing (e.g. see using Fairy to break two subroutines)
-   if card.markers[mdict['Scored']]: 
+   if card.markers[mdict['Scored']] or card.markers[mdict['ScorePenalty']]: 
       exileCard(card) # If the card is scored, then card effects don't trash it, but rather remove it from play (Otherwise the runner could score it again)
       return
    if ClickCost == '':
@@ -1871,6 +1874,14 @@ def exileCard(card, silent = False):
          else: APloss = card.markers[mdict['Scored']] # If we're trashing a card that's not an agenda but nevertheless counts as one, the amount of scored counters are the AP it provides.
          me.counters['Agenda Points'].value -= APloss # Trashing Agendas for any reason, now takes they value away as well.
          notify("--> {} loses {} Agenda Points".format(me, APloss))
+      if card.markers[mdict['ScorePenalty']]: # A card with Score Penalty counters was giving us minus agenda points. By exiling it, we recover those points.
+         if card.Type == 'Agenda': APgain = num(card.Stat)
+         else: APgain = card.markers[mdict['ScorePenalty']]
+         me.counters['Agenda Points'].value += APgain 
+         notify("--> {} recovers {} Agenda Points".format(me, APgain))
+         if me.counters['Agenda Points'].value >= 7 or (getSpecial('Identity',fetchCorpPL()).name == "Harmony Medtech" and me.counters['Agenda Points'].value >= 6):
+            notify("{} wins the game!".format(me))
+            reportGame() # If we removed agenda points penalty (e.g. Data Dealer a Shi.Kyu) and that made us reach 7 agenda points, we can win the game at this point.
       executePlayScripts(card,'TRASH') # We don't want to run automations on simply revealed cards.
       clearAttachLinks(card)
       changeCardGroup(card,card.owner.piles['Removed from Game'])

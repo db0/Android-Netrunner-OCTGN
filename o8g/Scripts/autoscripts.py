@@ -146,10 +146,10 @@ def executePlayScripts(card, action):
                continue 
             else: debugNotify("Succeeded for -ifActive. highlight == {}. group.name == {}".format(card.highlight,card.group.name))
          else: debugNotify("No -ifActive Modulator")
-         if re.search(r'-ifScored', activeAutoscript) and not card.markers[mdict['Scored']]:
+         if re.search(r'-ifScored', activeAutoscript) and not card.markers[mdict['Scored']] and not card.markers[mdict['ScorePenalty']]:
             debugNotify("!!! Failing script because card is not scored")
             continue 
-         if re.search(r'-ifUnscored', activeAutoscript) and card.markers[mdict['Scored']]:
+         if re.search(r'-ifUnscored', activeAutoscript) and (card.markers[mdict['Scored']] or card.markers[mdict['ScorePenalty']]):
             debugNotify("!!! Failing script because card is scored")
             continue 
          if re.search(r':Pass\b', activeAutoscript): continue # Pass is a simple command of doing nothing ^_^
@@ -1593,6 +1593,7 @@ def runnerPsi(CorpPsiCount,psiEffectTuple,card,corpPlayer):
    if secretCred == None: secretCred = 0
    me.Credits -= secretCred - reduceCost(card, 'PSI', secretCred)
    corpPlayer.Credits -= CorpPsiCount - reduceCost(card, 'PSI', CorpPsiCount, reversePlayer = True)
+   autoscriptOtherPlayers('RevealedPSI', card)
    if psiEffectTuple: # If the tuple is None, then there's no effects specified for this psi effect.
       debugNotify("Found currentPsiEffectTuple")
       if secretCred != CorpPsiCount:
@@ -2110,7 +2111,7 @@ def checkSpecialRestrictions(Autoscript,card):
    if re.search(r'isUnrezzed',Autoscript) and card.isFaceUp: 
       debugNotify("Rejecting because it's not rezzed")
       validCard = False
-   if re.search(r'isScored',Autoscript) and not card.markers[mdict['Scored']]:
+   if re.search(r'isScored',Autoscript) and not card.markers[mdict['Scored']] and not card.markers[mdict['ScorePenalty']]:
       debugNotify("Rejecting because it's not a scored agenda")
       validCard = False
    markerName = re.search(r'-hasMarker{([\w ]+)}',Autoscript) # Checking if we need specific markers on the card.
@@ -2313,7 +2314,7 @@ def per(Autoscript, card = None, count = 0, targetCards = None, notification = N
                   property = re.search(r'Property{([\w ]+)}',per.group(3))
                   multiplier += num(perCard.properties[property.group(1)])
                else: 
-                  multiplier += 1 # If there's no special conditions, then we just add one multiplier per valid (auto)target. Ef. "-perEvery-AutoTargeted-onICE" would give 1 multiplier per ICE on the table
+                  multiplier += 1 # If there's no special conditions, then we just add one multiplier per valid (auto)target.
                   debugNotify("Increasing Multiplier by 1 to {}".format(multiplier))
       else: #If we're not looking for a particular target, then we check for everything else.
          debugNotify("Doing no table lookup", 2) # Debug.

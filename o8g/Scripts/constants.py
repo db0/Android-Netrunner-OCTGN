@@ -19,6 +19,7 @@ mdict = dict( # A dictionary which holds all the hard coded markers (in the mark
              Tag =                     ("Tag","1d1e7dd2-c60a-4770-82b7-d2d9232b3be8"),
              Advancement =             ("Advancement", "f8372e2c-c5df-42d9-9d54-f5d9890e9821"),
              Scored =                  ("Scored", "4911f1ad-abf9-4b75-b4c5-86df3f9098ee"),
+             ScorePenalty =            ("Score Penalty", "44bbc99e-72cb-45a6-897c-029870f25556"),
              PlusOnePerm =             ("Permanent +1", "1bd5cc9f-3528-45d2-a8fc-e7d7bd6865d5"),
              PlusOne =                 ("Temporary +1", "e8d0b72e-0384-4762-b983-31137d4b4625"),
              MinusOne =                ("Temporary -1", "d5466468-e05c-4ad8-8bc0-02fbfe4a2ec6"),
@@ -123,7 +124,8 @@ RunnerCardTypes = [
          'Event']
 
 LimitedCard = [ ### Cards which are limited to one per deck ###
-         'bc0f047c-01b1-427f-a439-d451eda03004' # Director Haas Pet-Project
+         'bc0f047c-01b1-427f-a439-d451eda03004', # Director Haas Pet-Project
+         'bc0f047c-01b1-427f-a439-d451eda05006'  # Philotic Entanglement
          ] 
 SpecialDaemons = [ # These are cards which can host programs and avoid their MU cost, but don't have the daemon keyword
          'Dinosaurus'] # Not in use yet.

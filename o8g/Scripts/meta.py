@@ -497,6 +497,7 @@ def findAgendaRequirement(card):
          if re.search(r'whileInPlay', autoS):
             advanceModRegex = re.search(r'(Increase|Decrease)([0-9])Advancement', autoS)
             if advanceModRegex:
+               if c.isFaceUp and not checkCardRestrictions(gatherCardProperties(card), prepareRestrictions(autoS, 'reduce')): continue 
                debugNotify("advanceModRegex = {} ".format(advanceModRegex.groups()))
                if re.search(r'onlyOnce',autoS) and c.orientation == Rot90: continue # If the card has a once per-turn ability which has been used, ignore it
                if (re.search(r'excludeDummy',autoS) or re.search(r'CreateDummy',autoS)) and c.highlight == DummyColor: continue
@@ -781,7 +782,7 @@ def HasbroCP(card,count): # A Function called remotely for the runner player whi
             c.moveTo(me.piles['Removed from Game'])      
             notify("=> Extra {} scrubbed from Heap".format(exiledC))
       for c in table:
-         if c.model == exiledC.model and not c.markers[mdict['Scored']] and c.highlight != DummyColor: # Scored cards like Notoriety are not removed, nor are resident effects.
+         if c.model == exiledC.model and not c.markers[mdict['Scored']] and not c.markers[mdict['ScorePenalty']] and c.highlight != DummyColor: # Scored cards like Notoriety are not removed, nor are resident effects.
             exileCard(c, True)
             notify("=> Extra {} scrubbed from the table".format(exiledC))
       for c in me.hand:

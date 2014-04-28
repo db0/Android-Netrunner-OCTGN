@@ -177,6 +177,15 @@ def UseCustomAbility(Autoscript, announceText, card, targetCards = None, notific
    if fetchProperty(card, 'name') == "Bullfrog":
       remoteCall(findOpponent(),"Bullfrog",[card])
       announceString = ''
+   if fetchProperty(card, 'name') == "Shi.Kyu":
+      count = askInteger("How many credits do you want to pay for Shi.Kyu?", 0)
+      if not count: count = 0
+      while count > me.Credits: 
+         count = askInteger(":::ERROR::: You do not have {} credits to spend.\n\nHow many credits do you want to pay for Shi.Kyu?".format(count), 0)
+         if not count: count = 0
+      if count: remoteCall(findOpponent(),"ShiKyu",[card,count])
+      else: notify("{} opts not to spend any credits to power Shi.Kyu".format(me))
+      announceString = ''
    return announceString
    
 def CustomScript(card, action = 'PLAY', origin_card = None, original_action = None): # Scripts that are complex and fairly unique to specific cards, not worth making a whole generic function for them.
@@ -1128,3 +1137,12 @@ def Bullfrog(card): # Bullfrog
    if targetServer == 'Remote': announceText = 'a remote server'
    else: announceText = 'the ' + targetServer
    notify("--> {}'s Ability triggers and redirects the runner to {}.".format(card,announceText))
+
+def ShiKyu(card,count): # Shi.Kyu
+   if confirm("Shi.Kyu is about to inflict {} Net Damage to you. Score it for -1 Agenda Points instead?".format(count)):
+      ModifyStatus('ScoreMyself-onOpponent-isSilent', '', card)
+      GainX('Lose1Agenda Points-onOpponent-isSilent', '', card)
+      TokensX('Put1ScorePenalty-isSilent', '', card)
+      notify("{} opts to score Shi.Kyu for -1 Agenda Point".format(me))
+   else:
+      notify(InflictX('Inflict{}NetDamage-onOpponent'.format(count), '{} activates {} to'.format(card.owner, card), card))
