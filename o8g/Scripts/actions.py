@@ -1391,7 +1391,6 @@ def RDaccessX(group = table, x = 0, y = 0): # A function which looks at the top 
                RDtop[iter].moveTo(targetPL.piles['R&D/Stack'],iter - removedCards)
                passPileControl(targetPL.piles['R&D/Stack'],targetPL)
                gatheredCardList = False  # We set this variable to False, so that reduceCost() calls from other functions can start scanning the table again.
-               
                return
       debugNotify(" Storing...", 4)
       cType = RDtop[iter].Type
@@ -1514,17 +1513,21 @@ def HQaccess(group=table, x=0,y=0, silent = False):
    if ds == 'corp':
       whisper("This action is only for the use of the runner.")
       return
-   if not silent and not confirm("You are about to access a random card from the corp's HQ.\
-                                \nPlease make sure your opponent is not manipulating their hand, and does not have a way to cancel this effect before continuing\
-                              \n\nProceed?"): return
-   barNotifyAll('#000000',"{} is initiating HQ Access".format(me))
-   count = askInteger("How many files are you able to access from the corporation's HQ?",1)
-   if count == None: return
-   playAccessSound('HQ')
    targetPL = ofwhom('-ofOpponent')
    debugNotify("Found opponent.", 3) #Debug
    grabPileControl(targetPL.hand)
-   revealedCards = showatrandom(count = count, targetPL = targetPL, covered = True)
+   revealedCards = [c for c in table if c.highlight == RevealedColor]
+   if len(revealedCards): # Checking if we're continuing from a Paused HQ Access.
+      barNotifyAll('#000000',"{} is resuming their HQ Access".format(me))      
+   else:
+      if not silent and not confirm("You are about to access a random card from the corp's HQ.\
+                                   \nPlease make sure your opponent is not manipulating their hand, and does not have a way to cancel this effect before continuing\
+                                 \n\nProceed?"): return
+      barNotifyAll('#000000',"{} is initiating HQ Access".format(me))
+      count = askInteger("How many files are you able to access from the corporation's HQ?",1)
+      if count == None: return
+      playAccessSound('HQ')
+      revealedCards = showatrandom(count = count, targetPL = targetPL, covered = True)
    for revealedCard in revealedCards:
       loopChk(revealedCard)
       origController[revealedCard._id] = targetPL # We store the card's original controller to know against whom to check for scripts (e.g. when accessing a rezzed encryption protocol)
@@ -1541,6 +1544,12 @@ def HQaccess(group=table, x=0,y=0, silent = False):
             debugNotify(" accessRegex found!")
             notify("{} has just accessed a {}!".format(me,revealedCard.name))
             remoteCall(revealedCard.owner, 'remoteAutoscript', [revealedCard,autoS])
+            if re.search(r'-pauseRunner',autoS): 
+               notify(":::WARNING::: {} has stumbled onto {}. Once the effects of this card are complete, they need to press Ctrl+Q to continue their access from where they left it.".format(me,revealedCard.name))
+               revealedCard.moveTo(targetPL.hand) # We return it to the player's hand because the effect will decide where it goes afterwards
+               if not len([c for c in table if c.highlight == RevealedColor]): clearCovers() # If we have no leftover cards to access after a
+               passPileControl(targetPL.hand,targetPL)
+               return
       debugNotify("Not a Trap.", 2) #Debug
       if revealedCard.Type == 'ICE':
          cStatTXT = '\nStrength: {}.'.format(revealedCard.Stat)
@@ -1598,7 +1607,7 @@ def HQaccess(group=table, x=0,y=0, silent = False):
    passPileControl(targetPL.hand,targetPL)
    clearCovers() # Finally we clear any remaining cover cards.
    debugNotify("<<< HQAccess()", 3)
-
+   
 def isRezzable (card):
    debugNotify(">>> isRezzable(){}".format(extraASDebug())) #Debug
    mute()
