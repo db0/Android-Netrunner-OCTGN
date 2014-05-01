@@ -1384,13 +1384,14 @@ def RDaccessX(group = table, x = 0, y = 0): # A function which looks at the top 
             if re.search(r'-ifInstalled',autoS): continue # -ifInstalled cards work only while on the table.
             if re.search(r'-ifNotAccessedInRD',autoS): continue # -ifNotInRD cards work only while not accessed from R&D.
             debugNotify(" accessRegex found!")
-            notify("{} has just accessed a {}!".format(me,RDtop[iter].name))
+            notify("{} has just accessed {}!".format(me,RDtop[iter].name))
             remoteCall(RDtop[iter].owner, 'remoteAutoscript', [RDtop[iter],autoS])
             if re.search(r'-pauseRunner',autoS): 
-               whisper("You have stumbled onto a {}. Once the effects of this card are complete, press Ctrl+A to continue your access from where you left it".format(RDtop[iter]))
+               notify(":::WARNING::: {} has stumbled onto {}. Once the effects of this card are complete, they need to press Ctrl+A to continue their access from where they left it.\nThey have seen {} out of {} cards until now.".format(me,RDtop[iter].name,iter + 1, count))
                RDtop[iter].moveTo(targetPL.piles['R&D/Stack'],iter - removedCards)
                passPileControl(targetPL.piles['R&D/Stack'],targetPL)
                gatheredCardList = False  # We set this variable to False, so that reduceCost() calls from other functions can start scanning the table again.
+               
                return
       debugNotify(" Storing...", 4)
       cType = RDtop[iter].Type
