@@ -1175,7 +1175,7 @@ def fetchCardScripts(group = table, x=0, y=0, silent = False): # Creates 2 dicti
    debugNotify(">>> fetchCardScripts()") #Debug
    global CardsAA, CardsAS # Global dictionaries holding Card AutoActions and Card AutoScripts for all cards.
    if not silent: whisper("+++ Fetching fresh scripts. Please Wait...")
-   if (len(players) > 1 or debugVerbosity == 0) and me.name != 'dbzer0': # I put my debug account to always use local scripts.
+   if (len(players) > 1 or debugVerbosity == 0) and me.name != 'dbzer0' and not silent: # I put my debug account to always use local scripts.
       try: (ScriptsDownload, code) = webRead('https://raw.github.com/db0/Android-Netrunner-OCTGN/master/o8g/Scripts/CardScripts.py',5000)
       except: 
          debugNotify("Timeout Error when trying to download scripts", 0)

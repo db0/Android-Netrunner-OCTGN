@@ -1374,6 +1374,7 @@ def RDaccessX(group = table, x = 0, y = 0): # A function which looks at the top 
       notify(" -- {} is now accessing the {} card".format(me,numOrder(iter)))
       origController[RDtop[iter]._id] = targetPL # We store the card's original controller to know against whom to check for scripts (e.g. when accessing a rezzed encryption protocol)
       RDtop[iter].moveToBottom(me.ScriptingPile)
+      storeProperties(RDtop[iter])
       debugNotify(" Looping...", 4)
       loopChk(RDtop[iter],'Type')
       Autoscripts = CardsAS.get(RDtop[iter].model,'').split('||')
@@ -1385,8 +1386,13 @@ def RDaccessX(group = table, x = 0, y = 0): # A function which looks at the top 
             debugNotify(" accessRegex found!")
             notify("{} has just accessed a {}!".format(me,RDtop[iter].name))
             remoteCall(RDtop[iter].owner, 'remoteAutoscript', [RDtop[iter],autoS])
+            if re.search(r'-pauseRunner',autoS): 
+               whisper("You have stumbled onto a {}. Once the effects of this card are complete, press Ctrl+A to continue your access from where you left it".format(RDtop[iter]))
+               RDtop[iter].moveTo(targetPL.piles['R&D/Stack'],iter - removedCards)
+               passPileControl(targetPL.piles['R&D/Stack'],targetPL)
+               gatheredCardList = False  # We set this variable to False, so that reduceCost() calls from other functions can start scanning the table again.
+               return
       debugNotify(" Storing...", 4)
-      storeProperties(RDtop[iter]) # Otherwise trying to trash the card will crash because of reduceCost()
       cType = RDtop[iter].Type
       cKeywords = RDtop[iter].Keywords
       cStat = RDtop[iter].Stat

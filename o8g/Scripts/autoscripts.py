@@ -819,6 +819,7 @@ def remoteAutoscript(card = None, Autoscript = ''):
    debugNotify('>>> remoteAutoscript')
    debugNotify("Autoscript sent: {}".format(Autoscript))
    mute()
+   if card: storeProperties(card, True)
    if re.search(r'-isOptional', Autoscript):
       if not confirm("The runner has accessed {} and you can choose to activate it at this point. Do you want to do so?".format(fetchProperty(card, 'name'))):
          notify("{} opts not to activate {}'s optional ability".format(me,card))
@@ -1565,7 +1566,7 @@ def PsiX(Autoscript, announceText, card, targetCards = None, notification = None
       setGlobalVariable('CurrentPsiEffect',str(psiEffectTuple))
    else: psiEffectTuple = None
    barNotifyAll('#000000',"{} is initiating a Psi struggle...".format(me))
-   secretCred = askInteger("How many credits do you want to secretly spend for the Psi effect of {}?".format(card.name),0)
+   secretCred = askInteger("How many credits do you want to secretly spend for the Psi effect of {}?".format(fetchProperty(card, 'Name')),0)
    while secretCred and (secretCred - reduceCost(card, 'PSI', secretCred, dryRun = True) > me.Credits) or (secretCred > 2):
       if secretCred - reduceCost(card, 'PSI', secretCred, dryRun = True) > me.Credits and confirm("You do not have that many credits to spend. Bypass?"): break
       if secretCred > 2: warn = ":::ERROR::: You cannot spend more than 2 credits!\n"
@@ -1583,8 +1584,9 @@ def PsiX(Autoscript, announceText, card, targetCards = None, notification = None
 
 def runnerPsi(CorpPsiCount,psiEffectTuple,card,corpPlayer):
    debugNotify(">>> runnerPsi()") #Debug
+   mute()
    barNotifyAll('#000000',"{} is guessing the correct Psi value.".format(me))
-   secretCred = askInteger("How many credits do you want to spend for the Psi effect of {}?".format(card.name),0)
+   secretCred = askInteger("How many credits do you want to spend for the Psi effect of {}?".format(fetchProperty(card, 'Name')),0)
    while secretCred and (secretCred - reduceCost(card, 'PSI', secretCred, dryRun = True) > me.Credits) or (secretCred > 2):
       if secretCred - reduceCost(card, 'PSI', secretCred, dryRun = True) > me.Credits and confirm("You do not have that many credits to spend. Bypass?"): break
       if secretCred > 2: warn = ":::ERROR::: You cannot spend more than 2 credits!\n"
@@ -1690,6 +1692,11 @@ def ModifyStatus(Autoscript, announceText, card, targetCards = None, notificatio
          if targetPL.getGlobalVariable('ds') == 'corp': scoreType = 'scoredAgenda'
          else: scoreType = 'liberatedAgenda'
          placeCard(targetCard, 'SCORE', type = scoreType)
+         #rnd(1,100)
+         update()
+         if targetCard.Type == 'Agenda': 
+            targetCard.markers[mdict['Scored']] += 1
+            targetPL.counters['Agenda Points'].value += num(fetchProperty(targetCard,'Stat'))
          debugNotify("Current card group before scoring = {}".format(targetCard.group.name))
          grabCardControl(targetCard,targetPL)
          # We do not autoscript other players (see http://boardgamegeek.com/thread/914076/personal-evolution-and-notoriety)

@@ -3385,7 +3385,7 @@ Philotic Entanglement
 -----
 bc0f047c-01b1-427f-a439-d451eda05006
 -----
-onScore:Inflict1NetDamage-perEveryCard-atAgenda-targetOpponents
+onScore:Inflict1NetDamage-perEveryCard-fromHand-targetOpponents
 +++++
 
 .....
@@ -3393,7 +3393,7 @@ The Future Perfect
 -----
 bc0f047c-01b1-427f-a439-d451eda05007
 -----
-onAccess:Psi-psiEffects<ScoreMyself,None>-ifNotInstalled-pauseRunner
+onAccess:Psi-psiEffects<None,ScoreMyself-onOpponent>-ifNotInstalled-pauseRunner
 +++++
 
 .....

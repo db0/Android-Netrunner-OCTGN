@@ -551,9 +551,9 @@ def storeProperties(card, forced = False): # Function that grabs a cards importa
       debugNotify(">>> storeProperties(){}".format(extraASDebug())) #Debug
       global Stored_Name, Stored_Cost, Stored_Type, Stored_Keywords, Stored_AutoActions, Stored_AutoScripts, identName
       if (card.Name == '?' and Stored_Name.get(card._id,'?') == '?') or forced:
-         if not card.isFaceUp and card.group == table and (card.owner == me or forced): # If card is not ours and it's face down, we cannot store its properties without revealing it to the player via the full game log
+         if not card.isFaceUp and ((card.group == table and card.owner == me) or forced): # If card is not ours and it's face down, we cannot store its properties without revealing it to the player via the full game log
                                                                                              # See https://github.com/kellyelton/OCTGN/issues/879
-            if debugVerbosity >= 0 and confirm("Peek at card? (>>>storeProperties())"): card.peek()
+            card.peek()
             loopChk(card)
       if (Stored_Name.get(card._id,'?') == '?' and card.Name != '?') or (Stored_Name.get(card._id,'?') != card.Name and card.Name != '?') or forced:
          debugNotify("{} not stored. Storing...".format(card), 3)
@@ -610,6 +610,7 @@ def loopChk(card,property = 'Type'):
    loopcount = 0
    while card.properties[property] == '?':
       rnd(1,10)
+      update()
       loopcount += 1
       if loopcount == 5:
          whisper(":::Error::: Card property can't be grabbed. Aborting!")
