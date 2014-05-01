@@ -3377,7 +3377,7 @@ Medical Breakthrough
 -----
 bc0f047c-01b1-427f-a439-d451eda05005
 -----
-whileScored:Decrease1Advancement-affectsMedical Breakthrough||whileLiberated:Decrease1Advancement-affectsMedical Breakthrough
+whileScored:Decrease1Advancement-affectsMedical Breakthrough
 +++++
 
 .....

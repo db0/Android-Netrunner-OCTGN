@@ -493,10 +493,12 @@ def findAgendaRequirement(card):
    debugNotify(">>> findAgendaRequirement() for card: {}".format(card)) #Debug
    AdvanceReq = num(fetchProperty(card, 'Cost'))
    for c in table:
+      debugNotify("Checking {} for Agenda cost mods".format(c))
       for autoS in CardsAS.get(c.model,'').split('||'):
-         if re.search(r'whileInPlay', autoS):
+         if re.search(r'whileInPlay', autoS) or ((re.search(r'whileScored', autoS) or re.search(r'whileLiberated', autoS)) and c.markers[mdict['Scored']]):
             advanceModRegex = re.search(r'(Increase|Decrease)([0-9])Advancement', autoS)
             if advanceModRegex:
+               debugNotify("We have a advanceModRegex")
                if c.isFaceUp and not checkCardRestrictions(gatherCardProperties(card), prepareRestrictions(autoS, 'reduce')): continue 
                debugNotify("advanceModRegex = {} ".format(advanceModRegex.groups()))
                if re.search(r'onlyOnce',autoS) and c.orientation == Rot90: continue # If the card has a once per-turn ability which has been used, ignore it
@@ -504,7 +506,8 @@ def findAgendaRequirement(card):
                advanceMod = num(advanceModRegex.group(2)) * {'Decrease': -1}.get(advanceModRegex.group(1),1) * per(autoS, c, 0, findTarget(autoS, card = card))
                debugNotify("advanceMod = {}".format(advanceMod))
                AdvanceReq += advanceMod
-               if advanceMod: delayed_whisper("-- {} {}s advance requirement by {}".format(c,advanceModRegex.group(1),advanceMod))
+               if advanceMod: 
+                  delayed_whisper("-- {} {}s advance requirement by {}".format(c,advanceModRegex.group(1),advanceMod))
    debugNotify("<<< findAgendaRequirement() with return {}".format(AdvanceReq)) #Debug
    return AdvanceReq
    
