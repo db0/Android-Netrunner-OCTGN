@@ -1175,6 +1175,7 @@ def Bullfrog(card): # Bullfrog
    notify("--> {}'s Ability triggers and redirects the runner to {}.".format(card,announceText))
 
 def ShiKyu(card,count): # Shi.Kyu
+   mute()
    if confirm("Shi.Kyu is about to inflict {} Net Damage to you. Score it for -1 Agenda Points instead?".format(count)):
       ModifyStatus('ScoreMyself-onOpponent-isSilent', '', card)
       update()
@@ -1182,6 +1183,6 @@ def ShiKyu(card,count): # Shi.Kyu
       TokensX('Put1ScorePenalty-isSilent', '', card)
       notify("{} opts to score Shi.Kyu for -1 Agenda Point".format(me))
    else:
-      notify(InflictX('Inflict{}NetDamage-onOpponent'.format(count), '{} activates {} to'.format(card.owner, card), card))
+      remoteCall(fetchCorpPL(),'InflictX',['Inflict{}NetDamage-onOpponent'.format(count), '{} activates {} to'.format(card.owner, card), card, None, 'Automatic', count]) # We always have the corp itself do the damage
      
       

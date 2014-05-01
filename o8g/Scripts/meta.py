@@ -728,7 +728,15 @@ def chkDmgSpecialEffects(dmgType, count):
 # At the moment it's used for the two Chronos Protocol IDs.
    debugNotify(">>> chkDmgSpecialEffects()") #Debug
    usedDMG = 0
+   replaceDMGAnnounce = False
    for card in table:
+      if card.controller == me and card.model == 'bc0f047c-01b1-427f-a439-d451eda05022' and dmgType == 'Net' and re.search(r'running',getGlobalVariable('status')):
+         if confirm("Do you want to pay 2 credits to use {}'s ability to turn this {} Net damage into Brain Damage?\n\n(Unfortunately, OCTGN is not aware where {} is placed. If he's not in the right server, just press No.".format(card.name,count,card.name)):
+            if payCost(2, 'not free') != "ABORT":
+               usedDMG = count # After this, we don't want any autoscripts to be doing any more damage
+               InflictX('Inflict1BrainDamage-onOpponent', '', card)
+               notify("--> {} activates {} to turn all their Net Damage into 1 Brain damage".format(me,card))
+               replaceDMGAnnounce = True
       if card.name == 'Chronos Protocol':
          if card.Faction == 'Jinteki' and dmgType == 'Net' and oncePerTurn(card, silent = True, act = 'automatic') != 'ABORT':
             if card.controller == me: JintekiCP(card,count)
@@ -738,7 +746,7 @@ def chkDmgSpecialEffects(dmgType, count):
             remoteCall(fetchRunnerPL(),'HasbroCP',[card,count])
             usedDMG = count # After this, we don't want any autoscripts to be doing any more damage
    debugNotify("<<< chkDmgSpecialEffects() with return {}".format(usedDMG)) #Debug
-   return usedDMG
+   return (usedDMG,replaceDMGAnnounce)
 
 def JintekiCP(card,count): # Function which takes care that the Jinteki Chronos Protocol ID properly asks the Jinteki player for the choice before doing more damage.
    debugNotify(">>> JintekiCP()") #Debug

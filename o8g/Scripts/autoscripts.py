@@ -607,8 +607,9 @@ def autoscriptOtherPlayers(lookup, origin_card = Identity, count = 1): # Functio
             if TokensX(autoS, costText, card, targetCard, notification = 'Automatic', n = count) == 'ABORT': break
          elif regexHooks['TransferX'].search(autoS): 
             if TransferX(autoS, costText, card, targetCard, notification = 'Automatic', n = count) == 'ABORT': break
-         elif regexHooks['InflictX'].search(autoS):
-            if InflictX(autoS, costText, card, targetCard, notification = 'Automatic', n = count) == 'ABORT': break
+         elif regexHooks['InflictX'].search(autoS): 
+            remoteCall(fetchCorpPL(),'InflictX',[autoS, costText, card, targetCard, 'Automatic', count]) # We always have the corp itself do the damage
+            #if InflictX(autoS, costText, card, targetCard, notification = 'Automatic', n = count) == 'ABORT': break
          elif regexHooks['DrawX'].search(autoS):
             if DrawX(autoS, costText, card, targetCard, notification = 'Automatic', n = count) == 'ABORT': break
          elif regexHooks['ModifyStatus'].search(autoS):
@@ -1726,6 +1727,7 @@ def ModifyStatus(Autoscript, announceText, card, targetCards = None, notificatio
          
 def InflictX(Autoscript, announceText, card, targetCards = None, notification = None, n = 0): # Core Command for inflicting Damage to players (even ourselves)
    debugNotify(">>> InflictX(){}".format(extraASDebug(Autoscript))) #Debug
+   mute()
    if targetCards is None: targetCards = []
    global failedRequirement
    localDMGwarn = True #A variable to check if we've already warned the player during this damage dealing.
@@ -1756,16 +1758,19 @@ def InflictX(Autoscript, announceText, card, targetCards = None, notification = 
          preventTXT = ' ({} prevented)'.format(DMGprevented)
          DMG -= DMGprevented
       if DMG:
-         finalDMG = DMG - chkDmgSpecialEffects(action.group(3),DMG) # We check if any effect hijacks the normal damage effect, but we don't want to change the number of damage we announce is being done.
+         specialReduction = chkDmgSpecialEffects(action.group(3),DMG)
+         finalDMG = DMG - specialReduction[0] # We check if any effect hijacks the normal damage effect, but we don't want to change the number of damage we announce is being done.
+         if specialReduction[1]: DMG = 0 
          remoteCall(targetPL, 'intdamageDiscard',[finalDMG])
          if action.group(3) == 'Brain': applyBrainDmg(targetPL, DMG)
+      if DMG: 
+         autoscriptOtherPlayers('{}DMGInflicted'.format(action.group(3)),getSpecial('Identity',targetPL),DMG) # We also trigger any script for damage
          playDMGSound(action.group(3))
-      autoscriptOtherPlayers('{}DMGInflicted'.format(action.group(3)),getSpecial('Identity',targetPL),DMG) # We also trigger any script for damage
    if targetPL == me: targetPL = 'theirself' # Just changing the announcement to fit better.
    if re.search(r'isRequirement', Autoscript) and DMG < 1: failedRequirement = True # Requirement means that the cost is still paid but other clicks are not going to follow.
    if notification == 'Quick': announceString = "{} suffer {} {} damage{}".format(announceText,DMG,action.group(3),preventTXT)
    else: announceString = "{} inflict {} {} damage{} to {}{}".format(announceText,DMG,action.group(3),enhanceTXT,targetPL,preventTXT)
-   if notification and multiplier > 0: notify('--> {}.'.format(announceString))
+   if notification and DMG > 0: notify('--> {}.'.format(announceString))
    debugNotify("<<< InflictX()", 3)
    return announceString
 
