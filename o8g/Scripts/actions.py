@@ -1346,7 +1346,7 @@ def accessTarget(group = table, x = 0, y = 0, noQuestionsAsked = False):
             try: del origController[card._id] # We use a try: just in case...
             except: pass
 
-def RDaccessX(group = table, x = 0, y = 0): # A function which looks at the top X cards of the corp's deck and then asks the runner what to do with each one.
+def RDaccessX(group = table, x = 0, y = 0,count = None): # A function which looks at the top X cards of the corp's deck and then asks the runner what to do with each one.
    debugNotify(">>> RDaccessX()") #Debug
    mute()
    global gatheredCardList, origController
@@ -1356,7 +1356,7 @@ def RDaccessX(group = table, x = 0, y = 0): # A function which looks at the top 
       whisper("This action is only for the use of the runner. Use the 'Look at top X cards' function on your R&D's context manu to access your own deck")
       return
    barNotifyAll('#000000',"{} is initiating R&D Access".format(me))
-   count = askInteger("How many files are you able to access from the corporation's R&D?",1)
+   if not count: count = askInteger("How many files are you able to access from the corporation's R&D?",1)
    if count == None: return
    playAccessSound('RD')
    targetPL = ofwhom('-ofOpponent')

@@ -3417,9 +3417,9 @@ Psychic Field
 -----
 bc0f047c-01b1-427f-a439-d451eda05010
 -----
-onAccess:Psi-psiEffects<Inflict1NetDamage-perEvery-fromHand-onOppponent,None>-ifInstalled
+onAccess:Psi-psiEffects<Inflict1NetDamage-onOppponent-perEveryCard-at-fromHand,None>-ifInstalled
 +++++
-A0B0G0T0:Psi-psiEffects<Inflict1NetDamage-perEvery-fromHand-onOppponent,None>
+A0B0G0T0:Psi-psiEffects<Inflict1NetDamage-onOppponent-perEveryCard-at-fromHand,None>
 .....
 Shi.Kyu
 -----
@@ -3435,13 +3435,13 @@ bc0f047c-01b1-427f-a439-d451eda05012
 -----
 
 +++++
-
+A1B0G0T0:SimplyAnnounce{Swap 2 pieces of installed ICE}
 .....
 Cerebral Cast
 -----
 bc0f047c-01b1-427f-a439-d451eda05013
 -----
-
+onPlay:Psi-psiEffects<UseCustomAbility,None>
 +++++
 
 .....
@@ -3449,7 +3449,7 @@ Medical Research Fundraiser
 -----
 bc0f047c-01b1-427f-a439-d451eda05014
 -----
-
+onPlay:Gain8Credits$$Gain3Credits-onOpponent
 +++++
 
 .....
@@ -3457,7 +3457,7 @@ Mushin No Shin
 -----
 bc0f047c-01b1-427f-a439-d451eda05015
 -----
-
+onPlay:InstallTarget-DemiAutoTargeted-atAsset_or_Upgrade_or_Agenda-fromHand-choose1-with3Advancement
 +++++
 
 .....
@@ -3467,7 +3467,7 @@ bc0f047c-01b1-427f-a439-d451eda05016
 -----
 
 +++++
-
+A0B0G0T0:SimplyAnnounce{prevent the Runner from breaking any subroutines on the next piece of ice he or she encounters during this run.}-isSubroutine||A0B0G0T0:SimplyAnnounce{prevent the Runner from jacking out until after encountering the next piece of ice during this run}-isSubroutine
 .....
 Komainu
 -----
@@ -3475,7 +3475,7 @@ bc0f047c-01b1-427f-a439-d451eda05017
 -----
 
 +++++
-
+A0B0G0T0:Inflict1NetDamage-onOpponent-isSubroutine
 .....
 Pup
 -----
@@ -3483,7 +3483,7 @@ bc0f047c-01b1-427f-a439-d451eda05018
 -----
 
 +++++
-
+A0B0G0T0:Inflict1NetDamage-onOpponent-isSubroutine
 .....
 Shiro
 -----
@@ -3491,7 +3491,7 @@ bc0f047c-01b1-427f-a439-d451eda05019
 -----
 
 +++++
-
+A0B0G0T0:UseCustomAbility-isFirstCustom-isSubroutine||A0B0G0T0:Pay1Credits-isCost-isSubroutine||A0B0G0T0:UseCustomAbility-isSecondCustom-isSubroutine
 .....
 Susanoo-No-Mikoto
 -----

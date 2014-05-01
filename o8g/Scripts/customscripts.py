@@ -177,7 +177,7 @@ def UseCustomAbility(Autoscript, announceText, card, targetCards = None, notific
    if fetchProperty(card, 'name') == "Bullfrog":
       remoteCall(findOpponent(),"Bullfrog",[card])
       announceString = ''
-   if fetchProperty(card, 'name') == "Shi.Kyu":
+   if card.model == "bc0f047c-01b1-427f-a439-d451eda05011":
       count = askInteger("How many credits do you want to pay for Shi.Kyu?", 0)
       if not count: count = 0
       while count > me.Credits: 
@@ -186,6 +186,35 @@ def UseCustomAbility(Autoscript, announceText, card, targetCards = None, notific
       if count: remoteCall(findOpponent(),"ShiKyu",[card,count])
       else: notify("{} opts not to spend any credits to power Shi.Kyu".format(me))
       announceString = ''
+   if fetchProperty(card, 'name') == "Cerebral Cast":
+      choice = SingleChoice("Do you want to take a tag or 1 brain damage?",["Take a Tag","Suffer 1 Brain Damage"])
+      if choice == 0: 
+         me.Tags += 1
+         notify("{} chooses to take a Tag".format(me))
+      else: 
+         InflictX('Inflict1BrainDamage-onOpponent', '', card)
+         notify("{} chooses to take a brain damage".format(me))
+      announceString = ''
+   if fetchProperty(card, 'name') == "Shiro":
+      if re.search(r'-isFirstCustom',Autoscript): 
+         announceString = announceText + " look and rearrange at the top 3 card of their R&D"
+         me.piles['R&D/Stack'].addViewer(me)
+         cardList = list(me.piles['R&D/Stack'].top(3)) # We make a list of the top cards we will look at.
+         if len(cardList): loopChk(cardList[len(cardList) - 1])
+         notify(":> {} is rearranging through {}'s R&D".format(card,me))
+         idx = 0 # The index where we're going to be placing each card.
+         while len(cardList) > 0:
+            if len(cardList) == 1: choice = 0
+            else: choice = SingleChoice("Choose card put on the {} position of the R&D".format(numOrder(idx)), makeChoiceListfromCardList(cardList))
+            movedC = cardList.pop(choice)
+            movedC.moveTo(me.piles['R&D/Stack'],idx) # If there's only one card left, we put it in the last available index location in the Stack. We always put the card one index position deeper, because the first card is the cover.
+            idx += 1
+         notify("{} has finished preparing the R&D".format(card))
+         debugNotify("Removing Visibility", 2)
+         me.piles['R&D/Stack'].removeViewer(me)
+      else:
+         announceString = announceText + " force the runner to access the top card from their R&D"
+         remoteCall(fetchRunnerPL(),"RDaccessX",[table,0,0,1])
    return announceString
    
 def CustomScript(card, action = 'PLAY', origin_card = None, original_action = None): # Scripts that are complex and fairly unique to specific cards, not worth making a whole generic function for them.

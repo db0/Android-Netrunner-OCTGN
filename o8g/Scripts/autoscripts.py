@@ -211,6 +211,8 @@ def executePlayScripts(card, action):
                if RunX(passedScript, announceText, card, targetC, notification = 'Quick', n = X) == 'ABORT': return
             elif regexHooks['TraceX'].search(passedScript): 
                if TraceX(passedScript, announceText, card, targetC, notification = 'Quick', n = X) == 'ABORT': return
+            elif regexHooks['PsiX'].search(passedScript): 
+               if PsiX(passedScript, announceText, card, targetC, notification = 'Quick', n = X) == 'ABORT': return
             elif regexHooks['ReshuffleX'].search(passedScript): 
                reshuffleTuple = ReshuffleX(passedScript, announceText, card, targetC, notification = 'Quick', n = X)
                if reshuffleTuple == 'ABORT': return
@@ -1686,6 +1688,8 @@ def ModifyStatus(Autoscript, announceText, card, targetCards = None, notificatio
             preReduc = 0
             payCost = 'free'         
          intPlay(targetCard, payCost, True, preReduc)
+         extraTokens = re.search(r'-with([0-9][A-Z][A-Za-z&_ ]+)', Autoscript)
+         if extraTokens: TokensX('Put{}'.format(extraTokens.group(1)), '',targetCard) # If we have a -with in our autoscript, this is meant to put some tokens on the installed card.
       elif action.group(1) == 'Score': # Score takes a card and claims it as an agenda
          targetPL = ofwhom(Autoscript, targetCard.owner)
          grabCardControl(targetCard)
@@ -1698,6 +1702,7 @@ def ModifyStatus(Autoscript, announceText, card, targetCards = None, notificatio
             targetCard.markers[mdict['Scored']] += 1
             targetPL.counters['Agenda Points'].value += num(fetchProperty(targetCard,'Stat'))
          card.highlight = None
+         card.isFaceUp = True
          debugNotify("Current card group before scoring = {}".format(targetCard.group.name))
          grabCardControl(targetCard,targetPL)
          # We do not autoscript other players (see http://boardgamegeek.com/thread/914076/personal-evolution-and-notoriety)
@@ -1723,7 +1728,7 @@ def InflictX(Autoscript, announceText, card, targetCards = None, notification = 
    multiplier = per(Autoscript, card, n, targetCards)
    enhancer = findEnhancements(Autoscript) #See if any of our cards increases damage we deal
    debugNotify("card.owner = {}".format(card.owner),3)
-   targetPL = ofwhom(Autoscript, card.owner) #Find out who the target is
+   targetPL = fetchRunnerPL() #Damage always goes to the runner
    if enhancer > 0: enhanceTXT = ' (Enhanced: +{})'.format(enhancer) #Also notify that this is the case
    else: enhanceTXT = ''
    if multiplier == 0 or num(action.group(2)) == 0: DMG = 0 # if we don't do any damage, we don't enhance it

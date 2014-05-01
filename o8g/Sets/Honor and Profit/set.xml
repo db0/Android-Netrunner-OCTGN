@@ -255,7 +255,7 @@
 		<property name="Stat" value="5" />	
 		<property name="Rules" value="[Subroutine] The Runner cannot break any subroutines on the next piece of ice he or she encounters during this run.&#xD;&#xA;[Subroutine] The Runner cannot jack out until after encountering the next piece of ice during this run." />
 		<property name="Flavor" value="Trapped in her own reality, a paralyzed runner cannot even jack out." />
-		<property name="Instructions" value="" />
+		<property name="Instructions" value="[Subroutine] The Runner cannot break any subroutines on the next piece of ice he or she encounters during this run.||[Subroutine] The Runner cannot jack out until after encountering the next piece of ice during this run." />
 		<property name="Faction" value="Jinteki" />
 		<property name="Influence" value="2" />
 		<property name="Side" value="corp" />
@@ -303,7 +303,7 @@
 		<property name="Stat" value="5" />	
 		<property name="Rules" value="[Subroutine] Look at the top 3 cards of R&amp;D and arrange them in any order.&#xD;&#xA;[Subroutine] The Runner accesses the top card of R&amp;D unless the Corp pays 1[Credits]." />
 		<property name="Flavor" value="" />
-		<property name="Instructions" value="" />
+		<property name="Instructions" value="[Subroutine] Look at the top 3 cards of R&amp;D and arrange them in any order.||[Subroutine] Pay 1 Credit||[Subroutine] Force the runner to access top card from R&amp;D" />
 		<property name="Faction" value="Jinteki" />
 		<property name="Influence" value="4" />
 		<property name="Side" value="corp" />
