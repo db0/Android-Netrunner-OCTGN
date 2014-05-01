@@ -1927,7 +1927,9 @@ def autoscriptCostUndo(card, Autoscript): # Function for undoing the cost of an 
 def findTarget(Autoscript, fromHand = False, card = None, dryRun = False): # Function for finding the target of an autoscript
    debugNotify(">>> findTarget(){}".format(extraASDebug(Autoscript))) #Debug
    try:
-      if fromHand == True or re.search(r'-fromHand',Autoscript): group = me.hand
+      if fromHand == True or re.search(r'-fromHand',Autoscript): 
+         if re.search(r'-targetOpponents',Autoscript): group = findOpponent().hand
+         else: group = me.hand
       else: group = table
       foundTargets = []
       if re.search(r'Targeted', Autoscript):
