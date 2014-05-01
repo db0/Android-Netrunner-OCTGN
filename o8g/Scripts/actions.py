@@ -1355,10 +1355,18 @@ def RDaccessX(group = table, x = 0, y = 0,count = None): # A function which look
    if ds == 'corp':
       whisper("This action is only for the use of the runner. Use the 'Look at top X cards' function on your R&D's context manu to access your own deck")
       return
-   barNotifyAll('#000000',"{} is initiating R&D Access".format(me))
-   if not count: count = askInteger("How many files are you able to access from the corporation's R&D?",1)
-   if count == None: return
-   playAccessSound('RD')
+   pauseRecovery = eval(getGlobalVariable('Paused Runner'))
+   if pauseRecovery and pauseRecovery[0] == 'R&D':
+      #confirm('{}'.format(pauseRecovery))
+      barNotifyAll('#000000',"{} is resuming R&D Access".format(me))   
+      skipIter = pauseRecovery[1] # This is the iter at which we'll resume from
+      count = pauseRecovery[2] # The count of cards is what the previous access was, minus any removed cards (e.g.trashed ones)
+   else:
+      barNotifyAll('#000000',"{} is initiating R&D Access".format(me))
+      if not count: count = askInteger("How many files are you able to access from the corporation's R&D?",1)
+      if count == None: return
+      skipIter = -1 # We only using this variable if we're resuming from a paused R&D access.
+      playAccessSound('RD')
    targetPL = ofwhom('-ofOpponent')
    grabPileControl(targetPL.piles['R&D/Stack'])
    debugNotify("Found opponent. Storing the top {} as a list".format(count), 3) #Debug
@@ -1370,6 +1378,7 @@ def RDaccessX(group = table, x = 0, y = 0,count = None): # A function which look
       for card in RDtop: notify(" Card: {}".format(card))
    notify("{} is accessing the top {} cards of {}'s R&D".format(me,count,targetPL))
    for iter in range(len(RDtop)):
+      if iter <= skipIter: continue
       debugNotify("Moving card {}".format(iter), 3) #Debug
       notify(" -- {} is now accessing the {} card".format(me,numOrder(iter)))
       origController[RDtop[iter]._id] = targetPL # We store the card's original controller to know against whom to check for scripts (e.g. when accessing a rezzed encryption protocol)
@@ -1391,6 +1400,7 @@ def RDaccessX(group = table, x = 0, y = 0,count = None): # A function which look
                RDtop[iter].moveTo(targetPL.piles['R&D/Stack'],iter - removedCards)
                passPileControl(targetPL.piles['R&D/Stack'],targetPL)
                gatheredCardList = False  # We set this variable to False, so that reduceCost() calls from other functions can start scanning the table again.
+               setGlobalVariable('Paused Runner',str(['R&D',iter - removedCards,count - removedCards]))
                return
       debugNotify(" Storing...", 4)
       cType = RDtop[iter].Type
@@ -1460,6 +1470,7 @@ def RDaccessX(group = table, x = 0, y = 0,count = None): # A function which look
    notify("{} has finished accessing {}'s R&D".format(me,targetPL))
    passPileControl(targetPL.piles['R&D/Stack'],targetPL)
    gatheredCardList = False  # We set this variable to False, so that reduceCost() calls from other functions can start scanning the table again.
+   setGlobalVariable('Paused Runner','False')
    debugNotify("<<< RDaccessX()", 3)
    
 def ARCscore(group=table, x=0,y=0):
@@ -1549,6 +1560,7 @@ def HQaccess(group=table, x=0,y=0, silent = False):
                revealedCard.moveTo(targetPL.hand) # We return it to the player's hand because the effect will decide where it goes afterwards
                if not len([c for c in table if c.highlight == RevealedColor]): clearCovers() # If we have no leftover cards to access after a
                passPileControl(targetPL.hand,targetPL)
+               setGlobalVariable('Paused Runner',str(['HQ']))
                return
       debugNotify("Not a Trap.", 2) #Debug
       if revealedCard.Type == 'ICE':
@@ -1605,6 +1617,7 @@ def HQaccess(group=table, x=0,y=0, silent = False):
    rnd(1,10) # a little pause
    for c in revealedCards: c.highlight = None # We make sure no card remains highlighted for some reason.
    passPileControl(targetPL.hand,targetPL)
+   setGlobalVariable('Paused Runner','False')
    clearCovers() # Finally we clear any remaining cover cards.
    debugNotify("<<< HQAccess()", 3)
    

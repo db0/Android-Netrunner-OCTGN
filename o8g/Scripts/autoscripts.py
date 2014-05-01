@@ -1605,7 +1605,11 @@ def runnerPsi(CorpPsiCount,psiEffectTuple,card,corpPlayer):
          if psiEffectTuple[0] != 'None': executePostEffects(card,psiEffectTuple[0], 0,'Psi')
       else:
          notify("-- {} has succeeded the Psi struggle!\n   ({}: {} VS {}: {})".format(Identity,corpPlayer,uniCredit(CorpPsiCount),me,uniCredit(secretCred)))
-         if psiEffectTuple[1] != 'None': executePostEffects(card,psiEffectTuple[1], 0,'Psi') 
+         if psiEffectTuple[1] != 'None': executePostEffects(card,psiEffectTuple[1], 0,'Psi')
+   pauseRecovery = eval(getGlobalVariable('Paused Runner'))
+   if pauseRecovery:
+      if pauseRecovery[0] == 'R&D': remoteCall(fetchRunnerPL(),"RDaccessX",[table,0,0,0])
+      elif  pauseRecovery[0] == 'HQ': remoteCall(fetchRunnerPL(),"HQaccess",[table,0,0])
    debugNotify("<<< runnerPsi()") #Debug
 
 def ModifyStatus(Autoscript, announceText, card, targetCards = None, notification = None, n = 0): # Core Command for modifying the status of a card on the table.
