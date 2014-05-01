@@ -3393,7 +3393,7 @@ The Future Perfect
 -----
 bc0f047c-01b1-427f-a439-d451eda05007
 -----
-onAccess:Psi-psiEffects<None,ScoreMyself-onOpponent>-ifNotInstalled-pauseRunner
+onAccess:Psi-psiEffects<None,ScoreMyself-onOpponent>-ifNotInstalled-pauseRunner-worksInArchives-disableAutoStealingInArchives
 +++++
 
 .....
@@ -3425,7 +3425,7 @@ Shi.Kyu
 -----
 bc0f047c-01b1-427f-a439-d451eda05011
 -----
-onAccess:UseCustomAbility-ifNotAccessedInRD
+onAccess:UseCustomAbility-ifNotAccessedInRD-worksInArchives
 +++++
 
 .....
@@ -3499,7 +3499,7 @@ bc0f047c-01b1-427f-a439-d451eda05020
 -----
 
 +++++
-
+A0B0G0T0:UseCustomAbility-isSubroutine
 .....
 NeoTokyo City Grid
 -----

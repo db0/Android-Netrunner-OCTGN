@@ -215,6 +215,13 @@ def UseCustomAbility(Autoscript, announceText, card, targetCards = None, notific
       else:
          announceString = announceText + " force the runner to access the top card from their R&D"
          remoteCall(fetchRunnerPL(),"RDaccessX",[table,0,0,1])
+   if fetchProperty(card, 'name') == "Susanoo-No-Mikoto":
+      setGlobalVariable('status','runningArchives') # We change the global variable which holds on which server the runner is currently running on
+      enemyIdent = getSpecial('Identity',fetchRunnerPL())
+      #confirm("{}.{}".format(runnerPL,getSpecial('Archives',me).name))
+      enemyIdent.arrow(getSpecial('Archives',me), False)
+      enemyIdent.arrow(getSpecial('Archives',me), True)
+      announceString = announceText + " deflect the runner to Archives. The Runner cannot  jack out until after he or she encounters a piece of ice."
    return announceString
    
 def CustomScript(card, action = 'PLAY', origin_card = None, original_action = None): # Scripts that are complex and fairly unique to specific cards, not worth making a whole generic function for them.
@@ -1170,8 +1177,11 @@ def Bullfrog(card): # Bullfrog
 def ShiKyu(card,count): # Shi.Kyu
    if confirm("Shi.Kyu is about to inflict {} Net Damage to you. Score it for -1 Agenda Points instead?".format(count)):
       ModifyStatus('ScoreMyself-onOpponent-isSilent', '', card)
+      update()
       GainX('Lose1Agenda Points-onOpponent-isSilent', '', card)
       TokensX('Put1ScorePenalty-isSilent', '', card)
       notify("{} opts to score Shi.Kyu for -1 Agenda Point".format(me))
    else:
       notify(InflictX('Inflict{}NetDamage-onOpponent'.format(count), '{} activates {} to'.format(card.owner, card), card))
+     
+      

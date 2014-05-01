@@ -1498,7 +1498,7 @@ def ARCscore(group=table, x=0,y=0):
    for card in ARC:
       debugNotify("Checking: {}.".format(card), 3) #Debug
       origController[card._id] = targetPL # We store the card's original controller to know against whom to check for scripts (e.g. when accessing a rezzed encryption protocol)
-      if card.Type == 'Agenda': 
+      if card.Type == 'Agenda' and not re.search(r'-disableAutoStealingInArchives',CardsAS.get(card.model,'')): 
          agendaFound = True
          card.moveToTable(0,0)
          card.highlight = RevealedColor

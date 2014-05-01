@@ -1707,6 +1707,7 @@ def ModifyStatus(Autoscript, announceText, card, targetCards = None, notificatio
             targetPL.counters['Agenda Points'].value += num(fetchProperty(targetCard,'Stat'))
          card.highlight = None
          card.isFaceUp = True
+         update()
          debugNotify("Current card group before scoring = {}".format(targetCard.group.name))
          grabCardControl(targetCard,targetPL)
          # We do not autoscript other players (see http://boardgamegeek.com/thread/914076/personal-evolution-and-notoriety)
