@@ -1569,6 +1569,7 @@ def PsiX(Autoscript, announceText, card, targetCards = None, notification = None
       setGlobalVariable('CurrentPsiEffect',str(psiEffectTuple))
    else: psiEffectTuple = None
    barNotifyAll('#000000',"{} is initiating a Psi struggle...".format(me))
+   playPsiStartSound()
    secretCred = askInteger("How many credits do you want to secretly spend for the Psi effect of {}?".format(fetchProperty(card, 'Name')),0)
    while secretCred and (secretCred - reduceCost(card, 'PSI', secretCred, dryRun = True) > me.Credits) or (secretCred > 2):
       if secretCred - reduceCost(card, 'PSI', secretCred, dryRun = True) > me.Credits and confirm("You do not have that many credits to spend. Bypass?"): break
@@ -1576,7 +1577,7 @@ def PsiX(Autoscript, announceText, card, targetCards = None, notification = None
       else: warn = ''
       secretCred = askInteger("{}How many credits do you want to secretly spend?".format(warn),0)
    if secretCred != None: 
-      notify("{} has spent a hidden amount of credits for {}.".format(me,card))
+      notify("{} has spent a hidden amount of credits for {}.".format(me,fetchProperty(card, 'Name')))
       remoteCall(findOpponent(),'runnerPsi',[secretCred,psiEffectTuple,card,me])
    else: return 'ABORT'
    if notification == 'Quick': announceString = "{} sets their hidden Psi value".format(announceText)

@@ -1305,11 +1305,11 @@ def TrialError(group, x=0, y=0): # Debugging
       notify("About to create starting cards.") #Debug   
       createStartingCards()
    notify("<<< TrialError()") #Debug
-   if debugVerbosity >= 0 and confirm("Spawn Test Cards?"):
-      for idx in range(len(testcards)):
-         test = table.create(testcards[idx], (70 * idx) - 650, 0, 1, True)
-         storeProperties(test)
-         if test.Type == 'ICE' or test.Type == 'Agenda' or test.Type == 'Asset': test.isFaceUp = False
+   # if debugVerbosity >= 0 and confirm("Spawn Test Cards?"):
+      # for idx in range(len(testcards)):
+         # test = table.create(testcards[idx], (70 * idx) - 650, 0, 1, True)
+         # storeProperties(test)
+         # if test.Type == 'ICE' or test.Type == 'Agenda' or test.Type == 'Asset': test.isFaceUp = False
 
 def debugChangeSides(group=table,x=0,y=0):
    global ds

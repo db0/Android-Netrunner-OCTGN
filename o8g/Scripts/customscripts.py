@@ -242,6 +242,29 @@ def UseCustomAbility(Autoscript, announceText, card, targetCards = None, notific
          else: notify("{} opts not to initiate their Plan B".format(me))
       else: notify("{} wasn't prepared enough to succeed".format(card))
       announceString = ''
+   if fetchProperty(card, 'name') == "Window":
+      me.piles['R&D/Stack'].bottom().moveTo(me.hand)
+      announceString = announceText + " draw the bottom card from their stack"
+   if fetchProperty(card, 'name') == "Bug":
+      bugMemory = getGlobalVariable('Bug Memory')
+      if bugMemory == 'None': 
+         whisper(":::ERROR::: The corp didn't draw a card recently to expose")
+         announceString = announceText
+      else: announceString = announceText + " expose {} just drawn by the corp".format(bugMemory)
+   if fetchProperty(card, 'name') == "Oracle May":
+      choice = SingleChoice("What kind of card type do you think is on top of your deck?",['Event','Program','Hardware','Resource'])
+      if choice == None: announceString = announceText
+      foreseenCard = me.piles['R&D/Stack'].top()
+      foreseenCard.moveTo(me.piles['Heap/Archives(Face-up)'])
+      update()
+      choiceType = ['Event','Program','Hardware','Resource'][choice]
+      if foreseenCard.Type == choiceType:
+         announceString = announceText + " foresee an {} accurately! {} draws {} to their hand and gains {}".format(choiceType,me,foreseenCard,uniCredit(2))
+         rnd(1,10)
+         foreseenCard.moveTo(me.hand)
+         me.Credits += 2
+      else: announceString = announceText + " attempt to foresee a {}, but was mistaken. {} is trashed".format(choiceType,foreseenCard)
+         
    return announceString
    
 def CustomScript(card, action = 'PLAY', origin_card = None, original_action = None): # Scripts that are complex and fairly unique to specific cards, not worth making a whole generic function for them.
@@ -913,8 +936,36 @@ def CustomScript(card, action = 'PLAY', origin_card = None, original_action = No
       if me.counters['Agenda Points'].value < fetchCorpPL().counters['Agenda Points'].value:
          me.Credits += 2
          notify("{}: Provides {}".format(card,uniCredit(2)))
-   debugNotify("<<< CustomScript()", 3) #Debug
-   
+   if fetchProperty(card, 'name') == "Push Your Luck" and action == 'PLAY':
+      count = askInteger("How many credits do you want to spend?",me.Credits)
+      while count > me.Credits: count = askInteger(":::Error::: You cannot spend more credits than you have\n\nHow many credits do you want to spend?",me.Credits)
+      remoteCall(findOpponent(),"PYL",[count])
+   if fetchProperty(card, 'name') == "Security Testing":
+      if action == 'Start':
+         choice = SingleChoice("Which server would you like to security test today?",['HQ','R&D','Archives','Remote'])
+         if choice == 3 or choice == None:
+            card.markers[mdict['SecurityTesting']] += 1
+            whisper(":::INFO::: Please manually move your Security Testing marker to the targeted remote server.\nOnce you successful run that server, target it and double click on {} to get your credits manually.".format(card))
+         else:
+            targetServer = getSpecial({0:'HQ',1:'R&D',2:'Archives'}.get(choice),fetchCorpPL())
+            targetServer.markers[mdict['SecurityTesting']] += 1
+         notify("{} is going to be {} {} this turn".format(me,card,{0:'HQ',1:'R&D',2:'the Archives',3:'a remote server'}.get(choice)))
+      else: 
+         if getGlobalVariable('feintTarget') != 'None': currentRunTarget = getGlobalVariable('feintTarget')
+         else: 
+            currentRunTargetRegex = re.search(r'running([A-Za-z&]+)', getGlobalVariable('status')) # We check what the target of the current run was.
+            currentRunTarget = currentRunTargetRegex.group(1)
+         if currentRunTarget != 'Remote':
+            targetServer = getSpecial(currentRunTarget,fetchCorpPL())
+            if targetServer.markers[mdict['SecurityTesting']]: 
+               gain = targetServer.markers[mdict['SecurityTesting']] * 2
+               for iter in range(targetServer.markers[mdict['SecurityTesting']]): # We also tap a sec. testing for each counter.
+                  for c in table:
+                     if c.name == "Security Testing" and c.orientation == Rot0: c.orientation = Rot90
+               targetServer.markers[mdict['SecurityTesting']] = 0
+               me.Credits += gain
+               notify("{}: Successful Penetration nets {} {}".format(card,me,uniCredit(gain)))
+            
 def markerEffects(Time = 'Start'):
    mute()
    debugNotify(">>> markerEffects() at time: {}".format(Time)) #Debug
@@ -1209,4 +1260,14 @@ def ShiKyu(card,count): # Shi.Kyu
    else:
       remoteCall(fetchCorpPL(),'InflictX',['Inflict{}NetDamage-onOpponent'.format(count), '{} activates {} to'.format(card.owner, card), card, None, 'Automatic', count]) # We always have the corp itself do the damage
      
-      
+def PYL(count): # Push Your Luck
+   mute()
+   choice = SingleChoice("Do you think the runner spent an even or an odd number of credits pushing their luck?\n(They had {} to spend)".format(fetchRunnerPL().Credits),['Even','Odd'])
+   if count % 2 == choice:
+      notify("Failure! The corp correctly guessed the runner has spent an {} number of credits. {} lost {}".format({0:'Even',1:'Odd'}.get(count % 2),fetchRunnerPL(),uniCredit(count)))
+      fetchRunnerPL().Credits -= count
+      playSpecialSound('Special-Push_Your_Luck-Fail')
+   else:
+      notify("Success! The corp incorrectly thought the runner had spent an {} number of credits. {} gains {}".format({0:'Even',1:'Odd'}.get(count % 2),fetchRunnerPL(),uniCredit(count)))
+      fetchRunnerPL().Credits += count
+      playSpecialSound('Special-Push_Your_Luck-Success')

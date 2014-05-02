@@ -3405,7 +3405,7 @@ onRez:Lose2Hand Size-onOpponent||onTrash:Gain2Hand Size-onOpponent-ifActive-ifUn
 +++++
 
 .....
-Psychiatric Clinic
+Mental Health Clinic
 -----
 bc0f047c-01b1-427f-a439-d451eda05009
 -----
@@ -3483,7 +3483,7 @@ bc0f047c-01b1-427f-a439-d451eda05018
 -----
 
 +++++
-A0B0G0T0:Inflict1NetDamage-onOpponent-isSubroutine
+A0B0G0T0:Inflict1NetDamage-onOpponent-isSubroutine||A0B0G0T0:Lose1Credits-onOpponent-isSubroutine
 .....
 Shiro
 -----
@@ -3621,7 +3621,7 @@ onPlay:RunHQ
 +++++
 
 .....
-Planned Attack
+Planned Assault
 -----
 bc0f047c-01b1-427f-a439-d451eda05036
 -----
@@ -3633,15 +3633,15 @@ Logos
 -----
 bc0f047c-01b1-427f-a439-d451eda05037
 -----
-
+whileInstalled:Gain1Hand Size$$Gain1Base Link
 +++++
-
+A0B0G0T0:Retrieve1Card$$ShuffleStack
 .....
 Public Terminal
 -----
 bc0f047c-01b1-427f-a439-d451eda05038
 -----
-
+onInstall:Put1Credits-isSilent||atTurnPreStart:Refill1Credits-duringMyTurn||whileInstalled:Reduce#CostPlay-affectsRun_and_Event-forMe
 +++++
 
 .....
@@ -3651,7 +3651,7 @@ bc0f047c-01b1-427f-a439-d451eda05039
 -----
 
 +++++
-
+A2B0G0T0:TrashTarget-Targeted-atBioroid_and_nonICE_or_Clone_or_Executive_or_Sysop
 .....
 Window
 -----
@@ -3659,7 +3659,7 @@ bc0f047c-01b1-427f-a439-d451eda05040
 -----
 
 +++++
-
+A1B0G0T0:UseCustomAbility
 .....
 Alias
 -----
@@ -3667,7 +3667,7 @@ bc0f047c-01b1-427f-a439-d451eda05041
 -----
 
 +++++
-
+A0B1G0T0:SimplyAnnounce{break sentry subroutine}||A0B2G0T0:Put3PlusOne
 .....
 Breach
 -----
@@ -3675,7 +3675,7 @@ bc0f047c-01b1-427f-a439-d451eda05042
 -----
 
 +++++
-
+A0B2G0T0:SimplyAnnounce{break up to 3 barrier subroutine}||A0B2G0T0:Put4PlusOne
 .....
 Bug
 -----
@@ -3683,7 +3683,7 @@ bc0f047c-01b1-427f-a439-d451eda05043
 -----
 
 +++++
-
+A0B2G0T0:UseCustomAbility
 .....
 Gingerbread
 -----
@@ -3691,7 +3691,7 @@ bc0f047c-01b1-427f-a439-d451eda05044
 -----
 
 +++++
-
+A0B1G0T0:SimplyAnnounce{break tracer subroutine}||A0B2G0T0:Put3PlusOne
 .....
 Grappling Hook
 -----
@@ -3699,7 +3699,7 @@ bc0f047c-01b1-427f-a439-d451eda05045
 -----
 
 +++++
-
+A0B0G0T1:SimplyAnnounce{break all but 1 subroutines on a piece of ice.}
 .....
 Passport
 -----
@@ -3707,29 +3707,29 @@ bc0f047c-01b1-427f-a439-d451eda05046
 -----
 
 +++++
-
+A0B1G0T0:SimplyAnnounce{break code gate subroutine}||A0B2G0T0:Put2PlusOne
 .....
-Double or Nothing
+Push Your Luck
 -----
 bc0f047c-01b1-427f-a439-d451eda05047
 -----
-
+onPlay:CustomScript
 +++++
 
 .....
-Security Check
+Security Testing
 -----
 bc0f047c-01b1-427f-a439-d451eda05048
 -----
-
+atTurnStart:CustomScript||atSuccessfulRun:CustomScript||atTurnEnd:Remove999SecurityTesting-AutoTargeted_atServer_or_Security Testing
 +++++
-
+A0B0G0T0:Remove1SecurityTesting-Targeted-isCost$$Gain2Credits-onlyOnce
 .....
 Theophilius Bagbiter
 -----
 bc0f047c-01b1-427f-a439-d451eda05049
 -----
-
+onInstall:Lose999Credits||atTurnPreEnd:SetTo1Hand Size-perMyCounter{Credits}-duringMyTurn
 +++++
 
 .....
@@ -3737,15 +3737,15 @@ Tri-maf Contact
 -----
 bc0f047c-01b1-427f-a439-d451eda05050
 -----
-
+onTrash:Inflict3MeatDamage
 +++++
-
+A1B0G0T0:Gain2Credits-onlyOnce
 .....
-Mass Installation
+Mass Install
 -----
 bc0f047c-01b1-427f-a439-d451eda05051
 -----
-
+onPlay:InstallMulti-Targeted-atProgram-fromHand-payCost
 +++++
 
 .....
@@ -3753,7 +3753,7 @@ Q-Coherence Chip
 -----
 bc0f047c-01b1-427f-a439-d451eda05052
 -----
-
+whileInstalled:Gain1MU||whileInPlay:TrashMyself-foreachCardTrashed-typeProgram
 +++++
 
 .....
@@ -3761,9 +3761,9 @@ Overmind
 -----
 bc0f047c-01b1-427f-a439-d451eda05053
 -----
-
+onInstall:Put1Power-perMyCounter{MU}
 +++++
-
+A0B0G0T0:Remove1Power-isCost$$SimplyAnnounce{break ICE subroutine}||A0B1G0T0:Put1PlusOne
 .....
 Oracle May
 -----
@@ -3771,13 +3771,13 @@ bc0f047c-01b1-427f-a439-d451eda05054
 -----
 
 +++++
-
+A1B0G0T0:UseCustomAbility-onlyOnce
 .....
 Donut Taganes
 -----
 bc0f047c-01b1-427f-a439-d451eda05055
 -----
-
+whileInstalled:Increase1CostPlay-affectsAll
 +++++
 
 .....

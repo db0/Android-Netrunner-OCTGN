@@ -1,10 +1,13 @@
 =====Message of the Day======
 
-The Signups for the 3rd BGG Tournament are now open!
+Honor and Profit is now available and fully automated as always!
 
-Go ahead and select your region.
+Sorry for the long delay, but this was some crazy amount of jinteki weirdness I had to figure out. 
+I nevertheless, manage to automate almost everything.
 
-Open a browser window to the tournament signups?
+If you enjoy my work, please consider become my patron by donating a few $ a month.
+
+Would you like to open a browser window to my Patreon campaign?
 =============================
 &&
-http://www.boardgamegeek.com/article/15364975
+http://www.patreon.com/db0

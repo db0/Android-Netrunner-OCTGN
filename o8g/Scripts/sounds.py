@@ -37,6 +37,7 @@ def playEvOpSound(card):
    if getSetting('Sounds', True) == 'False': return
    if fetchProperty(card, 'Type') == 'Event' or fetchProperty(card, 'Type') == 'Operation':
       if card.name == 'Stimhack': playSound('Play-Stimhack')
+      elif card.name == 'Push Your Luck': playSound('Play-Push_Your_Luck')
       elif re.search(r'Transaction',getKeywords(card)): playSound('Play-Transaction')
       elif re.search(r'Job',getKeywords(card)): playSound('Play-Job')
 
@@ -104,6 +105,11 @@ def playButtonSound(buttonType):
    elif buttonType == 'NoRez': playSound('BTN-No_Rez')
    elif buttonType == 'Wait': playSound('BTN-Wait')  
 
+def playPsiStartSound():
+   debugNotify(">>> playTraceStartSound()") #Debug
+   if getSetting('Sounds', True) == 'False': return
+   playSound('Psi-Start')
+      
 def playTraceStartSound():
    debugNotify(">>> playTraceStartSound()") #Debug
    if getSetting('Sounds', True) == 'False': return
@@ -195,3 +201,8 @@ def playGameEndSound(type = 'AgendaVictory'):
    debugNotify(">>> playGameEndSound()") #Debug
    if getSetting('Sounds', True) == 'False': return
    if type == 'Flatlined' or type == 'FlatlineVictory': playSound('Runner-Flatline') 
+   
+def playSpecialSound(soundName = 'Special-Push_Your_Luck-Fail'):
+   debugNotify(">>> playSpecialSound()") #Debug
+   if getSetting('Sounds', True) == 'False': return
+   playSound(soundName) 

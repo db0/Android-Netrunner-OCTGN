@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <set xmlns:noNamespaceSchemaLocation="CardSet.xsd" 
-     name="Honor and Profit" 
+     name="Honor &amp; Profit" 
      id="acd4a6e4-c83e-43ea-b367-114d2fc9bf49" 
      gameId="0f38e453-26df-4c04-9d67-6d43de939c77" 
      gameVersion="3.0.0.0" 
@@ -134,7 +134,7 @@
 		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
 	</card>
-	<card id="bc0f047c-01b1-427f-a439-d451eda05009" name="Psychiatric Clinic">
+	<card id="bc0f047c-01b1-427f-a439-d451eda05009" name="Mental Health Clinic">
 		<property name="Subtitle" value="" />
 		<property name="Type" value="Asset" />
 		<property name="Keywords" value="Infrastructure" />
@@ -287,7 +287,7 @@
 		<property name="Stat" value="0" />	
 		<property name="Rules" value="[Subroutine] Do 1 net damage unless the Runner pays 1[Credits].&#xD;&#xA;[Subroutine] Do 1 net damage unless the Runner pays 1[Credits]." />
 		<property name="Flavor" value="" />
-		<property name="Instructions" value="" />
+		<property name="Instructions" value="[Subroutine] Do 1 net damage.||Runner pays 1 [Credit]." />
 		<property name="Faction" value="Jinteki" />
 		<property name="Influence" value="1" />
 		<property name="Side" value="corp" />
@@ -566,7 +566,7 @@
 		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
 	</card>
-	<card id="bc0f047c-01b1-427f-a439-d451eda05036" name="Planned Attack">
+	<card id="bc0f047c-01b1-427f-a439-d451eda05036" name="Planned Assault">
 		<property name="Subtitle" value="" />
 		<property name="Type" value="Event" />
 		<property name="Keywords" value="Double" />
@@ -655,7 +655,7 @@
 		<property name="Stat" value="1" />	
 		<property name="Rules" value="1[Credits]: Break sentry subroutine.&#xD;&#xA;2[Credits]: +3 strength.&#xD;&#xA;Alias cannot be used on ice protecting a remote server." />
 		<property name="Flavor" value="Appearances are easy to change in cyberspace, but a high-quality render is not easy to mimic." />
-		<property name="Instructions" value="" />
+		<property name="Instructions" value="1 [Credits]: Break sentry subroutine.||2 [Credits]: +3 strength." />
 		<property name="Faction" value="Criminal" />
 		<property name="Influence" value="2" />
 		<property name="Side" value="runner" />
@@ -671,7 +671,7 @@
 		<property name="Stat" value="2" />	
 		<property name="Rules" value="2[Credits]: Break up to 3 barrier subroutines.&#xD;&#xA;2[Credits]: +4 strength.&#xD;&#xA;Breach cannot be used on ice protecting a remote server." />
 		<property name="Flavor" value="" />
-		<property name="Instructions" value="" />
+		<property name="Instructions" value="2[Credits]: Break up to 3 barrier subroutines.||2[Credits]: +4 strength." />
 		<property name="Faction" value="Criminal" />
 		<property name="Influence" value="2" />
 		<property name="Side" value="runner" />
@@ -703,7 +703,7 @@
 		<property name="Stat" value="2" />	
 		<property name="Rules" value="1[Credits]: Break a tracer subroutine.&#xD;&#xA;2[Credits]: +3 strength." />
 		<property name="Flavor" value="" />
-		<property name="Instructions" value="" />
+		<property name="Instructions" value="1[ Credits]: Break a tracer subroutine.||2[Credits]: +3 strength." />
 		<property name="Faction" value="Criminal" />
 		<property name="Influence" value="2" />
 		<property name="Side" value="runner" />
@@ -735,14 +735,14 @@
 		<property name="Stat" value="2" />	
 		<property name="Rules" value="1[Credits]: Break code gate subroutine.&#xD;&#xA;2[Credits]: +2 strength.&#xD;&#xA;Passport cannot be used on ice protecting a remote server." />
 		<property name="Flavor" value="Nothing is secure when you have the right documentation." />
-		<property name="Instructions" value="" />
+		<property name="Instructions" value="1 [Credits]: Break code gate subroutine.||2[Credits]: +2 strength." />
 		<property name="Faction" value="Criminal" />
 		<property name="Influence" value="2" />
 		<property name="Side" value="runner" />
 		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
 	</card>
-	<card id="bc0f047c-01b1-427f-a439-d451eda05047" name="Double or Nothing">
+	<card id="bc0f047c-01b1-427f-a439-d451eda05047" name="Push Your Luck">
 		<property name="Subtitle" value="" />
 		<property name="Type" value="Event" />
 		<property name="Keywords" value="" />
@@ -758,7 +758,7 @@
 		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
 	</card>
-	<card id="bc0f047c-01b1-427f-a439-d451eda05048" name="Security Check">
+	<card id="bc0f047c-01b1-427f-a439-d451eda05048" name="Security Testing">
 		<property name="Subtitle" value="" />
 		<property name="Type" value="Resource" />
 		<property name="Keywords" value="Job" />
@@ -806,7 +806,7 @@
 		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
 	</card>
-	<card id="bc0f047c-01b1-427f-a439-d451eda05051" name="Mass Installation">
+	<card id="bc0f047c-01b1-427f-a439-d451eda05051" name="Mass Install">
 		<property name="Subtitle" value="" />
 		<property name="Type" value="Event" />
 		<property name="Keywords" value="" />
@@ -847,7 +847,7 @@
 		<property name="Stat" value="0" />	
 		<property name="Rules" value="Place 1 power counter on Overmind when it is installed for each unused MU.&#xD;&#xA;Hosted power counter: Break ice subroutine.&#xD;&#xA;1[Credits]: +1 strength." />
 		<property name="Flavor" value="" />
-		<property name="Instructions" value="" />
+		<property name="Instructions" value="Hosted power counter: Break ice subroutine.||1 [Credits]: +1 strength." />
 		<property name="Faction" value="Neutral" />
 		<property name="Influence" value="0" />
 		<property name="Side" value="runner" />

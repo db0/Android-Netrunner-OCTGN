@@ -35,6 +35,7 @@ mdict = dict( # A dictionary which holds all the hard coded markers (in the mark
              AwakeningCenter =         ("Awakening Center", "867864c4-7d68-4279-823f-100f747aa6f8"),
              Blackmail =               ("Blackmail", "e11a0cf8-25b4-4b5e-9a27-397cc934e890"),
              Cloud =                   ("Cloud", "5f58fb37-e44d-4620-8093-3b7378fb5f57"),
+             SecurityTesting =         ("Security Testing", "a3f8daee-be33-42f8-97dc-4d8860ef7fe9"),
              BaseLink =                ("Base Link", "2fb5b6bb-31c5-409c-8aa6-2c46e971a8a5"))
 
              

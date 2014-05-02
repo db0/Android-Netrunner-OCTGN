@@ -3,8 +3,8 @@
       xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
       name="Android-Netrunner" 
       id="0f38e453-26df-4c04-9d67-6d43de939c77" 
+      version="3.9.3.0"
       octgnVersion="3.1.127.0" 
-      version="3.9.2.5"
       markersize="20"
       tags="asymmetric cyberpunk LCG bluff duel"
       description="Android: Netrunner is an asymmetrical cyberpunk Card Game for two players.
@@ -58,6 +58,7 @@
       <sound name="Rez-Upgrade" src="Sounds/Rez-Upgrade.mp3"/>
       <sound name="Run-End" src="Sounds/Run-End.mp3"/>
       <sound name="Score-Agenda" src="Sounds/Score-Agenda.mp3"/>
+      <sound name="Psi-Start" src="Sounds/Psi-Start.mp3"/>
       <sound name="Trace-Start" src="Sounds/Trace-Start.mp3"/>
       <sound name="Trash-Opposing_Program" src="Sounds/Trash-Opposing_Program.mp3"/>
       <sound name="Trash-Opposing_Resource" src="Sounds/Trash-Opposing_Resource.mp3"/>
@@ -111,6 +112,9 @@
       <sound name="Rez-Archer" src="Sounds/Rez-Archer.mp3"/>
       <sound name="Play-Stimhack" src="Sounds/Play-Stimhack.mp3"/>
       <sound name="Score-Breaking_News" src="Sounds/Score-Breaking_News.mp3"/>
+      <sound name="Play-Push_Your_Luck" src="Sounds/Play-PYL.mp3"/>
+      <sound name="Special-Push_Your_Luck-Fail" src="Sounds/Play-PYL-Fail.mp3"/>
+      <sound name="Special-Push_Your_Luck-Success" src="Sounds/Play-PYL-Success.mp3"/>
    </sounds>
    <fonts>
        <font src="Fonts/CyberpunkIsNotDead_ANR.ttf" size="11" target="context"/> <!--menu-->
@@ -140,6 +144,7 @@
      <globalvariable name="Quick Access" value="False" /> 
      <globalvariable name="AutoScript Variables" value="{}" /> 
      <globalvariable name="Paused Runner" value="False" /> 
+     <globalvariable name="Bug Memory" value="None" /> 
    </globalvariables>
    <card back="Card/corp-back.jpg" front="Card/front.jpg" width="63" height="88" cornerRadius="2">
       <property name="Subtitle" type="String" hidden="False" ignoreText="False"/>
