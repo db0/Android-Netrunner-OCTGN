@@ -1793,7 +1793,8 @@ def RetrieveX(Autoscript, announceText, card, targetCards = None, notification =
    debugNotify("Setting Destination", 2)
    if re.search(r'-toTable', Autoscript):
       destination = table
-      destiVerb = 'install'   
+      if re.search(r'-grab.*?(Event|Operation)',Autoscript): destiVerb = 'play'   
+      else: destiVerb = 'install'   
    elif re.search(r'-toDeck', Autoscript):
       destination = targetPL.piles['R&D/Stack']
       destiVerb = 'rework'

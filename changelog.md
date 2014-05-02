@@ -11,6 +11,8 @@ Changelog - Android:Netrunner LCG OCTGN Game Definition
   * The Future Perfect: This will disrupt multi-access effects since it needs to stop the script to allow the psi struggle to take place. In those cases, simple press Ctrl+A or Ctrl+Q to complete the access after it's disrupted.
   * Shiro re-arranging is not automated
   * Tori Hanzo doesn't know where he is located, so he'll trigger on every net damage. Just don't use him if you're not supposed to.
+  * Silhoutte: Manual use. Just target and double click her.
+  * Custom Delivery: It won't show you duplicate cards. So you may see 3 or less option to select if there were multiples on the top.
 
 ### 3.9.2.x
 

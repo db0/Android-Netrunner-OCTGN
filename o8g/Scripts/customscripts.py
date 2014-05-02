@@ -909,6 +909,10 @@ def CustomScript(card, action = 'PLAY', origin_card = None, original_action = No
             count = askInteger("There's {} more copies of {} in your Archives. Retrieve how many?\n\n(We'll retrieve from Open Archives first)".format(len(foundMore),retrieveTuple[1][0].name),len(foundMore))
             for iter in range(count): foundMore.pop(0).moveTo(me.hand)
       notify("{} retrieved {} copies of {} from their Archives".format(me,len(retrieveTuple[1]) + count,retrieveTuple[1][0].name))
+   elif fetchProperty(card, 'name') == 'Iain Stirling' and action == 'Start':
+      if me.counters['Agenda Points'].value < fetchCorpPL().counters['Agenda Points'].value:
+         me.Credits += 2
+         notify("{}: Provides {}".format(card,uniCredit(2)))
    debugNotify("<<< CustomScript()", 3) #Debug
    
 def markerEffects(Time = 'Start'):

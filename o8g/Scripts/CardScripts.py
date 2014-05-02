@@ -532,7 +532,7 @@ bc0f047c-01b1-427f-a439-d451eda01023
 -----
 
 +++++
-A1B1G0T0:ExposeTarget-Targeted	
+A1B1G0T0:ExposeTarget-Targeted-isUnrezzed	
 .....
 Magnum Opus
 -----
@@ -3509,7 +3509,7 @@ bc0f047c-01b1-427f-a439-d451eda05021
 +++++
 A0B0G0T0:Gain1Credits
 .....
-Tori Hanzo
+Tori Hanzo #Hardcoded#
 -----
 bc0f047c-01b1-427f-a439-d451eda05022
 -----
@@ -3523,7 +3523,7 @@ bc0f047c-01b1-427f-a439-d451eda05023
 -----
 onAccess:UseCustomAbility
 +++++
-
+A0B0G0T0:UseCustomAbility
 .....
 Guard
 -----
@@ -3531,7 +3531,7 @@ bc0f047c-01b1-427f-a439-d451eda05024
 -----
 
 +++++
-
+A0B0G0T0:RunEnd-isSubroutine
 .....
 Rainbow
 -----
@@ -3539,13 +3539,13 @@ bc0f047c-01b1-427f-a439-d451eda05025
 -----
 
 +++++
-
+A0B0G0T0:RunEnd-isSubroutine
 .....
 Diversified Portfolio
 -----
 bc0f047c-01b1-427f-a439-d451eda05026
 -----
-
+onPlay:RequestInt-Msg{How many remote servers with a card installed in them do you currently have?}$$Gain1Credits-perX
 +++++
 
 .....
@@ -3553,7 +3553,7 @@ Fast Track
 -----
 bc0f047c-01b1-427f-a439-d451eda05027
 -----
-
+onPlay:Retrieve1Card-grabAgenda$$ShuffleStack
 +++++
 
 .....
@@ -3561,7 +3561,7 @@ Iain Stirling
 -----
 bc0f047c-01b1-427f-a439-d451eda05028
 -----
-
+atTurnStart:CustomScript-duringMyTurn
 +++++
 
 .....
@@ -3569,7 +3569,7 @@ Ken "Express" Tenma
 -----
 bc0f047c-01b1-427f-a439-d451eda05029
 -----
-
+whileInPlay:Gain1Credits-foreachCardPlay-typeRun_and_Event-byMe-onlyOnce
 +++++
 
 .....
@@ -3579,13 +3579,13 @@ bc0f047c-01b1-427f-a439-d451eda05030
 -----
 
 +++++
-
+A0B0G0T0:ExposeTarget-Targeted-isUnrezzed
 .....
 Calling in Favors
 -----
 bc0f047c-01b1-427f-a439-d451eda05031
 -----
-
+onPlay:Gain1Credits-perEveryCard-atConnection_and_Resource
 +++++
 
 .....
@@ -3593,7 +3593,7 @@ Early Bird
 -----
 bc0f047c-01b1-427f-a439-d451eda05032
 -----
-
+onPlay:RunGeneric$$Gain1Credits
 +++++
 
 .....
@@ -3601,7 +3601,7 @@ Express Delivery
 -----
 bc0f047c-01b1-427f-a439-d451eda05033
 -----
-
+onPlay:Retrieve1Cards-onTop4Cards$$ShuffleStack
 +++++
 
 .....
@@ -3609,7 +3609,7 @@ Feint
 -----
 bc0f047c-01b1-427f-a439-d451eda05034
 -----
-
+onPlay:RunHQ||atSuccessfulRun:SimplyAnnounce{stop accessing cards}-isAlternativeRunResult$$TrashMyself-ifSuccessfulRunHQ-isSilent
 +++++
 
 .....
@@ -3617,7 +3617,7 @@ Legwork
 -----
 bc0f047c-01b1-427f-a439-d451eda05035
 -----
-
+onPlay:RunHQ
 +++++
 
 .....
@@ -3625,7 +3625,7 @@ Planned Attack
 -----
 bc0f047c-01b1-427f-a439-d451eda05036
 -----
-
+onPlay:Retrieve1Card-grabRun_and_Event-toTable-payCost$$ShuffleStack
 +++++
 
 .....
