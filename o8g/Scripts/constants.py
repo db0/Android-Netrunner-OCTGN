@@ -194,6 +194,7 @@ SuperchargedSubs = ['stevehouston',       # Brendan               - http://www.p
                     'sly',                # Anthony Giovannetti   - http://www.patreon.com/StimHack
                     'Prentice78',         # Mathias Fleck         - http://www.patreon.com/user?u=120373
                     'rallenkov',          # Ralph Radtke          - http://www.patreon.com/user?u=149608
+                    'tobinator',          # Tobin Lopes          - http://www.patreon.com/user?u=149628
                     'alsciende'           # Cedric                - http://netrunnerdb.com/
                    ] # 3$ Tier
 
