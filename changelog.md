@@ -10,6 +10,7 @@ Changelog - Android:Netrunner LCG OCTGN Game Definition
   * Shi.Kyu: This thing is particularly nasty in archives, with no good way to deal with it.At  the moment the corp will have to choose their payment while the runner is still accessing archives. If there's Agendas with Jinteki:PE and shocks involved, those will have to finish before the runner has a chance to respond to Shi.Kyu. Sorry but I can't do this any better. In case of confusion, use voice chat, or do things manually.
   * The Future Perfect: This will disrupt multi-access effects since it needs to stop the script to allow the psi struggle to take place. In those cases, simple press Ctrl+A or Ctrl+Q to complete the access after it's disrupted.
   * Shiro re-arranging is not automated
+  * Tori Hanzo doesn't know where he is located, so he'll trigger on every net damage. Just don't use him if you're not supposed to.
 
 ### 3.9.2.x
 

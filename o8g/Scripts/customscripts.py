@@ -222,6 +222,26 @@ def UseCustomAbility(Autoscript, announceText, card, targetCards = None, notific
       enemyIdent.arrow(getSpecial('Archives',me), False)
       enemyIdent.arrow(getSpecial('Archives',me), True)
       announceString = announceText + " deflect the runner to Archives. The Runner cannot  jack out until after he or she encounters a piece of ice."
+   if fetchProperty(card, 'name') == "Plan B":
+      if not card.markers[mdict['Advancement']]: advCount = 0
+      else: advCount = card.markers[mdict['Advancement']] # We store the count of advancement markers in case the runner proceeds to trash the trap.
+      if advCount > 1 and len(me.hand):
+         scorableAgendas = [c for c in me.hand if c.Type == 'Agenda' and num(c.Cost) <= advCount]
+         if len(scorableAgendas): extraTXT = "You have the following agendas in your HQ you can score with Plan B:\n\n{}".format([c.name for c in scorableAgendas])
+         else: extraTXT = ''
+         if confirm("Do you want to initiate a Plan B?{}.\n\n(This dialogue also servers as a pause so that your opponent does not know if have any agendas you can score in HQ or not)".format(extraTXT)):
+            if len(scorableAgendas):
+               if len(scorableAgendas) == 1: choice = 0
+               else:
+                  choice = SingleChoice("Choose which agenda to score", makeChoiceListfromCardList(scorableAgendas,True))
+               if choice == None: notify("{} opts not to initiate their Plan B.".format(me))
+               else: 
+                  scrAgenda(scorableAgendas[choice], silent = True, forced = True)
+                  notify("{} initiates their {} and scores {} from their HQ".format(me,card,scorableAgendas[choice]))
+            else: notify("{} opts not to initiate their Plan B".format(me))
+         else: notify("{} opts not to initiate their Plan B".format(me))
+      else: notify("{} wasn't prepared enough to succeed".format(card))
+      announceString = ''
    return announceString
    
 def CustomScript(card, action = 'PLAY', origin_card = None, original_action = None): # Scripts that are complex and fairly unique to specific cards, not worth making a whole generic function for them.
