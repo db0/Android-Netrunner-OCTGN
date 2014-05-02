@@ -202,7 +202,7 @@ CustomSubs = ['dovian',                   # Daniel DeBoer         - http://www.p
    
 CardSubs = ['susuexp',                    # Simon Gunkel          - http://www.patreon.com/user?u=66210
             'reverendanthony',            # Anthony Burch         - http://www.patreon.com/user?u=66843
-            #'rediknight',                # Jeremy Espinosa       - http://www.patreon.com/user?u=68437 # Declined all payments
+            'rediknight',                # Jeremy Espinosa       - http://www.patreon.com/user?u=68437 # Declined all but last payment.
             'wimpgod',                    # Gary Bergeron         - Old time supporter
             'Kethran',                    # Marius Ødegård        - http://www.patreon.com/user?u=90737
             'db0',

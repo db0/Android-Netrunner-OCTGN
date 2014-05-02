@@ -8,7 +8,7 @@ Changelog - Android:Netrunner LCG OCTGN Game Definition
 * ##### Trickier Automations
   * Tennin Institute: Manual use. Just target the card and double click it.
   * Shi.Kyu: This thing is particularly nasty in archives, with no good way to deal with it.At  the moment the corp will have to choose their payment while the runner is still accessing archives. If there's Agendas with Jinteki:PE and shocks involved, those will have to finish before the runner has a chance to respond to Shi.Kyu. Sorry but I can't do this any better. In case of confusion, use voice chat, or do things manually.
-  * The Future Perfect: This will disrupt multi-access effects since it needs to stop the script to allow the psi struggle to take place. In those cases, simple press Ctrl+A or Ctrl+Q to complete the access after it's disrupted.
+  * The Future Perfect: This will won't provide the normal scoring window. Rather it will score itself if the runner wins the PSI struggle.
   * Tenma Line: Manual. Drag the ICE accordingly.
   * Shiro re-arranging is not automated
   * Inazuma: Doesn't rules enforce.
