@@ -32,8 +32,9 @@ def UseCustomAbility(Autoscript, announceText, card, targetCards = None, notific
       elif reduction < 0: extraText = " (increased by {})".format(uniCredit(abs(reduction)))
       else: extraText = ''
       if targetPL.Credits >= 3 - reduction: 
+         finalAmount = targetPL.Credits - 3 # We note it down to mention it later due to a bug that may occur.
          targetPL.Credits -= 3 - reduceCost(card, 'FORCE', 3, reversePlayer = True)
-         announceString = announceText + ' force {} to pay {}{}'.format(targetPL,uniCredit(3),extraText)
+         announceString = announceText + ' force {} to pay {}{}, bringing them down to {}'.format(targetPL,uniCredit(3),extraText,uniCredit(finalAmount))
       else: 
          jackOut(silent = True)
          announceString = announceText + ' end the run'
@@ -44,9 +45,10 @@ def UseCustomAbility(Autoscript, announceText, card, targetCards = None, notific
       if reduction > 0: extraText = " (reduced by {})".format(uniCredit(reduction))  
       elif reduction < 0: extraText = " (increased by {})".format(uniCredit(abs(reduction)))
       else: extraText = ''
-      if targetPL.Credits >= 2 - reduction: 
+      if targetPL.Credits >= 2 - reduction:
+         finalAmount = targetPL.Credits - 2
          targetPL.Credits -= 2 - reduceCost(card, 'FORCE', 2, reversePlayer = True)
-         announceString = announceText + ' force {} to pay {}{}'.format(targetPL,uniCredit(2),extraText)
+         announceString = announceText + ' force {} to pay {}{}, bringing them down to {}'.format(targetPL,uniCredit(2),extraText,uniCredit(finalAmount))
       else: 
          jackOut(silent = True)
          announceString = announceText + ' end the run'

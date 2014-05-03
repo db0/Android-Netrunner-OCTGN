@@ -719,7 +719,7 @@ def payCost(count = 1, cost = 'not free', counter = 'BP', silentCost = False): #
       if me.counters['Agenda Points'].value < count and not confirm("You do not seem to have enough Agenda Points to take this action. Are you sure you want to proceed? \
          \n(If you do, your Agenda Points will go to the negative. You will need to increase them manually as required.)"): return 'ABORT'
       me.counters['Agenda Points'].value -= count
-   return uniCredit(count)
+   return "{} (remaining: {})".format(uniCredit(count),uniCredit(me.Credits))
 
 def findExtraCosts(card, action = 'REZ'):
    # Some hardcoded effects that increase the cost of a card.
