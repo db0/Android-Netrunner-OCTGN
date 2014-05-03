@@ -969,8 +969,7 @@ def GainX(Autoscript, announceText, card, targetCards = None, notification = Non
          reportGame()      
       if targetPL.counters['Agenda Points'].value < 0: 
          if re.search(r'isCost', Autoscript): notify(":::Warning:::{} did not have enough {} to pay the cost of this action".format(targetPL,action.group(3)))
-         elif re.search(r'isPenalty', Autoscript): pass #If an action is marked as penalty, it means that the value can go negative and the player will have to recover that amount.
-         else: targetPL.counters['Agenda Points'].value = 0
+         #Agenda Points can go negative
    elif re.match(r'Clicks', action.group(3)): 
       if action.group(1) == 'SetTo': 
          targetPL.Clicks = 0 # If we're setting to a specific value, we wipe what it's currently.
@@ -1705,12 +1704,12 @@ def ModifyStatus(Autoscript, announceText, card, targetCards = None, notificatio
          placeCard(targetCard, 'SCORE', type = scoreType)
          #rnd(1,100)
          update()
-         if targetCard.Type == 'Agenda': 
-            targetCard.markers[mdict['Scored']] += 1
-            targetPL.counters['Agenda Points'].value += num(fetchProperty(targetCard,'Stat'))
          card.highlight = None
          card.isFaceUp = True
          update()
+         if targetCard.Type == 'Agenda': 
+            targetCard.markers[mdict['Scored']] += 1
+            targetPL.counters['Agenda Points'].value += num(fetchProperty(targetCard,'Stat'))
          debugNotify("Current card group before scoring = {}".format(targetCard.group.name))
          grabCardControl(targetCard,targetPL)
          # We do not autoscript other players (see http://boardgamegeek.com/thread/914076/personal-evolution-and-notoriety)

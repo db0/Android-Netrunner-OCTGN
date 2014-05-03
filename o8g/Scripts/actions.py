@@ -1528,6 +1528,7 @@ def HQaccess(group=table, x=0,y=0, silent = False):
       # If there's covers remaining, it means the last access was paused by there were no other cards to resume, so we just clear the covers.
       clearCovers()
       setGlobalVariable('Paused Runner','False')
+      return
    targetPL = ofwhom('-ofOpponent')
    debugNotify("Found opponent.", 3) #Debug
    grabPileControl(targetPL.hand)

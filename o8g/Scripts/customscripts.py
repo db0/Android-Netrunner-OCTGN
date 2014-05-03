@@ -183,8 +183,8 @@ def UseCustomAbility(Autoscript, announceText, card, targetCards = None, notific
       while count > me.Credits: 
          count = askInteger(":::ERROR::: You do not have {} credits to spend.\n\nHow many credits do you want to pay for Shi.Kyu?".format(count), 0)
          if not count: count = 0
-      if count: remoteCall(findOpponent(),"ShiKyu",[card,count])
-      else: notify("{} opts not to spend any credits to power Shi.Kyu".format(me))
+      notify("{} opts spend {} credits to power Shi.Kyu".format(me,count))
+      remoteCall(findOpponent(),"ShiKyu",[card,count])
       announceString = ''
    if fetchProperty(card, 'name') == "Cerebral Cast":
       choice = SingleChoice("Do you want to take a tag or 1 brain damage?",["Take a Tag","Suffer 1 Brain Damage"])
@@ -1253,9 +1253,9 @@ def Bullfrog(card): # Bullfrog
 def ShiKyu(card,count): # Shi.Kyu
    mute()
    if confirm("Shi.Kyu is about to inflict {} Net Damage to you. Score it for -1 Agenda Points instead?".format(count)):
+      GainX('Lose1Agenda Points-onOpponent-isSilent', '', card)
       ModifyStatus('ScoreMyself-onOpponent-isSilent', '', card)
       update()
-      GainX('Lose1Agenda Points-onOpponent-isSilent', '', card)
       TokensX('Put1ScorePenalty-isSilent', '', card)
       notify("{} opts to score Shi.Kyu for -1 Agenda Point".format(me))
    else:
