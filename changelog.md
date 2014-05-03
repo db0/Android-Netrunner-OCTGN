@@ -1,6 +1,21 @@
 Changelog - Android:Netrunner LCG OCTGN Game Definition
 ===============================================
 
+### 3.10.1.x
+
+* Same old thing will now use extra click for double events
+* Started providing more running tallies for credits in the log.
+* Start of turn will also mention how many cards the player is holding in their hand
+* End of turn will also mention how many cards the player is holding in their hand and how many cards are left in their deck.
+* Oracle may should now properly reveal the card
+* Shi.Kyu can now take an agenda tally to negative
+* Players can choose to steal Shi.Kyu when the net damage is 0
+* Scored Shi.Kyu can now be sold to Data Dealers.
+* HQ Interruption due to the Future Perfect will now cause another HQ access if TFP was the last card accessed.
+* Security Testing should now block accesses to the chosen server
+* Security Testing should now pop-up a choice for the corp anymore.
+* Security Testing now cannot activate in multiples from the same server
+
 ### 3.10.0.x
 
 * New game definition for **Honor & Profit**. As always, almost every card scripted!

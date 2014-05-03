@@ -1156,7 +1156,7 @@ def TokensX(Autoscript, announceText, card, targetCards = None, notification = N
       for targetCard in targetCards: # First we do a dry-run for removing tokens.
          if targetCard.markers[token]: dryRunAmount += targetCard.markers[token]
          debugNotify("Added {} tokens to the pool ({}) from {} at pos {}".format(targetCard.markers[token],dryRunAmount,targetCard,targetCard.position))
-      if dryRunAmount < modtokens:
+      if dryRunAmount < modtokens and not (num(action.group(2)) == 999 and dryRunAmount > 0):
          debugNotify("Found {} tokens. Required {}. Aborting".format(dryRunAmount,modtokens))
          if notification != 'Automatic': delayed_whisper ("No enough tokens to remove. Aborting!") #Some end of turn effect put a special counter and then remove it so that they only run for one turn. This avoids us announcing that it doesn't have markers every turn.
          return 'ABORT'

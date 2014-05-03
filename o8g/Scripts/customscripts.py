@@ -951,7 +951,7 @@ def CustomScript(card, action = 'PLAY', origin_card = None, original_action = No
             whisper(":::INFO::: Please manually move your Security Testing marker to the targeted remote server.\nOnce you successful run that server, target it and double click on {} to get your credits manually.".format(card))
          else:
             targetServer = getSpecial({0:'HQ',1:'R&D',2:'Archives'}.get(choice),fetchCorpPL())
-            targetServer.markers[mdict['SecurityTesting']] += 1
+            if not targetServer.markers[mdict['SecurityTesting']]: targetServer.markers[mdict['SecurityTesting']] += 1 # Apparently you cannot use more than one replacement effect each run, so only one of these counters can be placed per server
          notify("{} is going to be {} {} this turn".format(me,card,{0:'HQ',1:'R&D',2:'the Archives',3:'a remote server'}.get(choice)))
       else: 
          if getGlobalVariable('feintTarget') != 'None': currentRunTarget = getGlobalVariable('feintTarget')
@@ -961,13 +961,14 @@ def CustomScript(card, action = 'PLAY', origin_card = None, original_action = No
          if currentRunTarget != 'Remote':
             targetServer = getSpecial(currentRunTarget,fetchCorpPL())
             if targetServer.markers[mdict['SecurityTesting']]: 
-               gain = targetServer.markers[mdict['SecurityTesting']] * 2
-               for iter in range(targetServer.markers[mdict['SecurityTesting']]): # We also tap a sec. testing for each counter.
-                  for c in table:
-                     if c.name == "Security Testing" and c.orientation == Rot0: c.orientation = Rot90
+               #gain = targetServer.markers[mdict['SecurityTesting']] * 2
+               for c in table:
+                  if c.name == "Security Testing" and c.orientation == Rot0: 
+                     c.orientation = Rot90
+                     break # We only set one Sec.Testing as used per run.
                targetServer.markers[mdict['SecurityTesting']] = 0
-               me.Credits += gain
-               notify("{}: Successful Penetration nets {} {}".format(card,me,uniCredit(gain)))
+               me.Credits += 2
+               notify("{}: Successful Penetration nets {} {} instead of access.".format(card,me,uniCredit(2)))
                return 'ALTERNATIVE RUN'
             
 def markerEffects(Time = 'Start'):
