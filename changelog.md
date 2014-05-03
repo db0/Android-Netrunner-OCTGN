@@ -1,6 +1,10 @@
 Changelog - Android:Netrunner LCG OCTGN Game Definition
 ===============================================
 
+### 3.10.2.x
+
+* Made Shi.Kyu actually pay for the amount :)
+
 ### 3.10.1.x
 
 * Same old thing will now use extra click for double events

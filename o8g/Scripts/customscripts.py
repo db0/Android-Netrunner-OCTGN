@@ -185,6 +185,7 @@ def UseCustomAbility(Autoscript, announceText, card, targetCards = None, notific
       while count > me.Credits: 
          count = askInteger(":::ERROR::: You do not have {} credits to spend.\n\nHow many credits do you want to pay for Shi.Kyu?".format(count), 0)
          if not count: count = 0
+      me.Credits -= count
       notify("{} opts spend {} credits to power Shi.Kyu".format(me,count))
       remoteCall(findOpponent(),"ShiKyu",[card,count])
       announceString = ''
