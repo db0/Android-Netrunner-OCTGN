@@ -762,6 +762,7 @@ def atTimedEffects(Time = 'Start'): # Function which triggers card effects at th
                customScriptResult = CustomScript(card, Time, original_action = Time)
                if customScriptResult == 'CLICK USED': autoscriptOtherPlayers('CardAction', card)   # Some cards (I.e. Collective) just have a fairly unique effect and there's no use in trying to make them work in the generic framework.
                if customScriptResult == 'ABORT': break
+               if customScriptResult == 'ALTERNATIVE RUN': AlternativeRunResultUsed = True # Custom scripts might introduce alt-run results which need to stop normal access.
             if failedRequirement: break # If one of the Autoscripts was a cost that couldn't be paid, stop everything else.
    markerEffects(Time) 
    ASVarEffects(Time) 
@@ -792,8 +793,8 @@ def atTimedEffects(Time = 'Start'): # Function which triggers card effects at th
          RDaccessX()
       if currentRunTarget == 'Archives' and confirm("Authorization for user {} processed.\
                                                    \nDecrypting Archive Store...OK.\
-                                                \n\n============================\
-                                                  \nRetrieve Archives? Y/n:"):
+                                                 \n\n============================\
+                                                   \nRetrieve Archives? Y/n:".format(me.name)):
          ARCscore()
    if TitleDone: notify(":::{:=^30}:::".format('='))   
    debugNotify("<<< atTimedEffects()", 3) # Debug

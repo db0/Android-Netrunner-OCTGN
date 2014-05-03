@@ -965,6 +965,7 @@ def CustomScript(card, action = 'PLAY', origin_card = None, original_action = No
                targetServer.markers[mdict['SecurityTesting']] = 0
                me.Credits += gain
                notify("{}: Successful Penetration nets {} {}".format(card,me,uniCredit(gain)))
+               return 'ALTERNATIVE RUN'
             
 def markerEffects(Time = 'Start'):
    mute()
