@@ -854,7 +854,7 @@ def announceSupercharge():
       notify("   \n+=+ {}\n".format(CustomMsgs.get(me.name.lower(),SuperchargedMsg))) # We either announce a player's custom message, or the generic supercharged one
       
 def announceSoT():
-   statsTXT = "They have {} and {} {} for this turn.".format(uniCredit(me.Credits),me.Clicks,uniClick())
+   statsTXT = "They have {}, {} cards and {} {} starting this turn.".format(uniCredit(me.Credits),len(me.hand),me.Clicks,uniClick())
    if ds == "corp": 
       announceTXT = "The offices of {} ({}) are now open for business.".format(identName,me)
       if corpStartMsgs.get(me.name.lower(),None): customTXT = "\n\n{}\n".format(corpStartMsgs[me.name.lower()])
@@ -872,6 +872,7 @@ def announceSoT():
    if ds == 'runner' and chkTags(): notify(":::Reminder::: {} is Tagged!".format(identName))
 
 def announceEoT():
+   statsTXT = "They end their turn with {} and {} cards in their {}.".format(uniCredit(me.Credits),len(me.hand),pileName(me.piles['R&D/Stack']))
    if ds == "corp": 
       announceTXT = "{} ({}) has reached CoB.".format(identName, me)
       if corpEndMsgs.get(me.name.lower(),None): customTXT = "\n\n{}\n".format(corpEndMsgs[me.name.lower()])
@@ -883,4 +884,5 @@ def announceEoT():
    #if ds == 'runner': barNotifyAll('#880000',"{} has ended their turn".format(me))
    #else: barNotifyAll('#0000AA',"{} has ended their turn".format(me))
    notify("=> {}{}".format(announceTXT,customTXT)) 
+   notify("=> {}".format(statsTXT))
       
