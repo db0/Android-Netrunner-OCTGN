@@ -1,7 +1,7 @@
 Changelog - Android:Netrunner LCG OCTGN Game Definition
 ===============================================
 
-### 3.9.3.x
+### 3.10.0.x
 
 * New game definition for **Honor & Profit**. As always, almost every card scripted!
 

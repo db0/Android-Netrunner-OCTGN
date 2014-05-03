@@ -257,9 +257,10 @@ def UseCustomAbility(Autoscript, announceText, card, targetCards = None, notific
       foreseenCard = me.piles['R&D/Stack'].top()
       foreseenCard.moveTo(me.piles['Heap/Archives(Face-up)'])
       update()
+      notify(":> {} reveals a {}".format(foreseenCard))
       choiceType = ['Event','Program','Hardware','Resource'][choice]
       if foreseenCard.Type == choiceType:
-         announceString = announceText + " foresee an {} accurately! {} draws {} to their hand and gains {}".format(choiceType,me,foreseenCard,uniCredit(2))
+         announceString = announceText + " foresee an {} accurately! {} draws {} to their hand and gains {}".format(choiceType,me,foreseenCard.name,uniCredit(2))
          rnd(1,10)
          foreseenCard.moveTo(me.hand)
          me.Credits += 2
