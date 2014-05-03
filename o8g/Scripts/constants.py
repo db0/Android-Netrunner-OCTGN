@@ -194,17 +194,18 @@ SuperchargedSubs = ['stevehouston',       # Brendan               - http://www.p
                     'sly',                # Anthony Giovannetti   - http://www.patreon.com/StimHack
                     'Prentice78',         # Mathias Fleck         - http://www.patreon.com/user?u=120373
                     'rallenkov',          # Ralph Radtke          - http://www.patreon.com/user?u=149608
-                    'tobinator',          # Tobin Lopes          - http://www.patreon.com/user?u=149628
+                    'tobinator',          # Tobin Lopes           - http://www.patreon.com/user?u=149628
                     'alsciende'           # Cedric                - http://netrunnerdb.com/
                    ] # 3$ Tier
 
 CustomSubs = ['dovian',                   # Daniel DeBoer         - http://www.patreon.com/user?u=66260
+              'TandooriChicken',          # TandooriChicken       - http://www.patreon.com/user?u=149887
               'demarko'                   # Dannel Jurado         - http://www.patreon.com/demarko
              ] # $5 Tier   
    
 CardSubs = ['susuexp',                    # Simon Gunkel          - http://www.patreon.com/user?u=66210
             'reverendanthony',            # Anthony Burch         - http://www.patreon.com/user?u=66843
-            'rediknight',                # Jeremy Espinosa       - http://www.patreon.com/user?u=68437 # Declined all but last payment.
+            'rediknight',                 # Jeremy Espinosa       - http://www.patreon.com/user?u=68437 # Declined all but last payment.
             'wimpgod',                    # Gary Bergeron         - Old time supporter
             'Kethran',                    # Marius Ødegård        - http://www.patreon.com/user?u=90737
             'db0',
@@ -217,7 +218,9 @@ SuperchargedMsg = "{} is Supercharging their systems.\
            
 CustomMsgs = dict( # Dictionary holding the messages requested by people on the 5$ tier and above
                  dovian          = "Dovian wants YOU to support A:NR on OCTGN! - http://www.patreon.com/db0",
-                 demarko         = "Above the door is a matte black hemisphere about a meter in diameter, set into the front wall of the building. It is the closest thing the place has to decoration. Underneath it, in letters carved into the wall's black substance, is the name of the place: THE BLACK SUN.",                 reverendanthony = "When Anthony makes a run on your HQ he stops to kiss you on the cheek real quick",
+                 demarko         = "Above the door is a matte black hemisphere about a meter in diameter, set into the front wall of the building. It is the closest thing the place has to decoration. Underneath it, in letters carved into the wall's black substance, is the name of the place: THE BLACK SUN.",
+                 reverendanthony = "When Anthony makes a run on your HQ he stops to kiss you on the cheek real quick",
+                 TandooriChicken = "How about a nice game of chess?",
                  db0             = "Please consider supporting A:NR development via Patreon - http://www.patreon.com/db0"
                   )
                   
