@@ -872,7 +872,7 @@ def announceSoT():
    if ds == 'runner' and chkTags(): notify(":::Reminder::: {} is Tagged!".format(identName))
 
 def announceEoT():
-   statsTXT = "They end their turn with {} and {} cards in their {}.".format(uniCredit(me.Credits),len(me.hand),pileName(me.piles['R&D/Stack']))
+   statsTXT = "They end their turn with {}, {} cards in their {}, and {} cards in their {}.".format(uniCredit(me.Credits),len(me.hand),pileName(me.hand),len(me.piles['R&D/Stack']),pileName(me.piles['R&D/Stack']))
    if ds == "corp": 
       announceTXT = "{} ({}) has reached CoB.".format(identName, me)
       if corpEndMsgs.get(me.name.lower(),None): customTXT = "\n\n{}\n".format(corpEndMsgs[me.name.lower()])

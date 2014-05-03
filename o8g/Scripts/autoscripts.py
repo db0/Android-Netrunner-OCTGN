@@ -385,6 +385,7 @@ def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
    prev_announceText = 'NULL'
    multiCount = 0
    if len(AutoscriptsList): playUseSound(card)
+   startingCreds = me.Credits # We store our starting credits so that we may see if we won or lost any after our action is complete, to announce.
    for iter in range(len(AutoscriptsList)):
       debugNotify("iter = {}".format(iter), 2)
       selectedAutoscripts = AutoscriptsList[iter]
@@ -522,6 +523,7 @@ def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
          announceText = announceText[:-len(' and')] # If for some reason we end with " and" (say because the last action did nothing), we remove it.
       else: # If we did something and everything finished as expected, then take the costs.
          if re.search(r"T1:", selectedAutoscripts[0]): intTrashCard(card, fetchProperty(card,'Stat'), "free", silent = True)
+      if me.Credits != startingCreds: announceText = announceText + " (New total: {})".format(uniCredit(me.Credits)) # If we spent money during this script execution, we want to point out the new player's credit total.
       if iter == len(AutoscriptsList) - 1: # If this is the last script in the list, then we always announce the script we're running (We reduce by 1 because iterators always start as '0')
          debugNotify("Entering last notification", 2)
          if prev_announceText == 'NULL': # If it's NULL it's the only  script we run in this loop, so we just announce.
@@ -1049,10 +1051,14 @@ def GainX(Autoscript, announceText, card, targetCards = None, notification = Non
    elif action.group(1) == 'Lose' and not re.search(r'isPenalty', Autoscript): total = abs(gain * multiplier) - overcharge - reduction
    else: total = abs(gain * multiplier) - reduction# Else it's just the absolute value which we announce they "gain" or "lose"
    closureTXT = ASclosureTXT(action.group(3), total)
+   if re.match(r'Credits', action.group(3)): 
+      finalCounter = ' (new total: {})'.format(uniCredit(targetPL.Credits))
+   else: 
+      finalCounter = ''
    debugNotify("Gainx() about to announce", 2)
    if notification == 'Quick': 
       if exactFail: announceString = ":::WARNING::: {}'s ability failed to work because {} didn't have exactly {} {} to lose".format(card, targetPL, action.group(2), action.group(3))
-      else: announceString = "{}{} {} {}{}".format(announceText, otherTXT, verb, closureTXT,extraText)
+      else: announceString = "{}{} {} {}{}{}".format(announceText, otherTXT, verb, closureTXT,extraText,finalCounter)
    else: 
       if exactFail: 
          announceString = announceText
