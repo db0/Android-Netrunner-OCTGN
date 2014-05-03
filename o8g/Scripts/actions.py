@@ -1524,6 +1524,10 @@ def HQaccess(group=table, x=0,y=0, silent = False):
    if ds == 'corp':
       whisper("This action is only for the use of the runner.")
       return
+   if len([cover for cover in table if cover.model == 'ac3a3d5d-7e3a-4742-b9b2-7f72596d9c1b']):
+      # If there's covers remaining, it means the last access was paused by there were no other cards to resume, so we just clear the covers.
+      clearCovers()
+      setGlobalVariable('Paused Runner','False')
    targetPL = ofwhom('-ofOpponent')
    debugNotify("Found opponent.", 3) #Debug
    grabPileControl(targetPL.hand)
