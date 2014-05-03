@@ -3593,7 +3593,7 @@ Early Bird
 -----
 bc0f047c-01b1-427f-a439-d451eda05032
 -----
-onPlay:RunGeneric$$Gain1Credits
+onPlay:RunGeneric$$Gain1Clicks
 +++++
 
 .....
@@ -3601,7 +3601,7 @@ Express Delivery
 -----
 bc0f047c-01b1-427f-a439-d451eda05033
 -----
-onPlay:Retrieve1Cards-onTop4Cards$$ShuffleStack
+onPlay:Retrieve1Cards-onTop4Cards-doNotReveal$$ShuffleStack
 +++++
 
 .....
@@ -3633,9 +3633,9 @@ Logos
 -----
 bc0f047c-01b1-427f-a439-d451eda05037
 -----
-whileInstalled:Gain1Hand Size$$Gain1Base Link
+whileInstalled:Gain1Hand Size$$Gain1MU
 +++++
-A0B0G0T0:Retrieve1Card$$ShuffleStack
+A0B0G0T0:Retrieve1Card-doNotReveal$$ShuffleStack
 .....
 Public Terminal
 -----
