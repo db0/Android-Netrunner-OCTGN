@@ -3721,7 +3721,7 @@ Security Testing
 -----
 bc0f047c-01b1-427f-a439-d451eda05048
 -----
-atTurnStart:CustomScript||atSuccessfulRun:CustomScript||atTurnEnd:Remove999SecurityTesting-AutoTargeted_atServer_or_Security Testing
+atTurnStart:CustomScript-duringMyTurn||atSuccessfulRun:CustomScript||atTurnEnd:Remove999SecurityTesting-AutoTargeted_atServer_or_Security Testing
 +++++
 A0B0G0T0:Remove1SecurityTesting-Targeted-isCost$$Gain2Credits-onlyOnce
 .....
