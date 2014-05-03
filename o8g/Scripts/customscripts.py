@@ -702,14 +702,14 @@ def CustomScript(card, action = 'PLAY', origin_card = None, original_action = No
       debugNotify("About to announce")
       notify("{} has trashed {} and {}d through their {} finding and installing {} for {}{}{}.".format(me,trashProgram,card,targetPile,newProgram,uniCredit(cardCost),reduceTXT,MUtext))
    elif fetchProperty(card, 'name') == 'Same Old Thing' and action == 'USE':
-      ClickCost = useClick(count = 2)
-      if ClickCost == 'ABORT': return  #If the player didn't have enough clicks and opted not to proceed, do nothing.
+      if useClick(count = 2) == 'ABORT': return 'ABORT' #If the player didn't have enough clicks and opted not to proceed, do nothing.
       retrieveTuple = RetrieveX('Retrieve1Card-fromHeap-grabEvent', '', card)
       debugNotify("retrieveTuple = {}".format(retrieveTuple))
       if len(retrieveTuple[1]) == 0: 
          notify("{} tried to do the same old thing but they never did a thing in their life!".format(me))
          return 'ABORT'
       sameOldThing = retrieveTuple[1][0]
+      if re.search(r'Double', getKeywords(sameOldThing)) and not chkDoublePrevention() and useClick() == 'ABORT': return 'ABORT' # If it's a double event, we need to pay any double costs.
       notify("{} does the same old {}".format(me,sameOldThing))
       intPlay(sameOldThing,scripted = True)
       intTrashCard(card, fetchProperty(sameOldThing,'Stat'), "free", silent = True)
