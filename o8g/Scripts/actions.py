@@ -1524,17 +1524,16 @@ def HQaccess(group=table, x=0,y=0, silent = False):
    if ds == 'corp':
       whisper("This action is only for the use of the runner.")
       return
-   if len([cover for cover in table if cover.model == 'ac3a3d5d-7e3a-4742-b9b2-7f72596d9c1b']):
-      # If there's covers remaining, it means the last access was paused by there were no other cards to resume, so we just clear the covers.
-      clearCovers()
-      setGlobalVariable('Paused Runner','False')
-      return
    targetPL = ofwhom('-ofOpponent')
    debugNotify("Found opponent.", 3) #Debug
    grabPileControl(targetPL.hand)
    revealedCards = [c for c in table if c.highlight == RevealedColor]
    if len(revealedCards): # Checking if we're continuing from a Paused HQ Access.
       barNotifyAll('#000000',"{} is resuming their HQ Access".format(me))      
+   elif getGlobalVariable('Paused Runner') != 'False':
+      # If the pause variable is still active, it means the last access was paused by there were no other cards to resume, so we just clear the variable.
+      setGlobalVariable('Paused Runner','False')
+      return
    else:
       if not silent and not confirm("You are about to access a random card from the corp's HQ.\
                                    \nPlease make sure your opponent is not manipulating their hand, and does not have a way to cancel this effect before continuing\

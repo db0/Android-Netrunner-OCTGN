@@ -1,9 +1,13 @@
 Changelog - Android:Netrunner LCG OCTGN Game Definition
 ===============================================
 
+### 3.10.3.x
+
+* Fixed TFP HQ-access bug
+
 ### 3.10.2.x
 
-* Made Shi.Kyu actually pay for the amount :)
+* Made Shi.Kyu actually pay for the amount
 
 ### 3.10.1.x
 
