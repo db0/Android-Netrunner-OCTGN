@@ -173,7 +173,7 @@
 		<property name="Cost" value="0" />
 		<property name="Requirement" value="" />	
 		<property name="Stat" value="0" />	
-		<property name="Rules" value="When the Runner accesses Shi.Kyū, you may pay X[Credits]. The Runner chooses to suffer X net damage or add Shi.Kyū to his score area as an agenda worth -1 agenda point. Ignore this effect if the Runner accesses Shi.Kyū for R&amp;D." />
+		<property name="Rules" value="When the Runner accesses Shi.Kyū, you may pay X[Credits]. The Runner chooses to suffer X net damage or add Shi.Kyū to his score area as an agenda worth -1 agenda point. Ignore this effect if the Runner accesses Shi.Kyū from R&amp;D." />
 		<property name="Flavor" value="" />
 		<property name="Instructions" value="" />
 		<property name="Faction" value="Jinteki" />
