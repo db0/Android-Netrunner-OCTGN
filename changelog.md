@@ -1,6 +1,11 @@
 Changelog - Android:Netrunner LCG OCTGN Game Definition
 ===============================================
 
+### 3.10.4.x
+
+* Fixed Oracle may
+* Fixed Account Siphon not trashing itself when not used
+
 ### 3.10.3.x
 
 * Fixed TFP HQ-access bug
