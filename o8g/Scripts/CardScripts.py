@@ -66,7 +66,7 @@ Account Siphon
 -----
 bc0f047c-01b1-427f-a439-d451eda01018
 -----
-onPlay:RunHQ||atSuccessfulRun:Lose5Credits-ofOpponent-isOptional-isAlternativeRunResult$$Gain2Credits-perX$$Gain2Tags$$TrashMyself-ifSuccessfulRunHQ-isSilent
+onPlay:RunHQ||atSuccessfulRun:Lose5Credits-ofOpponent-isOptional-isAlternativeRunResult$$Gain2Credits-perX$$Gain2Tags||atSuccessfulRun:TrashMyself-ifSuccessfulRunHQ-isSilent
 +++++
 	
 .....
