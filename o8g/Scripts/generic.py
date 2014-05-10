@@ -764,7 +764,7 @@ def grabPileControl(pile, player = me):
       if count >= 2 and not count % 2: notify("=> {} is still trying to take control of {}...".format(player,pileName(pile)))
       rnd(1,100)
       count += 1
-      if count >= 6: 
+      if count >= 3: 
          notify(":::ERROR::: Pile Control not passed! Will see errors.")
          break   
    debugNotify("<<< grabPileControl(){}".format(extraASDebug())) #Debug
@@ -789,7 +789,7 @@ def grabCardControl(card, player = me):
          if count >= 2 and not count % 2: notify("=> {} is still trying to take control of {}...".format(player,card))
          rnd(1,100)
          count += 1
-         if count >= 6: 
+         if count >= 3: 
             notify(":::ERROR::: Card Control not passed! Will see errors.")
             break   
    debugNotify("<<< grabCardControl(){}".format(extraASDebug())) #Debug
