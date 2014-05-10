@@ -962,6 +962,7 @@ def intdamageDiscard(count = 1):
       if len(me.hand) == 0:
          notify ("{} has flatlined.".format(me))
          reportGame('Flatlined')
+         break
       else:
          card = me.hand.random()
          if ds == 'corp': card.moveTo(me.piles['Archives(Hidden)']) # For testing.

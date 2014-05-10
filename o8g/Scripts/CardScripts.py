@@ -3385,7 +3385,7 @@ Philotic Entanglement
 -----
 bc0f047c-01b1-427f-a439-d451eda05006
 -----
-onScore:Inflict1NetDamage-onOpponent-perEveryCard-atAgenda-targetOpponents
+onScore:Inflict1NetDamage-onOpponent-perEveryCard-at-isScored-targetOpponents
 +++++
 
 .....
