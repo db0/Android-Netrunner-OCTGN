@@ -697,6 +697,7 @@ def CustomScript(card, action = 'PLAY', origin_card = None, original_action = No
       else: reduceTXT = ''
       MUtext = chkRAM(newProgram)
       placeCard(newProgram)
+      rnd(1,100)
       debugNotify("Executing newProgram triggers")
       executePlayScripts(newProgram,'INSTALL')
       autoscriptOtherPlayers('CardInstall',newProgram)
