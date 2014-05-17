@@ -697,7 +697,7 @@ def CustomScript(card, action = 'PLAY', origin_card = None, original_action = No
       else: reduceTXT = ''
       MUtext = chkRAM(newProgram)
       placeCard(newProgram)
-      rnd(1,100)
+      rnd(1,100) # A small pause because it seems MU take a bit to update after a multiple choice selection. This means that scavenging an Overmind, would give an extra MU for some reason
       debugNotify("Executing newProgram triggers")
       executePlayScripts(newProgram,'INSTALL')
       autoscriptOtherPlayers('CardInstall',newProgram)

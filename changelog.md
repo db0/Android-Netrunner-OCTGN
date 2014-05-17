@@ -3,7 +3,8 @@ Changelog - Android:Netrunner LCG OCTGN Game Definition
 
 ### 3.10.5.x
 
-Fixed manually suffering damage
+* Fixed manually suffering damage
+* Overmind-Scavenge fix
 
 ### 3.10.4.x
 
