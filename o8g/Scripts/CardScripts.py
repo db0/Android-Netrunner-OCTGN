@@ -2913,7 +2913,7 @@ Starlight Crusade Funding
 -----
 bc0f047c-01b1-427f-a439-d451eda04069
 -----
-atTurnStart:Lose1Clicks
+atTurnStart:Lose1Clicks-duringMyTurn
 +++++
 
 .....
