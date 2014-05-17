@@ -1,6 +1,10 @@
 Changelog - Android:Netrunner LCG OCTGN Game Definition
 ===============================================
 
+### 3.10.5.x
+
+Fixed manually suffering damage
+
 ### 3.10.4.x
 
 * Fixed Oracle may

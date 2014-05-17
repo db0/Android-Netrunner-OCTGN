@@ -979,7 +979,7 @@ def addBrainDmg(group, x = 0, y = 0):
    else:
       applyBrainDmg()
       notify ("{} suffers 1 Brain Damage.".format(me))
-      finalDMG = DMG - chkDmgSpecialEffects('Brain', DMG)
+      finalDMG = DMG - chkDmgSpecialEffects('Brain', DMG)[0]
       intdamageDiscard(finalDMG)
       #intdamageDiscard(me.hand)    
       playDMGSound('Brain')
@@ -1000,7 +1000,7 @@ def addMeatDmg(group, x = 0, y = 0):
       notify ("{} prevents 1 Meat Damage.".format(me))
    else:
       notify ("{} suffers 1 Meat Damage.".format(me))
-      finalDMG = DMG - chkDmgSpecialEffects('Meat', DMG)
+      finalDMG = DMG - chkDmgSpecialEffects('Meat', DMG)[0]
       intdamageDiscard(finalDMG)
       #intdamageDiscard(me.hand)
       playDMGSound('Meat')
@@ -1015,7 +1015,7 @@ def addNetDmg(group, x = 0, y = 0):
       notify ("{} prevents 1 Net Damage.".format(me))
    else:
       notify ("{} suffers 1 Net Damage.".format(me))
-      finalDMG = DMG - chkDmgSpecialEffects('Net', DMG)
+      finalDMG = DMG - chkDmgSpecialEffects('Net', DMG)[0]
       intdamageDiscard(finalDMG)
       #intdamageDiscard(me.hand)
       playDMGSound('Net')

@@ -3,7 +3,7 @@
       xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
       name="Android-Netrunner" 
       id="0f38e453-26df-4c04-9d67-6d43de939c77" 
-      version="3.10.4.2"
+      version="3.10.5.0"
       octgnVersion="3.1.127.0" 
       markersize="20"
       tags="asymmetric cyberpunk LCG bluff duel"
@@ -203,7 +203,7 @@
          <groupaction menu="Score Target Agenda" default="False" shortcut="Ctrl+G" execute="scrTargetAgenda" />
          <groupaction menu="Access a random card form corp HQ" default="False" shortcut="Ctrl+Q" execute="HQaccess" />
          <groupaction menu="Access top X cards from corp R&amp;D" default="False" shortcut="Ctrl+A" execute="RDaccessX" />
-         <groupaction menu="Score all Agendas in the Archives" default="False" shortcut="Ctrl+H" execute="ARCscore" />
+         <groupaction menu="Access all Archives" default="False" shortcut="Ctrl+H" execute="ARCscore" />
          <groupaction menu="Suffer 1 Meat Damage" default="False" execute="addMeatDmg" />
          <groupaction menu="Suffer 1 Net Damage" default="False" execute="addNetDmg" />
          <groupaction menu="Suffer 1 Brain Damage" default="False" execute="addBrainDmg" />
