@@ -1,0 +1,330 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<set xmlns:noNamespaceSchemaLocation="CardSet.xsd" 
+     name="Upstalk" 
+     id="d5fe03a8-4e4d-4bc4-8117-4c2c6e2366e3" 
+     gameId="0f38e453-26df-4c04-9d67-6d43de939c77" 
+     gameVersion="3.0.0.0" 
+     version="3.0.0.0">
+<cards>
+	<card id="bc0f047c-01b1-427f-a439-d451eda06001" name="Domestic Sleepers">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Agenda" />
+		<property name="Keywords" value="" />
+		<property name="Cost" value="3" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="1" />	
+		<property name="Rules" value="[Click][Click][Click]: Place 1 agenda counter on Domestic Sleepers. Domestic Sleepers is worth 1 agenda point while it has at least 1 agenda counter on it." />
+		<property name="Flavor" value="" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Haas-Bioroid" />
+		<property name="Influence" value="" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda06002" name="NEXT Silver">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="ICE" />
+		<property name="Keywords" value="NEXT-Barrier" />
+		<property name="Cost" value="3" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="1" />	
+		<property name="Rules" value="NEXT Silver gains &quot;[Subroutine] End the run.&quot; for each rezzed piece of NEXT ice." />
+		<property name="Flavor" value="" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Haas-Bioroid" />
+		<property name="Influence" value="2" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda06003" name="Lotus Field">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="ICE" />
+		<property name="Keywords" value="Code Gate" />
+		<property name="Cost" value="5" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="4" />	
+		<property name="Rules" value="The strength of Lotus Field cannot be lowered.&#xD;&#xA;[Subroutine] End the run." />
+		<property name="Flavor" value="" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Jinteki" />
+		<property name="Influence" value="1" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda06004" name="Mutate">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Operation" />
+		<property name="Keywords" value="" />
+		<property name="Cost" value="2" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="" />	
+		<property name="Rules" value="As an addition cost to play this operation, trash a rezzed piece of ice.&#xD;&#xA;Reveal cards from the top of R&amp;D until you reveal another piece of ice. Install and rez that ice in the same position as the ice that was just trashed, ignoring all costs. Shuffle R&amp;D." />
+		<property name="Flavor" value="" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Jinteki" />
+		<property name="Influence" value="3" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda06005" name="Near-Earth Hub">
+		<property name="Subtitle" value="Broadcast Center" />
+		<property name="Type" value="Identity" />
+		<property name="Keywords" value="Division" />
+		<property name="Cost" value="0" />
+		<property name="Requirement" value="45" />	
+		<property name="Stat" value="17" />	
+		<property name="Rules" value="The first time you create a server each turn, draw 1 card." />
+		<property name="Flavor" value="" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="NBN" />
+		<property name="Influence" value="" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda06006" name="Primary Transmission Dish">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Asset" />
+		<property name="Keywords" value="" />
+		<property name="Cost" value="2" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="3" />	
+		<property name="Rules" value="3[Recurring Credits]&#xD;&#xA;Use these credits during traces." />
+		<property name="Flavor" value="" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="NBN" />
+		<property name="Influence" value="2" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda06007" name="Midway Station Grid">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Upgrade" />
+		<property name="Keywords" value="Beanstalk-Region" />
+		<property name="Cost" value="4" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="4" />	
+		<property name="Rules" value="The Runner must pay 1[Credits] as an additional cost each time he or she uses an icebreaker to break a subroutine during a run on this server.&#xD;&#xA;Limit 1 region per server." />
+		<property name="Flavor" value="" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="NBN" />
+		<property name="Influence" value="4" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda06008" name="The Root">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Asset" />
+		<property name="Keywords" value="Beanstalk-Unique" />
+		<property name="Cost" value="6" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="4" />	
+		<property name="Rules" value="3[Recurring Credits]&#xD;&#xA;Use these credits to advance, install, and rez cards." />
+		<property name="Flavor" value="" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="The Weyland Consortium" />
+		<property name="Influence" value="3" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda06009" name="Taurus">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="ICE" />
+		<property name="Keywords" value="Sentry, Tracer" />
+		<property name="Cost" value="5" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="5" />	
+		<property name="Rules" value="[Subroutine] Trace2 - If successful, trash a piece of hardware. If your trace strength is 5 or greater, trash a piece of hardware." />
+		<property name="Flavor" value="" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="The Weyland Consortium" />
+		<property name="Influence" value="2" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda06010" name="Mother Goddess">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="ICE" />
+		<property name="Keywords" value="Mythic" />
+		<property name="Cost" value="4" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="4" />	
+		<property name="Rules" value="Mother Goddess gains the subtypes of all other rezzed ice.&#xD;&#xA;[Subroutine] End the run." />
+		<property name="Flavor" value="" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Neutral" />
+		<property name="Influence" value="0" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda06011" name="Galahad">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="ICE" />
+		<property name="Keywords" value="Barrier-Grail" />
+		<property name="Cost" value="2" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="1" />	
+		<property name="Rules" value="When the Runner encounters Galahad, you may reveal up to 2 grail ice from HQ. For the remainder of the run, Galahad gains the subroutine of the revealed ice in the order of your choice.&#xD;&#xA;[Subroutine] End the run." />
+		<property name="Flavor" value="" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Neutral" />
+		<property name="Influence" value="1" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda06012" name="Bad Times">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Operation" />
+		<property name="Keywords" value="Gray Ops" />
+		<property name="Cost" value="4" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="" />	
+		<property name="Rules" value="Play only if the Runner is tagged.&#xD;&#xA;The Runner&apos;s memory limit is reduced by 2 until the end of the turn." />
+		<property name="Flavor" value="" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Neutral" />
+		<property name="Influence" value="0" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda06013" name="Cyber Threat">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Event" />
+		<property name="Keywords" value="Priority" />
+		<property name="Cost" value="1" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="" />	
+		<property name="Rules" value="Play only as your first [Click].&#xD;&#xA;Choose a server. The Corp may rez a piece of ice protecting this server. If she does not, make a run on this server during which the Corp cannot rez ice." />
+		<property name="Flavor" value="" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Anarch" />
+		<property name="Influence" value="3" />
+		<property name="Side" value="runner" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda06014" name="Lamprey">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Program" />
+		<property name="Keywords" value="Virus" />
+		<property name="Cost" value="1" />
+		<property name="Requirement" value="1" />	
+		<property name="Stat" value="-" />	
+		<property name="Rules" value="Whenever you make a successful run on HQ, the Corp loses 1[Credits].&#xD;&#xA;Trash Lamprey if the Corp purges virus counters." />
+		<property name="Flavor" value="" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Anarch" />
+		<property name="Influence" value="2" />
+		<property name="Side" value="runner" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda06015" name="Paper Tripping">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Event" />
+		<property name="Keywords" value="Priority" />
+		<property name="Cost" value="4" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="" />	
+		<property name="Rules" value="Play only as your first [Click].&#xD;&#xA;Remove all tags." />
+		<property name="Flavor" value="" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Criminal" />
+		<property name="Influence" value="2" />
+		<property name="Side" value="runner" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda06016" name="Power Tap">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Resource" />
+		<property name="Keywords" value="" />
+		<property name="Cost" value="2" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="" />	
+		<property name="Rules" value="Gain 1[Credits] whenever a trace is initiated." />
+		<property name="Flavor" value="" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Criminal" />
+		<property name="Influence" value="1" />
+		<property name="Side" value="runner" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda06017" name="Nasir Meidan">
+		<property name="Subtitle" value="Cyber Explorer" />
+		<property name="Type" value="Identity" />
+		<property name="Keywords" value="Cyborg" />
+		<property name="Cost" value="1" />
+		<property name="Requirement" value="45" />	
+		<property name="Stat" value="15" />	
+		<property name="Rules" value="Whenever you encounter a piece of ice that was just rezzed, lose all credits in your credit pool. Gain credits equal to the rez cost of that ice." />
+		<property name="Flavor" value="" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Shaper" />
+		<property name="Influence" value="" />
+		<property name="Side" value="runner" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda06018" name="Social Engineering">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Event" />
+		<property name="Keywords" value="Priority" />
+		<property name="Cost" value="2" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="" />	
+		<property name="Rules" value="Play only as your first [Click].&#xD;&#xA;Choose an unrezzed piece of ice. If the Corp rezzes that piece of ice this turn, gain credits equal to its rez cost." />
+		<property name="Flavor" value="" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Shaper" />
+		<property name="Influence" value="2" />
+		<property name="Side" value="runner" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda06019" name="Leprechaun">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Program" />
+		<property name="Keywords" value="Daemon" />
+		<property name="Cost" value="2" />
+		<property name="Requirement" value="1" />	
+		<property name="Stat" value="-" />	
+		<property name="Rules" value="Leprechaun can host up to 2 programs. The memory cost of hosted programs do not count against your memory limit." />
+		<property name="Flavor" value="" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Shaper" />
+		<property name="Influence" value="2" />
+		<property name="Side" value="runner" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda06020" name="Eden Shard">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Resource" />
+		<property name="Keywords" value="Virtual-Source-Unique" />
+		<property name="Cost" value="7" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="" />	
+		<property name="Rules" value="Whenever you make a successful run on R&amp;D, instead of accessing cards, you may install Eden Shard from your grip, ignoring all costs.&#xD;&#xA;[Trash]: The Corp draws 2 cards.&#xD;&#xA;Limit 1 per deck." />
+		<property name="Flavor" value="" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Neutral" />
+		<property name="Influence" value="1" />
+		<property name="Side" value="runner" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+</cards>
+</set>

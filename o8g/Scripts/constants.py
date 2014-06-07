@@ -207,7 +207,8 @@ CustomSubs = ['dovian',                   # Daniel DeBoer         - http://www.p
    
 CardSubs = ['susuexp',                    # Simon Gunkel          - http://www.patreon.com/user?u=66210
             'reverendanthony',            # Anthony Burch         - http://www.patreon.com/user?u=66843
-            'rediknight',                 # Jeremy Espinosa       - http://www.patreon.com/user?u=68437 # Declined all but last payment.
+            'TheEmann',                   # Chad                  - http://www.patreon.com/user?u=90551
+            #'rediknight',                 # Jeremy Espinosa       - http://www.patreon.com/user?u=68437 # Declined last payment...again.
             'wimpgod',                    # Gary Bergeron         - Old time supporter
             'Kethran',                    # Marius Ødegård        - http://www.patreon.com/user?u=90737
             'db0',
@@ -222,6 +223,7 @@ CustomMsgs = dict( # Dictionary holding the messages requested by people on the 
                  dovian          = "Dovian wants YOU to support A:NR on OCTGN! - http://www.patreon.com/db0",
                  demarko         = "Above the door is a matte black hemisphere about a meter in diameter, set into the front wall of the building. It is the closest thing the place has to decoration. Underneath it, in letters carved into the wall's black substance, is the name of the place: THE BLACK SUN.",
                  reverendanthony = "When Anthony makes a run on your HQ he stops to kiss you on the cheek real quick",
+                 TheEmann        = "Take time to deliberate, but when the time for action comes, stop thinking and go in. --Napoleon",
                  TandooriChicken = "How about a nice game of chess?",
                  db0             = "Please consider supporting A:NR development via Patreon - http://www.patreon.com/db0"
                   )

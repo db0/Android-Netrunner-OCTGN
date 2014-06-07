@@ -405,6 +405,22 @@
 		<property name="Side" value="corp" />
 		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
+      <alternate name="Corporate Troubleshooter" type="Supercharged">
+         <property name="Subtitle" value="" />
+         <property name="Type" value="Upgrade" />
+         <property name="Keywords" value="Connection" />
+         <property name="Cost" value="0" />
+         <property name="Requirement" value="" />	
+         <property name="Stat" value="2" />	
+         <property name="Rules" value="X [Credits], [Trash]: Choose a piece of rezzed ice protecting this server. That ice has +X strength until the end of the turn." />
+         <property name="Flavor" value="&quot;I solve problems.&quot;" />
+         <property name="Instructions" value="" />
+         <property name="Faction" value="Haas-Bioroid" />
+         <property name="Influence" value="1" />
+         <property name="Side" value="corp" />
+         <property name="AutoScript" value="" />
+         <property name="AutoAction" value="" />	
+     </alternate>
 	</card>
 	<card id="bc0f047c-01b1-427f-a439-d451eda01007" name="Corroder">
 		<property name="Subtitle" value="" />
@@ -1221,7 +1237,22 @@
 		<property name="Side" value="corp" />
 		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
-	</card>
+      <alternate name="NBN" type="Supercharged">
+         <property name="Subtitle" value="Making News" />
+         <property name="Type" value="Identity" />
+         <property name="Keywords" value="Megacorp" />
+         <property name="Cost" value="0" />
+         <property name="Requirement" value="45" />	
+         <property name="Stat" value="15" />	
+         <property name="Rules" value="2 [Generate Credits]&#xD;&#xA;Use these credits during trace attempts." />
+         <property name="Flavor" value="Someone is Always Watching." />
+         <property name="Instructions" value="" />
+         <property name="Faction" value="NBN" />
+         <property name="Influence" value="" />
+         <property name="Side" value="corp" />
+         <property name="AutoScript" value="" />
+         <property name="AutoAction" value="" />	
+     </alternate>	</card>
 	<card id="bc0f047c-01b1-427f-a439-d451eda01045" name="Net Shield">
 		<property name="Subtitle" value="" />
 		<property name="Type" value="Program" />
@@ -1317,6 +1348,22 @@
 		<property name="Side" value="runner" />
 		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
+      <alternate name="Noise" type="Supercharged">
+         <property name="Subtitle" value="Hacker Extraordinaire" />
+         <property name="Type" value="Identity" />
+         <property name="Keywords" value="G-mod" />
+         <property name="Cost" value="0" />
+         <property name="Requirement" value="45" />	
+         <property name="Stat" value="15" />	
+         <property name="Rules" value="Whenever you install a virus program, the Corp trashes the top card of R&amp;D." />
+         <property name="Flavor" value="&quot;Watch this. It&#39;ll be funny.&quot;" />
+         <property name="Instructions" value="" />
+         <property name="Faction" value="Anarch" />
+         <property name="Influence" value="" />
+         <property name="Side" value="runner" />
+         <property name="AutoScript" value="" />
+         <property name="AutoAction" value="" />	
+     </alternate>
 	</card>
 	<card id="bc0f047c-01b1-427f-a439-d451eda01109" name="PAD Campaign">
 		<property name="Subtitle" value="" />
