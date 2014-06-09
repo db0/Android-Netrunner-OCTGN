@@ -351,13 +351,14 @@ def checkUnique (card, manual = False):
 
 def chkTargeting(card):
    debugNotify(">>> chkTargeting(){}".format(extraASDebug())) #Debug
-   if (re.search(r'on(Rez|Play|Install)[^|]+(?<!Auto)Targeted', CardsAS.get(card.model,''))
-         and len(findTarget(CardsAS.get(card.model,''))) == 0
-         and not re.search(r'isOptional', CardsAS.get(card.model,''))
-         and not confirm("This card requires a valid target for it to work correctly.\
-                        \nIf you proceed without a target, strange things might happen.\
-                      \n\nProceed anyway?")):
-      return 'ABORT'
+   for autoS in CardsAS.get(card.model,'').split('||'):
+      if (re.search(r'on(Rez|Play|Install)[^|]+(?<!Auto)Targeted', autoS)
+            and len(findTarget(autoS)) == 0
+            and not re.search(r'isOptional', autoS)
+            and not confirm("This card requires a valid target for it to work correctly.\
+                           \nIf you proceed without a target, strange things might happen.\
+                         \n\nProceed anyway?")):
+         return 'ABORT'
    if ds == 'corp': runnerPL = findOpponent()
    else: runnerPL = me
    if re.search(r'ifTagged', CardsAS.get(card.model,'')) and runnerPL.Tags == 0 and not re.search(r'isOptional', CardsAS.get(card.model,'')) and not re.search(r'doesNotBlock', CardsAS.get(card.model,'')):
@@ -476,7 +477,7 @@ def sendToTrash(card, pile = None): # A function which takes care of sending a c
       grabPileControl(pile)
    if card.controller != me and card.group == table: grabCardControl(card) # We take control of the card in order to avoid errors
    if card.group == table: 
-      playTrashSound(card)
+      if card.highlight != DummyColor: playTrashSound(card) # We don't want the trash sound for resident effects.
       autoscriptOtherPlayers('CardTrashed',card)
    if card.group == table or chkModulator(card, 'runTrashScriptWhileInactive', 'onTrash'): 
       executePlayScripts(card,'TRASH') # We don't want to run automations on simply revealed cards, but some of them will like Director Haas.
@@ -1391,3 +1392,6 @@ def testHandRandom():
                randomsList[iter] += 1
                break
       notify("randomsList: {}".format(randomsList))
+
+def echoScripts():
+   notify(ScriptsLocal)

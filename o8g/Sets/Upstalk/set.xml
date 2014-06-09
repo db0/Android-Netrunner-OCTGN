@@ -10,9 +10,9 @@
 		<property name="Subtitle" value="" />
 		<property name="Type" value="Agenda" />
 		<property name="Keywords" value="" />
-		<property name="Cost" value="3" />
+		<property name="Cost" value="2" />
 		<property name="Requirement" value="" />	
-		<property name="Stat" value="1" />	
+		<property name="Stat" value="0" />	
 		<property name="Rules" value="[Click][Click][Click]: Place 1 agenda counter on Domestic Sleepers. Domestic Sleepers is worth 1 agenda point while it has at least 1 agenda counter on it." />
 		<property name="Flavor" value="" />
 		<property name="Instructions" value="" />
@@ -143,7 +143,7 @@
 		<property name="Stat" value="5" />	
 		<property name="Rules" value="[Subroutine] Trace2 - If successful, trash a piece of hardware. If your trace strength is 5 or greater, trash a piece of hardware." />
 		<property name="Flavor" value="" />
-		<property name="Instructions" value="" />
+		<property name="Instructions" value="[Subroutine] Trace 2||Trash a piece of hardware." />
 		<property name="Faction" value="The Weyland Consortium" />
 		<property name="Influence" value="2" />
 		<property name="Side" value="corp" />
@@ -175,7 +175,7 @@
 		<property name="Stat" value="1" />	
 		<property name="Rules" value="When the Runner encounters Galahad, you may reveal up to 2 grail ice from HQ. For the remainder of the run, Galahad gains the subroutine of the revealed ice in the order of your choice.&#xD;&#xA;[Subroutine] End the run." />
 		<property name="Flavor" value="" />
-		<property name="Instructions" value="" />
+		<property name="Instructions" value="Reveal up to 2 grail ice from HQ||⏎ End the run." />
 		<property name="Faction" value="Neutral" />
 		<property name="Influence" value="1" />
 		<property name="Side" value="corp" />

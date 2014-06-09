@@ -717,6 +717,17 @@ def fetchHost(card):
    debugNotify("<<< fetchHost() with return {}".format(host)) #Debug
    return host
    
+def compareValue(comparison, value, requirement):
+   debugNotify(">>> compareValue()")
+   debugNotify("{} {} {}?".format(value,comparison,requirement))
+   if comparison == 'eq' and value != requirement: return False # 'eq' stands for "Equal to"
+   if comparison == 'le' and value > requirement: return False # 'le' stands for "Less or Equal"
+   if comparison == 'ge' and value < requirement: return False # 'ge' stands for "Greater or Equal"
+   if comparison == 'lt' and value >= requirement: return False # 'lt' stands for "Less Than"
+   if comparison == 'gt' and value <= requirement: return False # 'gt' stands for "Greater Than"
+   debugNotify("<<< compareValue() with return True")
+   return True # If none of the requirements fail, we return true
+           
 #---------------------------------------------------------------------------
 # Card Placement functions
 #---------------------------------------------------------------------------

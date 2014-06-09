@@ -64,6 +64,7 @@ def executePlayScripts(card, action):
           re.search(r'Placement', autoS) or 
           re.search(r'CaissaPlace', autoS) or 
           re.search(r'whileInPlay', autoS) or 
+          re.search(r'onDragDrop', autoS) or 
           re.search(r'ConstantAbility', autoS) or 
           re.search(r'onPay', autoS) or # onPay effects are only useful before we go to the autoscripts, for the cost reduction.
           re.search(r'triggerNoisy', autoS) or # Trigger Noisy are used automatically during action use.
@@ -407,6 +408,7 @@ def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
          ### Warning the player in case we need to
          if chkWarn(card, activeAutoscript) == 'ABORT': return
          if chkTagged(activeAutoscript) == 'ABORT': return
+         if not checkOrigSpecialRestrictions(activeAutoscript,card): continue  
          ### Checking the activation cost and preparing a relevant string for the announcement
          actionCost = re.match(r"A([0-9]+)B([0-9]+)G([0-9]+)T([0-9]+):", activeAutoscript) 
          # This is the cost of the card.  It starts with A which is the amount of Clicks needed to activate
@@ -626,14 +628,14 @@ def autoscriptOtherPlayers(lookup, origin_card = Identity, count = 1): # Functio
 # Start/End of Turn/Run trigger
 #------------------------------------------------------------------------------
    
-def atTimedEffects(Time = 'Start'): # Function which triggers card effects at the start or end of the turn.
+def atTimedEffects(Time = 'Start', AlternativeRunResultUsed = False): # Function which triggers card effects at the start or end of the turn.
    mute()
    debugNotify(">>> atTimedEffects() at time: {}".format(Time)) #Debug
    global failedRequirement
    failedRequirement = False
    if not Automations['Start/End-of-Turn']: return
    TitleDone = False
-   AlternativeRunResultUsed = False # Used for SuccessfulRun effects which replace the normal effect of running a server. If set to True, then no more effects on that server will be processed (to avoid 2 bank jobs triggering at the same time for example).
+   #AlternativeRunResultUsed = False # Used for SuccessfulRun effects which replace the normal effect of running a server. If set to True, then no more effects on that server will be processed (to avoid 2 bank jobs triggering at the same time for example).
    X = 0
    tableCards = sortPriority([card for card in table if card.highlight != InactiveColor and card.highlight != RevealedColor])
    inactiveCards = [card for card in table if card.highlight == InactiveColor or card.highlight == RevealedColor]
@@ -2201,6 +2203,14 @@ def checkOrigSpecialRestrictions(Autoscript,card):
          debugNotify("Rejecting Originator because marker was found")
          validCard = False
    else: debugNotify("No marker restrictions.", 4)
+   # Checking if the target needs to have a markers at a particular value.
+   MarkerReq = re.search(r'-ifOrigmarkers{([\w ]+)}(eq|le|ge|gt|lt)([0-9])',Autoscript)
+   if MarkerReq and validCard: 
+      debugNotify("Found marker comparison req. regex groups: {}".format(MarkerReq.groups()), 4)
+      markerSeek = findMarker(card, MarkerReq.group(1))
+      if markerSeek:
+         validCard = compareValue(MarkerReq.group(2), card.markers[markerSeek], num(MarkerReq.group(3)))
+      else: validCard = compareValue(MarkerReq.group(2), 0, num(MarkerReq.group(3))) #If the card has no markers, then we treat it as having 0 markers.
    debugNotify("<<< checkOrigSpecialRestrictions() with return {}".format(validCard)) #Debug
    return validCard
 
@@ -2547,4 +2557,3 @@ def chkRunStatus(Autoscript): # Function for figuring out if an autoscript is su
       validCard = False
    debugNotify("<<< chkRunStatus(). validCard is: {}".format(validCard)) #Debug
    return validCard
-   

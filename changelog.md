@@ -1,6 +1,21 @@
 Changelog - Android:Netrunner LCG OCTGN Game Definition
 ===============================================
 
+### 3.11.0.x
+
+* New game definition for **Upstalk**. As always, almost every card scripted!
+
+* ##### Trickier Automations
+  * Near-Earth Hub: Manual use
+  * Midway Station Grid: Manual use
+  * Galahad. First action just reveals the grail ICE from HQ. The ICE will remain in play until jack out, at which point it will trash itself. You can double click those ICE to use their routines.
+  * Galahad will also give an error if you use a spawned galahad to end the run. Don't worry about it, it does no harm. I just can't be bollocksed to write the code around it.
+  * Bad Times: Manual use. Just calc the new temp MU and trash accordingly.
+  * Priority Events: Don't rules enforce being played as the first click.
+  * Leprechaun: Doesn't enforce the number of programs. Just don't host more than 2.
+  * Nasir Meidan: Manual Use. Target the ICE you've just encountered and double click him.
+  * Eden Shard: Shards can be installed manually when you're about to access. Simply drag them to the table and they'll skip their cost, and set the run to succeed, bypassing all costs. Warning this will bypass all corp acknowledgement, so make sure you use it after the corp has given the OK to access.
+
 ### 3.10.5.x
 
 * Fixed manually suffering damage

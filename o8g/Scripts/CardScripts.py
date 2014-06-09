@@ -3781,7 +3781,166 @@ whileInstalled:Increase1CostPlay-affectsAll
 +++++
 
 .....
+Domestic Sleepers
+-----
+bc0f047c-01b1-427f-a439-d451eda06001
+-----
+onTrash:Lose1Agenda Points-ifOrigmarkers{Agenda}ge1
++++++
+A3B0G0T0:Put1Agenda$$Gain1Agenda Points-ifOrigmarkers{Agenda}eq1
+.....
+NEXT Silver
+-----
+bc0f047c-01b1-427f-a439-d451eda06002
+-----
 
++++++
+A0B0G0T0:RunEnd-isSubroutine
+.....
+Lotus Field
+-----
+bc0f047c-01b1-427f-a439-d451eda06003
+-----
+
++++++
+A0B0G0T0:RunEnd-isSubroutine
+.....
+Mutate
+-----
+bc0f047c-01b1-427f-a439-d451eda06004
+-----
+onPlay:CustomScript
++++++
+
+.....
+Near-Earth Hub
+-----
+bc0f047c-01b1-427f-a439-d451eda06005
+-----
+
++++++
+A0B0G0T0:Draw1Card-onlyOnce
+.....
+Primary Transmission Dish
+-----
+bc0f047c-01b1-427f-a439-d451eda06006
+-----
+onRez:Put3Credits||atTurnPreStart:Refill3Credits-duringMyTurn||whileRezzed:Reduce#CostTrace-affectsAll-forMe
++++++
+
+.....
+Midway Station Grid
+-----
+bc0f047c-01b1-427f-a439-d451eda06007
+-----
+
++++++
+A0B0G0T0:Lose1Credits-onOpponent
+.....
+The Root
+-----
+bc0f047c-01b1-427f-a439-d451eda06008
+-----
+onRez:Put3Credits||atTurnPreStart:Refill3Credits-duringMyTurn||whileRezzed:Reduce#CostAdvancement-affectsAll-forMe||whileRezzed:Reduce#CostInstall-affectsAll-forMe||whileRezzed:Reduce#CostRez-affectsAll-forMe
++++++
+A0B0G0T0:Remove1Credits-isCost$$SimplyAnnounce{to pay for ICE install costs}
+.....
+Taurus
+-----
+bc0f047c-01b1-427f-a439-d451eda06009
+-----
+
++++++
+A0B0G0T0:Trace2-isSubroutine-traceEffects<SimplyAnnounce{trash a piece of hardware},None>||A0B0G0T0:TrashTarget-Targeted-atHardware
+.....
+Mother Goddess
+-----
+bc0f047c-01b1-427f-a439-d451eda06010
+-----
+
++++++
+A0B0G0T0:RunEnd-isSubroutine
+.....
+Galahad
+-----
+bc0f047c-01b1-427f-a439-d451eda06011
+-----
+atJackOut:TrashMyself-onlyforDummy
++++++
+A0B0G0T0:UseCustomAbility-excludeDummy||A0B0G0T0:RunEnd-isSubroutine-excludeDummy||A0B0G0T0:RunEnd-isSubroutine-onlyforDummy$$TrashMyself-isSilent
+.....
+Bad Times
+-----
+bc0f047c-01b1-427f-a439-d451eda06012
+-----
+onPlay:SimplyAnnounce{reduce the Runner's memory limit by 2 until the end of the turn.}
++++++
+
+.....
+Cyber Threat
+-----
+bc0f047c-01b1-427f-a439-d451eda06013
+-----
+onPlay:CustomScript
++++++
+
+.....
+Lamprey
+-----
+bc0f047c-01b1-427f-a439-d451eda06014
+-----
+atSuccessfulRun:Lose1Credits-onOpponent-ifSuccessfulRunHQ||whileInPlay:TrashMyself-foreachVirusPurged
++++++
+
+.....
+Paper Tripping
+-----
+bc0f047c-01b1-427f-a439-d451eda06015
+-----
+onPlay:Lose999Tags
++++++
+
+.....
+Power Tap
+-----
+bc0f047c-01b1-427f-a439-d451eda06016
+-----
+whileInPlay:Gain1Credits-foreachInitiatedTrace
++++++
+
+.....
+Nasir Meidan
+-----
+bc0f047c-01b1-427f-a439-d451eda06017
+-----
+
++++++
+A0B0G0T0:CustomScript
+.....
+Social Engineering
+-----
+bc0f047c-01b1-427f-a439-d451eda06018
+-----
+atTurnEnd:TrashMyself||onPlay:Put1Social Engineering-Targeted-isICE-isSilent$$CreateDummy||whileInPlay:UseCustomAbility-foreachCardRezzed-typeICE-onTriggerCard-onlyforDummy
++++++
+
+.....
+Leprechaun
+-----
+bc0f047c-01b1-427f-a439-d451eda06019
+-----
+onInstall:Put5DaemonMU-isSilent
++++++
+A0B0G0T0:PossessTarget-Targeted-atProgram-targetMine
+.....
+Eden Shard
+-----
+bc0f047c-01b1-427f-a439-d451eda06020
+-----
+onDragDrop:IgnoreCosts-isSourceShard
++++++
+A0B0G0T1:Draw2Cards-onOpponent
+.....
 ENDSCRIPTS
 =====
 '''

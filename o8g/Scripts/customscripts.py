@@ -268,7 +268,21 @@ def UseCustomAbility(Autoscript, announceText, card, targetCards = None, notific
          foreseenCard.moveTo(me.hand)
          me.Credits += 2
       else: announceString = announceText + " attempt to foresee a {}, but was mistaken. {} is trashed".format(choiceType,foreseenCard)
-         
+   if fetchProperty(card, 'name') == "Galahad":
+      revealedCards = findTarget('Targeted-atGrail-fromHand')
+      del revealedCards[2:] # We don't want it to be more than 5 cards
+      if len(revealedCards) == 0: 
+         delayed_whisper("You need to target some Grail first!")
+         return 'ABORT'
+      for c in revealedCards: CreateDummy('CreateDummy-doNotTrash-nonUnique', '', c)
+      notify("{} reveals {} as their Grail support".format(me,[c.name for c in revealedCards]))
+      announceString = ''
+   if fetchProperty(card, 'name') == "Social Engineering":
+      #confirm('1')
+      targetICE = targetCards[0]
+      card.controller.Credits += num(targetCards[0].Cost)
+      notify("{} gains {} from their {}".format(card.controller,uniCredit(num(targetCards[0].Cost)),card))
+      announceString = ''
    return announceString
    
 def CustomScript(card, action = 'PLAY', origin_card = None, original_action = None): # Scripts that are complex and fairly unique to specific cards, not worth making a whole generic function for them.
@@ -286,6 +300,7 @@ def CustomScript(card, action = 'PLAY', origin_card = None, original_action = No
          foundMarker = findMarker(c,'Virus')
          if foundMarker: c.markers[foundMarker] = 0
       notify("{} to clean all viruses from their corporate grid".format(clickCost))
+      autoscriptOtherPlayers('VirusPurged',card)
       return 'CLICK USED'
    elif card.model == '71a89203-94cd-42cd-b9a8-15377caf4437' and action == 'USE': # Technical Difficulties Special Ability
       knownMarkers = []
@@ -442,7 +457,7 @@ def CustomScript(card, action = 'PLAY', origin_card = None, original_action = No
    elif fetchProperty(card, 'name') == 'Mr. Li' and action == 'USE':
       ClickCost = useClick(count = 1)
       if ClickCost == 'ABORT': return 'ABORT'
-      StackTop = list(me.piles['R&D/Stack'].top(2))
+      StackTop = list(deck.top(2))
       if len(StackTop) < 2:
          whisper("Your Stack is does not have enough cards. You cannot take this action")
          return 'ABORT'
@@ -456,7 +471,7 @@ def CustomScript(card, action = 'PLAY', origin_card = None, original_action = No
       rnd(1,100) # A delay because it bugs out
       debugNotify("StackTop: {} in hand".format([c.name for c in StackTop])) #Debug
       returnChoice = SingleChoice('Select a card to put to the botton of your Stack', makeChoiceListfromCardList(StackTop, True), type = 'button', default = 0)
-      StackTop[returnChoice].moveToBottom(me.piles['R&D/Stack'])
+      StackTop[returnChoice].moveToBottom(deck)
       catchwords = ["Excellent.","Don't leave town.","We'll be in touch.","We'll be seeing you soon...","Always a pleasure.","Remember our agreement.","Interesting request there."]
       goodbye = catchwords.pop(rnd(0, len(catchwords) - 1))
       notify('{} to have {} procure 1 card.\n- "{}"'.format(ClickCost,card,goodbye))
@@ -791,7 +806,7 @@ def CustomScript(card, action = 'PLAY', origin_card = None, original_action = No
       notify("{} trashes {} to switch runs to the {} server".format(me,card,Name))
       intTrashCard(card, fetchProperty(card,'Stat'), "free", silent = True)
    elif fetchProperty(card, 'name') == 'Eureka!' and action == 'PLAY':
-      c = me.piles['R&D/Stack'].top()
+      c = deck.top()
       c.moveTo(me.piles['Heap/Archives(Face-up)'])
       rnd(0,5)
       if c.Type != 'Event':
@@ -920,8 +935,7 @@ def CustomScript(card, action = 'PLAY', origin_card = None, original_action = No
       accessC = findTarget('Targeted-targetOpponents')
       if len(accessC): accessTarget(accessC[0], noQuestionsAsked = True)
       else: whisper("You need to target an card to access before playing this event")      
-   elif action == 'USE': useCard(card)
-   if fetchProperty(card, 'name') == "Executive Wiretaps" and action == 'PLAY':
+   elif fetchProperty(card, 'name') == "Executive Wiretaps" and action == 'PLAY':
       remoteCall(findOpponent(),"ExecWire",[])
    elif fetchProperty(card, 'name') == 'Reclamation Order' and action == 'PLAY':
       retrieveTuple = RetrieveX('Retrieve1Card-fromArchives', '', card)
@@ -941,11 +955,11 @@ def CustomScript(card, action = 'PLAY', origin_card = None, original_action = No
       if me.counters['Agenda Points'].value < fetchCorpPL().counters['Agenda Points'].value:
          me.Credits += 2
          notify("{}: Provides {}".format(card,uniCredit(2)))
-   if fetchProperty(card, 'name') == "Push Your Luck" and action == 'PLAY':
+   elif fetchProperty(card, 'name') == "Push Your Luck" and action == 'PLAY':
       count = askInteger("How many credits do you want to spend?",me.Credits)
       while count > me.Credits: count = askInteger(":::Error::: You cannot spend more credits than you have\n\nHow many credits do you want to spend?",me.Credits)
       remoteCall(findOpponent(),"PYL",[count])
-   if fetchProperty(card, 'name') == "Security Testing":
+   elif fetchProperty(card, 'name') == "Security Testing":
       if action == 'Start':
          choice = SingleChoice("Which server would you like to security test today?",['HQ','R&D','Archives','Remote'])
          if choice == 3 or choice == None:
@@ -972,6 +986,54 @@ def CustomScript(card, action = 'PLAY', origin_card = None, original_action = No
                me.Credits += 2
                notify("{}: Successful Penetration nets {} {} instead of access.".format(card,me,uniCredit(2)))
                return 'ALTERNATIVE RUN'
+   elif fetchProperty(card, 'name') == 'Mutate' and action == 'PLAY':
+      targetICE = findTarget('Targeted-atICE-isRezzed')
+      if len(targetICE) == 0: return 'ABORT'
+      else: trashICE = targetICE[0]
+      intTrashCard(trashICE, fetchProperty(trashICE,'Stat'), "free", silent = True)
+      revealList = []
+      newICE = None
+      for c in deck:
+         storeProperties(c, True)
+         update()
+         if fetchProperty(c, 'Type') == 'ICE': 
+            newICE = c
+            break
+         else: 
+            cName = fetchProperty(c, 'name')
+            revealList.append(cName)
+      if not newICE: 
+         notify("{} tried to mutate {} but there was no ICE left in their R&D...")
+         shuffle(deck)
+      else:
+         placeCard(newICE,'InstallRezzed')
+         shuffle(deck)
+         newICE.orientation ^= Rot90
+         executePlayScripts(newICE,'REZ')
+         autoscriptOtherPlayers('CardInstall',newICE)
+         autoscriptOtherPlayers('CardRezzed',newICE)
+         debugNotify("About to announce")
+         if len(revealList): notify("{} has mutated {} into {}. In the process they revealed the following cards before shuffling R&D\n -- {}.".format(me,trashICE,newICE,revealList))
+         else: notify("{} has mutated {} into {}. That was the top card of their R&D before it wa shuffled.".format(me,trashICE,newICE))
+   elif fetchProperty(card, 'name') == 'Cyber Threat' and action == 'PLAY':
+      targetServer = findTarget('Targeted-atServer')
+      if not len(targetServer): whisper(":::WARNING::: You should target a server before you play this card!")
+      if confirm("Did the corp rez an ICE at the targeted server?"): return
+      else: 
+         RunX('RunGeneric', '', card)
+         if len(targetServer): notify("{} takes advantage of the {} to make a run on {}".format(me,card,targetServer[0]))
+         else: notify("{} takes advantage of the {} to make a run".format(me,card))
+   elif fetchProperty(card, 'name') == 'Nasir Meidan' and action == 'USE':
+      targetICE = findTarget('Targeted-atICE-isRezzed')
+      if not len(targetICE): whisper(":::ERROR::: You need to target a rezzed ICE to use this ability")
+      else:
+         diff = num(targetICE[0].Cost) - me.Credits
+         if diff >= 0: diff = "+{}".format(uniCredit(diff))
+         else: diff = "-{}".format(uniCredit(abs(diff)))
+         me.Credits = num(targetICE[0].Cost)
+         notify("{} encounters freshly rezzed {} and sets their Credits to {} ({})".format(me,targetICE[0],me.Credits,diff))
+   elif action == 'USE': useCard(card)
+      
             
 def markerEffects(Time = 'Start'):
    mute()
@@ -1005,6 +1067,8 @@ def markerEffects(Time = 'Start'):
             TokensX('Remove1Deep Red-isSilent', "Deep Red:", card)
          if re.search(r'LLDS Processor',marker[0]) and Time == 'End': # We silently remove LLDS Processor bonus
             TokensX('Remove999LLDS Processor-isSilent', "LLDS Processor:", card)
+         if re.search(r'Social Engineering',marker[0]) and Time == 'End':
+            TokensX('Remove999Social Engineering-isSilent', "Social Engineering:", card)
          if re.search(r'Gyri Labyrinth',marker[0]) and Time == 'Start' and (card.controller != me or len(getPlayers()) == 1): 
             opponentPL = findOpponent()
             opponentPL.counters['Hand Size'].value += card.markers[marker] * 2

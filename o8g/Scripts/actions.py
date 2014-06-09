@@ -412,7 +412,7 @@ def jackOut(group=table,x=0,y=0, silent = False):
       clearAll(True, True) # On jack out we clear all player's counters, but don't discard cards from the table.
    debugNotify("<<< jackOut()", 3) # Debug
 
-def runSuccess(group=table,x=0,y=0, silent = False):
+def runSuccess(group=table,x=0,y=0, silent = False, ShardSuccess = False):
    mute()
    debugNotify(">>> runSuccess(). Current status:{}".format(getGlobalVariable('status'))) #Debug
    opponent = ofwhom('-ofOpponent') # First we check if our opponent is a runner or a corp.
@@ -428,9 +428,9 @@ def runSuccess(group=table,x=0,y=0, silent = False):
       elif getGlobalVariable('SuccessfulRun') == 'True':
          whisper(":::Error::: You have already completed this run succesfully. Jacking out instead...")
          jackOut()
-      elif getGlobalVariable('Access') == 'DENIED' and num(getGlobalVariable('accessAttempts')) == 0 and getGlobalVariable('Quick Access') != 'Fucking':
+      elif not ShardSuccess and getGlobalVariable('Access') == 'DENIED' and num(getGlobalVariable('accessAttempts')) == 0 and getGlobalVariable('Quick Access') != 'Fucking':
          BUTTON_Access() # The first time a player tries to succeed the run, we press the button for them
-      elif getGlobalVariable('Quick Access') == 'False' and getGlobalVariable('Access') == 'DENIED' and (num(getGlobalVariable('accessAttempts')) < 3 or (num(getGlobalVariable('accessAttempts')) >= 3 and not confirm("Corp has not yet acknowledged your successful run. Bypass their reaction window?"))):
+      elif not ShardSuccess and getGlobalVariable('Quick Access') == 'False' and getGlobalVariable('Access') == 'DENIED' and (num(getGlobalVariable('accessAttempts')) < 3 or (num(getGlobalVariable('accessAttempts')) >= 3 and not confirm("Corp has not yet acknowledged your successful run. Bypass their reaction window?"))):
          notify(":::WARNING::: {} is about to access the server and is waiting for final corporation reacts.\n(Corp must now press the [OK] button F3 to acknowledge the access.)".format(me))
          setGlobalVariable('accessAttempts',str(num(getGlobalVariable('accessAttempts')) + 1))
          return 'DENIED'
@@ -438,7 +438,7 @@ def runSuccess(group=table,x=0,y=0, silent = False):
          setGlobalVariable('SuccessfulRun','True')
          if getGlobalVariable('feintTarget') != 'None': runTarget = getGlobalVariable('feintTarget') #If the runner is feinting, now change the target server to the right one
          else: runTarget = runTargetRegex.group(1) # If the runner is not feinting, then extract the target from the shared variable
-         atTimedEffects('SuccessfulRun')
+         atTimedEffects('SuccessfulRun',ShardSuccess)
          notify("{} has successfully run the {} server".format(identName,runTarget))
          #barNotifyAll('#000000',"{} has run succesfully.".format(fetchRunnerPL()))
          if runTarget == 'Remote': setGlobalVariable('Remote Run','Success')
@@ -641,6 +641,7 @@ def inputTraceValue (card, x=0,y=0, limit = 0, silent = False):
       setGlobalVariable('CorpTraceValue',str(TraceValue))
       OpponentTrace = getSpecial('Tracing',ofwhom('ofOpponent'))
       OpponentTrace.highlight = EmergencyColor
+      autoscriptOtherPlayers('InitiatedTrace', card)
    else:
       if not silent: notify("{} reinforces their {} by {} for a total of {}{}.".format(me,uniLink(),TraceValue, TraceValue + me.counters['Base Link'].value,extraText))
       CorpTraceValue = num(getGlobalVariable('CorpTraceValue'))
@@ -719,7 +720,7 @@ def payCost(count = 1, cost = 'not free', counter = 'BP', silentCost = False): #
       if me.counters['Agenda Points'].value < count and not confirm("You do not seem to have enough Agenda Points to take this action. Are you sure you want to proceed? \
          \n(If you do, your Agenda Points will go to the negative. You will need to increase them manually as required.)"): return 'ABORT'
       me.counters['Agenda Points'].value -= count
-   return "{} (remaining: {})".format(uniCredit(count),uniCredit(me.Credits))
+   return "{} (remaining bank: {})".format(uniCredit(count),uniCredit(me.Credits))
 
 def findExtraCosts(card, action = 'REZ'):
    # Some hardcoded effects that increase the cost of a card.

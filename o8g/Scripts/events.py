@@ -179,7 +179,11 @@ def checkMovedCard(player,card,fromGroup,toGroup,oldIndex,index,oldX,oldY,x,y,is
       if card.Type == 'Identity': intJackin(manual = True)
       else: 
          if not card.isFaceUp: card.peek()
-         intPlay(card, retainPos = True)
+         if not re.search(r'onDragDrop:IgnoreCosts', CardsAS.get(card.model,'')): 
+            intPlay(card, retainPos = True)
+         elif re.search(r'onDragDrop:IgnoreCosts-isSourceShard', CardsAS.get(card.model,'')):
+            notify("-- {} has discovered an {} instead of accessing cards".format(me,card))
+            runSuccess(ShardSuccess = True)
    elif fromGroup != table and toGroup == table and card.owner == me: # If the player moves a card into the table from Deck or Trash, we assume they are installing it for free.
       if not card.isFaceUp: card.peek()
       if confirm("Play this card from {} for free?".format(pileName(fromGroup))):
