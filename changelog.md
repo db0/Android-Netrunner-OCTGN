@@ -8,7 +8,7 @@ Changelog - Android:Netrunner LCG OCTGN Game Definition
 * ##### Trickier Automations
   * Near-Earth Hub: Manual use
   * Midway Station Grid: Manual use
-  * Galahad. First action just reveals the grail ICE from HQ. The ICE will remain in play until jack out, at which point it will trash itself. You can double click those ICE to use their routines.
+  * Galahad. First action just reveals the grail ICE you've targeted from HQ. The ICE will remain in play until jack out, at which point it will trash itself. You can double click those ICE to use their routines.
   * Galahad will also give an error if you use a spawned galahad to end the run. Don't worry about it, it does no harm. I just can't be bollocksed to write the code around it.
   * Bad Times: Manual use. Just calc the new temp MU and trash accordingly.
   * Priority Events: Don't rules enforce being played as the first click.
