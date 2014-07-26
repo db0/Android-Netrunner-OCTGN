@@ -1865,7 +1865,7 @@ NBN: The World is Yours
 -----
 bc0f047c-01b1-427f-a439-d451eda02114
 -----
-onStartup:Gain1Hand Size-isSilent||onMulligan:Gain1Hand Size-isSilent
+onStartup:Gain1Hand Size-isSilent
 +++++
 
 .....
