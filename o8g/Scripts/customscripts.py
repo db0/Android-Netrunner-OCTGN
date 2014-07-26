@@ -728,8 +728,8 @@ def CustomScript(card, action = 'PLAY', origin_card = None, original_action = No
       sameOldThing = retrieveTuple[1][0]
       if re.search(r'Double', getKeywords(sameOldThing)) and not chkDoublePrevention() and useClick() == 'ABORT': return 'ABORT' # If it's a double event, we need to pay any double costs.
       notify("{} does the same old {}".format(me,sameOldThing))
-      intPlay(sameOldThing,scripted = True)
       intTrashCard(card, fetchProperty(sameOldThing,'Stat'), "free", silent = True)
+      intPlay(sameOldThing,scripted = True)
       return 'CLICK USED'
    elif fetchProperty(card, 'name') == "Motivation" and action == 'Start':
       targetPL = me
