@@ -3793,7 +3793,7 @@ NEXT Silver
 -----
 bc0f047c-01b1-427f-a439-d451eda06002
 -----
-
+whileRezzed:Refill1NEXTSubroutine-perEveryCard-atNEXT-isICE-isRezzed-foreachCardRezzed-typeNEXT_and_ICE-isSilent||whileRezzed:Remove1NEXTSubroutine-foreachCardDerezzed-typeNEXT_and_ICE-isSilent||whileRezzed:Remove1NEXTSubroutine-foreachCardTrashed-typeNEXT_and_ICE-isSilent||onDerez:Remove999NEXTSubroutine||onTrash:Remove999NEXTSubroutine
 +++++
 A0B0G0T0:RunEnd-isSubroutine
 .....
