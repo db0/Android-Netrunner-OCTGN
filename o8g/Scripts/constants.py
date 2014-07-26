@@ -197,6 +197,7 @@ SuperchargedSubs = ['stevehouston',       # Brendan               - http://www.p
                     'tobinator',          # Tobin Lopes           - http://www.patreon.com/user?u=149628
                     'icydevarosp',        # Nickolas Riggs        - http://www.patreon.com/user?u=151453
                     'broccoli',           # Bryan Graham          - http://www.patreon.com/user?u=42675
+                    'cspieker',           # Chuck Spiekerman      - 
                     'alsciende'           # Cedric                - http://netrunnerdb.com/
                    ] # 3$ Tier
 
@@ -207,7 +208,7 @@ CustomSubs = ['dovian',                   # Daniel DeBoer         - http://www.p
    
 CardSubs = ['susuexp',                    # Simon Gunkel          - http://www.patreon.com/user?u=66210
             'reverendanthony',            # Anthony Burch         - http://www.patreon.com/user?u=66843
-            'TheEmann',                   # Chad                  - http://www.patreon.com/user?u=90551
+            'theemann',                   # Chad                  - http://www.patreon.com/user?u=90551
             #'rediknight',                 # Jeremy Espinosa       - http://www.patreon.com/user?u=68437 # Declined last payment...again.
             'wimpgod',                    # Gary Bergeron         - Old time supporter
             'Kethran',                    # Marius Ødegård        - http://www.patreon.com/user?u=90737
