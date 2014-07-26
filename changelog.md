@@ -1,6 +1,14 @@
 Changelog - Android:Netrunner LCG OCTGN Game Definition
 ===============================================
 
+### 3.11.1.x
+
+* Fixed mother goddess not being unique
+* Mutated ICE can now be used
+* Same Old Thing will be shuiffled in by Levy
+* NEXT Silver gets markers
+* TWIY won't give 7 hand size on mulligan.
+
 ### 3.11.0.x
 
 * New game definition for **Upstalk**. As always, almost every card scripted!
