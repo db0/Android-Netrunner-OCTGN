@@ -3977,7 +3977,7 @@ Paywall Implementation
 -----
 bc0f047c-01b1-427f-a439-d451eda06028
 -----
-
+atSuccessfulRun:Gain1Credits
 +++++
 
 .....
@@ -4003,7 +4003,7 @@ bc0f047c-01b1-427f-a439-d451eda06032
 -----
 
 +++++
-
+A0B0G0T1:SendToBottomTarget-Targeted-atIcebreaker
 .....
 D4v1d
 -----

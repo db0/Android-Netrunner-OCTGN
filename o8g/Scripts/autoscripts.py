@@ -1632,7 +1632,7 @@ def ModifyStatus(Autoscript, announceText, card, targetCards = None, notificatio
    if targetCards is None: targetCards = []
    targetCardlist = '' # A text field holding which cards are going to get tokens.
    extraText = ''
-   action = re.search(r'\b(Rez|Derez|Expose|Trash|Uninstall|Possess|Exile|Rework|Install|Score|Rehost)(Target|Host|Multi|Myself)[-to]*([A-Z][A-Za-z&_ ]+)?', Autoscript)
+   action = re.search(r'\b(Rez|Derez|Expose|Trash|Uninstall|Possess|Exile|Rework|Install|Score|Rehost|SendToBottom)(Target|Host|Multi|Myself)[-to]*([A-Z][A-Za-z&_ ]+)?', Autoscript)
    if action.group(2) == 'Myself': 
       del targetCards[:] # Empty the list, just in case.
       targetCards.append(card)
@@ -1693,6 +1693,7 @@ def ModifyStatus(Autoscript, announceText, card, targetCards = None, notificatio
          trashResult = intTrashCard(targetCard, fetchProperty(targetCard,'Stat'), "free", silent = True)
          if trashResult == 'ABORT': return 'ABORT'
          elif trashResult == 'COUNTERED': extraText = " (Countered!)"
+      elif action.group(1) == 'SendToBottom' and movetoBottomOfStack(targetCard, silent = True) != 'ABORT': pass
       elif action.group(1) == 'Exile' and exileCard(targetCard, silent = True) != 'ABORT': pass
       elif action.group(1) == 'Rework': # Rework puts a card on top of R&D (usually shuffling afterwards)
          changeCardGroup(targetCard,targetCard.controller.piles['R&D/Stack'])

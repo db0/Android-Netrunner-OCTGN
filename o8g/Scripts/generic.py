@@ -814,7 +814,7 @@ def passCardControl(card,player):
    if card.controller != player: card.setController(player)
    debugNotify("<<< passCardControl()") #Debug
       
-def changeCardGroup(card, group): # A cumulative function to take care for handling card and group control when moving a card from one group to another.
+def changeCardGroup(card, group, sendToBottom = False): # A cumulative function to take care for handling card and group control when moving a card from one group to another.
    debugNotify(">>> changeCardGroup(){}".format(extraASDebug())) #Debug
    debugNotify("Will move {} to {}'s {}".format(card,group.player,group.name))
    prevGroup = card.group
@@ -823,7 +823,8 @@ def changeCardGroup(card, group): # A cumulative function to take care for handl
    grabPileControl(group) # We take control of the target pile
    storeProperties(card) # Since we're at it, we might as well store its properties for later
    debugNotify("Finished Taking Control. Moving card to different group",1)
-   card.moveTo(group) # We move the card into the target pile
+   if sendToBottom: card.moveToBottom(group)
+   else: card.moveTo(group) # We move the card into the target pile
    if group.player != group.controller: grabPileControl(group,group.player) # We return control of the target pile to its original owner.
    if prevGroup != table and prevGroup.player != prevGroup.controller: grabPileControl(prevGroup,prevGroup.player) # If we took control of a whole pile to allow us to move the card, we return it now
    debugNotify("<<< changeCardGroup(){}".format(extraASDebug())) #Debug

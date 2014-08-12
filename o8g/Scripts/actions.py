@@ -2202,13 +2202,21 @@ def movetoTopOfStack(card):
    card.moveTo(deck)
    notify ("{} moves a card to top of their {}.".format(me,pileName(deck)))
 
-def movetoBottomOfStack(card):
+def movetoBottomOfStack(card, silent = False):
    debugNotify(">>> movetoBottomOfStack(){}".format(extraASDebug())) #Debug
+   # Puts the removed card in the shared pile and outside of view.
    mute()
-   deck = me.piles['R&D/Stack']
-   card.moveToBottom(deck)
-   notify ("{} moves a card to Bottom of their {}.".format(me,pileName(deck)))
-
+   storeProperties(card)
+   if fetchProperty(card, 'Type') == "Tracing" or fetchProperty(card, 'Type') == "Counter Hold" or fetchProperty(card, 'Type') == "Server":
+      whisper("This kind of card cannot be removed from the table!")
+      return 'ABORT'
+   else:
+      if card.isFaceUp and card.group == table: MUtext = chkRAM(card, 'UNINSTALL')
+      else: MUtext = ''
+      clearAttachLinks(card)
+      changeCardGroup(card,card.owner.piles['R&D/Stack'],True)
+   if not silent: notify("{} sent {} to the bottom of {}{}.".format(me,card,pileName(card.owner.piles['R&D/Stack']),MUtext))
+   
 def handtoArchives(card):
    debugNotify(">>> handtoArchives(){}".format(extraASDebug())) #Debug
    if ds == "runner": return

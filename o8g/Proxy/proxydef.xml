@@ -850,6 +850,29 @@
             </link>
          </textblocks>
       </template>
+      <template src="Proxy/Upgrades/Upgrade_Neutral.jpg">
+         <matches>
+            <match name="Faction" value="Neutral" />
+            <match name="Type" value="Upgrade" />
+         </matches>
+         <textblocks>
+            <link block="upgrade_name" separator=" ">
+               <property name="Name"  />
+            </link>
+            <link block="upgrade_cost" separator=" ">
+               <property name="Cost"  />
+            </link>
+            <link block="upgrade_trash" separator=" ">
+               <property name="Stat"  />
+            </link>
+            <link block="upgrade_keywords" separator=" ">
+               <property name="Keywords"  />
+            </link>
+            <link block="upgrade_rules" separator=" ">
+               <property name="Rules"  />
+            </link>
+         </textblocks>
+      </template>
    <!-- Corp Identity Templates -->
       <template src="Proxy/Identities/Identity_Hasbro.jpg">
          <matches>
