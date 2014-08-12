@@ -1232,6 +1232,7 @@ def scrAgenda(card, x = 0, y = 0,silent = False, forced = False):
       if me.counters['Agenda Points'].value >= 7 or (getSpecial('Identity',fetchCorpPL()).name == "Harmony Medtech" and me.counters['Agenda Points'].value >= 6):
          notify("{} wins the game!".format(me))
          reportGame()
+      clearCurrents(agendaTxt) # We check to see if there's any currents to clear.
       card.highlight = None # In case the card was highlighted as revealed, we remove that now.
       card.markers[mdict['Advancement']] = 0 # We only want to clear the advance counters after the automations, as they may still be used.
    else:
@@ -2170,6 +2171,7 @@ def intPlay(card, cost = 'not free', scripted = False, preReduction = 0, retainP
       placeCard(card, action, retainPos = retainPos)
       if card.Type == 'Operation': notify("{}{} to initiate {}{}.".format(ClickCost, rc, card, extraText))
       else: notify("{}{} to play {}{}.".format(ClickCost, rc, card, extraText))
+   if re.search('Current',getKeywords(card)): clearCurrents(card = card) # If the card just played was a current, we clear all other currents on the table.
    playInstallSound(card)
    card.highlight = NewCardColor # We give all new cards an orange highlight to make them easiet to see.
    playEvOpSound(card)

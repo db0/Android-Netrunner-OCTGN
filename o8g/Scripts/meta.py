@@ -572,7 +572,23 @@ def clearLeftoverEvents():
       if card.isFaceUp and (card.Type == 'Operation' or card.Type == 'Event') and card.highlight != DummyColor and card.highlight != RevealedColor and card.highlight != InactiveColor and not card.markers[mdict['Scored']] and not hostCards.has_key(card._id): # We do not trash "scored" events (e.g. see Notoriety) or cards hosted on others card (e.g. see Oversight AI)
          intTrashCard(card,0,"free") # Clearing all Events and operations for players who keep forgeting to clear them.   
    debugNotify("<<< clearLeftoverEvents()") #Debug   
-      
+
+def clearCurrents(type = None,card = None):
+   debugNotify(">>> clearCurrents(){}".format(extraASDebug())) #Debug
+   mute()
+   for c in table:
+      if re.search('Current',getKeywords(c)):
+         if card and card == c: continue # if a card variable has been passed, it's a newly placed current, which we don't want to trash.
+         if not type: 
+            intTrashCard(c, c.Stat, "free")
+            notify(":> {} replaces the {} current".format(me,c))
+         elif type == 'LIBERATE' and c.Side == 'corp': 
+            intTrashCard(c, c.Stat, "free")
+            notify(":> {} fizzles out as {} liberates an agenda".format(c,me))
+         elif type == 'SCORE' and c.Side == 'runner': 
+            intTrashCard(c, c.Stat, "free")
+            notify(":> {} scores their agenda and {} fades out".format(me,c))
+            
 #---------------------------------------------------------------------------
 # Card Placement
 #---------------------------------------------------------------------------

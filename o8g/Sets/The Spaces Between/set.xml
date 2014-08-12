@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<set xmlns:noNamespaceSchemaLocation="CardSet.xsd" 
+     name="The Spaces Between" 
+     id="a76c6360-dd0d-4742-9d31-99ae30341a32" 
+     gameId="0f38e453-26df-4c04-9d67-6d43de939c77" 
+     gameVersion="3.0.0.0" 
+     version="3.0.0.0">
+<cards>
+	<card id="bc0f047c-01b1-427f-a439-d451eda06022" name="Enhanced Login Protocol">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Operation" />
+		<property name="Keywords" value="Current" />
+		<property name="Cost" value="2" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="" />	
+		<property name="Rules" value="This card is not trashed until another current is played or an agenda is stolen.&#xD;&#xA;As an additional cost to make the first run not made through a card ability on his or her turn, the Runner must spend [Click]." />
+		<property name="Flavor" value="" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Haas-Bioroid" />
+		<property name="Influence" value="2" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda06024" name="Encrypted Portals">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Agenda" />
+		<property name="Keywords" value="Security" />
+		<property name="Cost" value="3" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="1" />	
+		<property name="Rules" value="All code gate ice have +1 strength.&#xD;&#xA;When you score Encrypted Portals, gain 1[Credits] for each rezzed code gate." />
+		<property name="Flavor" value="" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Jinteki" />
+		<property name="Influence" value="" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda06025" name="Cerebral Static">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Operation" />
+		<property name="Keywords" value="Current" />
+		<property name="Cost" value="2" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="" />	
+		<property name="Rules" value="This card is not trashed until another current is played or an agenda is stolen.&#xD;&#xA;The Runner&apos;s identity text box is blank." />
+		<property name="Flavor" value="Her eyes were the color of a vidscreen, tuned to a dead channel." />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Jinteki" />
+		<property name="Influence" value="2" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda06026" name="Targeted Marketing">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Operation" />
+		<property name="Keywords" value="Current" />
+		<property name="Cost" value="0" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="" />	
+		<property name="Rules" value="This card is not trashed until another current is played or an agenda is stolen.&#xD;&#xA;Name a card. Gain 10[Credits] whenever the Runner plays or installs a copy of that card." />
+		<property name="Flavor" value="" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="NBN" />
+		<property name="Influence" value="1" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda06028" name="Paywall Implementation">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Operation" />
+		<property name="Keywords" value="Current-Transaction" />
+		<property name="Cost" value="0" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="" />	
+		<property name="Rules" value="This card is not trashed until another current is played or an agenda is stolen. &#xD;&#xA;Gain 1[Credits] whenever the Runner makes a successful run." />
+		<property name="Flavor" value="" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="The Weyland Consortium" />
+		<property name="Influence" value="2" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda06030" name="Eden Fragment">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Agenda" />
+		<property name="Keywords" value="Source-Unique" />
+		<property name="Cost" value="5" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="3" />	
+		<property name="Rules" value="Ignore the install cost of the first piece of ice you install each turn.&#xD;&#xA;Limit 1 per deck." />
+		<property name="Flavor" value="" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Neutral" />
+		<property name="Influence" value="0" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda06031" name="Lag Time">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Operation" />
+		<property name="Keywords" value="Current" />
+		<property name="Cost" value="2" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="" />	
+		<property name="Rules" value="This operation is not trashed until another current is played or an agenda is stolen.&#xD;&#xA;All ice have +1 strength." />
+		<property name="Flavor" value="&quot;I don&apos;t care how good your console is, or how tricked out your rig is. The lag time on a run on the moon from earthside can be a killer.&quot; -Leela Patel" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Neutral" />
+		<property name="Influence" value="0" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda06032" name="Will-o&#039;-the-Wisp">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Upgrade" />
+		<property name="Keywords" value="" />
+		<property name="Cost" value="4" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="1" />	
+		<property name="Rules" value="Whenever there is a successful run on this server, you may trash Will-o&apos;-the-Wisp. If you do, choose an icebreaker that was used to break at least 1 subroutine during this run. The Runner adds that icebreaker to the bottom of his or her stack." />
+		<property name="Flavor" value="" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Neutral" />
+		<property name="Influence" value="0" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda06033" name="D4v1d">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Program" />
+		<property name="Keywords" value="" />
+		<property name="Cost" value="3" />
+		<property name="Requirement" value="1" />	
+		<property name="Stat" value="-" />	
+		<property name="Rules" value="Place 3 power counters on D4v1d when it is installed.&#xD;&#xA;Hosted power counter: Break ice subroutine on a piece of ice that has a strength of 5 or greater." />
+		<property name="Flavor" value="" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Anarch" />
+		<property name="Influence" value="4" />
+		<property name="Side" value="runner" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda06034" name="Scrubbed">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Event" />
+		<property name="Keywords" value="Current" />
+		<property name="Cost" value="2" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="" />	
+		<property name="Rules" value="This card is not trashed until another current is played or an agenda is scored.&#xD;&#xA;The first piece of ice encountered each turn has -2 strength for the remainder of the run." />
+		<property name="Flavor" value="" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Anarch" />
+		<property name="Influence" value="2" />
+		<property name="Side" value="runner" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda06036" name="Unscheduled Maintenance">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Event" />
+		<property name="Keywords" value="Current" />
+		<property name="Cost" value="1" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="" />	
+		<property name="Rules" value="This card is not trashed until another current is played or an agenda is scored.&#xD;&#xA;The Corp cannot install more than 1 piece of ice each turn." />
+		<property name="Flavor" value="" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Criminal" />
+		<property name="Influence" value="2" />
+		<property name="Side" value="runner" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda06037" name="Cache">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Program" />
+		<property name="Keywords" value="Virus" />
+		<property name="Cost" value="1" />
+		<property name="Requirement" value="1" />	
+		<property name="Stat" value="-" />	
+		<property name="Rules" value="Place 3 virus counters on Cache when it is installed.&#xD;&#xA;Hosted virus counter: Gain 1[Credits]." />
+		<property name="Flavor" value="&quot;People keep saying that &apos;Cash is king&apos; in the business, like it&apos;s untraceable in the days of DNA sniffers and microtracers. Digital credits can be just as anonymous, and they&apos;re just as easy to counterfeit.&quot; -Silhouette" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Criminal" />
+		<property name="Influence" value="1" />
+		<property name="Side" value="runner" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda06038" name="Net Celebrity">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Event" />
+		<property name="Keywords" value="Current" />
+		<property name="Cost" value="1" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="" />	
+		<property name="Rules" value="This card is not trashed until another current is played or an agenda is scored.&#xD;&#xA;1[Recurring Credits]&#xD;&#xA;Use this credit during a run." />
+		<property name="Flavor" value="" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Shaper" />
+		<property name="Influence" value="1" />
+		<property name="Side" value="runner" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda06039" name="Energy Regulator">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Program" />
+		<property name="Keywords" value="" />
+		<property name="Cost" value="0" />
+		<property name="Requirement" value="1" />	
+		<property name="Stat" value="-" />	
+		<property name="Rules" value="1[Credits] or [Trash]: Prevent an installed piece of hardware from being trashed." />
+		<property name="Flavor" value="" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Shaper" />
+		<property name="Influence" value="1" />
+		<property name="Side" value="runner" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda06040" name="Ghost Runner">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Resource" />
+		<property name="Keywords" value="Stealth-Virtual" />
+		<property name="Cost" value="1" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="" />	
+		<property name="Rules" value="Place 3[Credits] on Ghost Runner when it is installed. When there are no credits left on Ghost Runner, trash it.&#xD;&#xA;You can use the credits on Ghost Runner during a run." />
+		<property name="Flavor" value="" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Neutral" />
+		<property name="Influence" value="0" />
+		<property name="Side" value="runner" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+</cards>
+</set>
