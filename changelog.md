@@ -1,6 +1,16 @@
 Changelog - Android:Netrunner LCG OCTGN Game Definition
 ===============================================
 
+### 3.12.0.x
+
+* New game definition for **The Spaces Between**. As always, almost every card scripted!
+
+* ##### Trickier Automations
+  * Targeted Marketing: Manual Use
+  
+  
+
+
 ### 3.11.1.x
 
 * Fixed mother goddess not being unique

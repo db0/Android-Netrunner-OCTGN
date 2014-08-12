@@ -782,6 +782,7 @@ def reduceCost(card, action = 'REZ', fullCost = 0, dryRun = False, reversePlayer
       reductionRegex = re.compile(r'(Reduce|Increase)([0-9#XS]+)Cost({}|All)-affects([A-Z][A-Za-z ]+)(-not[A-Za-z_& ]+)?'.format(type)) # Doing this now, to reduce load.
       for c in RC_cardList: # Then check if there's other cards in the table that reduce its costs.
          debugNotify("Scanning {}".format(c), 2) #Debug
+         if c.Type == 'Identity' and c.Side == 'runner' and chkCerebralStatic(): continue # If Cerebral Static is still active, we abort the scripts.
          Autoscripts = CardsAS.get(c.model,'').split('||')
          if len(Autoscripts) == 0: 
             debugNotify("No AS found. Continuing")

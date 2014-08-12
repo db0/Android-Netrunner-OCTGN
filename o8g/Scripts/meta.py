@@ -589,6 +589,11 @@ def clearCurrents(type = None,card = None):
             intTrashCard(c, c.Stat, "free")
             notify(":> {} scores their agenda and {} fades out".format(me,c))
             
+def chkCerebralStatic():
+   CS = None
+   for card in table:
+      if card.name == "Cerebral Static": CS = card
+   return CS
 #---------------------------------------------------------------------------
 # Card Placement
 #---------------------------------------------------------------------------

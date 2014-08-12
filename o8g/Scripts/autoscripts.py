@@ -274,6 +274,9 @@ def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
       if not accessRegex:
          whisper("You cannot use inactive cards. Please use the relevant card abilities to clear them first. Aborting")
          return
+   if card.type == 'Identity' and card.Side == 'runner' and chkCerebralStatic(): 
+         whisper("You cannot use your ID's ability because {} is active. Aborting!".format(chkCerebralStatic()))
+         return
    debugNotify("Finished storing CardsAA.get(card.model,'')s. Checking Rez status", 4)
    if not card.isFaceUp:
       if re.search(r'onAccess',fetchProperty(card, 'AutoActions')) and confirm("This card has an ability that can be activated even when unrezzed. Would you like to activate that now?"): card.isFaceUp = True # Activating an on-access ability requires the card to be exposed, it it's no already.
@@ -586,6 +589,7 @@ def autoscriptOtherPlayers(lookup, origin_card = Identity, count = 1): # Functio
             debugNotify("lookup: {} not found in CardScript. Aborting".format(lookup))
             continue # Search if in the script of the card, the string that was sent to us exists. The sent string is decided by the function calling us, so for example the ProdX() function knows it only needs to send the 'GeneratedSpice' string.
          if chkPlayer(autoS, card.controller,False) == 0: continue # Check that the effect's origninator is valid.
+         if card.Type == 'Identity' and card.Side == 'runner' and chkCerebralStatic(): continue # If Cerebral Static is still active, we abort the scripts.
          if not ifHave(autoS,card.controller,silent = True): continue # If the script requires the playet to have a specific counter value and they don't, do nothing.
          if re.search(r'whileScored',autoS) and card.controller.getGlobalVariable('ds') != 'corp': continue # If the card is only working while scored, then its controller has to be the corp.
          if chkTagged(autoS, True) == 'ABORT': continue
@@ -646,6 +650,7 @@ def atTimedEffects(Time = 'Start', AlternativeRunResultUsed = False): # Function
          debugNotify("Rejecting {} Because highlight == {}".format(card, card.highlight), 4)
          continue
       if not card.isFaceUp: continue
+      if card.Type == 'Identity' and card.Side == 'runner' and chkCerebralStatic(): continue # If Cerebral Static is still active, we abort the scripts.
       Autoscripts = CardsAS.get(card.model,'').split('||')
       for autoS in Autoscripts:
          debugNotify("Processing {} Autoscript: {}".format(card, autoS), 3)
