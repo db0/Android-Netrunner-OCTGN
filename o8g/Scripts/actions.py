@@ -332,6 +332,10 @@ def intRun(aCost = 1, Name = 'R&D', silent = False):
       if getGlobalVariable('Central Run') == 'False' and Name == 'Remote': 
          whisper(":::ERROR::: Your opponent is playing {}:{}. You cannot run a remote server until you've first run on a central server".format(enemyIdent,enemyIdent.Subtitle))
          return 'ABORT'
+   for c in table:
+      if c.name == 'Enhanced Login Protocol' and c.orientation != Rot90: # For cards which increase the action cost, we need to check manually before the run.
+         aCost += 1
+         c.orientation = Rot90
    ClickCost = useClick(count = aCost)
    if ClickCost == 'ABORT': return 'ABORT'
    playRunStartSound()

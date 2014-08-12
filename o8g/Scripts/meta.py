@@ -569,7 +569,7 @@ def clearLeftoverEvents():
    for card in table: # We discard all events on the table when the player tries to use another click.
       debugNotify("Processing {}".format(card))
       debugNotify("hostCards eval = {}".format(hostCards))
-      if card.isFaceUp and (card.Type == 'Operation' or card.Type == 'Event') and card.highlight != DummyColor and card.highlight != RevealedColor and card.highlight != InactiveColor and not card.markers[mdict['Scored']] and not hostCards.has_key(card._id): # We do not trash "scored" events (e.g. see Notoriety) or cards hosted on others card (e.g. see Oversight AI)
+      if card.isFaceUp and (card.Type == 'Operation' or card.Type == 'Event') and not re.search('Current',getKeywords(card)) and card.highlight != DummyColor and card.highlight != RevealedColor and card.highlight != InactiveColor and not card.markers[mdict['Scored']] and not hostCards.has_key(card._id): # We do not trash "scored" events (e.g. see Notoriety) or cards hosted on others card (e.g. see Oversight AI)
          intTrashCard(card,0,"free") # Clearing all Events and operations for players who keep forgeting to clear them.   
    debugNotify("<<< clearLeftoverEvents()") #Debug   
 
