@@ -7,11 +7,13 @@ Changelog - Android:Netrunner LCG OCTGN Game Definition
 
 * ##### Trickier Automations
   * Targeted Marketing: Manual Use
-  * Ceebral Static: Won't reduce Chaos Theory's MU.
+  * Cerebral Static: Won't reduce Chaos Theory's MU.
   * Unscheduled Maintenance: Not Automated
   * Information Overload: Only trace is automated, since the runner chooses what to trash for the subroutines.
   * Scrubbed: Not Automated
-
+  * Energy Regulator: Just Announces
+  * Lag Time: Not Automated
+  * Encrypted Portals: Doesn't add markers or anything.
   
 
 
