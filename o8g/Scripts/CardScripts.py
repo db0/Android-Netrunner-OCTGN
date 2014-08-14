@@ -3941,9 +3941,25 @@ onDragDrop:IgnoreCosts-isSourceShard
 +++++
 A0B0G0T1:Draw2Cards-onOpponent
 .....
+The Foundry
+-----
+bc0f047c-01b1-427f-a439-d451eda06021
+-----
+
++++++
+
+.....
 Enhanced Login Protocol
 -----
 bc0f047c-01b1-427f-a439-d451eda06022
+-----
+
++++++
+
+.....
+Heinlein Grid
+-----
+bc0f047c-01b1-427f-a439-d451eda06023
 -----
 
 +++++
@@ -3973,11 +3989,27 @@ bc0f047c-01b1-427f-a439-d451eda06026
 +++++
 A0B0G0T0:Gain10Credits
 .....
+Information Overload
+-----
+bc0f047c-01b1-427f-a439-d451eda06027
+-----
+
++++++
+
+.....
 Paywall Implementation
 -----
 bc0f047c-01b1-427f-a439-d451eda06028
 -----
 atSuccessfulRun:Gain1Credits
++++++
+
+.....
+Sealed Vault
+-----
+bc0f047c-01b1-427f-a439-d451eda06029
+-----
+
 +++++
 
 .....
@@ -4020,6 +4052,14 @@ bc0f047c-01b1-427f-a439-d451eda06034
 
 +++++
 A0B0G0T0:Put2MinusOne-Targeted-atICE-onlyOnce
+.....
+Three Steps Ahead
+-----
+bc0f047c-01b1-427f-a439-d451eda06035
+-----
+
++++++
+
 .....
 Unscheduled Maintenance
 -----
