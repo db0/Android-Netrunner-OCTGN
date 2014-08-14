@@ -2795,7 +2795,7 @@ bc0f047c-01b1-427f-a439-d451eda04054
 -----
 
 +++++
-A0B0G0T0:Gain2Credits
+A0B0G0T0:Gain2Credits-onlyOnce
 .....
 City Surveillance
 -----
@@ -4009,9 +4009,9 @@ D4v1d
 -----
 bc0f047c-01b1-427f-a439-d451eda06033
 -----
-
+onInstall:Put3Power
 +++++
-
+A0B0G0T0:Remove1Power-isCost$$SimplyAnnounce{break ICE Subroutine}
 .....
 Scrubbed
 -----
@@ -4019,7 +4019,7 @@ bc0f047c-01b1-427f-a439-d451eda06034
 -----
 
 +++++
-
+A0B0G0T0:Put2MinusOne-Targeted-atICE-onlyOnce
 .....
 Unscheduled Maintenance
 -----
@@ -4033,15 +4033,15 @@ Cache
 -----
 bc0f047c-01b1-427f-a439-d451eda06037
 -----
-
+onPlay:Put3Power
 +++++
-
+A0B0G0T0:Remove1Power-isCost$$Gain1Credits
 .....
 Net Celebrity
 -----
 bc0f047c-01b1-427f-a439-d451eda06038
 -----
-
+onPlay:Put1Credits-isSilent||whileRunning:Reduce#CostAll-affectsAll-forMe||atTurnPreStart:Refill1Credits-duringMyTurn
 +++++
 
 .....
@@ -4051,7 +4051,7 @@ bc0f047c-01b1-427f-a439-d451eda06039
 -----
 
 +++++
-
+A0B1G0T0:SimplyAnnounce{prevent an installed piece of hardware from being trashed}||A0B0G0T1:SimplyAnnounce{prevent an installed piece of hardware from being trashed}
 .....
 Ghost Runner
 -----

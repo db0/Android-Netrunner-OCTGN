@@ -223,7 +223,7 @@
 		<property name="Stat" value="-" />	
 		<property name="Rules" value="1[Credits] or [Trash]: Prevent an installed piece of hardware from being trashed." />
 		<property name="Flavor" value="" />
-		<property name="Instructions" value="" />
+		<property name="Instructions" value="1[Credits]: Prevent an installed piece of hardware from being trashed.||[Trash]: Prevent an installed piece of hardware from being trashed." />
 		<property name="Faction" value="Shaper" />
 		<property name="Influence" value="1" />
 		<property name="Side" value="runner" />
