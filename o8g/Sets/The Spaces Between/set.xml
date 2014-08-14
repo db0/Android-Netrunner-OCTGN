@@ -6,6 +6,22 @@
      gameVersion="3.0.0.0" 
      version="3.0.0.0">
 <cards>
+	<card id="bc0f047c-01b1-427f-a439-d451eda06021" name="The Foundry">
+		<property name="Subtitle" value="Refining the Process" />
+		<property name="Type" value="Identity" />
+		<property name="Keywords" value="Division" />
+		<property name="Cost" value="0" />
+		<property name="Requirement" value="45" />	
+		<property name="Stat" value="15" />	
+		<property name="Rules" value="The first time you rez a piece of ice each turn, you may search R&amp;D for another copy of that ice, reveal it, and add it to HQ. Shuffle R&amp;D." />
+		<property name="Flavor" value="" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Haas-Bioroid" />
+		<property name="Influence" value="" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
 	<card id="bc0f047c-01b1-427f-a439-d451eda06022" name="Enhanced Login Protocol">
 		<property name="Subtitle" value="" />
 		<property name="Type" value="Operation" />
@@ -15,6 +31,22 @@
 		<property name="Stat" value="" />	
 		<property name="Rules" value="This card is not trashed until another current is played or an agenda is stolen.&#xD;&#xA;As an additional cost to make the first run not made through a card ability on his or her turn, the Runner must spend [Click]." />
 		<property name="Flavor" value="" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Haas-Bioroid" />
+		<property name="Influence" value="2" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda06023" name="Heinlein Grid">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Upgrade" />
+		<property name="Keywords" value="Region" />
+		<property name="Cost" value="3" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="3" />	
+		<property name="Rules" value="If the Runner loses or spends a click during a run on this server, he or she loses all credits in his or her credit pool.&#xD;&#xA;Limit 1 region per server." />
+		<property name="Flavor" value="&quot;There are many advantages to having facilities on the moon. Less traffic, for example.&quot; -Director Hass" />
 		<property name="Instructions" value="" />
 		<property name="Faction" value="Haas-Bioroid" />
 		<property name="Influence" value="2" />
@@ -70,6 +102,22 @@
 		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
 	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda06027" name="Information Overload">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="ICE" />
+		<property name="Keywords" value="Sentry-Tracer" />
+		<property name="Cost" value="6" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="4" />	
+		<property name="Rules" value="When the Runner encounters Information Overload, trace1 - if the trace is successful, give the Runner 1 tag.&#xD;&#xA;Information Overload gains &quot;[Subroutine] The Runner trashes 1 of his or her installed cards.&quot; for each tag the Runner has." />
+		<property name="Flavor" value="Throw enough data at a runner and it ceases to have any meaning at all." />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="NBN" />
+		<property name="Influence" value="2" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
 	<card id="bc0f047c-01b1-427f-a439-d451eda06028" name="Paywall Implementation">
 		<property name="Subtitle" value="" />
 		<property name="Type" value="Operation" />
@@ -82,6 +130,22 @@
 		<property name="Instructions" value="" />
 		<property name="Faction" value="The Weyland Consortium" />
 		<property name="Influence" value="2" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda06029" name="Sealed Vault">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Asset" />
+		<property name="Keywords" value="Facility" />
+		<property name="Cost" value="0" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="8" />	
+		<property name="Rules" value="1[Credits]: Move any number of credits from your credit pool to Sealed Vault.&#xD;&#xA;[Click] or [Trash]: Move any number of credits from Sealed Vault to your credit pool." />
+		<property name="Flavor" value="Nothing is impenetrable. The key is to make breaking into it more costly than what it&apos;s worth." />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="The Weyland Consortium" />
+		<property name="Influence" value="1" />
 		<property name="Side" value="corp" />
 		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
@@ -166,6 +230,22 @@
 		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
 	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda06035" name="Three Steps Ahead">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Event" />
+		<property name="Keywords" value="Priority" />
+		<property name="Cost" value="1" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="" />	
+		<property name="Rules" value="Play only as your first [Click].&#xD;&#xA;When this turn ends, gain 2[Credits] for each successful run you made during it." />
+		<property name="Flavor" value="In this business, you had to anticipate. If you weren&apos;t three steps ahead, you were three steps behind." />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Criminal" />
+		<property name="Influence" value="2" />
+		<property name="Side" value="runner" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
 	<card id="bc0f047c-01b1-427f-a439-d451eda06036" name="Unscheduled Maintenance">
 		<property name="Subtitle" value="" />
 		<property name="Type" value="Event" />
@@ -223,7 +303,7 @@
 		<property name="Stat" value="-" />	
 		<property name="Rules" value="1[Credits] or [Trash]: Prevent an installed piece of hardware from being trashed." />
 		<property name="Flavor" value="" />
-		<property name="Instructions" value="1[Credits]: Prevent an installed piece of hardware from being trashed.||[Trash]: Prevent an installed piece of hardware from being trashed." />
+		<property name="Instructions" value="1 [Credits]: Prevent an installed piece of hardware from being trashed.||[Trash]: Prevent an installed piece of hardware from being trashed." />
 		<property name="Faction" value="Shaper" />
 		<property name="Influence" value="1" />
 		<property name="Side" value="runner" />
