@@ -930,7 +930,7 @@ def reduceCost(card, action = 'REZ', fullCost = 0, dryRun = False, reversePlayer
       c = cTuple[0]
       reductionSearch = cTuple[1]
       autoS = cTuple[2]
-      debugNotify("cTuple[0] (i.e. card) is: {}".format(c), 2) #Debug
+      debugNotify("cTuple[0] (i.e. card) is: {}".format(c.name)) #Debug
       debugNotify("cTuple[2] (i.e. autoS) is: {}".format(autoS), 4) #Debug
       if reductionSearch.group(4) == 'All' or checkCardRestrictions(gatherCardProperties(card), prepareRestrictions(autoS,seek = 'reduce')):
          debugNotify(" ### Search match! Reduction Value is {}".format(reductionSearch.group(2)), 3) # Debug
@@ -957,6 +957,11 @@ def reduceCost(card, action = 'REZ', fullCost = 0, dryRun = False, reversePlayer
             if not dryRun and markersRemoved != 0:
                c.markers[mdict['Credits']] -= markersRemoved # If we have a dryRun, we don't remove any tokens.
                notify(" -- {} credits are used from {}".format(markersRemoved,c))
+            if not dryRun and re.search(r'trashCost-ifEmpty', autoS) and not c.markers[mdict["Credit"]]:
+               debugNotify("{} has with trashCost".format(c), 3)
+               intTrashCard(c, c.Stat, cost = "free", silent = True)
+               notify("-- {} {} {} because it was empty".format(me,uniTrash(),c))
+               #ModifyStatus('TrashMyself', c.controller.name, card, notification = 'Quick') # If the modulator -trashCost is there, the card trashes itself in order to use it's damage prevention ability
    debugNotify("<<< reduceCost() with return {}".format(reduction))
    return reduction
 

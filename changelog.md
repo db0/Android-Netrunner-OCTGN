@@ -9,6 +9,9 @@ Changelog - Android:Netrunner LCG OCTGN Game Definition
   * Targeted Marketing: Manual Use
   * Ceebral Static: Won't reduce Chaos Theory's MU.
   * Unscheduled Maintenance: Not Automated
+  * Information Overload: Only trace is automated, since the runner chooses what to trash for the subroutines.
+  * Scrubbed: Not Automated
+
   
 
 

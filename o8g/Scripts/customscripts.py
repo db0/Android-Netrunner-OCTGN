@@ -283,6 +283,15 @@ def UseCustomAbility(Autoscript, announceText, card, targetCards = None, notific
       card.controller.Credits += num(targetCards[0].Cost)
       notify("{} gains {} from their {}".format(card.controller,uniCredit(num(targetCards[0].Cost)),card))
       announceString = ''
+   if fetchProperty(card, 'name') == "The Foundry":
+      targetC = targetCards[0] # For this to be triggered an ICE has to have been rezzed, which was passed to us in an array.
+      if not confirm("Would you like to forge another {}?".format(targetC.name)):
+         return 'ABORT'
+      retrieveResult = RetrieveX('Retrieve1Card-grab{}-isTopmost'.format(targetC.name.replace('-','_')), announceText, card)
+      shuffle(me.piles['R&D/Stack'])
+      if re.search(r'no valid targets',retrieveResult[0]): announceString = "{} tries to use The Foundry to create a copy of {}, but they run out of bits.".format(me,targetC.name) # If we couldn't find a copy of the played card to replicate, we inform of this
+      else: announceString = "{} uses The Foundry to create a copy of {}".format(me,targetC.name)
+      notify(announceString)
    return announceString
    
 def CustomScript(card, action = 'PLAY', origin_card = None, original_action = None): # Scripts that are complex and fairly unique to specific cards, not worth making a whole generic function for them.
@@ -1033,6 +1042,34 @@ def CustomScript(card, action = 'PLAY', origin_card = None, original_action = No
          else: diff = "-{}".format(uniCredit(abs(diff)))
          me.Credits = num(targetICE[0].Cost)
          notify("{} encounters freshly rezzed {} and sets their Credits to {} ({})".format(me,targetICE[0],me.Credits,diff))
+   elif fetchProperty(card, 'name') == 'Sealed Vault' and action == 'USE':
+      if not card.markers[mdict["Credit"]] and not me.Credits: 
+         notify("{} wanted to use their {} but it was full of spiderwebs and their bank accounts would shame a pauper.".format(me,card))
+         return "ABORT"
+      elif not card.markers[mdict["Credit"]]: choice = 0
+      elif not me.Credits: choice = 1
+      else: choice = SingleChoice("Choose Option", ["Move any number of credits from your credit pool to Sealed Vault.","[Click] or [Trash]: Move any number of credits from Sealed Vault to your credit pool."])
+      if choice == 0:
+         if payCost(1, 'not free') == "ABORT": return "ABORT"
+         transfer = askInteger("How many credits do you want to transfer to the Sealed Vault?", me.Credits)
+         if transfer > me.Credits: transfer = me.Credits # If they exceed their credits, we just transfer the max they have
+         card.markers[mdict["Credit"]] += transfer
+         me.Credits -= transfer
+         notify("{} pays {} to transfer {} from their credit pool to the {}. They have {} remaining".format(me,uniCredit(1),uniCredit(transfer),card,uniCredit(me.Credits)))
+      else:   
+         if confirm("Trash {} to grab the credits?".format(card.name)): trashUse = True
+         else: 
+            clickTXT = useClick()
+            if clickTXT == 'ABORT': return clickTXT
+            trashUse = False         
+         transfer = askInteger("How many credits do you want to transfer from the Sealed Vault to your bank?", card.markers[mdict["Credit"]])
+         if transfer > card.markers[mdict["Credit"]]: transfer = card.markers[mdict["Credit"]] # If they exceed their credits, we just transfer the max they have
+         card.markers[mdict["Credit"]] -= transfer
+         me.Credits += transfer
+         if trashUse: 
+            notify("{} {} {} to transfer {} from it to their credit pool. They now have {}".format(me,uniTrash(),card,uniCredit(transfer),uniCredit(me.Credits)))
+            intTrashCard(card, fetchProperty(card,'Stat'), "free", silent = True)
+         else: notify("{} to {} {} and transfers {} from it to their credit pool. They now have {}".format(clickTXT,uniTrash(),card,uniCredit(transfer),uniCredit(me.Credits)))         
    elif action == 'USE': useCard(card)
       
             

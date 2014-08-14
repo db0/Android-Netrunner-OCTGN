@@ -1180,7 +1180,14 @@ def TokensX(Autoscript, announceText, card, targetCards = None, notification = N
             if not targetCard.markers[token]:
                #if not re.search(r'isSilent', Autoscript): delayed_whisper("There was nothing to remove.") 
                break
-            else: targetCard.markers[token] -= 1 
+            else: 
+               targetCard.markers[token] -= 1 
+               if token[0] == "Credit": # If the tokens we removed were credits, we check if the card is supposed to be trashed when it runs out.
+                  Autoscripts = fetchProperty(targetCard, 'AutoScripts').split('||')
+                  for autoS in Autoscripts:
+                     if re.search(r'Reduce(.+?)Cost',autoS) and re.search(r'trashCost-ifEmpty', autoS) and not targetCard.markers[mdict["Credit"]]: 
+                        intTrashCard(targetCard, targetCard.Stat, cost = "free", silent = True)
+                        notify("-- {} {} {} because it was empty".format(me,uniTrash(),targetCard))
          else:
             if action.group(1) == 'Refill' and targetCard.markers[token] and targetCard.markers[token] >= modtokens: break # If we're refilling the tokens and we've already exceeded that amount, we don't add more
             targetCard.markers[token] += 1

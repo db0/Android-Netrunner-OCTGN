@@ -3945,7 +3945,7 @@ The Foundry
 -----
 bc0f047c-01b1-427f-a439-d451eda06021
 -----
-
+whileInPlay:UseCustomAbility-foreachCardRezzed-typeICE-onTriggerCard-typeICE-byMe-onlyOnce
 +++++
 
 .....
@@ -3963,7 +3963,7 @@ bc0f047c-01b1-427f-a439-d451eda06023
 -----
 
 +++++
-
+A0B0G0T0:Lose999Credits-onOpponent
 .....
 Encrypted Portals
 -----
@@ -3995,7 +3995,7 @@ bc0f047c-01b1-427f-a439-d451eda06027
 -----
 
 +++++
-
+A0B0G0T0:Trace1-traceEffects<Gain1Tags-onOpponent,None>
 .....
 Paywall Implementation
 -----
@@ -4011,7 +4011,7 @@ bc0f047c-01b1-427f-a439-d451eda06029
 -----
 
 +++++
-
+A0B0G0T0:CustomScript
 .....
 Eden Fragment
 -----
@@ -4057,7 +4057,7 @@ Three Steps Ahead
 -----
 bc0f047c-01b1-427f-a439-d451eda06035
 -----
-
+onPlay:CreateDummy||atSuccessfulRun:Put1Power||atTurnEnd:Gain2Credits-perMarker{Power}$$TrashMyself-isSilent
 +++++
 
 .....
@@ -4073,9 +4073,9 @@ Cache
 -----
 bc0f047c-01b1-427f-a439-d451eda06037
 -----
-onPlay:Put3Power
+onInstall:Put3Virus
 +++++
-A0B0G0T0:Remove1Power-isCost$$Gain1Credits
+A0B0G0T0:Remove1Virus-isCost$$Gain1Credits
 .....
 Net Celebrity
 -----
@@ -4097,7 +4097,7 @@ Ghost Runner
 -----
 bc0f047c-01b1-427f-a439-d451eda06040
 -----
-
+onInstall:Put3Credits||whileRunning:Reduce#CostAll-affectsAll-forMe-trashCost-ifEmpty
 +++++
 
 .....
