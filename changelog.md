@@ -1,6 +1,10 @@
 Changelog - Android:Netrunner LCG OCTGN Game Definition
 ===============================================
 
+### 3.12.1.x
+
+* The Foundry should find Bioroids now.
+
 ### 3.12.0.x
 
 * New game definition for **The Spaces Between**. As always, almost every card scripted!

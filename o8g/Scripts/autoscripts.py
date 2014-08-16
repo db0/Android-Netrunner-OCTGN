@@ -2088,10 +2088,10 @@ def prepareRestrictions(Autoscript, seek = 'target'):
    debugNotify(">>> prepareRestrictions() {}".format(extraASDebug(Autoscript))) #Debug
    validTargets = [] # a list that holds any type that a card must be, in order to be a valid target.
    targetGroups = []
-   if seek == 'type': whatTarget = re.search(r'\b(type)([A-Za-z0-9_{},& ]+)[-]?', Autoscript) # seek of "type" is used by autoscripting other players, and it's separated so that the same card can have two different triggers (e.g. see Darth Vader)
-   elif seek == 'retrieve': whatTarget = re.search(r'\b(grab)([A-Za-z0-9_{},& ]+)[-]?', Autoscript) # seek of "retrieve" is used when checking what types of cards to retrieve from one's deck or discard pile
-   elif seek == 'reduce': whatTarget = re.search(r'\b(affects)([A-Za-z0-9_{},& ]+)[-]?', Autoscript) # seek of "reduce" is used when checking for what types of cards to recuce the cost.
-   else: whatTarget = re.search(r'\b(at)([A-Za-z0-9_{},& ]+)[-]?', Autoscript) # We signify target restrictions keywords by starting a string with "or"
+   if seek == 'type': whatTarget = re.search(r'\b(type)([A-Za-z0-9_{},&. ]+)[-]?', Autoscript) # seek of "type" is used by autoscripting other players, and it's separated so that the same card can have two different triggers (e.g. see Darth Vader)
+   elif seek == 'retrieve': whatTarget = re.search(r'\b(grab)([A-Za-z0-9_{},&. ]+)[-]?', Autoscript) # seek of "retrieve" is used when checking what types of cards to retrieve from one's deck or discard pile
+   elif seek == 'reduce': whatTarget = re.search(r'\b(affects)([A-Za-z0-9_{},&. ]+)[-]?', Autoscript) # seek of "reduce" is used when checking for what types of cards to recuce the cost.
+   else: whatTarget = re.search(r'\b(at)([A-Za-z0-9_{},&. ]+)[-]?', Autoscript) # We signify target restrictions keywords by starting a string with "or"
    if whatTarget: 
       debugNotify("whatTarget = {}".format(whatTarget.groups()))
       debugNotify("Splitting on _or_", 2) #Debug
@@ -2118,8 +2118,8 @@ def prepareRestrictions(Autoscript, seek = 'target'):
 
 def checkCardRestrictions(cardPropertyList, restrictionsList):
    debugNotify(">>> checkCardRestrictions()") #Debug
-   debugNotify("cardPropertyList = {}".format(cardPropertyList), 2) #Debug
-   debugNotify("restrictionsList = {}".format(restrictionsList), 2) #Debug
+   debugNotify("cardPropertyList = {}".format(cardPropertyList)) #Debug
+   debugNotify("restrictionsList = {}".format(restrictionsList)) #Debug
    validCard = True
    for restrictionsGroup in restrictionsList: 
    # We check each card's properties against each restrictions group of valid + invalid properties.

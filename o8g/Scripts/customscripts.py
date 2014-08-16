@@ -287,7 +287,7 @@ def UseCustomAbility(Autoscript, announceText, card, targetCards = None, notific
       targetC = targetCards[0] # For this to be triggered an ICE has to have been rezzed, which was passed to us in an array.
       if not confirm("Would you like to forge another {}?".format(targetC.name)):
          return 'ABORT'
-      retrieveResult = RetrieveX('Retrieve1Card-grab{}-isTopmost'.format(targetC.name.replace('-','_')), announceText, card)
+      retrieveResult = RetrieveX('Retrieve1Card-grab{}-isTopmost'.format(targetC.name), announceText, card)
       shuffle(me.piles['R&D/Stack'])
       if re.search(r'no valid targets',retrieveResult[0]): announceString = "{} tries to use The Foundry to create a copy of {}, but they run out of bits.".format(me,targetC.name) # If we couldn't find a copy of the played card to replicate, we inform of this
       else: announceString = "{} uses The Foundry to create a copy of {}".format(me,targetC.name)
