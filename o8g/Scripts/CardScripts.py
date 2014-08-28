@@ -4091,7 +4091,7 @@ bc0f047c-01b1-427f-a439-d451eda06039
 -----
 
 +++++
-A0B1G0T0:SimplyAnnounce{prevent an installed piece of hardware from being trashed}||A0B0G0T1:SimplyAnnounce{prevent an installed piece of hardware from being trashed}
+A0B3G0T0:SimplyAnnounce{prevent an installed piece of hardware from being trashed}||A0B0G0T1:SimplyAnnounce{prevent an installed piece of hardware from being trashed}
 .....
 Ghost Runner
 -----

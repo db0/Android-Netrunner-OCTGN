@@ -198,6 +198,8 @@ SuperchargedSubs = ['stevehouston',       # Brendan               - http://www.p
                     'icydevarosp',        # Nickolas Riggs        - http://www.patreon.com/user?u=151453
                     'broccoli',           # Bryan Graham          - http://www.patreon.com/user?u=42675
                     'cspieker',           # Chuck Spiekerman      - 
+                    'paranoid31',         # Joe Schupp            - http://www.patreon.com/user?msg=1&u=277654
+                    'nicohasa',           # Nikolai Hansen        - http://www.patreon.com/user?u=277545
                     'alsciende'           # Cedric                - http://netrunnerdb.com/
                    ] # 3$ Tier
 

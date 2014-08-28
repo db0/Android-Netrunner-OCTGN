@@ -1,9 +1,15 @@
 Changelog - Android:Netrunner LCG OCTGN Game Definition
 ===============================================
 
+### 3.12.2.x
+
+* The Foundry can find new pop-up windows now
+* Fixed LLDS Energy Regulator use Cost
+
 ### 3.12.1.x
 
 * The Foundry should find Bioroids now.
+* Enhanced Login Protocol shouldn't work for card effect runs now.
 
 ### 3.12.0.x
 

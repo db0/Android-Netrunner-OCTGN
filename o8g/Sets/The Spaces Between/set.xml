@@ -294,16 +294,16 @@
 		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
 	</card>
-	<card id="bc0f047c-01b1-427f-a439-d451eda06039" name="Energy Regulator">
+	<card id="bc0f047c-01b1-427f-a439-d451eda06039" name="LLDS Energy Regulator">
 		<property name="Subtitle" value="" />
 		<property name="Type" value="Program" />
 		<property name="Keywords" value="" />
 		<property name="Cost" value="0" />
 		<property name="Requirement" value="1" />	
 		<property name="Stat" value="-" />	
-		<property name="Rules" value="1[Credits] or [Trash]: Prevent an installed piece of hardware from being trashed." />
+		<property name="Rules" value="3 [Credits] or [Trash]: Prevent an installed piece of hardware from being trashed." />
 		<property name="Flavor" value="" />
-		<property name="Instructions" value="1 [Credits]: Prevent an installed piece of hardware from being trashed.||[Trash]: Prevent an installed piece of hardware from being trashed." />
+		<property name="Instructions" value="3 [Credits]: Prevent an installed piece of hardware from being trashed.||[Trash]: Prevent an installed piece of hardware from being trashed." />
 		<property name="Faction" value="Shaper" />
 		<property name="Influence" value="1" />
 		<property name="Side" value="runner" />
