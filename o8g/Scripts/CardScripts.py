@@ -3521,7 +3521,7 @@ Plan B
 -----
 bc0f047c-01b1-427f-a439-d451eda05023
 -----
-onAccess:UseCustomAbility
+onAccess:UseCustomAbility-ifInstalled
 +++++
 A0B0G0T0:UseCustomAbility
 .....
