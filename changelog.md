@@ -5,6 +5,7 @@ Changelog - Android:Netrunner LCG OCTGN Game Definition
 
 * The Foundry can find new pop-up windows now
 * Fixed LLDS Energy Regulator use Cost
+* Plan B shouldn't announce itself in R&D
 
 ### 3.12.1.x
 
