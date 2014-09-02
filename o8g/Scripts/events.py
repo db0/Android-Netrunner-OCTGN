@@ -113,6 +113,9 @@ def checkDeck(player,groups):
          elif card.Faction != Identity.Faction and card.Faction != 'Neutral' and Identity.Faction != 'Neutral':
             notify(":::ERROR::: Faction-restricted card ({}) found in {}'s {}.".format(fetchProperty(card, 'name'), me, pileName(group)))
             ok = False
+      if Identity.model == 'bc0f047c-01b1-427f-a439-d451eda00000' and card.Faction == 'Criminal':
+         notify(":::ERROR::: Criminal cards found in a {} deck".format(Identity))
+         ok = False
       if Identity.model == 'bc0f047c-01b1-427f-a439-d451eda03002' and card.Faction == 'Jinteki':
          notify(":::ERROR::: Jinteki cards found in a {} deck".format(Identity))
          ok = False

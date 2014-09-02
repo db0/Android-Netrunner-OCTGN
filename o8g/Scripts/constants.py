@@ -200,6 +200,7 @@ SuperchargedSubs = ['stevehouston',       # Brendan               - http://www.p
                     'cspieker',           # Chuck Spiekerman      - 
                     'paranoid31',         # Joe Schupp            - http://www.patreon.com/user?msg=1&u=277654
                     'nicohasa',           # Nikolai Hansen        - http://www.patreon.com/user?u=277545
+                    'saracenus',          # Bryan from FB         # Created my ANR ID
                     'alsciende'           # Cedric                - http://netrunnerdb.com/
                    ] # 3$ Tier
 
@@ -213,6 +214,7 @@ CardSubs = ['susuexp',                    # Simon Gunkel          - http://www.p
             'theemann',                   # Chad                  - http://www.patreon.com/user?u=90551
             #'rediknight',                 # Jeremy Espinosa       - http://www.patreon.com/user?u=68437 # Declined last payment...again.
             'wimpgod',                    # Gary Bergeron         - Old time supporter
+            'tuism',                      #Steven Tu              - Awesome dude
             'Kethran',                    # Marius Ødegård        - http://www.patreon.com/user?u=90737
             'db0',
             'dbzer0'
