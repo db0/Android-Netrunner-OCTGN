@@ -46,6 +46,14 @@ d59fc50c-c727-4b69-83eb-36c475d60dcb
 +++++
 A1B0G0T0:RunEnd-isSilent$$RunRemote
 .....
+Divided by Zer0
+-----
+bc0f047c-01b1-427f-a439-d451eda00000
+-----
+
++++++
+A0B0G0T0:ExileTarget-Targeted-atAgenda-targetMine-isCost$$SimplyAnnounce{force the corp to forfeit an agenda}
+.....
 Accelerated Beta Test
 -----
 bc0f047c-01b1-427f-a439-d451eda01055
