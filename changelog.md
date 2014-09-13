@@ -15,9 +15,6 @@ Changelog - Android:Netrunner LCG OCTGN Game Definition
   * Hades Shard: Shards can be installed manually when you're about to access. Simply drag them to the table and they'll skip their cost, and set the run to succeed, bypassing all costs. Warning this will bypass all corp acknowledgement, so make sure you use it after the corp has given the OK to access.
   * Rachel Beckman: Won't trash automatically when tagged.
   
-
-* Port Anson Grid
-
 ### 3.12.2.x
 
 * The Foundry can find new pop-up windows now
