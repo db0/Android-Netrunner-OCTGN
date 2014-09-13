@@ -439,7 +439,16 @@ def runSuccess(group=table,x=0,y=0, silent = False, ShardSuccess = False):
          setGlobalVariable('accessAttempts',str(num(getGlobalVariable('accessAttempts')) + 1))
          return 'DENIED'
       else:
-         setGlobalVariable('SuccessfulRun','True')
+         blockSuccess = False
+         for c in table: 
+            if c.name == 'Crisium Grid': # Here we basically tell the system that if Crisium Grid has been used,don't set the run as succesful
+               blockSuccessMarker = findMarker(c, 'Enabled')
+               if blockSuccess:
+                  c.markers[blockSuccessMarker] = 0
+                  blockSuccess = True
+                  setGlobalVariable('SuccessfulRun','Null')
+                  break
+         if not blockSuccess: setGlobalVariable('SuccessfulRun','True')
          if getGlobalVariable('feintTarget') != 'None': runTarget = getGlobalVariable('feintTarget') #If the runner is feinting, now change the target server to the right one
          else: runTarget = runTargetRegex.group(1) # If the runner is not feinting, then extract the target from the shared variable
          atTimedEffects('SuccessfulRun',ShardSuccess)
@@ -1530,7 +1539,7 @@ def ARCscore(group=table, x=0,y=0):
    passPileControl(ARC,targetPL)
    debugNotify("<<< ARCscore()")
 
-def HQaccess(group=table, x=0,y=0, silent = False):
+def HQaccess(group=table, x=0,y=0, silent = False, directTargets = None):
    mute()
    global origController
    debugNotify(">>> HQAccess(){}".format(extraASDebug())) #Debug
@@ -1547,6 +1556,11 @@ def HQaccess(group=table, x=0,y=0, silent = False):
       # If the pause variable is still active, it means the last access was paused by there were no other cards to resume, so we just clear the variable.
       setGlobalVariable('Paused Runner','False')
       return
+   elif directTargets != None: # This means that we passed direct cards to access (e.g. Kitsune)
+      barNotifyAll('#000000',"{} is initiating HQ Access".format(me))
+      playAccessSound('HQ')
+      showDirect(directTargets)      
+      revealedCards = directTargets
    else:
       if not silent and not confirm("You are about to access a random card from the corp's HQ.\
                                    \nPlease make sure your opponent is not manipulating their hand, and does not have a way to cancel this effect before continuing\
@@ -2320,6 +2334,18 @@ def showatrandom(group = None, count = 1, targetPL = None, silent = False, cover
    if not silent: notify("{} reveals {} at random from their hand.".format(targetPL,card))
    debugNotify("<<< showatrandom() with return {}".format(card), 2) #Debug
    return shownCards
+
+def showDirect(cardList):
+   debugNotify(">>> showDirect(){}".format(extraASDebug())) #Debug
+   mute()
+   for card in cardList:
+      card.moveToTable(playerside * side * iter * cwidth(card) - (count * cwidth(card) / 2), 0 - yaxisMove(card) * side, False)
+      card.highlight = RevealedColor
+      card.sendToBack()
+      storeProperties(card, forced = False)
+      if not covered: loopChk(card) # A small delay to make sure we grab the card's name to announce
+      if not silent: notify("{} chooses and reveals {} from their hand.".format(card.owner,card))
+      debugNotify("<<< showDirect() with return {}".format(card), 2) #Debug
 
 def groupToDeck (group = me.hand, player = me, silent = False):
    debugNotify(">>> groupToDeck(){}".format(extraASDebug())) #Debug

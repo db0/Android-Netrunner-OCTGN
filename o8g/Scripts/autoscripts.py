@@ -679,7 +679,7 @@ def atTimedEffects(Time = 'Start', AlternativeRunResultUsed = False): # Function
                debugNotify("All checked OK", 3)
             else: continue
          if re.search(r'-ifUnsuccessfulRun', autoS):
-            if Time == 'JackOut' and getGlobalVariable('SuccessfulRun') != 'True': #If we're looking only for unsuccessful runs, we need the Time to be a jackout without a successful run shared var..
+            if Time == 'JackOut' and getGlobalVariable('SuccessfulRun') == 'False': #If we're looking only for unsuccessful runs, we need the Time to be a jackout without a successful run shared var..
                requiredTarget = re.search(r'-ifUnsuccessfulRun([A-Za-z&]+)', autoS) # We check what the script requires to be the unsuccessful target
                if getGlobalVariable('feintTarget') != 'None': currentRunTarget = getGlobalVariable('feintTarget')
                else: 

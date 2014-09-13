@@ -1070,6 +1070,9 @@ def CustomScript(card, action = 'PLAY', origin_card = None, original_action = No
             notify("{} {} {} to transfer {} from it to their credit pool. They now have {}".format(me,uniTrash(),card,uniCredit(transfer),uniCredit(me.Credits)))
             intTrashCard(card, fetchProperty(card,'Stat'), "free", silent = True)
          else: notify("{} to {} {} and transfers {} from it to their credit pool. They now have {}".format(clickTXT,uniTrash(),card,uniCredit(transfer),uniCredit(me.Credits)))         
+   elif fetchProperty(card, 'name') == 'Kitsune' and action == 'USE':
+      cardList = findTarget('DemiAutoTargeted-fromHand-choose1')
+      remoteCall(fetchRunnerPL(),"HQaccess",[table,0,0,False,cardList])
    elif action == 'USE': useCard(card)
       
             

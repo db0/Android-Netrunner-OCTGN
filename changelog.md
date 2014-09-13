@@ -1,6 +1,21 @@
 Changelog - Android:Netrunner LCG OCTGN Game Definition
 ===============================================
 
+### 3.13.0.x
+
+* New game definition for **First Contact**. As always, almost every card scripted!
+
+* ##### Trickier Automations
+  * IQ: No Automation. Track the str manually.
+  * Port Anson Grid: Not automated. Don't jack out.
+  * The News Now Hour: Not automated. Don't play currents.
+  * Manhunt: Manual Use
+  * Wendigo: Not Automated. Track manually.
+  
+  
+
+* Port Anson Grid
+
 ### 3.12.2.x
 
 * The Foundry can find new pop-up windows now
