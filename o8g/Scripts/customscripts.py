@@ -292,6 +292,35 @@ def UseCustomAbility(Autoscript, announceText, card, targetCards = None, notific
       if re.search(r'no valid targets',retrieveResult[0]): announceString = "{} tries to use The Foundry to create a copy of {}, but they run out of bits.".format(me,targetC.name) # If we couldn't find a copy of the played card to replicate, we inform of this
       else: announceString = "{} uses The Foundry to create a copy of {}".format(me,targetC.name)
       notify(announceString)
+   if fetchProperty(card, 'name') == "Shattered Remains":
+      programTargets = [c for c in table if c.Type == 'Hardware']
+      debugNotify("Found {} Hardware on table".format(len(programTargets)))
+      if not len(programTargets): 
+         notify("{} can find no hardware to trash".format(card))
+         return
+      rc = payCost(2, 'not free')
+      if rc == "ABORT": 
+         notify("{} could not pay to use {}".format(me,card))
+         return
+      chosenHW = multiChoice('Please choose {} hardware to trash'.format(card.markers[mdict['Advancement']]), makeChoiceListfromCardList(programTargets),card)
+      if chosenHW == 'ABORT': return
+      while len(chosenHW) > card.markers[mdict['Advancement']]:
+         chosenHW = multiChoice('You chose too many hardware. Please choose up to {} hardware to trash'.format(card.markers[mdict['Advancement']]), makeChoiceListfromCardList(programTargets),card)
+         if chosenHW == 'ABORT': return
+      for chosenCard in chosenHW:
+         hw = programTargets[chosenCard]
+         intTrashCard(hw, fetchProperty(hw,'Stat'), "free", silent = True)
+         notify(":> {} trashes {}".format(card,hw))
+      announceString = ''
+   if fetchProperty(card, 'name') == "Lancelot":
+      revealedCards = findTarget('Targeted-atGrail-fromHand')
+      del revealedCards[2:] # We don't want it to be more than 5 cards
+      if len(revealedCards) == 0: 
+         delayed_whisper("You need to target some Grail first!")
+         return 'ABORT'
+      for c in revealedCards: CreateDummy('CreateDummy-doNotTrash-nonUnique', '', c)
+      notify("{} reveals {} as their Grail support".format(me,[c.name for c in revealedCards]))
+      announceString = ''
    return announceString
    
 def CustomScript(card, action = 'PLAY', origin_card = None, original_action = None): # Scripts that are complex and fairly unique to specific cards, not worth making a whole generic function for them.
@@ -1073,6 +1102,36 @@ def CustomScript(card, action = 'PLAY', origin_card = None, original_action = No
    elif fetchProperty(card, 'name') == 'Kitsune' and action == 'USE':
       cardList = findTarget('DemiAutoTargeted-fromHand-choose1')
       remoteCall(fetchRunnerPL(),"HQaccess",[table,0,0,False,cardList])
+      intTrashCard(card, fetchProperty(card,'Stat'), "free", silent = True)
+      notify("{} {} stumbles onto Kitsune who forces them to access a card from HQ before trashing itself".format(uniSubroutine(),fetchRunnerPL()))
+   elif fetchProperty(card, 'name') == 'The Supplier' and action == 'USE':
+      targetList = [c for c in me.hand  # First we see if they've targeted a card from their hand
+                     if c.targetedBy 
+                     and c.targetedBy == me 
+                     and num(c.Cost) > 0
+                     and (c.Type == 'Resource' or c.Type == 'Hardware')]
+      if len(targetList) > 0:
+         selectedCard = targetList[0]
+         actionCost = useClick(count = 1)
+         if actionCost == 'ABORT': return 'ABORT'
+         hostCards = eval(getGlobalVariable('Host Cards'))
+         hostCards[selectedCard._id] = card._id # We set the Supplier to be the card's host
+         setGlobalVariable('Host Cards',str(hostCards))
+         cardAttachementsNR = len([att_id for att_id in hostCards if hostCards[att_id] == card._id])
+         debugNotify("About to move into position", 2) #Debug
+         storeProperties(selectedCard)
+         orgAttachments(card)
+         TokensX('Put1Supplied-isSilent', "", selectedCard) # We add a Supplied counter to be able to trigger the paying the cost ability
+         selectedCard.highlight = InactiveColor
+         notify("{} to request {} from {}".format(actionCost,selectedCard,card))
+         return 'CLICK USED'
+      else: 
+         whisper(":::ERROR::: You need to target a resource or hardware in your hand, before using this action")  
+         return 'ABORT'
+   elif fetchProperty(card, 'name') == 'Hades Shard' and action == 'USE': 
+      ARCscore()      
+      intTrashCard(card, fetchProperty(card,'Stat'), "free", silent = True)
+      notify("{} activates the {} to instantly access all cards in archives".format(me,card))
    elif action == 'USE': useCard(card)
       
             
@@ -1246,6 +1305,28 @@ def markerScripts(card, action = 'USE'):
       if key[0] == 'Blackmail' and action == 'USE' and not card.isFaceUp:
          foundSpecial = True
          whisper(":::ERROR::: You cannot rez ICE during this run, you are being Blackmailed!")
+      if key[0] == 'Supplied' and action == 'USE':
+         foundSpecial = True
+         host = chkHostType(card) 
+         hostCards = eval(getGlobalVariable('Host Cards'))
+         hostCard = Card(hostCards[card._id])
+         if hostCard.orientation == Rot90 and not confirm("You've already used The Supplier this turn! Bypass restriction?"): return foundSpecial
+         cardCost = num(fetchProperty(card, 'Cost')) - 2
+         if cardCost < 0: cardCost = 0
+         reduction = reduceCost(card, 'INSTALL', cardCost, dryRun = True)
+         rc = payCost(cardCost - reduction, "not free")
+         if rc == 'ABORT': return foundSpecial # If the cost couldn't be paid, we don't proceed.
+         reduceCost(card, 'INSTALL', cardCost) # If the cost could be paid, we finally take the credits out from cost reducing cards.
+         if reduction: reduceTXT = ' (reduced by {})'.format(reduction)
+         else: reduceTXT = ''
+         clearAttachLinks(card) # We unhost it from Personal Workshop so that it's not trashed if PW is trashed
+         placeCard(card)
+         orgAttachments(hostCard)
+         card.markers[key] = 0
+         card.highlight = None
+         executePlayScripts(card,'INSTALL')
+         autoscriptOtherPlayers('CardInstall',card)
+         notify("{} has paid {}{} in order to install {} from {}.".format(me,uniCredit(cardCost),reduceTXT,card,hostCard))
    return foundSpecial
    
 def setAwareness(card):

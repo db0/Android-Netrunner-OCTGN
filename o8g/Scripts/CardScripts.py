@@ -4131,7 +4131,7 @@ bc0f047c-01b1-427f-a439-d451eda06043
 -----
 
 +++++
-
+A0B0G0T0:UseCustomScript
 .....
 Port Anson Grid
 -----
@@ -4171,13 +4171,13 @@ bc0f047c-01b1-427f-a439-d451eda06048
 -----
 
 +++++
-
+A0B0G0T0:Put1Enabled
 .....
 Chronos Project
 -----
 bc0f047c-01b1-427f-a439-d451eda06049
 -----
-
+onScore:ExileMulti-AutoTargeted-fromArchives-targetOpponents
 +++++
 
 .....
@@ -4185,17 +4185,17 @@ Shattered Remains
 -----
 bc0f047c-01b1-427f-a439-d451eda06050
 -----
-
+onAccess:UseCustomAbility-ifInstalled-isOptional-pauseRunner
 +++++
-
+A0B1G0T0:TrashMulti-Targeted-atHardware-onAccess
 .....
 Lancelot
 -----
 bc0f047c-01b1-427f-a439-d451eda06051
 -----
-
+atJackOut:TrashMyself-onlyforDummy
 +++++
-
+A0B0G0T0:UseCustomAbility-excludeDummy||A0B0G0T0:TrashTarget-Targeted-atProgram-isSubroutine-excludeDummy||A0B0G0T0:TrashTarget-Targeted-atProgram-isSubroutine-onlyforDummy$$TrashMyself-isSilent
 .....
 Quetzal
 -----
@@ -4203,7 +4203,7 @@ bc0f047c-01b1-427f-a439-d451eda06052
 -----
 
 +++++
-
+A0B0G0T0:SimplyAnnounce{break barrier subroutine}-onlyOnce
 .....
 BlacKat
 -----
@@ -4211,7 +4211,7 @@ bc0f047c-01b1-427f-a439-d451eda06053
 -----
 
 +++++
-
+A0B1G0T0:SimplyAnnounce{break 1 barrier subroutine}||A0B1G0T0:SimplyAnnounce{break up to 3 barrier subroutines}||A0B2G0T0:Put1PlusOne||A0B2G0T0:Put2PlusOne
 .....
 Duggar&#039;s
 -----
@@ -4219,13 +4219,13 @@ bc0f047c-01b1-427f-a439-d451eda06054
 -----
 
 +++++
-
+A4B0G0T0:Draw10Cards
 .....
 BOX-E
 -----
 bc0f047c-01b1-427f-a439-d451eda06055
 -----
-
+whileInstalled:Gain2Hand Size$$Gain2MU
 +++++
 
 .....
@@ -4235,7 +4235,7 @@ bc0f047c-01b1-427f-a439-d451eda06056
 -----
 
 +++++
-
+A1B0G0T0:CustomScript
 .....
 Refractor
 -----
@@ -4243,7 +4243,7 @@ bc0f047c-01b1-427f-a439-d451eda06057
 -----
 
 +++++
-
+A0B1G0T0:SimplyAnnounce{break code gate subroutine}||A0B0G0T0:Remove1Credits-AutoTargeted-atStealth-isCost$$Put3PlusOne
 .....
 Order of Sol
 -----
@@ -4251,21 +4251,21 @@ bc0f047c-01b1-427f-a439-d451eda06058
 -----
 
 +++++
-
+A0B0G0T0:Gain1Credits-onlyOnce
 .....
 Hades Shard
 -----
 bc0f047c-01b1-427f-a439-d451eda06059
 -----
-
+onDragDrop:IgnoreCosts-isSourceShard
 +++++
-
+A0B0G0T1:UseCustomScript
 .....
 Rachel Beckman
 -----
 bc0f047c-01b1-427f-a439-d451eda06060
 -----
-
+whileInstalled:Gain1Max Click
 +++++
 
 .....

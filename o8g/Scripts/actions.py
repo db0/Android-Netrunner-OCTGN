@@ -429,8 +429,8 @@ def runSuccess(group=table,x=0,y=0, silent = False, ShardSuccess = False):
       runTargetRegex = re.search(r'running([A-Za-z&]+)',getGlobalVariable('status'))
       if not runTargetRegex: # If the runner is not running at the moment, do nothing
          whisper(":::Error::: You are not currently jacked-in.")
-      elif getGlobalVariable('SuccessfulRun') == 'True':
-         whisper(":::Error::: You have already completed this run succesfully. Jacking out instead...")
+      elif getGlobalVariable('SuccessfulRun') == 'True' or getGlobalVariable('SuccessfulRun') == 'Null':
+         whisper(":::Error::: You have already completed this run. Jacking out instead...")
          jackOut()
       elif not ShardSuccess and getGlobalVariable('Access') == 'DENIED' and num(getGlobalVariable('accessAttempts')) == 0 and getGlobalVariable('Quick Access') != 'Fucking':
          BUTTON_Access() # The first time a player tries to succeed the run, we press the button for them
@@ -443,12 +443,14 @@ def runSuccess(group=table,x=0,y=0, silent = False, ShardSuccess = False):
          for c in table: 
             if c.name == 'Crisium Grid': # Here we basically tell the system that if Crisium Grid has been used,don't set the run as succesful
                blockSuccessMarker = findMarker(c, 'Enabled')
-               if blockSuccess:
+               if blockSuccessMarker:
                   c.markers[blockSuccessMarker] = 0
                   blockSuccess = True
                   setGlobalVariable('SuccessfulRun','Null')
+                  notify(":> {} sets the run to a null state.".format(c))
                   break
-         if not blockSuccess: setGlobalVariable('SuccessfulRun','True')
+         if not blockSuccess: 
+            setGlobalVariable('SuccessfulRun','True')
          if getGlobalVariable('feintTarget') != 'None': runTarget = getGlobalVariable('feintTarget') #If the runner is feinting, now change the target server to the right one
          else: runTarget = runTargetRegex.group(1) # If the runner is not feinting, then extract the target from the shared variable
          atTimedEffects('SuccessfulRun',ShardSuccess)
@@ -1374,7 +1376,7 @@ def RDaccessX(group = table, x = 0, y = 0,count = None): # A function which look
    global gatheredCardList, origController
    RDtop = []
    removedCards = 0
-   if ds == 'corp':
+   if ds == 'corp' and len(players) != 1:
       whisper("This action is only for the use of the runner. Use the 'Look at top X cards' function on your R&D's context manu to access your own deck")
       return
    pauseRecovery = eval(getGlobalVariable('Paused Runner'))
@@ -1543,7 +1545,7 @@ def HQaccess(group=table, x=0,y=0, silent = False, directTargets = None):
    mute()
    global origController
    debugNotify(">>> HQAccess(){}".format(extraASDebug())) #Debug
-   if ds == 'corp':
+   if ds == 'corp' and len(players) != 1:
       whisper("This action is only for the use of the runner.")
       return
    targetPL = ofwhom('-ofOpponent')
@@ -1674,13 +1676,15 @@ def intRez (card, x=0, y=0, cost = 'not free', silent = False, silentCost = Fals
    if chkTargeting(card) == 'ABORT':
       notify("{} cancels their action".format(me))
       return 'ABORT'
-   if cost != 'free': reduction = reduceCost(card, 'REZ', num(fetchProperty(card, 'Cost'))) + preReduction
+   if fetchProperty(card, 'Name') == 'IQ': cardCost = len(me.hand) # Special code to allow IQ to work
+   else: cardCost = num(fetchProperty(card, 'Cost'))
+   if cost != 'free': reduction = reduceCost(card, 'REZ', cardCost) + preReduction
    else: reduction = preReduction
    if reduction > 0: extraText = " (reduced by {})".format(uniCredit(reduction))
    elif reduction < 0: extraText = " (increased by {})".format(uniCredit(abs(reduction)))
    else: extraText = ''
    increase = findExtraCosts(card, 'REZ')
-   rc = payCost(num(fetchProperty(card, 'Cost')) - reduction + increase, cost, silentCost = silentCost)
+   rc = payCost(cardCost - reduction + increase, cost, silentCost = silentCost)
    if rc == "ABORT": return 'ABORT' # If the player didn't have enough money to pay and aborted the function, then do nothing.
    elif rc == "free": extraText = " at no cost"
    elif rc != 0: rc = "for {}".format(rc)
@@ -2338,14 +2342,16 @@ def showatrandom(group = None, count = 1, targetPL = None, silent = False, cover
 def showDirect(cardList):
    debugNotify(">>> showDirect(){}".format(extraASDebug())) #Debug
    mute()
-   for card in cardList:
-      card.moveToTable(playerside * side * iter * cwidth(card) - (count * cwidth(card) / 2), 0 - yaxisMove(card) * side, False)
+   if cardList[0].owner != me: side = -1
+   else: side = 1
+   for iter in range(len(cardList)):
+      card = cardList[iter]
+      card.moveToTable(playerside * side * iter * cwidth(card) - (len(cardList) * cwidth(card) / 2), 0 - yaxisMove(card) * side, False)
       card.highlight = RevealedColor
       card.sendToBack()
       storeProperties(card, forced = False)
-      if not covered: loopChk(card) # A small delay to make sure we grab the card's name to announce
-      if not silent: notify("{} chooses and reveals {} from their hand.".format(card.owner,card))
-      debugNotify("<<< showDirect() with return {}".format(card), 2) #Debug
+      loopChk(card) # A small delay to make sure we grab the card's name to announce
+   debugNotify("<<< showDirect()") #Debug
 
 def groupToDeck (group = me.hand, player = me, silent = False):
    debugNotify(">>> groupToDeck(){}".format(extraASDebug())) #Debug

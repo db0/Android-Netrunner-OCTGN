@@ -6,12 +6,14 @@ Changelog - Android:Netrunner LCG OCTGN Game Definition
 * New game definition for **First Contact**. As always, almost every card scripted!
 
 * ##### Trickier Automations
-  * IQ: No Automation. Track the str manually.
+  * IQ: Rez Cost is tracked but not STR. Track that manually.
   * Port Anson Grid: Not automated. Don't jack out.
   * The News Now Hour: Not automated. Don't play currents.
   * Manhunt: Manual Use
   * Wendigo: Not Automated. Track manually.
-  
+  * Order of Sol: Manual Use.
+  * Hades Shard: Shards can be installed manually when you're about to access. Simply drag them to the table and they'll skip their cost, and set the run to succeed, bypassing all costs. Warning this will bypass all corp acknowledgement, so make sure you use it after the corp has given the OK to access.
+  * Rachel Beckman: Won't trash automatically when tagged.
   
 
 * Port Anson Grid

@@ -66,6 +66,7 @@ regexHooks = dict( # A dictionary which holds the regex that then trigger each c
 
 specialHostPlacementAlgs = { # A Dictionary which holds tuples of X and Y placement offsets, for cards which place their hosted cards differently to normal, such as Personal Workshop
                               'Personal Workshop' :            (-32,0),
+                              'The Supplier'      :            (-32,0),
                               'Awakening Center'  :            (-32,0)
                            }
                            

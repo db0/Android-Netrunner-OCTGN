@@ -528,7 +528,6 @@ def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
          announceText = announceText[:-len(' and')] # If for some reason we end with " and" (say because the last action did nothing), we remove it.
       else: # If we did something and everything finished as expected, then take the costs.
          if re.search(r"T1:", selectedAutoscripts[0]): intTrashCard(card, fetchProperty(card,'Stat'), "free", silent = True)
-      if me.Credits != startingCreds: announceText = announceText + " (New total: {})".format(uniCredit(me.Credits)) # If we spent money during this script execution, we want to point out the new player's credit total.
       if iter == len(AutoscriptsList) - 1: # If this is the last script in the list, then we always announce the script we're running (We reduce by 1 because iterators always start as '0')
          debugNotify("Entering last notification", 2)
          if prev_announceText == 'NULL': # If it's NULL it's the only  script we run in this loop, so we just announce.
@@ -536,10 +535,12 @@ def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
          else: # If it's not NULL, then there was a script run last time, so we check to see if it's a duplicate
             if prev_announceText == announceText: # If the previous script had the same notification output as the current one, we merge them.
                multiCount += 1
+               if me.Credits != startingCreds: announceText = announceText + " (remaining bank: {})".format(uniCredit(me.Credits)) # If we spent money during this script execution, we want to point out the new player's credit total.
                notify("({}x) {}.".format(multiCount,announceText))
             else: # If the previous script did not have the same output as the current one, we announce them both together.
                if multiCount > 1: notify("({}x) {}.".format(multiCount,prev_announceText)) # If there were multiple versions of the last script used, announce them along with how many there were
                else: notify("{}.".format(prev_announceText))
+               if me.Credits != startingCreds: announceText = announceText + " (remaining bank: {})".format(uniCredit(me.Credits)) # If we spent money during this script execution, we want to point out the new player's credit total.
                notify("{}.".format(announceText)) # Finally we announce the current script's concatenated notification.
       else: #if it's not the last script we run, then we just check if we should announce the previous script or just add another replication.
          debugNotify("Entering notification grouping check", 2)
@@ -550,6 +551,7 @@ def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
             if prev_announceText == announceText: # If the previous script had the same notification output as the current one...
                multiCount += 1 # ...we merge them and continue without announcing.
             else: # If the previous script did not have the same notification output as the current one, we announce the previous one.
+               if me.Credits != startingCreds: prev_announceText = prev_announceText + " (remaining bank: {})".format(uniCredit(me.Credits)) # If we spent money during this script execution, we want to point out the new player's credit total.
                if multiCount > 1: notify("({}x) {}.".format(multiCount,prev_announceText)) # If there were multiple versions of the last script used, announce them along with how many there were
                else: notify("{}.".format(prev_announceText)) 
                multiCount = 1 # We reset the counter so that we start counting how many duplicates of the current script we're going to have in the future.
@@ -706,17 +708,18 @@ def atTimedEffects(Time = 'Start', AlternativeRunResultUsed = False): # Function
          if re.search(r'isAlternativeRunResult', effect.group(2)) and AlternativeRunResultUsed: continue # If we're already used an alternative run result and this card has one as well, ignore it
          if re.search(r'onlyOnce',autoS) and oncePerTurn(card, silent = True, act = 'dryRun') == 'ABORT': continue
          if re.search(r'restrictionMarker',autoS) and chkRestrictionMarker(card, autoS, silent = True, act = 'dryRun') == 'ABORT': continue
-         if re.search(r'isOptional', effect.group(2)):
+         if re.search(r'isOptional', effect.group(2)) and not (Time == 'SuccessfulRun' and getGlobalVariable('SuccessfulRun') != 'True'):
             extraCountersTXT = '' 
             for cmarker in card.markers: # If the card has any markers, we mention them do that the player can better decide which one they wanted to use (e.g. multiple bank jobs)
                extraCountersTXT += " {}x {}\n".format(card.markers[cmarker],cmarker[0])
             if extraCountersTXT != '': extraCountersTXT = "\n\nThis card has the following counters on it\n" + extraCountersTXT
             if not confirm("{} can have its optional ability take effect at this point. Do you want to activate it?{}".format(fetchProperty(card, 'name'),extraCountersTXT)): continue         
-         if re.search(r'isAlternativeRunResult', effect.group(2)): AlternativeRunResultUsed = True # If the card has an alternative result to the normal access for a run, mark that we've used it.         
+         if re.search(r'isAlternativeRunResult', effect.group(2)) and not (Time == 'SuccessfulRun' and getGlobalVariable('SuccessfulRun') != 'True'): AlternativeRunResultUsed = True # If the card has an alternative result to the normal access for a run, mark that we've used it.         
          if re.search(r'onlyOnce',autoS) and oncePerTurn(card, silent = True, act = 'automatic') == 'ABORT': continue
          if re.search(r'restrictionMarker',autoS) and chkRestrictionMarker(card, autoS, silent = True, act = 'automatic') == 'ABORT': continue
          splitAutoscripts = effect.group(2).split('$$')
          for passedScript in splitAutoscripts:
+            if Time == 'SuccessfulRun' and getGlobalVariable('SuccessfulRun') != 'True': continue # Required for Crisium Grid
             targetC = findTarget(passedScript)
             if re.search(r'Targeted', passedScript) and len(targetC) == 0: 
                debugNotify("Needed target but have non. Aborting")
@@ -1970,6 +1973,9 @@ def findTarget(Autoscript, fromHand = False, card = None, dryRun = False): # Fun
       if fromHand == True or re.search(r'-fromHand',Autoscript): 
          if re.search(r'-targetOpponents',Autoscript): group = findOpponent().hand
          else: group = me.hand
+      elif re.search(r'-fromArchives',Autoscript): 
+         if re.search(r'-targetOpponents',Autoscript): group = findOpponent().piles['Heap/Archives(Face-up)']
+         else: group = me.piles['Heap/Archives(Face-up)']
       else: group = table
       foundTargets = []
       if re.search(r'Targeted', Autoscript):
@@ -2356,7 +2362,9 @@ def per(Autoscript, card = None, count = 0, targetCards = None, notification = N
          perTargetRegex = re.search(r'\bper(Target|Every).*?-at(.*)', Autoscript)
          debugNotify("perTargetRegex = {}".format(perTargetRegex.groups()))
          if perTargetRegex.group(1) == 'Target': targetCards = findTarget('Targeted-at{}'.format(perTargetRegex.group(2)))
-         else: targetCards = findTarget('AutoTargeted-at{}'.format(perTargetRegex.group(2)))
+         else: 
+            if re.search('fromHand', Autoscript): targetCards = findTarget('AutoTargeted-at{}'.format(perTargetRegex.group(2)),True)
+            else: targetCards = findTarget('AutoTargeted-at{}'.format(perTargetRegex.group(2)))
          if len(targetCards) == 0: pass # If we were expecting some targeted cards but found none, we return a multiplier of 0
          else:
             debugNotify("Looping through {} targetCards".format(len(targetCards)))
