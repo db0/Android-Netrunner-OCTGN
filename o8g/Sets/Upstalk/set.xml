@@ -89,7 +89,7 @@
 	<card id="bc0f047c-01b1-427f-a439-d451eda06006" name="Primary Transmission Dish">
 		<property name="Subtitle" value="" />
 		<property name="Type" value="Asset" />
-		<property name="Keywords" value="" />
+		<property name="Keywords" value="Beanstalk" />
 		<property name="Cost" value="2" />
 		<property name="Requirement" value="" />	
 		<property name="Stat" value="3" />	
@@ -137,7 +137,7 @@
 	<card id="bc0f047c-01b1-427f-a439-d451eda06009" name="Taurus">
 		<property name="Subtitle" value="" />
 		<property name="Type" value="ICE" />
-		<property name="Keywords" value="Sentry, Tracer" />
+		<property name="Keywords" value="Sentry-Tracer" />
 		<property name="Cost" value="5" />
 		<property name="Requirement" value="" />	
 		<property name="Stat" value="5" />	

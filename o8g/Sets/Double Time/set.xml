@@ -280,7 +280,7 @@
 	</card>
 	<card id="bc0f047c-01b1-427f-a439-d451eda04118" name="Witness Tampering">
 		<property name="Subtitle" value="" />
-		<property name="Type" value="Operation" />
+		<property name="Type" value="Operation-Gray Ops" />
 		<property name="Keywords" value="Double" />
 		<property name="Cost" value="4" />
 		<property name="Requirement" value="" />	
