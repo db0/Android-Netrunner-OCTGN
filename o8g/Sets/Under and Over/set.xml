@@ -1,0 +1,330 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<set xmlns:noNamespaceSchemaLocation="CardSet.xsd" 
+     name="Up and Over" 
+     id="975dcca7-751b-40f6-9815-78d946f93c95" 
+     gameId="0f38e453-26df-4c04-9d67-6d43de939c77" 
+     gameVersion="3.0.0.0" 
+     version="3.0.0.0">
+<cards>
+	<card id="bc0f047c-01b1-427f-a439-d451eda06061" name="Architect">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="ICE" />
+		<property name="Keywords" value="Sentry" />
+		<property name="Cost" value="4" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="3" />	
+		<property name="Rules" value="Architect cannot be trashed while installed.  [Subroutine] The Corp looks at the top 5 cards of R&amp;D and may install 1 of those cards, ignoring all install costs.  [Subroutine] The Corp may install a card from Archives or HQ (paying all costs)." />
+		<property name="Flavor" value="" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Haas-Bioroid" />
+		<property name="Influence" value="2" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda06062" name="Peak Efficiency">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Operation" />
+		<property name="Keywords" value="" />
+		<property name="Cost" value="1" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="" />	
+		<property name="Rules" value="Gain 1c for each rezzed piece of ICE." />
+		<property name="Flavor" value="" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Haas-Bioroid" />
+		<property name="Influence" value="1" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda06063" name="Labyrinthine Servers">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Agenda" />
+		<property name="Keywords" value="" />
+		<property name="Cost" value="5" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="3" />	
+		<property name="Rules" value="Place 2 agenda counters on Labyrinthine Servers when you score it.  Hosted agenda counter: Prevent the Runner from jacking out. The Runner may not jack out for the remainder of this run. " />
+		<property name="Flavor" value="" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Jinteki" />
+		<property name="Influence" value="" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda06064" name="Ashigaru">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="ICE" />
+		<property name="Keywords" value="Barrier" />
+		<property name="Cost" value="9" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="4" />	
+		<property name="Rules" value="Ashigaru gains &quot;[Subroutine] End the run.&quot; for each card in HQ." />
+		<property name="Flavor" value="" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Jinteki" />
+		<property name="Influence" value="3" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda06065" name="Mamba">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="ICE" />
+		<property name="Keywords" value="Sentry-PSI-AP" />
+		<property name="Cost" value="6" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="4" />	
+		<property name="Rules" value="[Subroutine] Do 1 net damage. [Subroutine] You and the Runner secretly spend 0c, 1c, or 2c. Reveal spent credits. If you are the Runner spent a different number of credits, place 1 power counter on Mamba.  Hosted power counter: Do 1 net damage. Use this ability only during a run." />
+		<property name="Flavor" value="" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Jinteki" />
+		<property name="Influence" value="2" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda06066" name="Reversed Accounts">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Asset" />
+		<property name="Keywords" value="" />
+		<property name="Cost" value="0" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="3" />	
+		<property name="Rules" value="Reversed Accounts can be advanced.  [Click], [Trash]: The Runner loses 4c for each advancement token on Reversed Accounts." />
+		<property name="Flavor" value="" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="NBN" />
+		<property name="Influence" value="1" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda06067" name="Universal Connectivity Fee">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="ICE" />
+		<property name="Keywords" value="Trap" />
+		<property name="Cost" value="2" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="2" />	
+		<property name="Rules" value="[Subroutine]: The Runner loses 1c unless the Runner is tagged. If the Runner is tagged, he or she loses all credits in his or her credit pool and the Corp trashes Universal Connectivity Fee." />
+		<property name="Flavor" value="" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="NBN" />
+		<property name="Influence" value="1" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda06068" name="Blue Sun">
+		<property name="Subtitle" value="Powering the Future" />
+		<property name="Type" value="Identity" />
+		<property name="Keywords" value="Corp" />
+		<property name="Cost" value="0" />
+		<property name="Requirement" value="45" />	
+		<property name="Stat" value="15" />	
+		<property name="Rules" value="When your turn begins, you may add 1 rezzed card to HQ to gain credits equal to its rez cost." />
+		<property name="Flavor" value="Unlimited Energy. Reasonable Prices." />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="The Weyland Consortium" />
+		<property name="Influence" value="" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda06069" name="Changeling">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="ICE" />
+		<property name="Keywords" value="Barrier-Morph" />
+		<property name="Cost" value="5" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="4" />	
+		<property name="Rules" value="Changeling can be advanced. While Changeling has an odd number of advancement tokens on it, it gains sentry and loses barrier. [Subroutine] End the run.  " />
+		<property name="Flavor" value="" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="The Weyland Consortium" />
+		<property name="Influence" value="2" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda06070" name="Reuse">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Operation" />
+		<property name="Keywords" value="Double" />
+		<property name="Cost" value="0" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="" />	
+		<property name="Rules" value="As an additional cost to play this operation, spend click.  Trash any number of cards from HQ. Gain 2c for each card trashed." />
+		<property name="Flavor" value="" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="The Weyland Consortium" />
+		<property name="Influence" value="1" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda06071" name="Hades Fragment">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Agenda" />
+		<property name="Keywords" value="Source" />
+		<property name="Cost" value="5" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="3" />	
+		<property name="Rules" value="When your turn begins, you may add 1 card from Archives to the bottom of R&amp;D.&#xD;&#xA;Limit 1 per deck." />
+		<property name="Flavor" value="" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Neutral" />
+		<property name="Influence" value="0" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda06072" name="Docklands Crackdown">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Asset" />
+		<property name="Keywords" value="" />
+		<property name="Cost" value="2" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="3" />	
+		<property name="Rules" value="[Click], [Click]: Place 1 power counter on Docklands Crackdown.&#xD;&#xA;The install cost of the first card the Runner installs each turn is increased by 1 for each power counter on Docklands Crackdown." />
+		<property name="Flavor" value="" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Neutral" />
+		<property name="Influence" value="0" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda06073" name="Inject">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Event" />
+		<property name="Keywords" value="" />
+		<property name="Cost" value="1" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="" />	
+		<property name="Rules" value="Reveal the top 4 cards of your stack and trash all programs revealed. Gain 1[Credits] for each program trashed, and add the rest of the revealed cards to your grip." />
+		<property name="Flavor" value="" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Anarch" />
+		<property name="Influence" value="2" />
+		<property name="Side" value="runner" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda06074" name="Origami">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Program" />
+		<property name="Keywords" value="" />
+		<property name="Cost" value="0" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="-" />	
+		<property name="Rules" value="Your maximum hand size is increased by 1 for each copy of Origami installed." />
+		<property name="Flavor" value="" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Anarch" />
+		<property name="Influence" value="2" />
+		<property name="Side" value="runner" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda06075" name="Fester">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Resource" />
+		<property name="Keywords" value="Virtual" />
+		<property name="Cost" value="1" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="" />	
+		<property name="Rules" value="Whenever the Corp purges virus counters, he or she loses 2c, if able." />
+		<property name="Flavor" value="" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Anarch" />
+		<property name="Influence" value="1" />
+		<property name="Side" value="runner" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda06076" name="Autoscripter">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Hardware" />
+		<property name="Keywords" value="Unique" />
+		<property name="Cost" value="3" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="" />	
+		<property name="Rules" value="The first time you install a program from your grip during your turn, gain [Click].  Trash Autoscripter if you make an unsuccessful run. " />
+		<property name="Flavor" value="" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Criminal" />
+		<property name="Influence" value="3" />
+		<property name="Side" value="runner" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda06077" name="Switchblade">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Program" />
+		<property name="Keywords" value="Icebreaker-Killer" />
+		<property name="Cost" value="3" />
+		<property name="Requirement" value="1" />	
+		<property name="Stat" value="0" />	
+		<property name="Rules" value="1[Credits]: Break any number of sentry subroutines. Use this ability only by spending a credit from a stealth card.&#xD;&#xA;1[Credits]: +7 strength. Use this ability only by spending a credit from a stealth card." />
+		<property name="Flavor" value="" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Criminal" />
+		<property name="Influence" value="2" />
+		<property name="Side" value="runner" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda06078" name="Trade-In">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Event" />
+		<property name="Keywords" value="" />
+		<property name="Cost" value="1" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="" />	
+		<property name="Rules" value="As an additional cost to play this event, trash an installed piece of hardware.&#xD;&#xA;Gain credits equal to half the install cost of the trashed hardware (rounded down) and search your stack for a piece of hardware, reveal it, and add it to your grip. Shuffle your stack." />
+		<property name="Flavor" value="" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Shaper" />
+		<property name="Influence" value="2" />
+		<property name="Side" value="runner" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda06079" name="Astrolabe">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Hardware" />
+		<property name="Keywords" value="Console-Unique" />
+		<property name="Cost" value="1" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="" />	
+		<property name="Rules" value="+1[Memory Unit]&#xD;&#xA;Draw 1 card whenever the Corp creates a server.&#xD;&#xA;Limit 1 console per player." />
+		<property name="Flavor" value="&quot;There is no better tool for charting the empty spaces of the net.&quot; -Nasir Meidan" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Shaper" />
+		<property name="Influence" value="2" />
+		<property name="Side" value="runner" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda06080" name="Angel Arena">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Resource" />
+		<property name="Keywords" value="Location-Unique" />
+		<property name="Cost" value="0" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="" />	
+		<property name="Rules" value="Place X power counters on Angel Arena when it is installed. When there are no power counters left on Angel Arena, trash it.&#xD;&#xA;Hosted power counter: Reveal the top card of your stack. You may add that card to the bottom of your stack." />
+		<property name="Flavor" value="" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Neutral" />
+		<property name="Influence" value="0" />
+		<property name="Side" value="runner" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+</cards>
+</set>
