@@ -11,6 +11,13 @@ Changelog - Android:Netrunner LCG OCTGN Game Definition
   * Changeling: Not scripted. Track manually
   * Hades Fragment: Manual Use
   * Astrolabe: Manual Use
+* SoT on LARLA should now trash before LARLA resolves  
+* Woman in the red dress will now announce when the corp has finished looking at the card and left it in R&D.
+* Data Dealer should now exile Shi.Kyu, but can also target Corp cards due to this. Don't!
+* Social Engineering will now only get money from the target ICE
+* Mutated ICE can now use Subroutines
+* LARLA shouldn't clear runner currents anymore
+* Port Anson Grid and Kitsune should now work (nobody played them until now?)
 
 ### 3.13.0.x
 

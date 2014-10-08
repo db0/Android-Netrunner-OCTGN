@@ -1,6 +1,6 @@
 =====Message of the Day======
 
-First Contact has been rezzed! As always almost all cards have been automated.
+Up and Over has been rezzed! As always almost all cards have been automated.
 
 Please visit the plugin site for information on the trickier automations.
 
