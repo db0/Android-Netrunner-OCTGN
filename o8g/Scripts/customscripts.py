@@ -283,8 +283,9 @@ def UseCustomAbility(Autoscript, announceText, card, targetCards = None, notific
    if fetchProperty(card, 'name') == "Social Engineering":
       #confirm('1')
       targetICE = targetCards[0]
-      card.controller.Credits += num(targetCards[0].Cost)
-      notify("{} gains {} from their {}".format(card.controller,uniCredit(num(targetCards[0].Cost)),card))
+      if findMarker(targetICE, 'Social Engineering'):
+         card.controller.Credits += num(targetCards[0].Cost)
+         notify("{} gains {} from their {}".format(card.controller,uniCredit(num(targetCards[0].Cost)),card))
       announceString = ''
    if fetchProperty(card, 'name') == "The Foundry":
       targetC = targetCards[0] # For this to be triggered an ICE has to have been rezzed, which was passed to us in an array.
