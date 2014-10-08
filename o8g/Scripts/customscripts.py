@@ -341,10 +341,10 @@ def UseCustomAbility(Autoscript, announceText, card, targetCards = None, notific
       notify(":> {} reveals {} during their {} matchup".format(me,revealedCard,card))
       if not confirm("You have revealed your {} to your opponent. Do you want to send the card to the bottom of your Stack?".format(revealedCard.name)): 
          revealedCard.moveTo(deck)
-         notify(":> {} chooses to leave it at top of their Stack")
+         notify("{} chooses to leave it at top of their Stack")
       else: 
          revealedCard.moveToBottom(deck)     
-         notify(":> {} chooses to send it to the bottom of their Stack")
+         notify("{} chooses to send it to the bottom of their Stack")
       announceString = ''
    return announceString
    
@@ -1433,7 +1433,9 @@ def WitRD(): # Woman in the Red Dress
    if confirm("Do you want to draw {} to your HQ?".format(cardView.name)):
       notify("{} decided to take {} to their hand".format(me,cardView))
       cardView.moveTo(me.hand)
-   else: cardView.isFaceUp = False      
+   else: 
+      notify("{} decided to leave {} in their R&D".format(me,cardView))
+      cardView.isFaceUp = False      
 
 def Snoop(scenario = 'Simply Reveal', cardList = None):
    debugNotify(">>> Remote Script Snoop() with Scenario = {}".format(scenario)) #Debug     
