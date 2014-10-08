@@ -1072,7 +1072,7 @@ def CustomScript(card, action = 'PLAY', origin_card = None, original_action = No
          placeCard(newICE,'InstallRezzed')
          shuffle(deck)
          newICE.orientation ^= Rot90
-         storeProperties(newICE)
+         storeProperties(newICE,True)
          executePlayScripts(newICE,'REZ')
          autoscriptOtherPlayers('CardInstall',newICE)
          autoscriptOtherPlayers('CardRezzed',newICE)
