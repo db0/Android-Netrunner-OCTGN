@@ -1902,7 +1902,9 @@ def RetrieveX(Autoscript, announceText, card, targetCards = None, notification =
                preReduc = 0
                payCost = 'free'         
             intPlay(c, payCost, True, preReduc)
-         else: c.moveTo(destination)
+         else: 
+            if re.search(r'-sendToBottom', Autoscript): c.moveToBottom(destination)
+            else: c.moveTo(destination)
          tokensRegex = re.search(r'-with([A-Za-z0-9: ]+)', Autoscript) # If we have a -with in our autoscript, this is meant to put some tokens on the retrieved card.
          if tokensRegex: TokensX('Put{}'.format(tokensRegex.group(1)), announceText,c, n = n) 
    debugNotify("About to restore pile.", 2)
@@ -2361,7 +2363,9 @@ def per(Autoscript, card = None, count = 0, targetCards = None, notification = N
          debugNotify("Checking for Targeted per", 2)
          perTargetRegex = re.search(r'\bper(Target|Every).*?-at(.*)', Autoscript)
          debugNotify("perTargetRegex = {}".format(perTargetRegex.groups()))
-         if perTargetRegex.group(1) == 'Target': targetCards = findTarget('Targeted-at{}'.format(perTargetRegex.group(2)))
+         if perTargetRegex.group(1) == 'Target': 
+            if re.search('fromHand', Autoscript): findTarget('Targeted-at{}'.format(perTargetRegex.group(2)),True)
+            else: targetCards = findTarget('Targeted-at{}'.format(perTargetRegex.group(2)))
          else: 
             if re.search('fromHand', Autoscript): targetCards = findTarget('AutoTargeted-at{}'.format(perTargetRegex.group(2)),True)
             else: targetCards = findTarget('AutoTargeted-at{}'.format(perTargetRegex.group(2)))

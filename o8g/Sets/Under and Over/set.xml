@@ -15,7 +15,7 @@
 		<property name="Stat" value="3" />	
 		<property name="Rules" value="Architect cannot be trashed while installed.  [Subroutine] The Corp looks at the top 5 cards of R&amp;D and may install 1 of those cards, ignoring all install costs.  [Subroutine] The Corp may install a card from Archives or HQ (paying all costs)." />
 		<property name="Flavor" value="" />
-		<property name="Instructions" value="" />
+		<property name="Instructions" value="[Subroutine] Looks at the top 5 cards of R&amp;D. You may install 1 of those cards, ignoring all install costs.||[Subroutine] Install a card from Archives (paying all costs)||[Subroutine] Install a card from HQ (paying all costs)." />
 		<property name="Faction" value="Haas-Bioroid" />
 		<property name="Influence" value="2" />
 		<property name="Side" value="corp" />
@@ -77,9 +77,9 @@
 		<property name="Cost" value="6" />
 		<property name="Requirement" value="" />	
 		<property name="Stat" value="4" />	
-		<property name="Rules" value="[Subroutine] Do 1 net damage. [Subroutine] You and the Runner secretly spend 0c, 1c, or 2c. Reveal spent credits. If you are the Runner spent a different number of credits, place 1 power counter on Mamba.  Hosted power counter: Do 1 net damage. Use this ability only during a run." />
+		<property name="Rules" value="Hosted power counter: Do 1 net damage. Use this ability only during a run. [Subroutine] Do 1 net damage. [Subroutine] You and the Runner secretly spend 0c, 1c, or 2c. Reveal spent credits. If you are the Runner spent a different number of credits, place 1 power counter on Mamba." />
 		<property name="Flavor" value="" />
-		<property name="Instructions" value="" />
+		<property name="Instructions" value="Hosted power counter: Do 1 net damage. Use this ability only during a run.||[Subroutine] Do 1 net damage.||Subroutine] Play PSI. If you the winner, place 1 power counter on Mamba." />
 		<property name="Faction" value="Jinteki" />
 		<property name="Influence" value="2" />
 		<property name="Side" value="corp" />
@@ -111,7 +111,7 @@
 		<property name="Stat" value="2" />	
 		<property name="Rules" value="[Subroutine]: The Runner loses 1c unless the Runner is tagged. If the Runner is tagged, he or she loses all credits in his or her credit pool and the Corp trashes Universal Connectivity Fee." />
 		<property name="Flavor" value="" />
-		<property name="Instructions" value="" />
+		<property name="Instructions" value="[Subroutine]: The Runner loses 1c||[Subroutine]: If the Runner is tagged, he or she loses all credits in his or her credit pool and the Corp trashes Universal Connectivity Fee." />
 		<property name="Faction" value="NBN" />
 		<property name="Influence" value="1" />
 		<property name="Side" value="corp" />

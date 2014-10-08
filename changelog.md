@@ -1,6 +1,17 @@
 Changelog - Android:Netrunner LCG OCTGN Game Definition
 ===============================================
 
+### 3.14.0.x
+
+* New game definition for **Up and Over**. As always, almost every card scripted!
+
+* ##### Trickier Automations
+  * Labyrinthine Server: Just Announces
+  * Blue Sun: Will not consider cards which increase rez costs
+  * Changeling: Not scripted. Track manually
+  * Hades Fragment: Manual Use
+  * Astrolabe: Manual Use
+
 ### 3.13.0.x
 
 * New game definition for **First Contact**. As always, almost every card scripted!

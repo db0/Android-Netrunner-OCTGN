@@ -4275,13 +4275,13 @@ bc0f047c-01b1-427f-a439-d451eda06061
 -----
 
 +++++
-
+A0B0G0T0:Retrieve1Card-grabnonEvent-toTable-onTop5Cards-isSubroutine||A0B0G0T0:Retrieve1Card-grabnonEvent-fromArchives-toTable-isSubroutine||A0B0G0T0:InstallTarget-DemiAutoTargeted-atnonEvent-choose1-fromHand-isSubroutine
 .....
 Peak Efficiency
 -----
 bc0f047c-01b1-427f-a439-d451eda06062
 -----
-
+onPlay:Gain1Credits-perEveryCard-atICE-isRezzed
 +++++
 
 .....
@@ -4289,9 +4289,9 @@ Labyrinthine Servers
 -----
 bc0f047c-01b1-427f-a439-d451eda06063
 -----
-
+onScore:Put2Agenda
 +++++
-
+A0B0G0T0:Remove1Agenda-isCost$$SimplyAnnounce{prevent the runner from jacking out for the remainder of this run}
 .....
 Ashigaru
 -----
@@ -4299,7 +4299,7 @@ bc0f047c-01b1-427f-a439-d451eda06064
 -----
 
 +++++
-
+A0B0G0T0:RunEnd
 .....
 Mamba
 -----
@@ -4307,7 +4307,7 @@ bc0f047c-01b1-427f-a439-d451eda06065
 -----
 
 +++++
-
+A0B0G0T0:Inflict1NetDamage-onOpponent||A0B0G0T0:Inflict1NetDamage-onOpponent-isSubroutine||A0B0G0T0:Psi-psiEffects<Put1Power,None>-isSubroutine
 .....
 Reversed Accounts
 -----
@@ -4315,7 +4315,7 @@ bc0f047c-01b1-427f-a439-d451eda06066
 -----
 
 +++++
-
+A1B0G0T1:Lose4Credits-onOpponent-perMarker{Advancement}
 .....
 Universal Connectivity Fee
 -----
@@ -4323,7 +4323,7 @@ bc0f047c-01b1-427f-a439-d451eda06067
 -----
 
 +++++
-
+A0B0G0T0:Lose1Credit-onOpponent-isSubroutine||A0B0G0T0:Lose999Credit-onOpponent-ifTagged1-isSubroutine$$TrashMyself
 .....
 Blue Sun
 -----
@@ -4331,7 +4331,7 @@ bc0f047c-01b1-427f-a439-d451eda06068
 -----
 
 +++++
-
+A0B0G0T0:Gain1Credit-perTargetProperty{Cost}-Targeted-atICE-isRezzed-onlyOnce$$UninstallTarget-Targeted-atICE-isRezzed
 .....
 Changeling
 -----
@@ -4345,7 +4345,7 @@ Reuse
 -----
 bc0f047c-01b1-427f-a439-d451eda06070
 -----
-
+onPlay:Gain2Credits-perTarget-fromHand$$TrashMulti-Targeted-fromHand
 +++++
 
 .....
@@ -4355,15 +4355,15 @@ bc0f047c-01b1-427f-a439-d451eda06071
 -----
 
 +++++
-
+A0B0G0T0:Retrieve1Card-fromArchives-toDeck-sendToBottom-onlyOnce
 .....
 Docklands Crackdown
 -----
 bc0f047c-01b1-427f-a439-d451eda06072
 -----
-
+whileRezzed:IncreaseXCostInstall-affectsAll-forOpponent-perMarker{Power}
 +++++
-
+A2B0G0T0:Put1Power
 .....
 Inject
 -----
@@ -4377,7 +4377,7 @@ Origami
 -----
 bc0f047c-01b1-427f-a439-d451eda06074
 -----
-
+onInstall:CustomScript||onTrash:CustomScript
 +++++
 
 .....
@@ -4385,7 +4385,7 @@ Fester
 -----
 bc0f047c-01b1-427f-a439-d451eda06075
 -----
-
+whileInstalled:Lose2Credits-onOpponent-foreachVirusPurged
 +++++
 
 .....
@@ -4393,7 +4393,7 @@ Autoscripter
 -----
 bc0f047c-01b1-427f-a439-d451eda06076
 -----
-
+whileInstalled:Gain1Click-foreachCardInstalled-typeProgram-onlyOnce||atJackOut:TrashMyself-ifUnsuccessfulRunAny
 +++++
 
 .....
@@ -4403,13 +4403,13 @@ bc0f047c-01b1-427f-a439-d451eda06077
 -----
 
 +++++
-
+A0B0G0T0:Remove1Credits-AutoTargeted-atStealth-isCost$$SimplyAnnounce{break any number of sentry subroutines}||A0B0G0T0:Remove1Credits-AutoTargeted-atStealth-isCost$$Put7PlusOne
 .....
 Trade-In
 -----
 bc0f047c-01b1-427f-a439-d451eda06078
 -----
-
+onPlay:UseCustomScript$$TrashTarget-Targeted-atHardware$$Retrieve1Card-grabHardware
 +++++
 
 .....
@@ -4417,17 +4417,17 @@ Astrolabe
 -----
 bc0f047c-01b1-427f-a439-d451eda06079
 -----
-
+whileInstalled:Gain1MU
 +++++
-
+A0B0G0T0:Draw1Cards
 .....
 Angel Arena
 -----
 bc0f047c-01b1-427f-a439-d451eda06080
 -----
-
+onInstall:RequestInt-Msg{What install cost do you want to use?}$$Lose1Credits-perX-isCost$$Put1Power-perX
 +++++
-
+A0B0G0T0:Remove1Power-isCost$$UseCustomScript
 .....
 ENDSCRIPTS
 =====

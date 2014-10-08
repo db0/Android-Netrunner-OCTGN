@@ -24,6 +24,9 @@ collectiveSequence = []
 
 def UseCustomAbility(Autoscript, announceText, card, targetCards = None, notification = None, n = 0):
    global reversePlayerChk
+   trash = me.piles['Heap/Archives(Face-up)']
+   arcH = me.piles['Archives(Hidden)']
+   deck = me.piles['R&D/Stack']
    if fetchProperty(card, 'name') == "Tollbooth":
       targetPL = findOpponent()
       # We reverse for which player the reduce effects work, because we want cards which pay for the opponent's credit cost to take effect now.
@@ -321,6 +324,22 @@ def UseCustomAbility(Autoscript, announceText, card, targetCards = None, notific
       for c in revealedCards: CreateDummy('CreateDummy-doNotTrash-nonUnique', '', c)
       notify("{} reveals {} as their Grail support".format(me,[c.name for c in revealedCards]))
       announceString = ''
+   if fetchProperty(card, 'name') == "Trade-In": # This is only the part where it returns half the cost. The rest is done in the autoscript.
+      hardware = findTarget("Targeted-atHardware")
+      if not len(hardware): return 'ABORT'
+      price = int(num(hardware[0].Cost) / 2)
+      me.Credits += price
+      notify("{} trades-in {} for {}".format(me,card,uniCredit(price)))
+   if fetchProperty(card, 'name') == "Angel Arena":
+      revealedCard = deck.top()
+      if len(revealedCards) == 0: 
+         delayed_whisper("There's no more opponents to fight!")
+         return 'ABORT'
+      revealedCard.moveToTable(playerside * iter * cwidth(revealedCard), 0 - yaxisMove(revealedCard), False)
+      revealedCard.highlight = RevealedColor
+      notify("{} reveals {} during their {} matchup".format(me,revealedCard,card))
+      if not confirm("You have revealed your Angela Arena matchup to your opponent. Do you want to send the card to the bottom of your Stack?"): card.moveTo(deck)
+      else: card.moveToBottom(deck)     
    return announceString
    
 def CustomScript(card, action = 'PLAY', origin_card = None, original_action = None): # Scripts that are complex and fairly unique to specific cards, not worth making a whole generic function for them.
@@ -1132,6 +1151,48 @@ def CustomScript(card, action = 'PLAY', origin_card = None, original_action = No
       ARCscore()      
       intTrashCard(card, fetchProperty(card,'Stat'), "free", silent = True)
       notify("{} activates the {} to instantly access all cards in archives".format(me,card))
+   elif fetchProperty(card, 'name') == 'Inject' and action == 'PLAY':
+      revealedCards = deck.top(4)      
+      if len(revealedCards) == 0: 
+         delayed_whisper("Your syringe is empty!")
+         return 'ABORT'
+      iter = 0
+      progs = 0
+      for c in revealedCards:
+         c.moveToTable(playerside * iter * cwidth(c) - (len(revealedCards) * cwidth(c) / 2), 0 - yaxisMove(c), False)
+         c.highlight = RevealedColor
+         iter += 1
+         if c.Type == 'Program': progs += 1
+      notify("{} reveals {} during their injection and gains {}".format(me,[c.name for c in revealedCards],uniCredit(progs)))
+      while not confirm("You have revealed your injected data to your opponent. Return all non-programs to Grip?\n\n(Pressing 'No' will send a ping to your opponent to see if they're done reading them)"):
+         notify("{} would like to know if it's OK to return their cards to their Grip.".format(me))
+      for c in revealedCards: 
+         if c.Type == 'Program': c.moveTo(me.trash)
+         else: c.moveTo(me.hand)
+      me.Credits += progs
+   elif fetchProperty(card, 'name') == 'Inject':
+      if action == 'INSTALL':
+         folds = [c for c in table if c.name == card.name]
+         if folds == 1: 
+            me.counters['Hand Size'].value += 1
+            notify("{} starts folding their data and increases their available hand size by 1".format(me))
+         elif folds == 2:
+            me.counters['Hand Size'].value += 3
+            notify("{} intensifies their data folding and doubles their storage, increasing their hand size by 3.".format(me))
+         elif folds == 3:
+            me.counters['Hand Size'].value += 5
+            notify("{} has perfectly folder their data and triples their results, increasing their hand size by 5.".format(me))
+      elif action == 'TRASH':
+         folds = [c for c in table if c.name == card.name]
+         if folds == 1: # We run trash scripts before we remove cards from the table, so the minimum is going to be 1 origami on the table
+            me.counters['Hand Size'].value -= 1
+            notify(":> {}'s data folding is interrupted reducing their available hand size by 1".format(me))
+         elif folds == 2:
+            me.counters['Hand Size'].value -= 3
+            notify(":> {} disrupts their data folding and halves their storage, decreasing hand size by 3.".format(me))
+         elif folds == 3:
+            me.counters['Hand Size'].value -= 5
+            notify(":> {}'s perfect folds are ruined! Their hand size decreases by 5.".format(me))
    elif action == 'USE': useCard(card)
       
             
