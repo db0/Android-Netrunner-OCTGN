@@ -284,7 +284,7 @@ bc0f047c-01b1-427f-a439-d451eda01031
 -----
 
 +++++
-A1B0G0T0:ExileTarget-Targeted-isScored-targetMine$$Gain9Credits	
+A1B0G0T0:ExileTarget-Targeted-isScored$$Gain9Credits	
 .....
 Data Mine
 -----
