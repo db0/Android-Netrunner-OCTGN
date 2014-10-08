@@ -1168,7 +1168,7 @@ def TokensX(Autoscript, announceText, card, targetCards = None, notification = N
          debugNotify("Added {} tokens to the pool ({}) from {} at pos {}".format(targetCard.markers[token],dryRunAmount,targetCard,targetCard.position))
       if dryRunAmount < modtokens and not (num(action.group(2)) == 999 and dryRunAmount > 0):
          debugNotify("Found {} tokens. Required {}. Aborting".format(dryRunAmount,modtokens))
-         if notification != 'Automatic': delayed_whisper ("No enough tokens to remove. Aborting!") #Some end of turn effect put a special counter and then remove it so that they only run for one turn. This avoids us announcing that it doesn't have markers every turn.
+         if notification != 'Automatic': delayed_whisper ("Not enough counters to remove. Aborting!") #Some end of turn effect put a special counter and then remove it so that they only run for one turn. This avoids us announcing that it doesn't have markers every turn.
          return 'ABORT'
    tokenAmount = 0  # We count the amount of token we've manipulated, to be used with the -isExactAmount modulator.
    modifiedCards = [] # A list which holds the cards whose tokens we modified ,so that we can announce only the right names.
@@ -2361,14 +2361,18 @@ def per(Autoscript, card = None, count = 0, targetCards = None, notification = N
       multiplier = 0
       if per.group(2) and (per.group(2) == 'Target' or per.group(2) == 'Every'): # If we're looking for a target or any specific type of card, we need to scour the requested group for targets.
          debugNotify("Checking for Targeted per", 2)
-         perTargetRegex = re.search(r'\bper(Target|Every).*?-at(.*)', Autoscript)
+         perTargetRegex = re.search(r'\bper(Target|Every)', Autoscript)
+         perReqRegex = re.search(r'\bper(Target|Every).*?-at(.*)', Autoscript)
          debugNotify("perTargetRegex = {}".format(perTargetRegex.groups()))
-         if perTargetRegex.group(1) == 'Target': 
-            if re.search('fromHand', Autoscript): findTarget('Targeted-at{}'.format(perTargetRegex.group(2)),True)
-            else: targetCards = findTarget('Targeted-at{}'.format(perTargetRegex.group(2)))
+         if not perReqRegex: seek = ''
+         else: seek = '-at{}'.format(perReqRegex.group(2))            
+         if perTargetRegex.group(1) == 'Target':
+            if re.search('fromHand', Autoscript): 
+               targetCards = findTarget('Targeted{}'.format(seek),True)
+            else: targetCards = findTarget('Targeted{}'.format(seek))
          else: 
-            if re.search('fromHand', Autoscript): targetCards = findTarget('AutoTargeted-at{}'.format(perTargetRegex.group(2)),True)
-            else: targetCards = findTarget('AutoTargeted-at{}'.format(perTargetRegex.group(2)))
+            if re.search('fromHand', Autoscript): targetCards = findTarget('AutoTargeted{}'.format(seek),True)
+            else: targetCards = findTarget('AutoTargeted-{}'.format(seek))
          if len(targetCards) == 0: pass # If we were expecting some targeted cards but found none, we return a multiplier of 0
          else:
             debugNotify("Looping through {} targetCards".format(len(targetCards)))

@@ -4131,7 +4131,7 @@ bc0f047c-01b1-427f-a439-d451eda06043
 -----
 
 +++++
-A0B0G0T0:UseCustomScript
+A0B0G0T0:UseCustomAbility
 .....
 Port Anson Grid
 -----
@@ -4259,7 +4259,7 @@ bc0f047c-01b1-427f-a439-d451eda06059
 -----
 onDragDrop:IgnoreCosts-isSourceShard
 +++++
-A0B0G0T1:UseCustomScript
+A0B0G0T1:UseCustomAbility
 .....
 Rachel Beckman
 -----
@@ -4275,7 +4275,7 @@ bc0f047c-01b1-427f-a439-d451eda06061
 -----
 
 +++++
-A0B0G0T0:Retrieve1Card-grabnonEvent-toTable-onTop5Cards-isSubroutine||A0B0G0T0:Retrieve1Card-grabnonEvent-fromArchives-toTable-isSubroutine||A0B0G0T0:InstallTarget-DemiAutoTargeted-atnonEvent-choose1-fromHand-isSubroutine
+A0B0G0T0:Retrieve1Card-grabnonOperation-toTable-onTop5Cards-doNotReveal-isSubroutine||A0B0G0T0:Retrieve1Card-grabnonOperation-fromArchives-toTable-doNotReveal-isSubroutine||A0B0G0T0:InstallTarget-DemiAutoTargeted-atnonOperation-choose1-fromHand-isSubroutine
 .....
 Peak Efficiency
 -----
@@ -4299,7 +4299,7 @@ bc0f047c-01b1-427f-a439-d451eda06064
 -----
 
 +++++
-A0B0G0T0:RunEnd
+A0B0G0T0:RunEnd-isSubroutine
 .....
 Mamba
 -----
@@ -4307,7 +4307,7 @@ bc0f047c-01b1-427f-a439-d451eda06065
 -----
 
 +++++
-A0B0G0T0:Inflict1NetDamage-onOpponent||A0B0G0T0:Inflict1NetDamage-onOpponent-isSubroutine||A0B0G0T0:Psi-psiEffects<Put1Power,None>-isSubroutine
+A0B0G0T0:Remove1Power-isCost$$Inflict1NetDamage-onOpponent||A0B0G0T0:Inflict1NetDamage-onOpponent-isSubroutine||A0B0G0T0:Psi-psiEffects<Put1Power,None>-isSubroutine
 .....
 Reversed Accounts
 -----
@@ -4323,7 +4323,7 @@ bc0f047c-01b1-427f-a439-d451eda06067
 -----
 
 +++++
-A0B0G0T0:Lose1Credit-onOpponent-isSubroutine||A0B0G0T0:Lose999Credit-onOpponent-ifTagged1-isSubroutine$$TrashMyself
+A0B0G0T0:Lose1Credits-onOpponent-isSubroutine||A0B0G0T0:Lose999Credits-onOpponent-ifTagged1-isSubroutine$$TrashMyself
 .....
 Blue Sun
 -----
@@ -4331,7 +4331,7 @@ bc0f047c-01b1-427f-a439-d451eda06068
 -----
 
 +++++
-A0B0G0T0:Gain1Credit-perTargetProperty{Cost}-Targeted-atICE-isRezzed-onlyOnce$$UninstallTarget-Targeted-atICE-isRezzed
+A0B0G0T0:Gain1Credits-perTargetProperty{Cost}-Targeted-atICE-isRezzed-onlyOnce$$UninstallTarget-Targeted-atICE-isRezzed
 .....
 Changeling
 -----
@@ -4345,7 +4345,7 @@ Reuse
 -----
 bc0f047c-01b1-427f-a439-d451eda06070
 -----
-onPlay:Gain2Credits-perTarget-fromHand$$TrashMulti-Targeted-fromHand
+onPlay:Gain2Credits-perTargetCard-fromHand$$TrashMulti-Targeted-fromHand
 +++++
 
 .....
@@ -4369,7 +4369,7 @@ Inject
 -----
 bc0f047c-01b1-427f-a439-d451eda06073
 -----
-
+onPlay:CustomScript
 +++++
 
 .....
@@ -4377,7 +4377,7 @@ Origami
 -----
 bc0f047c-01b1-427f-a439-d451eda06074
 -----
-onInstall:CustomScript||onTrash:CustomScript
+whileInstalled:CustomScript
 +++++
 
 .....
@@ -4393,7 +4393,7 @@ Autoscripter
 -----
 bc0f047c-01b1-427f-a439-d451eda06076
 -----
-whileInstalled:Gain1Click-foreachCardInstalled-typeProgram-onlyOnce||atJackOut:TrashMyself-ifUnsuccessfulRunAny
+whileInstalled:Gain1Clicks-foreachCardInstalled-typeProgram-onlyOnce||atJackOut:TrashMyself-ifUnsuccessfulRunAny
 +++++
 
 .....
@@ -4409,7 +4409,7 @@ Trade-In
 -----
 bc0f047c-01b1-427f-a439-d451eda06078
 -----
-onPlay:UseCustomScript$$TrashTarget-Targeted-atHardware$$Retrieve1Card-grabHardware
+onPlay:UseCustomAbility$$TrashTarget-Targeted-atHardware-isSilent$$Retrieve1Card-grabHardware
 +++++
 
 .....
@@ -4427,7 +4427,7 @@ bc0f047c-01b1-427f-a439-d451eda06080
 -----
 onInstall:RequestInt-Msg{What install cost do you want to use?}$$Lose1Credits-perX-isCost$$Put1Power-perX
 +++++
-A0B0G0T0:Remove1Power-isCost$$UseCustomScript
+A0B0G0T0:Remove1Power-isCost$$UseCustomAbility
 .....
 ENDSCRIPTS
 =====
