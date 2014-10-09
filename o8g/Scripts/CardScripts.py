@@ -4331,7 +4331,7 @@ bc0f047c-01b1-427f-a439-d451eda06068
 -----
 
 +++++
-A0B0G0T0:Gain1Credits-perTargetProperty{Cost}-Targeted-atICE-isRezzed-onlyOnce$$UninstallTarget-Targeted-atICE-isRezzed
+A0B0G0T0:Gain1Credits-perTargetProperty{Cost}-Targeted-isRezzed-targetMine-onlyOnce$$UninstallTarget-Targeted-targetMine-isRezzed
 .....
 Changeling
 -----
@@ -4339,7 +4339,7 @@ bc0f047c-01b1-427f-a439-d451eda06069
 -----
 
 +++++
-
+A0B0G0T0:RunEnd-isSubroutine
 .....
 Reuse
 -----
