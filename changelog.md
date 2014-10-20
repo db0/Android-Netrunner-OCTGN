@@ -5,6 +5,9 @@ Changelog - Android:Netrunner LCG OCTGN Game Definition
 
 * Future Perfect being scored will now clear corp currents
 * Fixed Origami MU Cost
+* Architect will now show all 5 cards, but this will allow you to choose operations. Don't do it.
+* Fixed Origami MU
+* Fixed Autoscripter taking 1 click when removed.
 
 ### 3.14.0.x
 

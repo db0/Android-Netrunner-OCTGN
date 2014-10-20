@@ -4275,7 +4275,7 @@ bc0f047c-01b1-427f-a439-d451eda06061
 -----
 
 +++++
-A0B0G0T0:Retrieve1Card-grabnonOperation-toTable-onTop5Cards-doNotReveal-isSubroutine||A0B0G0T0:Retrieve1Card-grabnonOperation-fromArchives-toTable-doNotReveal-isSubroutine||A0B0G0T0:InstallTarget-DemiAutoTargeted-atnonOperation-choose1-fromHand-isSubroutine
+A0B0G0T0:Retrieve1Card-toTable-onTop5Cards-doNotReveal-isSubroutine-showDuplicates||A0B0G0T0:Retrieve1Card-fromArchives-toTable-doNotReveal-isSubroutine||A0B0G0T0:InstallTarget-DemiAutoTargeted-atnonOperation-choose1-fromHand-isSubroutine
 .....
 Peak Efficiency
 -----

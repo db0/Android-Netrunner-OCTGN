@@ -1862,7 +1862,7 @@ def RetrieveX(Autoscript, announceText, card, targetCards = None, notification =
          del cardChoices[:]
          del cardTexts[:]
          for c in cardList:
-            if (c.Rules,c.group.name) not in cardTexts: # we don't want to provide the player with a the same card as a choice twice, so we check if the a card in this group was already an option.
+            if (c.Rules,c.group.name) not in cardTexts or re.search(r'-showDuplicates',Autoscript): # we don't want to provide the player with a the same card as a choice twice, so we check if the a card in this group was already an option.
                debugNotify("Appending card", 4)
                cardChoices.append(c)
                cardTexts.append((c.Rules,c.group.name))
