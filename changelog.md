@@ -1,6 +1,11 @@
 Changelog - Android:Netrunner LCG OCTGN Game Definition
 ===============================================
 
+### 3.14.1.x
+
+* Future Perfect being scored will now clear corp currents
+* Fixed Origami MU Cost
+
 ### 3.14.0.x
 
 * New game definition for **Up and Over**. As always, almost every card scripted!

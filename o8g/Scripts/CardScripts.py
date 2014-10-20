@@ -4393,7 +4393,7 @@ Autoscripter
 -----
 bc0f047c-01b1-427f-a439-d451eda06076
 -----
-whileInstalled:Gain1Clicks-foreachCardInstalled-typeProgram-onlyOnce||atJackOut:TrashMyself-ifUnsuccessfulRunAny
+whileInPlay:Gain1Clicks-foreachCardInstalled-typeProgram-onlyOnce||atJackOut:TrashMyself-ifUnsuccessfulRunAny
 +++++
 
 .....
