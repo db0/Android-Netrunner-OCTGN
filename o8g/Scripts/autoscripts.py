@@ -1813,13 +1813,12 @@ def RetrieveX(Autoscript, announceText, card, targetCards = None, notification =
    debugNotify("Setting Source", 2)
    if re.search(r'-fromTrash', Autoscript) or re.search(r'-fromArchives', Autoscript) or re.search(r'-fromHeap', Autoscript):
       source = targetPL.piles['Heap/Archives(Face-up)']
-   else: 
-      debugNotify("Moving R&D/Stack to the scripting Pile", 2)
-      for c in targetPL.piles['R&D/Stack']: c.moveToBottom(me.ScriptingPile) # If the source is the R&D/Stack, then we move everything to the scripting pile in order to be able to read their properties. We move each new card to the bottom to preserve card order
-      source = me.ScriptingPile # # Then we change the source to that pile so that the rest of the script can process the right location.
+   else:
+      source = targetPL.piles['R&D/Stack']
+      source.addViewer(me)   
+      debugNotify("Making R&D/Stack vidible", 2)
       rnd(1,10) # We give a delay to allow OCTGN to read the card properties before we proceed with checking them
-   if source == me.ScriptingPile: sourcePath =  "from their {}".format(pileName(targetPL.piles['R&D/Stack']))
-   else: sourcePath =  "from their {}".format(pileName(source))
+   sourcePath =  "from their {}".format(pileName(source))
    if sourcePath == "from their Face-up Archives": sourcePath = "from their Archives"
    debugNotify("Setting Destination", 2)
    if re.search(r'-toTable', Autoscript):
@@ -1912,8 +1911,8 @@ def RetrieveX(Autoscript, announceText, card, targetCards = None, notification =
          tokensRegex = re.search(r'-with([A-Za-z0-9: ]+)', Autoscript) # If we have a -with in our autoscript, this is meant to put some tokens on the retrieved card.
          if tokensRegex: TokensX('Put{}'.format(tokensRegex.group(1)), announceText,c, n = n) 
    debugNotify("About to restore pile.", 2)
-   if source == me.ScriptingPile: # If our source was the scripting pile, we know we just checked the R&D,
-      for c in source: c.moveToBottom(targetPL.piles['R&D/Stack']) # So we return cards to their original location
+   if source == targetPL.piles['R&D/Stack']: # If our source was the scripting pile, we know we just checked the R&D,
+      source.removeViewer(me)
    if abortedRetrieve: #If the player canceled a retrieve effect from R&D / Stack, we make sure to shuffle their pile as well.
       notify("{} has aborted the retrieval effect from {}".format(me,card))
       if source == me.ScriptingPile: shuffle(targetPL.piles['R&D/Stack'])
