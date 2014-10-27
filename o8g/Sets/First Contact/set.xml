@@ -271,7 +271,7 @@
 		<property name="Stat" value="2" />	
 		<property name="Rules" value="1[Credits]: Break code gate subroutine.&#xD;&#xA;1[Credits]: +3 strength. Use this ability only by spending a credit from a stealth card." />
 		<property name="Flavor" value="&quot;If you look like you belong, people will ignore you for hours. Or years. It&apos;s only when you don&apos;t fit in that things start to go wrong.&quot; - Exile" />
-		<property name="Instructions" value="1 [Credits]: Break sentry subroutine.||1 [Credits]: +3 strength. Must have credits on a stealth card." />
+		<property name="Instructions" value="1 [Credits]: Break code gate subroutine.||1 [Credits]: +3 strength. Must have credits on a stealth card." />
 		<property name="Faction" value="Shaper" />
 		<property name="Influence" value="2" />
 		<property name="Side" value="runner" />
