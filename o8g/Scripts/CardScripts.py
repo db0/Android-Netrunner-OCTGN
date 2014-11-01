@@ -4429,6 +4429,166 @@ onInstall:RequestInt-Msg{What install cost do you want to use?}$$Lose1Credits-pe
 +++++
 A0B0G0T0:Remove1Power-isCost$$UseCustomAbility
 .....
+Bifrost Array
+-----
+bc0f047c-01b1-427f-a439-d451eda06081
+-----
+onScore:CustomScript
++++++
+
+......
+Sagittarius
+-----
+bc0f047c-01b1-427f-a439-d451eda06082
+-----
+
++++++
+A0B0G0T0:Trace2-isSubroutine-traceEffects<SimplyAnnounce{trash one program},None>||A0B0G0T0:TrashTarget-Targeted-atProgram
+.....
+Hostile Infrastructure
+-----
+bc0f047c-01b1-427f-a439-d451eda06083
+-----
+
++++++
+A0B0G0T0:Inflict1NetDamage-onOpponent
+.....
+Gemini
+-----
+bc0f047c-01b1-427f-a439-d451eda06084
+-----
+
++++++
+A0B0G0T0:Trace2-isSubroutine-traceEffects<Inflict1NetDamage-onOppponent,None>||A0B0G0T0:Inflict1NetDamage-onOppponent
+.....
+License Acquisition
+-----
+bc0f047c-01b1-427f-a439-d451eda06085
+-----
+onScore:Retrieve1Card-fromHeap-grabAsset_or_Upgrade-toTable
++++++
+
+.....
+Daily Business Show
+-----
+bc0f047c-01b1-427f-a439-d451eda06086
+-----
+
++++++
+
+.....
+Superior Cyberwalls
+-----
+bc0f047c-01b1-427f-a439-d451eda06087
+-----
+
++++++
+
+.....
+Executive Boot Camp
+-----
+bc0f047c-01b1-427f-a439-d451eda06088
+-----
+
++++++
+
+.....
+Lycan
+-----
+bc0f047c-01b1-427f-a439-d451eda06089
+-----
+
++++++
+
+.....
+Snatch and Grab
+-----
+bc0f047c-01b1-427f-a439-d451eda06090
+-----
+
++++++
+
+.....
+Merlin
+-----
+bc0f047c-01b1-427f-a439-d451eda06091
+-----
+
++++++
+
+.....
+Shell Corporation
+-----
+bc0f047c-01b1-427f-a439-d451eda06092
+-----
+
++++++
+
+.....
+Ekomind
+-----
+bc0f047c-01b1-427f-a439-d451eda06093
+-----
+
++++++
+
+.....
+Cerberus "Cuj.0" H3
+-----
+bc0f047c-01b1-427f-a439-d451eda06094
+-----
+
++++++
+
+.....
+Leela Patel
+-----
+bc0f047c-01b1-427f-a439-d451eda06095
+-----
+
++++++
+
+.....
+Cerberus "Rex" H2
+-----
+bc0f047c-01b1-427f-a439-d451eda06096
+-----
+
++++++
+
+.....
+Zona Sul Shipping
+-----
+bc0f047c-01b1-427f-a439-d451eda06097
+-----
+
++++++
+
+.....
+Cybsoft MacroDrive
+-----
+bc0f047c-01b1-427f-a439-d451eda06098
+-----
+
++++++
+
+.....
+Cerberus "Lady" H1
+-----
+bc0f047c-01b1-427f-a439-d451eda06099
+-----
+
++++++
+
+.....
+Utopia Shard
+-----
+bc0f047c-01b1-427f-a439-d451eda06100
+-----
+
++++++
+
+.....
 ENDSCRIPTS
 =====
 '''

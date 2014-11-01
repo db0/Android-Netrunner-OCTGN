@@ -1,6 +1,18 @@
 Changelog - Android:Netrunner LCG OCTGN Game Definition
 ===============================================
 
+### 3.15.0.x
+
+* New game definition for **All that Remains**. As always, almost every card scripted!
+
+* ##### Trickier Automations
+  * Hostile Infrastructure: Manual Use
+  * 
+  * 
+  * 
+  * 
+
+
 ### 3.14.1.x
 
 * Future Perfect being scored will now clear corp currents

@@ -2397,16 +2397,24 @@ def draw(group):
       return
    card = group.top()
    if ds == 'corp' and newturn:
-      card.moveTo(me.hand)
       notify("--> {} performs the turn's mandatory draw.".format(me))
       newturn = False
    else:
       ClickCost = useClick()
       if ClickCost == 'ABORT': return
-      changeCardGroup(card,me.hand)
       notify("{} to draw a card.".format(ClickCost))
       playClickDrawSound()
-      autoscriptOtherPlayers('CardDrawnClicked',card)
+   changeCardGroup(card,me.hand)      
+   dailyList = [card]
+   dailyBusiness = chkDailyBusinessShows() # Due to its automated wording, I have to hardcode this on every card draw.
+   if dailyBusiness:
+      for c in group.top(dailyBusiness):
+         dailyList.append(c)
+         changeCardGroup(c,me.hand)
+      for iter in range(dailyBusiness):
+         returnedCard = askCard(dailyList)
+         returnedCard.moveToBottom(group)
+   if not (ds == 'corp' and newturn): autoscriptOtherPlayers('CardDrawnClicked',card)
    if len(group) <= 3 and ds == 'corp': notify(":::WARNING::: {} is about to be decked! R&D down to {} cards.".format(me,len(group)))
    storeProperties(card)
 
@@ -2432,14 +2440,34 @@ def drawMany(group, count = None, destination = None, silent = False):
       else: 
          count = SSize
          whisper("You do not have enough cards in your deck to complete this action. Will draw as many as possible")
+   if destination == me.hand and group == me.piles['R&D/Stack']: # Due to its automated wording, I have to hardcode this on every card draw.
+      dailyList = []
+      dailyBusiness = chkDailyBusinessShows() 
+   else: dailyBusiness = 0
    for c in group.top(count):
+      if dailyBusiness:
+         dailyList.append(c)
       changeCardGroup(c,destination)
       #c.moveTo(destination)
+   if dailyBusiness:
+      for c in group.top(dailyBusiness):
+         dailyList.append(c)
+         changeCardGroup(c,destination)
+      for iter in range(dailyBusiness):
+         returnedCard = askCard(dailyList)
+         returnedCard.moveToBottom(group)
    if not silent: notify("{} draws {} cards.".format(me, count))
    if len(group) <= 3 and group.player.getGlobalVariable('ds') == 'corp': notify(":::WARNING::: {} is about to be decked! R&D down to {} cards.".format(group.player,len(group)))
    debugNotify("<<< drawMany() with return: {}".format(count), 3)
    return count
 
+def chkDailyBusinessShows():
+   found = 0
+   for c in table:
+      if c.name == "Daily Business Show" and c.controller == me and c.orientation == Rot0:
+         found += 1
+         c.orientation = Rot90
+   return found
 def toarchives(group = me.piles['Archives(Hidden)']):
    debugNotify(">>> toarchives(){}".format(extraASDebug())) #Debug
    mute()
