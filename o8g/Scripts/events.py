@@ -177,6 +177,7 @@ def checkMovedCard(player,card,fromGroup,toGroup,oldIndex,index,oldX,oldY,x,y,is
    if toGroup != me.piles['R&D/Stack'] and card.owner == me: superCharge(card) # First we check if we should supercharge the card, but only if the card is still on the same group at the time of execution.  
    if fromGroup == me.piles['R&D/Stack'] and toGroup == me.hand and ds == 'corp': # Code to store cards drawn by the corp to be exposed later by Bug
       if len([c for c in table if c.name == 'Bug']): setGlobalVariable('Bug Memory',card.name)
+   if ds == 'runner' and (fromGroup != table and toGroup == table) or (fromGroup == table and toGroup != table): recalcMU() # Any time a card enters or leaves the table, we recalculate MUs, just in case.
    if isScriptMove: return # If the card move happened via a script, then all further automations should have happened already.
    if fromGroup == me.hand and toGroup == table: 
       if card.Type == 'Identity': intJackin(manual = True)

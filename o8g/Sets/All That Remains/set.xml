@@ -191,7 +191,7 @@
 		<property name="Stat" value="3" />	
 		<property name="Rules" value="You cannot use Shell Corporation more than once per turn. &#xD;&#xA;[Click]: Place 3[Credits] on Shell Corporation. &#xD;&#xA;[Click]: Take all credits from Shell Corporation." />
 		<property name="Flavor" value="" />
-		<property name="Instructions" value="" />
+		<property name="Instructions" value="[Click]: Place 3 [Credits] from the bank on Shell Corporation.||[Click]: Take all credits from Shell Corporation." />
 		<property name="Faction" value="Neutral" />
 		<property name="Influence" value="0" />
 		<property name="Side" value="corp" />

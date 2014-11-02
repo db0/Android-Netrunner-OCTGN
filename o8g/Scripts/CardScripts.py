@@ -114,7 +114,7 @@ Akamatsu Mem Chip
 -----
 bc0f047c-01b1-427f-a439-d451eda01038
 -----
-whileInstalled:Gain1MU
+whileInPlay:Provide1MU
 +++++
 
 .....
@@ -338,7 +338,7 @@ Desperado
 -----
 bc0f047c-01b1-427f-a439-d451eda01024
 -----
-whileInstalled:Gain1MU||atSuccessfulRun:Gain1Credits
+whileInPlay:Provide1MU||atSuccessfulRun:Gain1Credits
 +++++
 	
 .....
@@ -426,7 +426,7 @@ Grimoire
 -----
 bc0f047c-01b1-427f-a439-d451eda01006
 -----
-whileInstalled:Gain2MU||whileInPlay:Put1Virus-foreachCardInstall-onTriggerCard-typeVirus
+whileInPlay:Provide2MU||whileInPlay:Put1Virus-foreachCardInstall-onTriggerCard-typeVirus
 +++++
 A0B0G0T0:Put1Virus-Targeted-atProgram_and_Virus
 .....
@@ -874,7 +874,7 @@ The Toolbox
 -----
 bc0f047c-01b1-427f-a439-d451eda01041
 -----
-whileInstalled:Gain2MU$$Gain2Base Link||onInstall:Put2Credits-isSilent||atTurnPreStart:Refill2Credits-duringMyTurn||whileRezzed:Reduce#CostUse-affectsIcebreaker-forMe
+whileInPlay:Provide2MU||whileInstalled:Gain2Base Link||onInstall:Put2Credits-isSilent||atTurnPreStart:Refill2Credits-duringMyTurn||whileRezzed:Reduce#CostUse-affectsIcebreaker-forMe
 +++++
 	
 .....
@@ -1074,7 +1074,7 @@ Spinal Modem
 -----
 bc0f047c-01b1-427f-a439-d451eda02002
 -----
-onInstall:Put2Credits-isSilent||whileInstalled:Gain1MU||atTurnPreStart:Refill2Credits-duringMyTurn||whileRezzed:Reduce#CostUse-affectsIcebreaker-forMe||whileRunning:Inflict1BrainDamage-foreachUnavoidedTrace-byMe
+onInstall:Put2Credits-isSilent||whileInPlay:Provide1MU||atTurnPreStart:Refill2Credits-duringMyTurn||whileRezzed:Reduce#CostUse-affectsIcebreaker-forMe||whileRunning:Inflict1BrainDamage-foreachUnavoidedTrace-byMe
 +++++
 
 .....
@@ -1154,7 +1154,7 @@ Dyson Mem Chip
 -----
 bc0f047c-01b1-427f-a439-d451eda02028
 -----
-whileInstalled:Gain1Base Link$$Gain1MU
+whileInstalled:Gain1Base Link$||whileInPlay:Provide1MU
 +++++
 
 .....
@@ -1426,7 +1426,7 @@ Chaos Theory
 -----
 bc0f047c-01b1-427f-a439-d451eda02046
 -----
-onStartup:Gain1MU-isSilent
+whileInPlay:Provide1MU
 +++++
 
 .....
@@ -1458,7 +1458,7 @@ Doppelganger
 -----
 bc0f047c-01b1-427f-a439-d451eda02064
 -----
-whileInstalled:Gain1MU
+whileInPlay:Provide1MU
 +++++
 A0B0G0T2:RunEnd-isSilent$$RunGeneric
 .....
@@ -2199,7 +2199,7 @@ Monolith
 -----
 bc0f047c-01b1-427f-a439-d451eda03036
 -----
-whileInstalled:Gain3MU||onInstall:InstallMulti-Targeted-atProgram-fromHand-payCost-reduc4||onDamage:Discard1Card-isCost-DemiAutoTargeted-atProgram-fromHand-choose1$$Put1protectionNetBrainDMG
+whileInPlay:Provide3MU||onInstall:InstallMulti-Targeted-atProgram-fromHand-payCost-reduc4||onDamage:Discard1Card-isCost-DemiAutoTargeted-atProgram-fromHand-choose1$$Put1protectionNetBrainDMG
 +++++
 A0B0G0T0:Discard1Card-isCost-DemiAutoTargeted-atProgram-fromHand-choose1$$Put1protectionNetBrainDMG
 .....
@@ -2705,7 +2705,7 @@ Deep Red
 -----
 bc0f047c-01b1-427f-a439-d451eda04042
 -----
-whileInstalled:Gain3MU||whileInPlay:Put1Deep Red-foreachCardInstall-onTriggerCard-typeCaissa
+whileInPlay:Provide3MU||whileInPlay:Put1Deep Red-foreachCardInstall-onTriggerCard-typeCaissa
 +++++
 
 .....
@@ -3065,7 +3065,7 @@ Blackguard
 -----
 bc0f047c-01b1-427f-a439-d451eda04085
 -----
-whileInstalled:Gain2MU
+whileInPlay:Provide2MU
 +++++
 A0B0G0T0:SimplyAnnounce{force the corp to rez the accessed card by paying its rez cost, if able.}
 .....
@@ -3073,7 +3073,7 @@ CyberSolutions Mem Chip
 -----
 bc0f047c-01b1-427f-a439-d451eda04086
 -----
-whileInstalled:Gain2MU
+whileInPlay:Provide2MU
 +++++
 
 .....
@@ -3641,7 +3641,7 @@ Logos
 -----
 bc0f047c-01b1-427f-a439-d451eda05037
 -----
-whileInstalled:Gain1Hand Size$$Gain1MU
+whileInstalled:Gain1Hand Size||whileInPlay:Provide1MU
 +++++
 A0B0G0T0:Retrieve1Card-doNotReveal$$ShuffleStack
 .....
@@ -3761,7 +3761,7 @@ Q-Coherence Chip
 -----
 bc0f047c-01b1-427f-a439-d451eda05052
 -----
-whileInstalled:Gain1MU||whileInPlay:TrashMyself-foreachCardTrashed-typeProgram
+whileInPlay:Provide1MU||whileInPlay:TrashMyself-foreachCardTrashed-typeProgram
 +++++
 
 .....
@@ -4225,7 +4225,7 @@ BOX-E
 -----
 bc0f047c-01b1-427f-a439-d451eda06055
 -----
-whileInstalled:Gain2Hand Size$$Gain2MU
+whileInstalled:Gain2Hand Size||whileInPlay:Provide2MU
 +++++
 
 .....
@@ -4417,7 +4417,7 @@ Astrolabe
 -----
 bc0f047c-01b1-427f-a439-d451eda06079
 -----
-whileInstalled:Gain1MU
+whileInPlay:Provide1MU
 +++++
 A0B0G0T0:Draw1Cards
 .....
@@ -4523,7 +4523,7 @@ bc0f047c-01b1-427f-a439-d451eda06092
 -----
 
 +++++
-
+A1B0G0T0:Put3Credits-onlyOnce||A1B0G0T0:Transfer999Credits-onlyOnce
 .....
 Ekomind
 -----

@@ -51,7 +51,7 @@ def executePlayScripts(card, action):
    X = 0
    Autoscripts = CardsAS.get(card.model,'').split('||') # When playing cards, the || is used as an "and" separator, rather than "or". i.e. we don't do choices (yet)
    autoScriptsSnapshot = list(Autoscripts) # Need to work on a snapshot, because we'll be modifying the list.
-   for autoS in autoScriptsSnapshot: # Checking and removing any "AtTurnStart" clicks.
+   for autoS in autoScriptsSnapshot: # Checking and removing any scripts which are not parsed at this point.
       if (autoS == '' or 
           re.search(r'atTurn(Start|End)', autoS) or 
           re.search(r'atRunStart', autoS) or 
