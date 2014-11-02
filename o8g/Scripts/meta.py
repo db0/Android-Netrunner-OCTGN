@@ -265,7 +265,9 @@ def recalcMU(): # Changing how MUs are tracked just for Ekomind...
             setMU = re.search(r'whileInPlay:SetTo([0-9]|Special)MU',autoS)
             if setMU:
                if setMU.group(1) == 'Special':
-                  if card.name == 'Ekomind': baseMU = len(me.hand)
+                  if card.name == 'Ekomind': 
+                     baseMU = len(me.hand)
+                     notify("setting MU to {} from {}".format(len(me.hand),card)) #Debug
                else: baseMU = num(setMU.group(1))
    for card in table:
       if card.controller == me and ds == 'runner':
@@ -274,7 +276,7 @@ def recalcMU(): # Changing how MUs are tracked just for Ekomind...
             extraMU = re.search(r'whileInPlay:Provide([0-9])MU',autoS)
             if extraMU: 
                addedMU += num(extraMU.group(1))
-               debugNotify("found {} extra MU on {}".format(extraMU.group(1),card)) #Debug
+               #notify("found {} extra MU on {}".format(extraMU.group(1),card)) #Debug
    for card in table:
       if card.controller == me and ds == 'runner' and fetchProperty(card,'Type') == 'Program':
          MUreq = num(fetchProperty(card,'Requirement'))
@@ -289,9 +291,9 @@ def recalcMU(): # Changing how MUs are tracked just for Ekomind...
                and card.highlight != InactiveColor 
                and card.highlight != RevealedColor): 
             paidMU += MUreq
-            debugNotify("paying {} MU for {}".format(MUreq,card)) #Debug               
+            #notify("paying {} MU for {}".format(MUreq,card)) #Debug               
    #confirm('baseMU = {}, addedMU = {}, MUreq = {} '.format(baseMU,addedMU,MUreq)) # Debug
-   me.MU = baseMU + addedMU - MUreq
+   me.MU = baseMU + addedMU - paidMU
    
    
 def chkCloud(cloudCard = None): # A function which checks the table for cards which can be put in the cloud and thus return their used MUs
