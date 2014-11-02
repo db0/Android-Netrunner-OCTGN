@@ -271,7 +271,7 @@ def UseCustomAbility(Autoscript, announceText, card, targetCards = None, notific
          foreseenCard.moveTo(me.hand)
          me.Credits += 2
       else: announceString = announceText + " attempt to foresee a {}, but was mistaken. {} is trashed".format(choiceType,foreseenCard)
-   if fetchProperty(card, 'name') == "Galahad":
+   if fetchProperty(card, 'name') == "Galahad" or fetchProperty(card, 'name') == "Lancelot" or fetchProperty(card, 'name') == "Merlin":
       revealedCards = findTarget('Targeted-atGrail-fromHand')
       del revealedCards[2:] # We don't want it to be more than 5 cards
       if len(revealedCards) == 0: 
@@ -315,15 +315,6 @@ def UseCustomAbility(Autoscript, announceText, card, targetCards = None, notific
          hw = programTargets[chosenCard]
          intTrashCard(hw, fetchProperty(hw,'Stat'), "free", silent = True)
          notify(":> {} trashes {}".format(card,hw))
-      announceString = ''
-   if fetchProperty(card, 'name') == "Lancelot":
-      revealedCards = findTarget('Targeted-atGrail-fromHand')
-      del revealedCards[2:] # We don't want it to be more than 5 cards
-      if len(revealedCards) == 0: 
-         delayed_whisper("You need to target some Grail first!")
-         return 'ABORT'
-      for c in revealedCards: CreateDummy('CreateDummy-doNotTrash-nonUnique', '', c)
-      notify("{} reveals {} as their Grail support".format(me,[c.name for c in revealedCards]))
       announceString = ''
    if fetchProperty(card, 'name') == "Trade-In": # This is only the part where it returns half the cost. The rest is done in the autoscript.
       hardware = findTarget("Targeted-atHardware")

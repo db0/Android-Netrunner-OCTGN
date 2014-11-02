@@ -7,9 +7,9 @@ Changelog - Android:Netrunner LCG OCTGN Game Definition
 
 * ##### Trickier Automations
   * Hostile Infrastructure: Manual Use
-  * 
-  * 
-  * 
+  * Executive Boot Camp: TurnStart Rez is manual use
+  * Lycan: Not scripted. Track manually.
+  * Snatch and Grab: Trace effects not automated, only announces.
   * 
 
 

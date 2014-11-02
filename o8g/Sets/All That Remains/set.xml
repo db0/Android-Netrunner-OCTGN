@@ -127,7 +127,7 @@
 		<property name="Stat" value="3" />	
 		<property name="Rules" value="When your turn begins, you may rez a card, lowering the rez cost by 1[Credits]. &#xD;&#xA;1[Credits],[Trash]: Search R&amp;D for an asset, reveal it, and add it to HQ. Shuffle R&amp;D." />
 		<property name="Flavor" value="&quot;Do it again, but this time I want to see you to enunciate less. Maybe let some spittle fly.&quot;" />
-		<property name="Instructions" value="" />
+		<property name="Instructions" value="Rez a card, lowering the rez cost by 1[Credits]||1[Credits],[Trash]: Search R&amp;D for an asset, reveal it, and add it to HQ. Shuffle R&amp;D." />
 		<property name="Faction" value="The Weyland Consortium" />
 		<property name="Influence" value="1" />
 		<property name="Side" value="corp" />

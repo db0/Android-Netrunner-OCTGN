@@ -4481,7 +4481,7 @@ Superior Cyberwalls
 -----
 bc0f047c-01b1-427f-a439-d451eda06087
 -----
-
+onScore:Gain1Credits-perEveryCard-atBarrier-isRezzed
 +++++
 
 .....
@@ -4491,7 +4491,7 @@ bc0f047c-01b1-427f-a439-d451eda06088
 -----
 
 +++++
-
+A0B0G0T0:RezTarget-Targeted-atnonOperation_andnonAgenda-payCost-reduc1-onlyOnce||A0B1G0T1:Retrieve1Card-grabAsset$$ShuffleR&D
 .....
 Lycan
 -----
@@ -4499,13 +4499,13 @@ bc0f047c-01b1-427f-a439-d451eda06089
 -----
 
 +++++
-
+A0B0G0T0:TrashTarget-Targeted-atProgram-isSubroutine
 .....
 Snatch and Grab
 -----
 bc0f047c-01b1-427f-a439-d451eda06090
 -----
-
+onPlay:Trace3<SimplyAnnounce{trash a connection unless the runner takes 1 tag},None>
 +++++
 
 .....
@@ -4515,7 +4515,7 @@ bc0f047c-01b1-427f-a439-d451eda06091
 -----
 
 +++++
-
+A0B0G0T0:UseCustomAbility-excludeDummy||A0B0G0T0:Inflict2NetDamage-onOpponent-isSubroutine-excludeDummy||A0B0G0T0:Inflict2NetDamage-onOpponent-isSubroutine-onlyforDummy$$TrashMyself-isSilent
 .....
 Shell Corporation
 -----
