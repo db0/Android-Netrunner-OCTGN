@@ -236,20 +236,20 @@ def chkRAM(card, action = 'INSTALL', silent = False):
          and card.highlight != InactiveColor 
          and card.highlight != RevealedColor):
       if action == 'INSTALL':
-         card.owner.MU -= MUreq
+         #card.owner.MU -= MUreq
          chkCloud(card)
          update()
          if not card.markers[mdict['Cloud']]:
             MUtext = ", using up  {}".format(uniMU(MUreq))
          else: MUtext = ''
       elif action == 'UNINSTALL':
-         card.owner.MU += MUreq
+         #card.owner.MU += MUreq
          MUtext = ", freeing up  {}".format(uniMU(MUreq))
    else: MUtext = ''
-   if card.owner.MU < 0 and not silent: 
-      notify(":::Warning:::{}'s programs require more memory than they have available. They must trash enough programs to bring their available Memory to at least 0".format(card.controller))
-      information(":::ATTENTION:::\n\nYou are now using more MUs than you have available memory!\
-                  \nYou need to trash enough programs to bring your Memory to 0 or higher")
+   #if card.owner.MU < 0 and not silent: 
+      #notify(":::Warning:::{}'s programs require more memory than they have available. They must trash enough programs to bring their available Memory to at least 0".format(card.controller))
+      #information(":::ATTENTION:::\n\nYou are now using more MUs than you have available memory!\
+                  #\nYou need to trash enough programs to bring your Memory to 0 or higher")
    debugNotify("<<< chkRAM() by returning: {}".format(MUtext), 3)
    return MUtext
 
@@ -267,7 +267,7 @@ def recalcMU(): # Changing how MUs are tracked just for Ekomind...
                if setMU.group(1) == 'Special':
                   if card.name == 'Ekomind': 
                      baseMU = len(me.hand)
-                     notify("setting MU to {} from {}".format(len(me.hand),card)) #Debug
+                     #notify("setting MU to {} from {}".format(len(me.hand),card)) #Debug
                else: baseMU = num(setMU.group(1))
    for card in table:
       if card.controller == me and ds == 'runner':
@@ -291,9 +291,11 @@ def recalcMU(): # Changing how MUs are tracked just for Ekomind...
                and card.highlight != InactiveColor 
                and card.highlight != RevealedColor): 
             paidMU += MUreq
+            chkCloud(card)
             #notify("paying {} MU for {}".format(MUreq,card)) #Debug               
    #confirm('baseMU = {}, addedMU = {}, MUreq = {} '.format(baseMU,addedMU,MUreq)) # Debug
    me.MU = baseMU + addedMU - paidMU
+   if me.MU < 0: notify(":::WARNING::: {} is currently exceeding their available Memory Units".format(me))
    
    
 def chkCloud(cloudCard = None): # A function which checks the table for cards which can be put in the cloud and thus return their used MUs
@@ -301,11 +303,11 @@ def chkCloud(cloudCard = None): # A function which checks the table for cards wh
    if not cloudCard: cards = [c for c in table if c.Type == 'Program']
    else: cards = [cloudCard] # If we passed a card as a variable, we just check the cloud status of that card
    for card in cards:
-      debugNotify("Cloud Checking {} with AS = {}".format(card,fetchProperty(card, 'AutoScripts')), 2) #Debug
+      #notify("Cloud Checking {} with AS = {}".format(card,fetchProperty(card, 'AutoScripts'))) #Debug
       cloudRegex = re.search(r'Cloud([0-9]+)Link',fetchProperty(card, 'AutoScripts'))
       if cloudRegex:
          linkRequired = num(cloudRegex.group(1))
-         debugNotify("Found Cloud Regex. linkRequired = {}".format(linkRequired), 2) #Debug
+         #notify("Found Cloud Regex on {}. linkRequired = {}".format(linkRequired,card)) #Debug
          if linkRequired <= card.controller.counters['Base Link'].value and not card.markers[mdict['Cloud']]:
             card.markers[mdict['Cloud']] = 1
             card.controller.MU += num(card.Requirement)
