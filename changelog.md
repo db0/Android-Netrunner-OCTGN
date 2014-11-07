@@ -10,7 +10,8 @@ Changelog - Android:Netrunner LCG OCTGN Game Definition
   * Executive Boot Camp: TurnStart Rez is manual use
   * Lycan: Not scripted. Track manually.
   * Snatch and Grab: Trace effects not automated, only announces.
-  * 
+  * Lela Patel: Manual Use
+  * Zona Sul Shipping: doesn't trash automatically on tag
 
 
 ### 3.14.1.x

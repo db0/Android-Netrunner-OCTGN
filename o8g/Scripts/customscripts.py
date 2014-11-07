@@ -1191,6 +1191,15 @@ def CustomScript(card, action = 'PLAY', origin_card = None, original_action = No
          elif folds == 3:
             me.counters['Hand Size'].value -= 5
             notify(":> {}'s perfect folds are ruined! Their hand size decreases by 5.".format(me))
+   elif fetchProperty(card, 'name') == 'Bifrost Array' and action == 'SCORE': 
+      targetAgenda = findTarget('DemiAutoTargeted-atAgenda_and_notBifrost Array-isScored-choose1')
+      if len(targetAgenda) and confirm("Do you want to use the optional ability of Bifrost Array?"):
+         notify('{} triggers the "when scored" ability of {}'.format(me,targetAgenda[0]))
+         executePlayScripts(targetAgenda[0],'SCORE')
+   elif fetchProperty(card, 'name') == 'Utopia Shard' and action == 'USE': 
+      remoteCall(fetchCorpPL(),'handRandomDiscard',[me.hand,2])
+      intTrashCard(card, fetchProperty(card,'Stat'), "free", silent = True)
+      notify("{} activates the {} to force {} to discard 2 cards at random".format(me,card,fetchCorpPL()))
    elif action == 'USE': useCard(card)
       
             

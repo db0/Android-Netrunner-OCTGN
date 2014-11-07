@@ -223,7 +223,7 @@
 		<property name="Stat" value="0" />	
 		<property name="Rules" value="Place 4 power counters on Cerberus &quot;Cuj.0&quot; H3 when it is installed.&#xD;&#xA;Hosted power counter: Break up to 2 sentry subroutines.&#xD;&#xA;1[Credits]: +1 strength." />
 		<property name="Flavor" value="&quot;He only likes to eat live meat.&quot; -MaxX" />
-		<property name="Instructions" value="" />
+		<property name="Instructions" value="Hosted power counter: Break up to 2 sentry subroutines.||1 [Credits]: +1 strength." />
 		<property name="Faction" value="Anarch" />
 		<property name="Influence" value="3" />
 		<property name="Side" value="runner" />
@@ -255,7 +255,7 @@
 		<property name="Stat" value="1" />	
 		<property name="Rules" value="Place 4 power counters on Cerberus &quot;Rex&quot; H2 when it is installed.&#xD;&#xA;Hosted power counter: Break up to 2 code gate subroutines.&#xD;&#xA;1[Credits]: +1 strength." />
 		<property name="Flavor" value="&quot;Useful for fetching all sorts of things…but you better have a treat ready if he likes it.&quot; -Iain Stirling" />
-		<property name="Instructions" value="" />
+		<property name="Instructions" value="Hosted power counter: Break up to 2 code gate subroutines.||1 [Credits]: +1 strength." />
 		<property name="Faction" value="Criminal" />
 		<property name="Influence" value="3" />
 		<property name="Side" value="runner" />
@@ -303,7 +303,7 @@
 		<property name="Stat" value="3" />	
 		<property name="Rules" value="Place 4 power counters on Cerberus &quot;Lady&quot; H1 when it is installed.&#xD;&#xA;Hosted power counter: Break up to 2 barrier subroutines.&#xD;&#xA;1[Credits]: +1 strength." />
 		<property name="Flavor" value="&quot;Its bytes are definitely worse than its bark.&quot; -Chaos Theory" />
-		<property name="Instructions" value="" />
+		<property name="Instructions" value="Hosted power counter: Break up to 2 barrier subroutines.||1 [Credits]: +1 strength." />
 		<property name="Faction" value="Shaper" />
 		<property name="Influence" value="3" />
 		<property name="Side" value="runner" />

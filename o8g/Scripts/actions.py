@@ -2279,10 +2279,11 @@ def handDiscard(card, scripted = False):
             goToEndTurn(table, 0, 0)
       else: notify("{} discards a card.".format(me))
 
-def handRandomDiscard(group, count = None, player = None, destination = None, silent = False):
+def handRandomDiscard(group = None, count = None, player = None, destination = None, silent = False):
    debugNotify(">>> handRandomDiscard(){}".format(extraASDebug())) #Debug
    mute()
    if not player: player = me
+   if not group: group = me.hand
    if not destination:
       if ds == "runner": destination = player.piles['Heap/Archives(Face-up)']
       else: destination = player.piles['Archives(Hidden)']

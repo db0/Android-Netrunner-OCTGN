@@ -4537,9 +4537,9 @@ Cerberus "Cuj.0" H3
 -----
 bc0f047c-01b1-427f-a439-d451eda06094
 -----
-
+onInstall:Put4Power
 +++++
-
+A0B0G0T0:Remove1Power-isCost$$SimplyAnnounce{break up to 2 sentry subroutines}||A0B1G0T0:Put1PlusOne	
 .....
 Leela Patel
 -----
@@ -4547,29 +4547,29 @@ bc0f047c-01b1-427f-a439-d451eda06095
 -----
 
 +++++
-
+A0B0G0T0:UninstallTarget-Targeted-targetOpponents-isUnrezzed-onlyOnce
 .....
 Cerberus "Rex" H2
 -----
 bc0f047c-01b1-427f-a439-d451eda06096
 -----
-
+onInstall:Put4Power
 +++++
-
+A0B0G0T0:Remove1Power-isCost$$SimplyAnnounce{break up to 2 code gate subroutines}||A0B1G0T0:Put1PlusOne	
 .....
 Zona Sul Shipping
 -----
 bc0f047c-01b1-427f-a439-d451eda06097
 -----
-
+atTurnStart:Put1Credits
 +++++
-
+A1B0G0T0:Transfer999Credits
 .....
 Cybsoft MacroDrive
 -----
 bc0f047c-01b1-427f-a439-d451eda06098
 -----
-
+onInstall:Put1Credits-isSilent||atTurnPreStart:Refill1Credits-duringMyTurn||whileRezzed:Reduce#CostInstall-affectsProgram-forMe
 +++++
 
 .....
@@ -4577,17 +4577,17 @@ Cerberus "Lady" H1
 -----
 bc0f047c-01b1-427f-a439-d451eda06099
 -----
-
+onInstall:Put4Power
 +++++
-
+A0B0G0T0:Remove1Power-isCost$$SimplyAnnounce{break up to 2 barrier subroutines}||A0B1G0T0:Put1PlusOne	
 .....
 Utopia Shard
 -----
 bc0f047c-01b1-427f-a439-d451eda06100
 -----
-
+onDragDrop:IgnoreCosts-isSourceShard
 +++++
-
+A0B0G0T0:CustomScript
 .....
 ENDSCRIPTS
 =====
