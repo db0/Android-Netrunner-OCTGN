@@ -1,8 +1,8 @@
 =====Message of the Day======
 
-Up and Over has been rezzed! As always almost all cards have been automated.
+All that Remains has been rezzed! As always almost all cards have been automated.
 
-Please visit the plugin site for information on the trickier automations.
+MU calculation had been fixed for a bit but now it's fixed and working even better. It should keep track of your MUs almost constanly and should be far more accurate.
 
 ---
 If you enjoy my work, please consider becoming my patron by donating a few $ a month.
