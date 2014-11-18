@@ -4259,7 +4259,7 @@ bc0f047c-01b1-427f-a439-d451eda06059
 -----
 onDragDrop:IgnoreCosts-isSourceShard
 +++++
-A0B0G0T1:UseCustomAbility
+A0B0G0T1:CustomScript
 .....
 Rachel Beckman
 -----

@@ -9,6 +9,7 @@ Changelog - Android:Netrunner LCG OCTGN Game Definition
 * Docklands Crackdown should trigger only once now
 * Fester doesn't trigger on install anymore.
 * Reuse shouldn't announce trashed cards anymore.
+* Hades shard should work now
 
 ### 3.15.0.x
 
