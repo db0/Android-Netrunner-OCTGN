@@ -1,9 +1,8 @@
 =====Message of the Day======
 
-All that Remains has been rezzed! As always almost all cards have been automated.
+A lot of bugfixes had been added. The two new shards should work correctly now.
 
-MU calculation had been broken for a bit (sorry about that) but now it's fixed and working even better. 
-It should keep track of your MUs almost constanly and should be far more accurate.
+Also the new stimhack league is about to start! Don't forget to register.
 
 ---
 If you enjoy my work, please consider becoming my patron by donating a few $ a month.
