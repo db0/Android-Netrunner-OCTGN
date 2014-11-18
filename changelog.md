@@ -5,7 +5,7 @@ Changelog - Android:Netrunner LCG OCTGN Game Definition
 
 * Inactive cards won't provide MUs anymore (e.g. card hosted on Supplier) 
 * Utopia Shard will trash Corp Cards now
-
+* Gorman Drip won't get a counter from the mandatory draw anymore.
 
 ### 3.15.0.x
 

@@ -2399,9 +2399,7 @@ def draw(group):
          whisper(":::ERROR::: No more cards in your stack")
       return
    card = group.top()
-   if ds == 'corp' and newturn:
-      notify("--> {} performs the turn's mandatory draw.".format(me))
-      newturn = False
+   if ds == 'corp' and newturn: notify("--> {} performs the turn's mandatory draw.".format(me))
    else:
       ClickCost = useClick()
       if ClickCost == 'ABORT': return
@@ -2418,6 +2416,7 @@ def draw(group):
          returnedCard = askCard(dailyList)
          returnedCard.moveToBottom(group)
    if not (ds == 'corp' and newturn): autoscriptOtherPlayers('CardDrawnClicked',card)
+   if ds == 'corp' and newturn: newturn = False # Need to do this later so as not to trigger autoscripts from the mnandatory draw.
    if len(group) <= 3 and ds == 'corp': notify(":::WARNING::: {} is about to be decked! R&D down to {} cards.".format(me,len(group)))
    storeProperties(card)
 
