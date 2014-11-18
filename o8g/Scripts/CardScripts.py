@@ -3769,7 +3769,7 @@ Overmind
 -----
 bc0f047c-01b1-427f-a439-d451eda05053
 -----
-onInstall:Put1Power-perMyCounter{MU}
+onInstall:Put1Power-perMyCounter{MU}$$Remove1Power-isSilent
 +++++
 A0B0G0T0:Remove1Power-isCost$$SimplyAnnounce{break ICE subroutine}||A0B1G0T0:Put1PlusOne
 .....
