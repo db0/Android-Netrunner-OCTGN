@@ -4385,7 +4385,7 @@ Fester
 -----
 bc0f047c-01b1-427f-a439-d451eda06075
 -----
-whileInstalled:Lose2Credits-onOpponent-foreachVirusPurged
+whileInPlay:Lose2Credits-onOpponent-foreachVirusPurged
 +++++
 
 .....
