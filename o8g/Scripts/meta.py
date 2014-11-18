@@ -259,7 +259,7 @@ def recalcMU(): # Changing how MUs are tracked just for Ekomind...
    addedMU = 0
    paidMU = 0
    for card in table:
-      if card.controller == me and ds == 'runner':
+      if card.controller == me and ds == 'runner' and card.highlight != InactiveColor and card.highlight != DummyColor and card.highlight != RevealedColor:
          Autoscripts = CardsAS.get(card.model,'').split('||')
          for autoS in Autoscripts: 
             setMU = re.search(r'whileInPlay:SetTo([0-9]|Special)MU',autoS)
