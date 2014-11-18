@@ -1197,9 +1197,10 @@ def CustomScript(card, action = 'PLAY', origin_card = None, original_action = No
          notify('{} triggers the "when scored" ability of {}'.format(me,targetAgenda[0]))
          executePlayScripts(targetAgenda[0],'SCORE')
    elif fetchProperty(card, 'name') == 'Utopia Shard' and action == 'USE': 
-      remoteCall(fetchCorpPL(),'handRandomDiscard',[me.hand,2])
+      corpPL = fetchCorpPL()
+      remoteCall(corpPL,'handRandomDiscard',[corpPL.hand,2])
       intTrashCard(card, fetchProperty(card,'Stat'), "free", silent = True)
-      notify("{} activates the {} to force {} to discard 2 cards at random".format(me,card,fetchCorpPL()))
+      notify("{} activates the {} to force {} to discard 2 cards at random".format(me,card,corpPL))
    elif action == 'USE': useCard(card)
       
             
