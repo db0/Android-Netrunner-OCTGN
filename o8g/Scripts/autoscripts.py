@@ -1700,9 +1700,13 @@ def ModifyStatus(Autoscript, announceText, card, targetCards = None, notificatio
                   return 'ABORT'
             except: hostMe(targetCard,newHost)
       elif action.group(1) == 'Trash':
-         trashResult = intTrashCard(targetCard, fetchProperty(targetCard,'Stat'), "free", silent = True)
-         if trashResult == 'ABORT': return 'ABORT'
-         elif trashResult == 'COUNTERED': extraText = " (Countered!)"
+         if targetCard.group.name == "Hand":
+            if targetCard.group.controller == me: handDiscard(targetCard, True)
+            else: remoteCall(targetCard.group.controller, 'handDiscard', [targetCard,True])
+         else:
+            trashResult = intTrashCard(targetCard, fetchProperty(targetCard,'Stat'), "free", silent = True)
+            if trashResult == 'ABORT': return 'ABORT'
+            elif trashResult == 'COUNTERED': extraText = " (Countered!)"
       elif action.group(1) == 'SendToBottom' and movetoBottomOfStack(targetCard, silent = True) != 'ABORT': pass
       elif action.group(1) == 'Exile' and exileCard(targetCard, silent = True) != 'ABORT': pass
       elif action.group(1) == 'Rework': # Rework puts a card on top of R&D (usually shuffling afterwards)

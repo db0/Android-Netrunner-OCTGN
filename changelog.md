@@ -7,6 +7,8 @@ Changelog - Android:Netrunner LCG OCTGN Game Definition
 * Utopia Shard will trash Corp Cards now
 * Gorman Drip won't get a counter from the mandatory draw anymore.
 * Docklands Crackdown should trigger only once now
+* Fester doesn't trigger on install anymore.
+* Reuse shouldn't announce trashed cards anymore.
 
 ### 3.15.0.x
 
