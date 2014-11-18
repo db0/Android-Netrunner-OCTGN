@@ -4361,7 +4361,7 @@ Docklands Crackdown
 -----
 bc0f047c-01b1-427f-a439-d451eda06072
 -----
-whileRezzed:IncreaseXCostInstall-affectsAll-forOpponent-perMarker{Power}
+whileRezzed:IncreaseXCostInstall-affectsAll-forOpponent-perMarker{Power}-onlyOnce
 +++++
 A2B0G0T0:Put1Power
 .....
