@@ -10,6 +10,7 @@ Changelog - Android:Netrunner LCG OCTGN Game Definition
 * Fester doesn't trigger on install anymore.
 * Reuse shouldn't announce trashed cards anymore.
 * Hades shard should work now
+* Deus X can now be re-hosted on daemons if its used to prevetn net damage
 
 ### 3.15.0.x
 

@@ -1506,7 +1506,7 @@ def CreateDummy(Autoscript, announceText, card, targetCards = None, notification
    #confirm("Dummy ID: {}\n\nList Dummy ID: {}".format(dummyCard._id,passedlist[0]._id)) #Debug
    if not re.search(r'doNotTrash',Autoscript):
       debugNotify("Did not find string 'doNotTrash' in {}. Trashing Card".format(Autoscript))
-      card.moveTo(card.owner.piles['Heap/Archives(Face-up)'])
+      sendToTrash(card)
    if action: announceString = TokensX('Put{}'.format(action.group(2)), announceText,dummyCard, n = n) # If we have a -with in our autoscript, this is meant to put some tokens on the dummy card.
    else: announceString = announceText + 'create a lingering effect for {}'.format(targetPL)
    debugNotify("<<< CreateDummy()", 3)
