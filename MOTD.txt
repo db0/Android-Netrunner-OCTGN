@@ -1,13 +1,8 @@
 =====Message of the Day======
 
-A lot of bugfixes had been added. The two new shards should work correctly now.
+The Second Stimhack league has begun!
 
-Also the new stimhack league is about to start! Don't forget to register.
-
----
-If you enjoy my work, please consider becoming my patron by donating a few $ a month.
-
-Would you like to open a browser window to my Patreon campaign?
+Would you like to learn more?
 =============================
 &&
-http://www.patreon.com/db0
+http://forum.stimhack.com/t/official-stimhack-octgn-league-part-ii/2318

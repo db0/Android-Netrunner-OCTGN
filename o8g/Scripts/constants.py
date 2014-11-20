@@ -172,6 +172,7 @@ knownLeagues = {'BGG-L02'           : 'Acceletated Beta League', # The known lea
                 'BGG-L05'           : 'Fear and Loathing in New Angeles League',
                 'HOL'               : 'Honor and OCTGN League',
                 'BGG Tournament 3'  : 'BGG Tournament 3',
+                'SHL2'              : 'Stimhack League 2',
                 'OGO L1'            : 'RPGnet OGO League'
                }
                
