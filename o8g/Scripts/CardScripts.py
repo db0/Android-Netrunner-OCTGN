@@ -4561,7 +4561,7 @@ Zona Sul Shipping
 -----
 bc0f047c-01b1-427f-a439-d451eda06097
 -----
-atTurnStart:Put1Credits
+atTurnStart:Put1Credits-duringMyTurn
 +++++
 A1B0G0T0:Transfer999Credits
 .....
