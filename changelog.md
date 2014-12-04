@@ -1,6 +1,10 @@
 Changelog - Android:Netrunner LCG OCTGN Game Definition
 ===============================================
 
+### 3.15.2.x
+
+* Fixed Kitsune
+
 ### 3.15.1.x
 
 * Inactive cards won't provide MUs anymore (e.g. card hosted on Supplier) 

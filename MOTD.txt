@@ -1,8 +1,4 @@
 =====Message of the Day======
 
-The Second Stimhack league is about to begin!
-
-Would you like to learn more?
+Kitsune is now fixed
 =============================
-&&
-http://forum.stimhack.com/t/official-stimhack-octgn-league-part-ii/2318

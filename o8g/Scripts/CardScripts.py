@@ -4131,7 +4131,7 @@ bc0f047c-01b1-427f-a439-d451eda06043
 -----
 
 +++++
-A0B0G0T0:UseCustomAbility
+A0B0G0T0:CustomScript
 .....
 Port Anson Grid
 -----
