@@ -1,4 +1,6 @@
 =====Message of the Day======
 
 Kitsune is now fixed
+Also a few other bugfixes mentioned on github.
+
 =============================
