@@ -153,7 +153,7 @@
 	<card id="bc0f047c-01b1-427f-a439-d451eda06010" name="Mother Goddess">
 		<property name="Subtitle" value="" />
 		<property name="Type" value="ICE" />
-		<property name="Keywords" value="Mythic-Unique" />
+		<property name="Keywords" value="Mythic-Unique-NEXT" />
 		<property name="Cost" value="4" />
 		<property name="Requirement" value="" />	
 		<property name="Stat" value="4" />	
