@@ -1242,13 +1242,10 @@ def scrAgenda(card, x = 0, y = 0,silent = False, forced = False):
          return
       ap = num(fetchProperty(card,'Stat'))
       card.markers[mdict['Scored']] += 1
-      apReduce = findCounterPrevention(ap, 'Agenda Points', me)
-      if apReduce: extraTXT = " ({} forfeited)".format(apReduce)
-      else: extraTXT = ''
       debugNotify("About to Score", 2)
-      me.counters['Agenda Points'].value += ap - apReduce
+      me.counters['Agenda Points'].value += ap
       placeCard(card, action = 'SCORE')
-      notify("{} {}s {} and receives {} agenda point(s){}".format(me, agendaTxt.lower(), card, ap - apReduce,extraTXT))
+      notify("{} {}s {} and receives {} agenda point(s)".format(me, agendaTxt.lower(), card, ap))
       if cheapAgenda: notify(":::Warning:::{} did not have enough advance tokens ({} out of {})! ".format(card,currentAdv,card.Cost))
       playScoreAgendaSound(card)
       executePlayScripts(card,agendaTxt)
@@ -1278,7 +1275,7 @@ def accessTarget(group = table, x = 0, y = 0, noQuestionsAsked = False):
    mute()
    global origController
    targetPL = ofwhom('-ofOpponent')
-   extraCreds = 0
+   extraCredCost = 0
    if getGlobalVariable('SuccessfulRun') != 'True' and not noQuestionsAsked:
       if not re.search(r'running',getGlobalVariable('status')) and not confirm("You're not currently running. Are you sure you're allowed to access this card?"): return
       if runSuccess() == 'DENIED': return # If the player is trying to access, then we assume the run was a success.
@@ -1337,9 +1334,23 @@ def accessTarget(group = table, x = 0, y = 0, noQuestionsAsked = False):
               \n\nWhat do you want to do with this card?".format(fetchProperty(card, 'name'),fetchProperty(card, 'Type'),fetchProperty(card, 'Keywords'),fetchProperty(card, 'Cost'),cStatTXT,fetchProperty(card, 'Rules'))
          if card.Type == 'Agenda' or card.Type == 'Asset' or card.Type == 'Upgrade':
             if card.Type == 'Agenda': 
-               action1TXT = 'Liberate for {} Agenda Points.'.format(card.Stat)
-               extraCreds = calcAgendaStealCost(card)
-               if extraCreds: action1TXT += ' (Requires {} Credits)'.format(extraCreds)
+               extraCredCost = calcAgendaStealCost(card)
+               if extraCredCost: 
+                  reduction = reduceCost(card, 'LIBERATE', extraCredCost, dryRun = True)
+                  if reduction > 0:
+                     extraText = " ({} - {})".format(extraCredCost,reduction)
+                     extraText2 = " (reduced by {})".format(uniCredit(reduction))
+                  elif reduction < 0:
+                     extraText = " ({} + {})".format(extraCredCost,abs(reduction))
+                     extraText2 = " (increased by {})".format(uniCredit(abs(reduction)))
+                  else:
+                     extraText = ''
+                     extraText2 = '' 
+                  agendaCost = ' by paying {}{} Credits'.format(extraCredCost - reduction,extraText)
+               else:
+                  agendaCost = ''
+                  extraText2 = '' 
+               action1TXT = 'Liberate for {} Agenda Points{}.'.format(card.Stat,agendaCost)
             else:
                reduction = reduceCost(card, 'TRASH', num(card.Stat), dryRun = True)
                if reduction > 0:
@@ -1362,14 +1373,19 @@ def accessTarget(group = table, x = 0, y = 0, noQuestionsAsked = False):
             notify("{} {} {} at no cost".format(me,uniTrash(),card))
          elif choice == 2:
             if card.Type == 'Agenda':
-               # TODO - Need to add a check before stealing to see if the runner has enough credits
-               scrAgenda(card,silent = True)
+               if extraCredCost:
+                  reduceCost(card, 'LIBERATE', extraCredCost)
+                  rc = payCost(extraCredCost - reduction, "not free")
+                  if rc != "ABORT":  # If the player couldn't pay to trash the card, we leave it where it is.
+                     scrAgenda(card,silent = True)
+                     notify("{} paid {}{} to liberate {}".format(me,uniCredit(extraCredCost - reduction),extraText2,card))
+               else: scrAgenda(card,silent = True)
             else:
                reduction = reduceCost(card, 'TRASH', num(card.Stat))
                rc = payCost(num(card.Stat) - reduction, "not free")
-               if rc == "ABORT": pass # If the player couldn't pay to trash the card, we leave it where it is.
-               sendToTrash(card)
-               notify("{} paid {}{} to {} {}".format(me,uniCredit(num(card.Stat) - reduction),extraText2,uniTrash(),card))
+               if rc != "ABORT":  # If the player couldn't pay to trash the card, we leave it where it is.
+                  sendToTrash(card)
+                  notify("{} paid {}{} to {} {}".format(me,uniCredit(num(card.Stat) - reduction),extraText2,uniTrash(),card))
          else: pass
          if cFaceD and card.group == table and not card.markers[mdict['Scored']] and not card.markers[mdict['ScorePenalty']]: card.isFaceUp = False
          card.highlight = None
@@ -1456,7 +1472,24 @@ def RDaccessX(group = table, x = 0, y = 0,count = None): # A function which look
                {}\n\nCard Text: {}\
            \n\nWhat do you want to do with this card?".format(cName,cType,cKeywords,cCost,cStatTXT,cRules)
       if cType == 'Agenda' or cType == 'Asset' or cType == 'Upgrade':
-         if cType == 'Agenda': action1TXT = 'Liberate for {} Agenda Points.'.format(cStat)
+         if cType == 'Agenda': 
+            extraCredCost = calcAgendaStealCost(RDtop[iter])
+            if extraCredCost: 
+               reduction = reduceCost(RDtop[iter], 'LIBERATE', extraCredCost, dryRun = True)
+               if reduction > 0:
+                  extraText = " ({} - {})".format(extraCredCost,reduction)
+                  extraText2 = " (reduced by {})".format(uniCredit(reduction))
+               elif reduction < 0:
+                  extraText = " ({} + {})".format(extraCredCost,abs(reduction))
+                  extraText2 = " (increased by {})".format(uniCredit(abs(reduction)))
+               else:
+                  extraText = ''
+                  extraText2 = '' 
+               agendaCost = ' by paying {}{} Credits'.format(extraCredCost - reduction,extraText)
+            else:
+               agendaCost = ''
+               extraText2 = '' 
+            action1TXT = 'Liberate for {} Agenda Points{}.'.format(cStat,agendaCost)
          else:
             reduction = reduceCost(RDtop[iter], 'TRASH', num(cStat), dryRun = True)
             gatheredCardList = True # We set this variable to True, to tell future reducecosts in this execution, not to scan the table a second time.
@@ -1482,10 +1515,20 @@ def RDaccessX(group = table, x = 0, y = 0,count = None): # A function which look
          removedCards += 1
       elif choice == 2:
          if cType == 'Agenda':
-            RDtop[iter].moveToTable(0,0)
-            RDtop[iter].highlight = RevealedColor
-            scrAgenda(RDtop[iter],silent = True)
-            removedCards += 1
+            if extraCredCost:
+               reduceCost(RDtop[iter], 'LIBERATE', extraCredCost)
+               rc = payCost(extraCredCost - reduction, "not free")
+               if rc != "ABORT":  # If the player couldn't pay to trash the card, we leave it where it is.
+                  RDtop[iter].moveToTable(0,0)
+                  RDtop[iter].highlight = RevealedColor
+                  scrAgenda(RDtop[iter],silent = True)
+                  notify("{} paid {}{} to liberate {}".format(me,uniCredit(extraCredCost - reduction),extraText2,RDtop[iter]))
+                  removedCards += 1
+            else:
+               RDtop[iter].moveToTable(0,0)
+               RDtop[iter].highlight = RevealedColor
+               scrAgenda(RDtop[iter],silent = True)
+               removedCards += 1
          else:
             reduction = reduceCost(RDtop[iter], 'TRASH', num(cStat))
             rc = payCost(num(cStat) - reduction, "not free")
@@ -1497,6 +1540,8 @@ def RDaccessX(group = table, x = 0, y = 0,count = None): # A function which look
       else: 
          debugNotify("Selected doing nothing. About to move back...", 4)
          RDtop[iter].moveTo(targetPL.piles['R&D/Stack'],iter - removedCards)
+         if cType == 'Agenda': # If the card was an agenda and the runner didn't steal it, we always announce it.
+            notify(":> {} accessed the {} agenda but opted not to liberate it".format(me,cName))
       try: del origController[RDtop[iter]._id] # We use a try: just in case...
       except: pass         
    notify("{} has finished accessing {}'s R&D".format(me,targetPL))
@@ -1534,7 +1579,31 @@ def ARCscore(group=table, x=0,y=0):
          agendaFound = True
          card.moveToTable(0,0)
          card.highlight = RevealedColor
-         scrAgenda(card) # We don't want it silent, as it needs to ask the runner to score, in case of agendas like Fetal AI for which they have to pay as well.
+         extraCredCost = calcAgendaStealCost(card)
+         if extraCredCost: 
+            reduction = reduceCost(card, 'LIBERATE', extraCredCost, dryRun = True)
+            if reduction > 0:
+               extraText = " ({} - {})".format(extraCredCost,reduction)
+               extraText2 = " (reduced by {})".format(uniCredit(reduction))
+            elif reduction < 0:
+               extraText = " ({} + {})".format(extraCredCost,abs(reduction))
+               extraText2 = " (increased by {})".format(uniCredit(abs(reduction)))
+            else:
+               extraText = ''
+               extraText2 = '' 
+            agendaCost = ' by paying {}{} Credits'.format(extraCredCost - reduction,extraText)
+         else:
+            agendaCost = ''
+            extraText2 = '' 
+         if confirm('Liberate {} for {} Agenda Points{}.'.format(card.name,card.Stat,agendaCost)):
+            if extraCredCost:
+               reduceCost(card, 'LIBERATE', extraCredCost)
+               rc = payCost(extraCredCost - reduction, "not free")
+               if rc != "ABORT":  # If the player couldn't pay to trash the card, we leave it where it is.
+                  scrAgenda(card,silent = True)
+                  notify("{} paid {}{} to liberate {}".format(me,uniCredit(extraCredCost - reduction),extraText2,card))
+            else: scrAgenda(card,silent = True) 
+         else: notify(":> {} opts not to steal {}".format(me,card))
          if card.highlight == RevealedColor: card.moveTo(ARC) # If the runner opted not to score the agenda, put it back into the deck.
       Autoscripts = CardsAS.get(card.model,'').split('||')
       debugNotify("Grabbed AutoScripts", 4)
@@ -1619,7 +1688,24 @@ def HQaccess(group=table, x=0,y=0, silent = False, directTargets = None):
                {}\n\nCard Text: {}\
            \n\nWhat do you want to do with this card?".format(revealedCard.Name,revealedCard.Type,revealedCard.Keywords,revealedCard.Cost,cStatTXT,revealedCard.Rules)
       if revealedCard.Type == 'Agenda' or revealedCard.Type == 'Asset' or revealedCard.Type == 'Upgrade':
-         if revealedCard.Type == 'Agenda': action1TXT = 'Liberate for {} Agenda Points.'.format(revealedCard.Stat)
+         if revealedCard.Type == 'Agenda': 
+            extraCredCost = calcAgendaStealCost(revealedCard)
+            if extraCredCost: 
+               reduction = reduceCost(revealedCard, 'LIBERATE', extraCredCost, dryRun = True)
+               if reduction > 0:
+                  extraText = " ({} - {})".format(extraCredCost,reduction)
+                  extraText2 = " (reduced by {})".format(uniCredit(reduction))
+               elif reduction < 0:
+                  extraText = " ({} + {})".format(extraCredCost,abs(reduction))
+                  extraText2 = " (increased by {})".format(uniCredit(abs(reduction)))
+               else:
+                  extraText = ''
+                  extraText2 = '' 
+               agendaCost = ' by paying {}{} Credits'.format(extraCredCost - reduction,extraText)
+            else:
+               agendaCost = ''
+               extraText2 = '' 
+            action1TXT = 'Liberate for {} Agenda Points{}.'.format(revealedCard.Stat,agendaCost)
          else:
             reduction = reduceCost(revealedCard, 'TRASH', num(revealedCard.Stat), dryRun = True)
             if reduction > 0:
@@ -1644,7 +1730,13 @@ def HQaccess(group=table, x=0,y=0, silent = False, directTargets = None):
          notify("{} {} {} at no cost".format(me,uniTrash(),revealedCard))
       elif choice == 2:
          if revealedCard.Type == 'Agenda':
-            scrAgenda(revealedCard,silent = True)
+            if extraCredCost:
+               reduceCost(revealedCard, 'LIBERATE', extraCredCost)
+               rc = payCost(extraCredCost - reduction, "not free")
+               if rc != "ABORT":  # If the player couldn't pay to trash the card, we leave it where it is.
+                  scrAgenda(revealedCard,silent = True)
+                  notify("{} paid {}{} to liberate {}".format(me,uniCredit(extraCredCost - reduction),extraText2,revealedCard))
+            else: scrAgenda(revealedCard,silent = True)
          else:
             reduction = reduceCost(revealedCard, 'TRASH', num(revealedCard.Stat))
             rc = payCost(num(revealedCard.Stat) - reduction, "not free")

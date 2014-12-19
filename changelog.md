@@ -9,7 +9,7 @@ Changelog - Android:Netrunner LCG OCTGN Game Definition
   * Markus: First subroutine just announces.
   * Turtlebacks: Manual Use
   * Shoot the Moon: Will rez all targeted ICE. Don't exceed the tags!
-  
+* Agendas with an extra cost to steal will now show this cost on the selection window, and take into account cost reduction effects (e.g. Bad Publicity). They will also warn a runner trying to steal an agenda they cannot afford. This will also take into account a Scored Utopia Fragment.
 
 ### 3.15.2.x
 

@@ -643,11 +643,11 @@ def chkCerebralStatic():
 def calcAgendaStealCost(card):
    extraCreds = 0
    if fetchProperty(card, 'name') == 'Fetal AI': extraCreds += 2
-   if fetchProperty(card, 'name') == 'NAPD Contracts': extraCreds += 4
+   if fetchProperty(card, 'name') == 'NAPD Contract': extraCreds += 4
    for c in table:
       if c.name == 'Utopia Fragment' and c.isFaceUp and card.markers[mdict['Advancement']]: # If there's a scored Utopia Fragment, then stealing costs a bit more.
-      extraCreds += card.markers[mdict['Advancement']]
-   extraTXT = ' (Requires 4 Credits)'
+         extraCreds += 2 * card.markers[mdict['Advancement']]
+   return extraCreds
 
 #---------------------------------------------------------------------------
 # Card Placement

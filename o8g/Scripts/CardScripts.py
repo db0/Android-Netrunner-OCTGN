@@ -1186,7 +1186,7 @@ Fetal AI
 -----
 bc0f047c-01b1-427f-a439-d451eda02032
 -----
-onAccess:Inflict2NetDamage-onOpponent||onLiberation:Lose2Credits-isCost-onOpponent
+onAccess:Inflict2NetDamage-onOpponent
 +++++
 
 .....
@@ -3337,7 +3337,7 @@ NAPD Contract
 -----
 bc0f047c-01b1-427f-a439-d451eda04119
 -----
-onLiberation:Lose4Credits-isCost-onOpponent
+
 +++++
 
 .....
@@ -4665,7 +4665,7 @@ Utopia Fragment
 -----
 bc0f047c-01b1-427f-a439-d451eda06110
 -----
-whileScored:Lose2Credits-onOpponent-foreachAgendaLiberated
+
 +++++
 
 .....

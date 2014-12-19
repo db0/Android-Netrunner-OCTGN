@@ -1546,7 +1546,7 @@ def Troll(card): # Troll
       jackOut(silent = True)
       notify("{}'s {} ends the run because {} has no more {} to spend".format(card.controller,card,me,uniClick()))
    else: 
-      choice = SingleChoice("Do you want to lose a click or end the run?",["Lose a Click.","End the Run."]
+      choice = SingleChoice("Do you want to lose a click or end the run?",["Lose a Click.","End the Run."])
       if choice == 0: me.Clicks -= 1
       else: 
          playCorpEndSound()
