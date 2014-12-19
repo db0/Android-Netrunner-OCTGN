@@ -866,6 +866,9 @@ def reduceCost(card, action = 'REZ', fullCost = 0, dryRun = False, reversePlayer
                if card.Type == 'ICE':  
                   reduction -= num(card.Cost)
                   fullCost += num(card.Cost)
+            if c.name == 'Industrial Genomics':
+               reduction -= len(fetchCorpPL().piles['Archives(Hidden)'])
+               fullCost += len(fetchCorpPL().piles['Archives(Hidden)'])
          else:
             for iter in range(num(reductionSearch.group(2))):  # if there is a match, the total reduction for this card's cost is increased.
                reduction -= 1
@@ -1275,6 +1278,7 @@ def accessTarget(group = table, x = 0, y = 0, noQuestionsAsked = False):
    mute()
    global origController
    targetPL = ofwhom('-ofOpponent')
+   extraCreds = 0
    if getGlobalVariable('SuccessfulRun') != 'True' and not noQuestionsAsked:
       if not re.search(r'running',getGlobalVariable('status')) and not confirm("You're not currently running. Are you sure you're allowed to access this card?"): return
       if runSuccess() == 'DENIED': return # If the player is trying to access, then we assume the run was a success.
@@ -1332,7 +1336,10 @@ def accessTarget(group = table, x = 0, y = 0, noQuestionsAsked = False):
                   {}\n\nCard Text: {}\
               \n\nWhat do you want to do with this card?".format(fetchProperty(card, 'name'),fetchProperty(card, 'Type'),fetchProperty(card, 'Keywords'),fetchProperty(card, 'Cost'),cStatTXT,fetchProperty(card, 'Rules'))
          if card.Type == 'Agenda' or card.Type == 'Asset' or card.Type == 'Upgrade':
-            if card.Type == 'Agenda': action1TXT = 'Liberate for {} Agenda Points.'.format(card.Stat)
+            if card.Type == 'Agenda': 
+               action1TXT = 'Liberate for {} Agenda Points.'.format(card.Stat)
+               extraCreds = calcAgendaStealCost(card)
+               if extraCreds: action1TXT += ' (Requires {} Credits)'.format(extraCreds)
             else:
                reduction = reduceCost(card, 'TRASH', num(card.Stat), dryRun = True)
                if reduction > 0:
@@ -1355,6 +1362,7 @@ def accessTarget(group = table, x = 0, y = 0, noQuestionsAsked = False):
             notify("{} {} {} at no cost".format(me,uniTrash(),card))
          elif choice == 2:
             if card.Type == 'Agenda':
+               # TODO - Need to add a check before stealing to see if the runner has enough credits
                scrAgenda(card,silent = True)
             else:
                reduction = reduceCost(card, 'TRASH', num(card.Stat))

@@ -1,0 +1,330 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<set xmlns:noNamespaceSchemaLocation="CardSet.xsd" 
+     name="The Source" 
+     id="006012c6-2fc1-49b3-835d-33c378a97b8c" 
+     gameId="0f38e453-26df-4c04-9d67-6d43de939c77" 
+     gameVersion="3.0.0.0" 
+     version="3.0.0.0">
+<cards>
+	<card id="bc0f047c-01b1-427f-a439-d451eda06101" name="Helium-3 Deposit">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Agenda" />
+		<property name="Keywords" value="" />
+		<property name="Cost" value="4" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="2" />	
+		<property name="Rules" value="When you score Helium-3 Deposit, place up to 2 power counters on a card with at least 1 power counter on it." />
+		<property name="Flavor" value="It takes power to create power." />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="The Weyland Consortium" />
+		<property name="Influence" value="" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda06102" name="Errand Boy">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="ICE" />
+		<property name="Keywords" value="Sentry" />
+		<property name="Cost" value="4" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="1" />	
+		<property name="Rules" value="[Subroutine] The Corp gain 1[Credits] or draws 1 card.&#xD;&#xA;[Subroutine] The Corp gain 1[Credits] or draws 1 card.&#xD;&#xA;[Subroutine] The Corp gain 1[Credits] or draws 1 card." />
+		<property name="Flavor" value="Recycling the energy entering the system via a run is both responsible and economical." />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="The Weyland Consortium" />
+		<property name="Influence" value="1" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda06103" name="IT Department">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Asset" />
+		<property name="Keywords" value="" />
+		<property name="Cost" value="2" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="4" />	
+		<property name="Rules" value="[Click]: Place 1 power counter on IT Department.&#xD;&#xA;Hosted power counter: Choose a rezzed piece of ice. That ice has +1 strength until the end of the turn for each power counter (including the one spent) on IT Department." />
+		<property name="Flavor" value="" />
+		<property name="Instructions" value="[Click]: Place 1 power counter on IT Department.||Hosted power counter: Increase targeted ICE strength." />
+		<property name="Faction" value="Haas-Bioroid" />
+		<property name="Influence" value="1" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda06104" name="Markus 1.0">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="ICE" />
+		<property name="Keywords" value="Barrier-Bioroid" />
+		<property name="Cost" value="4" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="3" />	
+		<property name="Rules" value="The Runner may spend [Click] to break any subroutine on Markus 1.0.&#xD;&#xA;[Subroutine] The Runner trashes 1 of his or her installed cards.&#xD;&#xA;[Subroutine] End the run." />
+		<property name="Flavor" value="The forge must never run cold." />
+		<property name="Instructions" value="[Subroutine] The Runner trashes 1 of his or her installed cards.||[Subroutine] End the run." />
+		<property name="Faction" value="Haas-Bioroid" />
+		<property name="Influence" value="1" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda06105" name="Industrial Genomics">
+		<property name="Subtitle" value="Growing Solutions" />
+		<property name="Type" value="Identity" />
+		<property name="Keywords" value="Division" />
+		<property name="Cost" value="0" />
+		<property name="Requirement" value="45" />	
+		<property name="Stat" value="15" />	
+		<property name="Rules" value="The trash cost of each card is increased by 1 for each facedown card in Archives." />
+		<property name="Flavor" value="Achieve the Impossible." />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Jinteki" />
+		<property name="Influence" value="" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda06106" name="Turtlebacks">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Asset" />
+		<property name="Keywords" value="Clone" />
+		<property name="Cost" value="2" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="4" />	
+		<property name="Rules" value="Gain 1[Credits] whenever you create a server." />
+		<property name="Flavor" value="A masterpiece of cloning and hardware technology, Jinteki created homo vacuo operae, commonly called &quot;turtlebacks&quot;, to operate for long periods of time within a vacuum." />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Jinteki" />
+		<property name="Influence" value="1" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda06107" name="Shoot the Moon">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Operation" />
+		<property name="Keywords" value="Double" />
+		<property name="Cost" value="3" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="" />	
+		<property name="Rules" value="As an additional cost to play this operation, spend [Click].&#xD;&#xA;Rez 1 piece of ice for each tag the Runner has, ignoring all costs." />
+		<property name="Flavor" value="" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="NBN" />
+		<property name="Influence" value="2" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda06108" name="Troll">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="ICE" />
+		<property name="Keywords" value="Sentry" />
+		<property name="Cost" value="1" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="3" />	
+		<property name="Rules" value="When the Runner encounters Troll, trace2 - if successful, the Runner must lose [Click] or end the run." />
+		<property name="Flavor" value="You gotta pay the troll toll to get in." />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="NBN" />
+		<property name="Influence" value="2" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda06109" name="Virgo">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="ICE" />
+		<property name="Keywords" value="Sentry-Tracer" />
+		<property name="Cost" value="4" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="5" />	
+		<property name="Rules" value="[Subroutine] Trace2 - If successful, give the Runner 1 tag. If your trace strength is 5 or greater, give the Runner 1 tag." />
+		<property name="Flavor" value="Virgo promised love, but offered only jealousy." />
+		<property name="Instructions" value="[Subroutine] Trace2 - If successful, give the Runner 1 tag.||If your trace strength is going to be 5 or greater, give the Runner 1 tag." />
+		<property name="Faction" value="NBN" />
+		<property name="Influence" value="2" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda06110" name="Utopia Fragment">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Agenda" />
+		<property name="Keywords" value="Source-Unique" />
+		<property name="Cost" value="5" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="3" />	
+		<property name="Rules" value="As an additional cost to steal an agenda, the Runner must pay 2[Credits] for each advancement token on that agenda.&#xD;&#xA;Limit 1 per deck." />
+		<property name="Flavor" value="" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Neutral" />
+		<property name="Influence" value="0" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda06111" name="Excalibur">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="ICE" />
+		<property name="Keywords" value="Mythic-Grail-Unique" />
+		<property name="Cost" value="2" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="3" />	
+		<property name="Rules" value="[Subroutine] The Runner cannot make another run this turn." />
+		<property name="Flavor" value="There drew he forth the brand Excalibur,&#xA;And o&apos;er him, drawing it, the winter moon,&#xA;Brightening the skirts of a long cloud, ran forth&#xA;And sparkled keen with frost against the hilt:&#xA;For all the haft twinkled with diamonds sparks,&#xA;Myriads of topaz-lights, and jacinth work&#xA;Of subtlest jewellery. -Lord Tennyson" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Neutral" />
+		<property name="Influence" value="0" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda06112" name="Self-destruct">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Upgrade" />
+		<property name="Keywords" value="" />
+		<property name="Cost" value="2" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="0" />	
+		<property name="Rules" value="Install only in a remote server.&#xD;&#xA;[Trash]: Trash all cards installed in or protecting this server and traceX - if successful, do 3 net damage. X is the number of cards trashed. Use this ability only during a run on this server." />
+		<property name="Flavor" value="" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Neutral" />
+		<property name="Influence" value="0" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda06113" name="Incubator">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Program" />
+		<property name="Keywords" value="Virus" />
+		<property name="Cost" value="3" />
+		<property name="Requirement" value="1" />	
+		<property name="Stat" value="-" />	
+		<property name="Rules" value="When your turn begins, place 1 virus counter on Incubator.&#xD;&#xA;[Click], [Trash]: Move all virus counters from Incubator to another installed virus program." />
+		<property name="Flavor" value="&quot;What terrors hatch in her dispossessed mind, waiting for their moment to be born? My money&apos;s on a double-helix rainbow with the head of a panda.&quot; -fakespeare" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Anarch" />
+		<property name="Influence" value="3" />
+		<property name="Side" value="runner" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda06114" name="Ixodidae">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Program" />
+		<property name="Keywords" value="Virus" />
+		<property name="Cost" value="1" />
+		<property name="Requirement" value="1" />	
+		<property name="Stat" value="-" />	
+		<property name="Rules" value="Whenever the Corp loses at least 1[Credits], gain 1[Credits].&#xD;&#xA;Trash Ixodidae if the Corp purges virus counters." />
+		<property name="Flavor" value="Digs in deeper than its Alabama counterpart." />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Anarch" />
+		<property name="Influence" value="2" />
+		<property name="Side" value="runner" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda06115" name="Code Siphon">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Event" />
+		<property name="Keywords" value="Run" />
+		<property name="Cost" value="0" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="" />	
+		<property name="Rules" value="Make a run on R&amp;D. If successful, instead of accessing cards, you may search your stack for a program and install it, lowering the install cost by 3 for each piece of ice protecting R&amp;D, and then take 1 tag. Shuffle your stack." />
+		<property name="Flavor" value="" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Shaper" />
+		<property name="Influence" value="4" />
+		<property name="Side" value="runner" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda06116" name="Collective Consciousness">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Program" />
+		<property name="Keywords" value="" />
+		<property name="Cost" value="2" />
+		<property name="Requirement" value="2" />	
+		<property name="Stat" value="-" />	
+		<property name="Rules" value="Draw 1 card whenever the Corp rezzes a piece of ice." />
+		<property name="Flavor" value="&quot;All programs are connected. The data that runs through one runs through all.&quot; -Rielle &quot;Kit&quot; Peddler" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Shaper" />
+		<property name="Influence" value="2" />
+		<property name="Side" value="runner" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda06117" name="Sage">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Program" />
+		<property name="Keywords" value="Icebreaker-Decoder-Fracter" />
+		<property name="Cost" value="4" />
+		<property name="Requirement" value="2" />	
+		<property name="Stat" value="0" />	
+		<property name="Rules" value="Sage has +1 strength for each unused MU.&#xD;&#xA;2[Credits]: Break code gate or barrier subroutine." />
+		<property name="Flavor" value="δὶς ἐς τὸν αὐτὸν ποταμὸν οὐκ ἂν ἐμβαίης" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Shaper" />
+		<property name="Influence" value="3" />
+		<property name="Side" value="runner" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda06118" name="Bribery">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Event" />
+		<property name="Keywords" value="Run" />
+		<property name="Cost" value="0" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="" />	
+		<property name="Rules" value="Make a run. During this run, the Corp must pay X[Credits] as an additional cost to rez the first unrezzed piece of ice approached." />
+		<property name="Flavor" value="&quot;Sometimes it&apos;s helpful to remember that you&apos;re not the only one who loves money.&quot; -Gabriel Santiago" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Criminal" />
+		<property name="Influence" value="2" />
+		<property name="Side" value="runner" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda06119" name="Au Revoir">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Program" />
+		<property name="Keywords" value="" />
+		<property name="Cost" value="1" />
+		<property name="Requirement" value="1" />	
+		<property name="Stat" value="-" />	
+		<property name="Rules" value="Gain 1[Credits] whenever you jack out." />
+		<property name="Flavor" value="The datastream slipped away, and it felt like being born for a second time, in only you could remember the first. A rush of air fills the lungs to bursting, and you gasp it out, coughing and choking as the dim lights of the room shine with the brilliance of a thousand suns." />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Criminal" />
+		<property name="Influence" value="2" />
+		<property name="Side" value="runner" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda06120" name="Earthrise Hotel">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Resource" />
+		<property name="Keywords" value="Location-Ritzy-Unique" />
+		<property name="Cost" value="4" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="" />	
+		<property name="Rules" value="Place 3 power counters on Earthrise Hotel when it is installed. When there are no power counters left on Earthrise Hotel, trash it.&#xD;&#xA;When your turn begins, draw 2 cards and remove 1 power counter from Earthrise Hotel." />
+		<property name="Flavor" value="" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Neutral" />
+		<property name="Influence" value="0" />
+		<property name="Side" value="runner" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+</cards>
+</set>

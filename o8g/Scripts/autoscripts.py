@@ -2366,10 +2366,10 @@ def per(Autoscript, card = None, count = 0, targetCards = None, notification = N
                                                                # We ignore "per" between <> as these are trace effects and are not part of the same script
       debugNotify("per Regex groups: {}".format(per.groups()),3)
       multiplier = 0
-      if per.group(2) and (per.group(2) == 'Target' or per.group(2) == 'Every'): # If we're looking for a target or any specific type of card, we need to scour the requested group for targets.
+      if per.group(2) and (per.group(2) == 'Target' or per.group(2) == 'Every' or per.group(2) == 'Personal'): # If we're looking for a target or any specific type of card, we need to scour the requested group for targets.
          debugNotify("Checking for Targeted per", 2)
-         perTargetRegex = re.search(r'\bper(Target|Every)', Autoscript)
-         perReqRegex = re.search(r'\bper(Target|Every).*?-at(.*)', Autoscript)
+         perTargetRegex = re.search(r'\bper(Target|Personal|Every)', Autoscript)
+         perReqRegex = re.search(r'\bper(Target|Personal|Every).*?-at(.*)', Autoscript)
          debugNotify("perTargetRegex = {}".format(perTargetRegex.groups()))
          if not perReqRegex: seek = ''
          else: seek = '-at{}'.format(perReqRegex.group(2))            
@@ -2377,6 +2377,7 @@ def per(Autoscript, card = None, count = 0, targetCards = None, notification = N
             if re.search('fromHand', Autoscript): 
                targetCards = findTarget('Targeted{}'.format(seek),True)
             else: targetCards = findTarget('Targeted{}'.format(seek))
+         elif perTargetRegex.group(1) == 'Personal': targetCards = [card]
          else: 
             if re.search('fromHand', Autoscript): targetCards = findTarget('AutoTargeted{}'.format(seek),True)
             else: targetCards = findTarget('AutoTargeted-{}'.format(seek))

@@ -219,6 +219,7 @@ CardSubs = ['susuexp',                    # Simon Gunkel          - http://www.p
             'wimpgod',                    # Gary Bergeron         - Old time supporter
             'tuism',                      #Steven Tu              - Awesome dude
             'Kethran',                    # Marius Ødegård        - http://www.patreon.com/user?u=90737
+            'presheaf',                   # Karl Erik Holter       - http://www.patreon.com/user?u=405662
             'db0',
             'dbzer0'
            ] # $10 Tier

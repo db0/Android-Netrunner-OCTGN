@@ -1,6 +1,16 @@
 Changelog - Android:Netrunner LCG OCTGN Game Definition
 ===============================================
 
+### 3.13.0.x
+
+* New game definition for **The Source**. As always, almost every card scripted!
+
+* ##### Trickier Automations
+  * Markus: First subroutine just announces.
+  * Turtlebacks: Manual Use
+  * Shoot the Moon: Will rez all targeted ICE. Don't exceed the tags!
+  
+
 ### 3.15.2.x
 
 * Fixed Kitsune

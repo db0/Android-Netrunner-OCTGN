@@ -271,7 +271,7 @@ def UseCustomAbility(Autoscript, announceText, card, targetCards = None, notific
          foreseenCard.moveTo(me.hand)
          me.Credits += 2
       else: announceString = announceText + " attempt to foresee a {}, but was mistaken. {} is trashed".format(choiceType,foreseenCard)
-   if fetchProperty(card, 'name') == "Galahad" or fetchProperty(card, 'name') == "Lancelot" or fetchProperty(card, 'name') == "Merlin":
+   if fetchProperty(card, 'name') == "Galahad" or fetchProperty(card, 'name') == "Lancelot" or fetchProperty(card, 'name') == "Merlin" or fetchProperty(card, 'name') == "Excalibur":
       revealedCards = findTarget('Targeted-atGrail-fromHand')
       del revealedCards[2:] # We don't want it to be more than 5 cards
       if len(revealedCards) == 0: 
@@ -338,6 +338,9 @@ def UseCustomAbility(Autoscript, announceText, card, targetCards = None, notific
          revealedCard.moveToBottom(deck)     
          notify("{} chooses to send it to the bottom of their Stack")
       announceString = ''
+   if fetchProperty(card, 'name') == "Troll":
+      remoteCall(fetchRunnerPL(),'Troll',[card])
+      announceString = 'force {} to pay {} or end the run.'.format(fetchRunnerPL(),uniClick())
    return announceString
    
 def CustomScript(card, action = 'PLAY', origin_card = None, original_action = None): # Scripts that are complex and fairly unique to specific cards, not worth making a whole generic function for them.
@@ -1535,3 +1538,18 @@ def PYL(count): # Push Your Luck
       notify("Success! The corp incorrectly thought the runner had spent an {} number of credits. {} gains {}".format({0:'Even',1:'Odd'}.get(count % 2),fetchRunnerPL(),uniCredit(count)))
       fetchRunnerPL().Credits += count
       playSpecialSound('Special-Push_Your_Luck-Success')
+      
+def Troll(card): # Troll
+   mute()
+   if not me.Clicks:
+      playCorpEndSound()
+      jackOut(silent = True)
+      notify("{}'s {} ends the run because {} has no more {} to spend".format(card.controller,card,me,uniClick()))
+   else: 
+      choice = SingleChoice("Do you want to lose a click or end the run?",["Lose a Click.","End the Run."]
+      if choice == 0: me.Clicks -= 1
+      else: 
+         playCorpEndSound()
+         jackOut(silent = True)
+         notify("{}'s {} ends the run because {} chose not to spend a {}".format(card.controller,card,me,uniClick()))
+   
