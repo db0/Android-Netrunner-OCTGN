@@ -14,6 +14,8 @@ Changelog - Android:Netrunner LCG OCTGN Game Definition
   * Ioxidae: Manual Use
   * Due to the special circumstances on what constitutes a "Jack Out" in ANR its use is manual (e.g. it doesn't work on an ETR or if the runner just presses ESC after seeing an ETR they cannot break to speed things up)
 * Agendas with an extra cost to steal will now show this cost on the selection window, and take into account cost reduction effects (e.g. Bad Publicity). They will also warn a runner trying to steal an agenda they cannot afford. This will also take into account a Scored Utopia Fragment.
+* Personal Workshop should no longer provide MU from inactive or revealed cards.
+* Nasir will clear BP and Stimhack creds.
 
 ### 3.15.2.x
 

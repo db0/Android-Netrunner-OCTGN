@@ -4355,7 +4355,7 @@ bc0f047c-01b1-427f-a439-d451eda06071
 -----
 
 +++++
-A0B0G0T0:Retrieve1Card-fromArchives-toDeck-sendToBottom-onlyOnce
+A0B0G0T0:Retrieve1Card-fromArchives-toDeck-sendToBottom-doNotReveal-onlyOnce
 .....
 Docklands Crackdown
 -----
