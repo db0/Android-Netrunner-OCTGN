@@ -1,6 +1,14 @@
 =====Message of the Day======
 
-Kitsune is now fixed
-Also a few other bugfixes mentioned on github.
+The Source is finally live. Lunar Cycle is finally complete!
 
+As always full automations are included but check the blog for special cases. 
+
+Also, this exciting new update now makes Utopia Shard work correctly and asks you to pay money before Stealing Fetal AI or NAPD Contract.
+
+---
+If you enjoy my work, please consider becoming my patron by donating a few credits a month. 
+Devs need more Diesel!
 =============================
+&&
+http://www.patreon.com/db0

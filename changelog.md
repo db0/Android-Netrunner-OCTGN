@@ -1,7 +1,7 @@
 Changelog - Android:Netrunner LCG OCTGN Game Definition
 ===============================================
 
-### 3.13.0.x
+### 3.16.0.x
 
 * New game definition for **The Source**. As always, almost every card scripted!
 
@@ -16,6 +16,7 @@ Changelog - Android:Netrunner LCG OCTGN Game Definition
 * Agendas with an extra cost to steal will now show this cost on the selection window, and take into account cost reduction effects (e.g. Bad Publicity). They will also warn a runner trying to steal an agenda they cannot afford. This will also take into account a Scored Utopia Fragment.
 * Personal Workshop should no longer provide MU from inactive or revealed cards.
 * Nasir will clear BP and Stimhack creds.
+* Hades Fragment will no longer reveal retrieved hidden archives cards.
 
 ### 3.15.2.x
 
