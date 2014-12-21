@@ -196,6 +196,22 @@
 		<property name="Side" value="runner" />
 		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
+      <alternate name="Plascrete Carapace" type="Supercharged">
+         <property name="Subtitle" value="" />
+         <property name="Type" value="Hardware" />
+         <property name="Keywords" value="Gear" />
+         <property name="Cost" value="3" />
+         <property name="Requirement" value="" />	
+         <property name="Stat" value="" />	
+         <property name="Rules" value="Place 4 power counters on Plascrete Carapace when it is installed. When there are no power counters left on Plascrete Carapace, trash it.&#xD;&#xA;Hosted power counter: Prevent 1 meat damage." />
+         <property name="Flavor" value="" />
+         <property name="Instructions" value="" />
+         <property name="Faction" value="Neutral" />
+         <property name="Influence" value="0" />
+         <property name="Side" value="runner" />
+         <property name="AutoScript" value="" />
+         <property name="AutoAction" value="" />	
+     </alternate>
 	</card>
 	<card id="bc0f047c-01b1-427f-a439-d451eda02018" name="Project Atlas">
 		<property name="Subtitle" value="" />
