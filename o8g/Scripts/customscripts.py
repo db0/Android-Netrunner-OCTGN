@@ -1090,6 +1090,9 @@ def CustomScript(card, action = 'PLAY', origin_card = None, original_action = No
          if diff >= 0: diff = "+{}".format(uniCredit(diff))
          else: diff = "-{}".format(uniCredit(abs(diff)))
          me.Credits = num(targetICE[0].Cost)
+         me.markers[mdict['BadPublicity']] = 0
+         for c in table: 
+            if c.name == 'Stimhack': c.markers[mdict['Credits']] = 0
          notify("{} encounters freshly rezzed {} and sets their Credits to {} ({})".format(me,targetICE[0],me.Credits,diff))
    elif fetchProperty(card, 'name') == 'Sealed Vault' and action == 'USE':
       if not card.markers[mdict["Credit"]] and not me.Credits: 
