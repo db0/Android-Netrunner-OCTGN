@@ -4723,7 +4723,7 @@ bc0f047c-01b1-427f-a439-d451eda06117
 -----
 
 +++++
-A0B1G0T0:SimplyAnnounce{break code gate or barrier subroutine}
+A0B2G0T0:SimplyAnnounce{break code gate or barrier subroutine}
 .....
 Bribery
 -----
