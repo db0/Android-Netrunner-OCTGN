@@ -4689,7 +4689,7 @@ Incubator
 -----
 bc0f047c-01b1-427f-a439-d451eda06113
 -----
-atTurnStart:Put1Virus
+atTurnStart:Put1Virus-duringMyTurn
 +++++
 A1B0G0T1:Put1Virus-perMyselfMarker{Virus}-Targeted-atVirus_and_Program
 .....
@@ -4745,7 +4745,7 @@ Earthrise Hotel
 -----
 bc0f047c-01b1-427f-a439-d451eda06120
 -----
-onInstall:Put3Power||atTurnStart:Remove1Power-isCost-isSilent$$Draw2Cards$$CustomScript
+onInstall:Put3Power||atTurnStart:Remove1Power-isCost-isSilent-duringMyTurn$$Draw2Cards$$CustomScript
 +++++
 
 .....
