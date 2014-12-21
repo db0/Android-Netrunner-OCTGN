@@ -645,7 +645,7 @@ def calcAgendaStealCost(card):
    if fetchProperty(card, 'name') == 'Fetal AI': extraCreds += 2
    if fetchProperty(card, 'name') == 'NAPD Contract': extraCreds += 4
    for c in table:
-      if c.name == 'Utopia Fragment' and c.isFaceUp and card.markers[mdict['Advancement']]: # If there's a scored Utopia Fragment, then stealing costs a bit more.
+      if c.name == 'Utopia Fragment' and c.isFaceUp and card.markers[mdict['Advancement']] and card.markers[mdict['Scored']]: # If there's a scored Utopia Fragment, then stealing costs a bit more.
          extraCreds += 2 * card.markers[mdict['Advancement']]
    return extraCreds
 
