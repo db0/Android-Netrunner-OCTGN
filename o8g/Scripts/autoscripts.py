@@ -1901,8 +1901,10 @@ def RetrieveX(Autoscript, announceText, card, targetCards = None, notification =
       for c in chosenCList:
          if destination == table: 
             if re.search(r'-payCost',Autoscript): # This modulator means the script is going to pay for the card normally
-               preReducRegex = re.search(r'-reduc([0-9]+)',Autoscript) # this one means its going to reduce the cost a bit.
-               if preReducRegex: preReduc = num(preReducRegex.group(1))
+               preReducRegex = re.search(r'-reduc([0-9X]+)',Autoscript) # this one means its going to reduce the cost a bit.
+               if preReducRegex: 
+                  if preReducRegex.group(1) == 'X': preReduc = n
+                  else: preReduc = num(preReducRegex.group(1))
                else: preReduc = 0
                payCost = 'not free'
             else: 

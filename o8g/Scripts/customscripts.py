@@ -340,7 +340,7 @@ def UseCustomAbility(Autoscript, announceText, card, targetCards = None, notific
       announceString = ''
    if fetchProperty(card, 'name') == "Troll":
       remoteCall(fetchRunnerPL(),'Troll',[card])
-      announceString = 'force {} to pay {} or end the run.'.format(fetchRunnerPL(),uniClick())
+      notify(':> {} forces {} to pay {} or end the run.'.format(card,fetchRunnerPL(),uniClick()))
    return announceString
    
 def CustomScript(card, action = 'PLAY', origin_card = None, original_action = None): # Scripts that are complex and fairly unique to specific cards, not worth making a whole generic function for them.
@@ -1204,6 +1204,14 @@ def CustomScript(card, action = 'PLAY', origin_card = None, original_action = No
       remoteCall(corpPL,'handRandomDiscard',[corpPL.hand,2])
       intTrashCard(card, fetchProperty(card,'Stat'), "free", silent = True)
       notify("{} activates the {} to force {} to discard 2 cards at random".format(me,card,corpPL))
+   elif fetchProperty(card, 'name') == "Code Siphon" and action == 'SuccessfulRun':
+      RDICE = askInteger("How many ICE does the R&D server have?",1)
+      if not RDICE: RDICE = 0
+      RetrieveX("Retrieve1Card-fromStack-grabProgram-toTable-payCost-reducX", '{} uses {} to'.format(me,card), card, notification = 'Automatic', n = 3 * RDICE)
+   elif fetchProperty(card, 'name') == 'Earthrise Hotel' and action == 'Start': # This is just for trashing the card when empty.
+      if not card.markers[mdict['Power']]: 
+         sendToTrash(card)
+         notify(":> {} {} {} because it expired".format(me,uniTrash(),card))
    elif action == 'USE': useCard(card)
       
             
@@ -1547,7 +1555,9 @@ def Troll(card): # Troll
       notify("{}'s {} ends the run because {} has no more {} to spend".format(card.controller,card,me,uniClick()))
    else: 
       choice = SingleChoice("Do you want to lose a click or end the run?",["Lose a Click.","End the Run."])
-      if choice == 0: me.Clicks -= 1
+      if choice == 0: 
+         me.Clicks -= 1
+         notify("{} chooses to pay the {}'s {} toll".format(me,card,uniClick()))
       else: 
          playCorpEndSound()
          jackOut(silent = True)

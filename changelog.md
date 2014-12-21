@@ -9,6 +9,10 @@ Changelog - Android:Netrunner LCG OCTGN Game Definition
   * Markus: First subroutine just announces.
   * Turtlebacks: Manual Use
   * Shoot the Moon: Will rez all targeted ICE. Don't exceed the tags!
+  * Self-Destruct will require that you target all cards in the server to get the appropriate trace value.
+  * Sage doesn't put +1 tokens. Track strength manually.
+  * Ioxidae: Manual Use
+  * Due to the special circumstances on what constitutes a "Jack Out" in ANR its use is manual (e.g. it doesn't work on an ETR or if the runner just presses ESC after seeing an ETR they cannot break to speed things up)
 * Agendas with an extra cost to steal will now show this cost on the selection window, and take into account cost reduction effects (e.g. Bad Publicity). They will also warn a runner trying to steal an agenda they cannot afford. This will also take into account a Scored Utopia Fragment.
 
 ### 3.15.2.x

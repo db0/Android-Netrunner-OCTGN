@@ -4641,7 +4641,7 @@ Shoot the Moon
 -----
 bc0f047c-01b1-427f-a439-d451eda06107
 -----
-onPlay:RezMultiple-Targeted-isive-isUnrezzed
+onPlay:RezMultiple-Targeted-isICE-isUnrezzed-ifTagged1
 +++++
 
 .....
@@ -4673,9 +4673,9 @@ Excalibur
 -----
 bc0f047c-01b1-427f-a439-d451eda06111
 -----
-
+atJackOut:TrashMyself-onlyforDummy
 +++++
-A0B0G0T0:SimplyAnnounce{stop the runner from accessing anymore cards}-isSubroutine
+A0B0G0T0:UseCustomAbility-excludeDummy||A0B0G0T0:SimplyAnnounce{stop the runner from accessing anymore cards}-isSubroutine-excludeDummy||A0B0G0T0:SimplyAnnounce{stop the runner from accessing anymore cards}-isSubroutine-onlyforDummy$$TrashMyself-isSilent
 .....
 Self-destruct
 -----
@@ -4683,29 +4683,29 @@ bc0f047c-01b1-427f-a439-d451eda06112
 -----
 
 +++++
-
+A0B0G0T1:Trace1-perTargetAsset_or_Upgrade_or_Agenda-traceEffects<Inflict3NetDamage-onOpponent,None>$$TrashMultiple-Targeted-atAsset_or_Upgrade_or_Agenda-isSilent
 .....
 Incubator
 -----
 bc0f047c-01b1-427f-a439-d451eda06113
 -----
-
+atTurnStart:Put1Virus
 +++++
-
+A1B0G0T1:Put1Virus-perMyselfMarker{Virus}-Targeted-atVirus_and_Program
 .....
 Ixodidae
 -----
 bc0f047c-01b1-427f-a439-d451eda06114
 -----
-
+whileInPlay:TrashMyself-foreachVirusPurged
 +++++
-
+A0B0G0T0:Gain1Credits
 .....
 Code Siphon
 -----
 bc0f047c-01b1-427f-a439-d451eda06115
 -----
-
+onPlay:RunR&D||atSuccessfulRun:CustomScript-isOptional-isAlternativeRunResult$$Gain1Tags||atJackOut:TrashMyself-isSilent
 +++++
 
 .....
@@ -4713,7 +4713,7 @@ Collective Consciousness
 -----
 bc0f047c-01b1-427f-a439-d451eda06116
 -----
-
+whileInPlay:Draw1Card-foreachCardRezzed-typeICE
 +++++
 
 .....
@@ -4723,13 +4723,13 @@ bc0f047c-01b1-427f-a439-d451eda06117
 -----
 
 +++++
-
+A0B1G0T0:SimplyAnnounce{break code gate or barrier subroutine}
 .....
 Bribery
 -----
 bc0f047c-01b1-427f-a439-d451eda06118
 -----
-
+onPlay:RequestInt-msg{How much do you want to bribe with?}$$Lose1Credits-perX-isCost$$Put1Power-perX$$RunGeneric||whileInPlay:IncreaseXCostRez-affectsAll-isICE-forOpponent-perMarker{Power}-onlyOnce||atJackOut:TrashMyself-isSilent
 +++++
 
 .....
@@ -4739,13 +4739,13 @@ bc0f047c-01b1-427f-a439-d451eda06119
 -----
 
 +++++
-
+A0B0G0T0:Gain1Credits
 .....
 Earthrise Hotel
 -----
 bc0f047c-01b1-427f-a439-d451eda06120
 -----
-
+onInstall:Put3Power||atTurnStart:Remove1Power-isCost-isSilent$$Draw2Cards$$CustomScript
 +++++
 
 .....
