@@ -202,8 +202,9 @@ SuperchargedSubs = ['stevehouston',       # Brendan               - http://www.p
                     'cspieker',           # Chuck Spiekerman      - 
                     'paranoid31',         # Joe Schupp            - http://www.patreon.com/user?msg=1&u=277654
                     'nicohasa',           # Nikolai Hansen        - http://www.patreon.com/user?u=277545
-                    'saracenus',          # Bryan from FB         # Created my ANR ID
+                    'saracenus',          # Bryan from FB         - Created my ANR ID
                     'bblum',              # Ben Blum              - http://www.patreon.com/user?u=412949
+                    'danthulhu',          # Dan                   - http://www.patreon.com/user?u=338034
                     'alsciende'           # Cedric                - http://netrunnerdb.com/
                    ] # 3$ Tier
 

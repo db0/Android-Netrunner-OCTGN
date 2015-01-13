@@ -211,6 +211,14 @@ def checkGlobalVars(name,oldValue,value):
    if name == 'boardFlipState': checkBoardFlip(name,oldValue,value)
    if name == 'accessAttempts': checkAccessAttempts(name,oldValue,value)
 
+def checkMarkerSafety(card,markerName,oldValue,newValue,isScriptChange):
+   if card.controller == me and not isScriptChange and markerName != 'None': # Scripted changes don't need to be checked. Name 'None' means it was the last marker, so Bug #1274         
+      marker = eval(markerName) # The marker name is the marker tuple as a string
+      if marker[0] == "Test Run" and card.group == table:
+         if oldValue and not newValue: TokensX('Put1Test Run-isSilent', "", card)
+         elif newValue == 2: TokensX('Remove1Test Run-isSilent', "",card) # See Bug #1357
+         whisper(":::ERROR::: You're not allowed to manually add or remove Test Run markers")
+
 def checkBoardFlip(name,oldValue,value):   
    global flipBoard, flipModX, flipModY
    if value == 'True':
