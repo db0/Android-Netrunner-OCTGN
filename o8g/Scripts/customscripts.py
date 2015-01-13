@@ -1257,6 +1257,8 @@ def markerEffects(Time = 'Start'):
             opponentPL.counters['Hand Size'].value += card.markers[marker] * 2
             notify(":> Gyri Labyrinth's effect expires and {} recovers {} hand size".format(card,card.markers[marker] * 2))
             card.markers[marker] = 0
+         if re.search(r'IT Department',marker[0]) and Time == 'End':
+            TokensX('Remove999IT Department-isSilent', "IT Department:", card)
 
 def ASVarEffects(Time = 'Start'):
    mute()
