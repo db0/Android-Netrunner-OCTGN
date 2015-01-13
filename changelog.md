@@ -1,6 +1,11 @@
 Changelog - Android:Netrunner LCG OCTGN Game Definition
 ===============================================
 
+### 3.16.1.x
+
+* IT dept should now work correctly according to the ruling and also clear its counter at turn's end.
+* Test Run markers now cannot be moved to other cards (say, by mistake)
+
 ### 3.16.0.x
 
 * New game definition for **The Source**. As always, almost every card scripted!
