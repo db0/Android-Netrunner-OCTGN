@@ -333,7 +333,7 @@ def intRun(aCost = 1, Name = 'R&D', silent = False):
          whisper(":::ERROR::: Your opponent is playing {}:{}. You cannot run a remote server until you've first run on a central server".format(enemyIdent,enemyIdent.Subtitle))
          return 'ABORT'
    for c in table:
-      if c.name == 'Enhanced Login Protocol' and c.orientation != Rot90 and not silent: # For cards which increase the action cost, we need to check manually before the run. We don't do it when silent since that signifies a scripted run (i.e. card effect)
+      if c.Name == 'Enhanced Login Protocol' and c.orientation != Rot90 and not silent: # For cards which increase the action cost, we need to check manually before the run. We don't do it when silent since that signifies a scripted run (i.e. card effect)
          aCost += 1
          c.orientation = Rot90
    ClickCost = useClick(count = aCost)
@@ -1295,7 +1295,6 @@ def accessTarget(group = table, x = 0, y = 0, noQuestionsAsked = False):
       cFaceD = False
       if not card.isFaceUp:
          card.isFaceUp = True
-         rnd(1,100) # Bigger delay, in case the lag makes the card take too long to read.
          cFaceD = True
          card.highlight = InactiveColor
       storeProperties(card)
@@ -1427,13 +1426,12 @@ def RDaccessX(group = table, x = 0, y = 0,count = None): # A function which look
    notify("{} is accessing the top {} cards of {}'s R&D".format(me,count,targetPL))
    for iter in range(len(RDtop)):
       if iter <= skipIter: continue
-      debugNotify("Moving card {}".format(iter), 3) #Debug
       notify(" -- {} is now accessing the {} card".format(me,numOrder(iter)))
       origController[RDtop[iter]._id] = targetPL # We store the card's original controller to know against whom to check for scripts (e.g. when accessing a rezzed encryption protocol)
-      RDtop[iter].moveToBottom(me.ScriptingPile)
+      #RDtop[iter].moveToBottom(me.ScriptingPile)
       storeProperties(RDtop[iter])
-      debugNotify(" Looping...", 4)
-      loopChk(RDtop[iter],'Type')
+      #debugNotify(" Looping...", 4)
+      #loopChk(RDtop[iter],'Type')
       Autoscripts = CardsAS.get(RDtop[iter].model,'').split('||')
       debugNotify("Grabbed AutoScripts", 4)
       for autoS in Autoscripts:
@@ -1441,7 +1439,7 @@ def RDaccessX(group = table, x = 0, y = 0,count = None): # A function which look
             if re.search(r'-ifInstalled',autoS): continue # -ifInstalled cards work only while on the table.
             if re.search(r'-ifNotAccessedInRD',autoS): continue # -ifNotInRD cards work only while not accessed from R&D.
             debugNotify(" accessRegex found!")
-            notify("{} has just accessed {}!".format(me,RDtop[iter].name))
+            notify("{} has just accessed {}!".format(me,RDtop[iter].Name))
             remoteCall(RDtop[iter].owner, 'remoteAutoscript', [RDtop[iter],autoS])
             if re.search(r'-pauseRunner',autoS): 
                notify(":::WARNING::: {} has stumbled onto {}. Once the effects of this card are complete, they need to press Ctrl+A to continue their access from where they left it.\nThey have seen {} out of {} cards until now.".format(me,RDtop[iter].name,iter + 1, count))
@@ -1455,7 +1453,7 @@ def RDaccessX(group = table, x = 0, y = 0,count = None): # A function which look
       cKeywords = RDtop[iter].Keywords
       cStat = RDtop[iter].Stat
       cCost = RDtop[iter].Cost
-      cName = RDtop[iter].name
+      cName = RDtop[iter].Name
       cRules = RDtop[iter].Rules
       debugNotify("Stored properties. Checking type...", 3) #Debug
       if cType == 'ICE':
@@ -1465,10 +1463,10 @@ def RDaccessX(group = table, x = 0, y = 0,count = None): # A function which look
       elif cType == 'Agenda':
          cStatTXT = '\nAgenda Points: {}.'.format(cStat)
       else: cStatTXT = ''
-      title = "Card: {}.\
-             \nType: {}.\
-             \nKeywords: {}.\
-             \nCost: {}.\
+      title = "Card: {}\
+             \nType: {}\
+             \nKeywords: {}\
+             \nCost: {}\
                {}\n\nCard Text: {}\
            \n\nWhat do you want to do with this card?".format(cName,cType,cKeywords,cCost,cStatTXT,cRules)
       if cType == 'Agenda' or cType == 'Asset' or cType == 'Upgrade':
@@ -1539,7 +1537,7 @@ def RDaccessX(group = table, x = 0, y = 0,count = None): # A function which look
             removedCards += 1
       else: 
          debugNotify("Selected doing nothing. About to move back...", 4)
-         RDtop[iter].moveTo(targetPL.piles['R&D/Stack'],iter - removedCards)
+         #RDtop[iter].moveTo(targetPL.piles['R&D/Stack'],iter - removedCards)
          if cType == 'Agenda': # If the card was an agenda and the runner didn't steal it, we always announce it.
             notify(":> {} accessed the {} agenda but opted not to liberate it".format(me,cName))
       try: del origController[RDtop[iter]._id] # We use a try: just in case...
@@ -1648,12 +1646,10 @@ def HQaccess(group=table, x=0,y=0, silent = False, directTargets = None):
       count = askInteger("How many files are you able to access from the corporation's HQ?",1)
       if count == None: return
       playAccessSound('HQ')
-      revealedCards = showatrandom(count = count, targetPL = targetPL, covered = True)
+      revealedCards = showatrandom(count = count, targetPL = targetPL, silent = True)
    for revealedCard in revealedCards:
-      loopChk(revealedCard)
       origController[revealedCard._id] = targetPL # We store the card's original controller to know against whom to check for scripts (e.g. when accessing a rezzed encryption protocol)
       #storeProperties(revealedCard) # So as not to crash reduceCost() later
-      revealedCard.sendToFront() # We send our currently accessed card to the front, so that the corp can see it. The rest are covered up.
       accessRegex = re.search(r'onAccess:([^|]+)',CardsAS.get(revealedCard.model,''))
       if accessRegex:
          debugNotify(" accessRegex found! {}".format(accessRegex.group(1)), 2)
@@ -1681,10 +1677,10 @@ def HQaccess(group=table, x=0,y=0, silent = False, directTargets = None):
          cStatTXT = '\nAgenda Points: {}.'.format(revealedCard.Stat)
       else: cStatTXT = ''
       debugNotify("Crafting Title", 2) #Debug
-      title = "Card: {}.\
-             \nType: {}.\
-             \nKeywords: {}.\
-             \nCost: {}.\
+      title = "Card: {}\
+             \nType: {}\
+             \nKeywords: {}\
+             \nCost: {}\
                {}\n\nCard Text: {}\
            \n\nWhat do you want to do with this card?".format(revealedCard.Name,revealedCard.Type,revealedCard.Keywords,revealedCard.Cost,cStatTXT,revealedCard.Rules)
       if revealedCard.Type == 'Agenda' or revealedCard.Type == 'Asset' or revealedCard.Type == 'Upgrade':
@@ -1726,8 +1722,7 @@ def HQaccess(group=table, x=0,y=0, silent = False, directTargets = None):
       if choice == None: choice = 0
       if choice == 1:
          sendToTrash(revealedCard)
-         loopChk(revealedCard,'Type')
-         notify("{} {} {} at no cost".format(me,uniTrash(),revealedCard))
+         notify("{} {} {} at no cost".format(me,uniTrash(),revealedCard.Name))
       elif choice == 2:
          if revealedCard.Type == 'Agenda':
             if extraCredCost:
@@ -1742,16 +1737,14 @@ def HQaccess(group=table, x=0,y=0, silent = False, directTargets = None):
             rc = payCost(num(revealedCard.Stat) - reduction, "not free")
             if rc == "ABORT": revealedCard.moveTo(targetPL.hand) # If the player couldn't pay to trash the card, we leave it where it is.
             sendToTrash(revealedCard)
-            loopChk(revealedCard,'Type')
-            notify("{} paid {}{} to {} {}".format(me,uniCredit(num(revealedCard.Stat) - reduction),extraText2,uniTrash(),revealedCard))
+            notify("{} paid {}{} to {} {}".format(me,uniCredit(num(revealedCard.Stat) - reduction),extraText2,uniTrash(),revealedCard.Name))
       else: revealedCard.moveTo(targetPL.hand)
       try: del origController[revealedCard._id] # We use a try: just in case...
       except: pass
-   rnd(1,10) # a little pause
    for c in revealedCards: c.highlight = None # We make sure no card remains highlighted for some reason.
    passPileControl(targetPL.hand,targetPL)
    setGlobalVariable('Paused Runner','False')
-   clearCovers() # Finally we clear any remaining cover cards.
+   #clearCovers() # Finally we clear any remaining cover cards.
    debugNotify("<<< HQAccess()", 3)
    
 def isRezzable (card):
@@ -2403,7 +2396,7 @@ def handRandomDiscard(group = None, count = None, player = None, destination = N
    debugNotify("<<< handRandomDiscard() with return {}".format(iter + 1), 2) #Debug
    return iter + 1 #We need to increase the iter by 1 because it starts iterating from 0
 
-def showatrandom(group = None, count = 1, targetPL = None, silent = False, covered = False):
+def showatrandom(group = None, count = 1, targetPL = None, silent = False):
    debugNotify(">>> showatrandom(){}".format(extraASDebug())) #Debug
    mute()
    shownCards = []
@@ -2424,21 +2417,15 @@ def showatrandom(group = None, count = 1, targetPL = None, silent = False, cover
    for iter in range(count):
       card = group.random()
       if card.controller != me: # If we're revealing a card from another player's hand, we grab its properties before we put it on the table, as as not to give away if we're scanning it right now or not.
-         card.isFaceUp = True
          storeProperties(card, forced = False)
-      time.sleep(1)
       if card == None:
          notify(":::Info:::{} has no more cards in their hand to reveal".format(targetPL))
          break
-      if covered:
-         cover = table.create("ac3a3d5d-7e3a-4742-b9b2-7f72596d9c1b",playerside * side * iter * cwidth(card) - (count * cwidth(card) / 2), 0 - yaxisMove(card) * side,1,False)
-         cover.moveToTable(playerside * side * iter * cwidth(card) - (count * cwidth(card) / 2), 0 - yaxisMove(card) * side,False)
-      card.moveToTable(playerside * side * iter * cwidth(card) - (count * cwidth(card) / 2), 0 - yaxisMove(card) * side, False)
+      if silent: card.moveToTable(playerside * side * iter * cwidth(card) - (count * cwidth(card) / 2), 0 - yaxisMove(card) * side, True)
+      else: card.moveToTable(playerside * side * iter * cwidth(card) - (count * cwidth(card) / 2), 0 - yaxisMove(card) * side, False) # If we announce the card, we also place it on the table face-up
       card.highlight = RevealedColor
-      card.sendToBack()
-      if not covered: loopChk(card) # A small delay to make sure we grab the card's name to announce
       shownCards.append(card) # We put the revealed cards in a list to return to other functions that call us
-   if not silent: notify("{} reveals {} at random from their hand.".format(targetPL,card))
+   if not silent: notify("{} reveals {} at random from their hand.".format(targetPL,card.Name))
    debugNotify("<<< showatrandom() with return {}".format(card), 2) #Debug
    return shownCards
 
