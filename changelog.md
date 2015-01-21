@@ -1,6 +1,11 @@
 Changelog - Android:Netrunner LCG OCTGN Game Definition
 ===============================================
 
+### 3.16.2.x
+
+* Fixed the borked server and button images from the new changes to the custom card sizes of OCTGN
+* Removed a lot of hacks to make card visibility work accordingly now that this has been addressed. HQ and R&D access should be faster now.
+
 ### 3.16.1.x
 
 * IT dept should now work correctly according to the ruling and also clear its counter at turn's end.

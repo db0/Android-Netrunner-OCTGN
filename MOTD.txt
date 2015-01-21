@@ -1,11 +1,14 @@
 =====Message of the Day======
 
-The Source is finally live. Lunar Cycle is finally complete!
+Recently OCTGN did some changes in the way scripts handle face-down card visibility, so I had to make some changes to work with the new paradigm.
 
-As always full automations are included but check the blog for special cases. 
+It's possible that this introduced bugs, and even though I tested the basic accesses, it may still be the case that something slipped through. 
 
-Also, this exciting new update now makes Utopia Shard work correctly and asks you to pay money before Stealing Fetal AI or NAPD Contract.
+On the positive side, HQ and R&D access should now be much faster.
 
+Please let me know if you encounter any weird issues so that I can fix ASAP.
+
+Thanks and enjoy!
 ---
 If you enjoy my work, please consider becoming my patron by donating a few credits a month. 
 Devs need more Diesel!
