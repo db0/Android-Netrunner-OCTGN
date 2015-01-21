@@ -227,15 +227,15 @@ def createStartingCards():
          traceCard = table.create("eb7e719e-007b-4fab-973c-3fe228c6ce20", (569 * flipBoard) + flipModX, (163 * flipBoard) + flipModY, 1, True) #The Trace card
          storeSpecial(traceCard)
          if debugVerbosity >= 5: information("Creating HQ")
-         HQ = table.create("81cba950-9703-424f-9a6f-af02e0203762", (169 * flipBoard) + flipModX, (188 * flipBoard) + flipModY, 1, True)
+         HQ = table.create("81cba950-9703-424f-9a6f-af02e0203762", (169 * flipBoard) + flipModX, (208 * flipBoard) + flipModY, 1, True)
          storeSpecial(HQ) # We pass control of the centrals to the runner, so that they can double click them to start runs
          HQ.setController(findOpponent())
          if debugVerbosity >= 5: information("Creating R&D")
-         RD = table.create("fbb865c9-fccc-4372-9618-ae83a47101a2", (277 * flipBoard) + flipModX, (188 * flipBoard) + flipModY, 1, True)
+         RD = table.create("fbb865c9-fccc-4372-9618-ae83a47101a2", (277 * flipBoard) + flipModX, (208 * flipBoard) + flipModY, 1, True)
          storeSpecial(RD)
          RD.setController(findOpponent())
          if debugVerbosity >= 5: information("Creating Archives")
-         ARC = table.create("47597fa5-cc0c-4451-943b-9a14417c2007", (382 * flipBoard) + flipModX, (188 * flipBoard) + flipModY, 1, True)
+         ARC = table.create("47597fa5-cc0c-4451-943b-9a14417c2007", (382 * flipBoard) + flipModX, (208 * flipBoard) + flipModY, 1, True)
          storeSpecial(ARC)
          ARC.setController(findOpponent())
          if debugVerbosity >= 5: information("Creating Virus Scan")
@@ -333,7 +333,7 @@ def intRun(aCost = 1, Name = 'R&D', silent = False):
          whisper(":::ERROR::: Your opponent is playing {}:{}. You cannot run a remote server until you've first run on a central server".format(enemyIdent,enemyIdent.Subtitle))
          return 'ABORT'
    for c in table:
-      if c.Name == 'Enhanced Login Protocol' and c.orientation != Rot90 and not silent: # For cards which increase the action cost, we need to check manually before the run. We don't do it when silent since that signifies a scripted run (i.e. card effect)
+      if c.name == 'Enhanced Login Protocol' and c.orientation != Rot90 and not silent: # For cards which increase the action cost, we need to check manually before the run. We don't do it when silent since that signifies a scripted run (i.e. card effect)
          aCost += 1
          c.orientation = Rot90
    ClickCost = useClick(count = aCost)

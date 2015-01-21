@@ -68,12 +68,12 @@ def UseCustomAbility(Autoscript, announceText, card, targetCards = None, notific
       count = askInteger("By which amount of trace strength did you exceeded the runner's link strength?",1)
       if not count: return 'ABORT'
       targetPL = findOpponent()
-      addGroupVisibility(targetPL.piles['R&D/Stack'],me) # Workaround for OCTGN bug #1242
+      #addGroupVisibility(targetPL.piles['R&D/Stack'],me) # Workaround for OCTGN bug #1242
       grabPileControl(targetPL.piles['R&D/Stack'])
-      targetPL.piles['R&D/Stack'].addViewer(me)
+      #targetPL.piles['R&D/Stack'].addViewer(me)
       cardList = list(targetPL.piles['R&D/Stack'].top(count)) # We make a list of the top cards the corp can look at.
       debugNotify("Turning Runner's Stack Face Up", 2)
-      if len(cardList): loopChk(cardList[len(cardList) - 1])
+      #if len(cardList): loopChk(cardList[len(cardList) - 1])
       if len(cardList) > 1:
          notify(":> {}'s Data Hound is sniffing through {}'s Stack".format(me,targetPL))
          choice = SingleChoice("Choose card to trash", makeChoiceListfromCardList(cardList))
@@ -92,9 +92,9 @@ def UseCustomAbility(Autoscript, announceText, card, targetCards = None, notific
          idx += 1
       debugNotify("Removing Visibility", 2)
       rnd(1,100) # Delay to be able to announce names.
-      targetPL.piles['R&D/Stack'].removeViewer(me)
+      #targetPL.piles['R&D/Stack'].removeViewer(me)
       passPileControl(targetPL.piles['R&D/Stack'],targetPL)
-      delGroupVisibility(targetPL.piles['R&D/Stack'],me) # Workaround for OCTGN bug #1242
+      #delGroupVisibility(targetPL.piles['R&D/Stack'],me) # Workaround for OCTGN bug #1242
       announceString = ':=> Sniff'
          #      __
          # (___()'`;   *Sniff*
@@ -866,7 +866,6 @@ def CustomScript(card, action = 'PLAY', origin_card = None, original_action = No
    elif fetchProperty(card, 'name') == 'Eureka!' and action == 'PLAY':
       c = deck.top()
       c.moveTo(me.piles['Heap/Archives(Face-up)'])
-      rnd(0,5)
       if c.Type != 'Event':
          extraCost = num(c.Cost) - 10
          if extraCost < 0: extraCost = 0

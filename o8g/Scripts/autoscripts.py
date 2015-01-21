@@ -1819,9 +1819,7 @@ def RetrieveX(Autoscript, announceText, card, targetCards = None, notification =
       source = targetPL.piles['Heap/Archives(Face-up)']
    else:
       source = targetPL.piles['R&D/Stack']
-      source.addViewer(me)   
       debugNotify("Making R&D/Stack vidible", 2)
-      rnd(1,10) # We give a delay to allow OCTGN to read the card properties before we proceed with checking them
    sourcePath =  "from their {}".format(pileName(source))
    if sourcePath == "from their Face-up Archives": sourcePath = "from their Archives"
    debugNotify("Setting Destination", 2)
@@ -1887,15 +1885,15 @@ def RetrieveX(Autoscript, announceText, card, targetCards = None, notification =
    if re.search(r'doNotReveal',Autoscript): # If we do not reveal the cards, we still want to tell which cards from the face-up archives were taken
       if re.search(r'-fromArchives', Autoscript):
          debugNotify(str(["{} in {}".format(c.name, c.group.name) for c in chosenCList]))
-         shownArcCards = [c.name for c in chosenCList if c.group == targetPL.piles['Heap/Archives(Face-up)']]
+         shownArcCards = [c.Name for c in chosenCList if c.group == targetPL.piles['Heap/Archives(Face-up)']]
          debugNotify("shownArcCards = {}".format(shownArcCards))
-         hiddenArcCards = [c.name for c in chosenCList if c.group == targetPL.piles['Archives(Hidden)']]
+         hiddenArcCards = [c.Name for c in chosenCList if c.group == targetPL.piles['Archives(Hidden)']]
          debugNotify("hiddenArcCards = {}".format(hiddenArcCards))
          if len(shownArcCards) and len(hiddenArcCards): cardNames = "{} and {} hidden card(s)".format(shownArcCards,len(hiddenArcCards))
          elif len(shownArcCards): cardNames = str(shownArcCards)
          else: cardNames = "{} hidden cards".format(len(chosenCList))
       else: cardNames = "{} cards".format(len(chosenCList))
-   else: cardNames = str([c.name for c in chosenCList])
+   else: cardNames = str([c.Name for c in chosenCList])
    debugNotify("About to move {} to {}".format([c for c in chosenCList],destination.name))
    if not abortedRetrieve:
       for c in chosenCList:
@@ -1917,8 +1915,6 @@ def RetrieveX(Autoscript, announceText, card, targetCards = None, notification =
          tokensRegex = re.search(r'-with([A-Za-z0-9: ]+)', Autoscript) # If we have a -with in our autoscript, this is meant to put some tokens on the retrieved card.
          if tokensRegex: TokensX('Put{}'.format(tokensRegex.group(1)), announceText,c, n = n) 
    debugNotify("About to restore pile.", 2)
-   if source == targetPL.piles['R&D/Stack']: # If our source was the scripting pile, we know we just checked the R&D,
-      source.removeViewer(me)
    if abortedRetrieve: #If the player canceled a retrieve effect from R&D / Stack, we make sure to shuffle their pile as well.
       notify("{} has aborted the retrieval effect from {}".format(me,card))
       if source == me.ScriptingPile: shuffle(targetPL.piles['R&D/Stack'])
@@ -2274,7 +2270,7 @@ def makeChoiceListfromCardList(cardList,includeText = False, includeGroup = Fals
       if includeText: cText = '\n' + fetchProperty(T, 'Rules')
       else: cText = ''
       hostCards = eval(getGlobalVariable('Host Cards'))
-      attachmentsList = [Card(cID).name for cID in hostCards if hostCards[cID] == T._id]
+      attachmentsList = [Card(cID).Name for cID in hostCards if hostCards[cID] == T._id]
       if len(attachmentsList) >= 1: cAttachments = '\nAttachments:' + str(attachmentsList)
       else: cAttachments = ''
       if includeGroup: cGroup = '\n' + pileName(T.group) # Include group is used to inform the player where the card resides in cases where they're selecting cards from multiple groups.

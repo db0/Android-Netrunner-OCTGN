@@ -3,7 +3,7 @@
       xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
       name="Android-Netrunner" 
       id="0f38e453-26df-4c04-9d67-6d43de939c77" 
-      version="3.16.1.0"
+      version="3.16.1.9"
       octgnVersion="3.1.127.0" 
       markersize="20"
       tags="asymmetric cyberpunk LCG bluff duel"
@@ -164,6 +164,9 @@
       <property name="AutoScript" type="String" hidden="True" ignoreText="True" />
       <property name="AutoAction" type="String" hidden="True" ignoreText="True" />
 
+      <size name="button" width="50" height="50" front="Card/button-back.jpg" back="Card/button-front.jpg"/>
+      <size name="server" width="63" height="35" front="Card/button-back.jpg" back="Card/button-front.jpg"/>
+       
    </card>
    <table name="Table" visibility="undefined" ordered="False" width="1300" height="808" board="Table/Tabletop.png" boardPosition="-650,-370,1300,808" background="Table/background.jpg" backgroundStyle="uniformToFill">
       <cardaction menu="Use Card Ability/Clear" default="True" execute="useAbility" />

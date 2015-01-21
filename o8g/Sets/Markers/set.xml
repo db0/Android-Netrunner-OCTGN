@@ -54,7 +54,7 @@
          <property name="AutoScript" value="" />
          <property name="AutoAction" value="" />	
 		</card>
-		<card id="81cba950-9703-424f-9a6f-af02e0203762" name="HQ">
+		<card id="81cba950-9703-424f-9a6f-af02e0203762" name="HQ" size="server">
          <property name="Subtitle" value="" />
          <property name="Type" value="Server" />
          <property name="Keywords" value="" />
@@ -69,7 +69,7 @@
          <property name="AutoScript" value="" />
          <property name="AutoAction" value="" />	
 		</card>
-		<card id="fbb865c9-fccc-4372-9618-ae83a47101a2" name="R&amp;D">
+		<card id="fbb865c9-fccc-4372-9618-ae83a47101a2" name="R&amp;D" size="server">
          <property name="Subtitle" value="" />
          <property name="Type" value="Server" />
          <property name="Keywords" value="" />
@@ -84,7 +84,7 @@
          <property name="AutoScript" value="" />
          <property name="AutoAction" value="" />	
 		</card>
-		<card id="47597fa5-cc0c-4451-943b-9a14417c2007" name="Archives">
+		<card id="47597fa5-cc0c-4451-943b-9a14417c2007" name="Archives" size="server">
          <property name="Subtitle" value="" />
          <property name="Type" value="Server" />
          <property name="Keywords" value="" />
@@ -129,7 +129,7 @@
          <property name="AutoScript" value="" />
          <property name="AutoAction" value="A0B0G0T0:CustomScript" />
 		</card>
-		<card id="d59fc50c-c727-4b69-83eb-36c475d60dcb" name="Remote Server">
+		<card id="d59fc50c-c727-4b69-83eb-36c475d60dcb" name="Remote Server" size="server">
          <property name="Subtitle" value="" />
          <property name="Type" value="Server" />
          <property name="Keywords" value="" />
@@ -234,7 +234,7 @@
          <property name="AutoScript" value="" />
          <property name="AutoAction" value="" />	
 		</card>
-		<card id="33ac6951-93ec-4034-9578-0d7dcc77c3f8" name="Access Imminent">
+		<card id="33ac6951-93ec-4034-9578-0d7dcc77c3f8" name="Access Imminent" size="button">
          <property name="Subtitle" value="" />
          <property name="Type" value="Button" />
          <property name="Keywords" value="" />
@@ -249,7 +249,7 @@
          <property name="AutoScript" value="" />
          <property name="AutoAction" value="" />	
 		</card>
-		<card id="e904542b-83db-4022-9e8e-9369fe7bc761" name="OK">
+		<card id="e904542b-83db-4022-9e8e-9369fe7bc761" name="OK" size="button">
          <property name="Subtitle" value="" />
          <property name="Type" value="Button" />
          <property name="Keywords" value="" />
@@ -264,7 +264,7 @@
          <property name="AutoScript" value="" />
          <property name="AutoAction" value="" />	
 		</card>
-		<card id="0887f64f-4fe8-4a5b-9d41-77408fe0224b" name="Wait!">
+		<card id="0887f64f-4fe8-4a5b-9d41-77408fe0224b" name="Wait!" size="button">
          <property name="Subtitle" value="" />
          <property name="Type" value="Button" />
          <property name="Keywords" value="" />
@@ -279,7 +279,7 @@
          <property name="AutoScript" value="" />
          <property name="AutoAction" value="" />	
 		</card>
-		<card id="fb146e53-714b-4b29-861a-d58ca9840c00" name="No Rez">
+		<card id="fb146e53-714b-4b29-861a-d58ca9840c00" name="No Rez" size="button">
          <property name="Subtitle" value="" />
          <property name="Type" value="Button" />
          <property name="Keywords" value="" />
@@ -294,7 +294,7 @@
          <property name="AutoScript" value="" />
          <property name="AutoAction" value="" />	
 		</card>
-		<card id="5f7ff64b-1df3-4ce8-9153-7d4370fc32b3" name="Start Turn">
+		<card id="5f7ff64b-1df3-4ce8-9153-7d4370fc32b3" name="Start Turn" size="button">
          <property name="Subtitle" value="" />
          <property name="Type" value="Button" />
          <property name="Keywords" value="" />
@@ -309,7 +309,7 @@
          <property name="AutoScript" value="" />
          <property name="AutoAction" value="" />	
 		</card>
-		<card id="cfc45a19-54ab-46c3-9e51-9b4e01b1bed0" name="End Turn">
+		<card id="cfc45a19-54ab-46c3-9e51-9b4e01b1bed0" name="End Turn" size="button">
          <property name="Subtitle" value="" />
          <property name="Type" value="Button" />
          <property name="Keywords" value="" />
@@ -324,7 +324,7 @@
          <property name="AutoScript" value="" />
          <property name="AutoAction" value="" />	
 		</card>
-		<card id="1ce4f50d-2604-4afe-8d8c-551ce0623d70" name="Grant Access">
+		<card id="1ce4f50d-2604-4afe-8d8c-551ce0623d70" name="Grant Access" size="button">
          <property name="Subtitle" value="" />
          <property name="Type" value="Button" />
          <property name="Keywords" value="" />
