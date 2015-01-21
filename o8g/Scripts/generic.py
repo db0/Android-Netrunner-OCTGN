@@ -773,7 +773,7 @@ def grabPileControl(pile, player = me):
    count = 0
    while pile.controller != player: 
       if count >= 2 and not count % 2: notify("=> {} is still trying to take control of {}...".format(player,pileName(pile)))
-      rnd(1,100)
+      rnd(1,10000)
       count += 1
       if count >= 3: 
          notify(":::ERROR::: Pile Control not passed! Will see errors.")
@@ -798,7 +798,7 @@ def grabCardControl(card, player = me):
       count = 0
       while card.controller != player: 
          if count >= 2 and not count % 2: notify("=> {} is still trying to take control of {}...".format(player,card))
-         rnd(1,100)
+         rnd(1,10000)
          count += 1
          if count >= 3: 
             notify(":::ERROR::: Card Control not passed! Will see errors.")
