@@ -57,12 +57,12 @@ def UseCustomAbility(Autoscript, announceText, card, targetCards = None, notific
          announceString = announceText + ' end the run'
    if fetchProperty(card, 'name') == "Replicator":
       targetC = targetCards[0] # For this to be triggered a program has to have been installed, which was passed to us in an array.
-      if not confirm("Would you like to replicate the {}?".format(targetC.name)):
+      if not confirm("Would you like to replicate the {}?".format(targetC.Name)):
          return 'ABORT'
-      retrieveResult = RetrieveX('Retrieve1Card-grab{}-isTopmost'.format(targetC.name.replace('-','_')), announceText, card)
+      retrieveResult = RetrieveX('Retrieve1Card-grab{}-isTopmost'.format(targetC.Name.replace('-','_')), announceText, card)
       shuffle(me.piles['R&D/Stack'])
-      if re.search(r'no valid targets',retrieveResult[0]): announceString = "{} tries to use their replicator to create a copy of {}, but they run out of juice.".format(me,targetC.name) # If we couldn't find a copy of the played card to replicate, we inform of this
-      else: announceString = "{} uses their replicator to create a copy of {}".format(me,targetC.name)
+      if re.search(r'no valid targets',retrieveResult[0]): announceString = "{} tries to use their replicator to create a copy of {}, but they run out of juice.".format(me,targetC.Name) # If we couldn't find a copy of the played card to replicate, we inform of this
+      else: announceString = "{} uses their replicator to create a copy of {}".format(me,targetC.Name)
       notify(announceString)
    if fetchProperty(card, 'name') == "Data Hound":
       count = askInteger("By which amount of trace strength did you exceeded the runner's link strength?",1)
@@ -91,7 +91,6 @@ def UseCustomAbility(Autoscript, announceText, card, targetCards = None, notific
          movedC.moveTo(targetPL.piles['R&D/Stack'],idx) # If there's only one card left, we put it in the last available index location in the Stack. We always put the card one index position deeper, because the first card is the cover.
          idx += 1
       debugNotify("Removing Visibility", 2)
-      rnd(1,100) # Delay to be able to announce names.
       #targetPL.piles['R&D/Stack'].removeViewer(me)
       passPileControl(targetPL.piles['R&D/Stack'],targetPL)
       #delGroupVisibility(targetPL.piles['R&D/Stack'],me) # Workaround for OCTGN bug #1242
@@ -233,7 +232,7 @@ def UseCustomAbility(Autoscript, announceText, card, targetCards = None, notific
       else: advCount = card.markers[mdict['Advancement']] # We store the count of advancement markers in case the runner proceeds to trash the trap.
       if advCount > 1 and len(me.hand):
          scorableAgendas = [c for c in me.hand if c.Type == 'Agenda' and num(c.Cost) <= advCount]
-         if len(scorableAgendas): extraTXT = "You have the following agendas in your HQ you can score with Plan B:\n\n{}".format([c.name for c in scorableAgendas])
+         if len(scorableAgendas): extraTXT = "You have the following agendas in your HQ you can score with Plan B:\n\n{}".format([c.Name for c in scorableAgendas])
          else: extraTXT = ''
          if confirm("Do you want to initiate a Plan B?{}.\n\n(This dialogue also servers as a pause so that your opponent does not know if have any agendas you can score in HQ or not)".format(extraTXT)):
             if len(scorableAgendas):
@@ -266,8 +265,7 @@ def UseCustomAbility(Autoscript, announceText, card, targetCards = None, notific
       notify(":> {} reveals a {}".format(card,foreseenCard))
       choiceType = ['Event','Program','Hardware','Resource'][choice]
       if foreseenCard.Type == choiceType:
-         announceString = announceText + " foresee an {} accurately! {} draws {} to their hand and gains {}".format(choiceType,me,foreseenCard.name,uniCredit(2))
-         rnd(1,10)
+         announceString = announceText + " foresee an {} accurately! {} draws {} to their hand and gains {}".format(choiceType,me,foreseenCard.Name,uniCredit(2))
          foreseenCard.moveTo(me.hand)
          me.Credits += 2
       else: announceString = announceText + " attempt to foresee a {}, but was mistaken. {} is trashed".format(choiceType,foreseenCard)
@@ -278,7 +276,7 @@ def UseCustomAbility(Autoscript, announceText, card, targetCards = None, notific
          delayed_whisper("You need to target some Grail first!")
          return 'ABORT'
       for c in revealedCards: CreateDummy('CreateDummy-doNotTrash-nonUnique', '', c)
-      notify("{} reveals {} as their Grail support".format(me,[c.name for c in revealedCards]))
+      notify("{} reveals {} as their Grail support".format(me,[c.Name for c in revealedCards]))
       announceString = ''
    if fetchProperty(card, 'name') == "Social Engineering":
       #confirm('1')
@@ -289,12 +287,12 @@ def UseCustomAbility(Autoscript, announceText, card, targetCards = None, notific
       announceString = ''
    if fetchProperty(card, 'name') == "The Foundry":
       targetC = targetCards[0] # For this to be triggered an ICE has to have been rezzed, which was passed to us in an array.
-      if not confirm("Would you like to forge another {}?".format(targetC.name)):
+      if not confirm("Would you like to forge another {}?".format(targetC.Name)):
          return 'ABORT'
-      retrieveResult = RetrieveX('Retrieve1Card-grab{}-isTopmost'.format(targetC.name.replace('-','_')), announceText, card)
+      retrieveResult = RetrieveX('Retrieve1Card-grab{}-isTopmost'.format(targetC.Name.replace('-','_')), announceText, card)
       shuffle(me.piles['R&D/Stack'])
-      if re.search(r'no valid targets',retrieveResult[0]): announceString = "{} tries to use The Foundry to create a copy of {}, but they run out of bits.".format(me,targetC.name) # If we couldn't find a copy of the played card to replicate, we inform of this
-      else: announceString = "{} uses The Foundry to create a copy of {}".format(me,targetC.name)
+      if re.search(r'no valid targets',retrieveResult[0]): announceString = "{} tries to use The Foundry to create a copy of {}, but they run out of bits.".format(me,targetC.Name) # If we couldn't find a copy of the played card to replicate, we inform of this
+      else: announceString = "{} uses The Foundry to create a copy of {}".format(me,targetC.Name)
       notify(announceString)
    if fetchProperty(card, 'name') == "Shattered Remains":
       programTargets = [c for c in table if c.Type == 'Hardware']
@@ -331,7 +329,7 @@ def UseCustomAbility(Autoscript, announceText, card, targetCards = None, notific
       revealedCard.moveToTable(playerside * cwidth(revealedCard), 0 - yaxisMove(revealedCard), False)
       revealedCard.highlight = RevealedColor
       notify(":> {} reveals {} during their {} matchup".format(me,revealedCard,card))
-      if not confirm("You have revealed your {} to your opponent. Do you want to send the card to the bottom of your Stack?".format(revealedCard.name)): 
+      if not confirm("You have revealed your {} to your opponent. Do you want to send the card to the bottom of your Stack?".format(revealedCard.Name)): 
          revealedCard.moveTo(deck)
          notify("{} chooses to leave it at top of their Stack")
       else: 
@@ -397,7 +395,7 @@ def CustomScript(card, action = 'PLAY', origin_card = None, original_action = No
          c.moveTo(arcH)
          loopChk(c,'Type')
          if c.type == 'ICE': foundICE.append(c)
-      information("You have beta tested the following cards.\n\n{}\n\n\n(This dialogue is a pause so that your opponent does not know if you saw any ICE or not)\n\nPress OK to continue.".format([c.name for c in allCards]))
+      information("You have beta tested the following cards.\n\n{}\n\n\n(This dialogue is a pause so that your opponent does not know if you saw any ICE or not)\n\nPress OK to continue.".format([c.Name for c in allCards]))
       installedICE = 0
       while len(foundICE):
          choice = SingleChoice("Chose an ICE to install or press Cancel to trash all remaining ICE", makeChoiceListfromCardList(foundICE, True))
@@ -526,8 +524,7 @@ def CustomScript(card, action = 'PLAY', origin_card = None, original_action = No
          debugNotify(" Looping...", 4)
          loopChk(c)
          storeProperties(c)
-      rnd(1,100) # A delay because it bugs out
-      debugNotify("StackTop: {} in hand".format([c.name for c in StackTop])) #Debug
+      debugNotify("StackTop: {} in hand".format([c.Name for c in StackTop])) #Debug
       returnChoice = SingleChoice('Select a card to put to the botton of your Stack', makeChoiceListfromCardList(StackTop, True), type = 'button', default = 0)
       StackTop[returnChoice].moveToBottom(deck)
       catchwords = ["Excellent.","Don't leave town.","We'll be in touch.","We'll be seeing you soon...","Always a pleasure.","Remember our agreement.","Interesting request there."]
@@ -585,7 +582,7 @@ def CustomScript(card, action = 'PLAY', origin_card = None, original_action = No
       handICE.orientation = Rot90
       tableICE.moveTo(me.hand)
       autoscriptOtherPlayers('CardInstall',handICE)
-      notify('{} activates Midori to replace the approached {}, with an ICE from the HQ.'.format(me,tableICE.name))
+      notify('{} activates Midori to replace the approached {}, with an ICE from the HQ.'.format(me,tableICE.Name))
       notify('- "Naughty Naughty..."')
    elif fetchProperty(card, 'name') == "Director Haas' Pet Project" and action == 'SCORE':
       debugNotify("about to implement Director Haas' Pet Project")
@@ -607,7 +604,7 @@ def CustomScript(card, action = 'PLAY', origin_card = None, original_action = No
       chosenCList = []
       for iter in range(3):
          debugNotify("len(installableCards) = {}".format(len(installableCards)))
-         debugNotify("installableCards: {}".format([rootC.name for rootC in installableCards]), 4)
+         debugNotify("installableCards: {}".format([rootC.Name for rootC in installableCards]), 4)
          debugNotify("iter: {}/{}".format(iter,3), 4)
          del cardChoices[:]
          del cardTexts[:]
@@ -810,7 +807,7 @@ def CustomScript(card, action = 'PLAY', origin_card = None, original_action = No
          c.moveToTable(playerside * iter * cwidth(c) - (len(revealedCards) * cwidth(c) / 2), 0 - yaxisMove(c), False)
          c.highlight = RevealedColor
          iter += 1
-      notify("{} reveals {} as their celebrity gift and gains {}".format(me,[c.name for c in revealedCards],uniCredit(len(revealedCards) * 2)))
+      notify("{} reveals {} as their celebrity gift and gains {}".format(me,[c.Name for c in revealedCards],uniCredit(len(revealedCards) * 2)))
       while not confirm("You have revealed your celebrity gifts to your opponent. Return them to HQ?\n\n(Pressing 'No' will send a ping to your opponent to see if they're done reading them)"):
          notify("{} would like to know if it's OK to return their celebrity gifts to their HQ.".format(me))
       for c in revealedCards: c.moveTo(me.hand)
@@ -821,20 +818,20 @@ def CustomScript(card, action = 'PLAY', origin_card = None, original_action = No
          debugNotify("origin_card = {}. original_action = {}".format(origin_card.name,original_action),3)
          if not len(collectiveSequence):
             debugNotify("Empty collectiveSequence List")
-            collectiveSequence.extend([original_action,1,origin_card.name])
+            collectiveSequence.extend([original_action,1,origin_card.Name])
          elif collectiveSequence[0] == original_action:
             debugNotify("Matched original_action")
-            if original_action == 'CardAction' and collectiveSequence[2] != origin_card.name:
-               debugNotify("{} and no match of {} with {}".format(action,collectiveSequence[2],origin_card.name),3)
+            if original_action == 'CardAction' and collectiveSequence[2] != origin_card.Name:
+               debugNotify("{} and no match of {} with {}".format(action,collectiveSequence[2],origin_card.Name),3)
                del collectiveSequence[:]
-               collectiveSequence.extend([original_action,1,origin_card.name])
+               collectiveSequence.extend([original_action,1,origin_card.Name])
             else: 
-               debugNotify("{} and matched {} with {}".format(action,collectiveSequence[2],origin_card.name),3)
+               debugNotify("{} and matched {} with {}".format(action,collectiveSequence[2],origin_card.Name),3)
                collectiveSequence[1] += 1
          else:
             debugNotify("No match on original_action")
             del collectiveSequence[:]
-            collectiveSequence.extend([original_action,1,origin_card.name])
+            collectiveSequence.extend([original_action,1,origin_card.Name])
          if collectiveSequence[1] == 3:
             if oncePerTurn(card) == 'ABORT': return 'ABORT'
             else: 
@@ -964,11 +961,11 @@ def CustomScript(card, action = 'PLAY', origin_card = None, original_action = No
          for c in trashTargets:
             foundDuplicate = False
             for seek in table:
-               if c.name == seek.name: foundDuplicate = True
+               if c.Name == seek.Name: foundDuplicate = True
             if foundDuplicate: count += 1
             c.moveTo(me.piles['Heap/Archives(Face-up)'])
          drawMany(me.piles['R&D/Stack'], count, silent = False)
-         notify("{} to activate {} in order to trash {} from their hand and draw {} new cards".format(actionCost,card,[c.name for c in trashTargets],count))
+         notify("{} to activate {} in order to trash {} from their hand and draw {} new cards".format(actionCost,card,[c.Name for c in trashTargets],count))
          return 'CLICK USED'
    elif fetchProperty(card, 'name') == 'Rex Campaign' and action == 'Start':
       debugNotify("Checking Rex Campaign")
@@ -1003,11 +1000,11 @@ def CustomScript(card, action = 'PLAY', origin_card = None, original_action = No
          arcPiles.extend(me.piles['Archives(Hidden)'])
          foundMore = []
          for c in arcPiles:
-            if c.name == retrieveTuple[1][0].name: foundMore.append(c)
+            if c.Name == retrieveTuple[1][0].Name: foundMore.append(c)
          if len(foundMore):
-            count = askInteger("There's {} more copies of {} in your Archives. Retrieve how many?\n\n(We'll retrieve from Open Archives first)".format(len(foundMore),retrieveTuple[1][0].name),len(foundMore))
+            count = askInteger("There's {} more copies of {} in your Archives. Retrieve how many?\n\n(We'll retrieve from Open Archives first)".format(len(foundMore),retrieveTuple[1][0].Name),len(foundMore))
             for iter in range(count): foundMore.pop(0).moveTo(me.hand)
-      notify("{} retrieved {} copies of {} from their Archives".format(me,len(retrieveTuple[1]) + count,retrieveTuple[1][0].name))
+      notify("{} retrieved {} copies of {} from their Archives".format(me,len(retrieveTuple[1]) + count,retrieveTuple[1][0].Name))
    elif fetchProperty(card, 'name') == 'Iain Stirling' and action == 'Start':
       if me.counters['Agenda Points'].value < fetchCorpPL().counters['Agenda Points'].value:
          me.Credits += 2
@@ -1036,7 +1033,7 @@ def CustomScript(card, action = 'PLAY', origin_card = None, original_action = No
             if targetServer.markers[mdict['SecurityTesting']]: 
                #gain = targetServer.markers[mdict['SecurityTesting']] * 2
                for c in table:
-                  if c.name == "Security Testing" and c.orientation == Rot0: 
+                  if c.Name == "Security Testing" and c.orientation == Rot0: 
                      c.orientation = Rot90
                      break # We only set one Sec.Testing as used per run.
                targetServer.markers[mdict['SecurityTesting']] = 0
@@ -1091,7 +1088,7 @@ def CustomScript(card, action = 'PLAY', origin_card = None, original_action = No
          me.Credits = num(targetICE[0].Cost)
          me.markers[mdict['BadPublicity']] = 0
          for c in table: 
-            if c.name == 'Stimhack': c.markers[mdict['Credits']] = 0
+            if c.Name == 'Stimhack': c.markers[mdict['Credits']] = 0
          notify("{} encounters freshly rezzed {} and sets their Credits to {} ({})".format(me,targetICE[0],me.Credits,diff))
    elif fetchProperty(card, 'name') == 'Sealed Vault' and action == 'USE':
       if not card.markers[mdict["Credit"]] and not me.Credits: 
@@ -1108,7 +1105,7 @@ def CustomScript(card, action = 'PLAY', origin_card = None, original_action = No
          me.Credits -= transfer
          notify("{} pays {} to transfer {} from their credit pool to the {}. They have {} remaining".format(me,uniCredit(1),uniCredit(transfer),card,uniCredit(me.Credits)))
       else:   
-         if confirm("Trash {} to grab the credits?".format(card.name)): trashUse = True
+         if confirm("Trash {} to grab the credits?".format(card.Name)): trashUse = True
          else: 
             clickTXT = useClick()
             if clickTXT == 'ABORT': return clickTXT
@@ -1166,7 +1163,7 @@ def CustomScript(card, action = 'PLAY', origin_card = None, original_action = No
          c.highlight = RevealedColor
          iter += 1
          if c.Type == 'Program': progs += 1
-      notify("{} reveals {} during their injection and gains {}".format(me,[c.name for c in revealedCards],uniCredit(progs)))
+      notify("{} reveals {} during their injection and gains {}".format(me,[c.Name for c in revealedCards],uniCredit(progs)))
       while not confirm("You have revealed your injected data to your opponent. Return all non-programs to Grip?\n\n(Pressing 'No' will send a ping to your opponent to see if they're done reading them)"):
          notify("{} would like to know if it's OK to return their cards to their Grip.".format(me))
       for c in revealedCards:
@@ -1175,7 +1172,7 @@ def CustomScript(card, action = 'PLAY', origin_card = None, original_action = No
       me.Credits += progs
    elif fetchProperty(card, 'name') == 'Origami':
       if action == 'INSTALL':
-         folds = len([c for c in table if c.name == card.name])
+         folds = len([c for c in table if c.Name == card.Name])
          if folds == 1: 
             me.counters['Hand Size'].value += 1
             notify("{} starts folding their data and increases their available hand size by 1".format(me))
@@ -1186,7 +1183,7 @@ def CustomScript(card, action = 'PLAY', origin_card = None, original_action = No
             me.counters['Hand Size'].value += 5
             notify("{} has perfectly folder their data and triples their results, increasing their hand size by 5.".format(me))
       elif action == 'TRASH' or action == 'UNINSTALL' or action == 'EXILE':
-         folds = len([c for c in table if c.name == card.name])
+         folds = len([c for c in table if c.Name == card.Name])
          if folds == 1: # We run trash scripts before we remove cards from the table, so the minimum is going to be 1 origami on the table
             me.counters['Hand Size'].value -= 1
             notify(":> {}'s data folding is interrupted reducing their available hand size by 1".format(me))
@@ -1273,8 +1270,8 @@ def CustomEffects(Time = 'Start'):
    ### Checking for specific effects that require special card awareness.
    #AwarenessList = eval(me.getGlobalVariable('Awareness'))
    if Time == 'Start': #and 'Subliminal Messaging' in AwarenessList: 
-      count = sum(1 for card in me.piles['Heap/Archives(Face-up)'] if card.name == 'Subliminal Messaging')
-      count += sum(1 for card in me.piles['Archives(Hidden)'] if card.name == 'Subliminal Messaging')
+      count = sum(1 for card in me.piles['Heap/Archives(Face-up)'] if card.Name == 'Subliminal Messaging')
+      count += sum(1 for card in me.piles['Archives(Hidden)'] if card.Name == 'Subliminal Messaging')
       if count and getGlobalVariable('Central Run') == 'False' and getGlobalVariable('Remote Run') == 'False':
          choice = 4
          while count < choice: 
@@ -1283,14 +1280,14 @@ def CustomEffects(Time = 'Start'):
          grabbed = 0
          if grabbed < choice:
             for card in me.piles['Heap/Archives(Face-up)']:      
-               if card.name == 'Subliminal Messaging': 
+               if card.Name == 'Subliminal Messaging': 
                   grabbed += 1
                   card.moveTo(me.hand)
                   notify(":> {} takes one Subliminal Messaging from Face-Up Archives to their HQ".format(me))
                if grabbed == choice: break
          if grabbed < choice:
             for card in me.piles['Archives(Hidden)']:
-               if card.name == 'Subliminal Messaging': 
+               if card.Name == 'Subliminal Messaging': 
                   grabbed += 1
                   card.moveTo(me.hand)
                   notify(":> {} takes one Subliminal Messaging from Hidden Archives to their HQ".format(me))
@@ -1302,7 +1299,7 @@ def markerScripts(card, action = 'USE'):
    for key in card.markers:
       if key[0] == 'Personal Workshop' and action == 'USE':
          foundSpecial = True
-         count = askInteger("{} has {} power counters left.\nHow many do you want to pay to remove?".format(card.name,card.markers[mdict['Power']]),card.markers[mdict['Power']])
+         count = askInteger("{} has {} power counters left.\nHow many do you want to pay to remove?".format(card.Name,card.markers[mdict['Power']]),card.markers[mdict['Power']])
          if not count: return foundSpecial
          if count > card.markers[mdict['Power']]: count = card.markers[mdict['Power']]
          host = chkHostType(card) 
@@ -1415,9 +1412,9 @@ def markerScripts(card, action = 'USE'):
    
 def setAwareness(card):
 # A function which stores if a special card exists in a player's deck, and activates extra scripts only then (to avoid unnecessary load)
-   if card.name == 'Subliminal Messaging': # For now we only have subliminal. In the future we might get more card names separated by OR clauses.
+   if card.Name == 'Subliminal Messaging': # For now we only have subliminal. In the future we might get more card names separated by OR clauses.
       AwarenessList = eval(me.getGlobalVariable('Awareness'))
-      if card.name not in AwarenessList: AwarenessList.append(card.name)
+      if card.Name not in AwarenessList: AwarenessList.append(card.Name)
       me.setGlobalVariable('Awareness',str(AwarenessList))
    
 #------------------------------------------------------------------------------
@@ -1434,7 +1431,7 @@ def ESA(): # Expert Schedule Analyzer
       c.moveToTable(playerside * iter * cwidth(c) - (len(revealedCards) * cwidth(c) / 2), 0 - yaxisMove(c), False)
       c.highlight = RevealedColor
       iter += 1
-   notify("The Expert Schedule Analyzer reveals {}".format([c.name for c in revealedCards]))
+   notify("The Expert Schedule Analyzer reveals {}".format([c.Name for c in revealedCards]))
    while not confirm("You have revealed your hand to your opponent. Return them to HQ?\n\n(Pressing 'No' will send a ping to your opponent to see if they're done reading them)"):
       notify("{} would like to know if it's OK to return their remaining cards to their HQ.".format(me))
    for c in revealedCards: c.moveTo(me.hand)
@@ -1444,15 +1441,12 @@ def WitRD(): # Woman in the Red Dress
    mute()   
    cardView = me.piles['R&D/Stack'].top()
    debugNotify("Flipping top R&D card")
-   cardView.isFaceUp = True
-   rnd(1,10)
    notify(":> The Woman in the Red Dress has revealed {}".format(cardView))
-   if confirm("Do you want to draw {} to your HQ?".format(cardView.name)):
+   if confirm("Do you want to draw {} to your HQ?".format(cardView.Name)):
       notify("{} decided to take {} to their hand".format(me,cardView))
       cardView.moveTo(me.hand)
    else: 
       notify("{} decided to leave {} in their R&D".format(me,cardView))
-      cardView.isFaceUp = False      
 
 def Snoop(scenario = 'Simply Reveal', cardList = None):
    debugNotify(">>> Remote Script Snoop() with Scenario = {}".format(scenario)) #Debug     
@@ -1479,7 +1473,7 @@ def Snoop(scenario = 'Simply Reveal', cardList = None):
          c.moveToTable(playerside * iter * cwidth(c) - (count * cwidth(c) / 2), 0 - yaxisMove(c), False)
          c.highlight = RevealedColor
          iter += 1
-      notify("Snoop reveals {}".format([c.name for c in cardList]))
+      notify("Snoop reveals {}".format([c.Name for c in cardList]))
       if scenario == 'Simply Reveal':
          while not confirm("You have revealed your hand to your opponent. Return them to Grip?\n\n(Pressing 'No' will send a ping to your opponent to see if they're done reading them)"):
             notify("{} would like to know if it's OK to return their remaining cards to their Grip.".format(me))
@@ -1509,7 +1503,7 @@ def ExecWire(): # Expert Schedule Analyzer
       c.moveToTable(playerside * iter * cwidth(c) - (len(revealedCards) * cwidth(c) / 2), 0 - yaxisMove(c), False)
       c.highlight = RevealedColor
       iter += 1
-   notify("The Executive Wiretaps reveal {}".format([c.name for c in revealedCards]))
+   notify("The Executive Wiretaps reveal {}".format([c.Name for c in revealedCards]))
    while not confirm("You have revealed your hand to your opponent. Return them to HQ?\n\n(Pressing 'No' will send a ping to your opponent to see if they're done reading them)"):
       notify("{} would like to know if it's OK to return their remaining cards to their HQ.".format(me))
    for c in revealedCards: c.moveTo(me.hand)

@@ -279,13 +279,11 @@ def intJackin(group = table, x = 0, y = 0, manual = False):
    debugNotify("Identity is: {}".format(Identity), 3)
    if ds == "corp":
       Identity.moveToTable((169 * flipBoard) + flipModX, (255 * flipBoard) + flipModY)
-      rnd(1,10) # Allow time for the ident to be recognised
       modClicks(count = 3, action = 'set to')
       me.MU = 0
       notify("{} is the CEO of the {} Corporation".format(me,Identity))
    else:
       Identity.moveToTable((106 * flipBoard) + flipModX, (-331 * flipBoard) + flipModY)
-      rnd(1,10)  # Allow time for the ident to be recognised
       modClicks(count = 4, action = 'set to')
       me.MU = 4
       BL = num(Identity.Cost)
@@ -1089,7 +1087,6 @@ def findDMGProtection(DMGdone, DMGtype, targetPL): # Find out if the player has 
                                     \n(Pressing 'No' will send a ping to the runner  player to remind him to take action)".format(targetPL.name,fetchProperty(card, 'name'))):
                         pingCount += 1
                         if pingCount > 2 and confirm("You've tried to ping your opponent {} times already. Do you perhaps want to abort this script?".format(pingCount)): return 'ABORT'
-                        rnd(1,1000)
                         notify(":::NOTICE::: {} is still waiting for {} to decide whether to use {} or not".format(me,targetPL,card))
    cardList = sortPriority([c for c in table
                if c.controller == targetPL
@@ -1218,13 +1215,9 @@ def scrAgenda(card, x = 0, y = 0,silent = False, forced = False):
    if card.markers[mdict['Scored']] > 0:
       notify ("This agenda has already been scored")
       return
-   if ds == 'runner' and card.Type != "Agenda" and not card.isFaceUp:
-      card.isFaceUp = True
-      random = rnd(100,1000) # Hack Workaround
-      if card.Type != "Agenda":
-         whisper ("You can only score Agendas")
-         card.isFaceUp = False
-         return
+   if ds == 'runner' and card.Type != "Agenda":
+      whisper ("You can only score Agendas")
+      return
    if ds == 'runner': agendaTxt = 'LIBERATE'
    else: agendaTxt = 'SCORE'
    if fetchProperty(card, 'Type') == "Agenda":
@@ -2361,7 +2354,6 @@ def handDiscard(card, scripted = False):
    else:
       card.moveTo(me.piles['Archives(Hidden)'])
       if endofturn:
-         random = rnd(1, 5)
          if random == 1: notify("{}'s Internal Audit has corrected some tax book discrepancies.".format(me))
          if random == 2: notify("{} has downsized a department.".format(me))
          if random == 3: notify("{}'s Corporation has sent some hardware to secure recycling.".format(me))

@@ -73,7 +73,7 @@ def checkDeck(player,groups):
    agendasCount = 0
    #debugNotify("About to move cards into me.ScriptingPile", 4) #Debug
    debugNotify("About to get visibility", 4) #Debug
-   group.setVisibility('me')
+   #group.setVisibility('me')
    #for card in group: card.moveTo(me.ScriptingPile)
    #if len(players) > 1: random = rnd(1,100) # Fix for multiplayer only. Makes Singleplayer setup very slow otherwise.
    debugNotify("About to check each card in the deck", 4) #Debug
@@ -82,9 +82,9 @@ def checkDeck(player,groups):
    professorsRig = [] # This is used by "The Professor" to avoid counting influence for the first instance of a program.
    for card in group:
       #setAwareness(card)
-      counts[card.name] += 1
-      if counts[card.name] > 3:
-         notify(":::ERROR::: Only 3 copies of {} allowed.".format(card.name))
+      counts[card.Name] += 1
+      if counts[card.Name] > 3:
+         notify(":::ERROR::: Only 3 copies of {} allowed.".format(card.Name))
          ok = False
       if card.Type == 'Agenda':
          if ds == 'corp':
@@ -127,7 +127,7 @@ def checkDeck(player,groups):
             ok = False
    #if len(players) > 1: random = rnd(1,100) # Fix for multiplayer only. Makes Singleplayer setup very slow otherwise.
    #for card in me.ScriptingPile: card.moveToBottom(group) # We use a second loop because we do not want to pause after each check
-   group.setVisibility('None')
+   #group.setVisibility('None')
    if ds == 'corp':
       requiredAP = 2 + 2 * int(loDeckCount / 5)
       if loAP not in (requiredAP, requiredAP + 1):
