@@ -1,6 +1,10 @@
 Changelog - Android:Netrunner LCG OCTGN Game Definition
 ===============================================
 
+### 3.16.2.1
+
+* Fixed woman in the red dress
+
 ### 3.16.2.x
 
 * Fixed the borked server and button images from the new changes to the custom card sizes of OCTGN

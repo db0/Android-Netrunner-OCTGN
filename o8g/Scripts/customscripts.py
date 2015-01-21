@@ -1440,10 +1440,9 @@ def WitRD(): # Woman in the Red Dress
    debugNotify(">>> Remote Script WitRD()") #Debug     
    mute()   
    cardView = me.piles['R&D/Stack'].top()
-   debugNotify("Flipping top R&D card")
-   notify(":> The Woman in the Red Dress has revealed {}".format(cardView))
+   notify(":> The Woman in the Red Dress has revealed {}".format(cardView.Name))
    if confirm("Do you want to draw {} to your HQ?".format(cardView.Name)):
-      notify("{} decided to take {} to their hand".format(me,cardView))
+      notify("{} decided to take {} to their hand".format(me,cardView.Name))
       cardView.moveTo(me.hand)
    else: 
       notify("{} decided to leave {} in their R&D".format(me,cardView))
