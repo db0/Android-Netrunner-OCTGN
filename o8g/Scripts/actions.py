@@ -1657,7 +1657,7 @@ def HQaccess(group=table, x=0,y=0, silent = False, directTargets = None):
             if re.search(r'-pauseRunner',autoS): 
                notify(":::WARNING::: {} has stumbled onto {}. Once the effects of this card are complete, they need to press Ctrl+Q to continue their access from where they left it.".format(me,revealedCard.name))
                revealedCard.moveTo(targetPL.hand) # We return it to the player's hand because the effect will decide where it goes afterwards
-               if not len([c for c in table if c.highlight == RevealedColor]): clearCovers() # If we have no leftover cards to access after a
+               #if not len([c for c in table if c.highlight == RevealedColor]): clearCovers() # If we have no leftover cards to access after a
                passPileControl(targetPL.hand,targetPL)
                setGlobalVariable('Paused Runner',str(['HQ']))
                return
