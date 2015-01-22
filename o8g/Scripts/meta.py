@@ -682,9 +682,11 @@ def placeCard(card, action = 'INSTALL', hostCard = None, type = None, retainPos 
       loopback = place[type][3] * loopsNR 
       if loopsNR and place[type][3] != 1: offset = 15 * (loopsNR % 3) # This means that in one loop the offset is going to be 0 and in another 15.
       else: offset = 0
+      if card.Type == 'Server': yMod = flipServerModY # With the new custom card sizes, servers need their own mod to the y coordinates when the table is flipped.
+      else: yMod = flipModY
       debugNotify("installedCount[type] is: {}.\nLoopsNR is: {}.\nLoopback is: {}\nOffset is: {}".format(installedCount[type],offset, loopback, offset), 3) #Debug
       #if not retainPos: card.moveToTable(((place[type][0] + (((cwidth(card,0) + place[type][2]) * (installedCount[type] - loopback)) + offset) * place[type][4]) * flipBoard) + flipModX,(place[type][1] * flipBoard) + flipModY,CfaceDown) 
-      if not retainPos: placeOnTable(card,((place[type][0] + (((cwidth(card,0) + place[type][2]) * (installedCount[type] - loopback)) + offset) * place[type][4]) * flipBoard) + flipModX,(place[type][1] * flipBoard) + flipModY,CfaceDown) 
+      if not retainPos: placeOnTable(card,((place[type][0] + (((cwidth(card,0) + place[type][2]) * (installedCount[type] - loopback)) + offset) * place[type][4]) * flipBoard) + flipModX,(place[type][1] * flipBoard) + yMod,CfaceDown) 
       # To explain the above, we place the card at: Its original location
       #                                             + the width of the card
       #                                             + a predefined distance from each other times the number of other cards of the same type

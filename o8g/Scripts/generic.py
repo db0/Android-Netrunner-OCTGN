@@ -772,11 +772,11 @@ def grabPileControl(pile, player = me):
       else: passPileControl(pile,player) # We don't want to do a remote call if the current controller is ourself, as the call we go out after we finish all scripts, which will end up causing a delay later while the game is checking if control pass is done.
    count = 0
    while pile.controller != player: 
-      if count >= 2 and not count % 2: notify("=> {} is still trying to take control of {}...".format(player,pileName(pile)))
+      #if count >= 2 and not count % 2: notify("=> {} is still trying to take control of {}...".format(player,pileName(pile)))
       rnd(1,10000)
       count += 1
       if count >= 3: 
-         notify(":::ERROR::: Pile Control not passed! Will see errors.")
+         #notify(":::ERROR::: Pile Control not passed! Will see errors.")
          break   
    debugNotify("<<< grabPileControl(){}".format(extraASDebug())) #Debug
 
@@ -797,11 +797,11 @@ def grabCardControl(card, player = me):
          else: passCardControl(card,player) # We don't want to do a remote call if the current controller is ourself, as the call we go out after we finish all scripts, which will end up causing a delay later while the game is checking if control pass is done.
       count = 0
       while card.controller != player: 
-         if count >= 2 and not count % 2: notify("=> {} is still trying to take control of {}...".format(player,card))
+         #if count >= 2 and not count % 2: notify("=> {} is still trying to take control of {}...".format(player,card))
          rnd(1,10000)
          count += 1
          if count >= 3: 
-            notify(":::ERROR::: Card Control not passed! Will see errors.")
+            #notify(":::ERROR::: Card Control not passed! Will see errors.")
             break   
    debugNotify("<<< grabCardControl(){}".format(extraASDebug())) #Debug
    
@@ -847,6 +847,15 @@ def rotCard(card):
 def grabVisibility(group):
    mute()
    group.setVisibility('me')      
+
+def peekCard(card):
+   mute()
+   if not card.isFaceUp: card.peek()
+   
+def flipCard(card, up = True):
+   mute()
+   if card.controller == me: card.isFaceUp = up
+   else: remoteCall(card.controller,'flipFaceUp',[card,up])
 #---------------------------------------------------------------------------
 # Patron Functions
 #---------------------------------------------------------------------------   

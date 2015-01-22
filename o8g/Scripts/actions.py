@@ -227,15 +227,15 @@ def createStartingCards():
          traceCard = table.create("eb7e719e-007b-4fab-973c-3fe228c6ce20", (569 * flipBoard) + flipModX, (163 * flipBoard) + flipModY, 1, True) #The Trace card
          storeSpecial(traceCard)
          if debugVerbosity >= 5: information("Creating HQ")
-         HQ = table.create("81cba950-9703-424f-9a6f-af02e0203762", (169 * flipBoard) + flipModX, (208 * flipBoard) + flipModY, 1, True)
+         HQ = table.create("81cba950-9703-424f-9a6f-af02e0203762", (169 * flipBoard) + flipModX, (208 * flipBoard) + flipServerModY, 1, True)
          storeSpecial(HQ) # We pass control of the centrals to the runner, so that they can double click them to start runs
          HQ.setController(findOpponent())
          if debugVerbosity >= 5: information("Creating R&D")
-         RD = table.create("fbb865c9-fccc-4372-9618-ae83a47101a2", (277 * flipBoard) + flipModX, (208 * flipBoard) + flipModY, 1, True)
+         RD = table.create("fbb865c9-fccc-4372-9618-ae83a47101a2", (277 * flipBoard) + flipModX, (208 * flipBoard) + flipServerModY, 1, True)
          storeSpecial(RD)
          RD.setController(findOpponent())
          if debugVerbosity >= 5: information("Creating Archives")
-         ARC = table.create("47597fa5-cc0c-4451-943b-9a14417c2007", (382 * flipBoard) + flipModX, (208 * flipBoard) + flipModY, 1, True)
+         ARC = table.create("47597fa5-cc0c-4451-943b-9a14417c2007", (382 * flipBoard) + flipModX, (208 * flipBoard) + flipServerModY, 1, True)
          storeSpecial(ARC)
          ARC.setController(findOpponent())
          if debugVerbosity >= 5: information("Creating Virus Scan")
@@ -1287,7 +1287,7 @@ def accessTarget(group = table, x = 0, y = 0, noQuestionsAsked = False):
       grabCardControl(card)
       cFaceD = False
       if not card.isFaceUp:
-         card.isFaceUp = True
+         flipCard(card,True)
          cFaceD = True
          card.highlight = InactiveColor
       storeProperties(card)
@@ -1379,7 +1379,9 @@ def accessTarget(group = table, x = 0, y = 0, noQuestionsAsked = False):
                   sendToTrash(card)
                   notify("{} paid {}{} to {} {}".format(me,uniCredit(num(card.Stat) - reduction),extraText2,uniTrash(),card))
          else: pass
-         if cFaceD and card.group == table and not card.markers[mdict['Scored']] and not card.markers[mdict['ScorePenalty']]: card.isFaceUp = False
+         if cFaceD and card.group == table and not card.markers[mdict['Scored']] and not card.markers[mdict['ScorePenalty']]: 
+            flipCard(card,False)
+            remoteCall(fetchCorpPL(),'peekCard',[card])
          card.highlight = None
          if card.group == table and not card.markers[mdict['Scored']] and not card.markers[mdict['ScorePenalty']]: 
             passCardControl(card,card.owner) # We pass control back to the corp, but only if we didn't steal the card.

@@ -27,6 +27,7 @@ flipBoard = 1 # If True, it signifies that the table board has been flipped beca
 ds = None # The side of the player. 'runner' or 'corp'
 flipModX = 0
 flipModY = 0
+flipServerModY = 0
 
 def chkTwoSided():
    mute()
@@ -220,18 +221,20 @@ def checkMarkerSafety(card,markerName,oldValue,newValue,isScriptChange):
          whisper(":::ERROR::: You're not allowed to manually add or remove Test Run markers")
 
 def checkBoardFlip(name,oldValue,value):   
-   global flipBoard, flipModX, flipModY
+   global flipBoard, flipModX, flipModY, flipServerModY
    if value == 'True':
       debugNotify("Flipping Board")
       flipBoard = -1
       flipModX = -61
       flipModY = -77
+      flipServerModY = -27
       table.setBoardImage("table\\Tabletop_flipped.png")
    else:
       debugNotify("Restoring Board Orientation")
       flipBoard = 1
       flipModX = 0
       flipModY = 0
+      flipServerModY = 0
       table.setBoardImage("table\\Tabletop.png") # If they had already reversed the table before, we set it back proper again   
 
 def checkAccessAttempts(name,oldValue,value):
