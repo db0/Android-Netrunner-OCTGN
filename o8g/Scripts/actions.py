@@ -1228,9 +1228,9 @@ def scrAgenda(card, x = 0, y = 0,silent = False, forced = False):
          else: return
       elif not silent and not confirm("Do you want to {} agenda {}?".format(agendaTxt.lower(),fetchProperty(card, 'name'))): return
       grabCardControl(card) # Taking control of the agenda for the one that scored it.
-      card.isFaceUp = True
+      flipCard(card,True)
       if agendaTxt == 'SCORE' and chkTargeting(card) == 'ABORT':
-         card.isFaceUp = False
+         flipCard(card,False)
          notify("{} cancels their action".format(me))
          return
       ap = num(fetchProperty(card,'Stat'))
@@ -1438,7 +1438,7 @@ def RDaccessX(group = table, x = 0, y = 0,count = None): # A function which look
             remoteCall(RDtop[iter].owner, 'remoteAutoscript', [RDtop[iter],autoS])
             if re.search(r'-pauseRunner',autoS): 
                notify(":::WARNING::: {} has stumbled onto {}. Once the effects of this card are complete, they need to press Ctrl+A to continue their access from where they left it.\nThey have seen {} out of {} cards until now.".format(me,RDtop[iter].name,iter + 1, count))
-               RDtop[iter].moveTo(targetPL.piles['R&D/Stack'],iter - removedCards)
+               #RDtop[iter].moveTo(targetPL.piles['R&D/Stack'],iter - removedCards)
                passPileControl(targetPL.piles['R&D/Stack'],targetPL)
                gatheredCardList = False  # We set this variable to False, so that reduceCost() calls from other functions can start scanning the table again.
                setGlobalVariable('Paused Runner',str(['R&D',iter - removedCards,count - removedCards]))

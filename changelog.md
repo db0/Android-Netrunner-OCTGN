@@ -1,9 +1,12 @@
 Changelog - Android:Netrunner LCG OCTGN Game Definition
 ===============================================
 
-### 3.16.2.1
+### 3.16.3.x
 
 * Fixed woman in the red dress
+* Fixed server placement when table is flipped
+* Stopped warning about controlling cards when accessing cards.
+* Fixed Stealing a Future Perfect during multi-access runs causing the resumed R&D run to skip a card.
 
 ### 3.16.2.x
 

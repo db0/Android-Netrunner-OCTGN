@@ -1631,9 +1631,15 @@ def runnerPsi(CorpPsiCount,psiEffectTuple,card,corpPlayer):
       else:
          notify("-- {} has succeeded the Psi struggle!\n   ({}: {} VS {}: {})".format(Identity,corpPlayer,uniCredit(CorpPsiCount),me,uniCredit(secretCred)))
          if psiEffectTuple[1] != 'None': executePostEffects(card,psiEffectTuple[1], 0,'Psi')
-   pauseRecovery = eval(getGlobalVariable('Paused Runner'))
+   pauseRecovery = eval(getGlobalVariable('Paused Runner')) # We check if the psi check was in the middle of a run, so that we can continue the run automatically where it left off.
    if pauseRecovery:
-      if pauseRecovery[0] == 'R&D': remoteCall(fetchRunnerPL(),"RDaccessX",[table,0,0,0])
+      if pauseRecovery[0] == 'R&D': 
+         if card.Name == 'The Future Perfect' and secretCred == CorpPsiCount: # We need special clause here because a scored TFP leaves R&D before we return to the R&D run. So we need to continue from the right card.
+            pauseRecovery = eval(getGlobalVariable('Paused Runner'))
+            pauseRecovery[1] -= 1
+            pauseRecovery[2] -= 1
+            setGlobalVariable('Paused Runner',str(pauseRecovery))
+         remoteCall(fetchRunnerPL(),"RDaccessX",[table,0,0,0])
       elif  pauseRecovery[0] == 'HQ': remoteCall(fetchRunnerPL(),"HQaccess",[table,0,0])
    debugNotify("<<< runnerPsi()") #Debug
 
