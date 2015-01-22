@@ -2355,6 +2355,7 @@ def handDiscard(card, scripted = False):
       else: notify("{} discards {}.".format(me,card))
    else:
       card.moveTo(me.piles['Archives(Hidden)'])
+      random = rnd(1,5)
       if endofturn:
          if random == 1: notify("{}'s Internal Audit has corrected some tax book discrepancies.".format(me))
          if random == 2: notify("{} has downsized a department.".format(me))
