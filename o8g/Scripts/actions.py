@@ -1208,50 +1208,58 @@ def findCounterPrevention(count, counter, targetPL): # Find out if the player ha
 
 def scrAgenda(card, x = 0, y = 0,silent = False, forced = False):
    debugNotify(">>> scrAgenda(){}".format(extraASDebug())) #Debug
-   #global scoredAgendas
    mute()
-   cheapAgenda = False
-   storeProperties(card)
-   if card.markers[mdict['Scored']] > 0:
-      notify ("This agenda has already been scored")
-      return
-   if ds == 'runner' and card.Type != "Agenda":
-      whisper ("You can only score Agendas")
-      return
-   if ds == 'runner': agendaTxt = 'LIBERATE'
-   else: agendaTxt = 'SCORE'
-   if fetchProperty(card, 'Type') == "Agenda":
-      if ds == 'corp' and card.markers[mdict['Advancement']] < findAgendaRequirement(card) and not forced:
-         if confirm("You have not advanced this agenda enough to score it. Bypass?"):
-            cheapAgenda = True
-            currentAdv = card.markers[mdict['Advancement']]
-         else: return
-      elif not silent and not confirm("Do you want to {} agenda {}?".format(agendaTxt.lower(),fetchProperty(card, 'name'))): return
-      grabCardControl(card) # Taking control of the agenda for the one that scored it.
-      flipCard(card,True)
-      if agendaTxt == 'SCORE' and chkTargeting(card) == 'ABORT':
-         flipCard(card,False)
-         notify("{} cancels their action".format(me))
+   if card.controller == me:
+      cheapAgenda = False
+      storeProperties(card)
+      if card.markers[mdict['Scored']] > 0:
+         notify ("This agenda has already been scored")
          return
-      ap = num(fetchProperty(card,'Stat'))
-      card.markers[mdict['Scored']] += 1
-      debugNotify("About to Score", 2)
-      me.counters['Agenda Points'].value += ap
-      placeCard(card, action = 'SCORE')
-      notify("{} {}s {} and receives {} agenda point(s)".format(me, agendaTxt.lower(), card, ap))
-      if cheapAgenda: notify(":::Warning:::{} did not have enough advance tokens ({} out of {})! ".format(card,currentAdv,card.Cost))
-      playScoreAgendaSound(card)
-      executePlayScripts(card,agendaTxt)
-      autoscriptOtherPlayers('Agenda'+agendaTxt.capitalize()+'d',card) # The autoscripts triggered by this effect are using AgendaLiberated and AgendaScored as the hook
-      if me.counters['Agenda Points'].value >= 7 or (getSpecial('Identity',fetchCorpPL()).name == "Harmony Medtech" and me.counters['Agenda Points'].value >= 6):
-         notify("{} wins the game!".format(me))
-         reportGame()
-      clearCurrents(agendaTxt) # We check to see if there's any currents to clear.
-      card.highlight = None # In case the card was highlighted as revealed, we remove that now.
-      card.markers[mdict['Advancement']] = 0 # We only want to clear the advance counters after the automations, as they may still be used.
-   else:
-      whisper ("You can't score this card")
+      if ds == 'runner' and card.Type != "Agenda":
+         whisper ("You can only score Agendas")
+         return
+      if fetchProperty(card, 'Type') == "Agenda":
+         if ds == 'corp' and card.markers[mdict['Advancement']] < findAgendaRequirement(card) and not forced:
+            if confirm("You have not advanced this agenda enough to score it. Bypass?"):
+               cheapAgenda = True
+               currentAdv = card.markers[mdict['Advancement']]
+            else: return
+         elif not silent and not confirm("Do you want to {} agenda {}?".format(agendaTxt.lower(),fetchProperty(card, 'name'))): return
+         if ds == 'runner': agendaTxt = 'LIBERATE'
+         else: agendaTxt = 'SCORE'
+         if card.group == table: flipCard(card,True)
+         if agendaTxt == 'SCORE' and chkTargeting(card) == 'ABORT':
+            if card.group == table: flipCard(card,False)
+            notify("{} cancels their action".format(me))
+            return
+         placeCard(card, action = 'SCORE')
+         ap = num(fetchProperty(card,'Stat'))
+         card.markers[mdict['Scored']] += 1
+         me.counters['Agenda Points'].value += ap
+         notify("{} {}s {} and receives {} agenda point(s)".format(me, agendaTxt.lower(), card, ap))
+         if cheapAgenda: notify(":::Warning:::{} did not have enough advance tokens ({} out of {})! ".format(card,currentAdv,card.Cost))
+         playScoreAgendaSound(card)
+         executePlayScripts(card,agendaTxt)
+         autoscriptOtherPlayers('Agenda'+agendaTxt.capitalize()+'d',card) # The autoscripts triggered by this effect are using AgendaLiberated and AgendaScored as the hook
+         if me.counters['Agenda Points'].value >= 7 or (getSpecial('Identity',fetchCorpPL()).name == "Harmony Medtech" and me.counters['Agenda Points'].value >= 6):
+            notify("{} wins the game!".format(me))
+            reportGame()
+         clearCurrents(agendaTxt) # We check to see if there's any currents to clear.
+         card.highlight = None # In case the card was highlighted as revealed, we remove that now.
+         card.markers[mdict['Advancement']] = 0 # We only want to clear the advance counters after the automations, as they may still be used.
+      else:
+         whisper ("You can't score this card")
+   else: remoteCall(card.controller,'agendaScoreSetup',[me,card,silent,forced]) 
+         # If we don't control the agenda, we have to ask the corp to give us control first
+   
+def agendaScoreSetup(player,card,silent,forced): # Helper remote function to pass control of an agenda to the runner so that they can score it
+   if card.group != table: # If the card is not on the table, we move it to the table so that we can easily pass control of it.
+      card.moveToTable(0,0)
+      card.highlight = RevealedColor
+   passCardControl(card,player)
+   remoteCall(player,'scrAgenda',[card,0,0,silent,forced])
 
+      
 def scrTargetAgenda(group = table, x = 0, y = 0):
    cardList = [c for c in table if c.targetedBy and c.targetedBy == me]
    for card in cardList:
@@ -1410,7 +1418,7 @@ def RDaccessX(group = table, x = 0, y = 0,count = None): # A function which look
       skipIter = -1 # We only using this variable if we're resuming from a paused R&D access.
       playAccessSound('RD')
    targetPL = ofwhom('-ofOpponent')
-   grabPileControl(targetPL.piles['R&D/Stack'])
+   #grabPileControl(targetPL.piles['R&D/Stack'])
    debugNotify("Found opponent. Storing the top {} as a list".format(count), 3) #Debug
    RDtop = list(targetPL.piles['R&D/Stack'].top(count))
    if len(RDtop) == 0:
@@ -1512,14 +1520,10 @@ def RDaccessX(group = table, x = 0, y = 0,count = None): # A function which look
                reduceCost(RDtop[iter], 'LIBERATE', extraCredCost)
                rc = payCost(extraCredCost - reduction, "not free")
                if rc != "ABORT":  # If the player couldn't pay to trash the card, we leave it where it is.
-                  RDtop[iter].moveToTable(0,0)
-                  RDtop[iter].highlight = RevealedColor
                   scrAgenda(RDtop[iter],silent = True)
                   notify("{} paid {}{} to liberate {}".format(me,uniCredit(extraCredCost - reduction),extraText2,RDtop[iter]))
                   removedCards += 1
             else:
-               RDtop[iter].moveToTable(0,0)
-               RDtop[iter].highlight = RevealedColor
                scrAgenda(RDtop[iter],silent = True)
                removedCards += 1
          else:
@@ -1533,12 +1537,12 @@ def RDaccessX(group = table, x = 0, y = 0,count = None): # A function which look
       else: 
          debugNotify("Selected doing nothing. About to move back...", 4)
          #RDtop[iter].moveTo(targetPL.piles['R&D/Stack'],iter - removedCards)
-         if cType == 'Agenda': # If the card was an agenda and the runner didn't steal it, we always announce it.
-            notify(":> {} accessed the {} agenda but opted not to liberate it".format(me,cName))
+         #if cType == 'Agenda': # If the card was an agenda and the runner didn't steal it, we always announce it.
+            #notify(":> {} accessed the {} agenda but opted not to liberate it".format(me,cName))
       try: del origController[RDtop[iter]._id] # We use a try: just in case...
       except: pass         
    notify("{} has finished accessing {}'s R&D".format(me,targetPL))
-   passPileControl(targetPL.piles['R&D/Stack'],targetPL)
+   #passPileControl(targetPL.piles['R&D/Stack'],targetPL)
    gatheredCardList = False  # We set this variable to False, so that reduceCost() calls from other functions can start scanning the table again.
    setGlobalVariable('Paused Runner','False')
    debugNotify("<<< RDaccessX()", 3)

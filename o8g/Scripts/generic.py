@@ -770,14 +770,6 @@ def grabPileControl(pile, player = me):
    if pile.controller != player:
       if pile.controller != me: remoteCall(pile.controller,'passPileControl',[pile,player])
       else: passPileControl(pile,player) # We don't want to do a remote call if the current controller is ourself, as the call we go out after we finish all scripts, which will end up causing a delay later while the game is checking if control pass is done.
-   count = 0
-   while pile.controller != player: 
-      #if count >= 2 and not count % 2: notify("=> {} is still trying to take control of {}...".format(player,pileName(pile)))
-      rnd(1,10000)
-      count += 1
-      if count >= 3: 
-         #notify(":::ERROR::: Pile Control not passed! Will see errors.")
-         break   
    debugNotify("<<< grabPileControl(){}".format(extraASDebug())) #Debug
 
 def passPileControl(pile,player):
@@ -795,51 +787,15 @@ def grabCardControl(card, player = me):
       if card.controller != player: 
          if card.controller != me: remoteCall(card.controller,'passCardControl',[card,player])
          else: passCardControl(card,player) # We don't want to do a remote call if the current controller is ourself, as the call we go out after we finish all scripts, which will end up causing a delay later while the game is checking if control pass is done.
-      count = 0
-      while card.controller != player: 
-         #if count >= 2 and not count % 2: notify("=> {} is still trying to take control of {}...".format(player,card))
-         rnd(1,10000)
-         count += 1
-         if count >= 3: 
-            #notify(":::ERROR::: Card Control not passed! Will see errors.")
-            break   
    debugNotify("<<< grabCardControl(){}".format(extraASDebug())) #Debug
    
 def passCardControl(card,player):
    debugNotify(">>> passCardControl(){}".format(extraASDebug())) #Debug
    debugNotify("card ={}, player = {}".format(card,player))
    mute()
-   update()
-   debugNotify("Getting ready to pass card control")
    if card.controller != player: card.setController(player)
    debugNotify("<<< passCardControl()") #Debug
       
-def changeCardGroup(card, group, sendToBottom = False): # A cumulative function to take care for handling card and group control when moving a card from one group to another.
-   debugNotify(">>> changeCardGroup(){}".format(extraASDebug())) #Debug
-   debugNotify("Will move {} to {}'s {}".format(card,group.player,group.name))
-   prevGroup = card.group
-   if prevGroup == table: grabCardControl(card) # We take control of the card, but only if it's on the table, otherwise we can't.
-   else: grabPileControl(prevGroup)
-   grabPileControl(group) # We take control of the target pile
-   storeProperties(card) # Since we're at it, we might as well store its properties for later
-   debugNotify("Finished Taking Control. Moving card to different group",1)
-   if sendToBottom: card.moveToBottom(group)
-   else: card.moveTo(group) # We move the card into the target pile
-   if group.player != group.controller: grabPileControl(group,group.player) # We return control of the target pile to its original owner.
-   if prevGroup != table and prevGroup.player != prevGroup.controller: grabPileControl(prevGroup,prevGroup.player) # If we took control of a whole pile to allow us to move the card, we return it now
-   debugNotify("<<< changeCardGroup(){}".format(extraASDebug())) #Debug
-
-def placeOnTable(card,x,y,facedownStatus = False): # A function that asks the current card controller to move a card to another table position
-   if card.controller == me: card.moveToTable(x, y, facedownStatus)
-   else: remoteCall(card.controller,'placeOnTable',[card,x,y,facedownStatus])
-   
-def indexSet(card,index): # A function that asks the current card controller to move the card to a specific index.
-   if card.controller == me: 
-      if index == 'front': card.sendToFront()
-      elif index == 'back': card.sendToBack()
-      else: card.setIndex(index) 
-   else: remoteCall(card.controller,'indexSet',[card,index])
-   
 def rotCard(card):
    mute()
    card.orientation = Rot90
@@ -852,10 +808,6 @@ def peekCard(card):
    mute()
    if not card.isFaceUp: card.peek()
    
-def flipCard(card, up = True):
-   mute()
-   if card.controller == me: card.isFaceUp = up
-   else: remoteCall(card.controller,'flipFaceUp',[card,up])
 #---------------------------------------------------------------------------
 # Patron Functions
 #---------------------------------------------------------------------------   
@@ -906,4 +858,39 @@ def announceEoT():
    #else: barNotifyAll('#0000AA',"{} has ended their turn".format(me))
    notify("=> {}{}".format(announceTXT,customTXT)) 
    notify("=> {}".format(statsTXT))
-      
+
+#---------------------------------------------------------------------------
+# API Fucking Wrappers
+#---------------------------------------------------------------------------   
+
+def flipCard(card,up = True):
+   mute()
+   if card.controller == me: card.isFaceUp = up
+   else: remoteCall(card.controller,'flipCard',[card,up])
+
+def indexSet(card,index): # A function that asks the current card controller to move the card to a specific index.
+   mute()
+   if card.controller == me: 
+      if index == 'front': card.sendToFront()
+      elif index == 'back': card.sendToBack()
+      else: card.setIndex(index) 
+   else: remoteCall(card.controller,'indexSet',[card,index])
+   
+def placeOnTable(card,x,y,facedownStatus = False): # A function that asks the current card controller to move a card to another table position
+   mute()
+   if card.controller == me: card.moveToTable(x, y, facedownStatus)
+   else: remoteCall(card.controller,'placeOnTable',[card,x,y,facedownStatus])
+   
+def changeCardGroup(card, group, sendToBottom = False): # A cumulative function to take care for handling card and group control when moving a card from one group to another.
+   mute()
+   if group.controller == me and card.controller == me:
+      storeProperties(card) # Since we're at it, we might as well store its properties for later
+      if sendToBottom: card.moveToBottom(group)
+      else: card.moveTo(group) # We move the card into the target pile
+   elif card.controller != me: 
+      remoteCall(card.controller,'changeCardGroup',[card, group, sendToBottom])
+   else: # We only get here if we control the card but not the group
+      passCardControl(card,group.controller)
+      remoteCall(group.controller,'changeCardGroup',[card, group, sendToBottom])
+
+   
