@@ -728,6 +728,10 @@ def compareValue(comparison, value, requirement):
    debugNotify("<<< compareValue() with return True")
    return True # If none of the requirements fail, we return true
            
+def showHijackQueue():
+   mute()
+   whisper(":::INFO::: Your current pending double-click actions are {}".format([card.Name for card in hijackDefaultAction]))
+                 
 #---------------------------------------------------------------------------
 # Card Placement functions
 #---------------------------------------------------------------------------
@@ -808,6 +812,7 @@ def peekCard(card):
    mute()
    if not card.isFaceUp: card.peek()
    
+
 #---------------------------------------------------------------------------
 # Patron Functions
 #---------------------------------------------------------------------------   

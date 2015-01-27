@@ -352,17 +352,6 @@ def UseCustomAbility(Autoscript, announceText, card, targetCards = None, notific
       announceString = ''
    return announceString
  
-def showHijackQueue():
-   mute()
-   whisper(":::INFO::: Your current pending double-click actions are {}".format([card.Name for card in hijackDefaultAction]))
-      
-def hijcack(card):
-   mute()
-   global hijackDefaultAction
-   currentHijack = hijackDefaultAction.pop()
-   if currentHijack.Name == "Space Camp":
-      TokensX('Put1Advancement-isSilent', "", card)
-      notify("{} uses {} to add an advancement on {}".format(me,currentHijack.Name,card))
 #------------------------------------------------------------------------------
 # Custom Scripts. These are card scripts that take over the whole execution. 
 # Nothing else can be added to them and they need to have click and credit payment written in them
@@ -1469,7 +1458,21 @@ def setAwareness(card):
       AwarenessList = eval(me.getGlobalVariable('Awareness'))
       if card.Name not in AwarenessList: AwarenessList.append(card.Name)
       me.setGlobalVariable('Awareness',str(AwarenessList))
-   
+
+#------------------------------------------------------------------------------
+# Hijack Functions
+# These are card effects which have taken over the default action of the game temporarily.
+#------------------------------------------------------------------------------
+
+def hijcack(card):
+   mute()
+   global hijackDefaultAction
+   currentHijack = hijackDefaultAction.pop()
+   if currentHijack.Name == "Space Camp":
+      TokensX('Put1Advancement-isSilent', "", card)
+      notify("{} uses {} to add an advancement on {}".format(me,currentHijack.Name,card))
+
+      
 #------------------------------------------------------------------------------
 # Custom Remote Functions
 #------------------------------------------------------------------------------
