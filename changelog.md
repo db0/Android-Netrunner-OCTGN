@@ -1,6 +1,14 @@
 Changelog - Android:Netrunner LCG OCTGN Game Definition
 ===============================================
 
+### 3.17.0.x
+
+* New game definition for **Order and Chaos**. As always, almost every card scripted!
+
+* ##### Trickier Automations
+   * Titan Transnational: Will always put an agenda counter. I don't see why not and it will speed up play.
+   
+  
 ### 3.16.5.x
 
 * Supercharges are now global

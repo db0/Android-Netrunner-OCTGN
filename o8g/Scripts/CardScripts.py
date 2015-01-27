@@ -4753,7 +4753,7 @@ Argus Security
 -----
 bc0f047c-01b1-427f-a439-d451eda07001
 -----
-
+whileInPlay:CustomScript-foreachAgendaLiberated
 +++++
 
 .....
@@ -4769,7 +4769,7 @@ Titan Transnational
 -----
 bc0f047c-01b1-427f-a439-d451eda07003
 -----
-
+whileInPlay:Put1Agenda-foreachAgendaScored-onTriggerCard
 +++++
 
 .....
@@ -4777,9 +4777,9 @@ Firmware Updates
 -----
 bc0f047c-01b1-427f-a439-d451eda07004
 -----
-
+onScore:Put3Agenda
 +++++
-
+A0B0G0T0:Remove1Agenda-isCost$$Put1Advancement-Targeted-atICE-onlyOnce
 .....
 Glenn Station
 -----
@@ -4787,7 +4787,7 @@ bc0f047c-01b1-427f-a439-d451eda07005
 -----
 
 +++++
-
+A1B0G0T0:CustomScript
 .....
 Government Takeover
 -----
@@ -4795,7 +4795,7 @@ bc0f047c-01b1-427f-a439-d451eda07006
 -----
 
 +++++
-
+A1B0G0T0:Gain3Credits
 .....
 High-Risk Investment
 -----

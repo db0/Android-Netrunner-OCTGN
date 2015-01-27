@@ -127,7 +127,15 @@ RunnerCardTypes = [
 
 LimitedCard = [ ### Cards which are limited to one per deck ###
          'bc0f047c-01b1-427f-a439-d451eda03004', # Director Haas Pet-Project
-         'bc0f047c-01b1-427f-a439-d451eda05006'  # Philotic Entanglement
+         'bc0f047c-01b1-427f-a439-d451eda05006',  # Philotic Entanglement
+         'bc0f047c-01b1-427f-a439-d451eda07006', # Gov. Takeover
+         'bc0f047c-01b1-427f-a439-d451eda06030', # Fragments and Shards
+         'bc0f047c-01b1-427f-a439-d451eda06071',
+         'bc0f047c-01b1-427f-a439-d451eda06110',
+         'bc0f047c-01b1-427f-a439-d451eda06020',
+         'bc0f047c-01b1-427f-a439-d451eda06059',
+         'onDragDrop:IgnoreCosts-isSourceShard'
+         
          ] 
 SpecialDaemons = [ # These are cards which can host programs and avoid their MU cost, but don't have the daemon keyword
          'Dinosaurus'] # Not in use yet.

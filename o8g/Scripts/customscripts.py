@@ -1211,6 +1211,32 @@ def CustomScript(card, action = 'PLAY', origin_card = None, original_action = No
       if not card.markers[mdict['Power']]: 
          sendToTrash(card)
          notify(":> {} {} {} because it expired".format(me,uniTrash(),card))
+   elif fetchProperty(card, 'name') == 'Argus Security' and action == 'USE': 
+      remoteCall(fetchRunnerPL(),'ArgusSecurity',[card])
+   elif fetchProperty(card, 'name') == 'Glenn Station' and action == 'USE':
+      actionCost = useClick(count = 1)
+      if actionCost == 'ABORT': return 'ABORT'
+      hostCards = eval(getGlobalVariable('Host Cards'))
+      if len([HQcardID for HQcardID in hostCards if hostCards[HQcardID] == card._id]): # IF we have an attachment, we obviously want to return it to HQ now.
+         glennGuest = Card([HQcardID for HQcardID in hostCards if hostCards[HQcardID] == card._id][0])
+         unlinkHosts(glennGuest)
+         glennGuest.moveTo(me.hand)
+         notify("{} {} adds a card from {} to their HQ".format(actionCost,me,card))
+      else: # Otherwise we want to host a new one
+         targetList = findTarget('DemiAutoTargeted-fromHand-choose1')
+         if not len(targetList):
+            whisper(":::ERROR::: You need to target a card in your hand before using this action")  
+            return 'ABORT'
+         selectedCard = targetList[0]
+         hostCards[selectedCard._id] = card._id # We set the Personal Workshop to be the card's host
+         setGlobalVariable('Host Cards',str(hostCards))
+         cardAttachementsNR = len([att_id for att_id in hostCards if hostCards[att_id] == card._id])
+         storeProperties(selectedCard)
+         selectedCard.moveToTable(0,0,True)
+         orgAttachments(card)
+         selectedCard.highlight = InactiveColor
+         notify("{} {} hosts a card on {} from their HQ".format(actionCost,me,card))
+      return 'CLICK USED'
    elif action == 'USE': useCard(card)
       
             
@@ -1560,3 +1586,30 @@ def Troll(card): # Troll
          jackOut(silent = True)
          notify("{}'s {} ends the run because {} chose not to spend a {}".format(card.controller,card,me,uniClick()))
    
+def ArgusSecurity(card): 
+   mute()
+   choice = SingleChoice("You cannot avoid Argus Security. Take 1 Tag or suffer 2 Meat Damage?",['Take 1 Tag','Suffer 2 Meat Damage'])
+   if choice == 0: 
+      me.Tags += 1
+      notify("{} chooses to take 1 Tag from {}".format(me,card))
+   else: 
+      notify("{} chooses to suffer 2 Meat Damage from {}".format(me,card))
+      InflictX('Inflict2MeatDamage-onMe', '', card)
+
+def chkGagarinTax(card):
+   mute()
+   findGagarin = [card for card in table if card.Name == 'Gagarin Deep Space']
+   if len(findGagarin):
+      gararin = findGagarin[0]
+      reduction = reduceCost(card, 'ACCESS', 1)
+      if reduction > 0: extraText = " (reduced by {})".format(uniCredit(reduction))
+      elif reduction < 0: extraText = " (increased by {})".format(uniCredit(abs(reduction)))
+      else: extraText = ''
+      rc = payCost(1 - reduction, "not free")
+      if rc != "ABORT":  # If the player couldn't pay to trash the card, we leave it where it is.
+         notify(":> {} forced {} paid {}{} to access the remote server".format(gararin, me,uniCredit(1 - reduction),extraText))
+      else: 
+         notify(":> {} did not have enough money to pay the {} tax".format(me,gararin))
+         return 'ABORT'
+   return 'OK'
+      

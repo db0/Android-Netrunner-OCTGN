@@ -1291,6 +1291,7 @@ def accessTarget(group = table, x = 0, y = 0, noQuestionsAsked = False):
                and not (c.orientation == Rot90 and not c.isFaceUp)
                and c.Type != 'Remote Server']
    for card in cardList:
+      if chkGagarinTax(card) == 'ABORT': continue
       origController[card._id] = card.controller # We store the card's original controller to know against whom to check for scripts (e.g. when accessing a rezzed encryption protocol)
       grabCardControl(card)
       cFaceD = False
