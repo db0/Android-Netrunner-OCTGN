@@ -1304,7 +1304,7 @@ def accessTarget(group = table, x = 0, y = 0, noQuestionsAsked = False):
          if re.search(r'onAccess:',autoS):
             debugNotify(" accessRegex found!")
             if re.search(r'-ifNotInstalled',autoS): continue # -ifNotInstalled effects don't work with the Access Card shortcut.
-            notify("{} has just accessed a {}!".format(me,card.name))
+            notify("{} has just accessed a {}!".format(me,card.Name))
             debugNotify("Doing Remote Call with player = {}. card = {}, autoS = {}".format(me,card,autoS))
             remoteCall(card.owner, 'remoteAutoscript', [card,autoS])
             if re.search(r'-pauseRunner',autoS): # If the -pauseRunner modulator exists, we need to prevent the runner form trashing or scoring cards, as the amount of advancement tokens they have will be wiped and those may be important for the ambush effect.
@@ -1407,7 +1407,6 @@ def RDaccessX(group = table, x = 0, y = 0,count = None): # A function which look
       return
    pauseRecovery = eval(getGlobalVariable('Paused Runner'))
    if pauseRecovery and pauseRecovery[0] == 'R&D':
-      #confirm('{}'.format(pauseRecovery))
       barNotifyAll('#000000',"{} is resuming R&D Access".format(me))   
       skipIter = pauseRecovery[1] # This is the iter at which we'll resume from
       count = pauseRecovery[2] # The count of cards is what the previous access was, minus any removed cards (e.g.trashed ones)
@@ -1418,7 +1417,6 @@ def RDaccessX(group = table, x = 0, y = 0,count = None): # A function which look
       skipIter = -1 # We only using this variable if we're resuming from a paused R&D access.
       playAccessSound('RD')
    targetPL = ofwhom('-ofOpponent')
-   #grabPileControl(targetPL.piles['R&D/Stack'])
    debugNotify("Found opponent. Storing the top {} as a list".format(count), 3) #Debug
    RDtop = list(targetPL.piles['R&D/Stack'].top(count))
    if len(RDtop) == 0:
@@ -1431,10 +1429,7 @@ def RDaccessX(group = table, x = 0, y = 0,count = None): # A function which look
       if iter <= skipIter: continue
       notify(" -- {} is now accessing the {} card".format(me,numOrder(iter)))
       origController[RDtop[iter]._id] = targetPL # We store the card's original controller to know against whom to check for scripts (e.g. when accessing a rezzed encryption protocol)
-      #RDtop[iter].moveToBottom(me.ScriptingPile)
       storeProperties(RDtop[iter])
-      #debugNotify(" Looping...", 4)
-      #loopChk(RDtop[iter],'Type')
       Autoscripts = CardsAS.get(RDtop[iter].model,'').split('||')
       debugNotify("Grabbed AutoScripts", 4)
       for autoS in Autoscripts:
@@ -1446,8 +1441,7 @@ def RDaccessX(group = table, x = 0, y = 0,count = None): # A function which look
             remoteCall(RDtop[iter].owner, 'remoteAutoscript', [RDtop[iter],autoS])
             if re.search(r'-pauseRunner',autoS): 
                notify(":::WARNING::: {} has stumbled onto {}. Once the effects of this card are complete, they need to press Ctrl+A to continue their access from where they left it.\nThey have seen {} out of {} cards until now.".format(me,RDtop[iter].name,iter + 1, count))
-               #RDtop[iter].moveTo(targetPL.piles['R&D/Stack'],iter - removedCards)
-               passPileControl(targetPL.piles['R&D/Stack'],targetPL)
+               #passPileControl(targetPL.piles['R&D/Stack'],targetPL)
                gatheredCardList = False  # We set this variable to False, so that reduceCost() calls from other functions can start scanning the table again.
                setGlobalVariable('Paused Runner',str(['R&D',iter - removedCards,count - removedCards]))
                return
@@ -1536,13 +1530,11 @@ def RDaccessX(group = table, x = 0, y = 0,count = None): # A function which look
             removedCards += 1
       else: 
          debugNotify("Selected doing nothing. About to move back...", 4)
-         #RDtop[iter].moveTo(targetPL.piles['R&D/Stack'],iter - removedCards)
          #if cType == 'Agenda': # If the card was an agenda and the runner didn't steal it, we always announce it.
             #notify(":> {} accessed the {} agenda but opted not to liberate it".format(me,cName))
       try: del origController[RDtop[iter]._id] # We use a try: just in case...
       except: pass         
    notify("{} has finished accessing {}'s R&D".format(me,targetPL))
-   #passPileControl(targetPL.piles['R&D/Stack'],targetPL)
    gatheredCardList = False  # We set this variable to False, so that reduceCost() calls from other functions can start scanning the table again.
    setGlobalVariable('Paused Runner','False')
    debugNotify("<<< RDaccessX()", 3)
@@ -1607,7 +1599,7 @@ def ARCscore(group=table, x=0,y=0):
       for autoS in Autoscripts:
          if chkModulator(card, 'worksInArchives', 'onAccess'):
             debugNotify("-worksInArchives accessRegex found!")
-            notify("{} has just accessed a {}!".format(me,card.name))
+            notify("{} has just accessed a {}!".format(me,card.Name))
             remoteCall(card.owner, 'remoteAutoscript', [card,autoS])
       try: del origController[card._id] # We use a try: just in case...
       except: pass
@@ -1622,130 +1614,142 @@ def HQaccess(group=table, x=0,y=0, silent = False, directTargets = None):
    if ds == 'corp' and len(players) != 1:
       whisper("This action is only for the use of the runner.")
       return
-   targetPL = ofwhom('-ofOpponent')
-   debugNotify("Found opponent.", 3) #Debug
-   grabPileControl(targetPL.hand)
-   revealedCards = [c for c in table if c.highlight == RevealedColor]
-   if len(revealedCards): # Checking if we're continuing from a Paused HQ Access.
-      barNotifyAll('#000000',"{} is resuming their HQ Access".format(me))      
-   elif getGlobalVariable('Paused Runner') != 'False':
-      # If the pause variable is still active, it means the last access was paused by there were no other cards to resume, so we just clear the variable.
-      setGlobalVariable('Paused Runner','False')
+   if directTargets != None: # This means that we passed direct cards to access (e.g. Kitsune)
+      barNotifyAll('#000000',"{} is initiating HQ Access".format(me))
+      playAccessSound('HQ')
+      remoteCall(fetchCorpPL(),'prepHQAccess',[me, 0, silent,directTargets])
       return
-   elif directTargets != None: # This means that we passed direct cards to access (e.g. Kitsune)
-      barNotifyAll('#000000',"{} is initiating HQ Access".format(me))
-      playAccessSound('HQ')
-      showDirect(directTargets)      
-      revealedCards = directTargets
+   else: revealedCards = [c for c in table if c.highlight == RevealedColor]
+   if not len(revealedCards):  # If we have revealedCards, we're either continuing from another paused access, or the corp has just finished revealing and passing contol of cards to us
+      if getGlobalVariable('Paused Runner') != 'False':
+         # If the pause variable is still active, it means the last access was paused by there were no other cards to resume, so we just clear the variable.
+         setGlobalVariable('Paused Runner','False')
+         return
+      else:
+         if not silent and not confirm("You are about to access a random card from the corp's HQ.\
+                                      \nPlease make sure your opponent is not manipulating their hand, and does not have a way to cancel this effect before continuing\
+                                    \n\nProceed?"): return
+         barNotifyAll('#000000',"{} is initiating HQ Access".format(me))
+         count = askInteger("How many files are you able to access from the corporation's HQ?",1)
+         if not count: return
+         remoteCall(fetchCorpPL(),'prepHQAccess',[me, count, silent,None])
+         playAccessSound('HQ')
    else:
-      if not silent and not confirm("You are about to access a random card from the corp's HQ.\
-                                   \nPlease make sure your opponent is not manipulating their hand, and does not have a way to cancel this effect before continuing\
-                                 \n\nProceed?"): return
-      barNotifyAll('#000000',"{} is initiating HQ Access".format(me))
-      count = askInteger("How many files are you able to access from the corporation's HQ?",1)
-      if count == None: return
-      playAccessSound('HQ')
-      revealedCards = showatrandom(count = count, targetPL = targetPL, silent = True)
-   for revealedCard in revealedCards:
-      origController[revealedCard._id] = targetPL # We store the card's original controller to know against whom to check for scripts (e.g. when accessing a rezzed encryption protocol)
-      #storeProperties(revealedCard) # So as not to crash reduceCost() later
-      accessRegex = re.search(r'onAccess:([^|]+)',CardsAS.get(revealedCard.model,''))
-      if accessRegex:
-         debugNotify(" accessRegex found! {}".format(accessRegex.group(1)), 2)
-         notify("{} has just accessed a {}!".format(me,revealedCard))
-      Autoscripts = CardsAS.get(revealedCard.model,'').split('||')
-      for autoS in Autoscripts:
-         if re.search(r'onAccess:',autoS):
-            if re.search(r'-ifInstalled',autoS): continue # -ifInstalled cards work only while on the table.
-            debugNotify(" accessRegex found!")
-            notify("{} has just accessed a {}!".format(me,revealedCard.name))
-            remoteCall(revealedCard.owner, 'remoteAutoscript', [revealedCard,autoS])
-            if re.search(r'-pauseRunner',autoS): 
-               notify(":::WARNING::: {} has stumbled onto {}. Once the effects of this card are complete, they need to press Ctrl+Q to continue their access from where they left it.".format(me,revealedCard.name))
-               revealedCard.moveTo(targetPL.hand) # We return it to the player's hand because the effect will decide where it goes afterwards
-               #if not len([c for c in table if c.highlight == RevealedColor]): clearCovers() # If we have no leftover cards to access after a
-               passPileControl(targetPL.hand,targetPL)
-               setGlobalVariable('Paused Runner',str(['HQ']))
-               return
-      debugNotify("Not a Trap.", 2) #Debug
-      if revealedCard.Type == 'ICE':
-         cStatTXT = '\nStrength: {}.'.format(revealedCard.Stat)
-      elif revealedCard.Type == 'Asset' or revealedCard.Type == 'Upgrade':
-         cStatTXT = '\nTrash Cost: {}.'.format(revealedCard.Stat)
-      elif revealedCard.Type == 'Agenda':
-         cStatTXT = '\nAgenda Points: {}.'.format(revealedCard.Stat)
-      else: cStatTXT = ''
-      debugNotify("Crafting Title", 2) #Debug
-      title = "Card: {}\
-             \nType: {}\
-             \nKeywords: {}\
-             \nCost: {}\
-               {}\n\nCard Text: {}\
-           \n\nWhat do you want to do with this card?".format(revealedCard.Name,revealedCard.Type,revealedCard.Keywords,revealedCard.Cost,cStatTXT,revealedCard.Rules)
-      if revealedCard.Type == 'Agenda' or revealedCard.Type == 'Asset' or revealedCard.Type == 'Upgrade':
-         if revealedCard.Type == 'Agenda': 
-            extraCredCost = calcAgendaStealCost(revealedCard)
-            if extraCredCost: 
-               reduction = reduceCost(revealedCard, 'LIBERATE', extraCredCost, dryRun = True)
+      targetPL = fetchCorpPL()
+      for revealedCard in revealedCards:
+         origController[revealedCard._id] = targetPL # We store the card's original controller to know against whom to check for scripts (e.g. when accessing a rezzed encryption protocol)
+         accessRegex = re.search(r'onAccess:([^|]+)',CardsAS.get(revealedCard.model,''))
+         if accessRegex:
+            debugNotify(" accessRegex found! {}".format(accessRegex.group(1)), 2)
+            notify("{} has just accessed a {}!".format(me,revealedCard.Name))
+         Autoscripts = CardsAS.get(revealedCard.model,'').split('||')
+         for autoS in Autoscripts:
+            if re.search(r'onAccess:',autoS):
+               if re.search(r'-ifInstalled',autoS): continue # -ifInstalled cards work only while on the table.
+               debugNotify(" accessRegex found!")
+               notify("{} has just accessed a {}!".format(me,revealedCard.Name))
+               remoteCall(revealedCard.owner, 'remoteAutoscript', [revealedCard,autoS])
+               if re.search(r'-pauseRunner',autoS): 
+                  notify(":::WARNING::: {} has stumbled onto {}. Once the effects of this card are complete, they need to press Ctrl+Q to continue their access from where they left it.".format(me,revealedCard.name))
+                  changeCardGroup(revealedCard, targetPL.hand)
+                  #revealedCard.moveTo(targetPL.hand) # We return it to the player's hand because the effect will decide where it goes afterwards
+                  #if not len([c for c in table if c.highlight == RevealedColor]): clearCovers() # If we have no leftover cards to access after a
+                  setGlobalVariable('Paused Runner',str(['HQ']))
+                  return
+         debugNotify("Not a Trap.", 2) #Debug
+         if revealedCard.Type == 'ICE':
+            cStatTXT = '\nStrength: {}.'.format(revealedCard.Stat)
+         elif revealedCard.Type == 'Asset' or revealedCard.Type == 'Upgrade':
+            cStatTXT = '\nTrash Cost: {}.'.format(revealedCard.Stat)
+         elif revealedCard.Type == 'Agenda':
+            cStatTXT = '\nAgenda Points: {}.'.format(revealedCard.Stat)
+         else: cStatTXT = ''
+         debugNotify("Crafting Title", 2) #Debug
+         title = "Card: {}\
+                \nType: {}\
+                \nKeywords: {}\
+                \nCost: {}\
+                  {}\n\nCard Text: {}\
+              \n\nWhat do you want to do with this card?".format(revealedCard.Name,revealedCard.Type,revealedCard.Keywords,revealedCard.Cost,cStatTXT,revealedCard.Rules)
+         if revealedCard.Type == 'Agenda' or revealedCard.Type == 'Asset' or revealedCard.Type == 'Upgrade':
+            if revealedCard.Type == 'Agenda': 
+               extraCredCost = calcAgendaStealCost(revealedCard)
+               if extraCredCost: 
+                  reduction = reduceCost(revealedCard, 'LIBERATE', extraCredCost, dryRun = True)
+                  if reduction > 0:
+                     extraText = " ({} - {})".format(extraCredCost,reduction)
+                     extraText2 = " (reduced by {})".format(uniCredit(reduction))
+                  elif reduction < 0:
+                     extraText = " ({} + {})".format(extraCredCost,abs(reduction))
+                     extraText2 = " (increased by {})".format(uniCredit(abs(reduction)))
+                  else:
+                     extraText = ''
+                     extraText2 = '' 
+                  agendaCost = ' by paying {}{} Credits'.format(extraCredCost - reduction,extraText)
+               else:
+                  agendaCost = ''
+                  extraText2 = '' 
+               action1TXT = 'Liberate for {} Agenda Points{}.'.format(revealedCard.Stat,agendaCost)
+            else:
+               reduction = reduceCost(revealedCard, 'TRASH', num(revealedCard.Stat), dryRun = True)
                if reduction > 0:
-                  extraText = " ({} - {})".format(extraCredCost,reduction)
+                  extraText = " ({} - {})".format(revealedCard.Stat,reduction)
                   extraText2 = " (reduced by {})".format(uniCredit(reduction))
                elif reduction < 0:
-                  extraText = " ({} + {})".format(extraCredCost,abs(reduction))
+                  extraText = " ({} + {})".format(revealedCard.Stat,abs(reduction))
                   extraText2 = " (increased by {})".format(uniCredit(abs(reduction)))
                else:
                   extraText = ''
-                  extraText2 = '' 
-               agendaCost = ' by paying {}{} Credits'.format(extraCredCost - reduction,extraText)
-            else:
-               agendaCost = ''
-               extraText2 = '' 
-            action1TXT = 'Liberate for {} Agenda Points{}.'.format(revealedCard.Stat,agendaCost)
+                  extraText2 = ''
+               action1TXT = 'Pay {}{} to Trash.'.format(num(revealedCard.Stat) - reduction,extraText)
+            options = ["Leave where it is.","Force trash at no cost.\n(Only through card effects)",action1TXT]
          else:
-            reduction = reduceCost(revealedCard, 'TRASH', num(revealedCard.Stat), dryRun = True)
-            if reduction > 0:
-               extraText = " ({} - {})".format(revealedCard.Stat,reduction)
-               extraText2 = " (reduced by {})".format(uniCredit(reduction))
-            elif reduction < 0:
-               extraText = " ({} + {})".format(revealedCard.Stat,abs(reduction))
-               extraText2 = " (increased by {})".format(uniCredit(abs(reduction)))
-            else:
-               extraText = ''
-               extraText2 = ''
-            action1TXT = 'Pay {}{} to Trash.'.format(num(revealedCard.Stat) - reduction,extraText)
-         options = ["Leave where it is.","Force trash at no cost.\n(Only through card effects)",action1TXT]
-      else:
-         options = ["Leave where it is.","Force trash at no cost.\n(Only through card effects)"]
-      debugNotify("Opening Choice Window", 2) #Debug
-      choice = SingleChoice(title, options, 'button')
-      if choice == None: choice = 0
-      if choice == 1:
-         sendToTrash(revealedCard)
-         notify("{} {} {} at no cost".format(me,uniTrash(),revealedCard.Name))
-      elif choice == 2:
-         if revealedCard.Type == 'Agenda':
-            if extraCredCost:
-               reduceCost(revealedCard, 'LIBERATE', extraCredCost)
-               rc = payCost(extraCredCost - reduction, "not free")
-               if rc != "ABORT":  # If the player couldn't pay to trash the card, we leave it where it is.
-                  scrAgenda(revealedCard,silent = True)
-                  notify("{} paid {}{} to liberate {}".format(me,uniCredit(extraCredCost - reduction),extraText2,revealedCard))
-            else: scrAgenda(revealedCard,silent = True)
-         else:
-            reduction = reduceCost(revealedCard, 'TRASH', num(revealedCard.Stat))
-            rc = payCost(num(revealedCard.Stat) - reduction, "not free")
-            if rc == "ABORT": revealedCard.moveTo(targetPL.hand) # If the player couldn't pay to trash the card, we leave it where it is.
+            options = ["Leave where it is.","Force trash at no cost.\n(Only through card effects)"]
+         debugNotify("Opening Choice Window", 2) #Debug
+         choice = SingleChoice(title, options, 'button')
+         if choice == None: choice = 0
+         if choice == 1:
             sendToTrash(revealedCard)
-            notify("{} paid {}{} to {} {}".format(me,uniCredit(num(revealedCard.Stat) - reduction),extraText2,uniTrash(),revealedCard.Name))
-      else: revealedCard.moveTo(targetPL.hand)
-      try: del origController[revealedCard._id] # We use a try: just in case...
-      except: pass
-   for c in revealedCards: c.highlight = None # We make sure no card remains highlighted for some reason.
-   passPileControl(targetPL.hand,targetPL)
-   setGlobalVariable('Paused Runner','False')
+            notify("{} {} {} at no cost".format(me,uniTrash(),revealedCard.Name))
+         elif choice == 2:
+            if revealedCard.Type == 'Agenda':
+               if extraCredCost:
+                  reduceCost(revealedCard, 'LIBERATE', extraCredCost)
+                  rc = payCost(extraCredCost - reduction, "not free")
+                  if rc != "ABORT":  # If the player couldn't pay to trash the card, we leave it where it is.
+                     scrAgenda(revealedCard,silent = True)
+                     notify("{} paid {}{} to liberate {}".format(me,uniCredit(extraCredCost - reduction),extraText2,revealedCard))
+               else: scrAgenda(revealedCard,silent = True)
+            else:
+               reduction = reduceCost(revealedCard, 'TRASH', num(revealedCard.Stat))
+               rc = payCost(num(revealedCard.Stat) - reduction, "not free")
+               if rc == "ABORT": revealedCard.moveTo(targetPL.hand) # If the player couldn't pay to trash the card, we leave it where it is.
+               sendToTrash(revealedCard)
+               notify("{} paid {}{} to {} {}".format(me,uniCredit(num(revealedCard.Stat) - reduction),extraText2,uniTrash(),revealedCard.Name))
+         else: changeCardGroup(revealedCard, targetPL.hand)
+         try: del origController[revealedCard._id] # We use a try: just in case...
+         except: pass
+      for c in revealedCards: c.highlight = None # We make sure no card remains highlighted for some reason.
+      #passPileControl(targetPL.hand,targetPL)
+      setGlobalVariable('Paused Runner','False')
    #clearCovers() # Finally we clear any remaining cover cards.
    debugNotify("<<< HQAccess()", 3)
    
+def prepHQAccess(runner, count, silent, directTargets = None): # Helper function to reveal HQ cards and pass control to the runner to manipulate them
+   mute()
+   if directTargets: 
+      revealedCards = directTargets
+      for iter in range(len(revealedCards)):
+         card = revealedCards[iter]
+         card.moveToTable(playerside * -1 * iter * cwidth(card) - (len(revealedCards) * cwidth(card) / 2), 0 - yaxisMove(card) * -1, False)
+         card.highlight = RevealedColor
+   else: revealedCards = showatrandom(count = count, targetPL = me, silent = True)
+   if not len(revealedCards): 
+      notify(":::ERROR::: Corp has no cards in HQ")
+      return
+   for card in revealedCards: passCardControl(card,runner)
+   remoteCall(runner,'HQaccess',[table,0,0,silent,None])
+
 def isRezzable (card):
    debugNotify(">>> isRezzable(){}".format(extraASDebug())) #Debug
    mute()
@@ -2427,21 +2431,7 @@ def showatrandom(group = None, count = 1, targetPL = None, silent = False):
    if not silent: notify("{} reveals {} at random from their hand.".format(targetPL,card.Name))
    debugNotify("<<< showatrandom() with return {}".format(card), 2) #Debug
    return shownCards
-
-def showDirect(cardList):
-   debugNotify(">>> showDirect(){}".format(extraASDebug())) #Debug
-   mute()
-   if cardList[0].owner != me: side = -1
-   else: side = 1
-   for iter in range(len(cardList)):
-      card = cardList[iter]
-      card.moveToTable(playerside * side * iter * cwidth(card) - (len(cardList) * cwidth(card) / 2), 0 - yaxisMove(card) * side, False)
-      card.highlight = RevealedColor
-      card.sendToBack()
-      storeProperties(card, forced = False)
-      loopChk(card) # A small delay to make sure we grab the card's name to announce
-   debugNotify("<<< showDirect()") #Debug
-
+   
 def groupToDeck (group = me.hand, player = me, silent = False):
    debugNotify(">>> groupToDeck(){}".format(extraASDebug())) #Debug
    mute()
