@@ -1,0 +1,890 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<set xmlns:noNamespaceSchemaLocation="CardSet.xsd" 
+     name="Order and Chaos" 
+     id="7ef1d32e-bb98-44b5-a183-78f0d19d9e1c" 
+     gameId="0f38e453-26df-4c04-9d67-6d43de939c77" 
+     gameVersion="3.0.0.0" 
+     version="3.0.0.0">
+<cards>
+	<card id="bc0f047c-01b1-427f-a439-d451eda07001" name="Argus Security">
+		<property name="Subtitle" value="Protection Guaranteed" />
+		<property name="Type" value="Identity" />
+		<property name="Keywords" value="Corp" />
+		<property name="Cost" value="0" />
+		<property name="Requirement" value="45" />	
+		<property name="Stat" value="15" />	
+		<property name="Rules" value="Whenever the Runner steals an agenda, he or she must either take 1 tag or suffer 2 meat damage." />
+		<property name="Flavor" value="We Never Sleep." />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="The Weyland Consortium" />
+		<property name="Influence" value="" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda07002" name="Gagarin Deep Space">
+		<property name="Subtitle" value="Expanding the Horizon" />
+		<property name="Type" value="Identity" />
+		<property name="Keywords" value="Corp" />
+		<property name="Cost" value="0" />
+		<property name="Requirement" value="45" />	
+		<property name="Stat" value="15" />	
+		<property name="Rules" value="As an additional cost to access a card in a remote server, the Runner must pay 1[Credits]." />
+		<property name="Flavor" value="Sic Itur Ad Astra." />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="The Weyland Consortium" />
+		<property name="Influence" value="" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda07003" name="Titan Transnational">
+		<property name="Subtitle" value="Investing In Your Future" />
+		<property name="Type" value="Identity" />
+		<property name="Keywords" value="Corp" />
+		<property name="Cost" value="0" />
+		<property name="Requirement" value="45" />	
+		<property name="Stat" value="17" />	
+		<property name="Rules" value="Whenever you score an agenda, you may place 1 agenda counter on it." />
+		<property name="Flavor" value="The Way Forward." />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="The Weyland Consortium" />
+		<property name="Influence" value="" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda07004" name="Firmware Updates">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Agenda" />
+		<property name="Keywords" value="Security" />
+		<property name="Cost" value="3" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="1" />	
+		<property name="Rules" value="Place 3 agenda counters on Firmware Updates when you score it.&#xD;&#xA;Hosted agenda counter: Place 1 advancement token on a piece of ice that can be advanced. Use this ability only once per turn." />
+		<property name="Flavor" value="" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="The Weyland Consortium" />
+		<property name="Influence" value="" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda07005" name="Glenn Station">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Agenda" />
+		<property name="Keywords" value="Expansion" />
+		<property name="Cost" value="4" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="2" />	
+		<property name="Rules" value="Glenn Station can host a single card.&#xD;&#xA;[Click]: Host a card from HQ facedown on Glenn Station.&#xD;&#xA;[Click]: Add a card on Glenn Station to HQ." />
+		<property name="Flavor" value="" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="The Weyland Consortium" />
+		<property name="Influence" value="" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda07006" name="Government Takeover">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Agenda" />
+		<property name="Keywords" value="" />
+		<property name="Cost" value="9" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="6" />	
+		<property name="Rules" value="[Click]: Gain 3[Credits].&#xD;&#xA;Limit 1 Government Takeover per deck." />
+		<property name="Flavor" value="It is essential to liberate a populace from tyranny before that tyranny takes root." />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="The Weyland Consortium" />
+		<property name="Influence" value="" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda07007" name="High-Risk Investment">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Agenda" />
+		<property name="Keywords" value="Expansion" />
+		<property name="Cost" value="5" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="3" />	
+		<property name="Rules" value="Place 1 agenda counter on High-Risk Investment when you score it.&#xD;&#xA;[Click], hosted agenda counter: Gain 1[Credits] for each credit in the Runner&apos;s credit pool." />
+		<property name="Flavor" value="&quot;Trust me. I know what I&apos;m doing.&quot;" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="The Weyland Consortium" />
+		<property name="Influence" value="" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda07008" name="Constellation Protocol">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Asset" />
+		<property name="Keywords" value="" />
+		<property name="Cost" value="0" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="4" />	
+		<property name="Rules" value="When your turn begins, you may move an advancement token from an installed piece of ice to an installed piece of ice that can be advanced." />
+		<property name="Flavor" value="&quot;With distributed systems, assets can be realigned with no loss of efficiency.&quot; -William Knuth, The Tower of Babbage" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="The Weyland Consortium" />
+		<property name="Influence" value="2" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda07009" name="Mark Yale">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Asset" />
+		<property name="Keywords" value="Executive-Unique" />
+		<property name="Cost" value="1" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="3" />	
+		<property name="Rules" value="Whenever you spend an agenda counter, gain 1[Credits].&#xD;&#xA;[Trash] or any agenda counter: Gain 2[Credits]." />
+		<property name="Flavor" value="&quot;This is a one-of-a-kind opportunity…&quot;" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="The Weyland Consortium" />
+		<property name="Influence" value="1" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda07010" name="Space Camp">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Asset" />
+		<property name="Keywords" value="Ambush" />
+		<property name="Cost" value="0" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="3" />	
+		<property name="Rules" value="If Space Camp is accessed from R&amp;D, the Runner must reveal it.&#xD;&#xA;When the Runner accesses Space Camp, you may place 1 advancement token on a card that can be advanced." />
+		<property name="Flavor" value="Future leaders start here." />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="The Weyland Consortium" />
+		<property name="Influence" value="1" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda07011" name="The Board">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Asset" />
+		<property name="Keywords" value="Executive-Unique" />
+		<property name="Cost" value="3" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="7" />	
+		<property name="Rules" value="Each agenda in the Runner&apos;s score area is worth 1 fewer agenda point.&#xD;&#xA;If the Board is trashed while being accessed, add it to the Runner&apos;s score area as an agenda worth 2 agenda points." />
+		<property name="Flavor" value="No one on the board knows everyone on it." />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="The Weyland Consortium" />
+		<property name="Influence" value="5" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda07012" name="Asteroid Belt">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="ICE" />
+		<property name="Keywords" value="Barrier" />
+		<property name="Cost" value="9" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="6" />	
+		<property name="Rules" value="Asteroid Belt can be advanced and its rez cost is lowered by 3 for each advancement token on it.&#xD;&#xA;[Subroutine] End the run." />
+		<property name="Flavor" value="His belt of stone did shake and shatter." />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="The Weyland Consortium" />
+		<property name="Influence" value="2" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda07013" name="Wormhole">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="ICE" />
+		<property name="Keywords" value="Code Gate" />
+		<property name="Cost" value="9" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="7" />	
+		<property name="Rules" value="Wormhole can be advanced and its rez cost is lowered by 3 for each advancement token on it.&#xD;&#xA;[Subroutine] Resolve a subroutine on another piece of rezzed ice." />
+		<property name="Flavor" value="As through the door of light he came." />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="The Weyland Consortium" />
+		<property name="Influence" value="2" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda07014" name="Nebula">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="ICE" />
+		<property name="Keywords" value="Sentry-Destroyer" />
+		<property name="Cost" value="9" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="5" />	
+		<property name="Rules" value="Nebula can be advanced and its rez cost is lowered by 3 for each advancement token on it.&#xD;&#xA;[Subroutine] Trash 1 program." />
+		<property name="Flavor" value="He bent his bow of stellar matter." />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="The Weyland Consortium" />
+		<property name="Influence" value="2" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda07015" name="Orion">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="ICE" />
+		<property name="Keywords" value="Sentry-Code Gate-Barrier-Unique" />
+		<property name="Cost" value="15" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="8" />	
+		<property name="Rules" value="Orion can be advanced and its rez cost is lowered by 3 for each advancement token on it.&#xD;&#xA;[Subroutine] Trash 1 program.&#xD;&#xA;[Subroutine] Resolve a subroutine on another piece of rezzed ice.&#xD;&#xA;[Subroutine] End the run." />
+		<property name="Flavor" value="And seeking prey he then took aim." />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="The Weyland Consortium" />
+		<property name="Influence" value="3" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda07016" name="Builder">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="ICE" />
+		<property name="Keywords" value="Code Gate" />
+		<property name="Cost" value="2" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="4" />	
+		<property name="Rules" value="[Click]: Move this piece of ice to the outermost position protecting any server.&#xD;&#xA;[Subroutine] Place 1 advancement token on a piece of ice protecting this server that can be advanced.&#xD;&#xA;[Subroutine] Place 1 advancement token on a piece of ice protecting this server that can be advanced." />
+		<property name="Flavor" value="" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="The Weyland Consortium" />
+		<property name="Influence" value="1" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda07017" name="Checkpoint">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="ICE" />
+		<property name="Keywords" value="Code Gate-Tracer-Illicit" />
+		<property name="Cost" value="4" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="7" />	
+		<property name="Rules" value="When you rez Checkpoint, take 1 bad publicity.&#xD;&#xA;[Subroutine] Trace5 - If successful, do 3 meat damage when this run is successful." />
+		<property name="Flavor" value="&quot;I passed right through one once. It didn&apos;t seem to do anything at first. It wasn&apos;t until I jacked out that I realized they were busting down the door of my apartment.&quot; -Valencia Estevez" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="The Weyland Consortium" />
+		<property name="Influence" value="2" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda07018" name="Fire Wall">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="ICE" />
+		<property name="Keywords" value="Barrier" />
+		<property name="Cost" value="5" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="5" />	
+		<property name="Rules" value="Fire Wall can be advanced and gains +1 strength for each advancement token on it.&#xD;&#xA;[Subroutine] End the run." />
+		<property name="Flavor" value="&quot;Definitely a literalist.&quot; -Liz Campbell, VP Project Security" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="The Weyland Consortium" />
+		<property name="Influence" value="2" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda07019" name="Searchlight">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="ICE" />
+		<property name="Keywords" value="Sentry" />
+		<property name="Cost" value="1" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="3" />	
+		<property name="Rules" value="Searchlight can be advanced. X is the number of advancement tokens on Searchlight.&#xD;&#xA;[Subroutine]Tracex - If successful, give the Runner 1 tag.&#xD;&#xA;[Subroutine]Tracex - If successful, give the Runner 1 tag." />
+		<property name="Flavor" value="" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="The Weyland Consortium" />
+		<property name="Influence" value="1" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda07020" name="Housekeeping">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Operation" />
+		<property name="Keywords" value="Current-Gray Ops" />
+		<property name="Cost" value="2" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="" />	
+		<property name="Rules" value="This card is not trashed until another current is played or an agenda is stolen.&#xD;&#xA;The first time the Runner installs a card each turn, he or she must trash 1 card from his or her grip." />
+		<property name="Flavor" value="" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="The Weyland Consortium" />
+		<property name="Influence" value="3" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda07021" name="Patch">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Operation" />
+		<property name="Keywords" value="Condition" />
+		<property name="Cost" value="0" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="" />	
+		<property name="Rules" value="Install Patch on a rezzed piece of ice as a hosted condition with the text &quot;Host ice has +2 strength.&quot;" />
+		<property name="Flavor" value="Update 1.1:&#xA;-Fixes some stability issues. //maybe" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="The Weyland Consortium" />
+		<property name="Influence" value="2" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda07022" name="Traffic Accident">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Operation" />
+		<property name="Keywords" value="Black Ops" />
+		<property name="Cost" value="0" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="" />	
+		<property name="Rules" value="Play only if the Runner has at least 2 tags.&#xD;&#xA;Do 2 meat damage." />
+		<property name="Flavor" value="&quot;Traffic was murder.&quot;" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="The Weyland Consortium" />
+		<property name="Influence" value="1" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda07023" name="Satellite Grid">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Upgrade" />
+		<property name="Keywords" value="Region" />
+		<property name="Cost" value="1" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="3" />	
+		<property name="Rules" value="Each piece of ice protecting this server is considered to have 1 additional advancement token on it.&#xD;&#xA;Limit 1 region per server." />
+		<property name="Flavor" value="" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="The Weyland Consortium" />
+		<property name="Influence" value="3" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda07024" name="The Twins">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Upgrade" />
+		<property name="Keywords" value="Sysop-Unique" />
+		<property name="Cost" value="2" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="2" />	
+		<property name="Rules" value="Whenever the Runner passes a rezzed piece of ice protecting this server, you can reveal and trash another copy of that ice from HQ to force the Runner to encounter the piece of ice just passed again." />
+		<property name="Flavor" value="Anything worth doing is worth doing twice." />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="The Weyland Consortium" />
+		<property name="Influence" value="1" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda07025" name="Sub Boost">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Operation" />
+		<property name="Keywords" value="Condition" />
+		<property name="Cost" value="0" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="" />	
+		<property name="Rules" value="Install Sub Boost on a rezzed piece of ice as a hosted condition counter with the text &quot;Host ice gains barrier and &apos;[Subroutine] End the run.&apos; after all its other subroutines.&quot;" />
+		<property name="Flavor" value="&quot;It&apos;s fun watching them derez after hitting Enigma.&quot; -Grace Lamarr, Freelance Security Expert" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Neutral" />
+		<property name="Influence" value="0" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda07026" name="Dedicated Technician Team">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Upgrade" />
+		<property name="Keywords" value="" />
+		<property name="Cost" value="1" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="1" />	
+		<property name="Rules" value="2[Recurring Credits]&#xD;&#xA;Use these credits to install ice protecting this server." />
+		<property name="Flavor" value="" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Neutral" />
+		<property name="Influence" value="0" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda07027" name="Cyberdex Virus Suite">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Upgrade" />
+		<property name="Keywords" value="Ambush" />
+		<property name="Cost" value="3" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="1" />	
+		<property name="Rules" value="If Cyberdex Virus Suite is accessed from R&amp;D, the Runner must reveal it.&#xD;&#xA;When the Runner accesses Cyberdex Virus Suite, you may purge virus counters.&#xD;&#xA;[Trash]: Purge virus counters." />
+		<property name="Flavor" value="" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Neutral" />
+		<property name="Influence" value="0" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda07028" name="Edward Kim">
+		<property name="Subtitle" value="Humanity&#039;s Hammer" />
+		<property name="Type" value="Identity" />
+		<property name="Keywords" value="Natural" />
+		<property name="Cost" value="1" />
+		<property name="Requirement" value="45" />	
+		<property name="Stat" value="15" />	
+		<property name="Rules" value="Trash the first operation you access each turn at no cost." />
+		<property name="Flavor" value="&quot;My only regret is that androids cannot feel my hate.&quot;" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Anarch" />
+		<property name="Influence" value="" />
+		<property name="Side" value="runner" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda07029" name="MaxX">
+		<property name="Subtitle" value="Maximum Punk Rock" />
+		<property name="Type" value="Identity" />
+		<property name="Keywords" value="G-Mod" />
+		<property name="Cost" value="0" />
+		<property name="Requirement" value="45" />	
+		<property name="Stat" value="15" />	
+		<property name="Rules" value="When your turn begins, trash the top 2 cards of your stack. Draw 1 card." />
+		<property name="Flavor" value="&quot;**** you, mother******!&quot;" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Anarch" />
+		<property name="Influence" value="" />
+		<property name="Side" value="runner" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda07030" name="Valencia Estevez">
+		<property name="Subtitle" value="The Angel of Cayambe" />
+		<property name="Type" value="Identity" />
+		<property name="Keywords" value="Natural" />
+		<property name="Cost" value="0" />
+		<property name="Requirement" value="50" />	
+		<property name="Stat" value="15" />	
+		<property name="Rules" value="The Corp starts the game with 1 bad publicity." />
+		<property name="Flavor" value="&quot;Everyone deserves a chance. Everyone.&quot;" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Anarch" />
+		<property name="Influence" value="" />
+		<property name="Side" value="runner" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda07031" name="Amped Up">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Event" />
+		<property name="Keywords" value="" />
+		<property name="Cost" value="1" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="" />	
+		<property name="Rules" value="Gain [Click] [Click] [Click] and suffer 1 brain damage (cannot be prevented)." />
+		<property name="Flavor" value="&quot;The human brain only uses like a quarter of its capacity anyway, right?&quot; -MaxX" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Anarch" />
+		<property name="Influence" value="3" />
+		<property name="Side" value="runner" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda07032" name="I&#039;ve Had Worse">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Event" />
+		<property name="Keywords" value="" />
+		<property name="Cost" value="1" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="" />	
+		<property name="Rules" value="Draw 3 cards.&#xD;&#xA;Whenever I&apos;ve Had Worse is trashed by taking net or meat damage, draw 3 cards." />
+		<property name="Flavor" value="" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Anarch" />
+		<property name="Influence" value="2" />
+		<property name="Side" value="runner" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda07033" name="Itinerant Protesters">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Event" />
+		<property name="Keywords" value="Current" />
+		<property name="Cost" value="2" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="" />	
+		<property name="Rules" value="This card is not trashed until another current is played or an agenda is scored.&#xD;&#xA;The Corp&apos;s maximum hand size is reduced by 1 for each bad publicity he or she has." />
+		<property name="Flavor" value="No one knows what they want&amp;ndash;least of all them." />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Anarch" />
+		<property name="Influence" value="2" />
+		<property name="Side" value="runner" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda07034" name="Showing Off">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Event" />
+		<property name="Keywords" value="Run" />
+		<property name="Cost" value="2" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="" />	
+		<property name="Rules" value="Make a run on R&amp;D. If successful, instead of accessing cards from the top of R&amp;D, access cards from the bottom of R&amp;D (starting with the bottom card and work your way up)." />
+		<property name="Flavor" value="" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Anarch" />
+		<property name="Influence" value="3" />
+		<property name="Side" value="runner" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda07035" name="Wanton Destruction">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Event" />
+		<property name="Keywords" value="Run-Sabotage" />
+		<property name="Cost" value="1" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="" />	
+		<property name="Rules" value="Make a run on HQ. If successful, instead of accessing cards, you may spend any number of [Click] to force the Corp to trash an equal number of cards from HQ at random." />
+		<property name="Flavor" value="" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Anarch" />
+		<property name="Influence" value="4" />
+		<property name="Side" value="runner" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda07036" name="Day Job">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Event" />
+		<property name="Keywords" value="" />
+		<property name="Cost" value="2" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="" />	
+		<property name="Rules" value="As an additional cost to play this event, spend [Click] [Click] [Click].&#xD;&#xA;Gain 10[Credits]." />
+		<property name="Flavor" value="&quot;Hello thank you for vidding MegaBuy I&apos;m Carol how can I help you.&quot;" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Anarch" />
+		<property name="Influence" value="1" />
+		<property name="Side" value="runner" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda07037" name="Forked">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Event" />
+		<property name="Keywords" value="Run-Sabotage" />
+		<property name="Cost" value="2" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="" />	
+		<property name="Rules" value="Make a run. The first time you break all subroutines on a sentry during this run, trash that sentry." />
+		<property name="Flavor" value="" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Anarch" />
+		<property name="Influence" value="3" />
+		<property name="Side" value="runner" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda07038" name="Knifed">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Event" />
+		<property name="Keywords" value="Run-Sabotage" />
+		<property name="Cost" value="1" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="" />	
+		<property name="Rules" value="Make a run. The first time you break all subroutines on a barrier during this run, trash that barrier." />
+		<property name="Flavor" value="" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Anarch" />
+		<property name="Influence" value="3" />
+		<property name="Side" value="runner" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda07039" name="Spooned">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Event" />
+		<property name="Keywords" value="Run-Sabotage" />
+		<property name="Cost" value="2" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="" />	
+		<property name="Rules" value="Make a run. The first time you break all subroutines on a code gate during this run, trash that code gate." />
+		<property name="Flavor" value="" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Anarch" />
+		<property name="Influence" value="3" />
+		<property name="Side" value="runner" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda07040" name="Eater">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Program" />
+		<property name="Keywords" value="Icebreaker-AI" />
+		<property name="Cost" value="4" />
+		<property name="Requirement" value="1" />	
+		<property name="Stat" value="2" />	
+		<property name="Rules" value="1[Credits]: Break ice subroutine. You cannot access more than 0 cards for the remainder of this run.&#xD;&#xA;1[Credits]: +1 strength." />
+		<property name="Flavor" value="Nom nom nom." />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Anarch" />
+		<property name="Influence" value="3" />
+		<property name="Side" value="runner" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda07041" name="Gravedigger">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Program" />
+		<property name="Keywords" value="Virus" />
+		<property name="Cost" value="2" />
+		<property name="Requirement" value="1" />	
+		<property name="Stat" value="-" />	
+		<property name="Rules" value="Whenever an installed Corp card is trashed, place 1 virus counter on Gravedigger.&#xD;&#xA;[Click], hosted virus counter: The Corp trashes the top card of R&amp;D." />
+		<property name="Flavor" value="&quot;Once your sniffer finds the protocols the server uses to trash its own data, you can spoof those same protocols. It&apos;s quite the show.&quot; -Ji &quot;Noise&quot; Reilly" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Anarch" />
+		<property name="Influence" value="2" />
+		<property name="Side" value="runner" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda07042" name="Hivemind">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Program" />
+		<property name="Keywords" value="Virus-Unique" />
+		<property name="Cost" value="3" />
+		<property name="Requirement" value="2" />	
+		<property name="Stat" value="-" />	
+		<property name="Rules" value="Place 1 virus counter on Hivemind when it is installed.&#xD;&#xA;Virus counters on Hivemind are considered to be hosted on all other virus programs for the purposes of card effects (and can be spent as if on them)." />
+		<property name="Flavor" value="&quot;We built the network. But then the network evolved. Can we be sure that it is not alive?&quot; -g00ru" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Anarch" />
+		<property name="Influence" value="5" />
+		<property name="Side" value="runner" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda07043" name="Progenitor">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Program" />
+		<property name="Keywords" value="Daemon" />
+		<property name="Cost" value="0" />
+		<property name="Requirement" value="0" />	
+		<property name="Stat" value="-" />	
+		<property name="Rules" value="You may host a single virus program on Progenitor.&#xD;&#xA;The memory cost of the hosted program does not count against your memory limit.&#xD;&#xA;Whenever virus counters are purged, remove all but 1 virus counter from the hosted card." />
+		<property name="Flavor" value="" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Anarch" />
+		<property name="Influence" value="2" />
+		<property name="Side" value="runner" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda07044" name="Archives Interface">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Hardware" />
+		<property name="Keywords" value="" />
+		<property name="Cost" value="3" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="" />	
+		<property name="Rules" value="Whenever you access cards in Archives, remove 1 card in Archives from the game, instead of accessing it." />
+		<property name="Flavor" value="A black box that makes data disappear forever." />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Anarch" />
+		<property name="Influence" value="2" />
+		<property name="Side" value="runner" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda07045" name="Chop Bot 3000">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Hardware" />
+		<property name="Keywords" value="Unique" />
+		<property name="Cost" value="1" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="" />	
+		<property name="Rules" value="When your turn begins, you may trash another of your installed cards. If you do, draw 1 card or remove 1 tag." />
+		<property name="Flavor" value="There was a sickly smell coming from his closet. He hoped it was only a mouse this time." />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Anarch" />
+		<property name="Influence" value="1" />
+		<property name="Side" value="runner" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda07046" name="MemStrips">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Hardware" />
+		<property name="Keywords" value="Chip" />
+		<property name="Cost" value="3" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="" />	
+		<property name="Rules" value="+3[Memory Unit]&#xD;&#xA;Use the MU on MemStrips only for virus programs." />
+		<property name="Flavor" value="&quot;The trick is remembering which virus you loaded onto which strip. That&apos;s why I draw emoji on &apos;em. Then I just have to remember which emoji stands for which virus.&quot; -Princess Space Kitten" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Anarch" />
+		<property name="Influence" value="2" />
+		<property name="Side" value="runner" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda07047" name="Vigil">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Hardware" />
+		<property name="Keywords" value="Console-Unique" />
+		<property name="Cost" value="2" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="" />	
+		<property name="Rules" value="+1[Memory Unit]&#xD;&#xA;When your turn begins, draw 1 card if the Corp has cards in HQ equal to his or her maximum hand size.&#xD;&#xA;Limit 1 console per player." />
+		<property name="Flavor" value="&quot;Show me your faith without deeds, if you can.&quot;" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Anarch" />
+		<property name="Influence" value="2" />
+		<property name="Side" value="runner" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda07048" name="Human First">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Resource" />
+		<property name="Keywords" value="Connection-Unique" />
+		<property name="Cost" value="1" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="" />	
+		<property name="Rules" value="Whenever an agenda is scored or stolen, gain credits equal to the agenda points on that agenda." />
+		<property name="Flavor" value="&quot;They showed me that I wasn&apos;t broken. I am still a whole human, no matter how many limbs I lose. The golems are our enemy, as well as anyone who values efficiency and profit more than a human life.&quot; -Edward Kim" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Anarch" />
+		<property name="Influence" value="2" />
+		<property name="Side" value="runner" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda07049" name="Investigative Journalism">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Resource" />
+		<property name="Keywords" value="" />
+		<property name="Cost" value="0" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="" />	
+		<property name="Rules" value="Install only if the Corp has at least 1 bad publicity.&#xD;&#xA;[Click],[Click],[Click],[Click],[Trash]: Give the Corp 1 bad publicity." />
+		<property name="Flavor" value="Her heart beat faster as her reader illuminated the records. It was all there. The pod had not been reprogrammed since the 14th, which meant that this was a case of gross negligence." />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Anarch" />
+		<property name="Influence" value="1" />
+		<property name="Side" value="runner" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda07050" name="Sacrificial Clone">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Resource" />
+		<property name="Keywords" value="" />
+		<property name="Cost" value="3" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="" />	
+		<property name="Rules" value="[Trash]: Prevent all damage. Trash all installed hardware, all installed non-virtual resources, and all cards in your grip. Lose all credits in your credit pool. Remove all tags." />
+		<property name="Flavor" value="&quot;Don&apos;t worry, me. You won&apos;t have to vertical park.&quot; -Ji &quot;Noise&quot; Reilly" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Anarch" />
+		<property name="Influence" value="4" />
+		<property name="Side" value="runner" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda07051" name="Stim Dealer">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Resource" />
+		<property name="Keywords" value="Connection" />
+		<property name="Cost" value="4" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="" />	
+		<property name="Rules" value="When your turn begins, if there are 2 or more power counters on Stim Dealer, remove all power counters from it and suffer 1 brain damage (cannot be prevented); otherwise, place 1 power counter on Stim Dealer and gain [Click]." />
+		<property name="Flavor" value="Her eyes were the color of dreams and disasters." />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Anarch" />
+		<property name="Influence" value="3" />
+		<property name="Side" value="runner" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda07052" name="Virus Breeding Ground">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Resource" />
+		<property name="Keywords" value="Virtual" />
+		<property name="Cost" value="2" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="" />	
+		<property name="Rules" value="When your turn begins, place 1 virus counter on Virus Breeding Ground.&#xD;&#xA;[Click]: Move 1 virus counter on Virus Breeding Ground to another card with at least 1 virus counter on it." />
+		<property name="Flavor" value="Scraps of code drifting around the network can congeal into pools of data. Within this primordial soup the code breaks, re-assemble, mutates. Evolves." />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Anarch" />
+		<property name="Influence" value="2" />
+		<property name="Side" value="runner" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda07053" name="Uninstall">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Event" />
+		<property name="Keywords" value="" />
+		<property name="Cost" value="0" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="" />	
+		<property name="Rules" value="Add an installed program or piece of hardware to your grip." />
+		<property name="Flavor" value="Runner software is notoriously scratch-built and under-tested, and the shadow net has no tech support. It works, mostly, but sometimes a fresh install is just the ticket." />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Neutral" />
+		<property name="Influence" value="0" />
+		<property name="Side" value="runner" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda07054" name="Qianju PT">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Hardware" />
+		<property name="Keywords" value="Vehicle" />
+		<property name="Cost" value="2" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="" />	
+		<property name="Rules" value="When your turn begins, you may lose [Click]. If you do, avoid the first tag you would take until the start of your next turn." />
+		<property name="Flavor" value="" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Neutral" />
+		<property name="Influence" value="0" />
+		<property name="Side" value="runner" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda07055" name="Data Folding">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Resource" />
+		<property name="Keywords" value="Virtual" />
+		<property name="Cost" value="3" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="" />	
+		<property name="Rules" value="When your turn begins, gain 1[Credits] if you have 2 or more unused MU." />
+		<property name="Flavor" value="&quot;Sometimes I like to make origami cranes out of old newsrag. It helps me think, putting it back on the subconscious. I figure it&apos;s the same principle for my rig &amp;ndash; keep it busy and it makes me a few creds for my trouble.&quot; -Quetzal" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Neutral" />
+		<property name="Influence" value="0" />
+		<property name="Side" value="runner" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+</cards>
+</set>

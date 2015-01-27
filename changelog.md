@@ -1,6 +1,10 @@
 Changelog - Android:Netrunner LCG OCTGN Game Definition
 ===============================================
 
+### 3.16.5.x
+
+* Supercharges are now global
+
 ### 3.16.4.x
 
 * Fixed R&D Agenda scoring bug
