@@ -1,5 +1,7 @@
 =====Message of the Day======
 
+Oops! Sorry about Corp agendas not scoring. should be fixed now. Restart your clients!
+
 I just heard and fixed the bug about scoring agendas from R&D. Let me know if you see anything similar.
 
 PS: O&C should be arriving soon ;)

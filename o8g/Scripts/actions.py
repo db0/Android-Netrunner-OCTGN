@@ -1219,14 +1219,14 @@ def scrAgenda(card, x = 0, y = 0,silent = False, forced = False):
          whisper ("You can only score Agendas")
          return
       if fetchProperty(card, 'Type') == "Agenda":
+         if ds == 'runner': agendaTxt = 'LIBERATE'
+         else: agendaTxt = 'SCORE'
          if ds == 'corp' and card.markers[mdict['Advancement']] < findAgendaRequirement(card) and not forced:
             if confirm("You have not advanced this agenda enough to score it. Bypass?"):
                cheapAgenda = True
                currentAdv = card.markers[mdict['Advancement']]
             else: return
          elif not silent and not confirm("Do you want to {} agenda {}?".format(agendaTxt.lower(),fetchProperty(card, 'name'))): return
-         if ds == 'runner': agendaTxt = 'LIBERATE'
-         else: agendaTxt = 'SCORE'
          if card.group == table: flipCard(card,True)
          if agendaTxt == 'SCORE' and chkTargeting(card) == 'ABORT':
             if card.group == table: flipCard(card,False)
