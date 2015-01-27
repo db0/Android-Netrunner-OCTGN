@@ -61,7 +61,7 @@ askedQA = False
 CardsAA = {} # Dictionary holding all the AutoAction scripts for all cards
 CardsAS = {} # Dictionary holding all the AutoScript scripts for all cards
 
-
+patreonsDict = {}
 #---------------------------------------------------------------------------
 # Generic Netrunner functions
 #---------------------------------------------------------------------------
@@ -1467,3 +1467,12 @@ def testHandRandom():
 
 def echoScripts():
    notify(ScriptsLocal)
+
+def fetchPatrons():
+   global patreonsDict
+   mute()
+   patreonsString = None
+   patreonsString, code = webRead('https://raw.githubusercontent.com/db0/octgn-supercharges/master/dicts.txt',5000)
+   #confirm(patreonsString)
+   if not patreonsString: whisper(":::WARNING::: Cannot download patreon list at the moment.")
+   else: patreonsDict = eval(patreonsString)
