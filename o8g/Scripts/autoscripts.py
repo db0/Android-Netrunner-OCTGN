@@ -268,7 +268,7 @@ def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
       elif not card.isFaceUp: card.isFaceUp = True
       return
    debugNotify("Not a tracing card. Checking highlight...", 4)
-   if hijackDefaultAction: 
+   if len(hijackDefaultAction): 
       hijcack(card)
       return
    if markerScripts(card): return # If there's a special marker, it means the card triggers to do something else with the default action

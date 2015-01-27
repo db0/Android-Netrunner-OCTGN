@@ -21,7 +21,7 @@
 ###=================================================================================================================###
 
 collectiveSequence = []
-hijackDefaultAction = None
+hijackDefaultAction = []
 #------------------------------------------------------------------------------
 # Custom Abilities. These are abilities that can be added as part of a larger script
 #------------------------------------------------------------------------------
@@ -345,19 +345,24 @@ def UseCustomAbility(Autoscript, announceText, card, targetCards = None, notific
       notify(':> {} forces {} to pay {} or end the run.'.format(card,fetchRunnerPL(),uniClick()))
       announceString = ''
    if fetchProperty(card, 'name') == "Space Camp":
-      whisper(":::Info::: Double click on a card you control to add an advancement counter")
-      hijackDefaultAction = card
-      notify(':> {} allows {} to add an advancement to one of their cards.'.format(card,me))
+      notify(':> {} is thinking where to add the  {} advancement...'.format(card,me))
+      whisper(":::INFO::: Double click on a card you control to add an advancement counter")
+      hijackDefaultAction.append(card)
+      showHijackQueue()
       announceString = ''
    return announceString
  
+def showHijackQueue():
+   mute()
+   whisper(":::INFO::: Your current pending double-click actions are {}".format([card.Name for card in hijackDefaultAction]))
+      
 def hijcack(card):
    mute()
    global hijackDefaultAction
-   if hijackDefaultAction.Name == "Space Camp":
+   currentHijack = hijackDefaultAction.pop()
+   if currentHijack.Name == "Space Camp":
       TokensX('Put1Advancement-isSilent', "", card)
-      notify("{} uses {} to add an advancement on {}".format(me,hijackDefaultAction,card))
-   hijackDefaultAction = None
+      notify("{} uses {} to add an advancement on {}".format(me,currentHijack.Name,card))
 #------------------------------------------------------------------------------
 # Custom Scripts. These are card scripts that take over the whole execution. 
 # Nothing else can be added to them and they need to have click and credit payment written in them
