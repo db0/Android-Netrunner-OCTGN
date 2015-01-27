@@ -1,6 +1,11 @@
 Changelog - Android:Netrunner LCG OCTGN Game Definition
 ===============================================
 
+### 3.16.4.x
+
+* Fixed R&D Agenda scoring bug
+* Fixed warning about not controlling cards during HQ and R&D access.
+
 ### 3.16.3.x
 
 * Fixed woman in the red dress

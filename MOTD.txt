@@ -1,12 +1,8 @@
 =====Message of the Day======
 
-Recently OCTGN did some changes in the way scripts handle face-down card visibility, so I had to make some changes to work with the new paradigm.
+I just heard and fixed the bug about scoring agendas from R&D. Let me know if you see anything similar.
 
-It's possible that this introduced bugs, and even though I tested the basic accesses, it may still be the case that something slipped through. 
-
-On the positive side, HQ and R&D access should now be much faster.
-
-Please let me know if you encounter any weird issues so that I can fix ASAP.
+PS: O&C should be arriving soon ;)
 
 Thanks and enjoy!
 ---
