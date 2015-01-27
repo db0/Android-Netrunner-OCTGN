@@ -7,7 +7,9 @@ Changelog - Android:Netrunner LCG OCTGN Game Definition
 
 * ##### Trickier Automations
    * Titan Transnational: Will always put an agenda counter. I don't see why not and it will speed up play.
-   
+   * Constellation Protocol: Manual use
+   * Mark Yale, credit for spending Agenda Counter is manual use. When using his ability to spend agenda counters, he gives you automatically 3 credits (2 for ability + 1 for trait)
+   * Space Camp: After it's triggered, double click on any of your cards to add an advancement counter.
   
 ### 3.16.5.x
 

@@ -21,9 +21,13 @@
 ###=================================================================================================================###
 
 collectiveSequence = []
+hijackDefaultAction = None
+#------------------------------------------------------------------------------
+# Custom Abilities. These are abilities that can be added as part of a larger script
+#------------------------------------------------------------------------------
 
 def UseCustomAbility(Autoscript, announceText, card, targetCards = None, notification = None, n = 0):
-   global reversePlayerChk
+   global reversePlayerChk, hijackDefaultAction
    trash = me.piles['Heap/Archives(Face-up)']
    arcH = me.piles['Archives(Hidden)']
    deck = me.piles['R&D/Stack']
@@ -339,8 +343,26 @@ def UseCustomAbility(Autoscript, announceText, card, targetCards = None, notific
    if fetchProperty(card, 'name') == "Troll":
       remoteCall(fetchRunnerPL(),'Troll',[card])
       notify(':> {} forces {} to pay {} or end the run.'.format(card,fetchRunnerPL(),uniClick()))
+      announceString = ''
+   if fetchProperty(card, 'name') == "Space Camp":
+      whisper(":::Info::: Double click on a card you control to add an advancement counter")
+      hijackDefaultAction = card
+      notify(':> {} allows {} to add an advancement to one of their cards.'.format(card,me))
+      announceString = ''
    return announceString
-   
+ 
+def hijcack(card):
+   mute()
+   global hijackDefaultAction
+   if hijackDefaultAction.Name == "Space Camp":
+      TokensX('Put1Advancement-isSilent', "", card)
+      notify("{} uses {} to add an advancement on {}".format(me,hijackDefaultAction,card))
+   hijackDefaultAction = None
+#------------------------------------------------------------------------------
+# Custom Scripts. These are card scripts that take over the whole execution. 
+# Nothing else can be added to them and they need to have click and credit payment written in them
+#------------------------------------------------------------------------------
+ 
 def CustomScript(card, action = 'PLAY', origin_card = None, original_action = None): # Scripts that are complex and fairly unique to specific cards, not worth making a whole generic function for them.
    global ModifyDraw, secretCred, collectiveSequence
    debugNotify(">>> CustomScript() with action: {}".format(action)) #Debug

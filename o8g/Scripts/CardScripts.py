@@ -4801,9 +4801,9 @@ High-Risk Investment
 -----
 bc0f047c-01b1-427f-a439-d451eda07007
 -----
-
+onScore:Put1Agenda
 +++++
-
+A1B0G0T0:Remove1Agenda-isCost$$Gain1Credits-perOpponentCounter{Credits}
 .....
 Constellation Protocol
 -----
@@ -4819,13 +4819,13 @@ bc0f047c-01b1-427f-a439-d451eda07009
 -----
 
 +++++
-
+A0B0G0T0:Gain1Credits||A0B0G0T1:Gain2Credits||A0B0G0T0:Remove1Agenda-DemiAutoTargeted-hasMarker{Agenda}-choose1-isCost$$Gain3Credits
 .....
 Space Camp
 -----
 bc0f047c-01b1-427f-a439-d451eda07010
 -----
-
+onAccess:UseCustomAbility-isOptional-worksInArchives
 +++++
 
 .....
