@@ -643,6 +643,16 @@ def calcAgendaStealCost(card):
          extraCreds += 2 * card.markers[mdict['Advancement']]
    return extraCreds
 
+def chkAgendaVictory():
+   mute()
+   if getSpecial('Identity',fetchCorpPL()).name == "Harmony Medtech": agendaPTneeded = 6
+   else: agendaPTneeded = 7
+   if ds == 'runner' and len([card for card in table if card.isFaceUpa and card.Name == "The Board" and not card.marker[mdict['Scored']]]):
+      agendaPTneeded += len([card for card in table if card.controller == me and card.marker[mdict['Scored']]]) # If the board is active, we increase the agenda points needed for each scored agenda or card acting as an agenda
+   if me.counters['Agenda Points'].value >= agendaPTneeded:
+      notify("{} wins the game!".format(me))
+      reportGame()
+      
 #---------------------------------------------------------------------------
 # Card Placement
 #---------------------------------------------------------------------------

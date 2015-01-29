@@ -1250,16 +1250,6 @@ def scrAgenda(card, x = 0, y = 0,silent = False, forced = False):
    else: remoteCall(card.controller,'agendaScoreSetup',[me,card,silent,forced]) 
          # If we don't control the agenda, we have to ask the corp to give us control first
 
-def chkAgendaVictory():
-   mute()
-   if getSpecial('Identity',fetchCorpPL()).name == "Harmony Medtech": agendaPTneeded = 6
-   agendaPTneeded = 7
-   if ds == 'runner' and len([card for card in table if card.isFaceUpa and card.Name == "The Board" and not card.marker[mdict['Scored']]]):
-      agendaPTneeded += len([card for card in table if card.controller == me and card.marker[mdict['Scored']]) # If the board is active, we increase the agenda points needed for each scored agenda or card acting as an agenda
-   if me.counters['Agenda Points'].value >= agendaPTneeded:
-      notify("{} wins the game!".format(me))
-      reportGame()
-   
 def agendaScoreSetup(player,card,silent,forced): # Helper remote function to pass control of an agenda to the runner so that they can score it
    if card.group != table: # If the card is not on the table, we move it to the table so that we can easily pass control of it.
       card.moveToTable(0,0)
