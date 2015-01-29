@@ -1241,9 +1241,7 @@ def scrAgenda(card, x = 0, y = 0,silent = False, forced = False):
          playScoreAgendaSound(card)
          executePlayScripts(card,agendaTxt)
          autoscriptOtherPlayers('Agenda'+agendaTxt.capitalize()+'d',card) # The autoscripts triggered by this effect are using AgendaLiberated and AgendaScored as the hook
-         if me.counters['Agenda Points'].value >= 7 or (getSpecial('Identity',fetchCorpPL()).name == "Harmony Medtech" and me.counters['Agenda Points'].value >= 6):
-            notify("{} wins the game!".format(me))
-            reportGame()
+         chkAgendaVictory()
          clearCurrents(agendaTxt) # We check to see if there's any currents to clear.
          card.highlight = None # In case the card was highlighted as revealed, we remove that now.
          card.markers[mdict['Advancement']] = 0 # We only want to clear the advance counters after the automations, as they may still be used.
@@ -1251,6 +1249,16 @@ def scrAgenda(card, x = 0, y = 0,silent = False, forced = False):
          whisper ("You can't score this card")
    else: remoteCall(card.controller,'agendaScoreSetup',[me,card,silent,forced]) 
          # If we don't control the agenda, we have to ask the corp to give us control first
+
+def chkAgendaVictory():
+   mute()
+   if getSpecial('Identity',fetchCorpPL()).name == "Harmony Medtech": agendaPTneeded = 6
+   agendaPTneeded = 7
+   if ds == 'runner' and len([card for card in table if card.isFaceUpa and card.Name == "The Board" and not card.marker[mdict['Scored']]]):
+      agendaPTneeded += len([card for card in table if card.controller == me and card.marker[mdict['Scored']]) # If the board is active, we increase the agenda points needed for each scored agenda or card acting as an agenda
+   if me.counters['Agenda Points'].value >= agendaPTneeded:
+      notify("{} wins the game!".format(me))
+      reportGame()
    
 def agendaScoreSetup(player,card,silent,forced): # Helper remote function to pass control of an agenda to the runner so that they can score it
    if card.group != table: # If the card is not on the table, we move it to the table so that we can easily pass control of it.
@@ -2040,9 +2048,7 @@ def exileCard(card, silent = False):
          else: APgain = card.markers[mdict['ScorePenalty']]
          me.counters['Agenda Points'].value += APgain 
          notify("--> {} recovers {} Agenda Points".format(me, APgain))
-         if me.counters['Agenda Points'].value >= 7 or (getSpecial('Identity',fetchCorpPL()).name == "Harmony Medtech" and me.counters['Agenda Points'].value >= 6):
-            notify("{} wins the game!".format(me))
-            reportGame() # If we removed agenda points penalty (e.g. Data Dealer a Shi.Kyu) and that made us reach 7 agenda points, we can win the game at this point.
+         chkAgendaVictory() # If we removed agenda points penalty (e.g. Data Dealer a Shi.Kyu) and that made us reach 7 agenda points, we can win the game at this point.
       executePlayScripts(card,'TRASH') # We don't want to run automations on simply revealed cards.
       clearAttachLinks(card)
       changeCardGroup(card,card.owner.piles['Removed from Game'])

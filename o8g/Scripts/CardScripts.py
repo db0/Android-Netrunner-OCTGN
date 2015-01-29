@@ -4833,7 +4833,7 @@ The Board
 -----
 bc0f047c-01b1-427f-a439-d451eda07011
 -----
-
+onTrash:ScoreMyself-onOpponent-ifAccessed-ifUnscored-preventTrash-runTrashScriptWhileInactive$$Gain2Agenda Points-onOpponent-ifAccessed-ifUnscored$$Put2Scored-isSilent-ifAccessed-ifUnscored
 +++++
 
 .....
