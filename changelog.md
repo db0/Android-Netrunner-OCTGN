@@ -12,10 +12,12 @@ Changelog - Android:Netrunner LCG OCTGN Game Definition
    * Space Camp: After it's triggered, double click on any of your cards to add an advancement counter.
    * Wormhole: Manually use the ICE you want after using Wormhole
    * Housekeeping: Just announces to remind the runner. Runner should trash on their own.
-   * Satellite Grid, not automated. You'll have to take care of the relevant effects manually.
+   * Satellite Grid: not automated. You'll have to take care of the relevant effects manually.
    * The Twins, doesn't check ICE sameness
    * Sub Boost: Double click on the sub boost to end the run
    * Dedicated Technician Team: Manual use. Double click to remove a credit
+   * Edward Kim: Manual use but is mandatory, so make sure you do it.
+   * Itinerant Protesters: Manual Tracking (for now)
   
   
 ### 3.16.5.x

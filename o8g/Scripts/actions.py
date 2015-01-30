@@ -1421,7 +1421,11 @@ def RDaccessX(group = table, x = 0, y = 0,count = None): # A function which look
       playAccessSound('RD')
    targetPL = ofwhom('-ofOpponent')
    debugNotify("Found opponent. Storing the top {} as a list".format(count), 3) #Debug
-   RDtop = list(targetPL.piles['R&D/Stack'].top(count))
+   if len([c for c in table if c.Name == 'Showing Off']): # If there is a Showing off on the table, it means the runner is using it to run currently
+      RDtop = list(targetPL.piles['R&D/Stack'].bottom(count))
+      RDtop.reverse()
+   else: 
+      RDtop = list(targetPL.piles['R&D/Stack'].top(count))
    if len(RDtop) == 0:
       whisper("Corp's R&D is empty. You cannot take this action")
       return
