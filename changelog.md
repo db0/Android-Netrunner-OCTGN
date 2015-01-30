@@ -18,6 +18,9 @@ Changelog - Android:Netrunner LCG OCTGN Game Definition
    * Dedicated Technician Team: Manual use. Double click to remove a credit
    * Edward Kim: Manual use but is mandatory, so make sure you do it.
    * Itinerant Protesters: Manual Tracking (for now)
+   * Knifed/Spooned/Forked: You can use them to trash ICE if the corp is too slow. Target ICE and Double-Click
+   * Eater: Will put marker to remind you, but will not prevent access. Just select 0 cards.
+   
   
   
 ### 3.16.5.x

@@ -5033,7 +5033,7 @@ Day Job
 -----
 bc0f047c-01b1-427f-a439-d451eda07036
 -----
-
+onPlay:Lose3Clicks-isCost$$Gain10Credits
 +++++
 
 .....
@@ -5043,7 +5043,7 @@ bc0f047c-01b1-427f-a439-d451eda07037
 -----
 
 +++++
-
+A0B0G0T0:TrashTarged-Targeted-atICE_and_Sentry-isRezzed
 .....
 Knifed
 -----
@@ -5051,7 +5051,7 @@ bc0f047c-01b1-427f-a439-d451eda07038
 -----
 
 +++++
-
+A0B0G0T0:TrashTarged-Targeted-atICE_and_Barrier-isRezzed
 .....
 Spooned
 -----
@@ -5059,7 +5059,7 @@ bc0f047c-01b1-427f-a439-d451eda07039
 -----
 
 +++++
-
+A0B0G0T0:TrashTarged-Targeted-atICE_and_Code Gate-isRezzed
 .....
 Eater
 -----
@@ -5067,7 +5067,7 @@ bc0f047c-01b1-427f-a439-d451eda07040
 -----
 
 +++++
-
+A0B1G0T0:SimplyAnnounce{break ICE subroutine}$$Put1Fed||A0B1G0T0:Put1PlusOne||atJackOut:Remove999Fed
 .....
 Gravedigger
 -----

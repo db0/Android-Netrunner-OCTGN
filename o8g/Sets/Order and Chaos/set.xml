@@ -639,7 +639,7 @@
 		<property name="Stat" value="2" />	
 		<property name="Rules" value="1[Credits]: Break ice subroutine. You cannot access more than 0 cards for the remainder of this run.&#xD;&#xA;1[Credits]: +1 strength." />
 		<property name="Flavor" value="Nom nom nom." />
-		<property name="Instructions" value="" />
+		<property name="Instructions" value="1 [Credits]: Break barrier subroutine.||1 [Credits]: +1 strength." />
 		<property name="Faction" value="Anarch" />
 		<property name="Influence" value="3" />
 		<property name="Side" value="runner" />
