@@ -5025,7 +5025,7 @@ Wanton Destruction
 -----
 bc0f047c-01b1-427f-a439-d451eda07035
 -----
-
+onPlay:RunHQ||atSuccessfulRun:CustomScript-isAlternativeRunResult-isOptional-ifSuccessfulRunHQ$$TrashMyself-ifSuccessfulRunR&D-isSilent
 +++++
 
 .....

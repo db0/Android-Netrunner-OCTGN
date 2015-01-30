@@ -1261,6 +1261,13 @@ def CustomScript(card, action = 'PLAY', origin_card = None, original_action = No
          selectedCard.highlight = InactiveColor
          notify("{} {} hosts a card on {} from their HQ".format(actionCost,me,card))
       return 'CLICK USED'
+   elif fetchProperty(card, 'name') == "Wanton Destruction" and action == 'SuccessfulRun':
+      trashNR = askInteger("You have {} clicks. How many do you want to use to trash Corp cards?".format(me.Clicks),me.Clicks)
+      if trashNR: 
+         me.Clicks -= trashNR
+         remoteCall(fetchCorpPL(),'handRandomDiscard',[None,trashNR,None,None,True])
+         notify(":> {} uses {} to force {} to trash {} cards from HQ at random".format(me,card,fetchCorpPL(),trashNR))
+      return 'CLICK USED'
    elif action == 'USE': useCard(card)
       
             
@@ -1650,4 +1657,4 @@ def chkGagarinTax(card):
          notify(":> {} did not have enough money to pay the {} tax".format(me,gararin))
          return 'ABORT'
    return 'OK'
-      
+     
