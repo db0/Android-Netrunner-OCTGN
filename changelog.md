@@ -10,6 +10,13 @@ Changelog - Android:Netrunner LCG OCTGN Game Definition
    * Constellation Protocol: Manual use
    * Mark Yale, credit for spending Agenda Counter is manual use. When using his ability to spend agenda counters, he gives you automatically 3 credits (2 for ability + 1 for trait)
    * Space Camp: After it's triggered, double click on any of your cards to add an advancement counter.
+   * Wormhole: Manually use the ICE you want after using Wormhole
+   * Housekeeping: Just announces to remind the runner. Runner should trash on their own.
+   * Satellite Grid, not automated. You'll have to take care of the relevant effects manually.
+   * The Twins, doesn't check ICE sameness
+   * Sub Boost: Double click on the sub boost to end the run
+   * Dedicated Technician Team: Manual use. Double click to remove a credit
+  
   
 ### 3.16.5.x
 

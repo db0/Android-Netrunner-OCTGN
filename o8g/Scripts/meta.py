@@ -835,7 +835,7 @@ def JintekiCP(card,count): # Function which takes care that the Jinteki Chronos 
    debugNotify(">>> JintekiCP()") #Debug
    mute()
    targetPL = findOpponent()
-   if not len(targetPL.hand): remoteCall(targetPL, 'intdamageDiscard',[count]) # If their hand is empty we need to flatline them
+   if not len(targetPL.hand): remoteCall(targetPL, 'intdamageDiscard',[count,'Net']) # If their hand is empty we need to flatline them
    else:
       grabPileControl(targetPL.hand)
       #targetPL.hand.setVisibility('all')
@@ -851,7 +851,7 @@ def JintekiCP(card,count): # Function which takes care that the Jinteki Chronos 
       passPileControl(targetPL.hand,targetPL)
       #remoteCall(targetPL,'grabVisibility',[targetPL.hand])
       if choice != None: 
-         if count - 1: remoteCall(targetPL, 'intdamageDiscard',[count - 1]) # If there's any leftover damage, we inflict it now.
+         if count - 1: remoteCall(targetPL, 'intdamageDiscard',[count - 1,'Net']) # If there's any leftover damage, we inflict it now.
    debugNotify("<<< JintekiCP()") #Debug
    
 def HasbroCP(card,count): # A Function called remotely for the runner player which takes care to wipe all cards of the same type as the one trashed from the game.

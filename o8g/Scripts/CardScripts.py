@@ -4841,33 +4841,33 @@ Asteroid Belt
 -----
 bc0f047c-01b1-427f-a439-d451eda07012
 -----
-
+onRez:Gain3Credits-perMarker{Advancement}-max3
 +++++
-
+A0B0G0T0:RunEnd-isSubroutine
 .....
 Wormhole
 -----
 bc0f047c-01b1-427f-a439-d451eda07013
 -----
-
+onRez:Gain3Credits-perMarker{Advancement}-max3
 +++++
-
+A0B0G0T0:SimplyAnnounce{use the subroutine on another piece of rezzed ICE}-isSubroutine
 .....
 Nebula
 -----
 bc0f047c-01b1-427f-a439-d451eda07014
 -----
-
+onRez:Gain3Credits-perMarker{Advancement}-max3
 +++++
-
+A0B0G0T0:TrashTarget-Targeted-atProgram-isSubroutine
 .....
 Orion
 -----
 bc0f047c-01b1-427f-a439-d451eda07015
 -----
-
+onRez:Gain3Credits-perMarker{Advancement}-max5
 +++++
-
+A0B0G0T0:TrashTarget-Targeted-atProgram-isSubroutine||A0B0G0T0:SimplyAnnounce{use the subroutine on another piece of rezzed ICE}-isSubroutine||A0B0G0T0:RunEnd-isSubroutine
 .....
 Builder
 -----
@@ -4875,15 +4875,15 @@ bc0f047c-01b1-427f-a439-d451eda07016
 -----
 
 +++++
-
+A1B0G0T0:SimplyAnnounce{move to the outermost position of any server}||A0B0G0T0:Put1Advancement-Targeted-atICE-isSubroutine 
 .....
 Checkpoint
 -----
 bc0f047c-01b1-427f-a439-d451eda07017
 -----
-
+onRez:Gain1Bad Publicity||atSuccessfulRun:Inflict3MeatDamage-perMarker{Checked}$$Remove999Checked
 +++++
-
+A0B0G0T0:Trace5-traceEffects<Put1Checked,None>
 .....
 Fire Wall
 -----
@@ -4891,7 +4891,7 @@ bc0f047c-01b1-427f-a439-d451eda07018
 -----
 
 +++++
-
+A0B0G0T0:RunEnd-isSubroutine
 .....
 Searchlight
 -----
@@ -4899,7 +4899,7 @@ bc0f047c-01b1-427f-a439-d451eda07019
 -----
 
 +++++
-
+A0B0G0T0:Trace1-perMarker{Advancement}-traceEffects<Gain1Tags-onOpponent,None>
 .....
 Housekeeping
 -----
@@ -4907,13 +4907,13 @@ bc0f047c-01b1-427f-a439-d451eda07020
 -----
 
 +++++
-
+A0B0G0T0:SimplyAnnounce{force the runner to trash a card from their Grip}-onlyOnce
 .....
 Patch
 -----
 bc0f047c-01b1-427f-a439-d451eda07021
 -----
-
+Placement:ICE-isRezzed
 +++++
 
 .....
@@ -4921,7 +4921,7 @@ Traffic Accident
 -----
 bc0f047c-01b1-427f-a439-d451eda07022
 -----
-
+onPlay:Inflict2MeatDamage-onOpponent-ifTagged2	
 +++++
 
 .....
@@ -4939,31 +4939,31 @@ bc0f047c-01b1-427f-a439-d451eda07024
 -----
 
 +++++
-
+A0B0G0T0:TrashTarget-DemiAutoTargeted-atICE-fromHand-choose1$$SimplyAnnounce{force the runner to enounter the same ICE again}
 .....
 Sub Boost
 -----
 bc0f047c-01b1-427f-a439-d451eda07025
 -----
-
+Placement:ICE-isRezzed||onPlay:Put1Keyword:Barrier-Targeted-onHost-isSilent
 +++++
-
+A0B0G0T0:RunEnd-isSubroutine
 .....
 Dedicated Technician Team
 -----
 bc0f047c-01b1-427f-a439-d451eda07026
 -----
-
+atTurnPreStart:Refill2Credits-duringMyTurn
 +++++
-
+A0B0G0T0:Remove1Credits
 .....
 Cyberdex Virus Suite
 -----
 bc0f047c-01b1-427f-a439-d451eda07027
 -----
-
+onAccess:UseCustomAbility-isOptional
 +++++
-
+A0B0G0T1:UseCustomAbility
 .....
 Edward Kim
 -----
@@ -4971,13 +4971,13 @@ bc0f047c-01b1-427f-a439-d451eda07028
 -----
 
 +++++
-
+A0B0G0T2:SimplyAnnounce{trash an accessed operation}-onlyOnce
 .....
 MaxX
 -----
 bc0f047c-01b1-427f-a439-d451eda07029
 -----
-
+atTurnStart:Draw2Cards-toTrash$$Draw1Card
 +++++
 
 .....
@@ -4985,7 +4985,7 @@ Valencia Estevez
 -----
 bc0f047c-01b1-427f-a439-d451eda07030
 -----
-
+onStartup:Gain1Bad Publicity-onOpponent
 +++++
 
 .....
@@ -4993,7 +4993,7 @@ Amped Up
 -----
 bc0f047c-01b1-427f-a439-d451eda07031
 -----
-
+onPlay:Gain3Clicks$$Inflict1BrainDamage-nonPreventable
 +++++
 
 .....
@@ -5001,7 +5001,7 @@ I&#039;ve Had Worse
 -----
 bc0f047c-01b1-427f-a439-d451eda07032
 -----
-
+onPlay:Draw3Cards
 +++++
 
 .....

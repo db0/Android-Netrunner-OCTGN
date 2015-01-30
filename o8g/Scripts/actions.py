@@ -977,9 +977,10 @@ def reduceCost(card, action = 'REZ', fullCost = 0, dryRun = False, reversePlayer
    debugNotify("<<< reduceCost() with return {}".format(reduction))
    return reduction
 
-def intdamageDiscard(count = 1):
+def intdamageDiscard(count = 1, dmgType = 'Meat'):
    debugNotify(">>> intdamageDiscard()") #Debug
    mute()
+   discardedList = []
    for DMGpt in range(count): #Start applying the damage
       notify("+++ Applying damage {} of {}...".format(DMGpt+1,count))
       if len(me.hand) == 0:
@@ -988,9 +989,12 @@ def intdamageDiscard(count = 1):
          break
       else:
          card = me.hand.random()
+         discardedList.append(card)
          if ds == 'corp': card.moveTo(me.piles['Archives(Hidden)']) # For testing.
          else: card.moveTo(me.piles['Heap/Archives(Face-up)'])
          notify("--DMG: {} discarded.".format(card))
+   for card in discardedList: executePlayScripts(Identity,'{}DMGDiscard'.format(dmgType)) # If we have cards with effects when discarded (e.g. I've had worse) we trigger them after all damage has been applied.
+      
 
 def addBrainDmg(group, x = 0, y = 0):
    mute()
@@ -1003,7 +1007,7 @@ def addBrainDmg(group, x = 0, y = 0):
       applyBrainDmg()
       notify ("{} suffers 1 Brain Damage.".format(me))
       finalDMG = DMG - chkDmgSpecialEffects('Brain', DMG)[0]
-      intdamageDiscard(finalDMG)
+      intdamageDiscard(finalDMG,'Brain')
       #intdamageDiscard(me.hand)    
       playDMGSound('Brain')
       autoscriptOtherPlayers('BrainDMGInflicted',getSpecial('Identity',fetchRunnerPL()))
@@ -1024,7 +1028,7 @@ def addMeatDmg(group, x = 0, y = 0):
    else:
       notify ("{} suffers 1 Meat Damage.".format(me))
       finalDMG = DMG - chkDmgSpecialEffects('Meat', DMG)[0]
-      intdamageDiscard(finalDMG)
+      intdamageDiscard(finalDMG,'Meat')
       #intdamageDiscard(me.hand)
       playDMGSound('Meat')
       autoscriptOtherPlayers('MeatDMGInflicted',getSpecial('Identity',fetchRunnerPL()))
@@ -1039,7 +1043,7 @@ def addNetDmg(group, x = 0, y = 0):
    else:
       notify ("{} suffers 1 Net Damage.".format(me))
       finalDMG = DMG - chkDmgSpecialEffects('Net', DMG)[0]
-      intdamageDiscard(finalDMG)
+      intdamageDiscard(finalDMG,'Net')
       #intdamageDiscard(me.hand)
       playDMGSound('Net')
       autoscriptOtherPlayers('NetDMGInflicted',getSpecial('Identity',fetchRunnerPL()))

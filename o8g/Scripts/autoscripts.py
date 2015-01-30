@@ -81,6 +81,9 @@ def executePlayScripts(card, action):
    elif action == 'INSTALL': trigger = 'onInstall'
    elif action == 'SCORE': trigger = 'onScore'
    elif action == 'TRASH': trigger = 'onTrash'
+   elif action == 'MEATDMGDISCARD': trigger = 'onMeatDMGDiscard' # For effects triggered when a card is trashed from hand via damage
+   elif action == 'NETDMGDISCARD': trigger = 'onNetDMGDiscard'
+   elif action == 'BRAINDMGDISCARD': trigger = 'onBrainDMGDiscard'
    else: trigger = 'N/A'
    if debugVerbosity >= 2: notify ('trigger = {}'.format(trigger)) # Debug
    if trigger != 'N/A': # If there's a possibility of a multiple choice trigger, we do the check
@@ -1805,7 +1808,7 @@ def InflictX(Autoscript, announceText, card, targetCards = None, notification = 
          specialReduction = chkDmgSpecialEffects(action.group(3),DMG)
          finalDMG = DMG - specialReduction[0] # We check if any effect hijacks the normal damage effect, but we don't want to change the number of damage we announce is being done.
          if specialReduction[1]: DMG = 0 
-         remoteCall(targetPL, 'intdamageDiscard',[finalDMG])
+         remoteCall(targetPL, 'intdamageDiscard',[finalDMG,action.group(3)])
          if action.group(3) == 'Brain': applyBrainDmg(targetPL, DMG)
       if DMG: 
          autoscriptOtherPlayers('{}DMGInflicted'.format(action.group(3)),getSpecial('Identity',targetPL),DMG) # We also trigger any script for damage

@@ -239,7 +239,7 @@
 		<property name="Stat" value="8" />	
 		<property name="Rules" value="Orion can be advanced and its rez cost is lowered by 3 for each advancement token on it.&#xD;&#xA;[Subroutine] Trash 1 program.&#xD;&#xA;[Subroutine] Resolve a subroutine on another piece of rezzed ice.&#xD;&#xA;[Subroutine] End the run." />
 		<property name="Flavor" value="And seeking prey he then took aim." />
-		<property name="Instructions" value="" />
+		<property name="Instructions" value="[Subroutine] Trash 1 program.||[Subroutine] Resolve a subroutine on another piece of rezzed ice.||[Subroutine] End the run." />
 		<property name="Faction" value="The Weyland Consortium" />
 		<property name="Influence" value="3" />
 		<property name="Side" value="corp" />
@@ -255,7 +255,7 @@
 		<property name="Stat" value="4" />	
 		<property name="Rules" value="[Click]: Move this piece of ice to the outermost position protecting any server.&#xD;&#xA;[Subroutine] Place 1 advancement token on a piece of ice protecting this server that can be advanced.&#xD;&#xA;[Subroutine] Place 1 advancement token on a piece of ice protecting this server that can be advanced." />
 		<property name="Flavor" value="" />
-		<property name="Instructions" value="" />
+		<property name="Instructions" value="[Click]: Move this piece of ice to the outermost position protecting any server.||[Subroutine] Place 1 advancement token on a piece of ice protecting this server that can be advanced." />
 		<property name="Faction" value="The Weyland Consortium" />
 		<property name="Influence" value="1" />
 		<property name="Side" value="corp" />

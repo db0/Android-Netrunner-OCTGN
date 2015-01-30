@@ -350,6 +350,14 @@ def UseCustomAbility(Autoscript, announceText, card, targetCards = None, notific
       hijackDefaultAction.append(card)
       showHijackQueue()
       announceString = ''
+   if fetchProperty(card, 'name') == 'Cyberdex Virus Suite': 
+      playVirusPurgeSound()
+      for c in table: 
+         foundMarker = findMarker(c,'Virus')
+         if foundMarker: c.markers[foundMarker] = 0
+      notify("{} triggers to clean all viruses from the corporate grid".format(card))
+      autoscriptOtherPlayers('VirusPurged',card)
+      announceString = ''
    return announceString
  
 #------------------------------------------------------------------------------
