@@ -164,7 +164,14 @@ def chkSideFlip(forced = False):
 def parseNewCounters(player,counter,oldValue):
    mute()
    debugNotify(">>> parseNewCounters() for player {} with counter {}. Old Value = {}".format(player,counter.name,oldValue))
-   if counter.name == 'Tags' and player == me: chkTags()
+   if counter.name == 'Tags' and player == me: 
+      QianjuPTs = [c for c in table if c.Name == "Qianju PT" and c.markers[mdict['Power']]]
+      if len(QianjuPTs):
+         if counter.value >= 1: 
+            counter.value -= 1
+            notify("{:> }'s {} prevented one Tag".format(me,QianjuPTs[0]))
+            for card in QianjuPTs: card.markers[mdict['Power']] = 0 # Qianju's only ever protect against the first tag, no matter how many you use.
+      chkTags()
    if counter.name == 'Bad Publicity' and oldValue < counter.value:
       if player == me: playSound('Gain-Bad_Publicity')
       for c in table: # Looking for cards which trigger off the corp gaining Bad Publicity

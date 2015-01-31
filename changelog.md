@@ -20,7 +20,10 @@ Changelog - Android:Netrunner LCG OCTGN Game Definition
    * Itinerant Protesters: Manual Tracking (for now)
    * Knifed/Spooned/Forked: You can use them to trash ICE if the corp is too slow. Target ICE and Double-Click
    * Eater: Will put marker to remind you, but will not prevent access. Just select 0 cards.
-   
+   * Hivemind: Cannot make it host the viruses everywehre, so if you want to spend them for something (e.g. Datasucker), just drag the marker there, or target that ICE and DC Hivemind to transfer the Virus counter.
+   * Progenitor has 3 MU of RAM, but don't host more than 1 proggie.
+   * Archives Interface: Manual Use. Do it before accessing
+   * Qianju PT: Manual use for starting the effect
   
   
 ### 3.16.5.x

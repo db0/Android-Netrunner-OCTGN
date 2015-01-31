@@ -1268,6 +1268,9 @@ def CustomScript(card, action = 'PLAY', origin_card = None, original_action = No
          remoteCall(fetchCorpPL(),'handRandomDiscard',[None,trashNR,None,None,True])
          notify(":> {} uses {} to force {} to trash {} cards from HQ at random".format(me,card,fetchCorpPL(),trashNR))
       return 'CLICK USED'
+   elif fetchProperty(card, 'name') == "Vigil" and action == 'Start':
+      corpPL = fetchCorpPL()
+      if len(corpPL.hand) == corpPL.counters['Hand Size'].value: DrawX('Draw1Card', '{} uses {}'.format(me,card), card, targetCards = None, notification = 'Quick', n = 0)
    elif action == 'USE': useCard(card)
       
             

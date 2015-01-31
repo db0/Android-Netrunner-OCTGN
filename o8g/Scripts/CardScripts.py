@@ -5073,7 +5073,7 @@ Gravedigger
 -----
 bc0f047c-01b1-427f-a439-d451eda07041
 -----
-
+whileInstalled:Put1Virus-foreachCardTrashed-byOpponent
 +++++
 
 .....
@@ -5081,15 +5081,15 @@ Hivemind
 -----
 bc0f047c-01b1-427f-a439-d451eda07042
 -----
-
+onPlay:Put1Virus
 +++++
-
+A0B0G0T0:Remove1Virus-isCost$$Put1Virus-Targeted-atProgram_and_Virus
 .....
 Progenitor
 -----
 bc0f047c-01b1-427f-a439-d451eda07043
 -----
-
+Put3DaemonMU||whileInstalled:Put1Virus-DemiAutoTargeted-onAttachment-choose1-foreachVirusPurged
 +++++
 
 .....
@@ -5099,7 +5099,7 @@ bc0f047c-01b1-427f-a439-d451eda07044
 -----
 
 +++++
-
+A0B0G0T0:ExileTarget-DemiAutoTargeted-choose1-fromArchives
 .....
 Chop Bot 3000
 -----
@@ -5107,13 +5107,13 @@ bc0f047c-01b1-427f-a439-d451eda07045
 -----
 
 +++++
-
+A0B0G0T2:TrashTarget-Targeted-targetMine$$Draw1Card||A0B0G0T2:TrashTarget-Targeted-targetMine$$Lose1Tags
 .....
 MemStrips
 -----
 bc0f047c-01b1-427f-a439-d451eda07046
 -----
-
+whileInPlay:Provide3MU
 +++++
 
 .....
@@ -5121,7 +5121,7 @@ Vigil
 -----
 bc0f047c-01b1-427f-a439-d451eda07047
 -----
-
+atTurnStart:CustomScript-duringMyTurn
 +++++
 
 .....
@@ -5129,7 +5129,7 @@ Human First
 -----
 bc0f047c-01b1-427f-a439-d451eda07048
 -----
-
+whileInstalled:Gain1Credits-perProperty{Stat}-foreachAgendaScored-onTriggerCard||whileInstalled:Gain1Credits-perProperty{Stat}-foreachAgendaLiberated-onTriggerCard
 +++++
 
 .....
@@ -5139,21 +5139,21 @@ bc0f047c-01b1-427f-a439-d451eda07049
 -----
 
 +++++
-
+A4B0G0T1:Gain1Bad Publicity-onOpponent
 .....
 Sacrificial Clone
 -----
 bc0f047c-01b1-427f-a439-d451eda07050
 -----
-
+onDamage:CreateDummy-with99protectionAllDMG-trashCost$$TrashMultiple-AutoTarget-atHardware_or_Resource_and_nonVirtual$$Discard999Cards$$Lose999Credits$$Lose999Tags
 +++++
-
+A0B0G0T1:CreateDummy-with99protectionAllDMG-trashCost$$TrashMultiple-AutoTarget-atHardware_or_Resource_and_nonVirtual$$Discard999Cards$$Lose999Credits$$Lose999Tags
 .....
 Stim Dealer
 -----
 bc0f047c-01b1-427f-a439-d451eda07051
 -----
-
+atTurnStart:Inflict1BrainDamage-ifOrigmarkers{Power}ge2||atTurnStart:Put1Power-ifOrigmarkers{Power}le1$$Gain1Clicks
 +++++
 
 .....
@@ -5161,31 +5161,31 @@ Virus Breeding Ground
 -----
 bc0f047c-01b1-427f-a439-d451eda07052
 -----
-
+atTurnStart:Put1Virus
 +++++
-
+A1B0G0T0:Remove1Virus-isCost$$Put1Virus-DemiAutoTargeted-hasMarker{Virus}-choose1
 .....
 Uninstall
 -----
 bc0f047c-01b1-427f-a439-d451eda07053
 -----
-
+onPlay:UninstallTarget-DemiAutoTargeted-atProgram_or_Hardware-choose1
 +++++
 
 .....
-Qianju PT
+Qianju PT # Scripted manually in parseNewCounters()
 -----
 bc0f047c-01b1-427f-a439-d451eda07054
 -----
-
+atTurnPreStart:Remove1Used
 +++++
-
+A0B0G0T0:Lose1Clicks-isCost-onlyOnce$$Put1Used
 .....
 Data Folding
 -----
 bc0f047c-01b1-427f-a439-d451eda07055
 -----
-
+atTurnStart:Gain1Credits-ifIHave2MU-duringMyTurn
 +++++
 
 .....

@@ -2020,6 +2020,15 @@ def findTarget(Autoscript, fromHand = False, card = None, dryRun = False): # Fun
                         debugNotify("Host found! {}".format(targetLookup), 2)
                         isHost = True
                   if not isHost: continue
+               elif re.search(r'-onAttachment',Autoscript): 
+                  if not card: continue # If this targeting script targets only an attachment and we have not passed what the host is, we cannot find the attachment, so we abort.
+                  hostCards = eval(getGlobalVariable('Host Cards'))
+                  isAttachment = False
+                  for attachment in hostCards:
+                     if hostCards[attachment] == card._id and attachment == targetLookup._id: 
+                        debugNotify("Attachment found! {}".format(targetLookup), 2)
+                        isAttachment = True
+                  if not isAttachment: continue
                if checkCardRestrictions(gatherCardProperties(targetLookup,Autoscript), targetGroups): 
                   if not targetLookup in foundTargets: 
                      debugNotify("About to append {}".format(targetLookup), 3) #Debug

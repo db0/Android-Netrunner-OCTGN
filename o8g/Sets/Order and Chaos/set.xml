@@ -719,7 +719,7 @@
 		<property name="Stat" value="" />	
 		<property name="Rules" value="When your turn begins, you may trash another of your installed cards. If you do, draw 1 card or remove 1 tag." />
 		<property name="Flavor" value="There was a sickly smell coming from his closet. He hoped it was only a mouse this time." />
-		<property name="Instructions" value="" />
+		<property name="Instructions" value="Draw 1 card||Lose 1 Tag" />
 		<property name="Faction" value="Anarch" />
 		<property name="Influence" value="1" />
 		<property name="Side" value="runner" />
