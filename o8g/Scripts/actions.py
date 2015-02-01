@@ -1791,7 +1791,9 @@ def intRez (card, x=0, y=0, cost = 'not free', silent = False, silentCost = Fals
    increase = findExtraCosts(card, 'REZ')
    rc = payCost(cardCost - reduction + increase, cost, silentCost = silentCost)
    if rc == "ABORT": return 'ABORT' # If the player didn't have enough money to pay and aborted the function, then do nothing.
-   elif rc == "free": extraText = " at no cost"
+   elif rc == "free": 
+      extraText = " at no cost"
+      rc = ""
    elif rc != 0: rc = "for {}".format(rc)
    else: rc = ''
    card.isFaceUp = True

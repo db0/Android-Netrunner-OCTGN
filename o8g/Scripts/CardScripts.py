@@ -4465,7 +4465,7 @@ License Acquisition
 -----
 bc0f047c-01b1-427f-a439-d451eda06085
 -----
-onScore:Retrieve1Card-fromHeap-grabAsset_or_Upgrade-toTable
+onScore:Retrieve1Card-fromArchives-grabAsset_or_Upgrade-toTable-rezFree||onScore:InstallTarget-fromHand-DemiAutoTargeted-atAsset_or_Upgrade-choose1-rezFree
 +++++
 
 .....

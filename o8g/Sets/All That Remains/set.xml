@@ -79,7 +79,7 @@
 		<property name="Stat" value="1" />	
 		<property name="Rules" value="When you score License Acquisition, install and rez an asset or upgrade from Archives or HQ, ignoring all costs." />
 		<property name="Flavor" value="&quot;We&apos;ve received seventeen crates from ChiLo. We&apos;ll hit stores the same day we sign the licence agreement.&quot;" />
-		<property name="Instructions" value="" />
+		<property name="Instructions" value="onScore[Install and Rez from Archives|-|Install and Rez from HQ]" />
 		<property name="Faction" value="NBN" />
 		<property name="Influence" value="" />
 		<property name="Side" value="corp" />

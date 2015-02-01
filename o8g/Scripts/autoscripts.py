@@ -96,8 +96,9 @@ def executePlayScripts(card, action):
       if len(TriggersFound) > 1: # If we have more than one option for this trigger, we need to ask the player for which to use.
          if Automations['WinForms']: ChoiceTXT = "This card has multiple abilities that can trigger at this point.\nSelect the ones you would like to use."
          else: ChoiceTXT = "This card has multiple abilities that can trigger at this point.\nType the number of the one you would like to use."
+         #confirm(card.Instructions)
          triggerInstructions = re.search(r'{}\[(.*?)\]'.format(trigger),card.Instructions) # If the card has multiple options, it should also have some card instructions to have nice menu options.
-         if not triggerInstructions and debugVerbosity >= 1: notify("## Oops! No multiple choice instructions found and I expected some. Will crash prolly.") # Debug
+         #if not triggerInstructions: confirm("## Oops! No multiple choice instructions found and I expected some. Will crash prolly.") # Debug
          cardInstructions = triggerInstructions.group(1).split('|-|') # We instructions for trigger have a slightly different split, so as not to conflict with the instructions from AutoActions.
          choices = cardInstructions
          abilChoice = SingleChoice(ChoiceTXT, choices, type = 'button')
@@ -1741,6 +1742,14 @@ def ModifyStatus(Autoscript, announceText, card, targetCards = None, notificatio
          intPlay(targetCard, payCost, True, preReduc)
          extraTokens = re.search(r'-with([0-9][A-Z][A-Za-z&_ ]+)', Autoscript)
          if extraTokens: TokensX('Put{}'.format(extraTokens.group(1)), '',targetCard) # If we have a -with in our autoscript, this is meant to put some tokens on the installed card.
+         if re.search(r'-rezPay',Autoscript): # This modulator means the script is going to rez & pay for the card normally
+            preReducRegex = re.search(r'-reduc([0-9X]+)',Autoscript) # this one means its going to reduce the cost a bit.
+            if preReducRegex: 
+               if preReducRegex.group(1) == 'X': preReduc = n
+               else: preReduc = num(preReducRegex.group(1))
+            else: preReduc = 0
+            intRez (targetCard, cost = 'not free', silent = True, preReduction = preReduc)
+         elif re.search(r'-rezFree',Autoscript): intRez(targetCard, cost = 'free')
       elif action.group(1) == 'Score': # Score takes a card and claims it as an agenda
          targetPL = ofwhom(Autoscript, targetCard.owner)
          grabCardControl(targetCard)
@@ -1926,6 +1935,14 @@ def RetrieveX(Autoscript, announceText, card, targetCards = None, notification =
                preReduc = 0
                payCost = 'free'         
             intPlay(c, payCost, True, preReduc)
+            if re.search(r'-rezPay',Autoscript): # This modulator means the script is going to rez & pay for the card normally
+               preReducRegex = re.search(r'-reduc([0-9X]+)',Autoscript) # this one means its going to reduce the cost a bit.
+               if preReducRegex: 
+                  if preReducRegex.group(1) == 'X': preReduc = n
+                  else: preReduc = num(preReducRegex.group(1))
+               else: preReduc = 0
+               intRez (c, cost = 'not free', silent = True, preReduction = preReduc)
+            elif re.search(r'-rezFree',Autoscript): intRez(c, cost = 'free')
          else: 
             if re.search(r'-sendToBottom', Autoscript): c.moveToBottom(destination)
             else: c.moveTo(destination)
