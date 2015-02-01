@@ -4961,7 +4961,7 @@ Cyberdex Virus Suite
 -----
 bc0f047c-01b1-427f-a439-d451eda07027
 -----
-onAccess:UseCustomAbility-isOptional
+onAccess:UseCustomAbility-isOptional-worksInArchives
 +++++
 A0B0G0T1:UseCustomAbility
 .....
@@ -5041,7 +5041,7 @@ Forked
 -----
 bc0f047c-01b1-427f-a439-d451eda07037
 -----
-
+onPlay:RunGeneric
 +++++
 A0B0G0T0:TrashTarged-Targeted-atICE_and_Sentry-isRezzed
 .....
@@ -5049,7 +5049,7 @@ Knifed
 -----
 bc0f047c-01b1-427f-a439-d451eda07038
 -----
-
+onPlay:RunGeneric
 +++++
 A0B0G0T0:TrashTarged-Targeted-atICE_and_Barrier-isRezzed
 .....
@@ -5057,7 +5057,7 @@ Spooned
 -----
 bc0f047c-01b1-427f-a439-d451eda07039
 -----
-
+onPlay:RunGeneric
 +++++
 A0B0G0T0:TrashTarged-Targeted-atICE_and_Code Gate-isRezzed
 .....
@@ -5161,7 +5161,7 @@ Virus Breeding Ground
 -----
 bc0f047c-01b1-427f-a439-d451eda07052
 -----
-atTurnStart:Put1Virus
+atTurnStart:Put1Virus-duringMyTurn
 +++++
 A1B0G0T0:Remove1Virus-isCost$$Put1Virus-DemiAutoTargeted-hasMarker{Virus}-choose1
 .....
