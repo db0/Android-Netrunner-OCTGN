@@ -1234,7 +1234,7 @@ def scrAgenda(card, x = 0, y = 0,silent = False, forced = False):
             else: return
          elif not silent and not confirm("Do you want to {} agenda {}?".format(agendaTxt.lower(),fetchProperty(card, 'name'))): return
          if card.group == table: flipCard(card,True)
-         if agendaTxt == 'SCORE' and chkTargeting(card) == 'ABORT':
+         if agendaTxt == 'SCORE' and chkTargeting(card,'SCORE') == 'ABORT':
             if card.group == table: flipCard(card,False)
             notify("{} cancels their action".format(me))
             return
@@ -1778,7 +1778,7 @@ def intRez (card, x=0, y=0, cost = 'not free', silent = False, silentCost = Fals
       whisper("Not a rezzable card")
       return 'ABORT'
    if not checkUnique(card): return 'ABORT' #If the player has the unique card rezzed and opted not to trash it, do nothing.
-   if chkTargeting(card) == 'ABORT':
+   if chkTargeting(card,'REZ') == 'ABORT':
       notify("{} cancels their action".format(me))
       return 'ABORT'
    if fetchProperty(card, 'Name') == 'IQ': cardCost = len(me.hand) # Special code to allow IQ to work
@@ -2217,7 +2217,7 @@ def intPlay(card, cost = 'not free', scripted = False, preReduction = 0, retainP
    if ClickCost == 'ABORT': 
       if retainPos: card.moveTo(me.hand)
       return  #If the player didn't have enough clicks and opted not to proceed, do nothing.
-   if (card.Type == 'Operation' or card.Type == 'Event') and chkTargeting(card) == 'ABORT': 
+   if (card.Type == 'Operation' or card.Type == 'Event') and chkTargeting(card,'PLAY') == 'ABORT': 
       me.Clicks += NbReq # We return any used clicks in case of aborting due to missing target
       card.moveTo(me.hand)
       return 'ABORT'# If it's an Operation or Event and has targeting requirements, check with the user first.

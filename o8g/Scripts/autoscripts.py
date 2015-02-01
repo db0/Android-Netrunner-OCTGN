@@ -54,6 +54,8 @@ def executePlayScripts(card, action):
    for autoS in autoScriptsSnapshot: # Checking and removing any scripts which are not parsed at this point.
       if (autoS == '' or 
           re.search(r'atTurn(Start|End)', autoS) or 
+          re.search(r'atJackout', autoS) or 
+          re.search(r'atSuccessfulRun', autoS) or 
           re.search(r'atRunStart', autoS) or 
           re.search(r'Reduce[0-9#X]Cost', autoS) or 
           re.search(r'whileRunning', autoS) or 
@@ -303,7 +305,7 @@ def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
       return
    debugNotify("Automations active. Checking for CustomScript...", 4)
    if re.search(r'CustomScript', fetchProperty(card, 'AutoActions')): 
-      if chkTargeting(card) == 'ABORT': return
+      if chkTargeting(card,'USE') == 'ABORT': return
       if CustomScript(card,'USE') == 'CLICK USED': autoscriptOtherPlayers('CardAction', card)  # Some cards just have a fairly unique effect and there's no use in trying to make them work in the generic framework.
       return
    debugNotify("+++ All checks done!. Starting Choice Parse...", 5)

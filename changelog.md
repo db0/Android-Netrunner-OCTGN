@@ -1,6 +1,10 @@
 Changelog - Android:Netrunner LCG OCTGN Game Definition
 ===============================================
 
+### 3.17.1.x
+
+* Various bugfixes
+
 ### 3.17.0.x
 
 * New game definition for **Order and Chaos**. As always, almost every card scripted!

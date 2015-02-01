@@ -394,7 +394,7 @@ def checkUnique (card, manual = False):
    debugNotify("<<< checkUnique() - Returning True", 3) #Debug
    return True   
 
-def chkTargeting(card):
+def chkTargeting(card,action = 'PLAY'):
    debugNotify(">>> chkTargeting(){}".format(extraASDebug())) #Debug
    for autoS in CardsAS.get(card.model,'').split('||'):
       if (re.search(r'on(Rez|Play|Install)[^|]+(?<!Auto)Targeted', autoS)
@@ -406,9 +406,20 @@ def chkTargeting(card):
          return 'ABORT'
    if ds == 'corp': runnerPL = findOpponent()
    else: runnerPL = me
-   if re.search(r'ifTagged', CardsAS.get(card.model,'')) and runnerPL.Tags == 0 and not re.search(r'isOptional', CardsAS.get(card.model,'')) and not re.search(r'doesNotBlock', CardsAS.get(card.model,'')):
-      whisper("{} must be tagged in order to use this card".format(runnerPL))
-      return 'ABORT'
+   if action != 'USE': 
+      Autoscripts = CardsAS.get(card.model,'').split('||')
+      for autoS in Autoscripts: # We check if the conditions match before rejecting a script for requiring tagging
+         foundMatchingScript = False
+         if action == 'REZ' and re.search(r'onRez', autoS): foundMatchingScript = True
+         if action == 'SCORE' and re.search(r'onScore', autoS): foundMatchingScript = True
+         if action == 'PLAY' and re.search(r'onPlay', autoS): foundMatchingScript = True
+         if foundMatchingScript and re.search(r'ifTagged', autoS) and runnerPL.Tags == 0 and not re.search(r'isOptional', CardsAS.get(card.model,'')) and not re.search(r'doesNotBlock', CardsAS.get(card.model,'')):
+            whisper("{} must be tagged in order to use this card".format(runnerPL))
+            return 'ABORT'
+   else: 
+      if re.search(r'ifTagged', CardsAA.get(card.model,'')) and runnerPL.Tags == 0 and not re.search(r'isOptional', CardsAS.get(card.model,'')) and not re.search(r'doesNotBlock', CardsAS.get(card.model,'')):
+         whisper("{} must be tagged in order to use this card".format(runnerPL))
+         return 'ABORT'
    if re.search(r'isExposeTarget', CardsAS.get(card.model,'')) and getSetting('ExposeTargetsWarn',True):
       if confirm("This card will automatically provide a bonus depending on how many non-exposed derezzed cards you've selected.\
                 \nMake sure you've selected all the cards you wish to expose and have peeked at them before taking this action\
