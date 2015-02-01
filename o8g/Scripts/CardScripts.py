@@ -4881,7 +4881,7 @@ Checkpoint
 -----
 bc0f047c-01b1-427f-a439-d451eda07017
 -----
-onRez:Gain1Bad Publicity||atSuccessfulRun:Inflict3MeatDamage-perMarker{Checked}$$Remove999Checked
+onRez:Gain1Bad Publicity||atSuccessfulRun:Inflict3MeatDamage-perMarker{Checked}-onOpponent$$Remove999Checked
 +++++
 A0B0G0T0:Trace5-traceEffects<Put1Checked,None>
 .....
@@ -4971,7 +4971,7 @@ bc0f047c-01b1-427f-a439-d451eda07028
 -----
 
 +++++
-A0B0G0T2:SimplyAnnounce{trash an accessed operation}-onlyOnce
+A0B0G0T2:SimplyAnnounce{trash an accessed operation}
 .....
 MaxX
 -----
@@ -4997,11 +4997,11 @@ onPlay:Gain3Clicks$$Inflict1BrainDamage-nonPreventable
 +++++
 
 .....
-I&#039;ve Had Worse
+I've Had Worse
 -----
 bc0f047c-01b1-427f-a439-d451eda07032
 -----
-onPlay:Draw3Cards
+onPlay:Draw3Cards||onMeatDMGDiscard:Draw3Cards||onNetDMGDiscard:Draw3Cards
 +++++
 
 .....
@@ -5073,15 +5073,15 @@ Gravedigger
 -----
 bc0f047c-01b1-427f-a439-d451eda07041
 -----
-whileInstalled:Put1Virus-foreachCardTrashed-byOpponent
+whileInstalled:Put1Virus-foreachCardTrashed-byOpponent-typenonOperation
 +++++
-
+A1B0G0T0:Remove1Virus-isCost$$Draw1Card-toTrash-ofOpponent
 .....
 Hivemind
 -----
 bc0f047c-01b1-427f-a439-d451eda07042
 -----
-onPlay:Put1Virus
+onInstall:Put1Virus
 +++++
 A0B0G0T0:Remove1Virus-isCost$$Put1Virus-Targeted-atProgram_and_Virus
 .....
@@ -5089,7 +5089,7 @@ Progenitor
 -----
 bc0f047c-01b1-427f-a439-d451eda07043
 -----
-Put3DaemonMU||whileInstalled:Put1Virus-DemiAutoTargeted-onAttachment-choose1-foreachVirusPurged
+onInstall:Put3DaemonMU||whileInstalled:Put1Virus-AutoTargeted-onAttachment-foreachVirusPurged
 +++++
 
 .....
@@ -5129,7 +5129,7 @@ Human First
 -----
 bc0f047c-01b1-427f-a439-d451eda07048
 -----
-whileInstalled:Gain1Credits-perProperty{Stat}-foreachAgendaScored-onTriggerCard||whileInstalled:Gain1Credits-perProperty{Stat}-foreachAgendaLiberated-onTriggerCard
+whileInstalled:Gain1Credits-perTargetProperty{Stat}-foreachAgendaScored-onTriggerCard||whileInstalled:Gain1Credits-perTargetProperty{Stat}-foreachAgendaLiberated-onTriggerCard
 +++++
 
 .....
@@ -5145,15 +5145,15 @@ Sacrificial Clone
 -----
 bc0f047c-01b1-427f-a439-d451eda07050
 -----
-onDamage:CreateDummy-with99protectionAllDMG-trashCost$$TrashMultiple-AutoTarget-atHardware_or_Resource_and_nonVirtual$$Discard999Cards$$Lose999Credits$$Lose999Tags
+onDamage:TrashMultiple-AutoTargeted-atHardware_or_Resource_and_nonVirtual$$Discard999Cards$$Lose999Credits$$Lose999Tags$$CreateDummy-with100protectionAllDMG-trashCost
 +++++
-A0B0G0T1:CreateDummy-with99protectionAllDMG-trashCost$$TrashMultiple-AutoTarget-atHardware_or_Resource_and_nonVirtual$$Discard999Cards$$Lose999Credits$$Lose999Tags
+A0B0G0T1:TrashMultiple-AutoTargeted-atHardware_or_Resource_and_nonVirtual$$Discard999Cards$$Lose999Credits$$Lose999Tags$$CreateDummy-with100protectionAllDMG-trashCost
 .....
 Stim Dealer
 -----
 bc0f047c-01b1-427f-a439-d451eda07051
 -----
-atTurnStart:Inflict1BrainDamage-ifOrigmarkers{Power}ge2||atTurnStart:Put1Power-ifOrigmarkers{Power}le1$$Gain1Clicks
+atTurnStart:Inflict1BrainDamage-nonPreventable-ifOrigmarkers{Power}ge2$$Remove99Power$$Put1Brained||atTurnStart:Put1Power-hasntOrigMarker{Brained}-ifOrigmarkers{Power}le1||atTurnStart:Remove99Brained
 +++++
 
 .....
@@ -5177,9 +5177,9 @@ Qianju PT # Scripted manually in parseNewCounters()
 -----
 bc0f047c-01b1-427f-a439-d451eda07054
 -----
-atTurnPreStart:Remove1Used
+atTurnPreStart:Remove1Power
 +++++
-A0B0G0T0:Lose1Clicks-isCost-onlyOnce$$Put1Used
+A0B0G0T0:Lose1Clicks-isCost-onlyOnce$$Put1Power
 .....
 Data Folding
 -----

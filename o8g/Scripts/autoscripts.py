@@ -75,7 +75,6 @@ def executePlayScripts(card, action):
          CustomScript(card,action)
          Autoscripts.remove(autoS)
    if len(Autoscripts) == 0: return
-   if debugVerbosity >= 2: notify ('Looking for multiple choice options') # Debug
    if action == 'PLAY': trigger = 'onPlay' # We figure out what can be the possible multiple choice trigger
    elif action == 'REZ': trigger = 'onRez'
    elif action == 'INSTALL': trigger = 'onInstall'
@@ -123,6 +122,9 @@ def executePlayScripts(card, action):
           (effectType.group(1) == 'whileLiberated' and ds != 'runner') or
           (effectType.group(1) == 'onDamage' and action != 'DAMAGE') or
           (effectType.group(1) == 'onLiberation' and action != 'LIBERATE') or
+          (effectType.group(1) == 'onBrainDMGDiscard' and action != 'BRAINDMGDISCARD') or
+          (effectType.group(1) == 'onMeatDMGDiscard' and action != 'MEATDMGDISCARD') or
+          (effectType.group(1) == 'onNetDMGDiscard' and action != 'NETDMGDISCARD') or
           (effectType.group(1) == 'onTrash' and action != 'TRASH' and action!= 'UNINSTALL' and action != 'DEREZ') or
           (effectType.group(1) == 'onDerez' and action != 'DEREZ')): 
          debugNotify("Rejected {} because {} does not fit with {}".format(autoS,effectType.group(1),action))
@@ -141,6 +143,7 @@ def executePlayScripts(card, action):
          if not ifVarSet(activeAutoscript): continue # If the script requires a shared AutoScript variable to be set to a specific value.
          if not checkOrigSpecialRestrictions(activeAutoscript,card): continue  
          if not chkRunStatus(activeAutoscript): continue
+         if chkTagged(activeAutoscript) == 'ABORT': continue
          if re.search(r'-ifAccessed', activeAutoscript) and ds != 'runner': 
             debugNotify("!!! Failing script because card is not being accessed")
             continue # These scripts are only supposed to fire from the runner (when they access a card)         
@@ -172,10 +175,10 @@ def executePlayScripts(card, action):
             else: Removal = False
          #elif action == 'DEREZ' or action == 'TRASH': continue # If it's just a one-off event, and we're trashing it, then do nothing.
          else: Removal = False
-         targetC = findTarget(activeAutoscript)
+         targetC = findTarget(activeAutoscript,card = card)
          targetPL = ofwhom(activeAutoscript,card.owner) # So that we know to announce the right person the effect, affects.
          announceText = "{} uses {}'s ability to".format(targetPL,card)
-         debugNotify(" targetC: {}".format(targetC), 3) # Debug
+         #confirm(" targetC: {}".format(targetC.Name)) # Debug
          if effect.group(1) == 'Gain' or effect.group(1) == 'Lose':
             if Removal: 
                if effect.group(1) == 'Gain': passedScript = "Lose{}{}".format(effect.group(2),effect.group(3))
@@ -606,7 +609,7 @@ def autoscriptOtherPlayers(lookup, origin_card = Identity, count = 1): # Functio
          if not checkSpecialRestrictions(autoS,origin_card): continue #If we fail the special restrictions on the trigger card, we also abort.
          if re.search(r'onlyOnce',autoS) and oncePerTurn(card, silent = True, act = 'automatic') == 'ABORT': continue # If the card's ability is only once per turn, use it or silently abort if it's already been used
          if re.search(r'onTriggerCard',autoS): targetCard = [origin_card] # if we have the "-onTriggerCard" modulator, then the target of the script will be the original card (e.g. see Grimoire)
-         elif re.search(r'AutoTargeted',autoS): targetCard = findTarget(autoS)
+         elif re.search(r'AutoTargeted',autoS): targetCard = findTarget(autoS, card = card)
          else: targetCard = None
          debugNotify("Automatic Autoscripts: {}".format(autoS), 2) # Debug
          #effect = re.search(r'\b([A-Z][A-Za-z]+)([0-9]*)([A-Za-z& ]*)\b([^:]?[A-Za-z0-9_&{} -]*)', autoS)
@@ -2026,7 +2029,7 @@ def findTarget(Autoscript, fromHand = False, card = None, dryRun = False): # Fun
                   isAttachment = False
                   for attachment in hostCards:
                      if hostCards[attachment] == card._id and attachment == targetLookup._id: 
-                        debugNotify("Attachment found! {}".format(targetLookup), 2)
+                        #confirm("Attachment found! {}".format(targetLookup))
                         isAttachment = True
                   if not isAttachment: continue
                if checkCardRestrictions(gatherCardProperties(targetLookup,Autoscript), targetGroups): 

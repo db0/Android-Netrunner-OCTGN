@@ -24,6 +24,7 @@ Changelog - Android:Netrunner LCG OCTGN Game Definition
    * Progenitor has 3 MU of RAM, but don't host more than 1 proggie.
    * Archives Interface: Manual Use. Do it before accessing
    * Qianju PT: Manual use for starting the effect
+   * The dummy Sac. Clone card won't trash itself when used. Will fix later.
   
   
 ### 3.16.5.x

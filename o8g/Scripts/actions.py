@@ -993,7 +993,9 @@ def intdamageDiscard(count = 1, dmgType = 'Meat'):
          if ds == 'corp': card.moveTo(me.piles['Archives(Hidden)']) # For testing.
          else: card.moveTo(me.piles['Heap/Archives(Face-up)'])
          notify("--DMG: {} discarded.".format(card))
-   for card in discardedList: executePlayScripts(Identity,'{}DMGDiscard'.format(dmgType)) # If we have cards with effects when discarded (e.g. I've had worse) we trigger them after all damage has been applied.
+   for card in discardedList: 
+      #confirm("trashed {} with {}. Sending {}".format(card.Name,dmgType,'{}DMGDiscard'.format(dmgType)))
+      executePlayScripts(card,'{}DMGDiscard'.format(dmgType)) # If we have cards with effects when discarded (e.g. I've had worse) we trigger them after all damage has been applied.
       
 
 def addBrainDmg(group, x = 0, y = 0):

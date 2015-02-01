@@ -519,6 +519,8 @@ def sendToTrash(card, pile = None): # A function which takes care of sending a c
    debugNotify("sendToTrash says previous group = {} and highlight = {}".format(card.group.name,card.highlight))
    if card.group == table: 
       if card.highlight != DummyColor: playTrashSound(card) # We don't want the trash sound for resident effects.
+      chkAgendaVictory() # Just in case we trashed the Board
+      remoteCall(findOpponent(),'chkAgendaVictory',[]) # Just in case we trashed the Board
       autoscriptOtherPlayers('CardTrashed',card)
    if card.group == table or chkModulator(card, 'runTrashScriptWhileInactive', 'onTrash'): 
       executePlayScripts(card,'TRASH') # We don't want to run automations on simply revealed cards, but some of them will like Director Haas.
@@ -647,8 +649,8 @@ def chkAgendaVictory():
    mute()
    if getSpecial('Identity',fetchCorpPL()).name == "Harmony Medtech": agendaPTneeded = 6
    else: agendaPTneeded = 7
-   if ds == 'runner' and len([card for card in table if card.isFaceUpa and card.Name == "The Board" and not card.marker[mdict['Scored']]]):
-      agendaPTneeded += len([card for card in table if card.controller == me and card.marker[mdict['Scored']]]) # If the board is active, we increase the agenda points needed for each scored agenda or card acting as an agenda
+   if ds == 'runner' and len([card for card in table if card.isFaceUp and card.Name == "The Board" and not card.markers[mdict['Scored']]]):
+      agendaPTneeded += len([card for card in table if card.controller == me and card.markers[mdict['Scored']]]) # If the board is active, we increase the agenda points needed for each scored agenda or card acting as an agenda
    if me.counters['Agenda Points'].value >= agendaPTneeded:
       notify("{} wins the game!".format(me))
       reportGame()
