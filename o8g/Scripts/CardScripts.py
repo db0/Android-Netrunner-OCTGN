@@ -4977,7 +4977,7 @@ MaxX
 -----
 bc0f047c-01b1-427f-a439-d451eda07029
 -----
-atTurnStart:Draw2Cards-toTrash$$Draw1Card
+atTurnStart:Draw2Cards-toTrash-duringMyTurn$$Draw1Card
 +++++
 
 .....
