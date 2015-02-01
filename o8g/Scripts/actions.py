@@ -1297,7 +1297,7 @@ def accessTarget(group = table, x = 0, y = 0, noQuestionsAsked = False):
    for card in cardList:
       if chkGagarinTax(card) == 'ABORT': continue
       origController[card._id] = card.controller # We store the card's original controller to know against whom to check for scripts (e.g. when accessing a rezzed encryption protocol)
-      grabCardControl(card)
+      #grabCardControl(card)
       cFaceD = False
       if not card.isFaceUp:
          flipCard(card,True)
@@ -1313,7 +1313,7 @@ def accessTarget(group = table, x = 0, y = 0, noQuestionsAsked = False):
             debugNotify("Doing Remote Call with player = {}. card = {}, autoS = {}".format(me,card,autoS))
             remoteCall(card.owner, 'remoteAutoscript', [card,autoS])
             if re.search(r'-pauseRunner',autoS): # If the -pauseRunner modulator exists, we need to prevent the runner form trashing or scoring cards, as the amount of advancement tokens they have will be wiped and those may be important for the ambush effect.
-               passCardControl(card,card.owner) # We pass control back to the original owner in case of a trap, to allow them to manipulate their own card (e.g. Toshiyuki Sakai)
+               #passCardControl(card,card.owner) # We pass control back to the original owner in case of a trap, to allow them to manipulate their own card (e.g. Toshiyuki Sakai)
                while not confirm("Ambush! You have stumbled into a {}\
                                \n(This card activates even when inactive. You need to wait for the corporation now.)\
                              \n\nHas the corporation decided whether or not to the effects of this ambush?\
@@ -1323,7 +1323,7 @@ def accessTarget(group = table, x = 0, y = 0, noQuestionsAsked = False):
                   notify(":::NOTICE::: {} is still waiting for {} to decide whether to use {} or not".format(me,card.owner,card))
       if card.group != table: whisper(":::Access Aborted::: Card has left the table!")
       else:
-         grabCardControl(card) # If the card is still in the table after any trap option resolves...
+         #grabCardControl(card) # If the card is still in the table after any trap option resolves...
          if card.Type == 'ICE':
             cStatTXT = '\nStrength: {}.'.format(card.Stat)
          elif card.Type == 'Asset' or card.Type == 'Upgrade':
@@ -1397,7 +1397,7 @@ def accessTarget(group = table, x = 0, y = 0, noQuestionsAsked = False):
             remoteCall(fetchCorpPL(),'peekCard',[card])
          card.highlight = None
          if card.group == table and not card.markers[mdict['Scored']] and not card.markers[mdict['ScorePenalty']]: 
-            passCardControl(card,card.owner) # We pass control back to the corp, but only if we didn't steal the card.
+            #passCardControl(card,card.owner) # We pass control back to the corp, but only if we didn't steal the card.
             try: del origController[card._id] # We use a try: just in case...
             except: pass
 
