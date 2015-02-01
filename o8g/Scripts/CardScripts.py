@@ -4881,7 +4881,7 @@ Checkpoint
 -----
 bc0f047c-01b1-427f-a439-d451eda07017
 -----
-onRez:Gain1Bad Publicity||atSuccessfulRun:Inflict3MeatDamage-perMarker{Checked}-onOpponent$$Remove999Checked
+onRez:Gain1Bad Publicity||atSuccessfulRun:Inflict3MeatDamage-perMarker{Checked}-onOpponent$$Remove999Checked||atJackOut:Remove999Checked
 +++++
 A0B0G0T0:Trace5-traceEffects<Put1Checked,None>
 .....
