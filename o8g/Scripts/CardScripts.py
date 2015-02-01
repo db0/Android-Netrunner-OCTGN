@@ -5121,7 +5121,7 @@ Vigil
 -----
 bc0f047c-01b1-427f-a439-d451eda07047
 -----
-atTurnStart:CustomScript-duringMyTurn
+whileInPlay:Provide1MU||atTurnStart:CustomScript-duringMyTurn
 +++++
 
 .....
