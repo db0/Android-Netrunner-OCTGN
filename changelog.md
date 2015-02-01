@@ -3,7 +3,10 @@ Changelog - Android:Netrunner LCG OCTGN Game Definition
 
 ### 3.17.1.x
 
-* Various bugfixes
+* Livence Acquisition will now install from HQ and Archives properly, and rez what is installed.
+* DRT will not refuse to rez is runner is untagged
+* Utensils should make runs now
+* Various small bugfixes
 
 ### 3.17.0.x
 
