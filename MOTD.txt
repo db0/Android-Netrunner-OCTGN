@@ -1,12 +1,14 @@
 =====Message of the Day======
 
-Oops! Sorry about Corp agendas not scoring. should be fixed now. Restart your clients!
+Order and Chaos is now Rezzed!
 
-I just heard and fixed the bug about scoring agendas from R&D. Let me know if you see anything similar.
+As always, most cards have been scripted. Check the changelog for tricky scripts. 
 
-PS: O&C should be arriving soon ;)
+I tried to get this ASAP so there might be some bugs remaining. Please lemme know if you find any
 
-Thanks and enjoy!
+Note: Itinerant Protesters and Satellite Grid need *Manual Tracking*
+
+PS: Bug where corp lost control of their server cards when runner accessed them should be fixed now.
 ---
 If you enjoy my work, please consider becoming my patron by donating a few credits a month. 
 Devs need more Diesel!
