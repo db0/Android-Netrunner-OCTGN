@@ -5153,7 +5153,7 @@ Stim Dealer
 -----
 bc0f047c-01b1-427f-a439-d451eda07051
 -----
-atTurnStart:Inflict1BrainDamage-nonPreventable-ifOrigmarkers{Power}ge2$$Remove99Power$$Put1Brained||atTurnStart:Put1Power-hasntOrigMarker{Brained}-ifOrigmarkers{Power}le1||atTurnStart:Remove99Brained
+atTurnStart:Inflict1BrainDamage-nonPreventable-ifOrigmarkers{Power}ge2-durinMyTurn$$Remove99Power$$Put1Brained||atTurnStart:Put1Power-hasntOrigMarker{Brained}-ifOrigmarkers{Power}le1-durinMyTurn||atTurnStart:Remove99Brained-durinMyTurn
 +++++
 
 .....
