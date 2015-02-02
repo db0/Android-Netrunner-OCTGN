@@ -877,7 +877,7 @@ def JintekiCP(card,count): # Function which takes care that the Jinteki Chronos 
    targetPL = findOpponent()
    if not len(targetPL.hand): remoteCall(targetPL, 'intdamageDiscard',[count,'Net']) # If their hand is empty we need to flatline them
    else:
-      grabPileControl(targetPL.hand)
+      #grabPileControl(targetPL.hand)
       #targetPL.hand.setVisibility('all')
       #update()
       handList = [c for c in targetPL.hand]
@@ -888,7 +888,7 @@ def JintekiCP(card,count): # Function which takes care that the Jinteki Chronos 
          sendToTrash(handList[choice])
          notify("=> {} uses {}'s ability to trash {} with the first net damage".format(me,card,handList[choice]))
       for c in handList: c.moveTo(targetPL.hand)
-      passPileControl(targetPL.hand,targetPL)
+      #passPileControl(targetPL.hand,targetPL)
       #remoteCall(targetPL,'grabVisibility',[targetPL.hand])
       if choice != None: 
          if count - 1: remoteCall(targetPL, 'intdamageDiscard',[count - 1,'Net']) # If there's any leftover damage, we inflict it now.

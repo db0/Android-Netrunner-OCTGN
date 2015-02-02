@@ -1757,7 +1757,8 @@ def ModifyStatus(Autoscript, announceText, card, targetCards = None, notificatio
          else: scoreType = 'liberatedAgenda'
          placeCard(targetCard, 'SCORE', type = scoreType)
          card.highlight = None
-         card.isFaceUp = True
+         flipCard(card)
+         #card.isFaceUp = True
          update()
          if targetCard.Type == 'Agenda': 
             targetCard.markers[mdict['Scored']] += 1
@@ -1769,7 +1770,7 @@ def ModifyStatus(Autoscript, announceText, card, targetCards = None, notificatio
                autoscriptOtherPlayers('AgendaLiberated',card)
                clearCurrents('LIBERATE',card)
          debugNotify("Current card group before scoring = {}".format(targetCard.group.name))
-         #grabCardControl(targetCard,targetPL)
+         grabCardControl(targetCard,targetPL)
          # We do not autoscript other players (see http://boardgamegeek.com/thread/914076/personal-evolution-and-notoriety)
          if targetPL.counters['Agenda Points'].value >= 7 or (getSpecial('Identity',fetchCorpPL()).name == "Harmony Medtech" and targetPL.counters['Agenda Points'].value >= 6):
             notify("{} wins the game!".format(targetPL))
