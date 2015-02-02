@@ -394,9 +394,9 @@ def jackOut(group=table,x=0,y=0, silent = False):
       runTarget = runTargetRegex.group(1) # If the runner is not feinting, then extract the target from the shared variable
       if ds == 'runner' : myIdent.markers[mdict['BadPublicity']] = 0 #If we're the runner, then remove out remaining bad publicity tokens
       else: 
-         grabCardControl(enemyIdent) # Taking control to avoid errors.
+         #grabCardControl(enemyIdent) # Taking control to avoid errors.
          enemyIdent.markers[mdict['BadPublicity']] = 0 # If we're not the runner, then find the runners and remove any bad publicity tokens
-         passCardControl(enemyIdent,enemyIdent.owner)
+         #passCardControl(enemyIdent,enemyIdent.owner)
       if getGlobalVariable('SuccessfulRun') == 'False': playRunUnsuccesfulSound()
       atTimedEffects('JackOut') # If this was a simple jack-out, then make the end-of-run effects trigger only jack-out effects
       setGlobalVariable('status','idle') # Clear the run variable
