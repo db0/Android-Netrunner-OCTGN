@@ -5123,7 +5123,7 @@ bc0f047c-01b1-427f-a439-d451eda07047
 -----
 whileInPlay:Provide1MU||atTurnStart:CustomScript-duringMyTurn
 +++++
-
+A0B0G0T0:Draw1Card
 .....
 Human First
 -----
