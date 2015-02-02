@@ -1557,26 +1557,25 @@ def ARCscore(group=table, x=0,y=0):
    if ds == 'corp':
       whisper("This action is only for the use of the runner.")
       return
-   targetPL = ofwhom('-ofOpponent')
+   targetPL = fetchCorpPL()
    debugNotify("Found opponent.", 3) #Debug
    ARC = targetPL.piles['Heap/Archives(Face-up)']
-   grabPileControl(ARC)
-   grabPileControl(targetPL.piles['Archives(Hidden)'])
-   for card in targetPL.piles['Archives(Hidden)']: card.moveTo(ARC) # When the runner accesses the archives, all  cards of the face up archives.
-   passPileControl(targetPL.piles['Archives(Hidden)'],targetPL)
+   if len(targetPL.piles['Archives(Hidden)']): 
+      remoteCall(targetPL,'revealHiddenArc',[me])
+      return
    if len(ARC) == 0:
       whisper("Corp's Archives are empty. You cannot take this action")
       return
    playAccessSound('Archives')
-   rnd(10,100) # A small pause
    agendaFound = False
    for card in ARC:
       debugNotify("Checking: {}.".format(card), 3) #Debug
       origController[card._id] = targetPL # We store the card's original controller to know against whom to check for scripts (e.g. when accessing a rezzed encryption protocol)
       if card.Type == 'Agenda' and not re.search(r'-disableAutoStealingInArchives',CardsAS.get(card.model,'')): 
          agendaFound = True
-         card.moveToTable(0,0)
-         card.highlight = RevealedColor
+         #placeOnTable(card,0,0,False,RevealedColor)
+         #card.moveToTable(0,0)
+         #card.highlight = RevealedColor
          extraCredCost = calcAgendaStealCost(card)
          if extraCredCost: 
             reduction = reduceCost(card, 'LIBERATE', extraCredCost, dryRun = True)
@@ -1602,7 +1601,8 @@ def ARCscore(group=table, x=0,y=0):
                   notify("{} paid {}{} to liberate {}".format(me,uniCredit(extraCredCost - reduction),extraText2,card))
             else: scrAgenda(card,silent = True) 
          else: notify(":> {} opts not to steal {}".format(me,card))
-         if card.highlight == RevealedColor: card.moveTo(ARC) # If the runner opted not to score the agenda, put it back into the deck.
+         #if card.highlight == RevealedColor: changeCardGroup(card, ARC) # If the runner opted not to score the agenda, put it back into the deck.
+         #if card.highlight == RevealedColor: card.moveTo(ARC) # If the runner opted not to score the agenda, put it back into the deck.
       Autoscripts = CardsAS.get(card.model,'').split('||')
       debugNotify("Grabbed AutoScripts", 4)
       for autoS in Autoscripts:
@@ -1613,7 +1613,6 @@ def ARCscore(group=table, x=0,y=0):
       try: del origController[card._id] # We use a try: just in case...
       except: pass
    if not agendaFound: notify("{} has rumaged through {}'s archives but found no Agendas".format(Identity,targetPL))
-   passPileControl(ARC,targetPL)
    debugNotify("<<< ARCscore()")
 
 def HQaccess(group=table, x=0,y=0, silent = False, directTargets = None):
@@ -1744,28 +1743,6 @@ def HQaccess(group=table, x=0,y=0, silent = False, directTargets = None):
    #clearCovers() # Finally we clear any remaining cover cards.
    debugNotify("<<< HQAccess()", 3)
    
-def prepHQAccess(runner, count, silent, directTargets = None): # Helper function to reveal HQ cards and pass control to the runner to manipulate them
-   mute()
-   if directTargets: 
-      revealedCards = directTargets
-      for iter in range(len(revealedCards)):
-         card = revealedCards[iter]
-         card.moveToTable(playerside * -1 * iter * cwidth(card) - (len(revealedCards) * cwidth(card) / 2), 0 - yaxisMove(card) * -1, False)
-         card.highlight = RevealedColor
-   else: revealedCards = showatrandom(count = count, targetPL = me, silent = True)
-   if not len(revealedCards): 
-      notify(":::ERROR::: Corp has no cards in HQ")
-      return
-   for card in revealedCards: passCardControl(card,runner)
-   remoteCall(runner,'HQaccess',[table,0,0,silent,None])
-
-def isRezzable (card):
-   debugNotify(">>> isRezzable(){}".format(extraASDebug())) #Debug
-   mute()
-   Type = fetchProperty(card, 'Type')
-   if Type == "ICE" or Type == "Asset" or Type == "Upgrade" or Type == "Agenda": return True
-   else: return False
-
 def intRez (card, x=0, y=0, cost = 'not free', silent = False, silentCost = False, preReduction = 0):
    debugNotify(">>> intRez(){}".format(extraASDebug())) #Debug
    mute()

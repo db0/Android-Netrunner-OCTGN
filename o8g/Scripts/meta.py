@@ -665,7 +665,34 @@ def chkAgendaVictory():
    if me.counters['Agenda Points'].value >= agendaPTneeded:
       notify("{} wins the game!".format(me))
       reportGame()
-      
+ 
+def prepHQAccess(runner, count, silent, directTargets = None): # Helper function to reveal HQ cards and pass control to the runner to manipulate them
+   mute()
+   if directTargets: 
+      revealedCards = directTargets
+      for iter in range(len(revealedCards)):
+         card = revealedCards[iter]
+         card.moveToTable(playerside * -1 * iter * cwidth(card) - (len(revealedCards) * cwidth(card) / 2), 0 - yaxisMove(card) * -1, False)
+         card.highlight = RevealedColor
+   else: revealedCards = showatrandom(count = count, targetPL = me, silent = True)
+   if not len(revealedCards): 
+      notify(":::ERROR::: Corp has no cards in HQ")
+      return
+   for card in revealedCards: passCardControl(card,runner)
+   remoteCall(runner,'HQaccess',[table,0,0,silent,None])
+
+def revealHiddenArc(runner): # Helper call to move hidden archive into normal archive
+   mute()
+   for card in me.piles['Archives(Hidden)']: card.moveTo(me.piles['Heap/Archives(Face-up)']) # When the runner accesses the archives, all  cards of the face up archives.
+   remoteCall(runner,'ARCscore',[])
+    
+def isRezzable (card):
+   debugNotify(">>> isRezzable(){}".format(extraASDebug())) #Debug
+   mute()
+   Type = fetchProperty(card, 'Type')
+   if Type == "ICE" or Type == "Asset" or Type == "Upgrade" or Type == "Agenda": return True
+   else: return False
+ 
 #---------------------------------------------------------------------------
 # Card Placement
 #---------------------------------------------------------------------------

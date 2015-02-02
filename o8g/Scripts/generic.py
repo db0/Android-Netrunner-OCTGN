@@ -881,10 +881,14 @@ def indexSet(card,index): # A function that asks the current card controller to 
       else: card.setIndex(index) 
    else: remoteCall(card.controller,'indexSet',[card,index])
    
-def placeOnTable(card,x,y,facedownStatus = False): # A function that asks the current card controller to move a card to another table position
+def placeOnTable(card,x,y,facedownStatus = False,highlight = None): # A function that asks the current card controller to move a card to another table position
    mute()
-   if card.controller == me: card.moveToTable(x, y, facedownStatus)
-   else: remoteCall(card.controller,'placeOnTable',[card,x,y,facedownStatus])
+   if card.controller == me: 
+      card.moveToTable(x, y, facedownStatus)
+      if highlight:
+         if highlight == 'clear': card.highlight = None
+         else: card.highlight = highlight
+   else: remoteCall(card.controller,'placeOnTable',[card,x,y,facedownStatus,highlight])
    
 def changeCardGroup(card, group, sendToBottom = False): # A cumulative function to take care for handling card and group control when moving a card from one group to another.
    mute()
