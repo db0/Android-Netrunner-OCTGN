@@ -1382,9 +1382,9 @@ def accessTarget(group = table, x = 0, y = 0, noQuestionsAsked = False):
                   reduceCost(card, 'LIBERATE', extraCredCost)
                   rc = payCost(extraCredCost - reduction, "not free")
                   if rc != "ABORT":  # If the player couldn't pay to trash the card, we leave it where it is.
-                     scrAgenda(card,silent = True)
+                     remoteCall(me,'scrAgenda',[card,0,0,True]) # We need to remote call every-fucking-thing now because that script ALSO does remote calls.
                      notify("{} paid {}{} to liberate {}".format(me,uniCredit(extraCredCost - reduction),extraText2,card))
-               else: scrAgenda(card,silent = True)
+               else: remoteCall(me,'scrAgenda',[card,0,0,True])
             else:
                reduction = reduceCost(card, 'TRASH', num(card.Stat))
                rc = payCost(num(card.Stat) - reduction, "not free")
@@ -1392,15 +1392,19 @@ def accessTarget(group = table, x = 0, y = 0, noQuestionsAsked = False):
                   sendToTrash(card)
                   notify("{} paid {}{} to {} {}".format(me,uniCredit(num(card.Stat) - reduction),extraText2,uniTrash(),card))
          else: pass
-         if cFaceD and card.group == table and not card.markers[mdict['Scored']] and not card.markers[mdict['ScorePenalty']]: 
-            flipCard(card,False)
-            remoteCall(fetchCorpPL(),'peekCard',[card])
+         remoteCall(card.controller,'postAccessFlipCHK',[card,cFaceD])
          card.highlight = None
          if card.group == table and not card.markers[mdict['Scored']] and not card.markers[mdict['ScorePenalty']]: 
-            #passCardControl(card,card.owner) # We pass control back to the corp, but only if we didn't steal the card.
             try: del origController[card._id] # We use a try: just in case...
             except: pass
 
+def postAccessFlipCHK(card,PrevStatus): # So many fucking remote calls needed now...
+   mute()
+   update()
+   if PrevStatus and card.group == table and not card.markers[mdict['Scored']] and not card.markers[mdict['ScorePenalty']]: 
+      flipCard(card,False)
+      card.peek()
+      
 def RDaccessX(group = table, x = 0, y = 0,count = None): # A function which looks at the top X cards of the corp's deck and then asks the runner what to do with each one.
    debugNotify(">>> RDaccessX()") #Debug
    mute()
@@ -1523,11 +1527,13 @@ def RDaccessX(group = table, x = 0, y = 0,count = None): # A function which look
                reduceCost(RDtop[iter], 'LIBERATE', extraCredCost)
                rc = payCost(extraCredCost - reduction, "not free")
                if rc != "ABORT":  # If the player couldn't pay to trash the card, we leave it where it is.
-                  scrAgenda(RDtop[iter],silent = True)
+                  remoteCall(me,'scrAgenda',[RDtop[iter],0,0,True])
+                  #scrAgenda(RDtop[iter],silent = True)
                   notify("{} paid {}{} to liberate {}".format(me,uniCredit(extraCredCost - reduction),extraText2,RDtop[iter]))
                   removedCards += 1
             else:
-               scrAgenda(RDtop[iter],silent = True)
+               remoteCall(me,'scrAgenda',[RDtop[iter],0,0,True])
+               #scrAgenda(RDtop[iter],silent = True)
                removedCards += 1
          else:
             reduction = reduceCost(RDtop[iter], 'TRASH', num(cStat))
@@ -1597,9 +1603,9 @@ def ARCscore(group=table, x=0,y=0):
                reduceCost(card, 'LIBERATE', extraCredCost)
                rc = payCost(extraCredCost - reduction, "not free")
                if rc != "ABORT":  # If the player couldn't pay to trash the card, we leave it where it is.
-                  scrAgenda(card,silent = True)
+                  remoteCall(me,'scrAgenda',[card,0,0,True])
                   notify("{} paid {}{} to liberate {}".format(me,uniCredit(extraCredCost - reduction),extraText2,card))
-            else: scrAgenda(card,silent = True) 
+            else: remoteCall(me,'scrAgenda',[card,0,0,True]) 
          else: notify(":> {} opts not to steal {}".format(me,card))
          #if card.highlight == RevealedColor: changeCardGroup(card, ARC) # If the runner opted not to score the agenda, put it back into the deck.
          #if card.highlight == RevealedColor: card.moveTo(ARC) # If the runner opted not to score the agenda, put it back into the deck.
@@ -1725,9 +1731,9 @@ def HQaccess(group=table, x=0,y=0, silent = False, directTargets = None):
                   reduceCost(revealedCard, 'LIBERATE', extraCredCost)
                   rc = payCost(extraCredCost - reduction, "not free")
                   if rc != "ABORT":  # If the player couldn't pay to trash the card, we leave it where it is.
-                     scrAgenda(revealedCard,silent = True)
+                     remoteCall(me,'scrAgenda',[revealedCard,0,0,True]) 
                      notify("{} paid {}{} to liberate {}".format(me,uniCredit(extraCredCost - reduction),extraText2,revealedCard))
-               else: scrAgenda(revealedCard,silent = True)
+               else: remoteCall(me,'scrAgenda',[revealedCard,0,0,True]) 
             else:
                reduction = reduceCost(revealedCard, 'TRASH', num(revealedCard.Stat))
                rc = payCost(num(revealedCard.Stat) - reduction, "not free")
