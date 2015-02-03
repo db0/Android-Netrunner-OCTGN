@@ -1,5 +1,7 @@
 =====Message of the Day======
 
+UPDATE: Latest update should address agenda scoring problems and MaxX' ability. Lemme know if they persist.
+
 Order and Chaos is now Rezzed!
 
 As always, most cards have been scripted. Check the changelog for tricky scripts. 
@@ -8,7 +10,6 @@ I tried to get this ASAP so there might be some bugs remaining. Please lemme kno
 
 Note: Itinerant Protesters and Satellite Grid need *Manual Tracking*
 
-PS: Bug where corp lost control of their server cards when runner accessed them should be fixed now.
 ---
 If you enjoy my work, please consider becoming my patron by donating a few credits a month. 
 Devs need more Diesel!

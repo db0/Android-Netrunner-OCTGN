@@ -1,6 +1,12 @@
 Changelog - Android:Netrunner LCG OCTGN Game Definition
 ===============================================
 
+### 3.17.2.x
+
+* Hopefully fixes the issue with Agendas being scored face down, or cards being turned face down after trash from play.
+* Should fix MaxX malfunctioning
+
+
 ### 3.17.1.x
 
 * Livence Acquisition will now install from HQ and Archives properly, and rez what is installed.
