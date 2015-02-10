@@ -2238,7 +2238,7 @@ def intPlay(card, cost = 'not free', scripted = False, preReduction = 0, retainP
       MUtext = chkRAM(card)
       if card.Type == 'Resource' and hiddenresource == 'yes':
          placeCard(card, action, retainPos = retainPos)
-         executePlayScripts(card,action)
+         #executePlayScripts(card,action)
          card.isFaceUp = False
          notify("{} to install a hidden resource.".format(ClickCost))
          return
@@ -2293,7 +2293,7 @@ def intPlay(card, cost = 'not free', scripted = False, preReduction = 0, retainP
    playInstallSound(card)
    card.highlight = NewCardColor # We give all new cards an orange highlight to make them easiet to see.
    playEvOpSound(card)
-   executePlayScripts(card,action)
+   if card.isFaceUp: executePlayScripts(card,action)
    autoscriptOtherPlayers('Card'+action.capitalize(),card) # we tell the autoscriptotherplayers that we installed/played a card. (e.g. See Haas-Bioroid ability)
    if debugVerbosity >= 3: notify("<<< intPlay().action: {}\nAutoscriptedothers: {}".format(action,'Card'+action.capitalize())) #Debug
    if debugVerbosity >= 1:
