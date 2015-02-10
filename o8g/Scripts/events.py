@@ -197,11 +197,12 @@ def checkMovedCard(player,card,fromGroup,toGroup,oldIndex,index,oldX,oldY,x,y,is
          elif re.search(r'onDragDrop:IgnoreCosts-isSourceShard', CardsAS.get(card.model,'')):
             notify("-- {} has discovered an {} instead of accessing cards".format(me,card))
             runSuccess(ShardSuccess = True)
-   elif fromGroup != table and toGroup == table and card.owner == me: # If the player moves a card into the table from Deck or Trash, we assume they are installing it for free.
+   elif fromGroup != table and toGroup == table and card.owner == me: # If the player moves a card into the table from Deck or Trash, we assume they are installing it for free. 
       if not card.isFaceUp: card.peek()
       if confirm("Play this card from {} for free?".format(pileName(fromGroup))):
          intPlay(card, cost = 'free', scripted = True, retainPos = True)
-   elif fromGroup == table and toGroup != table and card.owner == me: # If the player dragged a card manually from the table to their discard pile...
+   elif fromGroup == table and toGroup != table and card.owner == me and ds == 'runner': # If the player dragged a card manually from the table to their discard pile...
+                                                                                         # We only do it for runners due to OCTGN bug #1374
       if card.isFaceUp and card.Type == 'Program': 
          chkRAM(card, 'UNINSTALL')
          notify(":> {} frees up {} MU".format(player,card.Requirement))
