@@ -5073,7 +5073,7 @@ Gravedigger
 -----
 bc0f047c-01b1-427f-a439-d451eda07041
 -----
-whileInstalled:Put1Virus-foreachCardTrashed-byOpponent-typenon{Operation}
+whileInstalled:Put1Virus-foreachCardTrashed-byOpponent-typenon{Operation}_and_non{Program}_and_non{Hardware}_and_non{Event}_and_non{Resource}
 +++++
 A1B0G0T0:Remove1Virus-isCost$$Draw1Card-toTrash-ofOpponent
 .....
