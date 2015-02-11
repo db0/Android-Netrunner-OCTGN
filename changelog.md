@@ -1,6 +1,11 @@
 Changelog - Android:Netrunner LCG OCTGN Game Definition
 ===============================================
 
+### 3.17.3.x
+
+* Fixed Gravedigger
+* Corp cards installed unrezzed won't trigger resident effects anymore (e.g. Mandatory Upgrades giving you a click on install)
+
 ### 3.17.2.x
 
 * Hopefully fixes the issue with Agendas being scored face down, or cards being turned face down after trash from play.
