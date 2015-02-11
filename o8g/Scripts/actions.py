@@ -1823,10 +1823,8 @@ def derez(card, x = 0, y = 0, silent = False):
          playDerezSound(card)
          executePlayScripts(card,'DEREZ')
          autoscriptOtherPlayers('CardDerezzed',card)
-         card.isFaceUp = False
-         if card.owner == me:
-            if debugVerbosity >= 0 and not confirm("Peek at card?"): return
-            card.peek()
+         flipCard(card,up = False)
+         remoteCall(card.owner,'peekCard',[card])
    else:
       notify ( "you can't derez a unrezzed card")
       return 'ABORT'
