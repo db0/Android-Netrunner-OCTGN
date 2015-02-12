@@ -2290,8 +2290,6 @@ def makeChoiceListfromCardList(cardList,includeText = False, includeGroup = Fals
    targetChoices = []
    debugNotify("About to prepare choices list.", 2)# Debug
    for T in cardList:
-      notify(T.Name)
-      notify("{}".format(T))
       if T.isFaceUp or T.owner == me: # If we own the card, we assume we're peeking at it already (unfortunately there's no way anymore to check if we peek at a card)
          debugNotify("Checking {}".format(T), 4)# Debug
          markers = 'Counters:'

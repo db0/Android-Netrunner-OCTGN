@@ -1716,7 +1716,7 @@ bc0f047c-01b1-427f-a439-d451eda02096
 -----
 
 +++++
-A0B0G0T0:Trace2-isSubroutine-traceEffects<SimplyAnnounce{sniff the runner's stack},None>||A0B0G0T0:UseCustomAbility
+A0B0G0T0:Trace2-isSubroutine-traceEffects<SimplyAnnounce{sniff the runner stack},None>||A0B0G0T0:UseCustomAbility
 
 .....
 Bernice Mai

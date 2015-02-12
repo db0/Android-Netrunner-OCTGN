@@ -890,12 +890,12 @@ def placeOnTable(card,x,y,facedownStatus = False,highlight = None): # A function
          else: card.highlight = highlight
    else: remoteCall(card.controller,'placeOnTable',[card,x,y,facedownStatus,highlight])
    
-def changeCardGroup(card, group, sendToBottom = False): # A cumulative function to take care for handling card and group control when moving a card from one group to another.
+def changeCardGroup(card, group, sendToBottom = False, index = 0): # A cumulative function to take care for handling card and group control when moving a card from one group to another.
    mute()
    if group.controller == me and card.controller == me:
       storeProperties(card) # Since we're at it, we might as well store its properties for later
       if sendToBottom: card.moveToBottom(group)
-      else: card.moveTo(group) # We move the card into the target pile
+      else: card.moveTo(group, index) # We move the card into the target pile
    elif card.controller != me: 
       remoteCall(card.controller,'changeCardGroup',[card, group, sendToBottom])
    else: # We only get here if we control the card but not the group

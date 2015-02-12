@@ -72,12 +72,8 @@ def UseCustomAbility(Autoscript, announceText, card, targetCards = None, notific
       count = askInteger("By which amount of trace strength did you exceeded the runner's link strength?",1)
       if not count: return 'ABORT'
       targetPL = findOpponent()
-      #addGroupVisibility(targetPL.piles['R&D/Stack'],me) # Workaround for OCTGN bug #1242
-      grabPileControl(targetPL.piles['R&D/Stack'])
-      #targetPL.piles['R&D/Stack'].addViewer(me)
       cardList = list(targetPL.piles['R&D/Stack'].top(count)) # We make a list of the top cards the corp can look at.
       debugNotify("Turning Runner's Stack Face Up", 2)
-      #if len(cardList): loopChk(cardList[len(cardList) - 1])
       if len(cardList) > 1:
          notify(":> {}'s Data Hound is sniffing through {}'s Stack".format(me,targetPL))
          choice = SingleChoice("Choose card to trash", makeChoiceListfromCardList(cardList))
@@ -92,12 +88,9 @@ def UseCustomAbility(Autoscript, announceText, card, targetCards = None, notific
          if len(cardList) == 1: choice = 0
          else: choice = SingleChoice("Choose card put on the {} position of the Stack".format(numOrder(idx)), makeChoiceListfromCardList(cardList))
          movedC = cardList.pop(choice)
-         movedC.moveTo(targetPL.piles['R&D/Stack'],idx) # If there's only one card left, we put it in the last available index location in the Stack. We always put the card one index position deeper, because the first card is the cover.
+         changeCardGroup(movedC, targetPL.piles['R&D/Stack'], index = idx)
          idx += 1
       debugNotify("Removing Visibility", 2)
-      #targetPL.piles['R&D/Stack'].removeViewer(me)
-      passPileControl(targetPL.piles['R&D/Stack'],targetPL)
-      #delGroupVisibility(targetPL.piles['R&D/Stack'],me) # Workaround for OCTGN bug #1242
       announceString = ':=> Sniff'
          #      __
          # (___()'`;   *Sniff*
