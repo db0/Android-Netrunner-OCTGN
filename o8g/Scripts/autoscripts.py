@@ -2290,36 +2290,42 @@ def makeChoiceListfromCardList(cardList,includeText = False, includeGroup = Fals
    targetChoices = []
    debugNotify("About to prepare choices list.", 2)# Debug
    for T in cardList:
-      debugNotify("Checking {}".format(T), 4)# Debug
-      markers = 'Counters:'
-      if T.markers[mdict['Advancement']] and T.markers[mdict['Advancement']] >= 1: markers += " {} Advancement,".format(T.markers[mdict['Advancement']])
-      if T.markers[mdict['Credits']] and T.markers[mdict['Credits']] >= 1: markers += " {} Credits,".format(T.markers[mdict['Credits']])
-      if T.markers[mdict['Power']] and T.markers[mdict['Power']] >= 1: markers += " {} Power.".format(T.markers[mdict['Power']])
-      if T.markers[mdict['Virus']] and T.markers[mdict['Virus']] >= 1: markers += " {} Virus.".format(T.markers[mdict['Virus']])
-      if T.markers[mdict['Agenda']] and T.markers[mdict['Agenda']] >= 1: markers += " {} Agenda.".format(T.markers[mdict['Agenda']])
-      if T.markers[mdict['DaemonMU']] and T.markers[mdict['DaemonMU']] >= 1: markers += " {} Daemon MU.".format(T.markers[mdict['DaemonMU']])
-      if markers != 'Counters:': markers += '\n'
-      else: markers = ''
-      debugNotify("Finished Adding Markers. Adding stats...", 4)# Debug               
-      stats = ''
-      stats += "Cost: {}. ".format(fetchProperty(T, 'Cost'))
-      cStat = fetchProperty(T, 'Stat')
-      cType = fetchProperty(T, 'Type')
-      if cType == 'ICE': stats += "Strength: {}.".format(cStat)
-      if cType == 'Program': stats += "MU: {}.".format(fetchProperty(T, 'Requirement'))
-      if cType == 'Agenda': stats += "Agenda Points: {}.".format(cStat)
-      if cType == 'Asset' or cType == 'Upgrade': stats += "Trash Cost: {}.".format(cStat)
-      if includeText: cText = '\n' + fetchProperty(T, 'Rules')
-      else: cText = ''
-      hostCards = eval(getGlobalVariable('Host Cards'))
-      attachmentsList = [Card(cID).Name for cID in hostCards if hostCards[cID] == T._id]
-      if len(attachmentsList) >= 1: cAttachments = '\nAttachments:' + str(attachmentsList)
-      else: cAttachments = ''
-      if includeGroup: cGroup = '\n' + pileName(T.group) # Include group is used to inform the player where the card resides in cases where they're selecting cards from multiple groups.
-      else: cGroup = ''
-      debugNotify("Finished Adding Stats. Going to choice...", 4)# Debug               
-      choiceTXT = "{}\n{}\n{}\n{}{}{}{}{}".format(fetchProperty(T, 'name'),cType,getKeywords(T),markers,stats,cAttachments,cText,cGroup)
-      targetChoices.append(choiceTXT)
+      notify(T.Name)
+      notify("{}".format(T))
+      if T.isFaceUp or T.owner == me: # If we own the card, we assume we're peeking at it already (unfortunately there's no way anymore to check if we peek at a card)
+         debugNotify("Checking {}".format(T), 4)# Debug
+         markers = 'Counters:'
+         if T.markers[mdict['Advancement']] and T.markers[mdict['Advancement']] >= 1: markers += " {} Advancement,".format(T.markers[mdict['Advancement']])
+         if T.markers[mdict['Credits']] and T.markers[mdict['Credits']] >= 1: markers += " {} Credits,".format(T.markers[mdict['Credits']])
+         if T.markers[mdict['Power']] and T.markers[mdict['Power']] >= 1: markers += " {} Power.".format(T.markers[mdict['Power']])
+         if T.markers[mdict['Virus']] and T.markers[mdict['Virus']] >= 1: markers += " {} Virus.".format(T.markers[mdict['Virus']])
+         if T.markers[mdict['Agenda']] and T.markers[mdict['Agenda']] >= 1: markers += " {} Agenda.".format(T.markers[mdict['Agenda']])
+         if T.markers[mdict['DaemonMU']] and T.markers[mdict['DaemonMU']] >= 1: markers += " {} Daemon MU.".format(T.markers[mdict['DaemonMU']])
+         if markers != 'Counters:': markers += '\n'
+         else: markers = ''
+         debugNotify("Finished Adding Markers. Adding stats...", 4)# Debug               
+         stats = ''
+         stats += "Cost: {}. ".format(fetchProperty(T, 'Cost'))
+         cStat = fetchProperty(T, 'Stat')
+         cType = fetchProperty(T, 'Type')
+         if cType == 'ICE': stats += "Strength: {}.".format(cStat)
+         if cType == 'Program': stats += "MU: {}.".format(fetchProperty(T, 'Requirement'))
+         if cType == 'Agenda': stats += "Agenda Points: {}.".format(cStat)
+         if cType == 'Asset' or cType == 'Upgrade': stats += "Trash Cost: {}.".format(cStat)
+         if includeText: cText = '\n' + fetchProperty(T, 'Rules')
+         else: cText = ''
+         hostCards = eval(getGlobalVariable('Host Cards'))
+         attachmentsList = [Card(cID).Name for cID in hostCards if hostCards[cID] == T._id]
+         if len(attachmentsList) >= 1: cAttachments = '\nAttachments:' + str(attachmentsList)
+         else: cAttachments = ''
+         if includeGroup: cGroup = '\n' + pileName(T.group) # Include group is used to inform the player where the card resides in cases where they're selecting cards from multiple groups.
+         else: cGroup = ''
+         debugNotify("Finished Adding Stats. Going to choice...", 4)# Debug               
+         choiceTXT = "{}\n{}\n{}\n{}{}{}{}{}".format(fetchProperty(T, 'name'),cType,getKeywords(T),markers,stats,cAttachments,cText,cGroup)
+         targetChoices.append(choiceTXT)
+      else:
+         if T.orientation == Rot90: targetChoices.append('Unrezzed ICE at {}'.format(T.position))
+         else: targetChoices.append('Unrezzed card at {}'.format(T.position))
    return targetChoices
    debugNotify("<<< makeChoiceListfromCardList()", 3)
    
