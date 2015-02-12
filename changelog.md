@@ -1,6 +1,14 @@
 Changelog - Android:Netrunner LCG OCTGN Game Definition
 ===============================================
 
+### 3.17.4.x
+
+* Fixed multiple-chhoice hosting (e.g. Kaissas) revealing face-down ICE
+* Fixed Data Hound (again)
+* Fixed Witness Tampering
+* Fixed Emergency Shutdown not peeking the card for the corp.
+* Fixed Human First
+
 ### 3.17.3.x
 
 * Fixed Gravedigger
