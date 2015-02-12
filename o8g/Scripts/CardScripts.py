@@ -5129,7 +5129,7 @@ Human First
 -----
 bc0f047c-01b1-427f-a439-d451eda07048
 -----
-whileInstalled:Gain1Credits-perTargetProperty{Stat}-foreachAgendaScored-onTriggerCard||whileInstalled:Gain1Credits-perTargetProperty{Stat}-foreachAgendaLiberated-onTriggerCard
+whileInstalled:Gain1Credits-perTriggeringProperty{Stat}-foreachAgendaScored-onTriggerCard||whileInstalled:Gain1Credits-perTargetProperty{Stat}-foreachAgendaLiberated-onTriggerCard
 +++++
 
 .....

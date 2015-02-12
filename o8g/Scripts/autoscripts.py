@@ -2400,19 +2400,19 @@ def ofwhom(Autoscript, controller = me):
    return targetPL
    
 def per(Autoscript, card = None, count = 0, targetCards = None, notification = None): # This function goes through the autoscript and looks for the words "per<Something>". Then figures out what the card multiplies its effect with, and returns the appropriate multiplier.
-   debugNotify(">>> per(){}".format(extraASDebug(Autoscript))) #Debug
-   debugNotify("per() passwd vars: card = {}. count = {}".format(card,count),4)
+   debugNotify(">>> per(){}".format(Autoscript)) #Debug
+   debugNotify("per() passwd vars: card = {}. count = {}, targetCards = {}".format(card.Name,count,[c.Name for c in targetCards]))
    div = 1
    ignore = 0
    max = 0 # A maximum of 0 means no limit   
-   per = re.search(r'\b(per|upto)(Target|Host|Every)?([A-Z][^-]*)-?', Autoscript) # We're searching for the word per, and grabbing all after that, until the first dash "-" as the variable. 
+   per = re.search(r'\b(per|upto)(Target|Host|Every|Triggering)?([A-Z][^-]*)-?', Autoscript) # We're searching for the word per, and grabbing all after that, until the first dash "-" as the variable. 
    if per and not re.search(r'<.*?(per|upto).*?>',Autoscript): # If the  search was successful...
                                                                # We ignore "per" between <> as these are trace effects and are not part of the same script
       debugNotify("per Regex groups: {}".format(per.groups()),3)
       multiplier = 0
-      if per.group(2) and (per.group(2) == 'Target' or per.group(2) == 'Every' or per.group(2) == 'Personal'): # If we're looking for a target or any specific type of card, we need to scour the requested group for targets.
+      if per.group(2) and (per.group(2) == 'Target' or per.group(2) == 'Every' or per.group(2) == 'Personal' or per.group(2) == 'Triggering'): # If we're looking for a target or any specific type of card, we need to scour the requested group for targets.
          debugNotify("Checking for Targeted per", 2)
-         perTargetRegex = re.search(r'\bper(Target|Personal|Every)', Autoscript)
+         perTargetRegex = re.search(r'\bper(Target|Personal|Every|Triggering)', Autoscript)
          perReqRegex = re.search(r'\bper(Target|Personal|Every).*?-at(.*)', Autoscript)
          debugNotify("perTargetRegex = {}".format(perTargetRegex.groups()))
          if not perReqRegex: seek = ''
@@ -2422,6 +2422,7 @@ def per(Autoscript, card = None, count = 0, targetCards = None, notification = N
                targetCards = findTarget('Targeted{}'.format(seek),True)
             else: targetCards = findTarget('Targeted{}'.format(seek))
          elif perTargetRegex.group(1) == 'Personal': targetCards = [card]
+         elif perTargetRegex.group(1) == 'Triggering': pass #In this case, we should already be passing the targetCards
          else: 
             if re.search('fromHand', Autoscript): targetCards = findTarget('AutoTargeted{}'.format(seek),True)
             else: targetCards = findTarget('AutoTargeted-{}'.format(seek))
