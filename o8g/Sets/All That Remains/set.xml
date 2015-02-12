@@ -175,7 +175,7 @@
 		<property name="Stat" value="4" />	
 		<property name="Rules" value="When the Runner encounters Merlin, you may reveal up to 2 grail ice from HQ. For the remainder of this run, Merlin gains the subroutines of the revealed ice in the order of your choice.&#xD;&#xA;[Subroutine] Do 2 net damage." />
 		<property name="Flavor" value="He who holds the staff of wisdom." />
-		<property name="Instructions" value="" />
+		<property name="Instructions" value="Reveal up to 2 grail ice from HQ||⏎ Do 2 net damage." />
 		<property name="Faction" value="Neutral" />
 		<property name="Influence" value="1" />
 		<property name="Side" value="corp" />
