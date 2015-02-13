@@ -2290,7 +2290,7 @@ def makeChoiceListfromCardList(cardList,includeText = False, includeGroup = Fals
    targetChoices = []
    debugNotify("About to prepare choices list.", 2)# Debug
    for T in cardList:
-      if T.isFaceUp or T.owner == me: # If we own the card, we assume we're peeking at it already (unfortunately there's no way anymore to check if we peek at a card)
+      if T.isFaceUp or T.owner == me or T.group != table: # If we own the card, we assume we're peeking at it already (unfortunately there's no way anymore to check if we peek at a card)
          debugNotify("Checking {}".format(T), 4)# Debug
          markers = 'Counters:'
          if T.markers[mdict['Advancement']] and T.markers[mdict['Advancement']] >= 1: markers += " {} Advancement,".format(T.markers[mdict['Advancement']])
