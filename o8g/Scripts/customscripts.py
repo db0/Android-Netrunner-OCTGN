@@ -535,15 +535,9 @@ def CustomScript(card, action = 'PLAY', origin_card = None, original_action = No
          whisper("Your Stack is does not have enough cards. You cannot take this action")
          return 'ABORT'
       notify("--> {} is visiting Mr. Li...".format(me))
-      for c in StackTop:
-         debugNotify("Pulling cards to hand", 3) #Debug
-         c.moveTo(me.hand)
-         debugNotify(" Looping...", 4)
-         loopChk(c)
-         storeProperties(c)
-      debugNotify("StackTop: {} in hand".format([c.Name for c in StackTop])) #Debug
-      returnChoice = SingleChoice('Select a card to put to the botton of your Stack', makeChoiceListfromCardList(StackTop, True), type = 'button', default = 0)
-      StackTop[returnChoice].moveToBottom(deck)
+      for c in StackTop: changeCardGroup(c,me.hand)
+      returnedCard = askCard(StackTop,'Choose which card to send to the bottom of your deck',card.Name)
+      returnedCard.moveToBottom(deck)
       catchwords = ["Excellent.","Don't leave town.","We'll be in touch.","We'll be seeing you soon...","Always a pleasure.","Remember our agreement.","Interesting request there."]
       goodbye = catchwords.pop(rnd(0, len(catchwords) - 1))
       notify('{} to have {} procure 1 card.\n- "{}"'.format(ClickCost,card,goodbye))
