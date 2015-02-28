@@ -118,7 +118,7 @@ def goToEndTurn(group, x = 0, y = 0):
    if re.search(r'running',getGlobalVariable('status')): jackOut() # If the player forgot to end the run, we do it for them now.
    if me.Clicks > 0: # If the player has not used all their clicks for this turn, remind them, just in case.
       if debugVerbosity <= 0 and not confirm("You have not taken all your clicks for this turn, are you sure you want to declare end of turn"): return
-   if currentHandSize(me) < 0: 
+   if currentHandSize(me) < 0 and ds == 'runner': 
       notify(":::Warning:::{} goes to sleep, never to wake up again (flatlined due to excessive brain damage.)".format(me)) #If the target does not have any more cards in their hand, inform they've flatlined.
       reportGame('Flatlined')
       return
