@@ -128,6 +128,7 @@ def executePlayScripts(card, action):
           (effectType.group(1) == 'onBrainDMGDiscard' and action != 'BRAINDMGDISCARD') or
           (effectType.group(1) == 'onMeatDMGDiscard' and action != 'MEATDMGDISCARD') or
           (effectType.group(1) == 'onNetDMGDiscard' and action != 'NETDMGDISCARD') or
+          ((effectType.group(1) == 'whileRezzed' or effectType.group(1) == 'whileInstalled' or effectType.group(1) == 'whileScored' or effectType.group(1) == 'whileLiberated') and (action == 'NETDMGDISCARD' or action == 'BRAINDMGDISCARD' or action == 'MEATDMGDISCARD')) or
           (effectType.group(1) == 'onTrash' and action != 'TRASH' and action!= 'UNINSTALL' and action != 'DEREZ') or
           (effectType.group(1) == 'onDerez' and action != 'DEREZ')): 
          debugNotify("Rejected {} because {} does not fit with {}".format(autoS,effectType.group(1),action))
