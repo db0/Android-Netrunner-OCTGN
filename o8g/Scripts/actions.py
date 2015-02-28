@@ -1425,7 +1425,7 @@ def RDaccessX(group = table, x = 0, y = 0,count = None): # A function which look
       if count == None: return
       skipIter = -1 # We only using this variable if we're resuming from a paused R&D access.
       playAccessSound('RD')
-   targetPL = ofwhom('-ofOpponent')
+   targetPL = fetchCorpPL()
    debugNotify("Found opponent. Storing the top {} as a list".format(count), 3) #Debug
    if len([c for c in table if c.Name == 'Showing Off']): # If there is a Showing off on the table, it means the runner is using it to run currently
       RDtop = list(targetPL.piles['R&D/Stack'].bottom(count))

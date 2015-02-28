@@ -2373,26 +2373,26 @@ def ofwhom(Autoscript, controller = me):
    debugNotify("Controller = {}".format(controller),2) #Debug
    if re.search(r'o[fn]Opponent', Autoscript):
       if debugVerbosity >= 2:  notify("Autoscript requirement found!")
-      if len(players) > 1:
+      if len(getPlayers()) > 1:
          if controller == me: # If we're the current controller of the card who's scripts are being checked, then we look for our opponent
             targetPL = None # First we Null the variable, to make sure it is filled.
-            for player in players:
+            for player in getPlayers():
                if player.getGlobalVariable('ds') == '': continue # This is a spectator 
                elif player != me and player.getGlobalVariable('ds') != ds:
                   targetPL = player # Opponent needs to be not us, and of a different type. 
                                     # In the future I'll also be checking for teams by using a global player variable for it and having players select their team on startup.
             if not targetPL: # If the variable was not filled, it means the opponent may not have set up their side first. In that case, we try and guess who it is
-               for player in players:
+               for player in getPlayers():
                   if len(player.hand) > 0: targetPL = player # If they have at least loaded a deck, we assume they're the opponent, as spectators shouldn't be loading up decks
                if not targetPL: # If we still don't have a probable opponent, we just choose the second player (but there's a chance we'll grab a spectator)
-                  targetPL = players[1]
+                  targetPL = getPlayers()[1]
          else: targetPL = me # if we're not the controller of the card we're using, then we're the opponent of the player (i.e. we're trashing their card)
       else: 
          if debugVerbosity >= 1: whisper("There's no valid Opponents! Selecting myself.")
          targetPL = me
    else: 
       if debugVerbosity >= 2:  notify("No autoscript requirement found")
-      if len(players) > 1:
+      if len(getPlayers()) > 1:
          if controller != me: targetPL = controller         
          else: targetPL = me
       else: targetPL = me

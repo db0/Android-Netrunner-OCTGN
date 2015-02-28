@@ -1,6 +1,10 @@
 Changelog - Android:Netrunner LCG OCTGN Game Definition
 ===============================================
 
+### 3.17.5.x
+
+* Corp cannot flatline due to brain damage anymore ;)
+
 ### 3.17.4.x
 
 * Fixed multiple-chhoice hosting (e.g. Kaissas) revealing face-down ICE
