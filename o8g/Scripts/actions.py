@@ -2479,8 +2479,9 @@ def draw(group):
          dailyList.append(c)
          changeCardGroup(c,me.hand)
       for iter in range(dailyBusiness):
-         returnedCard = askCard(dailyList)
+         returnedCard = askCard(dailyList,'Choose which card to send to the bottom of your deck ({}/{})'.format(iter+1,dailyBusiness),'Daily Business Show')
          returnedCard.moveToBottom(group)
+         dailyList.remove(returnedCard)
    if not (ds == 'corp' and newturn): autoscriptOtherPlayers('CardDrawnClicked',card)
    if ds == 'corp' and newturn: newturn = False # Need to do this later so as not to trigger autoscripts from the mnandatory draw.
    if len(group) <= 3 and ds == 'corp': notify(":::WARNING::: {} is about to be decked! R&D down to {} cards.".format(me,len(group)))
