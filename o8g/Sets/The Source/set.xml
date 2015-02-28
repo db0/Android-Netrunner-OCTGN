@@ -175,7 +175,7 @@
 		<property name="Stat" value="3" />	
 		<property name="Rules" value="[Subroutine] The Runner cannot make another run this turn." />
 		<property name="Flavor" value="There drew he forth the brand Excalibur,&#xA;And o&apos;er him, drawing it, the winter moon,&#xA;Brightening the skirts of a long cloud, ran forth&#xA;And sparkled keen with frost against the hilt:&#xA;For all the haft twinkled with diamonds sparks,&#xA;Myriads of topaz-lights, and jacinth work&#xA;Of subtlest jewellery. -Lord Tennyson" />
-		<property name="Instructions" value="Reveal up to 2 grail ice from HQ||⏎ Stop the Runner from making another run this turn." />
+		<property name="Instructions" value="⏎ Stop the Runner from making another run this turn." />
 		<property name="Faction" value="Neutral" />
 		<property name="Influence" value="0" />
 		<property name="Side" value="corp" />

@@ -4,6 +4,8 @@ Changelog - Android:Netrunner LCG OCTGN Game Definition
 ### 3.17.5.x
 
 * Corp cannot flatline due to brain damage anymore ;)
+* Exclibur doesn't have the option to reveal grail ICE anymore.
+
 
 ### 3.17.4.x
 

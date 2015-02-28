@@ -4675,7 +4675,7 @@ bc0f047c-01b1-427f-a439-d451eda06111
 -----
 atJackOut:TrashMyself-onlyforDummy
 +++++
-A0B0G0T0:UseCustomAbility-excludeDummy||A0B0G0T0:SimplyAnnounce{stop the runner from making more runs}-isSubroutine-excludeDummy||A0B0G0T0:SimplyAnnounce{stop the runner from making more runs}-isSubroutine-onlyforDummy$$TrashMyself-isSilent
+A0B0G0T0:SimplyAnnounce{stop the runner from making more runs}-isSubroutine-excludeDummy||A0B0G0T0:SimplyAnnounce{stop the runner from making more runs}-isSubroutine-onlyforDummy$$TrashMyself-isSilent
 .....
 Self-destruct
 -----
