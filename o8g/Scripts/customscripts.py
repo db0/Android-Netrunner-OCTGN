@@ -76,8 +76,8 @@ def UseCustomAbility(Autoscript, announceText, card, targetCards = None, notific
       debugNotify("Turning Runner's Stack Face Up", 2)
       if len(cardList) > 1:
          notify(":> {}'s Data Hound is sniffing through {}'s Stack".format(me,targetPL))
-         choice = SingleChoice("Choose card to trash", makeChoiceListfromCardList(cardList))
-         trashedC = cardList.pop(choice)
+         trashedC = askCard(cardList,"Choose card to Trash from the runner's Stack",card.Name)
+         cardList.remove(trashedC)
       else: trashedC = cardList.pop(0)
       debugNotify("Trashing {}".format(trashedC), 2)
       sendToTrash(trashedC)
@@ -85,9 +85,9 @@ def UseCustomAbility(Autoscript, announceText, card, targetCards = None, notific
       else: notify("{} has sniffed out and trashed {}".format(me,trashedC))
       idx = 0 # The index where we're going to be placing each card.
       while len(cardList) > 0:
-         if len(cardList) == 1: choice = 0
-         else: choice = SingleChoice("Choose card put on the {} position of the Stack".format(numOrder(idx)), makeChoiceListfromCardList(cardList))
-         movedC = cardList.pop(choice)
+         if len(cardList) == 1: movedC = cardList[0]
+         else: movedC = askCard(cardList,"Choose card put on the {} position of the Stack".format(numOrder(idx),card.Name))
+         cardList.remove(movedC)
          changeCardGroup(movedC, targetPL.piles['R&D/Stack'], index = idx)
          idx += 1
       debugNotify("Removing Visibility", 2)
