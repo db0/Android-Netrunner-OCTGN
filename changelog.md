@@ -5,6 +5,7 @@ Changelog - Android:Netrunner LCG OCTGN Game Definition
 
 * Corp cannot flatline due to brain damage anymore ;)
 * Exclibur doesn't have the option to reveal grail ICE anymore.
+* Some effects, such as Public Sympathy shouldn't trigger from Damaged cards in hand anymore.
 
 
 ### 3.17.4.x
