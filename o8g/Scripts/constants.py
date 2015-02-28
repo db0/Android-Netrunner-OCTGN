@@ -174,14 +174,8 @@ NewCardColor = "#ffa500" # Cards which came into play just this turn
 Xaxis = 'x'
 Yaxis = 'y'
 
-knownLeagues = {'BGG-L02'           : 'Acceletated Beta League', # The known leagues. Now the game will confirm this was a league match before submitting.
-                'BGG-L03'           : 'BGG Third League',
-                'BGG-L04'           : 'Show Your True Colors League',
-                'BGG-L05'           : 'Fear and Loathing in New Angeles League',
-                'HOL'               : 'Honor and OCTGN League',
-                'BGG Tournament 3'  : 'BGG Tournament 3',
-                'SHL2'              : 'Stimhack League 2',
-                'OGO L1'            : 'RPGnet OGO League'
+knownLeagues = { # The known leagues. Now the game will confirm this was a league match before submitting.
+                'SHL3'              : 'Stimhack League 3'
                }
                
 

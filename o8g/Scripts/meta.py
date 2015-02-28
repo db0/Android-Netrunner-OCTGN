@@ -1285,7 +1285,7 @@ def setleague(group = table, x=0,y=0, manual = True):
    debugNotify("global var = {}".format(league))
    if league == '': # If there is no league set, we attempt to find out the league name from the game name
       for leagueTag in knownLeagues:
-         if re.search(r'{}'.format(leagueTag),currentGameName()): league = leagueTag
+         if re.search(r'{}'.format(leagueTag),currentGameName(),re.IGNORECASE): league = leagueTag
    debugNotify("League after automatic check: {}".format(league))
    if manual:
       if not confirm("Do you want to set this match to count for an active league\n(Pressing 'No' will unset this match from all leagues)"): league = ''
