@@ -4683,7 +4683,7 @@ bc0f047c-01b1-427f-a439-d451eda06112
 -----
 
 +++++
-A0B0G0T1:Trace1-perTargetAsset_or_Upgrade_or_Agenda-traceEffects<Inflict3NetDamage-onOpponent,None>$$TrashMultiple-Targeted-atAsset_or_Upgrade_or_Agenda-isSilent
+A0B0G0T1:Trace1-perTargetAsset_or_Upgrade_or_Agenda_or_ICE-traceEffects<Inflict3NetDamage-onOpponent,None>$$TrashMultiple-Targeted-atAsset_or_Upgrade_or_Agenda-isSilent
 .....
 Incubator
 -----
