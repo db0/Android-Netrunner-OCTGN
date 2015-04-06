@@ -4393,9 +4393,9 @@ Autoscripter
 -----
 bc0f047c-01b1-427f-a439-d451eda06076
 -----
-whileInPlay:Gain1Clicks-foreachCardInstalled-typeProgram-onlyOnce-duringMyTurn||atJackOut:TrashMyself-ifUnsuccessfulRunAny
+atJackOut:TrashMyself-ifUnsuccessfulRunAny
 +++++
-
+A0B0G0T0:Gain1Clicks-onlyOnce
 .....
 Switchblade
 -----

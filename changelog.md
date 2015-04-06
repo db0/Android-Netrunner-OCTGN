@@ -12,6 +12,9 @@ Changelog - Android:Netrunner LCG OCTGN Game Definition
    * Enhanced Vision: Will show only the title of the card
    * Jinteki Bioteck: You will have to choose your department at the start of your first turn (You can also double click to do it before F1)
    * Negotiator: Break with Credits manually.
+* Autoscripter switched to manual use to avoid triggering off of Heap/Stack installs.
+* Leela won't score bounced Chairmen
+* Gagarin won't trigger during runs on centrals.
 
 
 ### 3.17.5.x

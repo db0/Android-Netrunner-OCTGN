@@ -1,14 +1,10 @@
 =====Message of the Day======
 
-UPDATE: Latest update should address agenda scoring problems and MaxX' ability. Lemme know if they persist.
-
-Order and Chaos is now Rezzed!
+The Valley is now Rezzed!
 
 As always, most cards have been scripted. Check the changelog for tricky scripts. 
 
-I tried to get this ASAP so there might be some bugs remaining. Please lemme know if you find any
-
-Note: Itinerant Protesters and Satellite Grid need *Manual Tracking*
+*Note*: I've switched Autoscripter to manual use to avoid it triggering when installing from Stack or Heap
 
 ---
 If you enjoy my work, please consider becoming my patron by donating a few credits a month. 
