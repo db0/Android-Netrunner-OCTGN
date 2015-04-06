@@ -5265,7 +5265,7 @@ Brain-Taping Warehouse
 -----
 bc0f047c-01b1-427f-a439-d451eda08010
 -----
-whileInPlay:ReduceSCostRez-affectsICE
+whileInPlay:ReduceSCostRez-affectsICE_and_Bioroid
 +++++
 
 .....

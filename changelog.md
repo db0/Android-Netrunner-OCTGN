@@ -9,6 +9,9 @@ Changelog - Android:Netrunner LCG OCTGN Game Definition
    * Clot: Not scripted but will remind the corp
    * Paige Piper: Manual use after you install a card
    * Adjusted Chronotype: Manual use
+   * Enhanced Vision: Will show only the title of the card
+   * Jinteki Bioteck: You will have to choose your department at the start of your first turn (You can also double click to do it before F1)
+   * Negotiator: Break with Credits manually.
 
 
 ### 3.17.5.x
