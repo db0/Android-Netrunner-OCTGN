@@ -1261,6 +1261,28 @@ def CustomScript(card, action = 'PLAY', origin_card = None, original_action = No
    elif fetchProperty(card, 'name') == "Enhanced Vision" and action == 'SuccessfulRun':
       rndCard = fetchCorpPL().hand.random()
       notify(":> The runner's {} glimpses a {} inside the corp HQ".format(card,rndCard.Name))
+   elif fetchProperty(card, 'name') == "Paige Piper" and action == 'USE':
+      freshInstalls = [c for c in table if c.highlight == NewCardColor and c.controller == me and c.Type != 'Event']
+      if not len(freshInstalls):
+         whisper("You need to install a card first before you use this ability")
+         return 'ABORT'
+      else:
+         freshCard = freshInstalls[0]
+         foundCards = []
+         for c in deck:
+            if c.Name == freshCard.Name: foundCards.append(c)
+         if len(foundCards):
+            count = askInteger("We have found {} copies of {} in your deck, how many do you want to Trash?".format(len(foundCards),freshCard.Name),len(foundCards))
+            if not count: notify(":> {}'s {} checked how many copies of {} they still have in their deck but chose to trash none of them".format(me,card,freshCard))
+            else:
+               if count > len(foundCards): count = len(foundCards)
+               for iter in range(count):
+                  changeCardGroup(foundCards.pop(),trash)
+               notify(":> {}'s {} trashed {} copies of {} from their deck".format(me,card,count,freshCard))
+         else:
+            confirm("You have no further copies in your deck. This is a pause to avoid giving away this information to the corp. Press any button to continue")
+            notify(":> {}'s {} checked how many copies of {} they still have in their deck but chose to trash none of them".format(me,card,freshCard))
+         deck.shuffle()
    elif action == 'USE': useCard(card)
       
             
