@@ -132,7 +132,8 @@ def executePlayScripts(card, action):
           (effectType.group(1) == 'onTrash' and action != 'TRASH' and action!= 'UNINSTALL' and action != 'DEREZ') or
           (effectType.group(1) == 'onDerez' and action != 'DEREZ')): 
          debugNotify("Rejected {} because {} does not fit with {}".format(autoS,effectType.group(1),action))
-         continue 
+         continue
+      if re.search(r'-explicitTrash',autoS) and action != 'TRASH': continue # To prevent Leela scoring Directors she uninstalled
       if re.search(r'-isOptional', autoS):
          if not confirm("This card has an optional ability you can activate at this point. Do you want to do so?"): 
             notify("{} opts not to activate {}'s optional ability".format(me,card))

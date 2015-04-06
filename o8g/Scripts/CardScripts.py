@@ -1999,7 +1999,7 @@ Director Haas
 -----
 bc0f047c-01b1-427f-a439-d451eda03010
 -----
-onRez:Gain1Clicks$$Gain1Max Click||onTrash:Lose1Max Click-ifActive-ifUnscored$$Lose1Clicks-ifActive-ifUnscored$$ScoreMyself-onOpponent-ifAccessed-ifUnscored-preventTrash-runTrashScriptWhileInactive$$Gain2Agenda Points-onOpponent-ifAccessed-ifUnscored$$Put2Scored-isSilent-ifAccessed-ifUnscored
+onRez:Gain1Clicks$$Gain1Max Click||onTrash:Lose1Max Click-ifActive-ifUnscored$$Lose1Clicks-ifActive-ifUnscored$$ScoreMyself-onOpponent-ifAccessed-ifUnscored-preventTrash-runTrashScriptWhileInactive-explicitTrash$$Gain2Agenda Points-onOpponent-ifAccessed-ifUnscored-explicitTrash$$Put2Scored-isSilent-ifAccessed-ifUnscored-explicitTrash
 +++++
 
 .....
@@ -3409,7 +3409,7 @@ Chairman Hiro
 -----
 bc0f047c-01b1-427f-a439-d451eda05008
 -----
-onRez:Lose2Hand Size-onOpponent||onTrash:Gain2Hand Size-onOpponent-ifActive-ifUnscored$$ScoreMyself-onOpponent-ifAccessed-ifUnscored-preventTrash-runTrashScriptWhileInactive$$Gain2Agenda Points-onOpponent-ifAccessed-ifUnscored$$Put2Scored-isSilent-ifAccessed-ifUnscored
+onRez:Lose2Hand Size-onOpponent||onTrash:Gain2Hand Size-onOpponent-ifActive-ifUnscored$$ScoreMyself-onOpponent-ifAccessed-ifUnscored-preventTrash-runTrashScriptWhileInactive-explicitTrash$$Gain2Agenda Points-onOpponent-ifAccessed-ifUnscored-explicitTrash$$Put2Scored-isSilent-ifAccessed-ifUnscored-explicitTrash
 +++++
 
 .....
@@ -4833,7 +4833,7 @@ The Board
 -----
 bc0f047c-01b1-427f-a439-d451eda07011
 -----
-onTrash:ScoreMyself-onOpponent-ifAccessed-ifUnscored-preventTrash-runTrashScriptWhileInactive$$Gain2Agenda Points-onOpponent-ifAccessed-ifUnscored$$Put2Scored-isSilent-ifAccessed-ifUnscored
+onTrash:ScoreMyself-onOpponent-ifAccessed-ifUnscored-preventTrash-runTrashScriptWhileInactive-explicitTrash$$Gain2Agenda Points-onOpponent-ifAccessed-ifUnscored-explicitTrash$$Put2Scored-isSilent-ifAccessed-ifUnscored-explicitTrash
 +++++
 
 .....
