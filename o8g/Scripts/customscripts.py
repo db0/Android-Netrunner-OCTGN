@@ -1693,18 +1693,20 @@ def ArgusSecurity(card):
 
 def chkGagarinTax(card):
    mute()
-   findGagarin = [card for card in table if card.Name == 'Gagarin Deep Space']
-   if len(findGagarin):
-      gararin = findGagarin[0]
-      reduction = reduceCost(card, 'ACCESS', 1)
-      if reduction > 0: extraText = " (reduced by {})".format(uniCredit(reduction))
-      elif reduction < 0: extraText = " (increased by {})".format(uniCredit(abs(reduction)))
-      else: extraText = ''
-      rc = payCost(1 - reduction, "not free")
-      if rc != "ABORT":  # If the player couldn't pay to trash the card, we leave it where it is.
-         notify(":> {} forced {} paid {}{} to access the remote server".format(gararin, me,uniCredit(1 - reduction),extraText))
-      else: 
-         notify(":> {} did not have enough money to pay the {} tax".format(me,gararin))
-         return 'ABORT'
+   runTarget = getGlobalVariable('status')
+   if runTarget != 'runningHQ' and runTarget != 'runningR&D' and runTarget != 'runningArchives': # Gagarin only works on remote servers
+      findGagarin = [card for card in table if card.Name == 'Gagarin Deep Space']
+      if len(findGagarin):
+         gararin = findGagarin[0]
+         reduction = reduceCost(card, 'ACCESS', 1)
+         if reduction > 0: extraText = " (reduced by {})".format(uniCredit(reduction))
+         elif reduction < 0: extraText = " (increased by {})".format(uniCredit(abs(reduction)))
+         else: extraText = ''
+         rc = payCost(1 - reduction, "not free")
+         if rc != "ABORT":  # If the player couldn't pay to trash the card, we leave it where it is.
+            notify(":> {} forced {} paid {}{} to access the remote server".format(gararin, me,uniCredit(1 - reduction),extraText))
+         else: 
+            notify(":> {} did not have enough money to pay the {} tax".format(me,gararin))
+            return 'ABORT'
    return 'OK'
      
