@@ -189,7 +189,7 @@
 		<property name="Cost" value="0" />
 		<property name="Requirement" value="45" />	
 		<property name="Stat" value="15" />	
-		<property name="Rules" value="Before taking your first turn, you may swap this card with any copy of Jinteki Biotech.&#xD;&#xA;[Click],[Click],[Click]: Flip this identity.&#xD;&#xA;The Brewery: When you flip this identity, do 2 net damage.&#xD;&#xA;The Tank: When you flip this identity, shuffle Archives into R&amp;D.&#xD;&#xA;The Greenhouse: When you flip this identity, place 4 advancement tokens on a card that can be advanced." />
+		<property name="Rules" value="Before taking your first turn, you may swap this card with any copy of Jinteki Biotech." />
 		<property name="Flavor" value="" />
 		<property name="Instructions" value="" />
 		<property name="Faction" value="Jinteki" />
@@ -197,6 +197,54 @@
 		<property name="Side" value="corp" />
 		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
+      <alternate name="The Brewery" type="brewery">
+         <property name="Subtitle" value="Jinteki Biotech (The Brewery)" />
+         <property name="Type" value="Identity" />
+         <property name="Keywords" value="Department" />
+         <property name="Cost" value="0" />
+         <property name="Requirement" value="45" />	
+         <property name="Stat" value="15" />	
+         <property name="Rules" value="When you flip this identity, do 2 net damage." />
+         <property name="Flavor" value="" />
+         <property name="Instructions" value="" />
+         <property name="Faction" value="Jinteki" />
+         <property name="Influence" value="" />
+         <property name="Side" value="corp" />
+         <property name="AutoScript" value="" />
+         <property name="AutoAction" value="" />	
+      </alternate>
+      <alternate name="The Tank" type="tank">
+         <property name="Subtitle" value="Jinteki Biotech (The Tank)" />
+         <property name="Type" value="Identity" />
+         <property name="Keywords" value="Department" />
+         <property name="Cost" value="0" />
+         <property name="Requirement" value="45" />	
+         <property name="Stat" value="15" />	
+         <property name="Rules" value="When you flip this identity, shuffle Archives into R&amp;D" />
+         <property name="Flavor" value="" />
+         <property name="Instructions" value="" />
+         <property name="Faction" value="Jinteki" />
+         <property name="Influence" value="" />
+         <property name="Side" value="corp" />
+         <property name="AutoScript" value="" />
+         <property name="AutoAction" value="" />	
+      </alternate>
+      <alternate name="The Greenhouse" type="greenhouse">
+         <property name="Subtitle" value="Jinteki Biotech (The Greenhouse)" />
+         <property name="Type" value="Identity" />
+         <property name="Keywords" value="Department" />
+         <property name="Cost" value="0" />
+         <property name="Requirement" value="45" />	
+         <property name="Stat" value="15" />	
+         <property name="Rules" value="When you flip this identity, place 4 advancement tokens on a card that can be advanced." />
+         <property name="Flavor" value="" />
+         <property name="Instructions" value="" />
+         <property name="Faction" value="Jinteki" />
+         <property name="Influence" value="" />
+         <property name="Side" value="corp" />
+         <property name="AutoScript" value="" />
+         <property name="AutoAction" value="" />	
+      </alternate>
 	</card>
 	<card id="bc0f047c-01b1-427f-a439-d451eda08013" name="Genetic Resequencing">
 		<property name="Subtitle" value="" />

@@ -1283,6 +1283,31 @@ def CustomScript(card, action = 'PLAY', origin_card = None, original_action = No
             confirm("You have no further copies in your deck. This is a pause to avoid giving away this information to the corp. Press any button to continue")
             notify(":> {}'s {} checked how many copies of {} they still have in their deck but chose to trash none of them".format(me,card,freshCard))
          deck.shuffle()
+   elif fetchProperty(card, 'name') == "Jinteki Biotech" and action == 'USE':
+      if me.getGlobalVariable('TripleID') == 'None':
+         notify(":> {} is selecting their {} department".format(me,card))
+         choiceDict = {0: 'brewery', 1: 'tank', 2: 'greenhouse'}
+         choice = SingleChoice("Which department of {} would you like to use today?".format(card.Name),['The Brewery\n(Do 2 net damage.)','The Tank\n(Shuffle Archives into R&D)','The Greenhouse\n(Place 4 advancement tokens)'],cancelButton = False)
+         me.setGlobalVariable('TripleID',choiceDict.get(choice))
+         notify(":> {}'s {} department is now set.".format(me,card))
+      else:
+         clickCost = useClick(count = 3)
+         if clickCost == 'ABORT': return 'ABORT'
+         if me.getGlobalVariable('TripleID') == 'greenhouse':
+            targetCards = findTarget('Targeted')
+            if not len(targetCards): 
+               whisper(":::ERROR::: Target a card before you try to advance it")
+               return 'ABORT'
+         card.switchTo(me.getGlobalVariable('TripleID'))
+         if card.alternate == 'brewery': 
+            InflictX('Inflict2NetDamage-onOpponent', '', card)
+            notify("{} reveals {} as their Jinteki Biotech department and uses it to inflict 2 net damage to the runner".format(me,card))
+         if card.alternate == 'tank': 
+            ReshuffleX('ReshuffleArchives', '', card)
+            notify("{} reveals {} as their Jinteki Biotech department and uses it reshuffle their Archves into R&D".format(me,card))
+         if card.alternate == 'greenhouse': 
+            TokensX('Put4Advancement','',card,targetCards)
+            notify("{} reveals {} as their Jinteki Biotech department and uses it to advance {} 4 times".format(me,card,targetCards[0]))               
    elif action == 'USE': useCard(card)
       
             

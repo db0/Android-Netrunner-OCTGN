@@ -590,6 +590,7 @@ def resetAll(): # Clears all the global variables in order to start a new game.
    setGlobalVariable('League','')
    setGlobalVariable('Access','DENIED')
    setGlobalVariable('accessAttempts','0')
+   me.setGlobalVariable('TripleID','None')
    newturn = False 
    endofturn = False
    currClicks = 0
@@ -698,6 +699,10 @@ def isRezzable (card):
    if Type == "ICE" or Type == "Asset" or Type == "Upgrade" or Type == "Agenda": return True
    else: return False
  
+def chkTripleID(): # Function which double checks that the player has selected a Triple ID variant if they're playing one.
+   tripleIDs = ['Jinteki Biotech']
+   if Identity.Name in tripleIDs and  me.getGlobalVariable('TripleID') == 'None': CustomScript(Identity, 'USE') # If the player didn't yet select their department, we forcing them to do it now so that they do not forget.
+   
 #---------------------------------------------------------------------------
 # Card Placement
 #---------------------------------------------------------------------------
