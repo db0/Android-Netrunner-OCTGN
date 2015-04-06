@@ -577,12 +577,13 @@ def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
 # Other Player trigger
 #------------------------------------------------------------------------------
    
-def autoscriptOtherPlayers(lookup, origin_card = Identity, count = 1): # Function that triggers effects based on the opponent's cards.
+def autoscriptOtherPlayers(lookup, origin_card = None, count = 1): # Function that triggers effects based on the opponent's cards.
 # This function is called from other functions in order to go through the table and see if other players have any cards which would be activated by it.
 # For example a card that would produce credits whenever a trace was attempted. 
    if not Automations['Triggers']: return
+   if not origin_card: origin_card = Identity
    debugNotify(">>> autoscriptOtherPlayers() with lookup: {}".format(lookup)) #Debug
-   debugNotify("origin_card = {}".format(origin_card), 3) #Debug
+   #confirm("origin_card = {}".format(origin_card)) #Debug
    if not Automations['Play, Score and Rez']: return # If automations have been disabled, do nothing.
    for card in table:
       debugNotify('Checking {}'.format(card), 2) # Debug
@@ -2122,6 +2123,7 @@ def findTarget(Autoscript, fromHand = False, card = None, dryRun = False): # Fun
 def gatherCardProperties(card,Autoscript = ''):
    debugNotify(">>> gatherCardProperties()") #Debug     
    cardProperties = []
+   notify("{}".format(card))
    if storeProperties(card) != 'ABORT': # We store the card properties so that we don't start flipping the cards over each time.
       debugNotify("Appending name", 4) #Debug
       cName = fetchProperty(card, 'Name')

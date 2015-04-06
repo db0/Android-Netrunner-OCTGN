@@ -1,6 +1,16 @@
 Changelog - Android:Netrunner LCG OCTGN Game Definition
 ===============================================
 
+### 3.18.0.x
+
+* New game definition for **The Valley**. As always, almost every card scripted!
+
+* ##### Trickier Automations
+   * Clot: Not scripted but will remind the corp
+   * Paige Piper: Manual use after you install a card
+   * Adjusted Chronotype: Manual use
+
+
 ### 3.17.5.x
 
 * Corp cannot flatline due to brain damage anymore ;)
