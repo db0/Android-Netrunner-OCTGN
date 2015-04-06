@@ -5189,6 +5189,166 @@ atTurnStart:Gain1Credits-ifIHave2MU-duringMyTurn
 +++++
 
 .....
+Clot
+-----
+bc0f047c-01b1-427f-a439-d451eda08001
+-----
+whileInPlay:TrashMyself-foreachVirusPurged
++++++
+
+.....
+Paige Piper
+-----
+bc0f047c-01b1-427f-a439-d451eda08002
+-----
+onInstall:CustomScript-onlyOnce
++++++
+
+.....
+Adjusted Chronotype
+-----
+bc0f047c-01b1-427f-a439-d451eda08003
+-----
+
++++++
+A0B0G0T0:Gain1Clicks-onlyOnce
+.....
+Spike
+-----
+bc0f047c-01b1-427f-a439-d451eda08004
+-----
+ConstantAbility:Cloud2Link
++++++
+A0B0G0T1:SimplyAnnounce{break up to 3 barrier subroutines}
+.....
+Enhanced Vision
+-----
+bc0f047c-01b1-427f-a439-d451eda08005
+-----
+atSuccessfulRun:CustomScript-onlyOnce
++++++
+
+.....
+Gene Conditioning Shoppe
+-----
+bc0f047c-01b1-427f-a439-d451eda08006
+-----
+
++++++
+
+.....
+Synthetic Blood
+-----
+bc0f047c-01b1-427f-a439-d451eda08007
+-----
+whileInPlay:Draw1Cards-forEachMeatDMGTaken-onlyOnce||whileInPlay:Draw1Cards-forEachNetDMGTaken-onlyOnce||whileInPlay:Draw1Cards-forEachBrainDMGTaken-onlyOnce
++++++
+
+.....
+Traffic Jam
+-----
+bc0f047c-01b1-427f-a439-d451eda08008
+-----
+whileInPlay:Increase0Advancement
++++++
+
+.....
+Symmetrical Visage
+-----
+bc0f047c-01b1-427f-a439-d451eda08009
+-----
+whileInPlay:Gain1Credits-foreachCardDrawnClicked-byMe-onlyOnce
++++++
+
+.....
+Brain-Taping Warehouse
+-----
+bc0f047c-01b1-427f-a439-d451eda08010
+-----
+whileInPlay:ReduceSCostRez-affectsICE
++++++
+
+.....
+NEXT Gold
+-----
+bc0f047c-01b1-427f-a439-d451eda08011
+-----
+
++++++
+A0B0G0T0:Inflict1NetDamage-perEveryCard-atNEXT-isICE-isRezzed-isSubroutine||A0B0G0T0:TrashMulti-Targeted-atProgram-isSubtourine
+.....
+Jinteki Biotech
+-----
+bc0f047c-01b1-427f-a439-d451eda08012
+-----
+
++++++
+
+.....
+Genetic Resequencing
+-----
+bc0f047c-01b1-427f-a439-d451eda08013
+-----
+onScore:Put1Agenda-DemiAutoTargeted-atAgenda-isScored-targetMine-choose1
++++++
+
+.....
+Cortex Lock
+-----
+bc0f047c-01b1-427f-a439-d451eda08014
+-----
+
++++++
+A0B0G0T0:Inflict1NetDamage-perCounter{MU}-OpCounter-isSubroutine
+.....
+Valley Grid
+-----
+bc0f047c-01b1-427f-a439-d451eda08015
+-----
+
++++++
+A0B0G0T0:Lose1Hand Size-onOpponent$$Put1Valley Grid-AutoTargeted-atIdentity-targetOpponents
+.....
+Bandwidth
+-----
+bc0f047c-01b1-427f-a439-d451eda08016
+-----
+
++++++
+A0B0G0T0:Gain1Tags-onOpponent-isSubroutine$$Put1Bandwidth Logged-AutoTargeted-atIdentity-targetOpponents
+.....
+Predictive Algorithm
+-----
+bc0f047c-01b1-427f-a439-d451eda08017
+-----
+
++++++
+
+.....
+Capital Investors
+-----
+bc0f047c-01b1-427f-a439-d451eda08018
+-----
+
++++++
+A1B0G0T0:Gain2Credits
+.....
+Negotiator
+-----
+bc0f047c-01b1-427f-a439-d451eda08019
+-----
+
++++++
+A0B0G0T0:Gain2Credits-isSubroutine||A0B0G0T0:TrashTarget-Targeted-atProgram-isSubrourine
+.....
+Tech Startup
+-----
+bc0f047c-01b1-427f-a439-d451eda08020
+-----
+
++++++
+A0B0G0T1:Retrieve1Card-grabAsset-toTable$$ShuffleR&D
+.....
 ENDSCRIPTS
 =====
 '''

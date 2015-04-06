@@ -541,7 +541,7 @@ def sendToTrash(card, pile = None): # A function which takes care of sending a c
    else: changeCardGroup(card,pile)
    debugNotify("<<< sendToTrash()", 3) #Debug   
    
-def findAgendaRequirement(card):
+def findAgendaRequirement(card): # Calculates how many advancement points an agenda needs to be scored.
    mute()
    debugNotify(">>> findAgendaRequirement() for card: {}".format(card)) #Debug
    AdvanceReq = num(fetchProperty(card, 'Cost'))
@@ -557,7 +557,10 @@ def findAgendaRequirement(card):
                if re.search(r'onlyOnce',autoS) and c.orientation == Rot90: continue # If the card has a once per-turn ability which has been used, ignore it
                if (re.search(r'excludeDummy',autoS) or re.search(r'CreateDummy',autoS)) and c.highlight == DummyColor: continue
                advanceMod = num(advanceModRegex.group(2)) * {'Decrease': -1}.get(advanceModRegex.group(1),1) * per(autoS, c, 0, findTarget(autoS, card = card))
-               debugNotify("advanceMod = {}".format(advanceMod))
+               debugNotify("advanceMod = {}".format(advanceMod))                        
+               if c.name == 'Traffic Jam': # Needs custom code
+                  for agenda in table:
+                     if agenda.Type == 'Agenda' and agenda.isFaceUp and card.Name == agenda.Name and agenda.controller == me: advanceMod += 1
                AdvanceReq += advanceMod
                if advanceMod: 
                   delayed_whisper("-- {} {}s advance requirement by {}".format(c,advanceModRegex.group(1),advanceMod))
@@ -654,6 +657,8 @@ def calcAgendaStealCost(card):
    for c in table:
       if c.name == 'Utopia Fragment' and c.isFaceUp and card.markers[mdict['Advancement']] and card.markers[mdict['Scored']]: # If there's a scored Utopia Fragment, then stealing costs a bit more.
          extraCreds += 2 * card.markers[mdict['Advancement']]
+      if c.name == 'Predictive Algorithm': # If there's an active predictive Algorithm then stealing costs are raised.
+         extraCreds += 2
    return extraCreds
 
 def chkAgendaVictory():

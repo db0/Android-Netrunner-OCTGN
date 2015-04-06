@@ -797,7 +797,7 @@ def reduceCost(card, action = 'REZ', fullCost = 0, dryRun = False, reversePlayer
             debugNotify("No AS found. Continuing")
             continue
          for autoS in Autoscripts:
-            debugNotify("AS: {}".format(autoS), 2) #Debug
+            #confirm("{} AS: {}".format(c.Name,autoS)) #Debug
             if not chkRunningStatus(autoS): 
                debugNotify("Rejecting because not running")
                continue # if the reduction is only during runs, and we're not in a run, bypass this effect
@@ -890,7 +890,17 @@ def reduceCost(card, action = 'REZ', fullCost = 0, dryRun = False, reversePlayer
                if oncePerTurn(c, act = 'dryRun') == 'ABORT': continue
             else:
                if oncePerTurn(c, act = 'automatic') == 'ABORT': continue # if the card's effect has already been used, check the next one
-         if reductionSearch.group(2) == '#' and c.highlight == PriorityColor: # We also check if we have any recurring credits to spend on cards which the player has prioritized. Those will spend before BP.
+         if reductionSearch.group(2) == 'S': # 'S' Stands for Special (i.e. custom effects) They go before others since the one available makes sense to be used before recurring creds etc.
+            if c.name == 'Brain-Taping Warehouse':
+               if fetchRunnerPL().Clicks > fullCost: 
+                  reduction = fullCost
+                  fullCost = 0
+                  notify(" -- {} reduces the cost of the Bioroid ICE to 0".format(c))
+               else:               
+                  reduction += fetchRunnerPL().Clicks
+                  fullCost -= fetchRunnerPL().Clicks
+                  notify(" -- {} reduces the cost of the Bioroid ICE by the {} unspent runner clicks".format(c,fetchRunnerPL().Clicks))
+         elif reductionSearch.group(2) == '#' and c.highlight == PriorityColor: # We also check if we have any recurring credits to spend on cards which the player has prioritized. Those will spend before BP.
             markersCount = c.markers[mdict['Credits']]
             markersRemoved = 0
             while markersCount > 0:
@@ -996,6 +1006,7 @@ def intdamageDiscard(count = 1, dmgType = 'Meat'):
    for card in discardedList: 
       #confirm("trashed {} with {}. Sending {}".format(card.Name,dmgType,'{}DMGDiscard'.format(dmgType)))
       executePlayScripts(card,'{}DMGDiscard'.format(dmgType)) # If we have cards with effects when discarded (e.g. I've had worse) we trigger them after all damage has been applied.
+   autoscriptOtherPlayers('{}DMGTaken'.format(dmgType))
       
 
 def addBrainDmg(group, x = 0, y = 0):
@@ -1227,12 +1238,17 @@ def scrAgenda(card, x = 0, y = 0,silent = False, forced = False):
       if fetchProperty(card, 'Type') == "Agenda":
          if ds == 'runner': agendaTxt = 'LIBERATE'
          else: agendaTxt = 'SCORE'
-         if ds == 'corp' and card.markers[mdict['Advancement']] < findAgendaRequirement(card) and not forced:
-            if confirm("You have not advanced this agenda enough to score it. Bypass?"):
+         extraScoreMSG = '\n'
+         for c in table:
+            if c.Name == 'Clot' and ds == 'corp': extraScoreMSG += '\n:\> Clot detected in play'
+            if c.Name == 'Chakana' and ds == 'corp': extraScoreMSG += '\n:\> Chakana detected in play'
+         agendaReq = findAgendaRequirement(card)
+         if ds == 'corp' and card.markers[mdict['Advancement']] < agendaReq and not forced:
+            if confirm("You have not advanced this agenda enough to score it ({} needed). Bypass?{}".format(agendaReq,extraScoreMSG)):
                cheapAgenda = True
                currentAdv = card.markers[mdict['Advancement']]
             else: return
-         elif not silent and not confirm("Do you want to {} agenda {}?".format(agendaTxt.lower(),fetchProperty(card, 'name'))): return
+         elif not silent and not confirm("Do you want to {} agenda {}?{}".format(agendaTxt.lower(),fetchProperty(card, 'name'),extraScoreMSG)): return
          if card.group == table: flipCard(card,True)
          if agendaTxt == 'SCORE' and chkTargeting(card,'SCORE') == 'ABORT':
             if card.group == table: flipCard(card,False)
@@ -1243,7 +1259,7 @@ def scrAgenda(card, x = 0, y = 0,silent = False, forced = False):
          card.markers[mdict['Scored']] += 1
          me.counters['Agenda Points'].value += ap
          notify("{} {}s {} and receives {} agenda point(s)".format(me, agendaTxt.lower(), card, ap))
-         if cheapAgenda: notify(":::Warning:::{} did not have enough advance tokens ({} out of {})! ".format(card,currentAdv,card.Cost))
+         if cheapAgenda: notify(":::Warning:::{} did not have enough advancement counters ({} out of {})! ".format(card,currentAdv,agendaReq))
          playScoreAgendaSound(card)
          executePlayScripts(card,agendaTxt)
          autoscriptOtherPlayers('Agenda'+agendaTxt.capitalize()+'d',card) # The autoscripts triggered by this effect are using AgendaLiberated and AgendaScored as the hook

@@ -1258,6 +1258,9 @@ def CustomScript(card, action = 'PLAY', origin_card = None, original_action = No
    elif fetchProperty(card, 'name') == "Vigil" and action == 'Start':
       corpPL = fetchCorpPL()
       if len(corpPL.hand) == corpPL.counters['Hand Size'].value: DrawX('Draw1Card', '{} uses {}'.format(me,card), card, targetCards = None, notification = 'Quick', n = 0)
+   elif fetchProperty(card, 'name') == "Enhanced Vision" and action == 'SuccessfulRun':
+      rndCard = fetchCorpPL().hand.random()
+      notify(":> The runner's {} glimpses a {} inside the corp HQ".format(card,rndCard.Name))
    elif action == 'USE': useCard(card)
       
             
@@ -1300,8 +1303,18 @@ def markerEffects(Time = 'Start'):
             opponentPL.counters['Hand Size'].value += card.markers[marker] * 2
             notify(":> Gyri Labyrinth's effect expires and {} recovers {} hand size".format(card,card.markers[marker] * 2))
             card.markers[marker] = 0
+         if re.search(r'Valley Grid',marker[0]) and Time == 'Start' and (card.controller != me or len(getPlayers()) == 1): 
+            opponentPL = findOpponent()
+            opponentPL.counters['Hand Size'].value += card.markers[marker]
+            notify(":> Valley Grid's effect expires and {} recovers {} hand size".format(card,card.markers[marker] * 2))
+            card.markers[marker] = 0
          if re.search(r'IT Department',marker[0]) and Time == 'End':
             TokensX('Remove999IT Department-isSilent', "IT Department:", card)
+         if re.search(r'Bandwidth Logged',marker[0]) and Time == 'SuccessfulRun' or Time == 'JackOut':
+            if Time == 'SuccessfulRun': GainX('Lose{}Tags'.format(card.markers[marker]), "Bandwidth:", card)
+            TokensX('Remove999Bandwidth Logged-isSilent', "Bandwidth:", card)
+         if re.search(r'Gene Conditioned',marker[0]) and Time == 'End':
+            TokensX('Remove999Gene Conditioned-isSilent', "Gene Conditioned:", card)
 
 def ASVarEffects(Time = 'Start'):
    mute()
