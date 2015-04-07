@@ -1,6 +1,10 @@
 Changelog - Android:Netrunner LCG OCTGN Game Definition
 ===============================================
 
+### 3.18.1.0
+
+* Fixes text spam on retrieval.
+
 ### 3.18.0.x
 
 * New game definition for **The Valley**. As always, almost every card scripted!
