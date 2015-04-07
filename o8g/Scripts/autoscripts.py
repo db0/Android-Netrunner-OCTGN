@@ -2124,7 +2124,6 @@ def findTarget(Autoscript, fromHand = False, card = None, dryRun = False): # Fun
 def gatherCardProperties(card,Autoscript = ''):
    debugNotify(">>> gatherCardProperties()") #Debug     
    cardProperties = []
-   notify("{}".format(card))
    if storeProperties(card) != 'ABORT': # We store the card properties so that we don't start flipping the cards over each time.
       debugNotify("Appending name", 4) #Debug
       cName = fetchProperty(card, 'Name')
