@@ -351,6 +351,9 @@ def UseCustomAbility(Autoscript, announceText, card, targetCards = None, notific
       notify("{} triggers to clean all viruses from the corporate grid".format(card))
       autoscriptOtherPlayers('VirusPurged',card)
       announceString = ''
+   if fetchProperty(card, 'name') == 'Hacktivist Meeting': 
+      remoteCall(fetchCorpPL(),'HacktivistMeeting',[card])
+      announceString = ''
    return announceString
  
 #------------------------------------------------------------------------------
@@ -1308,6 +1311,22 @@ def CustomScript(card, action = 'PLAY', origin_card = None, original_action = No
          if card.alternate == 'greenhouse': 
             TokensX('Put4Advancement','',card,targetCards)
             notify("{} reveals {} as their Jinteki Biotech department and uses it to advance {} 4 times".format(me,card,targetCards[0]))               
+   elif fetchProperty(card, 'name') == "Off-Campus Apartment" and action == 'USE':
+      hostCards = eval(getGlobalVariable('Host Cards'))
+      handConnections = [c for c in me.hand if c.targetedBy and c.targetedBy == me and re.search(r'Connection', c.Keywords)]
+      if len(handConnections):
+         connection = handConnections[0] # If they targeted more than one connection for some reason, we only host the first one we see.
+      else:
+         tableConnections = [c for c in table if c.targetedBy and c.targetedBy == me and re.search(r'Connection', c.Keywords) and not hostCards.get(c._id,None) and c.highlight != RevealedColor and c.highlight != InactiveColor and c.highlight != DummyColor]
+         if len(tableConnections):
+            connection = tableConnections[0] # If they targeted more than one connection for some reason, we only host the first one we see.
+         else:
+            connection = None
+      if not connection: notify("Please target an unhosted Connection in your Grip or the table before using this action")
+      else:
+         hostMe(connection,card)
+         drawMany(deck, 1,silent = True)
+         notify(":> {} uses {} to host {} and draw 1 card".format(me,card,connection))
    elif action == 'USE': useCard(card)
       
             
@@ -1709,4 +1728,11 @@ def chkGagarinTax(card):
             notify(":> {} did not have enough money to pay the {} tax".format(me,gararin))
             return 'ABORT'
    return 'OK'
-     
+
+def HacktivistMeeting(card):
+   mute()
+   discardC = me.hand.random()
+   if not discardC: notify(":::WARNING::: {} was supposed to trash a random card from HQ to rez their non-ICE card, but they had no cards left in hand".format(me))
+   else:
+      handDiscard(discardC, True)
+      notify(":> {} trashed a card from HQ at random as an extra cost".format(me))

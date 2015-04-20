@@ -5349,6 +5349,166 @@ bc0f047c-01b1-427f-a439-d451eda08020
 +++++
 A0B0G0T1:Retrieve1Card-grabAsset-toTable$$ShuffleR&D
 .....
+Hacktivist Meeting
+-----
+bc0f047c-01b1-427f-a439-d451eda08021
+-----
+whileInPlay:UseCustomAbility-foreachCardRezzed-typenonIce-byOpponent
++++++
+
+.....
+Off-Campus Apartment
+-----
+bc0f047c-01b1-427f-a439-d451eda08022
+-----
+
++++++
+A1B0G0T0:CustomScript
+.....
+Career Fair
+-----
+bc0f047c-01b1-427f-a439-d451eda08023
+-----
+onPlay:InstallTarget-DemiAutoTargeted-atResource-fromHand-choose1-payCost-reduc3
++++++
+
+.....
+Dorm Computer
+-----
+bc0f047c-01b1-427f-a439-d451eda08024
+-----
+onInstall:Put4Power-isSilent||atJackOut:Remove999preventCounter:Tags
++++++
+A1B0G0T0:Remove1Power-isCost$$RunGeneric$$Put100preventCounter:Tags
+.....
+Hayley Kaplan
+-----
+bc0f047c-01b1-427f-a439-d451eda08025
+-----
+
++++++
+A0B0G0T0:InstallTarget-DemiAutoTargeted-fromHand-choose1-payCost-onlyOnce
+.....
+Game Day
+-----
+bc0f047c-01b1-427f-a439-d451eda08026
+-----
+onPlay:Draw999Cards
++++++
+
+.....
+Comet
+-----
+bc0f047c-01b1-427f-a439-d451eda08027
+-----
+
++++++
+A0B0G0T0:InstallTarget-DemiAutoTargeted-atEvent-fromHand-choose1-payCost-onlyOnce
+.....
+Study Guide
+-----
+bc0f047c-01b1-427f-a439-d451eda08028
+-----
+
++++++
+
+.....
+London Library
+-----
+bc0f047c-01b1-427f-a439-d451eda08029
+-----
+
++++++
+
+.....
+Tyson Observatory
+-----
+bc0f047c-01b1-427f-a439-d451eda08030
+-----
+
++++++
+
+.....
+Beach Party
+-----
+bc0f047c-01b1-427f-a439-d451eda08031
+-----
+
++++++
+
+.....
+Research Grant
+-----
+bc0f047c-01b1-427f-a439-d451eda08032
+-----
+
++++++
+
+.....
+Turing
+-----
+bc0f047c-01b1-427f-a439-d451eda08033
+-----
+
++++++
+
+.....
+Crick
+-----
+bc0f047c-01b1-427f-a439-d451eda08034
+-----
+
++++++
+
+.....
+Recruiting Trip
+-----
+bc0f047c-01b1-427f-a439-d451eda08035
+-----
+
++++++
+
+.....
+Blacklist
+-----
+bc0f047c-01b1-427f-a439-d451eda08036
+-----
+
++++++
+
+.....
+Gutenberg
+-----
+bc0f047c-01b1-427f-a439-d451eda08037
+-----
+
++++++
+
+.....
+Student Loans
+-----
+bc0f047c-01b1-427f-a439-d451eda08038
+-----
+
++++++
+
+.....
+Meru Mati
+-----
+bc0f047c-01b1-427f-a439-d451eda08039
+-----
+
++++++
+
+.....
+Breaker Bay Grid
+-----
+bc0f047c-01b1-427f-a439-d451eda08040
+-----
+
++++++
+
+.....
 ENDSCRIPTS
 =====
 '''
