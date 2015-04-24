@@ -354,6 +354,19 @@ def UseCustomAbility(Autoscript, announceText, card, targetCards = None, notific
    if fetchProperty(card, 'name') == 'Hacktivist Meeting': 
       remoteCall(fetchCorpPL(),'HacktivistMeeting',[card])
       announceString = ''
+   if fetchProperty(card, 'name') == 'London Library': 
+      handTargets = [c for c in me.hand if c.Type == 'Program' and not re.search(r'Virus', getKeywords(c))]
+      tableTargets = [c for c in table if findMarker(c, 'London Library')]
+      if len(handTargets):
+         hostMe(handTargets[0],card)
+         TokensX('Put1London Library-isSilent', "", handTargets[0])
+         announceString = "{} host {} in the {}".format(announceText,handTargets[0],card)
+      elif len(tableTargets):
+         uninstall(tableTargets[0], silent = True)
+         announceString = "{} uninstall {} from the {}".format(announceText,tableTargets[0],card)
+      else:
+         whisper(":::ERROR::: Please target a card to host or uninstall for the {}".format(card))
+         announceString = ''
    return announceString
  
 #------------------------------------------------------------------------------
@@ -1381,6 +1394,9 @@ def markerEffects(Time = 'Start'):
             TokensX('Remove999Bandwidth Logged-isSilent', "Bandwidth:", card)
          if re.search(r'Gene Conditioned',marker[0]) and Time == 'End':
             TokensX('Remove999Gene Conditioned-isSilent', "Gene Conditioned:", card)
+         if re.search(r'London Library',marker[0]) and Time == 'End': # We put Test Run's effect here, as the card will be discarded after being played.
+            notify("--> London Library reimages their systems and {} is trashed".format(card))
+            ModifyStatus('TrashMyself', 'London Library:', card)
 
 def ASVarEffects(Time = 'Start'):
    mute()

@@ -5411,7 +5411,7 @@ bc0f047c-01b1-427f-a439-d451eda08028
 -----
 
 +++++
-
+A0B1G0T0:SimplyAnnounce{break code gate subroutine}||A0B2G0T0:Put1Power
 .....
 London Library
 -----
@@ -5419,7 +5419,7 @@ bc0f047c-01b1-427f-a439-d451eda08029
 -----
 
 +++++
-
+A1B0G0T0:UseCustomAbility
 .....
 Tyson Observatory
 -----
@@ -5427,21 +5427,21 @@ bc0f047c-01b1-427f-a439-d451eda08030
 -----
 
 +++++
-
+A2B0G0T0:Retrieve1Cards-grabHardware
 .....
 Beach Party
 -----
 bc0f047c-01b1-427f-a439-d451eda08031
 -----
-
+atTurnStart:Lose1Clicks
 +++++
-
+whileInstalled:Gain5Hand Size
 .....
 Research Grant
 -----
 bc0f047c-01b1-427f-a439-d451eda08032
 -----
-
+onScore:ScoreTarget-Targeted-atResearch Grant-isMutedTarget
 +++++
 
 .....
@@ -5451,7 +5451,7 @@ bc0f047c-01b1-427f-a439-d451eda08033
 -----
 
 +++++
-
+A0B0G0T0:RunEnd-isSubroutine
 .....
 Crick
 -----
@@ -5459,13 +5459,13 @@ bc0f047c-01b1-427f-a439-d451eda08034
 -----
 
 +++++
-
+A0B0G0T0:Retrieve1Cards-fromArchives-toTable
 .....
 Recruiting Trip
 -----
 bc0f047c-01b1-427f-a439-d451eda08035
 -----
-
+onPlay:RequestInt-Msg{How many sysops are you recruiting?}$$Lose1Credits-perX-isCost$$Retrieve1Cards-perX-grabSysop$$ShuffleR&D
 +++++
 
 .....
@@ -5483,13 +5483,13 @@ bc0f047c-01b1-427f-a439-d451eda08037
 -----
 
 +++++
-
+A0B0G0T0:Trace7-isSubroutine-traceEffects<Gain1Tags-onOpponent,None>
 .....
 Student Loans
 -----
 bc0f047c-01b1-427f-a439-d451eda08038
 -----
-
+whileInPlay:ReduceSCostPlay-affectsEvent
 +++++
 
 .....
@@ -5499,7 +5499,7 @@ bc0f047c-01b1-427f-a439-d451eda08039
 -----
 
 +++++
-
+A0B0G0T0:RunEnd-isSubroutine
 .....
 Breaker Bay Grid
 -----
@@ -5507,7 +5507,7 @@ bc0f047c-01b1-427f-a439-d451eda08040
 -----
 
 +++++
-
+A0B0G0T0:RezTarget-Targeted-isnotICE-payCost-reduc5
 .....
 ENDSCRIPTS
 =====

@@ -127,7 +127,7 @@
 		<property name="Stat" value="0" />	
 		<property name="Rules" value="Study Guide has +1 strength for each power counter on it.&#xD;&#xA;1[Credits]: Break code gate subroutine.&#xD;&#xA;2[Credits]: Place 1 power counter on Study Guide." />
 		<property name="Flavor" value="&quot;Once you download the lecture source files, this program does a statistical analysis and distills the most important concepts.&quot; -Hayley Kaplan" />
-		<property name="Instructions" value="" />
+		<property name="Instructions" value="1[Credits]: Break code gate subroutine.||2[Credits]: Place 1 power counter on Study Guide." />
 		<property name="Faction" value="Shaper" />
 		<property name="Influence" value="4" />
 		<property name="Side" value="runner" />

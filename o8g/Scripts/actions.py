@@ -868,6 +868,12 @@ def reduceCost(card, action = 'REZ', fullCost = 0, dryRun = False, reversePlayer
             if c.name == 'Industrial Genomics':
                reduction -= len(fetchCorpPL().piles['Archives(Hidden)'])
                fullCost += len(fetchCorpPL().piles['Archives(Hidden)'])
+            if c.name == 'Student Loans':
+               loans = 0
+               for heapC in card.owner.piles['Heap/Archives(Face-up)']:
+                  if heapC.Name == card.Name: loans += 2
+               reduction -= loans
+               fullCost += loans
          else:
             for iter in range(num(reductionSearch.group(2))):  # if there is a match, the total reduction for this card's cost is increased.
                reduction -= 1

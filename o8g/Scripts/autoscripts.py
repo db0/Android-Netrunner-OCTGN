@@ -1845,6 +1845,9 @@ def RetrieveX(Autoscript, announceText, card, targetCards = None, notification =
    debugNotify("Setting Source", 2)
    if re.search(r'-fromTrash', Autoscript) or re.search(r'-fromArchives', Autoscript) or re.search(r'-fromHeap', Autoscript):
       source = targetPL.piles['Heap/Archives(Face-up)']
+      if ds == 'runner' and len([c for c in table if c.Name == 'Blacklist']):
+         notify(":::ERROR::: {} tried to retrieve cards from their heap but they're currently Blacklisted. Retrieve Aborted!".format(me))
+         return 'ABORT'
    else:
       source = targetPL.piles['R&D/Stack']
       debugNotify("Making R&D/Stack vidible", 2)
