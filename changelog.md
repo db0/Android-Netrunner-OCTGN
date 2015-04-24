@@ -1,6 +1,21 @@
 Changelog - Android:Netrunner LCG OCTGN Game Definition
 ===============================================
 
+### 3.19.0.x
+
+* New game definition for **Breaker Bat**. As always, almost every card scripted!
+
+* ##### Trickier Automations
+   * Hacktivist Meeting: Trash will happen after card is installed, so if the corp doesn't have a card they can still play non-ice. Don't do it.
+   * Haley Kaplan: Manual use
+   * Comet: Manual Use
+   * Turing: Lose clicks manually.
+   * Should prevent the runner using automated effects to fetch specific cards from their R&D, but won't prevent AR Lab Access.
+   * Breaker bay Grid: Manual use (Target card to rez and DC)
+* Autoscripter switched to manual use to avoid triggering off of Heap/Stack installs.
+* Leela won't score bounced Chairmen
+* Gagarin won't trigger during runs on centrals.
+
 ### 3.18.1.0
 
 * Fixes text spam on retrieval.
