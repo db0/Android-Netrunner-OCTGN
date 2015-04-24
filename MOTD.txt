@@ -1,14 +1,13 @@
 =====Message of the Day======
 
-The Valley is now Rezzed!
+Breaker Bay is now Rezzed!
 
 As always, most cards have been scripted. Check the changelog for tricky scripts. 
 
-*Note*: I've switched Autoscripter to manual use to avoid it triggering when installing from Stack or Heap
-
 ---
 If you enjoy my work, please consider becoming my patron by donating a few credits a month. 
-Devs need more Diesel!
+
+Papa needs new genetics!
 =============================
 &&
 http://www.patreon.com/db0
