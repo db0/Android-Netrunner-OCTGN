@@ -11,7 +11,7 @@ Changelog - Android:Netrunner LCG OCTGN Game Definition
    * Haley Kaplan: Manual use
    * Comet: Manual Use
    * Turing: Lose clicks manually.
-   * Should prevent the runner using automated effects to fetch specific cards from their R&D, but won't prevent AR Lab Access.
+   * Should prevent the runner using automated effects to fetch specific cards from their Heap, but won't prevent AR Lab Access.
    * Breaker bay Grid: Manual use (Target card to rez and DC)
 
 ### 3.18.1.0
