@@ -5403,7 +5403,7 @@ bc0f047c-01b1-427f-a439-d451eda08027
 -----
 
 +++++
-A0B0G0T0:InstallTarget-DemiAutoTargeted-atEvent-fromHand-choose1-payCost-onlyOnce
+A0B0G0T0:InstallTarget-DemiAutoTargeted-atEvent-fromHand-choose1-payCost-onlyOnce||whileInPlay:Provide1MU
 .....
 Study Guide
 -----
