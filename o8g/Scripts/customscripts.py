@@ -355,8 +355,8 @@ def UseCustomAbility(Autoscript, announceText, card, targetCards = None, notific
       remoteCall(fetchCorpPL(),'HacktivistMeeting',[card])
       announceString = ''
    if fetchProperty(card, 'name') == 'London Library': 
-      handTargets = [c for c in me.hand if c.Type == 'Program' and not re.search(r'Virus', getKeywords(c))]
-      tableTargets = [c for c in table if findMarker(c, 'London Library')]
+      handTargets = [c for c in me.hand if c.targetedBy and c.targetedBy == me and c.Type == 'Program' and not re.search(r'Virus', getKeywords(c))]
+      tableTargets = [c for c in table if findMarker(c, 'London Library') and c.targetedBy and c.targetedBy == me ]
       if len(handTargets):
          hostMe(handTargets[0],card)
          TokensX('Put1London Library-isSilent', "", handTargets[0])
@@ -1338,6 +1338,7 @@ def CustomScript(card, action = 'PLAY', origin_card = None, original_action = No
       if not connection: notify("Please target an unhosted Connection in your Grip or the table before using this action")
       else:
          hostMe(connection,card)
+         if not connection.highlight: connection.highlight = NewCardColor
          drawMany(deck, 1,silent = True)
          notify(":> {} uses {} to host {} and draw 1 card".format(me,card,connection))
    elif action == 'USE': useCard(card)

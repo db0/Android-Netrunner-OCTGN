@@ -5387,7 +5387,7 @@ bc0f047c-01b1-427f-a439-d451eda08025
 -----
 
 +++++
-A0B0G0T0:InstallTarget-DemiAutoTargeted-fromHand-choose1-payCost-onlyOnce
+A0B0G0T0:InstallTarget-DemiAutoTargeted-atnonEvent-fromHand-choose1-payCost-onlyOnce
 .....
 Game Day
 -----
@@ -5433,9 +5433,9 @@ Beach Party
 -----
 bc0f047c-01b1-427f-a439-d451eda08031
 -----
-atTurnStart:Lose1Clicks
+atTurnStart:Lose1Clicks||whileInstalled:Gain5Hand Size
 +++++
-whileInstalled:Gain5Hand Size
+
 .....
 Research Grant
 -----
@@ -5489,7 +5489,7 @@ Student Loans
 -----
 bc0f047c-01b1-427f-a439-d451eda08038
 -----
-whileInPlay:ReduceSCostPlay-affectsEvent
+whileRezzed:IncreaseSCostPlay-affectsEvent
 +++++
 
 .....

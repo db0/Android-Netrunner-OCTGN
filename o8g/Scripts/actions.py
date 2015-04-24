@@ -871,9 +871,17 @@ def reduceCost(card, action = 'REZ', fullCost = 0, dryRun = False, reversePlayer
             if c.name == 'Student Loans':
                loans = 0
                for heapC in card.owner.piles['Heap/Archives(Face-up)']:
-                  if heapC.Name == card.Name: loans += 2
+                  if heapC.Name == card.Name: 
+                     loans += 2
+                     break
+               if not loans:
+                  for tableC in table: # We also check the table, in case they played two of the same events in a row.
+                     if tableC.Name == card.Name and tableC.highlight == NewCardColor: 
+                        loans += 2
+                        break
                reduction -= loans
                fullCost += loans
+               if not dryRun and loans: notify(" -- {} increases the cost of {} by 2".format(c,card))
          else:
             for iter in range(num(reductionSearch.group(2))):  # if there is a match, the total reduction for this card's cost is increased.
                reduction -= 1
@@ -1206,8 +1214,7 @@ def findVirusProtection(card, targetPL, VirusInfected): # Find out if the player
    return protectionFound
 
 def findCounterPrevention(count, counter, targetPL): # Find out if the player has any markers preventing them form gaining specific counters (Credits, Agenda Points etc)
-   debugNotify(">>> findCounterPrevention() for {}. Return immediately <<<".format(counter)) #Debug
-   return 0
+   debugNotify(">>> findCounterPrevention() for {}.".format(counter)) #Debug
    preventionFound = 0
    forfeit = None
    preventionType = 'preventCounter:{}'.format(counter)
@@ -1219,10 +1226,13 @@ def findCounterPrevention(count, counter, targetPL): # Find out if the player ha
       foundMarker = findMarker(card, preventionType)
       if not foundMarker: foundMarker = findMarker(card, forfeitType)
       if foundMarker: # If we found a counter prevention marker of the specific type we're looking for...
+         cardPrevention = 0 # Used just for the announcement
          while count > 0 and card.markers[foundMarker] > 0: # For each point of damage we do.
+            cardPrevention += 1
             preventionFound += 1 # We increase the prevention found by 1
             count -= 1 # We reduce how much counter we still need to add by 1
             card.markers[foundMarker] -= 1 # We reduce the specific counter prevention counters by 1
+         notify(" -- {} prevents {} {}".format(card,cardPrevention,counter))
          if count == 0: break # If we've found enough protection to alleviate all counters, stop the search.
    debugNotify("<<< findCounterPrevention() by returning: {}".format(preventionFound), 3)
    return preventionFound

@@ -7,6 +7,7 @@ Changelog - Android:Netrunner LCG OCTGN Game Definition
 
 * ##### Trickier Automations
    * Hacktivist Meeting: Trash will happen after card is installed, so if the corp doesn't have a card they can still play non-ice. Don't do it.
+   * Off Campus Apartment. Use it like Personal Workshop, not like a Daemon. Target connection from hand then DC it. In case you've already played the connection, you can target it and DB the OCA to host it manually after the fact.
    * Haley Kaplan: Manual use
    * Comet: Manual Use
    * Turing: Lose clicks manually.

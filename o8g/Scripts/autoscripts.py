@@ -1074,7 +1074,7 @@ def GainX(Autoscript, announceText, card, targetCards = None, notification = Non
    if abs(gain) == abs(999): total = 'all' # If we have +/-999 as the count, then this mean "all" of the particular counter.
    elif action.group(1) == 'Lose' and re.search(r'isCost', Autoscript): total = abs(gain * multiplier)
    elif action.group(1) == 'Lose' and not re.search(r'isPenalty', Autoscript): total = abs(gain * multiplier) - overcharge - reduction
-   else: total = abs(gain * multiplier) - reduction# Else it's just the absolute value which we announce they "gain" or "lose"
+   else: total = abs(gain * multiplier) - reduction - gainReduce# Else it's just the absolute value which we announce they "gain" or "lose"
    closureTXT = ASclosureTXT(action.group(3), total)
    if re.match(r'Credits', action.group(3)): 
       finalCounter = ' (new total: {})'.format(uniCredit(targetPL.Credits))
@@ -1760,7 +1760,7 @@ def ModifyStatus(Autoscript, announceText, card, targetCards = None, notificatio
          else: scoreType = 'liberatedAgenda'
          placeCard(targetCard, 'SCORE', type = scoreType)
          card.highlight = None
-         flipCard(card)
+         flipCard(targetCard)
          #card.isFaceUp = True
          update()
          if targetCard.Type == 'Agenda': 
@@ -1867,6 +1867,7 @@ def RetrieveX(Autoscript, announceText, card, targetCards = None, notification =
    debugNotify("Fething Script Variables", 2)
    count = num(action.group(1))
    multiplier = per(Autoscript, card, n, targetCards, notification)
+   count *= multiplier
    restrictions = prepareRestrictions(Autoscript, seek = 'retrieve')
    cardList = []
    countRestriction = re.search(r'-onTop([0-9]+)Cards', Autoscript)
