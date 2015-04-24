@@ -13,9 +13,6 @@ Changelog - Android:Netrunner LCG OCTGN Game Definition
    * Turing: Lose clicks manually.
    * Should prevent the runner using automated effects to fetch specific cards from their R&D, but won't prevent AR Lab Access.
    * Breaker bay Grid: Manual use (Target card to rez and DC)
-* Autoscripter switched to manual use to avoid triggering off of Heap/Stack installs.
-* Leela won't score bounced Chairmen
-* Gagarin won't trigger during runs on centrals.
 
 ### 3.18.1.0
 
