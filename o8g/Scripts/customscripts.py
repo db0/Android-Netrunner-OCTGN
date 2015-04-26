@@ -1325,6 +1325,7 @@ def CustomScript(card, action = 'PLAY', origin_card = None, original_action = No
             TokensX('Put4Advancement','',card,targetCards)
             notify("{} reveals {} as their Jinteki Biotech department and uses it to advance {} 4 times".format(me,card,targetCards[0]))               
    elif fetchProperty(card, 'name') == "Off-Campus Apartment" and action == 'USE':
+      if useClick() == 'ABORT': return 'ABORT'
       hostCards = eval(getGlobalVariable('Host Cards'))
       handConnections = [c for c in me.hand if c.targetedBy and c.targetedBy == me and re.search(r'Connection', c.Keywords)]
       if len(handConnections):
