@@ -5433,7 +5433,7 @@ Beach Party
 -----
 bc0f047c-01b1-427f-a439-d451eda08031
 -----
-atTurnStart:Lose1Clicks||whileInstalled:Gain5Hand Size
+atTurnStart:Lose1Clicks-duringMyTurn||whileInstalled:Gain5Hand Size
 +++++
 
 .....

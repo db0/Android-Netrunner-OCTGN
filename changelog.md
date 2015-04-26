@@ -1,6 +1,12 @@
 Changelog - Android:Netrunner LCG OCTGN Game Definition
 ===============================================
 
+### 3.19.1.x
+
+* Crisium Grid will clear its state if the run was unsuccessful
+* Off-Campus Apartment will cost a click to use now
+
+
 ### 3.19.0.x
 
 * New game definition for **Breaker Bat**. As always, almost every card scripted!
