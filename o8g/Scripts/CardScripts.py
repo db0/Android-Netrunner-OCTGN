@@ -5385,9 +5385,9 @@ Hayley Kaplan
 -----
 bc0f047c-01b1-427f-a439-d451eda08025
 -----
-
+whileInPlay:Pass-foreachCardInstall-typeProgram_or_Hardware_or_Resource-byMe-onlyOnce
 +++++
-A0B0G0T0:InstallTarget-DemiAutoTargeted-atnonEvent-fromHand-choose1-payCost-onlyOnce
+A0B0G0T0:InstallTarget-DemiAutoTargeted-atnonEvent-fromHand-choose1-payCost
 .....
 Game Day
 -----
@@ -5401,9 +5401,9 @@ Comet
 -----
 bc0f047c-01b1-427f-a439-d451eda08027
 -----
-
+whileInPlay:Pass-foreachCardPlay-typeEvent-byMe-onlyOnce||whileInPlay:Provide1MU
 +++++
-A0B0G0T0:InstallTarget-DemiAutoTargeted-atEvent-fromHand-choose1-payCost-onlyOnce||whileInPlay:Provide1MU
+A0B0G0T0:InstallTarget-DemiAutoTargeted-atEvent-fromHand-choose1-payCost
 .....
 Study Guide
 -----

@@ -5,6 +5,8 @@ Changelog - Android:Netrunner LCG OCTGN Game Definition
 
 * Crisium Grid will clear its state if the run was unsuccessful
 * Off-Campus Apartment will cost a click to use now
+* Beach Party will not a click only on corp turn
+* Hayley Kaplan will be turned sideways whenever you install a card, to remind you, you have done so. You can still DC her to play a card from hand.
 
 
 ### 3.19.0.x
