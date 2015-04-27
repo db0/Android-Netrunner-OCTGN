@@ -5353,7 +5353,7 @@ Hacktivist Meeting
 -----
 bc0f047c-01b1-427f-a439-d451eda08021
 -----
-whileInPlay:UseCustomAbility-foreachCardRezzed-typenonIce-byOpponent
+whileInPlay:UseCustomAbility-foreachCardRezzed-typenonICE-byOpponent
 +++++
 
 .....
