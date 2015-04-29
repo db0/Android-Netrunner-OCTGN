@@ -1452,6 +1452,9 @@ def RDaccessX(group = table, x = 0, y = 0,count = None): # A function which look
       barNotifyAll('#000000',"{} is resuming R&D Access".format(me))   
       skipIter = pauseRecovery[1] # This is the iter at which we'll resume from
       count = pauseRecovery[2] # The count of cards is what the previous access was, minus any removed cards (e.g.trashed ones)
+      if not count: 
+         setGlobalVariable('Paused Runner','False')
+         return 
    else:
       barNotifyAll('#000000',"{} is initiating R&D Access".format(me))
       if not count: count = askInteger("How many files are you able to access from the corporation's R&D?",1)
