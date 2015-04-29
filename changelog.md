@@ -1,6 +1,10 @@
 Changelog - Android:Netrunner LCG OCTGN Game Definition
 ===============================================
 
+### 3.19.2.x
+
+* Fixed the game reporting the R&D empty after stealing TFP from a solo access
+
 ### 3.19.1.x
 
 * Crisium Grid will clear its state if the run was unsuccessful
