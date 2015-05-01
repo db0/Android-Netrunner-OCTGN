@@ -1,6 +1,10 @@
 Changelog - Android:Netrunner LCG OCTGN Game Definition
 ===============================================
 
+### 3.19.3.x
+
+* Blacklist shouldn't fire when unrezzed
+
 ### 3.19.2.x
 
 * Fixed the game reporting the R&D empty after stealing TFP from a solo access
