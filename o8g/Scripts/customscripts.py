@@ -297,7 +297,7 @@ def UseCustomAbility(Autoscript, announceText, card, targetCards = None, notific
       if not len(programTargets): 
          notify("{} can find no hardware to trash".format(card))
          return
-      rc = payCost(2, 'not free')
+      rc = payCost(1, 'not free')
       if rc == "ABORT": 
          notify("{} could not pay to use {}".format(me,card))
          return
