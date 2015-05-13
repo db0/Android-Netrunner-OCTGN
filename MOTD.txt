@@ -1,13 +1,6 @@
 =====Message of the Day======
 
-Breaker Bay is now Rezzed!
+Emergency Fix Deployed! Game scripts should function once more.
 
-As always, most cards have been scripted. Check the changelog for tricky scripts. 
-
----
-If you enjoy my work, please consider becoming my patron by donating a few credits a month. 
-
-Papa needs new genetics!
+Sorry for the break people, I got caught by surprise by this as much as all of you.
 =============================
-&&
-http://www.patreon.com/db0
