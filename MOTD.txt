@@ -3,4 +3,6 @@
 Emergency Fix Deployed! Game scripts should function once more.
 
 Sorry for the break people, I got caught by surprise by this as much as all of you.
+
+Ignore the complaining message at the start about the old API. Emergency measure until I can upgrade without breaking shit.
 =============================
