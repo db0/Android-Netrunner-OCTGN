@@ -1,6 +1,11 @@
 Changelog - Android:Netrunner LCG OCTGN Game Definition
 ===============================================
 
+### 3.19.4.x
+
+* Fixes Caissas not rehosting
+* Double Brain-Tapping Warehouses shouldn't conflict anymore
+
 ### 3.19.3.x
 
 * Blacklist shouldn't fire when unrezzed
