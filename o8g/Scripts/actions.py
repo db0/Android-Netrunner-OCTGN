@@ -908,7 +908,7 @@ def reduceCost(card, action = 'REZ', fullCost = 0, dryRun = False, reversePlayer
          if reductionSearch.group(2) == 'S': # 'S' Stands for Special (i.e. custom effects) They go before others since the one available makes sense to be used before recurring creds etc.
             if c.name == 'Brain-Taping Warehouse':
                if fetchRunnerPL().Clicks > fullCost: 
-                  reduction = fullCost
+                  reduction += fullCost
                   fullCost = 0
                   notify(" -- {} reduces the cost of the Bioroid ICE to 0".format(c))
                else:               
