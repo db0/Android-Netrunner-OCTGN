@@ -1715,11 +1715,10 @@ def ModifyStatus(Autoscript, announceText, card, targetCards = None, notificatio
             delayed_whisper("Not a card that {} can rehost on. Bad script?!".format(targetCard))
             return 'ABORT'
          else:
-            try:
-               if newHost == 'ABORT':
-                  delayed_whisper("Please target an appropriate card to host {}".format(targetCard))
-                  return 'ABORT'
-            except: hostMe(targetCard,newHost)
+            if newHost == 'ABORT':
+               delayed_whisper("Please target an appropriate card to host {}".format(targetCard))
+               return 'ABORT'
+            else: hostMe(targetCard,newHost)
       elif action.group(1) == 'Trash':
          if targetCard.group.name == "Hand":
             if targetCard.group.controller == me: handDiscard(targetCard, True)
