@@ -1,10 +1,7 @@
 =====Message of the Day======
 
-Emergency Fix Deployed! Game scripts should function once more.
+Update to API 3.1.0.1 should be complete. Please let me know if you notice any bugs at the bug tracker
 
-Sorry for the break people, I got caught by surprise by this as much as all of you.
+https://github.com/db0/Android-Netrunner-OCTGN/issues
 
-Ignore the complaining message at the start about the old API. Emergency measure until I can upgrade without breaking shit.
-
-Please restart your OCTGN client if you instead saw a message about "Script Version not specified"
 =============================

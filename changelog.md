@@ -1,6 +1,10 @@
 Changelog - Android:Netrunner LCG OCTGN Game Definition
 ===============================================
 
+### 3.19.5.x
+
+Moved to API 3.1.0.1
+
 ### 3.19.4.x
 
 * Fixes Caissas not rehosting
