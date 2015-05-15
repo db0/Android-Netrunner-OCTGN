@@ -140,7 +140,7 @@ def checkDeck(player,groups):
       ok = False
    deckStats = (loInf,loDeckCount,agendasCount) # The deck stats is a tuple that we stored shared, and stores how much influence is in the player's deck, how many cards it has and how many agendas
    me.setGlobalVariable('Deck Stats',str(deckStats))
-   debugNotify("Total Influence used: {} (Influence string stored is: {}".format(loInf, me.getGlobalVariable('Influence')), 2) #Debug
+   #debugNotify("Total Influence used: {} (Influence string stored is: {}".format(loInf, me.getGlobalVariable('Influence')), 2) #Debug
    if ok: notify("-> Deck of {} is OK!".format(me))
    else: 
       notify("-> Deck of {} is _NOT_ OK!".format(me))
@@ -180,41 +180,72 @@ def parseNewCounters(player,counter,oldValue):
                HQaccess(silent = True)
    debugNotify("<<< parseNewCounters()")
 
-def checkMovedCard(player,card,fromGroup,toGroup,oldIndex,index,oldX,oldY,x,y,isScriptMove,highlight = None,markers = None):
+def checkMovedCards(player,cards,fromGroups,toGroups,oldIndexs,indexs,oldXs,oldYs,xs,ys,faceups,highlights,markersList):
    mute()
-   debugNotify("isScriptMove = {}".format(isScriptMove))
-   if toGroup != me.piles['R&D/Stack'] and card.owner == me: superCharge(card) # First we check if we should supercharge the card, but only if the card is still on the same group at the time of execution.  
-   if fromGroup == me.piles['R&D/Stack'] and toGroup == me.hand and ds == 'corp': # Code to store cards drawn by the corp to be exposed later by Bug
-      if len([c for c in table if c.name == 'Bug']): setGlobalVariable('Bug Memory',card.name)
-   if ds == 'runner' and card.controller == me and fromGroup != toGroup: recalcMU() # Any time a card enters or leaves the table, we recalculate MUs, just in case.
-   if isScriptMove: return # If the card move happened via a script, then all further automations should have happened already.
-   if fromGroup == me.hand and toGroup == table: 
-      if card.Type == 'Identity': intJackin(manual = True)
-      else: 
+   for iter in range(len(cards)):
+      card = cards[iter]
+      fromGroup = fromGroups[iter]
+      toGroup = toGroups[iter]
+      oldIndex = oldIndexs[iter]
+      index = indexs[iter]
+      oldX = oldXs[iter]
+      oldY = oldYs[iter]
+      x = xs[iter]
+      y = ys[iter]
+      faceup = faceups[iter]
+      highlight = highlights[iter]
+      markers = markersList[iter]
+      if toGroup != me.piles['R&D/Stack'] and card.owner == me: superCharge(card) # First we check if we should supercharge the card, but only if the card is still on the same group at the time of execution.  
+      if fromGroup == me.piles['R&D/Stack'] and toGroup == me.hand and ds == 'corp': # Code to store cards drawn by the corp to be exposed later by Bug
+         if len([c for c in table if c.name == 'Bug']): setGlobalVariable('Bug Memory',card.name)
+      if ds == 'runner' and card.controller == me and fromGroup != toGroup: recalcMU() # Any time a card enters or leaves the table, we recalculate MUs, just in case.
+      if fromGroup == me.hand and toGroup == table: 
+         if card.Type == 'Identity': intJackin(manual = True)
+         else: 
+            if not card.isFaceUp: card.peek()
+            if not re.search(r'onDragDrop:IgnoreCosts', CardsAS.get(card.model,'')): 
+               intPlay(card, retainPos = True)
+            elif re.search(r'onDragDrop:IgnoreCosts-isSourceShard', CardsAS.get(card.model,'')):
+               notify("-- {} has discovered an {} instead of accessing cards".format(me,card))
+               runSuccess(ShardSuccess = True)
+      elif fromGroup != table and toGroup == table and card.owner == me: # If the player moves a card into the table from Deck or Trash, we assume they are installing it for free. 
          if not card.isFaceUp: card.peek()
-         if not re.search(r'onDragDrop:IgnoreCosts', CardsAS.get(card.model,'')): 
-            intPlay(card, retainPos = True)
-         elif re.search(r'onDragDrop:IgnoreCosts-isSourceShard', CardsAS.get(card.model,'')):
-            notify("-- {} has discovered an {} instead of accessing cards".format(me,card))
-            runSuccess(ShardSuccess = True)
-   elif fromGroup != table and toGroup == table and card.owner == me: # If the player moves a card into the table from Deck or Trash, we assume they are installing it for free. 
-      if not card.isFaceUp: card.peek()
-      if confirm("Play this card from {} for free?".format(pileName(fromGroup))):
-         intPlay(card, cost = 'free', scripted = True, retainPos = True)
-   elif fromGroup == table and toGroup != table and card.owner == me and ds == 'runner': # If the player dragged a card manually from the table to their discard pile...
-                                                                                         # We only do it for runners due to OCTGN bug #1374
-      if card.isFaceUp and card.Type == 'Program': 
-         chkRAM(card, 'UNINSTALL')
-         notify(":> {} frees up {} MU".format(player,card.Requirement))
-      if toGroup == player.piles['Archives(Hidden)'] or toGroup == player.piles['Heap/Archives(Face-up)']:
-         if ds == 'runner': sendToTrash(card, player.piles['Heap/Archives(Face-up)']) # The runner cards always go to face-up archives
-         else: sendToTrash(card, toGroup)
-      else: 
-         executePlayScripts(card,'UNINSTALL')
-         autoscriptOtherPlayers('CardUninstalled',card)
-         clearAttachLinks(card) # If the card was manually uninstalled or moved elsewhere than trash, then we simply take care of the MU and the attachments
-   elif fromGroup == table and toGroup == table and card.owner == me: 
-      orgAttachments(card)
+         if confirm("Play this card from {} for free?".format(pileName(fromGroup))):
+            intPlay(card, cost = 'free', scripted = True, retainPos = True)
+      elif fromGroup == table and toGroup != table and card.owner == me and ds == 'runner': # If the player dragged a card manually from the table to their discard pile...
+                                                                                            # We only do it for runners due to OCTGN bug #1374
+         if card.isFaceUp and card.Type == 'Program': 
+            chkRAM(card, 'UNINSTALL')
+            notify(":> {} frees up {} MU".format(player,card.Requirement))
+         if toGroup == player.piles['Archives(Hidden)'] or toGroup == player.piles['Heap/Archives(Face-up)']:
+            if ds == 'runner': sendToTrash(card, player.piles['Heap/Archives(Face-up)']) # The runner cards always go to face-up archives
+            else: sendToTrash(card, toGroup)
+         else: 
+            executePlayScripts(card,'UNINSTALL')
+            autoscriptOtherPlayers('CardUninstalled',card)
+            clearAttachLinks(card) # If the card was manually uninstalled or moved elsewhere than trash, then we simply take care of the MU and the attachments
+      elif fromGroup == table and toGroup == table and card.owner == me: 
+         orgAttachments(card)
+      
+def checkScriptedMovedCards(player,cards,fromGroups,toGroups,oldIndexs,indexs,oldXs,oldYs,xs,ys,faceups,highlights,markersList):
+   mute()
+   for iter in range(len(cards)):
+      card = cards[iter]
+      fromGroup = fromGroups[iter]
+      toGroup = toGroups[iter]
+      oldIndex = oldIndexs[iter]
+      index = indexs[iter]
+      oldX = oldXs[iter]
+      oldY = oldYs[iter]
+      x = xs[iter]
+      y = ys[iter]
+      faceup = faceups[iter]
+      highlight = highlights[iter]
+      markers = markersList[iter]
+      if toGroup != me.piles['R&D/Stack'] and card.owner == me: superCharge(card) # First we check if we should supercharge the card, but only if the card is still on the same group at the time of execution.  
+      if fromGroup == me.piles['R&D/Stack'] and toGroup == me.hand and ds == 'corp': # Code to store cards drawn by the corp to be exposed later by Bug
+         if len([c for c in table if c.name == 'Bug']): setGlobalVariable('Bug Memory',card.name)
+      if ds == 'runner' and card.controller == me and fromGroup != toGroup: recalcMU() # Any time a card enters or leaves the table, we recalculate MUs, just in case.
       
 def checkGlobalVars(name,oldValue,value):
    mute()

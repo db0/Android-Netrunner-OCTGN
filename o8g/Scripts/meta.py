@@ -1480,8 +1480,10 @@ def DebugCard(card, x=0, y=0):
           \nPrinted Keywords: {}\
           \nCost: {}\
           \nCard ID: {}\
+          \nCard AS: {}\
+          \nCard AA: {}\
           \n----------------------\
-          ".format(Stored_Name.get(card._id,'NULL'), card.Name, Stored_Type.get(card._id,'NULL'), card.Type, Stored_Keywords.get(card._id,'NULL'), card.Keywords, Stored_Cost.get(card._id,'NULL'),card._id))
+          ".format(Stored_Name.get(card._id,'NULL'), card.Name, Stored_Type.get(card._id,'NULL'), card.Type, Stored_Keywords.get(card._id,'NULL'), card.Keywords, Stored_Cost.get(card._id,'NULL'),card._id,CardsAS.get(card.model,''),Stored_AutoActions.get(card._id,CardsAS.get(card.model,''))))
    if debugVerbosity >= 4: 
       #notify("Stored_AS: {}".format(str(Stored_AutoScripts)))
       notify("Downloaded AA: {}".format(str(CardsAA)))

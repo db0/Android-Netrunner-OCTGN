@@ -573,12 +573,12 @@ def storeProperties(card, forced = False): # Function that grabs a cards importa
 def fetchProperty(card, property): 
    mute()
    debugNotify(">>> fetchProperty(){}".format(extraASDebug())) #Debug
-   if property == 'name' or property == 'Name': currentValue = Stored_Name.get(card._id,card.Name)
-   elif property == 'Cost': currentValue = Stored_Cost.get(card._id,card.Cost)
-   elif property == 'Type': currentValue = Stored_Type.get(card._id,card.Type)
-   elif property == 'Keywords': currentValue = Stored_Keywords.get(card._id,card.Keywords)
-   elif property == 'AutoScripts': currentValue = Stored_AutoScripts.get(card._id,CardsAA.get(card.model,''))
-   elif property == 'AutoActions': currentValue = Stored_AutoActions.get(card._id,CardsAS.get(card.model,''))
+   if property == 'name' or property == 'Name': currentValue = card.Name
+   elif property == 'Cost': currentValue = card.Cost
+   elif property == 'Type': currentValue = card.Type
+   elif property == 'Keywords': currentValue = card.Keywords
+   elif property == 'AutoScripts': currentValue = CardsAA.get(card.model,'')
+   elif property == 'AutoActions': currentValue = CardsAA.get(card.model,'')
    else: currentValue = card.properties[property]
    if currentValue == '?' or currentValue == 'Card':
       debugNotify("Card property: {} unreadable = {}".format(property,currentValue), 4) #Debug
