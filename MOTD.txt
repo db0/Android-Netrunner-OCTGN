@@ -1,7 +1,7 @@
 =====Message of the Day======
 
-Update to API 3.1.0.1 should be complete. Please let me know if you notice any bugs at the bug tracker
+It seem like all on-access effects (Snare, Fetal AI etc) are broken until further notice. 
 
-https://github.com/db0/Android-Netrunner-OCTGN/issues
+Sorry about this folks, it's out of my hands. Hopefully it will be resolved soon.
 
 =============================

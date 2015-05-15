@@ -140,7 +140,7 @@ def goToEndTurn(group, x = 0, y = 0):
    currClicks = 0
    myCards = [card for card in table if card.controller == me and card.owner == me]
    for card in myCards: # We refresh once-per-turn cards to be used on the opponent's turn as well (e.g. Net Shield)
-      if card._id in Stored_Type and fetchProperty(card, 'Type') != 'ICE': card.orientation &= ~Rot90
+      if card.Type != 'ICE': card.orientation &= ~Rot90
    clearRestrictionMarkers()
    atTimedEffects('End')
    clearAll() # Just in case the player has forgotten to remove their temp markers.
@@ -184,7 +184,7 @@ def goToSot (group, x=0,y=0):
    try: # Trying to figure out where #275 is coming from
       myCards = [card for card in table if card.controller == me and card.owner == me]
       for card in myCards:
-         if card._id in Stored_Type and fetchProperty(card, 'Type') != 'ICE': card.orientation &= ~Rot90 # Refresh all cards which can be used once a turn.
+         if card.Type: card.orientation &= ~Rot90 # Refresh all cards which can be used once a turn.
          if card.Name == '?' and card.owner == me and not card.isFaceUp:
             debugNotify("Peeking() at goToSot()")
             card.peek() # We also peek at all our facedown cards which the runner accessed last turn (because they left them unpeeked)
@@ -1479,6 +1479,7 @@ def RDaccessX(group = table, x = 0, y = 0,count = None): # A function which look
       notify(" -- {} is now accessing the {} card".format(me,numOrder(iter)))
       origController[RDtop[iter]._id] = targetPL # We store the card's original controller to know against whom to check for scripts (e.g. when accessing a rezzed encryption protocol)
       storeProperties(RDtop[iter])
+      #confirm("{} {}".format(RDtop[iter].Name,RDtop[iter].model)) 
       Autoscripts = CardsAS.get(RDtop[iter].model,'').split('||')
       debugNotify("Grabbed AutoScripts", 4)
       for autoS in Autoscripts:
