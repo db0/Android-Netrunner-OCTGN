@@ -180,7 +180,7 @@ def parseNewCounters(player,counter,oldValue):
                HQaccess(silent = True)
    debugNotify("<<< parseNewCounters()")
 
-def checkMovedCards(player,cards,fromGroups,toGroups,oldIndexs,indexs,oldXs,oldYs,xs,ys,faceups,highlights,markersList):
+def checkMovedCards(player,cards,fromGroups,toGroups,oldIndexs,indexs,oldXs,oldYs,xs,ys,isScriptMove,highlights = None,markersList = None):
    mute()
    for iter in range(len(cards)):
       card = cards[iter]
@@ -192,9 +192,16 @@ def checkMovedCards(player,cards,fromGroups,toGroups,oldIndexs,indexs,oldXs,oldY
       oldY = oldYs[iter]
       x = xs[iter]
       y = ys[iter]
-      faceup = faceups[iter]
-      highlight = highlights[iter]
-      markers = markersList[iter]
+      ### Bug Workaround #1426 ###
+      #faceup = faceups[iter]
+      #highlight = highlights[iter]
+      #markers = markersList[iter]
+      if toGroup != me.piles['R&D/Stack'] and card.owner == me: superCharge(card) # First we check if we should supercharge the card, but only if the card is still on the same group at the time of execution.  
+      if fromGroup == me.piles['R&D/Stack'] and toGroup == me.hand and ds == 'corp': # Code to store cards drawn by the corp to be exposed later by Bug
+         if len([c for c in table if c.name == 'Bug']): setGlobalVariable('Bug Memory',card.name)
+      if ds == 'runner' and card.controller == me and fromGroup != toGroup: recalcMU() # Any time a card enters or leaves the table, we recalculate MUs, just in case.
+      if isScriptMove: return 
+      ### Bug Workaround #1426 End ###
       if toGroup != me.piles['R&D/Stack'] and card.owner == me: superCharge(card) # First we check if we should supercharge the card, but only if the card is still on the same group at the time of execution.  
       if fromGroup == me.piles['R&D/Stack'] and toGroup == me.hand and ds == 'corp': # Code to store cards drawn by the corp to be exposed later by Bug
          if len([c for c in table if c.name == 'Bug']): setGlobalVariable('Bug Memory',card.name)
@@ -226,7 +233,8 @@ def checkMovedCards(player,cards,fromGroups,toGroups,oldIndexs,indexs,oldXs,oldY
             clearAttachLinks(card) # If the card was manually uninstalled or moved elsewhere than trash, then we simply take care of the MU and the attachments
       elif fromGroup == table and toGroup == table and card.owner == me: 
          orgAttachments(card)
-      
+
+''' Disabling due to bug #1426        
 def checkScriptedMovedCards(player,cards,fromGroups,toGroups,oldIndexs,indexs,oldXs,oldYs,xs,ys,faceups,highlights,markersList):
    mute()
    for iter in range(len(cards)):
@@ -246,6 +254,7 @@ def checkScriptedMovedCards(player,cards,fromGroups,toGroups,oldIndexs,indexs,ol
       if fromGroup == me.piles['R&D/Stack'] and toGroup == me.hand and ds == 'corp': # Code to store cards drawn by the corp to be exposed later by Bug
          if len([c for c in table if c.name == 'Bug']): setGlobalVariable('Bug Memory',card.name)
       if ds == 'runner' and card.controller == me and fromGroup != toGroup: recalcMU() # Any time a card enters or leaves the table, we recalculate MUs, just in case.
+'''      
       
 def checkGlobalVars(name,oldValue,value):
    mute()

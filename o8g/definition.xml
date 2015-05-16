@@ -3,7 +3,7 @@
       xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
       name="Android-Netrunner" 
       id="0f38e453-26df-4c04-9d67-6d43de939c77" 
-      version="3.19.5.0"
+      version="3.19.5.1"
       octgnVersion="3.1.127.0" 
       markersize="20"
       tags="asymmetric cyberpunk LCG bluff duel"
@@ -34,7 +34,7 @@
        <event name="OnLoadDeck" action="checkDeck" />
        <event name="OnChangeCounter" action="parseNewCounters" />
        <event name="OnMoveCards" action="checkMovedCards" />
-       <event name="OnScriptedMoveCards" action="checkScriptedMovedCards" />
+       <!-- <event name="OnScriptedMoveCards" action="checkScriptedMovedCards" /> -->
        <event name="OnGlobalVariableChanged" action="checkGlobalVars" />
        <event name="OnMarkerChanged" action="checkMarkerSafety" />
    </events>

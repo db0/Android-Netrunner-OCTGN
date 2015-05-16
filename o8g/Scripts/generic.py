@@ -553,7 +553,7 @@ def storeProperties(card, forced = False): # Function that grabs a cards importa
       if (card.Name == '?' and Stored_Name.get(card._id,'?') == '?') or forced:
          if not card.isFaceUp and ((card.group == table and card.owner == me) or forced): # If card is not ours and it's face down, we cannot store its properties without revealing it to the player via the full game log
                                                                                              # See https://github.com/kellyelton/OCTGN/issues/879
-            card.peek()
+            #card.peek()
             loopChk(card)
       if (Stored_Name.get(card._id,'?') == '?' and card.Name != '?') or (Stored_Name.get(card._id,'?') != card.Name and card.Name != '?') or forced:
          debugNotify("{} not stored. Storing...".format(card), 3)
