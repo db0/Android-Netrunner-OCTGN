@@ -1,7 +1,9 @@
 =====Message of the Day======
 
-It seem like all on-access effects (Snare, Fetal AI etc) are broken until further notice. 
+Rolled back to API 3.1.0.0 which seems to fix on-access issues for now.
 
-Sorry about this folks, it's out of my hands. Hopefully it will be resolved soon.
+Continue ignoring the API warning at the lobby. The game should at least work properly now.
+
+Lemme know if you encounter any bugs
 
 =============================
