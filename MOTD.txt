@@ -2,6 +2,8 @@
 
 Rolled back to API 3.1.0.0 which seems to fix on-access issues for now.
 
+YOU NEED TO RESTART OCTGN FOR TH CHANGES TO TAKE EFFECT!
+
 Continue ignoring the API warning at the lobby. The game should at least work properly now.
 
 Lemme know if you encounter any bugs
