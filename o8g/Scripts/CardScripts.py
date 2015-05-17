@@ -5459,7 +5459,7 @@ bc0f047c-01b1-427f-a439-d451eda08034
 -----
 
 +++++
-A0B0G0T0:Retrieve1Cards-fromArchives-toTable
+A0B0G0T0:Retrieve1Cards-fromArchives-toTable-doNotReveal
 .....
 Recruiting Trip
 -----
