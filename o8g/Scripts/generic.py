@@ -577,7 +577,7 @@ def fetchProperty(card, property):
    elif property == 'Cost': currentValue = card.Cost
    elif property == 'Type': currentValue = card.Type
    elif property == 'Keywords': currentValue = card.Keywords
-   elif property == 'AutoScripts': currentValue = CardsAA.get(card.model,'')
+   elif property == 'AutoScripts': currentValue = CardsAS.get(card.model,'')
    elif property == 'AutoActions': currentValue = CardsAA.get(card.model,'')
    else: currentValue = card.properties[property]
    if currentValue == '?' or currentValue == 'Card':
