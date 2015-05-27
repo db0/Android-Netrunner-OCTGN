@@ -3161,7 +3161,7 @@ GRNDL
 -----
 bc0f047c-01b1-427f-a439-d451eda04097
 -----
-onStartup:Gain5Credits-isSilent$$Gain1Bad Publicity-isSilent
+onStartup:Gain5Credits-isSilent$$SetTo1Bad Publicity-isSilent
 +++++
 
 .....
@@ -4985,7 +4985,7 @@ Valencia Estevez
 -----
 bc0f047c-01b1-427f-a439-d451eda07030
 -----
-onStartup:Gain1Bad Publicity-onOpponent
+onStartup:SetTo1Bad Publicity-onOpponent
 +++++
 
 .....
