@@ -1745,7 +1745,8 @@ def ModifyStatus(Autoscript, announceText, card, targetCards = None, notificatio
             payCost = 'not free'
          else: 
             preReduc = 0
-            payCost = 'free'         
+            payCost = 'free'   
+         if re.search(r'Double', getKeywords(targetCard)) and not chkDoublePrevention(): useClick(count = 1, manual = False) # On Double events which pay all costs, we ignore the cost to play them, but they need to pay the double cost 
          intPlay(targetCard, payCost, True, preReduc)
          extraTokens = re.search(r'-with([0-9][A-Z][A-Za-z&_ ]+)', Autoscript)
          if extraTokens: TokensX('Put{}'.format(extraTokens.group(1)), '',targetCard) # If we have a -with in our autoscript, this is meant to put some tokens on the installed card.
