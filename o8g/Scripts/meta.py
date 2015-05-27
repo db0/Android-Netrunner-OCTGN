@@ -1118,6 +1118,9 @@ def BUTTON_OK(group = None,x=0,y=0):
 def BUTTON_Wait(group = None,x=0,y=0):  
    notify("--- Wait! {} wants to react.".format(me))
    playButtonSound('Wait')
+   
+def BUTTON_Thinking(group = None,x=0,y=0):  
+   notify("--- {} is thinking....".format(me))
 #------------------------------------------------------------------------------
 #  Online Functions
 #------------------------------------------------------------------------------

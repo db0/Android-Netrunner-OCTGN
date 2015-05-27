@@ -264,6 +264,7 @@
          <groupaction menu="Announce No Rez" default="False" execute="BUTTON_NoRez"  shortcut="Ctrl+2"/>
          <groupaction menu="OK" default="False" execute="BUTTON_OK"  shortcut="Ctrl+3"/>
          <groupaction menu="Wait!" default="False" execute="BUTTON_Wait" shortcut="Ctrl+4"/>
+         <groupaction menu="Thinking..." default="False" execute="BUTTON_Thinking" shortcut="Ctrl+5"/>
       </groupactions>
       <!-- <cardaction menu="Show Card Position" default="False" shortcut="Ctrl+Shift+X" execute="ShowPosC" />  -->
         
