@@ -1,6 +1,18 @@
 Changelog - Android:Netrunner LCG OCTGN Game Definition
 ===============================================
 
+### 3.20.0.x
+
+* New game definition for **Chrome City**. As always, almost every card scripted!
+
+* ##### Trickier Automations
+   * Immolation Script: Manual use. Target the ICE and Double Click Immolation Script to trash it.
+   * Turntable: Manual use. Target both agendas and Double Click
+   * Chrome Parlor: Manual use. Double Click before playing genetics
+   * Analog Dreamers: Target the unrezzed card before pressing F3
+   * Oaktown Grid: Manually use it just before the runner is about to access cards in this server.
+   
+
 ### 3.19.5.x
 
 Moved to API 3.1.0.1

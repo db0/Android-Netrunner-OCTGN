@@ -703,6 +703,91 @@ def chkTripleID(): # Function which double checks that the player has selected a
    tripleIDs = ['Jinteki Biotech']
    if Identity.Name in tripleIDs and  me.getGlobalVariable('TripleID') == 'None': CustomScript(Identity, 'USE') # If the player didn't yet select their department, we forcing them to do it now so that they do not forget.
    
+def chkDmgSpecialEffects(dmgType, count):
+# This function checks for special card effects on the table that hijack normal damage effects and do something extra or differently
+# At the moment it's used for the two Chronos Protocol IDs.
+   debugNotify(">>> chkDmgSpecialEffects()") #Debug
+   usedDMG = 0
+   replaceDMGAnnounce = False
+   for card in table:
+      if card.controller == me and card.model == 'bc0f047c-01b1-427f-a439-d451eda05022' and dmgType == 'Net' and re.search(r'running',getGlobalVariable('status')):
+         if confirm("Do you want to pay 2 credits to use {}'s ability to turn this {} Net damage into Brain Damage?\n\n(Unfortunately, OCTGN is not aware where {} is placed. If he's not in the right server, just press No.".format(card.name,count,card.name)):
+            if payCost(2, 'not free') != "ABORT":
+               usedDMG = count # After this, we don't want any autoscripts to be doing any more damage
+               InflictX('Inflict1BrainDamage-onOpponent', '', card)
+               notify("--> {} activates {} to turn all their Net Damage into 1 Brain damage".format(me,card))
+               replaceDMGAnnounce = True
+      if card.name == 'Chronos Protocol':
+         if card.Faction == 'Jinteki' and dmgType == 'Net' and oncePerTurn(card, silent = True, act = 'automatic') != 'ABORT':
+            if card.controller == me: JintekiCP(card,count)
+            else: remoteCall(card.controller,'JintekiCP',[card,count]) # It needs to be the Jinteki player who selects the card.
+            usedDMG = count # After this, we don't want any autoscripts to be doing any more damage
+         if card.Faction == 'Haas-Bioroid' and dmgType == 'Brain':
+            remoteCall(fetchRunnerPL(),'HasbroCP',[card,count])
+            usedDMG = count # After this, we don't want any autoscripts to be doing any more damage
+   debugNotify("<<< chkDmgSpecialEffects() with return {}".format(usedDMG)) #Debug
+   return (usedDMG,replaceDMGAnnounce)
+
+def JintekiCP(card,count): # Function which takes care that the Jinteki Chronos Protocol ID properly asks the Jinteki player for the choice before doing more damage.
+   debugNotify(">>> JintekiCP()") #Debug
+   mute()
+   targetPL = findOpponent()
+   if not len(targetPL.hand): remoteCall(targetPL, 'intdamageDiscard',[count,'Net']) # If their hand is empty we need to flatline them
+   else:
+      #grabPileControl(targetPL.hand)
+      #targetPL.hand.setVisibility('all')
+      #update()
+      handList = [c for c in targetPL.hand]
+      for c in handList: c.moveToTable(0,0)
+      for c in handList: loopChk(c,'Type') # Make sure we can see each card's details
+      choice = SingleChoice("Choose a card to trash for your first Net Damage", makeChoiceListfromCardList(handList))
+      if choice != None: # If the player cancels the choice for some reason, abort the rest of the damage.
+         sendToTrash(handList[choice])
+         notify("=> {} uses {}'s ability to trash {} with the first net damage".format(me,card,handList[choice]))
+      for c in handList: c.moveTo(targetPL.hand)
+      #passPileControl(targetPL.hand,targetPL)
+      #remoteCall(targetPL,'grabVisibility',[targetPL.hand])
+      if choice != None: 
+         if count - 1: remoteCall(targetPL, 'intdamageDiscard',[count - 1,'Net']) # If there's any leftover damage, we inflict it now.
+   debugNotify("<<< JintekiCP()") #Debug
+   
+def HasbroCP(card,count): # A Function called remotely for the runner player which takes care to wipe all cards of the same type as the one trashed from the game.
+   debugNotify(">>> HasbroCP()") #Debug
+   mute()
+   for iter in range(count):
+      exiledC = me.hand.random()
+      exiledC.moveTo(me.piles['Removed from Game'])
+      notify("--DMG: {} is removed from the game due to {}!".format(exiledC,card))
+      #me.piles['R&D/Stack'].setVisibility('me')
+      for c in me.piles['R&D/Stack']: c.peek()
+      for c in me.piles['R&D/Stack']:
+         loopChk(c,'Name')
+         #notify("### {} c.model == {}".format(c.Name,c.model))
+         if c.Name == exiledC.Name: 
+            c.moveTo(me.piles['Removed from Game'])
+            notify("=> Extra {} scrubbed from Stack".format(exiledC))
+      #me.piles['R&D/Stack'].setVisibility('none')      
+      shuffle(me.piles['R&D/Stack'])
+      for c in me.piles['Heap/Archives(Face-up)']:
+         if c.model == exiledC.model: 
+            c.moveTo(me.piles['Removed from Game'])      
+            notify("=> Extra {} scrubbed from Heap".format(exiledC))
+      for c in table:
+         if c.model == exiledC.model and not c.markers[mdict['Scored']] and not c.markers[mdict['ScorePenalty']] and c.highlight != DummyColor: # Scored cards like Notoriety are not removed, nor are resident effects.
+            exileCard(c, True)
+            notify("=> Extra {} scrubbed from the table".format(exiledC))
+      for c in me.hand:
+         if c.model == exiledC.model: 
+            c.moveTo(me.piles['Removed from Game'])      
+            notify("=> Extra {} scrubbed from Grip".format(exiledC))
+   debugNotify("<<< HasbroCP()") #Debug
+   
+def chkDrawPrevention():
+   # Checking for custom effects which might prevent the player from drawing cards.
+   prevention = False
+   for card in table:
+      if card.Name == 'Lockdown' and card.markers[mdict['Power']]: prevention = True
+   return prevention
 #---------------------------------------------------------------------------
 # Card Placement
 #---------------------------------------------------------------------------
@@ -726,7 +811,7 @@ def placeCard(card, action = 'INSTALL', hostCard = None, type = None, retainPos 
             if ds == 'corp': type = 'scoredAgenda'
             else: type = 'liberatedAgenda'
          if action == 'INSTALL' and re.search(r'Console',card.Keywords): type = 'Console'
-      if action == 'INSTALL' and type in CorporationCardTypes: CfaceDown = True
+      if action == 'INSTALL' and type in CorporationCardTypes and not re.search(r'Public',card.Keywords): CfaceDown = True
       else: CfaceDown = False
       debugNotify("Setting installedCount. Type is: {}, CfaceDown: {}".format(type, str(CfaceDown)), 3) #Debug
       if installedCount.get(type,None) == None: installedCount[type] = 0
@@ -856,84 +941,6 @@ def possess(daemonCard, programCard, silent = False, force = False):
       if not silent: notify("{} installs {} into {}".format(me,programCard,daemonCard))
    debugNotify("<<< possess()", 3) #Debug   
    
-def chkDmgSpecialEffects(dmgType, count):
-# This function checks for special card effects on the table that hijack normal damage effects and do something extra or differently
-# At the moment it's used for the two Chronos Protocol IDs.
-   debugNotify(">>> chkDmgSpecialEffects()") #Debug
-   usedDMG = 0
-   replaceDMGAnnounce = False
-   for card in table:
-      if card.controller == me and card.model == 'bc0f047c-01b1-427f-a439-d451eda05022' and dmgType == 'Net' and re.search(r'running',getGlobalVariable('status')):
-         if confirm("Do you want to pay 2 credits to use {}'s ability to turn this {} Net damage into Brain Damage?\n\n(Unfortunately, OCTGN is not aware where {} is placed. If he's not in the right server, just press No.".format(card.name,count,card.name)):
-            if payCost(2, 'not free') != "ABORT":
-               usedDMG = count # After this, we don't want any autoscripts to be doing any more damage
-               InflictX('Inflict1BrainDamage-onOpponent', '', card)
-               notify("--> {} activates {} to turn all their Net Damage into 1 Brain damage".format(me,card))
-               replaceDMGAnnounce = True
-      if card.name == 'Chronos Protocol':
-         if card.Faction == 'Jinteki' and dmgType == 'Net' and oncePerTurn(card, silent = True, act = 'automatic') != 'ABORT':
-            if card.controller == me: JintekiCP(card,count)
-            else: remoteCall(card.controller,'JintekiCP',[card,count]) # It needs to be the Jinteki player who selects the card.
-            usedDMG = count # After this, we don't want any autoscripts to be doing any more damage
-         if card.Faction == 'Haas-Bioroid' and dmgType == 'Brain':
-            remoteCall(fetchRunnerPL(),'HasbroCP',[card,count])
-            usedDMG = count # After this, we don't want any autoscripts to be doing any more damage
-   debugNotify("<<< chkDmgSpecialEffects() with return {}".format(usedDMG)) #Debug
-   return (usedDMG,replaceDMGAnnounce)
-
-def JintekiCP(card,count): # Function which takes care that the Jinteki Chronos Protocol ID properly asks the Jinteki player for the choice before doing more damage.
-   debugNotify(">>> JintekiCP()") #Debug
-   mute()
-   targetPL = findOpponent()
-   if not len(targetPL.hand): remoteCall(targetPL, 'intdamageDiscard',[count,'Net']) # If their hand is empty we need to flatline them
-   else:
-      #grabPileControl(targetPL.hand)
-      #targetPL.hand.setVisibility('all')
-      #update()
-      handList = [c for c in targetPL.hand]
-      for c in handList: c.moveToTable(0,0)
-      for c in handList: loopChk(c,'Type') # Make sure we can see each card's details
-      choice = SingleChoice("Choose a card to trash for your first Net Damage", makeChoiceListfromCardList(handList))
-      if choice != None: # If the player cancels the choice for some reason, abort the rest of the damage.
-         sendToTrash(handList[choice])
-         notify("=> {} uses {}'s ability to trash {} with the first net damage".format(me,card,handList[choice]))
-      for c in handList: c.moveTo(targetPL.hand)
-      #passPileControl(targetPL.hand,targetPL)
-      #remoteCall(targetPL,'grabVisibility',[targetPL.hand])
-      if choice != None: 
-         if count - 1: remoteCall(targetPL, 'intdamageDiscard',[count - 1,'Net']) # If there's any leftover damage, we inflict it now.
-   debugNotify("<<< JintekiCP()") #Debug
-   
-def HasbroCP(card,count): # A Function called remotely for the runner player which takes care to wipe all cards of the same type as the one trashed from the game.
-   debugNotify(">>> HasbroCP()") #Debug
-   mute()
-   for iter in range(count):
-      exiledC = me.hand.random()
-      exiledC.moveTo(me.piles['Removed from Game'])
-      notify("--DMG: {} is removed from the game due to {}!".format(exiledC,card))
-      #me.piles['R&D/Stack'].setVisibility('me')
-      for c in me.piles['R&D/Stack']: c.peek()
-      for c in me.piles['R&D/Stack']:
-         loopChk(c,'Name')
-         #notify("### {} c.model == {}".format(c.Name,c.model))
-         if c.Name == exiledC.Name: 
-            c.moveTo(me.piles['Removed from Game'])
-            notify("=> Extra {} scrubbed from Stack".format(exiledC))
-      #me.piles['R&D/Stack'].setVisibility('none')      
-      shuffle(me.piles['R&D/Stack'])
-      for c in me.piles['Heap/Archives(Face-up)']:
-         if c.model == exiledC.model: 
-            c.moveTo(me.piles['Removed from Game'])      
-            notify("=> Extra {} scrubbed from Heap".format(exiledC))
-      for c in table:
-         if c.model == exiledC.model and not c.markers[mdict['Scored']] and not c.markers[mdict['ScorePenalty']] and c.highlight != DummyColor: # Scored cards like Notoriety are not removed, nor are resident effects.
-            exileCard(c, True)
-            notify("=> Extra {} scrubbed from the table".format(exiledC))
-      for c in me.hand:
-         if c.model == exiledC.model: 
-            c.moveTo(me.piles['Removed from Game'])      
-            notify("=> Extra {} scrubbed from Grip".format(exiledC))
-   debugNotify("<<< HasbroCP()") #Debug
 #------------------------------------------------------------------------------
 # Switches
 #------------------------------------------------------------------------------

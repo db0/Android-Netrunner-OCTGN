@@ -581,6 +581,7 @@ def advanceCardP(card, x = 0, y = 0):
       me.Clicks += 1 # If the player didn't notice they didn't have enough credits, we give them back their click
       return # If the player didn't have enough money to pay and aborted the function, then do nothing.
    card.markers[mdict['Advancement']] += 1
+   executePlayScripts(card,'ADVANCE')
    remoteCall(findOpponent(),'playSound',['Advance-Card']) # Attempt to fix lag
    #playSound('Advance-Card')
    if card.isFaceUp: notify("{} and paid {}{} to advance {}.".format(ClickCost,uniCredit(1 - reduction),extraText,card))
@@ -1013,7 +1014,10 @@ def intdamageDiscard(count = 1, dmgType = 'Meat'):
          reportGame('Flatlined')
          break
       else:
-         card = me.hand.random()
+         if len([c for c in table if c.Name == 'Titanium Ribs']):
+            notify(":::INFO::: {} is choosing which card to trash due to their Titanium Ribs...".format(me))
+            card = askCard([c for c in me.hand],"Choose which card to Trash from the {} damage ({}/{})".format(dmgType,DMGpt,count),'Titanium Ribs')
+         else: card = me.hand.random()            
          discardedList.append(card)
          if ds == 'corp': card.moveTo(me.piles['Archives(Hidden)']) # For testing.
          else: card.moveTo(me.piles['Heap/Archives(Face-up)'])
@@ -2267,8 +2271,8 @@ def intPlay(card, cost = 'not free', scripted = False, preReduction = 0, retainP
    if card.Type == 'ICE' or card.Type == 'Agenda' or card.Type == 'Asset' or card.Type == 'Upgrade':
       placeCard(card, action, retainPos = retainPos)
       if fetchProperty(card, 'Type') == 'ICE': card.orientation ^= Rot90 # Ice are played sideways.
-      notify("{} to install a card.".format(ClickCost))
-      #card.isFaceUp = False # Now Handled by placeCard()
+      if re.search(r'Public',card.Keywords): notify("{} to install {}.".format(ClickCost,card))
+      else: notify("{} to install a card.".format(ClickCost))
    elif card.Type == 'Program' or card.Type == 'Event' or card.Type == 'Resource' or card.Type == 'Hardware':
       MUtext = chkRAM(card)
       if card.Type == 'Resource' and hiddenresource == 'yes':
@@ -2501,6 +2505,9 @@ def draw(group):
       else:
          whisper(":::ERROR::: No more cards in your stack")
       return
+   if ds == 'runner' and chkDrawPrevention(): 
+      whisper(":::ERROR::: You're not allowed to draw any more cards this turn")
+      return
    card = group.top()
    if ds == 'corp' and newturn: notify("--> {} performs the turn's mandatory draw.".format(me))
    else:
@@ -2532,6 +2539,9 @@ def drawMany(group, count = None, destination = None, silent = False):
    if destination == None: destination = me.hand
    SSize = len(group)
    if SSize == 0: return 0
+   if group.player == me and group == me.piles['R&D/Stack'] and destination == me.hand and ds == 'runner' and chkDrawPrevention(): 
+      whisper(":::ERROR::: You're not allowed to draw any more cards this turn")
+      return 0
    if count == None: count = askInteger("Draw how many cards?", 5)
    if count == None: return 0
    if count > SSize:

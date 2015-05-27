@@ -82,6 +82,7 @@ def executePlayScripts(card, action):
    elif action == 'INSTALL': trigger = 'onInstall'
    elif action == 'SCORE': trigger = 'onScore'
    elif action == 'TRASH': trigger = 'onTrash'
+   elif action == 'ADVANCE': trigger = 'onAdvance'
    elif action == 'MEATDMGDISCARD': trigger = 'onMeatDMGDiscard' # For effects triggered when a card is trashed from hand via damage
    elif action == 'NETDMGDISCARD': trigger = 'onNetDMGDiscard'
    elif action == 'BRAINDMGDISCARD': trigger = 'onBrainDMGDiscard'
@@ -124,6 +125,7 @@ def executePlayScripts(card, action):
           (effectType.group(1) == 'whileScored' and ds != 'corp') or
           (effectType.group(1) == 'whileLiberated' and ds != 'runner') or
           (effectType.group(1) == 'onDamage' and action != 'DAMAGE') or
+          (effectType.group(1) == 'onAdvance' and action != 'ADVANCE') or
           (effectType.group(1) == 'onLiberation' and action != 'LIBERATE') or
           (effectType.group(1) == 'onBrainDMGDiscard' and action != 'BRAINDMGDISCARD') or
           (effectType.group(1) == 'onMeatDMGDiscard' and action != 'MEATDMGDISCARD') or
@@ -301,6 +303,9 @@ def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
       else: 
          intRez(card) # If card is face down or not rezzed assume they wanted to rez       
          return
+   elif fetchProperty(card, 'Type') == 'Agenda' and re.search(r'Public',card.Keywords) and not card.markers[mdict['Scored']]: 
+      scrAgenda(card)
+      return
    debugNotify("Card not unrezzed. Checking for automations switch...", 4)
    if not Automations['Play, Score and Rez'] or fetchProperty(card, 'AutoActions') == '':
       debugNotify("Going to useCard() because AA = {}".format(fetchProperty(card, 'AutoActions')))

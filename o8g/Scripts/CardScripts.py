@@ -5025,7 +5025,7 @@ Wanton Destruction
 -----
 bc0f047c-01b1-427f-a439-d451eda07035
 -----
-onPlay:RunHQ||atSuccessfulRun:CustomScript-isAlternativeRunResult-isOptional-ifSuccessfulRunHQ$$TrashMyself-ifSuccessfulRunR&D-isSilent
+onPlay:RunHQ||atSuccessfulRun:CustomScript-isAlternativeRunResult-isOptional-ifSuccessfulRunHQ$$TrashMyself-ifSuccessfulRunHQ-isSilent
 +++++
 
 .....
@@ -5065,9 +5065,9 @@ Eater
 -----
 bc0f047c-01b1-427f-a439-d451eda07040
 -----
-
+atJackOut:Remove999Fed
 +++++
-A0B1G0T0:SimplyAnnounce{break ICE subroutine}$$Put1Fed||A0B1G0T0:Put1PlusOne||atJackOut:Remove999Fed
+A0B1G0T0:SimplyAnnounce{break ICE subroutine}$$Put1Fed||A0B1G0T0:Put1PlusOne
 .....
 Gravedigger
 -----
@@ -5508,6 +5508,166 @@ bc0f047c-01b1-427f-a439-d451eda08040
 
 +++++
 A0B0G0T0:RezTarget-Targeted-isnotICE-payCost-reduc5
+.....
+Immolation Script
+-----
+bc0f047c-01b1-427f-a439-d451eda08041
+-----
+onPlay:RunArchives||atJackOut:TrashMyself-isSilent
++++++
+A0B0G0T0:TrashTarget-Targeted-atICE-isRezzed
+.....
+Skulljack
+-----
+bc0f047c-01b1-427f-a439-d451eda08042
+-----
+onInstall:Inflict1BrainDamage||whileInPlay:Reduce1CostTrash-affectsAll-forMe
++++++
+
+.....
+Turntable
+-----
+bc0f047c-01b1-427f-a439-d451eda08043
+-----
+whileInPlay:Provide1MU
++++++
+A0B0G0T0:CustomScript
+.....
+Chrome Parlor
+-----
+bc0f047c-01b1-427f-a439-d451eda08044
+-----
+
++++++
+A0B0G0T0:Put100protectionAllDMG
+.....
+Titanium Ribs
+-----
+bc0f047c-01b1-427f-a439-d451eda08045
+-----
+onInstall:Inflict2MeatDamage
++++++
+
+.....
+Crowbar
+-----
+bc0f047c-01b1-427f-a439-d451eda08046
+-----
+ConstantAbility:Cloud2Link
++++++
+A0B0G0T1:SimplyAnnounce{break up to 3 code gate subroutines}
+.....
+Net-Ready Eyes
+-----
+bc0f047c-01b1-427f-a439-d451eda08047
+-----
+onInstall:Inflict2MeatDamage
++++++
+A0B0G0T0:Put1PlusOne-DemiAutoTargeted-atIcebreaker-choose1
+.....
+Analog Dreamers
+-----
+bc0f047c-01b1-427f-a439-d451eda08048
+-----
+atSuccessfulRun:CustomScript-isAlternativeRunResult-isOptional-ifSuccessfulRunR&D-hasOrigMarker{Running}||atJackOut:Remove1Running-isSilent
++++++
+A1B0G0T0:RunR&D$$Put1Running
+.....
+Brain Cage
+-----
+bc0f047c-01b1-427f-a439-d451eda08049
+-----
+whileInstalled:Gain3Hand Size||onInstall:Inflict1MeatDamage
++++++
+
+.....
+Cybernetics Division
+-----
+bc0f047c-01b1-427f-a439-d451eda08050
+-----
+onStartup:Lose1Hand Size-isSilent$$Lose1Hand Size-onOpponent-isSilent
++++++
+
+.....
+Self-Destruct Chips
+-----
+bc0f047c-01b1-427f-a439-d451eda08051
+-----
+whileScored:Lose1Hand Size-onOpponent
++++++
+
+.....
+Lab Dog
+-----
+bc0f047c-01b1-427f-a439-d451eda08052
+-----
+
++++++
+A0B0G0T1:TrashTarget-DemiAutoTargeted-atHardware-isSubroutine-choose1
+.....
+Oaktown Grid
+-----
+bc0f047c-01b1-427f-a439-d451eda08053
+-----
+whileRezzed:IncreaseXCostTrash-affectsAll-forOpponent-perMarker{Power}||atJackOut:Remove999Power
++++++
+A0B0G0T0:Put3Power
+.....
+Ryon Knight
+-----
+bc0f047c-01b1-427f-a439-d451eda08054
+-----
+
++++++
+A0B0G0T1:Inflict1BrainDamage-onOpponent
+.....
+Clairvoyant Monitor
+-----
+bc0f047c-01b1-427f-a439-d451eda08055
+-----
+
++++++
+A0B0G0T0:Psi-psiEffects<Put1Advancement-Targeted++RunEnd,None>-isSubroutine
+.....
+Lockdown
+-----
+bc0f047c-01b1-427f-a439-d451eda08056
+-----
+atTurnEnd:Remove999Power
++++++
+A0B0G0T0:SimplyAnnounce{prevent the runner from drawing cards for the remainder of this turn}-isSubroutine$$Put1Power-isSilent
+.....
+Little Engine
+-----
+bc0f047c-01b1-427f-a439-d451eda08057
+-----
+
++++++
+A0B0G0T0:RunEnd-isSubroutine||A0B0G0T0:Gain5Credits-onOpponent-isSubroutine
+.....
+Oaktown Renovation
+-----
+bc0f047c-01b1-427f-a439-d451eda08058
+-----
+onAdvance:Gain2Credits$$Gain1Credits-ifOrigmarkers{Advancement}ge5
++++++
+
+.....
+Corporate Town
+-----
+bc0f047c-01b1-427f-a439-d451eda08059
+-----
+onRez:ExileTarget-DemiAutoTargeted-atAgenda-targetMine-isScored-choose1
++++++
+A0B0G0T0:TrashTarget-Targeted-atResource
+.....
+Quicksand
+-----
+bc0f047c-01b1-427f-a439-d451eda08060
+-----
+
++++++
+A0B0G0T0:Put1Power||A0B0G0T0:RunEnd-isSubroutine
 .....
 ENDSCRIPTS
 =====

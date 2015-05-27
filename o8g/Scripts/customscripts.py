@@ -1342,6 +1342,34 @@ def CustomScript(card, action = 'PLAY', origin_card = None, original_action = No
          if not connection.highlight: connection.highlight = NewCardColor
          drawMany(deck, 1,silent = True)
          notify(":> {} uses {} to host {} and draw 1 card".format(me,card,connection))
+   elif fetchProperty(card, 'name') == "Turntable" and action == 'USE':
+      myAgenda = findTarget('DemiAutoTargeted-atAgenda-targetMine-isScored-isMutedTarget-choose1')
+      opAgenda = findTarget('DemiAutoTargeted-atAgenda-targetOpponents-isScored-isMutedTarget-choose1')
+      if not len(myAgenda) or not len(opAgenda):
+         notify(':::ERROR::: You and your opponent need to have a scored agenda to use this effect')
+         return 'ABORT'
+      myX,myY = myAgenda[0].position
+      opX,opY = opAgenda[0].position
+      opponent = opAgenda[0].controller
+      passCardControl(myAgenda[0],opponent)
+      placeOnTable(myAgenda[0],opX,opY)
+      grabCardControl(opAgenda[0])
+      placeOnTable(opAgenda[0],myX,myY)
+      me.counters['Agenda Points'].value -= num(fetchProperty(myAgenda[0],'Stat'))
+      me.counters['Agenda Points'].value += num(fetchProperty(opAgenda[0],'Stat'))
+      opponent.counters['Agenda Points'].value -= num(fetchProperty(opAgenda[0],'Stat'))
+      opponent.counters['Agenda Points'].value += num(fetchProperty(myAgenda[0],'Stat'))
+      notify("{}'s mad scratches on {} swap their {} for {}'s {}".format(me,card,myAgenda[0],opponent,opAgenda[0]))
+      chkAgendaVictory()
+      remoteCall(opponent,'chkAgendaVictory',[])
+   elif fetchProperty(card, 'name') == "Analog Dreamers" and action == 'SuccessfulRun':
+      reworkTarget = findTarget('Targeted-atAgenda_or_Asset_or_Upgrade-isUnrezzed-hasntMarker{Advancement}')
+      if not len(reworkTarget): 
+         notify(":::ERROR::: No valid target selected to rework with {}. Target a card before using this ability".format(card))
+         return 'ABORT'
+      changeCardGroup(reworkTarget[0],reworkTarget[0].controller.piles['R&D/Stack'])
+      remoteCall(reworkTarget[0].controller,'shuffle',[reworkTarget[0].controller.piles['R&D/Stack']])
+      notify(":> {} trigger to rework {}'s unrezzed card into their R&D".format(me,reworkTarget[0].controller))
    elif action == 'USE': useCard(card)
       
             
