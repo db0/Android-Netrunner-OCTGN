@@ -1,11 +1,13 @@
 =====Message of the Day======
 
-Another day another patch...
+Chrome City is now Rezzed!
 
-Now back to API 3.1.0.1 which should be fixed. This also fixes Caissas and Parasites etc failing to host on ICE as well as other bugs
+As always, most cards have been scripted. Check the changelog for tricky scripts. 
 
-YOU NEED TO RESTART OCTGN FOR TH CHANGES TO TAKE EFFECT!
+---
+If you enjoy my work, please consider becoming my patron by donating a few credits a month. 
 
-Lemme know if you encounter any further bugs
-
+Papa needs some net ready eyes!
 =============================
+&&
+http://www.patreon.com/db0
