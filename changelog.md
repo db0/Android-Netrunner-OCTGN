@@ -12,7 +12,11 @@ Changelog - Android:Netrunner LCG OCTGN Game Definition
    * Analog Dreamers: Target the unrezzed card before pressing F3
    * Oaktown Grid: Manually use it just before the runner is about to access cards in this server.
    * Clairvoyant Monitor: Target the ICE before using the Monitor
-   
+* Added "Thinking..." notification with Ctrl+5
+* Valencia VS GRNDL won't end with 2 BP for GRNDL
+* Fixed Shehe infinite loop on hosting itself
+* Comet playing double events will now cost you a click
+* Fixed hosting Parasite giving errors
 
 ### 3.19.5.x
 
