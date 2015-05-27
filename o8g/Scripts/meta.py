@@ -896,6 +896,7 @@ def orgAttachments(card):
 def possess(daemonCard, programCard, silent = False, force = False):
    debugNotify(">>> possess(){}".format(extraASDebug())) #Debug
    #This function takes as arguments 2 cards. A Daemon and a program requiring MUs, then assigns the program to the Daemon, restoring the used MUs to the player.
+   if programCard == daemonCard: return # To avoid infinite loops
    hostType = re.search(r'Placement:([A-Za-z1-9:_ -]+)', fetchProperty(programCard, 'AutoScripts'))
    if hostType and not re.search(r'Daemon',hostType.group(1)):
       delayed_whisper("This card cannot be hosted on a Daemon as it needs a special host type")
