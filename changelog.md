@@ -11,6 +11,7 @@ Changelog - Android:Netrunner LCG OCTGN Game Definition
    * Chrome Parlor: Manual use. Double Click before playing genetics
    * Analog Dreamers: Target the unrezzed card before pressing F3
    * Oaktown Grid: Manually use it just before the runner is about to access cards in this server.
+   * Clairvoyant Monitor: Target the ICE before using the Monitor
    
 
 ### 3.19.5.x

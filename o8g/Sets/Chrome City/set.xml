@@ -271,7 +271,7 @@
 		<property name="Stat" value="7" />	
 		<property name="Rules" value="[Subroutine] End the run.&#xD;&#xA;[Subroutine] End the run.&#xD;&#xA;[Subroutine] The Runner gains 5[Credits]." />
 		<property name="Flavor" value="" />
-		<property name="Instructions" value="" />
+		<property name="Instructions" value="[Subroutine] End the run.||[Subroutine] The Runner gains 5 [Credits]." />
 		<property name="Faction" value="NBN" />
 		<property name="Influence" value="2" />
 		<property name="Side" value="corp" />
@@ -319,7 +319,7 @@
 		<property name="Stat" value="0" />	
 		<property name="Rules" value="When the Runner encounters Quicksand, place 1 power counter on Quicksand.&#xD;&#xA;Quicksand has +1 strength for each power counter on it.&#xD;&#xA;[Subroutine] End the run." />
 		<property name="Flavor" value="" />
-		<property name="Instructions" value="" />
+		<property name="Instructions" value="Put 1 Power||[Subroutine] End the Run" />
 		<property name="Faction" value="Neutral" />
 		<property name="Influence" value="0" />
 		<property name="Side" value="corp" />

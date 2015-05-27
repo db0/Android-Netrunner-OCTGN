@@ -5657,9 +5657,9 @@ Corporate Town
 -----
 bc0f047c-01b1-427f-a439-d451eda08059
 -----
-onRez:ExileTarget-DemiAutoTargeted-atAgenda-targetMine-isScored-choose1
+onRez:ExileTarget-DemiAutoTargeted-atAgenda-targetMine-isScored-choose1||atTurnStart:TrashTarget-DemiAutoTargeted-atResource-choose1-duringMyTurn-isMutedTarget
 +++++
-A0B0G0T0:TrashTarget-Targeted-atResource
+
 .....
 Quicksand
 -----

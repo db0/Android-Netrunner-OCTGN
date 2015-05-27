@@ -2128,7 +2128,9 @@ def findTarget(Autoscript, fromHand = False, card = None, dryRun = False): # Fun
          for foundTarget in foundTargets: tlist.append(foundTarget.name) # Debug
          notify("<<< findTarget() by returning: {}".format(tlist))
       return foundTargets
-   except: notify("!!!ERROR!!! on findTarget()")   
+   except: 
+      notify("!!!ERROR!!! on findTarget()")   
+      return []
    
 def gatherCardProperties(card,Autoscript = ''):
    debugNotify(">>> gatherCardProperties()") #Debug     
