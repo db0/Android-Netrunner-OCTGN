@@ -2248,12 +2248,11 @@ def intPlay(card, cost = 'not free', scripted = False, preReduction = 0, retainP
    host = chkHostType(card)
    debugNotify("host received: {}".format(host), 4)
    if host:
-      try:
-         if host == 'ABORT':
-            me.Clicks += NbReq
-            if retainPos: card.moveTo(me.hand)
-            return 'ABORT'
-      except: # If there's an exception, it means that the host is a card object which cannot be compared to a string
+      if host == 'ABORT':
+         me.Clicks += NbReq
+         if retainPos: card.moveTo(me.hand)
+         return 'ABORT'
+      else: # If there's an exception, it means that the host is a card object which cannot be compared to a string
          debugNotify("Found Host", 2)
          hostTXT = ' on {}'.format(host) # If the card requires a valid host and we found one, we will mention it later.
    else:
