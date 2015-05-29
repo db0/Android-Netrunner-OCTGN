@@ -186,7 +186,7 @@ def executePlayScripts(card, action):
          targetPL = ofwhom(activeAutoscript,card.owner) # So that we know to announce the right person the effect, affects.
          announceText = "{} uses {}'s ability to".format(targetPL,card)
          #confirm(" targetC: {}".format(targetC.Name)) # Debug
-         if effect.group(1) == 'Gain' or effect.group(1) == 'Lose':
+         if effect.group(1) == 'Gain' or effect.group(1) == 'Lose' or effect.group(1) == 'SetTo':
             if Removal: 
                if effect.group(1) == 'Gain': passedScript = "Lose{}{}".format(effect.group(2),effect.group(3))
                elif effect.group(1) == 'SetTo': passedScript = "SetTo{}{}".format(effect.group(2),effect.group(3))
@@ -1031,7 +1031,7 @@ def GainX(Autoscript, announceText, card, targetCards = None, notification = Non
          elif re.search(r'isPenalty', Autoscript): pass #If an action is marked as penalty, it means that the value can go negative and the player will have to recover that amount.
          else: targetPL.counters['Base Link'].value = 0
       chkCloud() # After we modify player link, we check for enabled cloud connections.
-   elif re.match(r'Bad Publicity', action.group(3)): 
+   elif re.match(r'Bad Publicity', action.group(3)):
       if action.group(1) == 'SetTo': targetPL.counters['Bad Publicity'].value = 0 # If we're setting to a specific value, we wipe what it's currently.
       if gain == -999: targetPL.counters['Bad Publicity'].value = 0
       else: 
