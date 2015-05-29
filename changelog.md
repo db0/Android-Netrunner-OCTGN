@@ -4,6 +4,7 @@ Changelog - Android:Netrunner LCG OCTGN Game Definition
 ### 3.20.1.x
 
 * Fixed Mandatory Upgrades and Self-Destruction Chips triggering after every advance
+* Valencia and GRNDL now properly put BP
 
 ### 3.20.0.x
 
