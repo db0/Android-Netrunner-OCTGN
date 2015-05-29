@@ -130,7 +130,7 @@ def executePlayScripts(card, action):
           (effectType.group(1) == 'onBrainDMGDiscard' and action != 'BRAINDMGDISCARD') or
           (effectType.group(1) == 'onMeatDMGDiscard' and action != 'MEATDMGDISCARD') or
           (effectType.group(1) == 'onNetDMGDiscard' and action != 'NETDMGDISCARD') or
-          ((effectType.group(1) == 'whileRezzed' or effectType.group(1) == 'whileInstalled' or effectType.group(1) == 'whileScored' or effectType.group(1) == 'whileLiberated') and (action == 'NETDMGDISCARD' or action == 'BRAINDMGDISCARD' or action == 'MEATDMGDISCARD')) or
+          ((effectType.group(1) == 'whileRezzed' or effectType.group(1) == 'whileInstalled' or effectType.group(1) == 'whileScored' or effectType.group(1) == 'whileLiberated') and (action == 'NETDMGDISCARD' or action == 'BRAINDMGDISCARD' or action == 'MEATDMGDISCARD' or action == 'ADVANCE')) or
           (effectType.group(1) == 'onTrash' and action != 'TRASH' and action!= 'UNINSTALL' and action != 'DEREZ') or
           (effectType.group(1) == 'onDerez' and action != 'DEREZ')): 
          debugNotify("Rejected {} because {} does not fit with {}".format(autoS,effectType.group(1),action))
@@ -1058,6 +1058,7 @@ def GainX(Autoscript, announceText, card, targetCards = None, notification = Non
    elif re.match(r'Max Click', action.group(3)): 
       if action.group(1) == 'SetTo': modType = 'set to' 
       else: modType = 'increment' 
+      #confirm('{} {}'.format(action.group(1), gain * multiplier)) # Debug
       modClicks(targetPL = targetPL, count = gain * multiplier, action = modType)
    elif re.match(r'Hand Size', action.group(3)): 
       if action.group(1) == 'SetTo': targetPL.counters['Hand Size'].value = 0 # If we're setting to a specific value, we wipe what it's currently.

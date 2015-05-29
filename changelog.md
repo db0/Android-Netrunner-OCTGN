@@ -1,6 +1,10 @@
 Changelog - Android:Netrunner LCG OCTGN Game Definition
 ===============================================
 
+### 3.20.1.x
+
+* Fixed Mandatory Upgrades and Self-Destruction Chips triggering after every advance
+
 ### 3.20.0.x
 
 * New game definition for **Chrome City**. As always, almost every card scripted!
