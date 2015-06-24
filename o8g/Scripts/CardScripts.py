@@ -5577,7 +5577,7 @@ Brain Cage
 -----
 bc0f047c-01b1-427f-a439-d451eda08049
 -----
-whileInstalled:Gain3Hand Size||onInstall:Inflict1MeatDamage
+whileInstalled:Gain3Hand Size||onInstall:Inflict1BrainDamage
 +++++
 
 .....
