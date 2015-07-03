@@ -5669,6 +5669,166 @@ bc0f047c-01b1-427f-a439-d451eda08060
 +++++
 A0B0G0T0:Put1Power||A0B0G0T0:RunEnd-isSubroutine
 .....
+Faust
+-----
+bc0f047c-01b1-427f-a439-d451eda08061
+-----
+
++++++
+A0B0G0T0:TrashTarget-DemiAutoTargeted-fromHand-choose1-isCost$$SimplyAnnounce{Break ICE Subtourine}||A0B0G0T0:TrashTarget-DemiAutoTargeted-fromHand-choose1-isCost$$Put2PlusOne
+.....
+Street Peddler
+-----
+bc0f047c-01b1-427f-a439-d451eda08062
+-----
+onInstall:CustomScript
++++++
+
+.....
+Armand "Geist" Walker
+-----
+bc0f047c-01b1-427f-a439-d451eda08063
+-----
+
++++++
+A0B0G0T0:Draw1Card
+.....
+Drive By
+-----
+bc0f047c-01b1-427f-a439-d451eda08064
+-----
+onPlay:ExposeTarget-Targeted-isUnrezzed
++++++
+A0B0G0T0:TrashTarget-Targeted-atAsset_or_Upgrade
+.....
+Forger
+-----
+bc0f047c-01b1-427f-a439-d451eda08065
+-----
+whileInstalled:Gain1Base Link
++++++
+A0B0G0T1:Lose1Tags
+.....
+Shiv
+-----
+bc0f047c-01b1-427f-a439-d451eda08066
+-----
+ConstantAbility:Cloud2Link
++++++
+A0B0G0T1:SimplyAnnounce{Break up to 3 sentry subroutines}
+.....
+Gang Sign
+-----
+bc0f047c-01b1-427f-a439-d451eda08067
+-----
+whileInPlay:CustomScript-foreachAgendaScored
++++++
+
+.....
+Muertos Gang Member
+-----
+bc0f047c-01b1-427f-a439-d451eda08068
+-----
+onInstall:CustomScript
++++++
+A0B0G0T1:Draw1Cards
+.....
+Chameleon
+-----
+bc0f047c-01b1-427f-a439-d451eda08069
+-----
+onInstall:CustomScript||atTurnEnd:UninstallMyself
++++++
+A1B0G0T0:SimplyAnnounce{Break subroutine of the named subtype}
+.....
+Hyperdriver
+-----
+bc0f047c-01b1-427f-a439-d451eda08070
+-----
+
++++++
+A0B0G0T0:ExileMyself$$Gain3Clicks
+.....
+Test Ground
+-----
+bc0f047c-01b1-427f-a439-d451eda08071
+-----
+
++++++
+A0B0G0T1:DerezMulti-Targeted-isRezzed-TargetMine
+.....
+Defective Brainchips
+-----
+bc0f047c-01b1-427f-a439-d451eda08072
+-----
+whileInPlay:Inflict1BrainDamage-forEachBrainDMGTaken-onlyOnce
++++++
+
+.....
+Allele Repression
+-----
+bc0f047c-01b1-427f-a439-d451eda08073
+-----
+
++++++
+A0B0G0T1:CustomScript
+.....
+Marcus Batty
+-----
+bc0f047c-01b1-427f-a439-d451eda08074
+-----
+
++++++
+A0B0G0T1:Psi-psiEffects<SimplyAnnounce{resolve 1 subroutine on a rezzed ICE protecting this server},None>-isSubroutine
+.....
+Expose
+-----
+bc0f047c-01b1-427f-a439-d451eda08075
+-----
+
++++++
+A0B0G0T1:Lose1Bad Publicity-perMarker{Advancement}
+.....
+Pachinko
+-----
+bc0f047c-01b1-427f-a439-d451eda08076
+-----
+
++++++
+A0B0G0T0:RunEnd-isSubroutine
+.....
+Underway Renovation
+-----
+bc0f047c-01b1-427f-a439-d451eda08077
+-----
+onAdvance:Draw1Card-toTrash-ofOpponent$$Draw1Card-toTrash-ofOpponent-ifOrigmarkers{Advancement}ge4
++++++
+
+.....
+Contract Killer
+-----
+bc0f047c-01b1-427f-a439-d451eda08078
+-----
+
++++++
+A1B0G0T1:Remove2Advancement-isCost$$TrashTarget-DemiAutoTargeted-atConnection-choose1||A1B0G0T1:Remove2Advancement-isCost$$Inflict2MeatDamage-onOpponent
+.....
+Spiderweb
+-----
+bc0f047c-01b1-427f-a439-d451eda08079
+-----
+
++++++
+A0B0G0T0:RunEnd-isSubroutine
+.....
+Underway Grid
+-----
+bc0f047c-01b1-427f-a439-d451eda08080
+-----
+
++++++
+
+.....
 ENDSCRIPTS
 =====
 '''

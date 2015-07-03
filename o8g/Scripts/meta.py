@@ -533,7 +533,7 @@ def sendToTrash(card, pile = None): # A function which takes care of sending a c
       chkAgendaVictory() # Just in case we trashed the Board
       remoteCall(findOpponent(),'chkAgendaVictory',[]) # Just in case we trashed the Board
       autoscriptOtherPlayers('CardTrashed',card)
-   if card.group == table or chkModulator(card, 'runTrashScriptWhileInactive', 'onTrash'): 
+   if (card.group == table and card.highlight != InactiveColor) or chkModulator(card, 'runTrashScriptWhileInactive', 'onTrash'): 
       executePlayScripts(card,'TRASH') # We don't want to run automations on simply revealed cards, but some of them will like Director Haas.
    clearAttachLinks(card)
    if chkModulator(card, 'preventTrash', 'onTrash'): # IF the card has the preventTrash modulator, it's not supposed to be trashed.
@@ -874,6 +874,9 @@ def orgAttachments(card):
       debugNotify("Checking group of {}".format(attachment))
       debugNotify("group name = {}".format(attachment.group.name))
       if attachment.owner.getGlobalVariable('ds') == 'corp' and pileName(attachment.group) in ['R&D','Face-up Archives','HQ'] and attachment.Type != 'Operation':
+         debugNotify("card is faceDown")
+         cFaceDown = True
+      elif card.Name == 'Street Peddler':
          debugNotify("card is faceDown")
          cFaceDown = True
       else: 

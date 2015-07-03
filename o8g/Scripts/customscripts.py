@@ -1370,6 +1370,45 @@ def CustomScript(card, action = 'PLAY', origin_card = None, original_action = No
       changeCardGroup(reworkTarget[0],reworkTarget[0].controller.piles['R&D/Stack'])
       remoteCall(reworkTarget[0].controller,'shuffle',[reworkTarget[0].controller.piles['R&D/Stack']])
       notify(":> {} trigger to rework {}'s unrezzed card into their R&D".format(me,reworkTarget[0].controller))
+   elif fetchProperty(card, 'name') == "Street Peddler" and action == 'INSTALL':
+      for c in deck.top(3): 
+         hostMe(c,card)
+         TokensX('Put1Peddled-isSilent', "", c)
+         c.highlight = InactiveColor
+   elif fetchProperty(card, 'name') == "Muertos Gang Member":
+      if action == 'INSTALL': remoteCall(fetchCorpPL(),'MuertosGangInstall',[card])
+      else: remoteCall(fetchCorpPL(),'MuertosGangUninstall',[card])
+   elif fetchProperty(card, 'name') == "Chameleon" and action == 'INSTALL':
+      subtypes = ['Sentry','Code Gate','Barrier']
+      choice = SingleChoice('Choose which subtype of ICE to be able to break',subtypes)
+      if choice == None: return 'ABORT'
+      TokensX('Put1Chameleon:{} Breaker'.format(subtypes[choice]), "", card)
+   elif fetchProperty(card, 'name') == "Allele Repression" and action == 'USE':
+      allArc = []
+      HQmoves = []
+      for c in trash: allArc.append(c)
+      for c in arcH: allArc.append(c)
+      for iter in range(card.markers[mdict['Advancement']]):
+         if not len(me.hand): 
+            whisper(":::INFO::: {} only found {} in hand to swap. Breaking off...".format(card,iter + 1))
+            iter -= 1
+            break
+         notify("-- {} is swaping {} of {}".format(me,iter + 1,card.markers[mdict['Advancement']]))
+         targetedCards = findTarget('Targeted-fromHand-isMutedTarget')
+         if len(targetedCards): cardHQ = targetedCards[0]
+         else: cardHQ = askCard([c for c in me.hand],"Choose which card to put into archives from HQ ({}/{})".format(iter + 1,card.markers[mdict['Advancement']]),'HQ Allele Repression')
+         cardARC = askCard([c for c in allArc],"Choose which card to put into HQ from Archives ({}/{})".format(iter + 1,card.markers[mdict['Advancement']]),'Archives Allele Repression')
+         if not cardHQ or not cardARC: 
+            iter -= 1
+            break
+         HQmoves.append(cardARC)
+         cardHQ.moveTo(arcH)
+         allArc.remove(cardARC)
+      for c in HQmoves: c.moveTo(me.hand)        
+      notify(":> {} trashed {} to swap {} cards between HQ and Archives".format(me,card,iter + 1))
+      intTrashCard(card,card.Stat,"free",silent = True)
+   elif fetchProperty(card, 'name') == 'Gang Sign' and action == 'USE': 
+      HQaccess()
    elif action == 'USE': useCard(card)
       
             
@@ -1580,6 +1619,16 @@ def markerScripts(card, action = 'USE'):
          executePlayScripts(card,'INSTALL')
          autoscriptOtherPlayers('CardInstall',card)
          notify("{} has paid {}{} in order to install {} from {}.".format(me,uniCredit(cardCost),reduceTXT,card,hostCard))
+      if key[0] == 'Peddled' and action == 'USE':
+         foundSpecial = True
+         if card.Type == 'Event': notify(":::ERROR::: You cannot get events from the Street Peddler")
+         else:
+            streetPeddler = fetchHost(card)
+            unlinkHosts(card)
+            card.isFaceUp = True
+            intPlay(card, cost = 'not free', scripted = True, preReduction = 1, retainPos = True)
+            card.markers[key] = 0
+            intTrashCard(streetPeddler, streetPeddler.Stat, cost = "free")
    return foundSpecial
    
 def setAwareness(card):
@@ -1594,15 +1643,25 @@ def setAwareness(card):
 # These are card effects which have taken over the default action of the game temporarily.
 #------------------------------------------------------------------------------
 
-def hijcack(card):
+def hijack(card):
    mute()
    global hijackDefaultAction
-   currentHijack = hijackDefaultAction.pop()
+   currentHijack = hijackDefaultAction[0]
    if currentHijack.Name == "Space Camp":
       TokensX('Put1Advancement-isSilent', "", card)
       notify("{} uses {} to add an advancement on {}".format(me,currentHijack.Name,card))
-
-      
+   if currentHijack.Name == "Muertos Gang Member":
+      if currentHijack.group == table:
+         if not (card.isFaceUp and card.controller == me and (card.Type == 'ICE' or card.Type == 'Asset'  or card.Type == 'Upgrade') and card.highlight != InactiveColor and card.highlight != RevealedColor and card.highlight != DummyColor):
+            notify(":::ERROR::: You cannot derez that card")
+            return
+         else: derez(card)
+      else: 
+         if not (card.isFaceUp == False and card.controller == me and (card.Type == 'ICE' or card.Type == 'Asset'  or card.Type == 'Upgrade') and card.highlight != InactiveColor and card.highlight != RevealedColor and card.highlight != DummyColor):
+            notify(":::ERROR::: You cannot rez that card")
+            return
+         else: rezForFree(card)
+   hijackDefaultAction.pop()
 #------------------------------------------------------------------------------
 # Custom Remote Functions
 #------------------------------------------------------------------------------
@@ -1782,3 +1841,25 @@ def HacktivistMeeting(card):
    else:
       handDiscard(discardC, True)
       notify(":> {} trashed a card from HQ at random as an extra cost".format(me))
+      
+def MuertosGangInstall(card):
+   rezzedOptions = [c for c in table if c.controller == me and c.isFaceUp and (c.Type == 'ICE' or c.Type == 'Asset' or c.Type == 'Upgrade') and c.highlight != InactiveColor and c.highlight != RevealedColor and c.highlight != DummyColor]
+   if not len(rezzedOptions):
+      notify(":::INFO::: {} did not have anything to derez for {}".format(me,card))
+   elif len(rezzedOptions) == 1: derez(rezzedOptions[0])
+   else:      
+      if not confirm("A {} has just been installed and you need to derez one of your cards.\
+                   \nYou need to double click on one of your rezzed card to derez it\
+                   \n\nProceed?".format(card.Name)): return
+      hijackDefaultAction.append(card)                
+      showHijackQueue()
+   
+def MuertosGangUninstall(card):
+   if not confirm("A {} has just been uninstalled and you may rez one of your cards.\
+                \nYou need to double click on one of your unrezzed card to rez it\
+                \n\nProceed? ('No' will forfeit this opportunity)".format(card.Name)): 
+      notify(":> {} opts not to rez any of their cards for free".format(me))          
+      return
+   hijackDefaultAction.append(card)                
+   showHijackQueue()
+   

@@ -1,6 +1,17 @@
 Changelog - Android:Netrunner LCG OCTGN Game Definition
 ===============================================
 
+### 3.21.0.x
+
+* New game definition for **The Underway**. As always, almost every card scripted!
+
+* ##### Trickier Automations
+   * Armand "Geist" Walker: Manual use similar to Exile
+   * Drive By: Expose manual as always (wait for Corp). After an expose, either the corp can trash, or you can trash by double-clicking Drive By
+   * Test Ground will derez all targeted cards. Make sure you target as many as you have tokens the relevant ones
+   * Allele Repression: You can target the cards in HQ before you use it to speed up the process.
+   * Marcus Batty: Manually use the subroutine is Psi succeeds
+
 ### 3.20.1.x
 
 * Fixed Mandatory Upgrades and Self-Destruction Chips triggering after every advance
