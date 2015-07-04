@@ -5739,7 +5739,7 @@ bc0f047c-01b1-427f-a439-d451eda08069
 -----
 onInstall:CustomScript||atTurnEnd:UninstallMyself
 +++++
-A1B0G0T0:SimplyAnnounce{Break subroutine of the named subtype}
+A0B1G0T0:SimplyAnnounce{Break subroutine of the named subtype}
 .....
 Hyperdriver
 -----
