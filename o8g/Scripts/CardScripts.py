@@ -3937,7 +3937,7 @@ Leprechaun
 -----
 bc0f047c-01b1-427f-a439-d451eda06019
 -----
-onInstall:Put5DaemonMU-isSilent
+onInstall:Put6DaemonMU-isSilent
 +++++
 A0B0G0T0:PossessTarget-Targeted-atProgram-targetMine
 .....
