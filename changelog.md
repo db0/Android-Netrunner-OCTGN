@@ -1,6 +1,10 @@
 Changelog - Android:Netrunner LCG OCTGN Game Definition
 ===============================================
 
+### 3.21.1.x
+
+* Fixed Gang sign
+
 ### 3.21.0.x
 
 * New game definition for **The Underway**. As always, almost every card scripted!

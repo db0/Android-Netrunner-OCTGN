@@ -1408,7 +1408,7 @@ def CustomScript(card, action = 'PLAY', origin_card = None, original_action = No
       notify(":> {} trashed {} to swap {} cards between HQ and Archives".format(me,card,iter + 1))
       intTrashCard(card,card.Stat,"free",silent = True)
    elif fetchProperty(card, 'name') == 'Gang Sign' and action == 'USE': 
-      HQaccess()
+      remoteCall(fetchRunnerPL(),'HQaccess',[])
    elif action == 'USE': useCard(card)
       
             
