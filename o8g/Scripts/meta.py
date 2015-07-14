@@ -300,7 +300,7 @@ def recalcMU(): # Changing how MUs are tracked just for Ekomind...
    
 def chkCloud(cloudCard = None): # A function which checks the table for cards which can be put in the cloud and thus return their used MUs
    debugNotify(">>> chkCloud(){}".format(extraASDebug())) #Debug
-   if not cloudCard: cards = [c for c in table if c.Type == 'Program']
+   if not cloudCard: cards = [c for c in table if c.Type == 'Program' and c.isFaceUp]
    else: cards = [cloudCard] # If we passed a card as a variable, we just check the cloud status of that card
    for card in cards:
       #notify("Cloud Checking {} with AS = {}".format(card,fetchProperty(card, 'AutoScripts'))) #Debug
