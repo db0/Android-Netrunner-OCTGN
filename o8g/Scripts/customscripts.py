@@ -1377,7 +1377,7 @@ def CustomScript(card, action = 'PLAY', origin_card = None, original_action = No
          c.highlight = InactiveColor
    elif fetchProperty(card, 'name') == "Muertos Gang Member":
       if action == 'INSTALL': remoteCall(fetchCorpPL(),'MuertosGangInstall',[card])
-      else: remoteCall(fetchCorpPL(),'MuertosGangUninstall',[card])
+      elif card.group == table: remoteCall(fetchCorpPL(),'MuertosGangUninstall',[card])
    elif fetchProperty(card, 'name') == "Chameleon" and action == 'INSTALL':
       subtypes = ['Sentry','Code Gate','Barrier']
       choice = SingleChoice('Choose which subtype of ICE to be able to break',subtypes)
