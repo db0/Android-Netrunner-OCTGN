@@ -4105,7 +4105,7 @@ Ghost Runner
 -----
 bc0f047c-01b1-427f-a439-d451eda06040
 -----
-onInstall:Put3Credits||whileRunning:Reduce#CostAll-affectsAll-forMe-trashCost-ifEmpty
+onInstall:Put3Credits$$ReserveMyself||whileRunning:Reduce#CostAll-affectsAll-forMe-trashCost-ifEmpty
 +++++
 
 .....

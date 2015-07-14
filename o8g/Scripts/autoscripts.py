@@ -1669,7 +1669,7 @@ def ModifyStatus(Autoscript, announceText, card, targetCards = None, notificatio
    if targetCards is None: targetCards = []
    targetCardlist = '' # A text field holding which cards are going to get tokens.
    extraText = ''
-   action = re.search(r'\b(Rez|Derez|Expose|Trash|Uninstall|Possess|Exile|Rework|Install|Score|Rehost|SendToBottom)(Target|Host|Multi|Myself)[-to]*([A-Z][A-Za-z&_ ]+)?', Autoscript)
+   action = re.search(r'\b(Rez|Derez|Expose|Trash|Uninstall|Possess|Exile|Rework|Install|Score|Rehost|SendToBottom|Reserve)(Target|Host|Multi|Myself)[-to]*([A-Z][A-Za-z&_ ]+)?', Autoscript)
    if action.group(2) == 'Myself': 
       del targetCards[:] # Empty the list, just in case.
       targetCards.append(card)
@@ -1705,6 +1705,7 @@ def ModifyStatus(Autoscript, announceText, card, targetCards = None, notificatio
             preReduc = 0
             intRez(targetCard, cost = 'free', silent = True)
       elif action.group(1) == 'Derez' and derez(targetCard, silent = True) != 'ABORT': pass
+      elif action.group(1) == 'Reserve': stealthReserve(targetCard)
       elif action.group(1) == 'Expose': 
          exposeResult = expose(targetCard, silent = True)
          if exposeResult == 'ABORT': return 'ABORT'

@@ -2138,7 +2138,7 @@ def prioritize(card,x=0,y=0):
 
 def stealthReserve(card,x=0,y=0):
    debugNotify(">>> prioritize(){}".format(extraASDebug())) #Debug
-   if card.highlight == None:
+   if card.highlight == None or card.highlight == NewCardColor:
       card.highlight = StealthColor
       notify ("{} reserves credits on {} for stealth cards.".format(me,card))
    else:

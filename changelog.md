@@ -6,6 +6,7 @@ Changelog - Android:Netrunner LCG OCTGN Game Definition
 * Muertos Gang Member won't trigger an uninstall when discarded via Damage
 * Stopped cards exiled via Chronos Protocol triggerring their onTrash scripts
 * Stopped information leaking when uninstalling NEXT ICE
+* Off-Campus app. will now trigger scripts on hosted cards
 
 
 ### 3.21.1.x
