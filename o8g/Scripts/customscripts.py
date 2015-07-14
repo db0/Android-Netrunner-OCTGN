@@ -1339,6 +1339,8 @@ def CustomScript(card, action = 'PLAY', origin_card = None, original_action = No
       if not connection: notify("Please target an unhosted Connection in your Grip or the table before using this action")
       else:
          hostMe(connection,card)
+         executePlayScripts(connection,'INSTALL')
+         autoscriptOtherPlayers('CardInstall',connection)
          if not connection.highlight: connection.highlight = NewCardColor
          drawMany(deck, 1,silent = True)
          notify(":> {} uses {} to host {} and draw 1 card".format(me,card,connection))
