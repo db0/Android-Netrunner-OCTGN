@@ -7,6 +7,7 @@ Changelog - Android:Netrunner LCG OCTGN Game Definition
 * Stopped cards exiled via Chronos Protocol triggerring their onTrash scripts
 * Stopped information leaking when uninstalling NEXT ICE
 * Off-Campus app. will now trigger scripts on hosted cards
+* Ghost Runner will install pre-reserved for stealth, to prevent making mistakes when trying to use credits.
 
 
 ### 3.21.1.x
