@@ -2073,10 +2073,7 @@ def exileCard(card, silent = False):
          me.counters['Agenda Points'].value += APgain 
          notify("--> {} recovers {} Agenda Points".format(me, APgain))
          chkAgendaVictory() # If we removed agenda points penalty (e.g. Data Dealer a Shi.Kyu) and that made us reach 7 agenda points, we can win the game at this point.
-      if card.isFaceUp: 
-         confirm('a')
-         executePlayScripts(card,'TRASH') # We don't want to run automations on simply revealed cards.
-      else: confirm('b')
+      if card.group == table and card.highlight != InactiveColor and card.isFaceUp: executePlayScripts(card,'TRASH') # We don't want to run automations on simply revealed cards.
       clearAttachLinks(card)
       changeCardGroup(card,card.owner.piles['Removed from Game'])
    if not silent: notify("{} exiled {}{}.".format(me,card,MUtext))
