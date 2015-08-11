@@ -1501,6 +1501,9 @@ def RDaccessX(group = table, x = 0, y = 0,count = None): # A function which look
       notify(" -- {} is now accessing the {} card".format(me,numOrder(iter)))
       origController[RDtop[iter]._id] = targetPL # We store the card's original controller to know against whom to check for scripts (e.g. when accessing a rezzed encryption protocol)
       storeProperties(RDtop[iter])
+      if chkFilmCritic(RDtop[iter]) == 'ABORT': 
+         removedCards += 1
+         continue
       #confirm("{} {}".format(RDtop[iter].Name,RDtop[iter].model)) 
       Autoscripts = CardsAS.get(RDtop[iter].model,'').split('||')
       debugNotify("Grabbed AutoScripts", 4)
@@ -1636,6 +1639,7 @@ def ARCscore(group=table, x=0,y=0):
    for card in ARC:
       debugNotify("Checking: {}.".format(card), 3) #Debug
       origController[card._id] = targetPL # We store the card's original controller to know against whom to check for scripts (e.g. when accessing a rezzed encryption protocol)
+      if chkFilmCritic(card) == 'ABORT': continue
       if card.Type == 'Agenda' and not re.search(r'-disableAutoStealingInArchives',CardsAS.get(card.model,'')): 
          agendaFound = True
          #placeOnTable(card,0,0,False,RevealedColor)
@@ -1711,6 +1715,7 @@ def HQaccess(group=table, x=0,y=0, silent = False, directTargets = None):
       targetPL = fetchCorpPL()
       for revealedCard in revealedCards:
          origController[revealedCard._id] = targetPL # We store the card's original controller to know against whom to check for scripts (e.g. when accessing a rezzed encryption protocol)
+         if chkFilmCritic(revealedCard) == 'ABORT': continue
          accessRegex = re.search(r'onAccess:([^|]+)',CardsAS.get(revealedCard.model,''))
          if accessRegex:
             debugNotify(" accessRegex found! {}".format(accessRegex.group(1)), 2)
