@@ -419,7 +419,7 @@ def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
       for activeAutoscript in selectedAutoscripts:
          #confirm("Active Autoscript: {}".format(activeAutoscript)) #Debug
          ### Checking if any of the card's effects requires one or more targets first
-         if re.search(r'Targeted', activeAutoscript) and findTarget(activeAutoscript, dryRun = True) == []: return
+         if re.search(r'Targeted', activeAutoscript) and not re.search(r'\bAutoTargeted', activeAutoscript) and findTarget(activeAutoscript, dryRun = True) == []: return
       CardAction = False # A boolean which stores if the card's ability required a click or not.
       for activeAutoscript in selectedAutoscripts:
          debugNotify("Reached ifHave chk", 3)

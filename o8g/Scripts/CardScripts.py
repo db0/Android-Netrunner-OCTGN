@@ -5833,9 +5833,9 @@ Trope
 -----
 bc0f047c-01b1-427f-a439-d451eda08081
 -----
-
+atTurnStart:Put1Power
 +++++
-
+A1B0G0T0:TrashMulti-AutoTargeted-atEvent_and_nonCurrent-hasntMarker{Scored}$$Retrieve1Card-fromHeap-toDeck-perMarker{Power}$$ShuffleStack$$ExileMyself
 .....
 Spoilers
 -----
