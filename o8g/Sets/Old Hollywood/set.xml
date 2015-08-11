@@ -143,7 +143,7 @@
 		<property name="Stat" value="5" />	
 		<property name="Rules" value="As an additional cost to rez Enforcer 1.0, the Corp must forfeit an agenda.&#xD;&#xA;The Runner can spend [Click] to break any subroutine on Enforcer 1.0.&#xD;&#xA;[Subroutine] Trash 1 program.&#xD;&#xA;[Subroutine] Do 1 brain damage.&#xD;&#xA;[Subroutine] Trash 1 console. &#xD;&#xA;[Subroutine] Trash all virtual resources." />
 		<property name="Flavor" value="" />
-		<property name="Instructions" value="" />
+		<property name="Instructions" value="[Subroutine] Trash 1 program.||[Subroutine] Do 1 brain damage.||[Subroutine] Trash 1 console.||[Subroutine] Trash all virtual resources." />
 		<property name="Faction" value="Haas-Bioroid" />
 		<property name="Influence" value="2" />
 		<property name="Side" value="corp" />

@@ -80,6 +80,7 @@ def executePlayScripts(card, action):
    if action == 'PLAY': trigger = 'onPlay' # We figure out what can be the possible multiple choice trigger
    elif action == 'REZ': trigger = 'onRez'
    elif action == 'INSTALL': trigger = 'onInstall'
+   elif action == 'EXPOSE': trigger = 'onExpose'
    elif action == 'SCORE': trigger = 'onScore'
    elif action == 'TRASH': trigger = 'onTrash'
    elif action == 'ADVANCE': trigger = 'onAdvance'
@@ -122,6 +123,7 @@ def executePlayScripts(card, action):
           (effectType.group(1) == 'onScore' and action != 'SCORE') or
           (effectType.group(1) == 'onStartup' and action != 'STARTUP') or
           (effectType.group(1) == 'onMulligan' and action != 'MULLIGAN') or
+          (effectType.group(1) == 'onExpose' and action != 'EXPOSE') or
           (effectType.group(1) == 'whileScored' and ds != 'corp') or
           (effectType.group(1) == 'whileLiberated' and ds != 'runner') or
           (effectType.group(1) == 'onDamage' and action != 'DAMAGE') or
@@ -303,7 +305,7 @@ def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
       else: 
          intRez(card) # If card is face down or not rezzed assume they wanted to rez       
          return
-   elif fetchProperty(card, 'Type') == 'Agenda' and re.search(r'Public',card.Keywords) and not card.markers[mdict['Scored']]: 
+   elif fetchProperty(card, 'Type') == 'Agenda' and (re.search(r'Public',card.Keywords) or len([c for c in fetchAttachments(card) if c.Name == 'Casting Call'])) and not card.markers[mdict['Scored']]: 
       scrAgenda(card)
       return
    debugNotify("Card not unrezzed. Checking for automations switch...", 4)
@@ -955,9 +957,7 @@ def GainX(Autoscript, announceText, card, targetCards = None, notification = Non
       otherTXT = ' force {} to'.format(targetPL)
       if action.group(1) == 'Lose': actionType = 'Force'
    else: otherTXT = ''
-   if re.search(r'ifTagged', Autoscript) and targetPL.Tags == 0:
-      whisper("Your opponent needs to be tagged to use this action")
-      return 'ABORT'
+   if chkTagged(Autoscript) == 'ABORT': return 'ABORT'      
    multiplier = per(Autoscript, card, n, targetCards) # We check if the card provides a gain based on something else, such as favour bought, or number of dune fiefs controlled by rivals.
    debugNotify("GainX() after per", 3) #Debug
    if action.group(1) == 'Lose': 
@@ -1766,6 +1766,7 @@ def ModifyStatus(Autoscript, announceText, card, targetCards = None, notificatio
          if targetPL.getGlobalVariable('ds') == 'corp': scoreType = 'scoredAgenda'
          else: scoreType = 'liberatedAgenda'
          placeCard(targetCard, 'SCORE', type = scoreType)
+         clearAttachLinks(targetCard)
          card.highlight = None
          flipCard(targetCard)
          #card.isFaceUp = True
@@ -2599,12 +2600,13 @@ def chkPlayer(Autoscript, controller, manual, targetChk = False, reversePlayerCh
       return 0
    
 def chkTagged(Autoscript, silent = False):
-### Check if the action needs the player or his opponent to be targeted
+### Check if the action needs the player or his opponent to be tagged
    debugNotify(">>> chkTagged(). Autoscript is: {}".format(Autoscript))
    if ds == 'corp': runnerPL = findOpponent()
    else: runnerPL = me
    regexTag = re.search(r'ifTagged([0-9]+)', Autoscript)
-   if regexTag and runnerPL.Tags < num(regexTag.group(1)) and not re.search(r'doesNotBlock', Autoscript): #See if the target needs to be tagged a specific number of times.
+   paparazzi = [c for c in table if c.Name == 'Paparazzi'] # Paparazzi make the runner always considered tagged
+   if regexTag and (runnerPL.Tags < num(regexTag.group(1)) or (num(regexTag.group(1)) == 1 and not len(paparazzi))) and not re.search(r'doesNotBlock', Autoscript): #See if the target needs to be tagged a specific number of times.
       if not silent:
          if regexTag.group(1) == '1': whisper("The runner needs to be tagged for you to use this action")
          else: whisper("The Runner needs to be tagged {} times for you to to use this action".format(regexTag.group(1)))

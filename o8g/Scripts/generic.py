@@ -717,7 +717,7 @@ def chkModulator(card, modulator, scriptType = 'onPlay'): # Checks the card's au
    debugNotify("<<< chkModulator() with return {}".format(ModulatorExists)) #Debug
    return ModulatorExists
 
-def fetchHost(card):
+def fetchHost(card): # Returns the card object which is set to be hosting 'card'
    debugNotify(">>> fetchHost()") #Debug
    host = None
    hostCards = eval(getGlobalVariable('Host Cards'))
@@ -725,6 +725,15 @@ def fetchHost(card):
    if hostID: host = Card(hostID) 
    debugNotify("<<< fetchHost() with return {}".format(host)) #Debug
    return host
+   
+def fetchAttachments(card): # Returns a list of card objects with all attachments of 'card'.
+   debugNotify(">>> fetchAttachments()") #Debug
+   attachments = []
+   hostCards = eval(getGlobalVariable('Host Cards'))
+   for attachment in hostCards:
+      if hostCards[attachment] == card._id: attachments.append(Card(attachment))
+   debugNotify("<<< fetchAttachments() with return {}".format(attachments)) #Debug
+   return attachments
    
 def compareValue(comparison, value, requirement):
    debugNotify(">>> compareValue()")

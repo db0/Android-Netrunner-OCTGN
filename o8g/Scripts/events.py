@@ -212,9 +212,8 @@ def checkMovedCards(player,cards,fromGroups,toGroups,oldIndexs,indexs,oldXs,oldY
          if not card.isFaceUp: card.peek()
          if confirm("Play this card from {} for free?".format(pileName(fromGroup))):
             intPlay(card, cost = 'free', scripted = True, retainPos = True)
-      elif fromGroup == table and toGroup != table and card.owner == me and ds == 'runner': # If the player dragged a card manually from the table to their discard pile...
-                                                                                            # We only do it for runners due to OCTGN bug #1374
-         if card.isFaceUp and card.Type == 'Program': 
+      elif fromGroup == table and toGroup != table and card.owner == me: # If the player dragged a card manually from the table to their discard pile...
+         if faceup and card.Type == 'Program': 
             chkRAM(card, 'UNINSTALL')
             notify(":> {} frees up {} MU".format(player,card.Requirement))
          if toGroup == player.piles['Archives(Hidden)'] or toGroup == player.piles['Heap/Archives(Face-up)']:

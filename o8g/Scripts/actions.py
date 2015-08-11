@@ -1146,10 +1146,13 @@ def findDMGProtection(DMGdone, DMGtype, targetPL): # Find out if the player has 
          if DMGdone == 0: break
    for card in cardList:
       if card.markers[mdict[protectionType]]:
-         if card.markers[mdict[protectionType]] == 100: # If we have 100 markers of damage prevention, the card is trying to prevent all Damage.
+         if card.markers[mdict[protectionType]] == 100: # If we have 100 markers of damage prevention, the card is trying to prevent all Damage once.
             protectionFound += DMGdone
             DMGdone = 0
             card.markers[mdict[protectionType]] = 0
+         elif card.markers[mdict[protectionType]] == 101: # If we have 101 markers of damage prevention, the card is trying to prevent all Damage forever.
+            protectionFound += DMGdone
+            DMGdone = 0
          else:
             while DMGdone > 0 and card.markers[mdict[protectionType]] > 0: # For each point of damage we do.
                protectionFound += 1 # We increase the protection found by 1
@@ -1170,6 +1173,9 @@ def findDMGProtection(DMGdone, DMGtype, targetPL): # Find out if the player has 
             protectionFound += DMGdone
             DMGdone = 0
             card.markers[mdict[altprotectionType]] = 0
+         elif card.markers[mdict[altprotectionType]] == 101: # If we have 100 markers of damage prevention, the card is trying to prevent all Damage.
+            protectionFound += DMGdone
+            DMGdone = 0
          else:
             while DMGdone > 0 and card.markers[mdict[altprotectionType]] > 0:
                protectionFound += 1 #
@@ -1276,6 +1282,7 @@ def scrAgenda(card, x = 0, y = 0,silent = False, forced = False):
             notify("{} cancels their action".format(me))
             return
          placeCard(card, action = 'SCORE')
+         clearAttachLinks(card)
          ap = num(fetchProperty(card,'Stat'))
          card.markers[mdict['Scored']] += 1
          me.counters['Agenda Points'].value += ap
@@ -1333,8 +1340,7 @@ def accessTarget(group = table, x = 0, y = 0, noQuestionsAsked = False):
                and c.Type != 'Remote Server']
    for card in cardList:
       if chkGagarinTax(card) == 'ABORT': continue
-      origController[card._id] = card.controller # We store the card's original controller to know against whom to check for scripts (e.g. when accessing a rezzed encryption protocol)
-      #grabCardControl(card)
+      if chkFilmCritic(card) == 'ABORT': continue
       cFaceD = False
       if not card.isFaceUp:
          flipCard(card,True)
@@ -1350,14 +1356,29 @@ def accessTarget(group = table, x = 0, y = 0, noQuestionsAsked = False):
             debugNotify("Doing Remote Call with player = {}. card = {}, autoS = {}".format(me,card,autoS))
             remoteCall(card.owner, 'remoteAutoscript', [card,autoS])
             if re.search(r'-pauseRunner',autoS): # If the -pauseRunner modulator exists, we need to prevent the runner form trashing or scoring cards, as the amount of advancement tokens they have will be wiped and those may be important for the ambush effect.
-               #passCardControl(card,card.owner) # We pass control back to the original owner in case of a trap, to allow them to manipulate their own card (e.g. Toshiyuki Sakai)
                while not confirm("Ambush! You have stumbled into a {}\
                                \n(This card activates even when inactive. You need to wait for the corporation now.)\
                              \n\nHas the corporation decided whether or not to the effects of this ambush?\
                                \n(Pressing 'No' will send a ping to the corporation player to remind him to take action)\
                                  ".format(card.name)):
-                  rnd(1,1000)
                   notify(":::NOTICE::: {} is still waiting for {} to decide whether to use {} or not".format(me,card.owner,card))
+      attachments = fetchAttachments(card)
+      for att in attachments:
+         Autoscripts = CardsAS.get(att.model,'').split('||')
+         for autoS in Autoscripts:
+            if re.search(r'onHostAccess:',autoS):
+               debugNotify(" accessRegex found!")
+               if re.search(r'-ifNotInstalled',autoS): continue # -ifNotInstalled effects don't work with the Access Card shortcut.
+               notify("{} has just accessed a card hosting a {}!".format(me,att.Name))
+               debugNotify("Doing Remote Call with player = {}. card = {}, autoS = {}".format(me,card,autoS))
+               remoteCall(att.owner, 'remoteAutoscript', [att,autoS])
+               if re.search(r'-pauseRunner',autoS): # If the -pauseRunner modulator exists, we need to prevent the runner form trashing or scoring cards, as the amount of advancement tokens they have will be wiped and those may be important for the ambush effect.
+                  while not confirm("Ambush! You have stumbled into a card hosting a {}\
+                                  \n(This card activates even when inactive. You need to wait for the corporation now.)\
+                                \n\nHas the corporation decided whether or not to the effects of this ambush?\
+                                  \n(Pressing 'No' will send a ping to the corporation player to remind him to take action)\
+                                    ".format(att.name)):
+                     notify(":::NOTICE::: {} is still waiting for {} to decide whether to use {} or not".format(me,att.owner,att))
       if card.group != table: whisper(":::Access Aborted::: Card has left the table!")
       else:
          #grabCardControl(card) # If the card is still in the table after any trap option resolves...
@@ -1431,9 +1452,6 @@ def accessTarget(group = table, x = 0, y = 0, noQuestionsAsked = False):
          else: pass
          remoteCall(card.controller,'postAccessFlipCHK',[card,cFaceD])
          card.highlight = None
-         if card.group == table and not card.markers[mdict['Scored']] and not card.markers[mdict['ScorePenalty']]: 
-            try: del origController[card._id] # We use a try: just in case...
-            except: pass
 
 def postAccessFlipCHK(card,PrevStatus): # So many fucking remote calls needed now...
    mute()
@@ -1879,6 +1897,7 @@ def expose(card, x = 0, y = 0, silent = False):
          card.isFaceUp = True
          if card.highlight == None: card.highlight = RevealedColor # we don't want to accidentally wipe dummy card highlight.
          if not silent: notify("{} exposed {}".format(me, card))
+         executePlayScripts(card,'EXPOSE')
    else:
       card.isFaceUp = False
       debugNotify("Peeking() at expose()")

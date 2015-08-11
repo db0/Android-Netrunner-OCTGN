@@ -5841,7 +5841,7 @@ Spoilers
 -----
 bc0f047c-01b1-427f-a439-d451eda08082
 -----
-
+whileInPlay:Draw1Card-toTrash-ofOpponent-foreachAgendaScored
 +++++
 
 .....
@@ -5849,7 +5849,7 @@ Drug Dealer
 -----
 bc0f047c-01b1-427f-a439-d451eda08083
 -----
-
+atTurnStart:Lose1Credit-duringMyTurn||atTurnStart:Draw1Cards-duringOpponentTurn
 +++++
 
 .....
@@ -5857,7 +5857,7 @@ Rolodex
 -----
 bc0f047c-01b1-427f-a439-d451eda08084
 -----
-
+onInstall:CustomScript||onTrash:Draw3Cards-toTrash
 +++++
 
 .....
@@ -5865,7 +5865,7 @@ Fan Site
 -----
 bc0f047c-01b1-427f-a439-d451eda08085
 -----
-
+whileInPlay:ScoreMyself-foreachAgendaScored-hasntOrigMarker{Scored}$$Put1ScorePenalty-isSilent$$Put1Scored-isSilent
 +++++
 
 .....
@@ -5875,13 +5875,13 @@ bc0f047c-01b1-427f-a439-d451eda08086
 -----
 
 +++++
-
+A2B0G0T0:CustomScript
 .....
 Paparazzi
 -----
 bc0f047c-01b1-427f-a439-d451eda08087
 -----
-
+onInstall:Put101protectionMeatDMG
 +++++
 
 .....
@@ -5889,31 +5889,31 @@ Ronald Five
 -----
 bc0f047c-01b1-427f-a439-d451eda08088
 -----
-
+whileInPlay:Lose1Clicks-forOpponent-foreachCardTrashed-byOpponent-typenon{Program}_and_non{Hardware}_and_non{Event}_and_non{Resource}
 +++++
-
+A0B0G0T0:Lose1Clicks-forOpponent
 .....
 Enforcer 1.0
 -----
 bc0f047c-01b1-427f-a439-d451eda08089
 -----
-
+onRez:ExileTarget-DemiAutoTargeted-atAgenda-isScored-choose1
 +++++
-
+A0B0G0T0:TrashTarget-DemiAutoTargeted-atProgram-choose1-isSubroutine||A0B0G0T0:Inflict1BrainDamage-onOpponent-isSubroutine||A0B0G0T0:TrashTarget-DemiAutoTargeted-atConsole-choose1-isSubroutine||A0B0G0T0:TrashMulti-AutoTargeted-atResource_and_Virtual-isSubroutine
 .....
 It's a Trap!
 -----
 bc0f047c-01b1-427f-a439-d451eda08090
 -----
-
+onExpose:Inflict2NetDamage-onOpponent
 +++++
-
+A0B0G0T0:SimplyAnnounce{force the runner to trash one of their cards}-isSubroutine
 .....
 An Offer You Can't Refuse
 -----
 bc0f047c-01b1-427f-a439-d451eda08091
 -----
-
+onPlay:CustomScript
 +++++
 
 .....
@@ -5929,7 +5929,7 @@ Award Bait
 -----
 bc0f047c-01b1-427f-a439-d451eda08093
 -----
-
+onAccess:UseCustomAbility-isOptional-worksInArchives
 +++++
 
 .....
@@ -5937,7 +5937,7 @@ Explode-a-palooza
 -----
 bc0f047c-01b1-427f-a439-d451eda08094
 -----
-
+onAccess:Gain5Credits-isOptional-worksInArchives
 +++++
 
 .....
@@ -5947,13 +5947,13 @@ bc0f047c-01b1-427f-a439-d451eda08095
 -----
 
 +++++
-
+A0B1G0T0:Put1Advancement-Targeted
 .....
 Casting Call
 -----
 bc0f047c-01b1-427f-a439-d451eda08096
 -----
-
+onPlay:UseCustomAbility-DemiAutoTargeted-atAgenda-fromHand-choose1||onHostAccess:Gain2Tags-forOpponent
 +++++
 
 .....
@@ -5969,7 +5969,7 @@ Hollywood Renovation
 -----
 bc0f047c-01b1-427f-a439-d451eda08098
 -----
-
+onAdvance:Put1Advancement-Targeted$$Put1Advancement-Targeted-ifOrigmarkers{Advancement}ge6
 +++++
 
 .....
@@ -5977,7 +5977,7 @@ Back Channels
 -----
 bc0f047c-01b1-427f-a439-d451eda08099
 -----
-
+onPlay:Gain3Credits-perTargetMarker{Advancement}-Targeted-atnonICE$$TrashTarget-Targeted-atnonICE
 +++++
 
 .....

@@ -367,6 +367,20 @@ def UseCustomAbility(Autoscript, announceText, card, targetCards = None, notific
       else:
          whisper(":::ERROR::: Please target a card to host or uninstall for the {}".format(card))
          announceString = ''
+   if fetchProperty(card, 'name') == "Award Bait":
+      notify(':> {} is thinking where to add the  {} advancement...'.format(card,me))
+      whisper(":::INFO::: Double click on a card you control to add an advancement counter")
+      hijackDefaultAction.append(card)
+      showHijackQueue()
+      announceString = ''
+   if fetchProperty(card, 'name') == 'Casting Call':
+      agenda = targetCards[0]
+      agenda.moveToTable(0,0)
+      card.moveToTable(0,0)
+      placeCard(agenda, 'INSTALL')
+      hostMe(card,agenda)
+      notify("{} installs {} using a {}".format(me,agenda,card))
+      announceString = ''
    return announceString
  
 #------------------------------------------------------------------------------
@@ -1411,6 +1425,21 @@ def CustomScript(card, action = 'PLAY', origin_card = None, original_action = No
       intTrashCard(card,card.Stat,"free",silent = True)
    elif fetchProperty(card, 'name') == 'Gang Sign' and action == 'USE': 
       remoteCall(fetchRunnerPL(),'HQaccess',[])
+   elif fetchProperty(card, 'name') == 'Rolodex' and action == 'INSTALL':
+      me.piles['R&D/Stack'].lookAt(5)
+   elif fetchProperty(card, 'name') == 'Film Critic' and action == 'USE':
+      hostCards = eval(getGlobalVariable('Host Cards'))
+      attachments = fetchAttachments(card)
+      if len(attachments): 
+         clickCost = useClick(count = 2)
+         if clickCost == 'ABORT': return 'ABORT'
+         ModifyStatus('ScoreTarget-forOpponent', '', card, targetCards = attachments)
+         notify("{} get {} to review {}".format(clickCost,card,attachments[0]))
+      else: whisper(":::ERROR::: You do not have any agendas hosted on the Film Critic")
+   elif fetchProperty(card, 'name') == "An Offer You Can't Refuse" and action == 'PLAY':
+      servers = ['HQ','R&D','Archives']
+      choice = SingleChoice('Choose which server to offer to the runner',['HQ','R&D','Archives'])
+      remoteCall(fetchRunnerPL(),'OfferRefuseBegin',[card,servers[choice]])
    elif action == 'USE': useCard(card)
       
             
@@ -1652,6 +1681,12 @@ def hijack(card):
    if currentHijack.Name == "Space Camp":
       TokensX('Put1Advancement-isSilent', "", card)
       notify("{} uses {} to add an advancement on {}".format(me,currentHijack.Name,card))
+   if currentHijack.Name == "Award Bait":
+      count = askInteger("How many tokens do you want to add to this card (Max 2)",2)
+      if count == None: count = 0
+      elif count > 2: count = 2
+      TokensX('Put{}Advancement-isSilent'.format(count), "", card)
+      notify("{} uses {} to add {} advancement tokens on {}".format(me,currentHijack.Name,count,card))
    if currentHijack.Name == "Muertos Gang Member":
       if currentHijack.group == table:
          if not (card.isFaceUp and card.controller == me and (card.Type == 'ICE' or card.Type == 'Asset'  or card.Type == 'Upgrade') and card.highlight != InactiveColor and card.highlight != RevealedColor and card.highlight != DummyColor):
@@ -1865,3 +1900,30 @@ def MuertosGangUninstall(card):
    hijackDefaultAction.append(card)                
    showHijackQueue()
    
+def chkFilmCritic(card):
+   mute()
+   if card.Type == 'Agenda':
+      hostCards = eval(getGlobalVariable('Host Cards'))
+      openCritic = None
+      for c in table:
+         if c.Name == 'Film Critic':
+            openCritic = c
+            for attachment in hostCards:
+               if hostCards[attachment] == c._id: 
+                  openCritic = None
+                  break
+      if openCritic:
+         if confirm("You have accessed {} and you have an available film Critic. Would you like them to host this Agenda".format(card.Name)):
+            clearAttachLinks(card)
+            hostMe(card,openCritic)
+            card.highlight = InactiveColor
+            return 'ABORT'   
+   return 'OK'
+
+def OfferRefuseBegin(card,server):
+   if confirm("{} is making you an offer to run on their {}. Do you accept?".format(card.owner.name,server)):
+      RunX('Run{}'.format(server), '', card)
+      notify("{} has no choice but to accept {}'s offer and begins a run on {}".format(me,card.owner.name,server))
+   else: 
+      ModifyStatus('ScoreMyself', '', card)
+      notify("{} is cowered and {} scores {} for 1 Agenda Point".format(me,card.owner.name,card))
