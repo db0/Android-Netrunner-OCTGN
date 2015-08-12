@@ -526,11 +526,13 @@ def sendToTrash(card, pile = None): # A function which takes care of sending a c
    if pile == None: pile = card.owner.piles['Heap/Archives(Face-up)'] # I can't pass it as a function variable. OCTGN doesn't like it.
    debugNotify("Target Pile: {}'s {}".format(pile.player,pile.name))
    debugNotify("sendToTrash says previous group = {} and highlight = {}".format(card.group.name,card.highlight))
-   if card.group == table: 
-      if card.highlight != DummyColor: playTrashSound(card) # We don't want the trash sound for resident effects.
-      chkAgendaVictory() # Just in case we trashed the Board
-      remoteCall(findOpponent(),'chkAgendaVictory',[]) # Just in case we trashed the Board
-      autoscriptOtherPlayers('CardTrashed',card)
+   if card.group == table:
+      if card.Type != 'Event' and card.Type != 'Operation': # Events and operations are not considered to be trashed when removed from the table
+         if card.highlight != DummyColor: playTrashSound(card) # We don't want the trash sound for resident effects.
+         chkAgendaVictory() # Just in case we trashed the Board
+         remoteCall(findOpponent(),'chkAgendaVictory',[]) # Just in case we trashed the Board
+         autoscriptOtherPlayers('CardTrashed',card)
+   else: autoscriptOtherPlayers('OutofPlayTrashed',card)
    if (card.group == table and card.highlight != InactiveColor and card.isFaceUp) or chkModulator(card, 'runTrashScriptWhileInactive', 'onTrash'): 
       executePlayScripts(card,'TRASH') # We don't want to run automations on simply revealed cards, but some of them will like Director Haas.
    clearAttachLinks(card)

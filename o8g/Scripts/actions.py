@@ -2067,7 +2067,7 @@ def trashTargetPaid(group, x=0, y=0):
       cardType = fetchProperty(card, 'Type')
       if ds == 'corp':
          if cardType != 'Resource' and not confirm("Only resources can be trashed from the runner.\n\nBypass Restriction?"): continue
-         if not card.controller.Tags and not confirm("You can only Trash the runner's resources when they're tagged\n\nBypass Restriction?"): continue
+         if chkTagged('ifTagged1',True) == 'ABORT' and not confirm("You can only Trash the runner's resources when they're tagged\n\nBypass Restriction?"): continue
          ClickCost = useClick()
          if ClickCost == 'ABORT': return
          intTrashCard(card, 2, ClickCost = ClickCost)

@@ -1433,7 +1433,7 @@ def CustomScript(card, action = 'PLAY', origin_card = None, original_action = No
       if len(attachments): 
          clickCost = useClick(count = 2)
          if clickCost == 'ABORT': return 'ABORT'
-         ModifyStatus('ScoreTarget-forOpponent', '', card, targetCards = attachments)
+         ModifyStatus('ScoreTarget-onOpponent', '', card, targetCards = attachments)
          notify("{} get {} to review {}".format(clickCost,card,attachments[0]))
       else: whisper(":::ERROR::: You do not have any agendas hosted on the Film Critic")
    elif fetchProperty(card, 'name') == "An Offer You Can't Refuse" and action == 'PLAY':
@@ -1917,6 +1917,8 @@ def chkFilmCritic(card):
             clearAttachLinks(card)
             hostMe(card,openCritic)
             card.highlight = InactiveColor
+            card.isFaceUp = True
+            grabCardControl(card)
             return 'ABORT'   
    return 'OK'
 
@@ -1926,4 +1928,6 @@ def OfferRefuseBegin(card,server):
       notify("{} has no choice but to accept {}'s offer and begins a run on {}".format(me,card.owner.name,server))
    else: 
       ModifyStatus('ScoreMyself', '', card)
+      GainX('Gain1Agenda Points','',card)
+      TokensX('Put1Scored-isSilent','',card)
       notify("{} is cowered and {} scores {} for 1 Agenda Point".format(me,card.owner.name,card))

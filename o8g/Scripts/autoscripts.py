@@ -1767,7 +1767,7 @@ def ModifyStatus(Autoscript, announceText, card, targetCards = None, notificatio
          else: scoreType = 'liberatedAgenda'
          placeCard(targetCard, 'SCORE', type = scoreType)
          clearAttachLinks(targetCard)
-         card.highlight = None
+         targetCard.highlight = None
          flipCard(targetCard)
          #card.isFaceUp = True
          update()
@@ -1841,7 +1841,7 @@ def InflictX(Autoscript, announceText, card, targetCards = None, notification = 
    if re.search(r'isRequirement', Autoscript) and DMG < 1: failedRequirement = True # Requirement means that the cost is still paid but other clicks are not going to follow.
    if notification == 'Quick': announceString = "{} suffer {} {} damage{}".format(announceText,DMG,action.group(3),preventTXT)
    else: announceString = "{} inflict {} {} damage{} to {}{}".format(announceText,DMG,action.group(3),enhanceTXT,targetPL,preventTXT)
-   if notification and DMG > 0: notify('--> {}.'.format(announceString))
+   if notification and (DMG > 0 or DMGprevented > 0): notify('--> {}.'.format(announceString))
    debugNotify("<<< InflictX()", 3)
    return announceString
 
@@ -2606,7 +2606,7 @@ def chkTagged(Autoscript, silent = False):
    else: runnerPL = me
    regexTag = re.search(r'ifTagged([0-9]+)', Autoscript)
    paparazzi = [c for c in table if c.Name == 'Paparazzi'] # Paparazzi make the runner always considered tagged
-   if regexTag and (runnerPL.Tags < num(regexTag.group(1)) or (num(regexTag.group(1)) == 1 and not len(paparazzi))) and not re.search(r'doesNotBlock', Autoscript): #See if the target needs to be tagged a specific number of times.
+   if regexTag and (runnerPL.Tags < num(regexTag.group(1)) and (num(regexTag.group(1)) == 1 and not len(paparazzi))) and not re.search(r'doesNotBlock', Autoscript): #See if the target needs to be tagged a specific number of times.
       if not silent:
          if regexTag.group(1) == '1': whisper("The runner needs to be tagged for you to use this action")
          else: whisper("The Runner needs to be tagged {} times for you to to use this action".format(regexTag.group(1)))

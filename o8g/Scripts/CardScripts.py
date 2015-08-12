@@ -5849,7 +5849,7 @@ Drug Dealer
 -----
 bc0f047c-01b1-427f-a439-d451eda08083
 -----
-atTurnStart:Lose1Credit-duringMyTurn||atTurnStart:Draw1Cards-duringOpponentTurn
+atTurnStart:Lose1Credits-duringMyTurn||atTurnStart:Draw1Cards-duringOpponentTurn
 +++++
 
 .....
@@ -5865,7 +5865,7 @@ Fan Site
 -----
 bc0f047c-01b1-427f-a439-d451eda08085
 -----
-whileInPlay:ScoreMyself-foreachAgendaScored-hasntOrigMarker{Scored}$$Put1ScorePenalty-isSilent$$Put1Scored-isSilent
+whileInPlay:ScoreMyself-foreachAgendaScored-hasntMarker{Scored}||whileInPlay:Put1ScorePenalty-isSilent-foreachAgendaScored-hasntMarker{Scored}||whileInPlay:Put1Scored-isSilent-isSilent-foreachAgendaScored-hasntMarker{Scored}
 +++++
 
 .....
@@ -5889,9 +5889,9 @@ Ronald Five
 -----
 bc0f047c-01b1-427f-a439-d451eda08088
 -----
-whileInPlay:Lose1Clicks-forOpponent-foreachCardTrashed-byOpponent-typenon{Program}_and_non{Hardware}_and_non{Event}_and_non{Resource}
+whileInPlay:Lose1Clicks-ofOpponent-foreachCardTrashed-byOpponent-typenon{Program}_and_non{Hardware}_and_non{Event}_and_non{Resource}||whileInPlay:Lose1Clicks-ofOpponent-foreachOutofPlayTrashed-byOpponent-typenon{Program}_and_non{Hardware}_and_non{Event}_and_non{Resource}
 +++++
-A0B0G0T0:Lose1Clicks-forOpponent
+A0B0G0T0:Lose1Clicks-onOpponent
 .....
 Enforcer 1.0
 -----
@@ -5953,7 +5953,7 @@ Casting Call
 -----
 bc0f047c-01b1-427f-a439-d451eda08096
 -----
-onPlay:UseCustomAbility-DemiAutoTargeted-atAgenda-fromHand-choose1||onHostAccess:Gain2Tags-forOpponent
+onPlay:UseCustomAbility-DemiAutoTargeted-atAgenda-fromHand-choose1||onHostAccess:Gain2Tags-onOpponent
 +++++
 
 .....
