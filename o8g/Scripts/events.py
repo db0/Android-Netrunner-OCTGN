@@ -28,7 +28,6 @@ ds = None # The side of the player. 'runner' or 'corp'
 flipModX = 0
 flipModY = 0
 flipServerModY = 0
-GeneticsPavilion = 0
 
 def chkTwoSided():
    mute()
