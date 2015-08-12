@@ -28,6 +28,7 @@ ds = None # The side of the player. 'runner' or 'corp'
 flipModX = 0
 flipModY = 0
 flipServerModY = 0
+GeneticsPavilion = 0
 
 def chkTwoSided():
    mute()
@@ -196,8 +197,11 @@ def checkMovedCards(player,cards,fromGroups,toGroups,oldIndexs,indexs,oldXs,oldY
       highlight = highlights[iter]
       markers = markersList[iter]
       if toGroup != me.piles['R&D/Stack'] and card.owner == me: superCharge(card) # First we check if we should supercharge the card, but only if the card is still on the same group at the time of execution.  
-      if fromGroup == me.piles['R&D/Stack'] and toGroup == me.hand and ds == 'corp': # Code to store cards drawn by the corp to be exposed later by Bug
-         if len([c for c in table if c.name == 'Bug']): setGlobalVariable('Bug Memory',card.name)
+      if fromGroup == me.piles['R&D/Stack'] and toGroup == me.hand:
+         if ds == 'corp': # Code to store cards drawn by the corp to be exposed later by Bug
+            if len([c for c in table if c.name == 'Bug']): setGlobalVariable('Bug Memory',card.name)
+         if ds == 'runner': # Code to store how many cards we've drawn for Genetics Pavilion
+            setGlobalVariable('Genetics Pavilion Memory',str(num(getGlobalVariable('Genetics Pavilion Memory')) + 1))
       if ds == 'runner' and card.controller == me and fromGroup != toGroup: recalcMU() # Any time a card enters or leaves the table, we recalculate MUs, just in case.
       if fromGroup == me.hand and toGroup == table: 
          if card.Type == 'Identity': intJackin(manual = True)

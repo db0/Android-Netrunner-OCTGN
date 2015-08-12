@@ -38,38 +38,6 @@
          <property name="AutoScript" value="" />
          <property name="AutoAction" value="" />	
 		</card>
-		<card id="bc0f047c-01b1-427f-a439-d451eda00002" name="Laramy Fisk">
-         <property name="Subtitle" value="Savvy Investor" />
-         <property name="Type" value="Identity" />
-         <property name="Keywords" value="Natural" />
-         <property name="Cost" value="0" />
-         <property name="Requirement" value="45" />	
-         <property name="Stat" value="15" />	
-         <property name="Rules" value="The first time you make a successful run on a central server each turn, you may force the Corp to draw 1 card." />
-         <property name="Flavor" value="&quot;Timing is Everything.&quot;" />
-         <property name="Instructions" value="" />
-         <property name="Faction" value="Criminal" />
-         <property name="Influence" value="" />
-         <property name="Side" value="runner" />
-         <property name="AutoScript" value="" />
-         <property name="AutoAction" value="" />	
-		</card>
-		<card id="bc0f047c-01b1-427f-a439-d451eda00003" name="Chronos Protocol">
-         <property name="Subtitle" value="Selective Mind-Mapping (J)" />
-         <property name="Type" value="Identity" />
-         <property name="Keywords" value="Division" />
-         <property name="Cost" value="0" />
-         <property name="Requirement" value="45" />	
-         <property name="Stat" value="15" />	
-         <property name="Rules" value="For the first net damage the runner suffers each turn, you may look at the runner's grip and select the card that is trashed." />
-         <property name="Flavor" value="" />
-         <property name="Instructions" value="" />
-         <property name="Faction" value="Jinteki" />
-         <property name="Influence" value="" />
-         <property name="Side" value="corp" />
-         <property name="AutoScript" value="" />
-         <property name="AutoAction" value="" />	
-		</card>
 		<card id="bc0f047c-01b1-427f-a439-d451eda00004" name="Chronos Protocol">
          <property name="Subtitle" value="Selective Mind-Mapping (HB)" />
          <property name="Type" value="Identity" />

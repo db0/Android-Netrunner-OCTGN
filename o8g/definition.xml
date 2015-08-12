@@ -148,6 +148,7 @@
      <globalvariable name="AutoScript Variables" value="{}" /> 
      <globalvariable name="Paused Runner" value="False" /> 
      <globalvariable name="Bug Memory" value="None" /> 
+     <globalvariable name="Genetics Pavilion Memory" value="0" /> 
    </globalvariables>
    <card back="Card/corp-back.jpg" front="Card/front.jpg" width="63" height="88" cornerRadius="2">
       <property name="Subtitle" type="String" hidden="False" ignoreText="False"/>

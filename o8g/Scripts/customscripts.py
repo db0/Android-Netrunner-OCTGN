@@ -1440,6 +1440,74 @@ def CustomScript(card, action = 'PLAY', origin_card = None, original_action = No
       servers = ['HQ','R&D','Archives']
       choice = SingleChoice('Choose which server to offer to the runner',['HQ','R&D','Archives'])
       remoteCall(fetchRunnerPL(),'OfferRefuseBegin',[card,servers[choice]])
+   elif fetchProperty(card, 'name') == 'Bookmark' and action == 'USE':
+      choice = SingleChoice('What do you want to do with the bookmark?',['[Click] Host up to 3 cards from the grip','[Click] Take all cards on Bookmark to your grip','[Trash] Take all cards on Bookmark to your grip'])
+      if choice == 0:
+         targetList = [c for c in me.hand  # First we see if they've targeted cards from their hand
+                        if c.targetedBy 
+                        and c.targetedBy == me]
+         if len(targetList) > 0:
+            done = 0
+            actionCost = useClick(count = 1)
+            if actionCost == 'ABORT': return 'ABORT'
+            for selectedCard in targetList:
+               selectedCard.moveToTable(0,0,True)
+               selectedCard.peek()
+               hostMe(selectedCard,card)
+               TokensX('Put1Bookmarked-isSilent', "", selectedCard) 
+               selectedCard.highlight = InactiveColor
+               done += 1
+               if done > 2: break
+            notify("{} to bookmark {} cards".format(actionCost,done))
+            return 'CLICK USED'
+         else: 
+            whisper(":::ERROR::: You need to target at least one card in your hand before using this action")  
+            return 'ABORT'
+      else:
+         if choice == 1:
+            actionCost = useClick(count = 1)
+            if actionCost == 'ABORT': return 'ABORT'
+         attachments = fetchAttachments(card)
+         for attach in attachments:
+            clearAttachLinks(attach)
+            changeCardGroup(attach, me.hand)
+         if choice == 1:
+            notify("{} to return their {} {}ed cards".format(actionCost,len(attachments),card))
+            return 'CLICK USED'
+         else:
+            notify("{} {} {} to return their {} bookmarked cards".format(me,uniTrash(),card,len(attachments)))
+            intTrashCard(card, card.Stat, cost = "free")
+   elif fetchProperty(card, 'name') == 'DaVinci' and action == 'USE':
+         targetLists = [c for c in me.hand  # First we see if they've targeted cards from their hand
+                        if c.targetedBy 
+                        and c.targetedBy == me]
+         if not len(targetLists):
+            targetLists = [c for c in me.hand if num(c.Cost) <= card.markers[mdict['Power']]] # If not, we just try to find cards with appropriate cost
+         if not len(targetLists): 
+            whisper(":::ERROR::: You need to target at least one card in your hand before using this action")  
+            return 'ABORT'
+         elif len(targetLists) == 1: chosenCard = targetLists[0]
+         else:         
+            choice = SingleChoice("Choose which card to bring in with DaVinci", makeChoiceListfromCardList(targetLists))
+            if choice == None: return 'ABORT'
+            else: chosenCard = targetLists[choice]
+         intPlay(chosenCard,'free', True)
+         notify("{} {} {} to bring in {} from their hand for free".format(me,uniTrash(),card,chosenCard))
+         intTrashCard(card, card.Stat, "free", silent = True)
+   elif fetchProperty(card, 'name') == 'Worlds Plaza' and action == 'USE':
+      if len(fetchAttachments(card)) >= 3: 
+         whisper(":::ERROR::: You cannot host more than 3 assetsa at {}".format(card.Name))
+         return 'ABORT'
+      targetList = findTarget('DemiAutoTargeted-atAsset-fromHand-choose1')
+      if len(targetList) > 0:
+         actionCost = useClick(count = 1)
+         if actionCost == 'ABORT': return 'ABORT'
+         selectedCard = targetList[0]
+         hostMe(selectedCard,card)
+         ModifyStatus('RezTarget-Targeted-payCost-reduc2','',card,targetCards = [selectedCard])
+         notify("{} to host {} in {}".format(actionCost,selectedCard,card))
+         return 'CLICK USED'
+      else: return 'ABORT'
    elif action == 'USE': useCard(card)
       
             
@@ -1917,7 +1985,7 @@ def chkFilmCritic(card):
             clearAttachLinks(card)
             hostMe(card,openCritic)
             card.highlight = InactiveColor
-            card.isFaceUp = True
+            flipCard(card)
             grabCardControl(card)
             return 'ABORT'   
    return 'OK'

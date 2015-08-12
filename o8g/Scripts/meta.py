@@ -705,7 +705,6 @@ def chkTripleID(): # Function which double checks that the player has selected a
    
 def chkDmgSpecialEffects(dmgType, count):
 # This function checks for special card effects on the table that hijack normal damage effects and do something extra or differently
-# At the moment it's used for the two Chronos Protocol IDs.
    debugNotify(">>> chkDmgSpecialEffects()") #Debug
    usedDMG = 0
    replaceDMGAnnounce = False
@@ -787,6 +786,7 @@ def chkDrawPrevention():
    prevention = False
    for card in table:
       if card.Name == 'Lockdown' and card.markers[mdict['Power']]: prevention = True
+      if card.Name == 'Genetics Pavilion' and num(getGlobalVariable('Genetics Pavilion Memory')) >= 2: prevention = True
    return prevention
 #---------------------------------------------------------------------------
 # Card Placement

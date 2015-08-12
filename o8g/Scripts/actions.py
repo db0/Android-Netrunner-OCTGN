@@ -201,6 +201,7 @@ def goToSot (group, x=0,y=0):
    if ds == 'runner':
       setGlobalVariable('Remote Run','False')
       setGlobalVariable('Central Run','False')
+   setGlobalVariable('Genetics Pavilion Memory',0)
    atTimedEffects('Start') # Check all our cards to see if there's any Start of Turn effects active.
    announceSoT()
    opponent = ofwhom('onOpponent')
@@ -2070,7 +2071,8 @@ def trashTargetPaid(group, x=0, y=0):
          if chkTagged('ifTagged1',True) == 'ABORT' and not confirm("You can only Trash the runner's resources when they're tagged\n\nBypass Restriction?"): continue
          ClickCost = useClick()
          if ClickCost == 'ABORT': return
-         intTrashCard(card, 2, ClickCost = ClickCost)
+         trashCost = 2 + (2 * len([c for c in table if c.Name == 'Wireless Net Pavilion']))
+         intTrashCard(card, trashCost, ClickCost = ClickCost)
       else:
          if cardType != 'Upgrade' and cardType != 'Asset' and not confirm("You can normally only pay to trash the Corp's Nodes and Upgrades.\n\nBypass Restriction?"): continue
          intTrashCard(card, fetchProperty(card, 'Stat')) # If we're a runner, trash with the cost of the card's trash.
@@ -2562,9 +2564,6 @@ def drawMany(group, count = None, destination = None, silent = False):
    if destination == None: destination = me.hand
    SSize = len(group)
    if SSize == 0: return 0
-   if group.player == me and group == me.piles['R&D/Stack'] and destination == me.hand and ds == 'runner' and chkDrawPrevention(): 
-      whisper(":::ERROR::: You're not allowed to draw any more cards this turn")
-      return 0
    if count == None: count = askInteger("Draw how many cards?", 5)
    if count == None: return 0
    if count > SSize:
@@ -2577,16 +2576,29 @@ def drawMany(group, count = None, destination = None, silent = False):
             notify(":::WARNING::: {} canceled the card draw effect to avoid decking themselves".format(me))
             return 0
       else: 
-         count = SSize
-         whisper("You do not have enough cards in your deck to complete this action. Will draw as many as possible")
+         if group.player != me and group == group.player.piles['R&D/Stack'] and destination == group.player.hand and ds == 'runner':
+            notify(":::ATTENTION::: {} cannot draw the full amount of cards. {} loses the game!".format(me,me))
+            reportGame('DeckDefeat')
+            return count
+         else:
+            count = SSize
+            whisper("You do not have enough cards in your deck to complete this action. Will draw as many as possible")
    if destination == me.hand and group == me.piles['R&D/Stack']: # Due to its automated wording, I have to hardcode this on every card draw.
       dailyList = []
       dailyBusiness = chkDailyBusinessShows() 
    else: dailyBusiness = 0
+   drawn = 0
    for c in group.top(count):
+      if group.player == me and group == me.piles['R&D/Stack'] and destination == me.hand and ds == 'runner' and chkDrawPrevention(): 
+         whisper(":::ERROR::: You're not allowed to draw any more cards this turn")
+         count = drawn
+         continue
       if dailyBusiness:
          dailyList.append(c)
       changeCardGroup(c,destination)
+      if ds == 'runner' and destination == me.hand and group == me.piles['R&D/Stack']: # Code to store how many cards we've drawn for Genetics Pavilion
+         setGlobalVariable('Genetics Pavilion Memory',str(num(getGlobalVariable('Genetics Pavilion Memory')) + 1))
+         drawn += 1
       #c.moveTo(destination)
    if dailyBusiness:
       for c in group.top(dailyBusiness):

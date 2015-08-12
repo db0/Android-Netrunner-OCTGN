@@ -70,6 +70,7 @@ specialHostPlacementAlgs = { # A Dictionary which holds tuples of X and Y placem
                               'Awakening Center'      :            (-32,0),
                               'London Library'        :            (-32,0),
                               'Street Peddler'        :            (-32,0),
+                              'Bookmark'              :            (-32,0),
                               'Off-Campus Apartment'  :            (-32,0)
                            }
                            

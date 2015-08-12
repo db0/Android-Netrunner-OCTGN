@@ -2523,14 +2523,6 @@ whileInPlay:CustomScript-foreachCardInstall-duringMyTurn||whileInPlay:CustomScri
 +++++
 A0B0G0T0:Gain1Clicks
 .....
-Laramy Fisk
------
-bc0f047c-01b1-427f-a439-d451eda00002
------
-atSuccessfulRun:Draw1Card-onOpponent-ifSuccessfulRunHQ-onlyOnce-isOptional||atSuccessfulRun:Draw1Card-onOpponent-ifSuccessfulRunR&D-onlyOnce-isOptional||atSuccessfulRun:Draw1Card-onOpponent-ifSuccessfulRunArchives-onlyOnce-isOptional
-+++++
-
-.....
 Bishop
 -----
 bc0f047c-01b1-427f-a439-d451eda04021
@@ -5993,9 +5985,9 @@ Power to the People
 -----
 bc0f047c-01b1-427f-a439-d451eda08101
 -----
-
+onPlay:CreateDummy
 +++++
-
+A0B0G0T1:Gain7Credits-onlyforDummy
 .....
 Surfer
 -----
@@ -6003,7 +5995,7 @@ bc0f047c-01b1-427f-a439-d451eda08102
 -----
 
 +++++
-
+A0B2G0T0:SimplyAnnounce{swap the Barrier ICE being encountered with another ICE before or after it}
 .....
 DDoS
 -----
@@ -6011,13 +6003,13 @@ bc0f047c-01b1-427f-a439-d451eda08103
 -----
 
 +++++
-
+A0B0G0T1:SimplyAnnounce{prevent the rez of the outermost ICE in all servers}
 .....
 Laramy Fisk
 -----
 bc0f047c-01b1-427f-a439-d451eda08104
 -----
-
+atSuccessfulRun:Draw1Card-onOpponent-ifSuccessfulRunHQ-onlyOnce-isOptional||atSuccessfulRun:Draw1Card-onOpponent-ifSuccessfulRunR&D-onlyOnce-isOptional||atSuccessfulRun:Draw1Card-onOpponent-ifSuccessfulRunArchives-onlyOnce-isOptional
 +++++
 
 .....
@@ -6025,7 +6017,7 @@ Fisk Investment Seminar
 -----
 bc0f047c-01b1-427f-a439-d451eda08105
 -----
-
+onPlay:Draw3Cards$$Draw3Cards-onOpponent
 +++++
 
 .....
@@ -6035,15 +6027,15 @@ bc0f047c-01b1-427f-a439-d451eda08106
 -----
 
 +++++
-
+A1B0G0T0:CustomScript
 .....
 DaVinci
 -----
 bc0f047c-01b1-427f-a439-d451eda08107
 -----
-
+atSuccessfulRun:Put1Power
 +++++
-
+A0B0G0T1:CustomScript
 .....
 Wireless Net Pavilion
 -----
@@ -6057,7 +6049,7 @@ Cybernetics Court
 -----
 bc0f047c-01b1-427f-a439-d451eda08109
 -----
-
+onRez:Gain4Hand Size||onTrash:Lose4Hand Size-ifActive
 +++++
 
 .....
@@ -6065,7 +6057,7 @@ Team Sponsorship
 -----
 bc0f047c-01b1-427f-a439-d451eda08110
 -----
-
+whileInPlay:InstallTarget-DemiAutoTargeted-atnonOperation-fromHand-choose1-isOptional-foreachAgendaScored
 +++++
 
 .....
@@ -6083,7 +6075,7 @@ bc0f047c-01b1-427f-a439-d451eda08112
 -----
 
 +++++
-
+A0B0G0T0:Inflict1NetDamage-onOpponent
 .....
 Genetics Pavilion
 -----
@@ -6099,13 +6091,13 @@ bc0f047c-01b1-427f-a439-d451eda08114
 -----
 
 +++++
-
+A0B0G0T0:Gain1Agenda Points$$ScoreMyself$$Put1Scored-isSilent
 .....
 Product Placement
 -----
 bc0f047c-01b1-427f-a439-d451eda08115
 -----
-
+onAccess:Gain2Credits
 +++++
 
 .....
@@ -6115,13 +6107,13 @@ bc0f047c-01b1-427f-a439-d451eda08116
 -----
 
 +++++
-
+A0B0G0T0:CustomScript
 .....
 Public Support
 -----
 bc0f047c-01b1-427f-a439-d451eda08117
 -----
-
+onRez:Put3Power||atTurnStart:Remove1Power-duringMyTurn||atTurnStart:Gain1Agenda Points-hasntOrigMarker{Power}-duringMyTurn$$ScoreMyself$$Put1Scored-isSilent
 +++++
 
 .....
@@ -6131,7 +6123,7 @@ bc0f047c-01b1-427f-a439-d451eda08118
 -----
 
 +++++
-
+A0B0G0T0:RunEnd-isSubroutine
 .....
 Expo Grid
 -----
@@ -6139,13 +6131,13 @@ bc0f047c-01b1-427f-a439-d451eda08119
 -----
 
 +++++
-
+A0B0G0T0:Gain1Credits-onlyOnce
 .....
 The Future is Now
 -----
 bc0f047c-01b1-427f-a439-d451eda08120
 -----
-
+onScore:Retrieve1Cards$$ShuffleR&D
 +++++
 
 .....
