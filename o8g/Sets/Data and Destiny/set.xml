@@ -13,7 +13,7 @@
 		<property name="Cost" value="0" />
 		<property name="Requirement" value="40" />	
 		<property name="Stat" value="15" />	
-		<property name="Rules" value="[Click]: Flip this identity.&#xD;&#xA;&#xD;&#xA;The Runner pays 1[Credits] more when spending a [Click] to remove a tag (not through a card ability).&#xD;&#xA;&#xD;&#xA;Flip side:&#xD;&#xA;&#xD;&#xA;[Click]: Flip this identity.&#xD;&#xA;&#xD;&#xA;You may pay 2[Credits] fewer when spending a [Click] to trash a resource (not through a card ability)." />
+		<property name="Rules" value="[Click]: Flip this identity.&#xD;&#xA;&#xD;&#xA;The Runner pays 1[Credits] more when spending a [Click] to remove a tag (not through a card ability)." />
 		<property name="Flavor" value="" />
 		<property name="Instructions" value="" />
 		<property name="Faction" value="NBN" />
@@ -21,6 +21,22 @@
 		<property name="Side" value="corp" />
 		<property name="AutoScript" value="" />
 		<property name="AutoAction" value="" />	
+      <alternate name="SYNC" type="Flipped">
+         <property name="Subtitle" value="Everything, Everywhere" />
+         <property name="Type" value="Identity" />
+         <property name="Keywords" value="Division" />
+         <property name="Cost" value="0" />
+         <property name="Requirement" value="40" />	
+         <property name="Stat" value="15" />	
+         <property name="Rules" value="[Click]: Flip this identity.&#xD;&#xA;&#xD;&#xA;You may pay 2[Credits] fewer when spending a [Click] to trash a resource (not through a card ability)." />
+         <property name="Flavor" value="" />
+         <property name="Instructions" value="" />
+         <property name="Faction" value="NBN" />
+         <property name="Influence" value="" />
+         <property name="Side" value="corp" />
+         <property name="AutoScript" value="" />
+         <property name="AutoAction" value="" />	
+      </alternate>
 	</card>
 	<card id="bc0f047c-01b1-427f-a439-d451eda09002" name="New Angeles Sol">
 		<property name="Subtitle" value="Your News" />
@@ -31,7 +47,7 @@
 		<property name="Stat" value="15" />	
 		<property name="Rules" value="Whenever an agenda is scored or stolen, you may play 1 current from HQ or Archives (paying its play cost)." />
 		<property name="Flavor" value="Nothing but the Truth." />
-		<property name="Instructions" value="" />
+		<property name="Instructions" value="Play from Hand||Play from Archives" />
 		<property name="Faction" value="NBN" />
 		<property name="Influence" value="" />
 		<property name="Side" value="corp" />

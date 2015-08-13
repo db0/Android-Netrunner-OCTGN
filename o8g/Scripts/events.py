@@ -307,3 +307,13 @@ def reconnect():
    chkSideFlip()
    notify("::> {} has reconnected to the session!".format(me))
    
+def checkCardDoubleClicked(card,mouseButton,keysDown): # And event to allow the players to use cards which have effects from the opponent.
+   mute()
+   if card.controller != me:
+      if card.Name == '15 Minutes': 
+         actionCost = useClick(count = 1)
+         if actionCost == 'ABORT': return 'ABORT'  
+         changeCardGroup(card,card.owner.piles['R&D/Stack'])
+         remoteCall(card.controller,'fifteenMinutesShuffle',[me])
+         notify("{} to reshuffle {} in their R&D".format(actionCost,card))
+         

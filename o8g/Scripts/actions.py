@@ -807,6 +807,7 @@ def reduceCost(card, action = 'REZ', fullCost = 0, dryRun = False, reversePlayer
             if not chkPlayer(autoS, origController.get(c._id,c.controller), False, reversePlayerChk = reversePlayer): 
                debugNotify("Rejecting because player does not match")
                continue
+            if not chkAlternate(autoS,c): continue
             reductionSearch = reductionRegex.search(autoS)
             if debugVerbosity >= 2: #Debug
                if reductionSearch: notify("!!! Regex is {}".format(reductionSearch.groups()))
@@ -1254,12 +1255,12 @@ def findCounterPrevention(count, counter, targetPL): # Find out if the player ha
 def scrAgenda(card, x = 0, y = 0,silent = False, forced = False):
    debugNotify(">>> scrAgenda(){}".format(extraASDebug())) #Debug
    mute()
+   if card.markers[mdict['Scored']] > 0:
+      notify ("This agenda has already been scored")
+      return
    if card.controller == me:
       cheapAgenda = False
       storeProperties(card)
-      if card.markers[mdict['Scored']] > 0:
-         notify ("This agenda has already been scored")
-         return
       if ds == 'runner' and card.Type != "Agenda":
          whisper ("You can only score Agendas")
          return
@@ -1353,6 +1354,7 @@ def accessTarget(group = table, x = 0, y = 0, noQuestionsAsked = False):
          if re.search(r'onAccess:',autoS):
             debugNotify(" accessRegex found!")
             if re.search(r'-ifNotInstalled',autoS): continue # -ifNotInstalled effects don't work with the Access Card shortcut.
+            if chkTagged(autoS, True) == 'ABORT': continue 
             notify("{} has just accessed a {}!".format(me,card.Name))
             debugNotify("Doing Remote Call with player = {}. card = {}, autoS = {}".format(me,card,autoS))
             remoteCall(card.owner, 'remoteAutoscript', [card,autoS])
@@ -1370,6 +1372,7 @@ def accessTarget(group = table, x = 0, y = 0, noQuestionsAsked = False):
             if re.search(r'onHostAccess:',autoS):
                debugNotify(" accessRegex found!")
                if re.search(r'-ifNotInstalled',autoS): continue # -ifNotInstalled effects don't work with the Access Card shortcut.
+               if chkTagged(autoS, True) == 'ABORT': continue 
                notify("{} has just accessed a card hosting a {}!".format(me,att.Name))
                debugNotify("Doing Remote Call with player = {}. card = {}, autoS = {}".format(me,card,autoS))
                remoteCall(att.owner, 'remoteAutoscript', [att,autoS])
@@ -1512,6 +1515,7 @@ def RDaccessX(group = table, x = 0, y = 0,count = None): # A function which look
          if re.search(r'onAccess:',autoS):
             if re.search(r'-ifInstalled',autoS): continue # -ifInstalled cards work only while on the table.
             if re.search(r'-ifNotAccessedInRD',autoS): continue # -ifNotInRD cards work only while not accessed from R&D.
+            if chkTagged(autoS, True) == 'ABORT': continue 
             debugNotify(" accessRegex found!")
             notify("{} has just accessed {}!".format(me,RDtop[iter].Name))
             remoteCall(RDtop[iter].owner, 'remoteAutoscript', [RDtop[iter],autoS])
@@ -1639,8 +1643,15 @@ def ARCscore(group=table, x=0,y=0):
    agendaFound = False
    for card in ARC:
       debugNotify("Checking: {}.".format(card), 3) #Debug
-      origController[card._id] = targetPL # We store the card's original controller to know against whom to check for scripts (e.g. when accessing a rezzed encryption protocol)
       if chkFilmCritic(card) == 'ABORT': continue
+      Autoscripts = CardsAS.get(card.model,'').split('||')
+      debugNotify("Grabbed AutoScripts", 4)
+      for autoS in Autoscripts:
+         if chkModulator(card, 'worksInArchives', 'onAccess'):
+            if chkTagged(autoS, True) == 'ABORT': continue 
+            debugNotify("-worksInArchives accessRegex found!")
+            notify("{} has just accessed a {}!".format(me,card.Name))
+            remoteCall(card.owner, 'remoteAutoscript', [card,autoS])
       if card.Type == 'Agenda' and not re.search(r'-disableAutoStealingInArchives',CardsAS.get(card.model,'')): 
          agendaFound = True
          #placeOnTable(card,0,0,False,RevealedColor)
@@ -1673,15 +1684,6 @@ def ARCscore(group=table, x=0,y=0):
          else: notify(":> {} opts not to steal {}".format(me,card))
          #if card.highlight == RevealedColor: changeCardGroup(card, ARC) # If the runner opted not to score the agenda, put it back into the deck.
          #if card.highlight == RevealedColor: card.moveTo(ARC) # If the runner opted not to score the agenda, put it back into the deck.
-      Autoscripts = CardsAS.get(card.model,'').split('||')
-      debugNotify("Grabbed AutoScripts", 4)
-      for autoS in Autoscripts:
-         if chkModulator(card, 'worksInArchives', 'onAccess'):
-            debugNotify("-worksInArchives accessRegex found!")
-            notify("{} has just accessed a {}!".format(me,card.Name))
-            remoteCall(card.owner, 'remoteAutoscript', [card,autoS])
-      try: del origController[card._id] # We use a try: just in case...
-      except: pass
    if not agendaFound: notify("{} has rumaged through {}'s archives but found no Agendas".format(Identity,targetPL))
    debugNotify("<<< ARCscore()")
 
@@ -1725,6 +1727,7 @@ def HQaccess(group=table, x=0,y=0, silent = False, directTargets = None):
          for autoS in Autoscripts:
             if re.search(r'onAccess:',autoS):
                if re.search(r'-ifInstalled',autoS): continue # -ifInstalled cards work only while on the table.
+               if chkTagged(autoS, True) == 'ABORT': continue 
                debugNotify(" accessRegex found!")
                notify("{} has just accessed a {}!".format(me,revealedCard.Name))
                remoteCall(revealedCard.owner, 'remoteAutoscript', [revealedCard,autoS])
@@ -2516,6 +2519,7 @@ def mulligan(group):
 # Pile Actions
 #------------------------------------------------------------------------------
 def shuffle(group):
+   mute()
    debugNotify(">>> shuffle(){}".format(extraASDebug())) #Debug
    group.shuffle()
 

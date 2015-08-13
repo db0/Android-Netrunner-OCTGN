@@ -1508,6 +1508,12 @@ def CustomScript(card, action = 'PLAY', origin_card = None, original_action = No
          notify("{} to host {} in {}".format(actionCost,selectedCard,card))
          return 'CLICK USED'
       else: return 'ABORT'
+   elif fetchProperty(card, 'name') == 'SYNC' and action == 'USE':
+      actionCost = useClick(count = 1)
+      if actionCost == 'ABORT': return 'ABORT'  
+      if card.alternate == '': card.switchTo('Flipped')
+      else: card.switchTo()
+      notify("{} to flip {}".format(actionCost,card))
    elif action == 'USE': useCard(card)
       
             
@@ -1999,3 +2005,7 @@ def OfferRefuseBegin(card,server):
       GainX('Gain1Agenda Points','',card)
       TokensX('Put1Scored-isSilent','',card)
       notify("{} is cowered and {} scores {} for 1 Agenda Point".format(me,card.owner.name,card))
+      
+def fifteenMinutesShuffle(player): # We need to remote call the deck shuffle or 15 minutes will always be placed on top of the R&D instead since the shuffle is too fast
+   mute()
+   remoteCall(player,'shuffle',[player.piles['R&D/Stack']])      

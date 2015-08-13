@@ -6145,9 +6145,9 @@ SYNC
 -----
 bc0f047c-01b1-427f-a439-d451eda09001
 -----
-
+whileInPlay:Increase1CostDeltag-affectsAll-ifAlterDefault||whileInPlay:Reduce2CostTrash-affectsResource-ifAlterFlipped
 +++++
-
+A0B0G0T0:CustomScript
 .....
 New Angeles Sol
 -----
@@ -6155,13 +6155,13 @@ bc0f047c-01b1-427f-a439-d451eda09002
 -----
 
 +++++
-
+A0B0G0T0:InstallTarget-DemiAutoTargeted-atCurrent_and_Operation-fromHand-choose1-payCost||A0B0G0T0:Retrieve1Cards-fromArchives-fetchCurrent_and_Operation-toTable-payCost
 .....
 Spark Agency
 -----
 bc0f047c-01b1-427f-a439-d451eda09003
 -----
-
+whileInPlay:Lose1Credits-onOpponent-foreachCardRezzed-typeAdvertisement-onlyOnce
 +++++
 
 .....
@@ -6171,7 +6171,7 @@ bc0f047c-01b1-427f-a439-d451eda09004
 -----
 
 +++++
-
+A1B0G0T0:ReworkMyself$$ShuffleR&D
 .....
 Improved Tracers
 -----
@@ -6193,7 +6193,7 @@ Quantum Predictive Model
 -----
 bc0f047c-01b1-427f-a439-d451eda09007
 -----
-
+onAccess:ScoreMyself-ifTagged1-worksInArchives
 +++++
 
 .....

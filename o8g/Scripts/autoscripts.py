@@ -152,6 +152,7 @@ def executePlayScripts(card, action):
          if not ifVarSet(activeAutoscript): continue # If the script requires a shared AutoScript variable to be set to a specific value.
          if not checkOrigSpecialRestrictions(activeAutoscript,card): continue  
          if not chkRunStatus(activeAutoscript): continue
+         if not chkAlternate(activeAutoscript,card): continue
          if chkTagged(activeAutoscript) == 'ABORT': continue
          if re.search(r'-ifAccessed', activeAutoscript) and ds != 'runner': 
             debugNotify("!!! Failing script because card is not being accessed")
@@ -1584,6 +1585,11 @@ def TraceX(Autoscript, announceText, card, targetCards = None, notification = No
    action = re.search(r'\bTrace([0-9]+)', Autoscript)
    multiplier = per(Autoscript, card, n, targetCards)
    TraceStrength = num(action.group(1)) * multiplier
+   ImpTracers = [c for c in table # If Improved Tracers is on the table and scored by the corp, we need to increase all the trace strength of subroutines
+                  if c.Name == 'Improved Tracers' 
+                  and c.controller.getGlobalVariable('ds') == 'corp' 
+                  and c.markers[mdict['Scored']]]
+   if len(ImpTracers) and re.search(r'isSubroutine',Autoscript): TraceStrength += len(ImpTracers)   
    reinforcement = inputTraceValue(card,silent = True)
    if reinforcement == 'ABORT': return 'ABORT'
    if reinforcement: reinforceTXT =  "and reinforced by {} (Total: {})".format(uniCredit(reinforcement),TraceStrength + reinforcement)
@@ -1737,7 +1743,7 @@ def ModifyStatus(Autoscript, announceText, card, targetCards = None, notificatio
       elif action.group(1) == 'SendToBottom' and movetoBottomOfStack(targetCard, silent = True) != 'ABORT': pass
       elif action.group(1) == 'Exile' and exileCard(targetCard, silent = True) != 'ABORT': pass
       elif action.group(1) == 'Rework': # Rework puts a card on top of R&D (usually shuffling afterwards)
-         changeCardGroup(targetCard,targetCard.controller.piles['R&D/Stack'])
+         changeCardGroup(targetCard,targetCard.owner.piles['R&D/Stack'])
          #targetCard.moveTo(targetCard.controller.piles['R&D/Stack'])
       elif action.group(1) == 'Install': # Install simply plays a cast on the table unrezzed without paying any costs.
          if re.search(r'-payCost',Autoscript): # This modulator means the script is going to pay for the card normally
@@ -2138,18 +2144,22 @@ def findTarget(Autoscript, fromHand = False, card = None, dryRun = False): # Fun
 def gatherCardProperties(card,Autoscript = ''):
    debugNotify(">>> gatherCardProperties()") #Debug     
    cardProperties = []
-   if storeProperties(card) != 'ABORT': # We store the card properties so that we don't start flipping the cards over each time.
-      debugNotify("Appending name", 4) #Debug
-      cName = fetchProperty(card, 'Name')
-      cardProperties.append(cName.replace('-','_')) # We are going to check its name. We replace all dashes to underscores to avoid messing up our lookup in prepareRestrictions() 
-      debugNotify("Appending Type", 4) #Debug                
-      cardProperties.append(fetchProperty(card, 'Type')) # We are going to check its Type
-      debugNotify("Appending Keywords", 4) #Debug                
-      cardSubkeywords = getKeywords(card).split('-') # And each individual keyword. keywords are separated by " - "
-      for cardSubkeyword in cardSubkeywords:
-         strippedCS = cardSubkeyword.strip() # Remove any leading/trailing spaces between keywords. We need to use a new variable, because we can't modify the loop iterator.
-         if strippedCS: cardProperties.append(strippedCS) # If there's anything left after the stip (i.e. it's not an empty string anymrore) add it to the list.
-      debugNotify("<<< gatherCardProperties() with Card Properties: {}".format(cardProperties), 3) #Debug
+   debugNotify("Appending name", 4) #Debug
+   cardProperties.append(card.Name.replace('-','_')) # We are going to check its name. We replace all dashes to underscores to avoid messing up our lookup in prepareRestrictions() 
+   debugNotify("Appending Type", 4) #Debug                
+   cardProperties.append(card.Type) # We are going to check its Type
+   debugNotify("Appending Keywords", 4) #Debug                
+   cardSubkeywords = getKeywords(card).split('-') # And each individual keyword. keywords are separated by " - "
+   for cardSubkeyword in cardSubkeywords:
+      strippedCS = cardSubkeyword.strip() # Remove any leading/trailing spaces between keywords. We need to use a new variable, because we can't modify the loop iterator.
+      if strippedCS: cardProperties.append(strippedCS) # If there's anything left after the stip (i.e. it's not an empty string anymrore) add it to the list.
+   if (len([c for c in table # If Rebranding Team is on the table and scored by the corp, we need to treat all Assets as advertisements. We need to manually hack the code to do this even out of play
+            if c.Name == 'Rebranding Team' 
+            and c.controller.getGlobalVariable('ds') == 'corp' 
+            and c.markers[mdict['Scored']]])  
+         and card.Type == 'Asset' 
+         and 'Advertisement' not in cardProperties): cardProperties.append('Advertisement')
+   debugNotify("<<< gatherCardProperties() with Card Properties: {}".format(cardProperties), 3) #Debug
    return cardProperties
 
 def prepareRestrictions(Autoscript, seek = 'target'):
@@ -2656,4 +2666,13 @@ def chkRunStatus(Autoscript): # Function for figuring out if an autoscript is su
       debugNotify("Rejecting because Remote Server was run successfully")
       validCard = False
    debugNotify("<<< chkRunStatus(). validCard is: {}".format(validCard)) #Debug
+   return validCard
+
+def chkAlternate(Autoscript,card): #Checks if the card requires an alternative side set, and if that side is set.
+   validCard = True
+   alternateRegex = re.search(r'ifAlter([A-Za-z -]+)',Autoscript)
+   #if alternateRegex: notify("{} - {}: (Needs: {} - Current: {})".format(card,Autoscript,alternateRegex.groups(),card.alternate)) #Debug
+   if alternateRegex:
+      if card.alternate == '' and alternateRegex.group(1) != 'Default': validCard = False
+      elif card.alternate != '' and card.alternate != alternateRegex.group(1): validCard = False
    return validCard
