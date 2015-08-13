@@ -180,7 +180,7 @@ def parseNewCounters(player,counter,oldValue):
                HQaccess(silent = True)
    debugNotify("<<< parseNewCounters()")
 
-def checkMovedCards(player,cards,fromGroups,toGroups,oldIndexs,indexs,oldXs,oldYs,xs,ys,faceups,highlights,markersList):
+def checkMovedCards(player,cards,fromGroups,toGroups,oldIndexs,indexs,oldXs,oldYs,xs,ys,highlights,markersList,faceups):
    mute()
    for iter in range(len(cards)):
       card = cards[iter]
@@ -222,7 +222,7 @@ def checkMovedCards(player,cards,fromGroups,toGroups,oldIndexs,indexs,oldXs,oldY
          if toGroup == player.piles['Archives(Hidden)'] or toGroup == player.piles['Heap/Archives(Face-up)']:
             if ds == 'runner': sendToTrash(card, player.piles['Heap/Archives(Face-up)']) # The runner cards always go to face-up archives
             else: sendToTrash(card, toGroup)
-         else: 
+         elif faceup:
             executePlayScripts(card,'UNINSTALL')
             autoscriptOtherPlayers('CardUninstalled',card)
             clearAttachLinks(card) # If the card was manually uninstalled or moved elsewhere than trash, then we simply take care of the MU and the attachments

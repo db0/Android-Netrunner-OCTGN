@@ -381,6 +381,39 @@ def UseCustomAbility(Autoscript, announceText, card, targetCards = None, notific
       hostMe(card,agenda)
       notify("{} installs {} using a {}".format(me,agenda,card))
       announceString = ''
+   if fetchProperty(card, 'name') == 'Lily Lockwell':
+      opCard = RetrieveX('Retrieve1Cards-grabOperation', announceText, card)
+      deck.shuffle()
+      if not len(opCard[1]):
+         notify('{} had no Operations to retrieve with {}'.format(me,card))
+         announceString = ''
+      else:
+         changeCardGroup(opCard[1][0],me.piles['R&D/Stack'])
+         announceString = "{} put {} on top of their shuffled R&D".format(announceText,opCard[1][0].Name)
+   if fetchProperty(card, 'name') == 'News Team':
+      remoteCall(fetchRunnerPL(),'NewsTeam',[card])
+      announceString = ''
+   if fetchProperty(card, 'name') == "Shannon Claire":
+      if re.search(r'-isFirstCustom',Autoscript): 
+         me.piles['R&D/Stack'].bottom().moveTo(me.hand)
+         announceString = announceText + " draw the bottom card from their R&D"
+      elif re.search(r'-isSecondCustom',Autoscript): 
+         opCard = RetrieveX('Retrieve1Cards-grabAgenda', announceText, card)
+         deck.shuffle()
+         if not len(opCard[1]):
+            notify('{} had no Agendas in R&D to retrieve with {}'.format(me,card))
+            announceString = ''
+         else:
+            changeCardGroup(opCard[1][0],me.piles['R&D/Stack'],True)
+            announceString = "{} put {} on the bottom of their shuffled R&D".format(announceText,opCard[1][0].Name)
+      elif re.search(r'-isThirdCustom',Autoscript): 
+         opCard = RetrieveX('Retrieve1Cards-grabAgenda-fromArchives', announceText, card)
+         if not len(opCard[1]):
+            notify('{} had no Agendas in Archives to retrieve with {}'.format(me,card))
+            announceString = ''
+         else:
+            changeCardGroup(opCard[1][0],me.piles['R&D/Stack'],True)
+            announceString = "{} put {} on the bottom of their shuffled R&D".format(announceText,opCard[1][0].Name)
    return announceString
  
 #------------------------------------------------------------------------------
@@ -2009,3 +2042,17 @@ def OfferRefuseBegin(card,server):
 def fifteenMinutesShuffle(player): # We need to remote call the deck shuffle or 15 minutes will always be placed on top of the R&D instead since the shuffle is too fast
    mute()
    remoteCall(player,'shuffle',[player.piles['R&D/Stack']])      
+   
+def NewsTeam(card):
+   choice = SingleChoice("You have accessed a News Team! Do you want to take 2 tags or take this card for -1 Agenda Points?",['Take 2 Tags','-1 Agenda points'])
+   if not choice: 
+      GainX('Gain2Tags-isSilent-onOpponent', '', card)
+      notify("{} opts to take two tags!".format(me))
+   else: 
+      GainX('Lose1Agenda Points-onOpponent-isSilent', '', card)
+      ModifyStatus('ScoreMyself-onOpponent-isSilent', '', card)
+      update()
+      TokensX('Put1ScorePenalty-isSilent', '', card)
+      notify("{} opts to score News Team for -1 Agenda Point".format(me))
+      
+         

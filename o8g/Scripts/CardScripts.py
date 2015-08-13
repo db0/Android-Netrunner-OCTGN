@@ -6201,15 +6201,15 @@ Lily Lockwell
 -----
 bc0f047c-01b1-427f-a439-d451eda09008
 -----
-
+onRez:Draw3Cards
 +++++
-
+A1B0G0T0:Lose1Tags-onOpponent-isCost$$UseCustomAbility
 .....
 News Team
 -----
 bc0f047c-01b1-427f-a439-d451eda09009
 -----
-
+onAccess:UseCustomAbility-worksInArchives
 +++++
 
 .....
@@ -6219,13 +6219,13 @@ bc0f047c-01b1-427f-a439-d451eda09010
 -----
 
 +++++
-
+A1B0G0T0:UseCustomAbility-isFirstCustom||A0B0G0T1:UseCustomAbility-isSecondCustom||A0B0G0T1:UseCustomAbility-isThirdCustom
 .....
 Victoria Jenkins
 -----
 bc0f047c-01b1-427f-a439-d451eda09011
 -----
-
+onRez:Lose1Clicks-onOpponent-duringOpponentTurn$$Lose1Max Click-onOpponent||onTrash:Gain1Clicks-onOpponent-duringOpponentTurn-isSilent-ifActive-ifUnscored$$Gain1Max Click-onOpponent-isSilent-ifActive-ifUnscored$$ScoreMyself-onOpponent-ifAccessed-ifUnscored-preventTrash-runTrashScriptWhileInactive-explicitTrash$$Gain2Agenda Points-onOpponent-ifAccessed-ifUnscored-explicitTrash$$Put2Scored-isSilent-ifAccessed-ifUnscored-explicitTrash
 +++++
 
 .....
@@ -6233,7 +6233,7 @@ Reality Threedee
 -----
 bc0f047c-01b1-427f-a439-d451eda09012
 -----
-
+onRez:Gain1Bad Publicity||atTurnStart:Gain1Credits-duringMyTurn-ifTagged0||atTurnStart:Gain2Credits-duringMyTurn-ifTagged1
 +++++
 
 .....

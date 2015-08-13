@@ -175,7 +175,7 @@
 		<property name="Stat" value="3" />	
 		<property name="Rules" value="[Click]: Draw 1 card from the bottom of R&amp;D.&#xD;&#xA;[Trash]: Search R&amp;D or Archives for an agenda and reveal it. Shuffle the rest of R&amp;D if you searched it. Add the agenda to the bottom of R&amp;D." />
 		<property name="Flavor" value="No one can bury a story better." />
-		<property name="Instructions" value="" />
+		<property name="Instructions" value="Draw 1 Card from the bottom of R&amp;D.||Search R&amp;D for an Agenda||Search Archives for an Agenda" />
 		<property name="Faction" value="NBN" />
 		<property name="Influence" value="2" />
 		<property name="Side" value="corp" />

@@ -158,7 +158,7 @@ def executePlayScripts(card, action):
             debugNotify("!!! Failing script because card is not being accessed")
             continue # These scripts are only supposed to fire from the runner (when they access a card)         
          if re.search(r'-ifActive', activeAutoscript):
-            if card.highlight == InactiveColor or card.highlight == RevealedColor or card.group.name != 'Table':
+            if card.highlight == InactiveColor or card.highlight == RevealedColor or card.group.name != 'Table' or not card.isFaceUp:
                debugNotify("!!! Failing script because card is inactive. highlight == {}. group.name == {}".format(card.highlight,card.group.name))
                continue 
             else: debugNotify("Succeeded for -ifActive. highlight == {}. group.name == {}".format(card.highlight,card.group.name))
@@ -2616,9 +2616,10 @@ def chkTagged(Autoscript, silent = False):
    else: runnerPL = me
    regexTag = re.search(r'ifTagged([0-9]+)', Autoscript)
    paparazzi = [c for c in table if c.Name == 'Paparazzi'] # Paparazzi make the runner always considered tagged
-   if regexTag and (runnerPL.Tags < num(regexTag.group(1)) and (num(regexTag.group(1)) == 1 and not len(paparazzi))) and not re.search(r'doesNotBlock', Autoscript): #See if the target needs to be tagged a specific number of times.
+   if regexTag and ((runnerPL.Tags < num(regexTag.group(1)) and (num(regexTag.group(1)) == 1 and not len(paparazzi))) or (num(regexTag.group(1)) == 0 and runnerPL.Tags > 0)) and not re.search(r'doesNotBlock', Autoscript): #See if the target needs to be tagged a specific number of times.
       if not silent:
          if regexTag.group(1) == '1': whisper("The runner needs to be tagged for you to use this action")
+         elif regexTag.group(1) == '0': whisper("The runner needs to not be tagged for you to use this action")
          else: whisper("The Runner needs to be tagged {} times for you to to use this action".format(regexTag.group(1)))
       return 'ABORT'
    return 'OK'
