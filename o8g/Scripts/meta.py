@@ -259,7 +259,7 @@ def recalcMU(): # Changing how MUs are tracked just for Ekomind...
    addedMU = 0
    paidMU = 0
    for card in table:
-      if card.controller == me and ds == 'runner' and card.highlight != InactiveColor and card.highlight != DummyColor and card.highlight != RevealedColor:
+      if card.controller == me and ds == 'runner' and card.highlight != InactiveColor and card.highlight != DummyColor and card.highlight != RevealedColor and card.isFaceUp:
          Autoscripts = CardsAS.get(card.model,'').split('||')
          for autoS in Autoscripts: 
             setMU = re.search(r'whileInPlay:SetTo([0-9]|Special)MU',autoS)
@@ -270,7 +270,7 @@ def recalcMU(): # Changing how MUs are tracked just for Ekomind...
                      #notify("setting MU to {} from {}".format(len(me.hand),card)) #Debug
                else: baseMU = num(setMU.group(1))
    for card in table:
-      if card.controller == me and ds == 'runner' and card.highlight != InactiveColor and card.highlight != DummyColor and card.highlight != RevealedColor:
+      if card.controller == me and ds == 'runner' and card.highlight != InactiveColor and card.highlight != DummyColor and card.highlight != RevealedColor and card.isFaceUp:
          Autoscripts = CardsAS.get(card.model,'').split('||')
          for autoS in Autoscripts: 
             extraMU = re.search(r'whileInPlay:Provide([0-9])MU',autoS)
@@ -278,7 +278,7 @@ def recalcMU(): # Changing how MUs are tracked just for Ekomind...
                addedMU += num(extraMU.group(1))
                #notify("found {} extra MU on {}".format(extraMU.group(1),card)) #Debug
    for card in table:
-      if card.controller == me and ds == 'runner' and fetchProperty(card,'Type') == 'Program':
+      if card.controller == me and ds == 'runner' and fetchProperty(card,'Type') == 'Program' and card.isFaceUp:
          MUreq = num(fetchProperty(card,'Requirement'))
          hostCards = eval(getGlobalVariable('Host Cards'))
          if hostCards.has_key(card._id): hostC = Card(hostCards[card._id])
@@ -296,6 +296,47 @@ def recalcMU(): # Changing how MUs are tracked just for Ekomind...
    #confirm('baseMU = {}, addedMU = {}, MUreq = {} '.format(baseMU,addedMU,MUreq)) # Debug
    me.MU = baseMU + addedMU - paidMU
    if me.MU < 0: notify(":::WARNING::: {} is currently exceeding their available Memory Units".format(me))
+   
+def recalcHandSize(): # Changing how MUs are tracked just for Brain Chip...
+   mute()
+   baseHS = 5
+   addedHS = 0
+   for card in table:
+      if card.highlight != InactiveColor and card.highlight != DummyColor and card.highlight != RevealedColor and card.isFaceUp:
+         if card.Type == 'Agenda' and (card.controller.getGlobalVariable('ds') != 'corp' or not card.markers[mdict['Scored']]): continue # If it's an agenda, it needs to be scored by the corp to be considered active
+         Autoscripts = CardsAS.get(card.model,'').split('||')
+         for autoS in Autoscripts: 
+            setHS = re.search(r'whileInPlay:SetTo([0-9]|Special)HandSize-for(Runner|Corp)',autoS)
+            if setHS and setHS.group(2) == ds.capitalize(): # Both sides can affect each other's hand sizes
+               if setHS.group(1) == 'Special': # Nothing available yet
+                  if card.name == 'Theophilius Bagbiter' or card.name == 'Cerebral Imaging': baseHS = me.Credits
+               else: baseHS = num(setHS.group(1))
+   myIdent = getSpecial('Identity',me)
+   for marker in myIdent.markers: # Special reductions based on markers
+      if re.search(r'Gyri Labyrinth',marker[0]): addedHS -= 2 * card.markers[findMarker(card, 'Gyri Labyrinth')]
+      if re.search(r'Valley Grid',marker[0]): addedHS -= card.markers[findMarker(card, 'Valley Grid')]
+   for card in table:
+      if card.highlight != InactiveColor and card.highlight != DummyColor and card.highlight != RevealedColor and card.isFaceUp:
+         if card.Type == 'Agenda' and (card.controller.getGlobalVariable('ds') != 'corp' or not card.markers[mdict['Scored']]): continue # If it's an agenda, it needs to be scored by the corp to be considered active
+         Autoscripts = CardsAS.get(card.model,'').split('||')
+         #notify("### Testinmg {} withj autoS: {}".format(card,Autoscripts)) #Debug
+         for autoS in Autoscripts: 
+            extraHS = re.search(r'whileInPlay:(Provide|Steal)([0-9]|Special)HandSize-for(Runner|Corp)',autoS)
+            #if extraHS: confirm(str(extraHS.groups()))
+            if extraHS and extraHS.group(3) == ds.capitalize(): 
+               if extraHS.group(2) == 'Special': # Nothing available yet
+                  if card.name == 'Brain Chip': 
+                     addedHS += me.counters['Agenda Points'].value
+                  if card.name == 'Origami': 
+                     folds = len([c for c in table if c.Name == card.Name])
+                     addedHS += folds
+               else: 
+                  if extraHS.group(1) == 'Provide': addedHS += num(extraHS.group(2))
+                  else: addedHS -= num(extraHS.group(2))
+               #notify("found {} extra Hand Size on {}".format(extraHS.group(1),card)) #Debug
+   #confirm('baseHS = {}, addedHS = {}'.format(baseHS,addedHS)) # Debug
+   me.counters['Hand Size'].value = baseHS + addedHS
+   if me.counters['Hand Size'].value < 0: notify(":::WARNING::: {} is currently exceeding their maximum Hand Size!".format(me))
    
 def chkCloud(cloudCard = None): # A function which checks the table for cards which can be put in the cloud and thus return their used MUs
    debugNotify(">>> chkCloud(){}".format(extraASDebug())) #Debug

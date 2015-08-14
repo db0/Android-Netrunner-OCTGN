@@ -2287,6 +2287,7 @@ def inspectTargetCard(group, x = 0, y = 0): # This function shows the player the
 def currentHandSize(player = me):
    debugNotify(">>> currentHandSizel(){}".format(extraASDebug())) #Debug
    specialCard = getSpecial('Identity', player)
+   recalcHandSize()
    if specialCard.markers[mdict['BrainDMG']]: currHandSize =  player.counters['Hand Size'].value - specialCard.markers[mdict['BrainDMG']]
    else: currHandSize = player.counters['Hand Size'].value
    return currHandSize

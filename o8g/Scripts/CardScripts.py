@@ -738,7 +738,7 @@ Research Station
 -----
 bc0f047c-01b1-427f-a439-d451eda01105
 -----
-onRez:Gain2Hand Size||onTrash:Lose2Hand Size-ifActive
+whileInPlay:Provide2HandSize-forCorp
 +++++
 	
 .....
@@ -1330,7 +1330,7 @@ Public Sympathy
 -----
 bc0f047c-01b1-427f-a439-d451eda02050
 -----
-whileInstalled:Gain2Hand Size
+whileInPlay:Provide2HandSize-forRunner
 +++++
 
 .....
@@ -1873,7 +1873,7 @@ NBN: The World is Yours
 -----
 bc0f047c-01b1-427f-a439-d451eda02114
 -----
-onStartup:Gain1Hand Size-isSilent
+whileInPlay:Provide1HandSize-forCorp
 +++++
 
 .....
@@ -1935,7 +1935,7 @@ Cerebral Imaging: Infinite Frontiers
 -----
 bc0f047c-01b1-427f-a439-d451eda03001
 -----
-atTurnPreEnd:SetTo1Hand Size-perMyCounter{Credits}-duringMyTurn
+whileInPlay:SetToSpecial5HandSize-forRunner
 +++++
 
 .....
@@ -2311,7 +2311,7 @@ Borrowed Satellite
 -----
 bc0f047c-01b1-427f-a439-d451eda03050
 -----
-whileInstalled:Gain1Hand Size$$Gain1Base Link
+whileInPlay:Provide1HandSize-forRunner$$Gain1Base Link
 +++++
 
 .....
@@ -3259,7 +3259,7 @@ bc0f047c-01b1-427f-a439-d451eda04110
 -----
 
 +++++
-A0B0G0T0:Lose2Hand Size-onOpponent-isSubroutine$$Put1Gyri Labyrinth-AutoTargeted-atIdentity-targetOpponents
+A0B0G0T0:Put1Gyri Labyrinth-AutoTargeted-atIdentity-targetOpponents-isSilent$$SimplyAnnounce{reduce the runner maximum hand size by 2 until the beggining of the Corp turn}
 .....
 Reclamation Order
 -----
@@ -3401,7 +3401,7 @@ Chairman Hiro
 -----
 bc0f047c-01b1-427f-a439-d451eda05008
 -----
-onRez:Lose2Hand Size-onOpponent||onTrash:Gain2Hand Size-onOpponent-ifActive-ifUnscored$$ScoreMyself-onOpponent-ifAccessed-ifUnscored-preventTrash-runTrashScriptWhileInactive-explicitTrash$$Gain2Agenda Points-onOpponent-ifAccessed-ifUnscored-explicitTrash$$Put2Scored-isSilent-ifAccessed-ifUnscored-explicitTrash
+whileInPlay:Steal2HandSize-forRunner||onTrash:ScoreMyself-onOpponent-ifAccessed-ifUnscored-preventTrash-runTrashScriptWhileInactive-explicitTrash$$Gain2Agenda Points-onOpponent-ifAccessed-ifUnscored-explicitTrash$$Put2Scored-isSilent-ifAccessed-ifUnscored-explicitTrash
 +++++
 
 .....
@@ -3409,7 +3409,7 @@ Mental Health Clinic
 -----
 bc0f047c-01b1-427f-a439-d451eda05009
 -----
-onRez:Gain1Hand Size-onOpponent||onTrash:Lose1Hand Size-onOpponent-ifActive||atTurnStart:Gain1Credits-duringMyTurn
+whileInPlay:Provide1HandSize-forRunner||atTurnStart:Gain1Credits-duringMyTurn
 +++++
 
 .....
@@ -3633,7 +3633,7 @@ Logos
 -----
 bc0f047c-01b1-427f-a439-d451eda05037
 -----
-whileInstalled:Gain1Hand Size||whileInPlay:Provide1MU
+whileInPlay:Provide1HandSize-forRunner||whileInPlay:Provide1MU
 +++++
 A0B0G0T0:Retrieve1Card-doNotReveal$$ShuffleStack
 .....
@@ -3729,7 +3729,7 @@ Theophilius Bagbiter
 -----
 bc0f047c-01b1-427f-a439-d451eda05049
 -----
-onInstall:Lose999Credits||atTurnPreEnd:SetTo1Hand Size-perMyCounter{Credits}-duringMyTurn
+onInstall:Lose999Credits||whileInPlay:SetToSpecialHandSize-forRunner
 +++++
 
 .....
@@ -4217,7 +4217,7 @@ BOX-E
 -----
 bc0f047c-01b1-427f-a439-d451eda06055
 -----
-whileInstalled:Gain2Hand Size||whileInPlay:Provide2MU
+whileInPlay:Provide2HandSize-forRunner||whileInPlay:Provide2MU
 +++++
 
 .....
@@ -4369,7 +4369,7 @@ Origami
 -----
 bc0f047c-01b1-427f-a439-d451eda06074
 -----
-whileInstalled:CustomScript
+whileInPlay:ProvideSpecialHandSize-forRunner
 +++++
 
 .....
@@ -5299,7 +5299,7 @@ bc0f047c-01b1-427f-a439-d451eda08015
 -----
 
 +++++
-A0B0G0T0:Lose1Hand Size-onOpponent$$Put1Valley Grid-AutoTargeted-atIdentity-targetOpponents
+A0B0G0T0:Put1Valley Grid-AutoTargeted-atIdentity-targetOpponents-isSilent$$SimplyAnnounce{reduce their maximum hand size until the beggining of your next turn}
 .....
 Bandwidth
 -----
@@ -5425,7 +5425,7 @@ Beach Party
 -----
 bc0f047c-01b1-427f-a439-d451eda08031
 -----
-atTurnStart:Lose1Clicks-duringMyTurn||whileInstalled:Gain5Hand Size
+atTurnStart:Lose1Clicks-duringMyTurn||whileInPlay:Provide5HandSize-forRunner
 +++++
 
 .....
@@ -5569,7 +5569,7 @@ Brain Cage
 -----
 bc0f047c-01b1-427f-a439-d451eda08049
 -----
-whileInstalled:Gain3Hand Size||onInstall:Inflict1BrainDamage
+whileInPlay:Provide3HandSize-forRunner||onInstall:Inflict1BrainDamage
 +++++
 
 .....
@@ -5577,7 +5577,7 @@ Cybernetics Division
 -----
 bc0f047c-01b1-427f-a439-d451eda08050
 -----
-onStartup:Lose1Hand Size-isSilent$$Lose1Hand Size-onOpponent-isSilent
+whileInPlay:Steal1HandSize-forRunner||whileInPlay:Steal1HandSize-forCorp
 +++++
 
 .....
@@ -5585,7 +5585,7 @@ Self-Destruct Chips
 -----
 bc0f047c-01b1-427f-a439-d451eda08051
 -----
-whileScored:Lose1Hand Size-onOpponent
+whileInPlay:Steal1HandSize-forRunner
 +++++
 
 .....
@@ -6049,7 +6049,7 @@ Cybernetics Court
 -----
 bc0f047c-01b1-427f-a439-d451eda08109
 -----
-onRez:Gain4Hand Size||onTrash:Lose4Hand Size-ifActive
+whileInPlay:Provide4HandSize-forCorp
 +++++
 
 .....

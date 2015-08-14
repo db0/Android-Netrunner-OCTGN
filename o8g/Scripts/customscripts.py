@@ -1267,29 +1267,6 @@ def CustomScript(card, action = 'PLAY', origin_card = None, original_action = No
          if c.Type == 'Program': c.moveTo(trash)
          else: c.moveTo(me.hand)
       me.Credits += progs
-   elif fetchProperty(card, 'name') == 'Origami':
-      if action == 'INSTALL':
-         folds = len([c for c in table if c.Name == card.Name])
-         if folds == 1: 
-            me.counters['Hand Size'].value += 1
-            notify("{} starts folding their data and increases their available hand size by 1".format(me))
-         elif folds == 2:
-            me.counters['Hand Size'].value += 3
-            notify("{} intensifies their data folding and doubles their storage, increasing their hand size by 3.".format(me))
-         elif folds == 3:
-            me.counters['Hand Size'].value += 5
-            notify("{} has perfectly folder their data and triples their results, increasing their hand size by 5.".format(me))
-      elif action == 'TRASH' or action == 'UNINSTALL' or action == 'EXILE':
-         folds = len([c for c in table if c.Name == card.Name])
-         if folds == 1: # We run trash scripts before we remove cards from the table, so the minimum is going to be 1 origami on the table
-            me.counters['Hand Size'].value -= 1
-            notify(":> {}'s data folding is interrupted reducing their available hand size by 1".format(me))
-         elif folds == 2:
-            me.counters['Hand Size'].value -= 3
-            notify(":> {} disrupts their data folding and halves their storage, decreasing hand size by 3.".format(me))
-         elif folds == 3:
-            me.counters['Hand Size'].value -= 5
-            notify(":> {}'s perfect folds are ruined! Their hand size decreases by 5.".format(me))
    elif fetchProperty(card, 'name') == 'Bifrost Array' and action == 'SCORE': 
       targetAgenda = findTarget('DemiAutoTargeted-atAgenda_and_notBifrost Array-isScored-choose1')
       if len(targetAgenda) and confirm("Do you want to use the optional ability of Bifrost Array?"):
@@ -1638,12 +1615,12 @@ def markerEffects(Time = 'Start'):
             TokensX('Remove999Social Engineering-isSilent', "Social Engineering:", card)
          if re.search(r'Gyri Labyrinth',marker[0]) and Time == 'Start' and (card.controller != me or len(getPlayers()) == 1): 
             opponentPL = findOpponent()
-            opponentPL.counters['Hand Size'].value += card.markers[marker] * 2
+            #opponentPL.counters['Hand Size'].value += card.markers[marker] * 2
             notify(":> Gyri Labyrinth's effect expires and {} recovers {} hand size".format(card,card.markers[marker] * 2))
             card.markers[marker] = 0
          if re.search(r'Valley Grid',marker[0]) and Time == 'Start' and (card.controller != me or len(getPlayers()) == 1): 
             opponentPL = findOpponent()
-            opponentPL.counters['Hand Size'].value += card.markers[marker]
+            #opponentPL.counters['Hand Size'].value += card.markers[marker]
             notify(":> Valley Grid's effect expires and {} recovers {} hand size".format(card,card.markers[marker] * 2))
             card.markers[marker] = 0
          if re.search(r'IT Department',marker[0]) and Time == 'End':
