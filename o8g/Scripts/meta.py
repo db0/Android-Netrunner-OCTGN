@@ -297,7 +297,6 @@ def recalcMU(): # Changing how MUs are tracked just for Ekomind...
    me.MU = baseMU + addedMU - paidMU
    if me.MU < 0: notify(":::WARNING::: {} is currently exceeding their available Memory Units".format(me))
    
-   
 def chkCloud(cloudCard = None): # A function which checks the table for cards which can be put in the cloud and thus return their used MUs
    debugNotify(">>> chkCloud(){}".format(extraASDebug())) #Debug
    if not cloudCard: cards = [c for c in table if c.Type == 'Program' and c.isFaceUp]

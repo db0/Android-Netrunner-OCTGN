@@ -6441,7 +6441,7 @@ Independent Thinking
 -----
 bc0f047c-01b1-427f-a439-d451eda09038
 -----
-
+onPlay:CustomScript
 +++++
 
 .....
@@ -6449,7 +6449,7 @@ Brain Chip
 -----
 bc0f047c-01b1-427f-a439-d451eda09039
 -----
-
+whileInPlay:ProvideSpecialHandSize-forRunner
 +++++
 
 .....

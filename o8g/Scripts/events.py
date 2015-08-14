@@ -201,7 +201,9 @@ def checkMovedCards(player,cards,fromGroups,toGroups,oldIndexs,indexs,oldXs,oldY
             if len([c for c in table if c.name == 'Bug']): setGlobalVariable('Bug Memory',card.name)
          if ds == 'runner': # Code to store how many cards we've drawn for Genetics Pavilion
             setGlobalVariable('Genetics Pavilion Memory',str(num(getGlobalVariable('Genetics Pavilion Memory')) + 1))
-      if ds == 'runner' and card.controller == me and fromGroup != toGroup: recalcMU() # Any time a card enters or leaves the table, we recalculate MUs, just in case.
+      if card.controller == me and fromGroup != toGroup: 
+         recalcHandSize()
+         if ds == 'runner': recalcMU() # Any time a card enters or leaves the table, we recalculate MUs, just in case.
       if fromGroup == me.hand and toGroup == table: 
          if card.Type == 'Identity': intJackin(manual = True)
          else: 
@@ -248,6 +250,9 @@ def checkScriptedMovedCards(player,cards,fromGroups,toGroups,oldIndexs,indexs,ol
       if fromGroup == me.piles['R&D/Stack'] and toGroup == me.hand and ds == 'corp': # Code to store cards drawn by the corp to be exposed later by Bug
          if len([c for c in table if c.name == 'Bug']): setGlobalVariable('Bug Memory',card.name)
       if ds == 'runner' and card.controller == me and fromGroup != toGroup: recalcMU() # Any time a card enters or leaves the table, we recalculate MUs, just in case.
+      if card.controller == me and fromGroup != toGroup: 
+         if ds == 'runner': recalcMU() # Any time a card enters or leaves the table, we recalculate MUs, just in case.
+         recalcHandSize()
       
 def checkGlobalVars(name,oldValue,value):
    mute()

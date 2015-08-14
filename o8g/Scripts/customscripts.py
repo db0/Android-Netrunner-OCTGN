@@ -1589,6 +1589,16 @@ def CustomScript(card, action = 'PLAY', origin_card = None, original_action = No
       if len(installTarget): 
          placeCard(installTarget[0], action = 'INSTALL', type = 'Apex')
          notify("{}'s hunger grows...".format(card))
+   elif fetchProperty(card, 'name') == 'Independent Thinking' and action == 'PLAY':
+      targetCards = findTarget('Targeted-atProgram_or_Hardware_or_Resource-targetMine')
+      if len(targetCards): 
+         count = 0
+         del targetCards[5:] # Max 5 cards
+         for c in targetCards:
+            if re.search(r'Directive',getKeywords(c)): count += 2
+            else: count += 1
+         DrawX('Draw{}Cards'.format(count), '', card)
+         notify("{} {} {} to draw {} cards".format(me,uniTrash(),[c.Name for c in targetCards],count))
    elif action == 'USE': useCard(card)
       
             
