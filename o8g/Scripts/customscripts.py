@@ -1576,6 +1576,26 @@ def CustomScript(card, action = 'PLAY', origin_card = None, original_action = No
             else: count += 1
          DrawX('Draw{}Cards'.format(count), '', card)
          notify("{} {} {} to draw {} cards".format(me,uniTrash(),[c.Name for c in targetCards],count))
+   elif fetchProperty(card, 'name') == 'Safety First' and action == 'End':
+      if len(me.hand) < currentHandSize(): DrawX('Draw1Cards', '{} uses {}'.format(me,card), card, notification = 'Quick')
+   elif fetchProperty(card, 'name') == 'Security Nexus' and action == 'USE':
+      if oncePerTurn(card) == 'ABORT': return 'ABORT'
+      remoteCall(fetchCorpPL(),'TraceX',['Trace5-traceEffects<Gain1Tags++RunEnd,SimplyAnnounce{bypass the current ICE}>', '{} uses {}'.format(me,card), card, None, 'Quick', 0])
+   elif fetchProperty(card, 'name') == "Globalsec Security Clearance" and action == 'USE':      
+      if oncePerTurn(card, silent = True) == 'ABORT': return 'ABORT'
+      actionCost = useClick(count = 1)
+      if actionCost == 'ABORT': return 'ABORT'  
+      corpPl = fetchCorpPL()
+      notify(":::WARN::: {} uses {} to look at the top card of the Corp R&D.".format(me,card))
+      whisper(":::INFO::: The top card of the corp R&D is {} ({})".format(corpPl.piles['R&D/Stack'].top().Name,corpPl.piles['R&D/Stack'].top().Type))
+   elif fetchProperty(card, 'name') == "Windfall" and action == 'PLAY':      
+      deck.shuffle()
+      trashC = deck.top()
+      intTrashCard(trashC, fetchProperty(trashC,'Stat'), "free", silent = True)
+      if trashC.Type != 'Event': 
+         me.Credits =+ num(trashC.Cost)
+         notify(":> {}'s {} has provided them with {} credits".format(me,card,trashC.Cost))
+      else: notify(":> {} tried to get a windfall but found only gas".format(me))
    elif action == 'USE': useCard(card)
       
             
@@ -1633,6 +1653,8 @@ def markerEffects(Time = 'Start'):
          if re.search(r'London Library',marker[0]) and Time == 'End': # We put Test Run's effect here, as the card will be discarded after being played.
             notify("--> London Library reimages their systems and {} is trashed".format(card))
             ModifyStatus('TrashMyself', 'London Library:', card)
+         if re.search(r'Feelgood',marker[0]) and Time == 'End':
+            TokensX('Remove999Feelgood-isSilent', "Dr. Feelgood:", card)
 
 def ASVarEffects(Time = 'Start'):
    mute()

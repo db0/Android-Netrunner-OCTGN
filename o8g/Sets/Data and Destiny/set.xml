@@ -783,7 +783,7 @@
 		<property name="Stat" value="1" />	
 		<property name="Rules" value="If you have at least 2[Link], the memory cost of GS Striker M1 is 0, even if it is not installed.&#xD;&#xA;2[Credits]: Break any number of code gate subroutines.&#xD;&#xA;2[Credits]: +3 strength." />
 		<property name="Flavor" value="Bigger." />
-		<property name="Instructions" value="" />
+		<property name="Instructions" value="2[Credits]: Break any number of code gate subroutines.||2[Credits]: +3 strength." />
 		<property name="Faction" value="Sunny Lebeau" />
 		<property name="Influence" value="2" />
 		<property name="Side" value="runner" />
@@ -799,7 +799,7 @@
 		<property name="Stat" value="1" />	
 		<property name="Rules" value="If you have at least 2[Link], the memory cost of GS Shrike M2 is 0, even if it is not installed.&#xD;&#xA;2[Credits]: Break any number of sentry subroutines.&#xD;&#xA;2[Credits]: +3 strength." />
 		<property name="Flavor" value="Badder." />
-		<property name="Instructions" value="" />
+		<property name="Instructions" value="2[Credits]: Break any number of sentry subroutines.||2[Credits]: +3 strength." />
 		<property name="Faction" value="Sunny Lebeau" />
 		<property name="Influence" value="2" />
 		<property name="Side" value="runner" />
@@ -815,7 +815,7 @@
 		<property name="Stat" value="1" />	
 		<property name="Rules" value="If you have at least 2[Link], the memory cost of GS Sherman M3 is 0, even if it is not installed.&#xD;&#xA;2[Credits]: Break any number of barrier subroutines.&#xD;&#xA;2[Credits]: +3 strength." />
 		<property name="Flavor" value="Boom." />
-		<property name="Instructions" value="" />
+		<property name="Instructions" value="2[Credits]: Break any number of barrier subroutines.||2[Credits]: +3 strength." />
 		<property name="Faction" value="Sunny Lebeau" />
 		<property name="Influence" value="2" />
 		<property name="Side" value="runner" />

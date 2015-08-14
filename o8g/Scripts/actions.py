@@ -810,13 +810,10 @@ def reduceCost(card, action = 'REZ', fullCost = 0, dryRun = False, reversePlayer
             debugNotify("No onPay trigger found in {}!".format(autoS), 2)
             continue
          reductionSearch = re.search(r'Reduce([0-9]+)Cost({}|All)'.format(type), autoS)
+         #confirm(str(reductionSearch.groups()))
          if debugVerbosity >= 2: #Debug
             if reductionSearch: notify("!!! self-reduce regex groups: {}".format(reductionSearch.groups()))
             else: notify("!!! No self-reduce regex Match!")
-         oppponent = ofwhom('-ofOpponent')
-         if re.search(r'ifNoisyOpponent', autoS) and oppponent.getGlobalVariable('wasNoisy') != '1':
-            debugNotify("No required noisy bit found!", 2)
-            continue
          count = num(reductionSearch.group(1))
          targetCards = findTarget(autoS,card = card)
          multiplier = per(autoS, card, 0, targetCards)
@@ -832,13 +829,15 @@ def reduceCost(card, action = 'REZ', fullCost = 0, dryRun = False, reversePlayer
       del costIncreasers[:]
       RC_cardList = sortPriority([c for c in table
                               if c.isFaceUp
+                              and not findMarker(c, 'Feelgood')
+                              and not (c.Type == 'Identity' and chkBlankID(c.Side))
                               and c.highlight != RevealedColor
                               and c.highlight != StealthColor # Cards reserved for stealth do not give the credits elsewhere. Stealth cards like dagger use those credits via TokensX
                               and c.highlight != InactiveColor])
       reductionRegex = re.compile(r'(Reduce|Increase)([0-9#XS]+)Cost({}|All)-affects([A-Z][A-Za-z ]+)(-not[A-Za-z_& ]+)?'.format(type)) # Doing this now, to reduce load.
       for c in RC_cardList: # Then check if there's other cards in the table that reduce its costs.
          debugNotify("Scanning {}".format(c), 2) #Debug
-         if c.Type == 'Identity' and c.Side == 'runner' and chkCerebralStatic(): continue # If Cerebral Static is still active, we abort the scripts.
+         if c.Type == 'Identity' and chkBlankID(c.Side): continue # If Cerebral Static is still active, we abort the scripts.
          Autoscripts = CardsAS.get(c.model,'').split('||')
          if len(Autoscripts) == 0: 
             debugNotify("No AS found. Continuing")
@@ -1147,6 +1146,7 @@ def findDMGProtection(DMGdone, DMGtype, targetPL): # Find out if the player has 
    protectionFound = 0
    protectionType = 'protection{}DMG'.format(DMGtype) # This is the string key that we use in the mdict{} dictionary
    for card in table: # First we check if we have some emergency protection cards.
+      if findMarker(card, 'Feelgood'): continue
       debugNotify("Checking {} for emergency protection".format(card))
       for autoS in CardsAS.get(card.model,'').split('||'):
          debugNotify("Checking autoS = {} ".format(autoS),4)
@@ -1172,6 +1172,7 @@ def findDMGProtection(DMGdone, DMGtype, targetPL): # Find out if the player has 
                         notify(":::NOTICE::: {} is still waiting for {} to decide whether to use {} or not".format(me,targetPL,card))
    cardList = sortPriority([c for c in table
                if c.controller == targetPL
+               and not findMarker(c, 'Feelgood')
                and c.markers])
    for card in cardList: # First we check for complete damage protection (i.e. protection from all types), which is always temporary.
       if card.markers[mdict['protectionAllDMG']]:

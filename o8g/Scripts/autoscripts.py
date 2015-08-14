@@ -154,6 +154,9 @@ def executePlayScripts(card, action):
          if not chkRunStatus(activeAutoscript): continue
          if not chkAlternate(activeAutoscript,card): continue
          if chkTagged(activeAutoscript) == 'ABORT': continue
+         if findMarker(card, 'Feelgood'):
+            notify(":::INFO::: Script ignored due to Dr. Feelgood")
+            continue
          if re.search(r'-ifAccessed', activeAutoscript) and ds != 'runner': 
             debugNotify("!!! Failing script because card is not being accessed")
             continue # These scripts are only supposed to fire from the runner (when they access a card)         
@@ -293,8 +296,8 @@ def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
       if not accessRegex:
          whisper("You cannot use inactive cards. Please use the relevant card abilities to clear them first. Aborting")
          return
-   if card.type == 'Identity' and card.Side == 'runner' and chkCerebralStatic(): 
-         whisper("You cannot use your ID's ability because {} is active. Aborting!".format(chkCerebralStatic()))
+   if card.type == 'Identity' and chkBlankID(card.Side): 
+         whisper("You cannot use your ID's ability because {} is active. Aborting!".format(chkBlankID(card.Side)))
          return
    debugNotify("Finished storing CardsAA.get(card.model,'')s. Checking Rez status", 4)
    if not card.isFaceUp:
@@ -335,6 +338,9 @@ def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
    if len(Autoscripts) == 0:
       useCard(card) # If the card had only "WhileInstalled"  or AtTurnStart effect, just announce that it is being used.
       return 
+   if findMarker(card, 'Feelgood'):
+      notify(":::INFO::: Script ignored due to Dr. Feelgood")
+      return
    if len(Autoscripts) > 1: 
       #abilConcat = "This card has multiple abilities.\nWhich one would you like to use?\
                 #\n\n(Tip: You can put multiple abilities one after the the other (e.g. '110'). Max 9 at once)\n\n" # We start a concat which we use in our confirm window.
@@ -596,6 +602,7 @@ def autoscriptOtherPlayers(lookup, origin_card = None, count = 1): # Function th
    if not Automations['Play, Score and Rez']: return # If automations have been disabled, do nothing.
    for card in table:
       debugNotify('Checking {}'.format(card), 2) # Debug
+      if findMarker(card, 'Feelgood'): continue
       if not card.isFaceUp: continue # Don't take into accounts cards that are not rezzed.
       if card.highlight == InactiveColor: continue # We don't take into account inactive cards.
       costText = '{} activates {} to'.format(card.controller, card) 
@@ -614,7 +621,7 @@ def autoscriptOtherPlayers(lookup, origin_card = None, count = 1): # Function th
             debugNotify("lookup: {} not found in CardScript. Aborting".format(lookup))
             continue # Search if in the script of the card, the string that was sent to us exists. The sent string is decided by the function calling us, so for example the ProdX() function knows it only needs to send the 'GeneratedSpice' string.
          if chkPlayer(autoS, card.controller,False) == 0: continue # Check that the effect's origninator is valid.
-         if card.Type == 'Identity' and card.Side == 'runner' and chkCerebralStatic(): continue # If Cerebral Static is still active, we abort the scripts.
+         if card.Type == 'Identity' and card.Side == 'runner' and chkBlankID(card.Side): continue # If Cerebral Static is still active, we abort the scripts.
          if not ifHave(autoS,card.controller,silent = True): continue # If the script requires the playet to have a specific counter value and they don't, do nothing.
          if re.search(r'whileScored',autoS) and card.controller.getGlobalVariable('ds') != 'corp' and card.isFaceUp: continue # If the card is only working while scored, then its controller has to be the corp.
          if chkTagged(autoS, True) == 'ABORT': continue
@@ -674,8 +681,9 @@ def atTimedEffects(Time = 'Start', AlternativeRunResultUsed = False): # Function
       if card.highlight == InactiveColor or card.highlight == RevealedColor: 
          debugNotify("Rejecting {} Because highlight == {}".format(card, card.highlight), 4)
          continue
+      if findMarker(card, 'Feelgood'): continue
       if not card.isFaceUp: continue
-      if card.Type == 'Identity' and card.Side == 'runner' and chkCerebralStatic(): continue # If Cerebral Static is still active, we abort the scripts.
+      if card.Type == 'Identity' and chkBlankID(card.Side): continue # If Cerebral Static is still active, we abort the scripts.
       Autoscripts = CardsAS.get(card.model,'').split('||')
       for autoS in Autoscripts:
          debugNotify("Processing {} Autoscript: {}".format(card, autoS), 3)
@@ -1580,7 +1588,7 @@ def ChooseKeyword(Autoscript, announceText, card, targetCards = None, notificati
    debugNotify("<<< ChooseKeyword()", 3)
    return announceString
             
-def TraceX(Autoscript, announceText, card, targetCards = None, notification = None, n = 0): # Core Command for drawing X Cards from the house deck to your hand.
+def TraceX(Autoscript, announceText, card, targetCards = None, notification = None, n = 0): # Core Command for Tracing with X starting strength
    debugNotify(">>> TraceX(){}".format(extraASDebug(Autoscript))) #Debug
    if targetCards is None: targetCards = []
    action = re.search(r'\bTrace([0-9]+)', Autoscript)
@@ -1595,7 +1603,7 @@ def TraceX(Autoscript, announceText, card, targetCards = None, notification = No
    debugNotify("Checking for Trace Effects", 2) #Debug
    if traceEffects:
       traceEffectTuple = (card._id,traceEffects.group(1),traceEffects.group(2))
-      debugNotify("TraceEffectsTuple: {}".format(traceEffectTuple), 2) #Debug
+      #confirm("TraceEffectsTuple: {}".format(traceEffectTuple)) #Debug
       setGlobalVariable('CurrentTraceEffect',str(traceEffectTuple))
    if len([c for c in table if c.Name == 'Surveillance Sweep']) and re.search(r'running([A-Za-z&]+)',getGlobalVariable('status')):
       setGlobalVariable('CorpTraceValue',str(TraceStrength))
@@ -1750,6 +1758,7 @@ def ModifyStatus(Autoscript, announceText, card, targetCards = None, notificatio
       elif action.group(1) == 'Exile' and exileCard(targetCard, silent = True) != 'ABORT': pass
       elif action.group(1) == 'ApexFlip':
          targetCard.isFaceUp = False
+         targetCard.peek()
       elif action.group(1) == 'Rework': # Rework puts a card on top of R&D (usually shuffling afterwards)
          changeCardGroup(targetCard,targetCard.owner.piles['R&D/Stack'])
          #targetCard.moveTo(targetCard.controller.piles['R&D/Stack'])
@@ -2254,6 +2263,9 @@ def checkSpecialRestrictions(Autoscript,card):
    if re.search(r'isScored',Autoscript) and not card.markers[mdict['Scored']] and not card.markers[mdict['ScorePenalty']]:
       debugNotify("Rejecting because it's not a scored agenda")
       validCard = False
+   if re.search(r'isUnscored',Autoscript) and (card.markers[mdict['Scored']] or card.markers[mdict['ScorePenalty']]):
+      debugNotify("Rejecting because it's in the scored area")
+      validCard = False
    markerName = re.search(r'-hasMarker{([\w ]+)}',Autoscript) # Checking if we need specific markers on the card.
    if markerName: #If we're looking for markers, then we go through each targeted card and check if it has any relevant markers
       debugNotify("Checking marker restrictions", 2)# Debug
@@ -2495,7 +2507,7 @@ def per(Autoscript, card = None, count = 0, targetCards = None, notification = N
             property = re.search(r'Property{([\w ]+)}',per.group(3))
             multiplier = num(card.properties[property.group(1)])
          elif re.search(r'Counter',per.group(3)):
-            debugNotify("Checking perCounter", 2) # Debug.   
+            #confirm("Checking perCounter with AS {}".format(per.group(3))) # Debug.   
             counter = re.search(r'Counter{([\w ]+)}',per.group(3))
             if re.search(r'MyCounter',per.group(3)): 
                if card.controller == me: player = me

@@ -5291,7 +5291,7 @@ bc0f047c-01b1-427f-a439-d451eda08014
 -----
 
 +++++
-A0B0G0T0:Inflict1NetDamage-perCounter{MU}-OpCounter-isSubroutine
+A0B0G0T0:Inflict1NetDamage-perOpponentCounter{MU}-OpCounter-isSubroutine
 .....
 Valley Grid
 -----
@@ -6377,7 +6377,7 @@ Apocalypse
 -----
 bc0f047c-01b1-427f-a439-d451eda09030
 -----
-onPlay:TrashMulti-AutoTargeted-atICE_or_Upgrade_or_Asset_or_Agenda-isRezzed$$ApexFlipMulti-AutoTargeted-atProgram_or_Resource_or_Hardware
+onPlay:TrashMulti-AutoTargeted-atICE_or_Upgrade_or_Asset_or_Agenda-isUnscored$$ApexFlipMulti-AutoTargeted-atProgram_or_Resource_or_Hardware-isSilent
 +++++
 
 .....
@@ -6393,9 +6393,9 @@ Heartbeat
 -----
 bc0f047c-01b1-427f-a439-d451eda09032
 -----
-onDamage:TrashTarget-DemiAutoTargeted-targetMine-isCost$$Put1protectionAllDMG
+onDamage:TrashTarget-DemiAutoTargeted-targetMine-isCost-choose1$$Put1protectionAllDMG
 +++++
-A0B0G0T0:TrashTarget-DemiAutoTargeted-targetMine-isCost$$Put1protectionAllDMG
+A0B0G0T0:TrashTarget-DemiAutoTargeted-targetMine-isCost-choose1$$Put1protectionAllDMG
 .....
 Endless Hunger
 -----
@@ -6409,7 +6409,7 @@ Harbinger
 -----
 bc0f047c-01b1-427f-a439-d451eda09034
 -----
-onTrash:ApexFlipMyself-preventTrash-onlyPreventWhileActive
+onTrash:ApexFlipMyself-preventTrash
 +++++
 
 .....
@@ -6457,7 +6457,7 @@ Multithreader
 -----
 bc0f047c-01b1-427f-a439-d451eda09040
 -----
-
+onInstall:Put2Credits-isSilent||whileInstalled:Reduce#CostUse-affectsProgram-forMe||atTurnPreStart:Refill2Credits-duringMyTurn
 +++++
 
 .....
@@ -6467,7 +6467,7 @@ bc0f047c-01b1-427f-a439-d451eda09041
 -----
 
 +++++
-
+A0B0G0T0:Lose2Clicks-isCost$$SimplyAnnounce{break ICE subroutine}-onlyOnce
 .....
 Dr. Lovegood
 -----
@@ -6475,7 +6475,7 @@ bc0f047c-01b1-427f-a439-d451eda09042
 -----
 
 +++++
-
+A0B0G0T0:Put1Feelgood-DemiAutoTargeted-targetMine-atProgram_or_Hardware_or_Resource-choose1-onlyOnce
 .....
 Neutralize All Threats
 -----
@@ -6489,7 +6489,7 @@ Safety First
 -----
 bc0f047c-01b1-427f-a439-d451eda09044
 -----
-
+whileInPlay:Steal2HandSize-forRunner||atTurnEnd:CustomScript
 +++++
 
 .....
@@ -6507,39 +6507,39 @@ bc0f047c-01b1-427f-a439-d451eda09046
 -----
 
 +++++
-
+A0B0G0T1:Put1PlusOne-Targeted-atIcebreaker-perMyCounter{Base Link}
 .....
 Security Nexus
 -----
 bc0f047c-01b1-427f-a439-d451eda09047
 -----
-
+whileInPlay:Provide1MU||whileInstalled:Gain1Base Link
 +++++
-
+A0B0G0T0:CustomScript
 .....
 GS Striker M1
 -----
 bc0f047c-01b1-427f-a439-d451eda09048
 -----
-
+ConstantAbility:Cloud2Link
 +++++
-
+A0B2G0T0:SimplyAnnounce{break any number of code gate subroutines}||A0B2G0T0:Put3PlusOne
 .....
 GS Shrike M2
 -----
 bc0f047c-01b1-427f-a439-d451eda09049
 -----
-
+ConstantAbility:Cloud2Link
 +++++
-
+A0B2G0T0:SimplyAnnounce{break any number of sentry subroutines}||A0B2G0T0:Put3PlusOne
 .....
 GS Sherman M3
 -----
 bc0f047c-01b1-427f-a439-d451eda09050
 -----
-
+ConstantAbility:Cloud2Link
 +++++
-
+A0B2G0T0:SimplyAnnounce{break any number of barrier subroutines}||A0B2G0T0:Put3PlusOne
 .....
 Globalsec Security Clearance
 -----
@@ -6547,15 +6547,15 @@ bc0f047c-01b1-427f-a439-d451eda09051
 -----
 
 +++++
-
+A1B0G0T0:CustomScript
 .....
 Jak Sinclair
 -----
 bc0f047c-01b1-427f-a439-d451eda09052
 -----
-
+onPay:Reduce1CostAll-perMyCounter{Base Link}
 +++++
-
+A0B0G0T0:RunGeneric-onlyOnce
 .....
 Employee Strike
 -----
@@ -6569,7 +6569,7 @@ Windfall
 -----
 bc0f047c-01b1-427f-a439-d451eda09054
 -----
-
+onPlay:CustomScript
 +++++
 
 .....
@@ -6577,9 +6577,9 @@ Technical Writer
 -----
 bc0f047c-01b1-427f-a439-d451eda09055
 -----
-
+whileInPlay:Put1Credit-foreachCardInstall-typeProgram_or_Hardware
 +++++
-
+A1B0G0T1:Transfer999Credits
 .....
 ENDSCRIPTS
 =====

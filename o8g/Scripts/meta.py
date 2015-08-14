@@ -260,6 +260,7 @@ def recalcMU(): # Changing how MUs are tracked just for Ekomind...
    paidMU = 0
    for card in table:
       if card.controller == me and ds == 'runner' and card.highlight != InactiveColor and card.highlight != DummyColor and card.highlight != RevealedColor and card.isFaceUp:
+         if findMarker(card, 'Feelgood'): continue
          Autoscripts = CardsAS.get(card.model,'').split('||')
          for autoS in Autoscripts: 
             setMU = re.search(r'whileInPlay:SetTo([0-9]|Special)MU',autoS)
@@ -271,6 +272,7 @@ def recalcMU(): # Changing how MUs are tracked just for Ekomind...
                else: baseMU = num(setMU.group(1))
    for card in table:
       if card.controller == me and ds == 'runner' and card.highlight != InactiveColor and card.highlight != DummyColor and card.highlight != RevealedColor and card.isFaceUp:
+         if findMarker(card, 'Feelgood'): continue
          Autoscripts = CardsAS.get(card.model,'').split('||')
          for autoS in Autoscripts: 
             extraMU = re.search(r'whileInPlay:Provide([0-9])MU',autoS)
@@ -304,6 +306,7 @@ def recalcHandSize(): # Changing how MUs are tracked just for Brain Chip...
    for card in table:
       if card.highlight != InactiveColor and card.highlight != DummyColor and card.highlight != RevealedColor and card.isFaceUp:
          if card.Type == 'Agenda' and (card.controller.getGlobalVariable('ds') != 'corp' or not card.markers[mdict['Scored']]): continue # If it's an agenda, it needs to be scored by the corp to be considered active
+         if findMarker(card, 'Feelgood'): continue
          Autoscripts = CardsAS.get(card.model,'').split('||')
          for autoS in Autoscripts: 
             setHS = re.search(r'whileInPlay:SetTo([0-9]|Special)HandSize-for(Runner|Corp)',autoS)
@@ -318,6 +321,7 @@ def recalcHandSize(): # Changing how MUs are tracked just for Brain Chip...
    for card in table:
       if card.highlight != InactiveColor and card.highlight != DummyColor and card.highlight != RevealedColor and card.isFaceUp:
          if card.Type == 'Agenda' and (card.controller.getGlobalVariable('ds') != 'corp' or not card.markers[mdict['Scored']]): continue # If it's an agenda, it needs to be scored by the corp to be considered active
+         if findMarker(card, 'Feelgood'): continue
          Autoscripts = CardsAS.get(card.model,'').split('||')
          #notify("### Testinmg {} withj autoS: {}".format(card,Autoscripts)) #Debug
          for autoS in Autoscripts: 
@@ -578,7 +582,7 @@ def sendToTrash(card, pile = None): # A function which takes care of sending a c
    clearAttachLinks(card)
    if chkModulator(card, 'preventTrash', 'onTrash'): # IF the card has the preventTrash modulator, it's not supposed to be trashed.
       if chkModulator(card, 'ifAccessed', 'onTrash') and ds != 'runner': changeCardGroup(card,pile) # Unless it only has that modulator active during runner access. Then when the corp trashes it, it should trash normally.
-      if chkModulator(card, 'onlyPreventWhileActive', 'onTrash') and card.isFaceUp: changeCardGroup(card,pile) # Unless it only has onlyPreventWhileActive modulator active and the card is not rezzed on the table.
+      if chkModulator(card, 'onlyPreventWhileActive', 'onTrash') and not card.isFaceUp: changeCardGroup(card,pile) # Unless it only has onlyPreventWhileActive modulator active and the card is not rezzed on the table.
    else: changeCardGroup(card,pile)
    debugNotify("<<< sendToTrash()", 3) #Debug   
    
@@ -686,11 +690,12 @@ def clearCurrents(type = None,card = None):
             intTrashCard(c, c.Stat, "free")
             notify(":> {} scores their agenda and {} fades out".format(me,c))
             
-def chkCerebralStatic():
-   CS = None
+def chkBlankID(sideCheck):
+   BI = None
    for card in table:
-      if card.name == "Cerebral Static": CS = card
-   return CS
+      if sideCheck == 'runner' and card.name == "Cerebral Static": BI = card
+      if sideCheck == 'corp' and card.name == "Employee Strike": BI = card
+   return BI
    
 def calcAgendaStealCost(card):
    extraCreds = 0
