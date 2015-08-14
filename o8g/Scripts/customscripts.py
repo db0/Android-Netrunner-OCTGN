@@ -1562,6 +1562,7 @@ def CustomScript(card, action = 'PLAY', origin_card = None, original_action = No
    elif fetchProperty(card, 'name') == 'The All-Seeing I' and action == 'PLAY':
       remoteCall(fetchRunnerPL(),'AllSeeingI',[card])
    elif fetchProperty(card, 'name') == 'Apex' and action == 'USE':
+      if oncePerTurn(card) == 'ABORT': return 'ABORT'
       installTarget = findTarget('DemiAutoTargeted-fromHand-choose1')
       if len(installTarget): 
          placeCard(installTarget[0], action = 'INSTALL', type = 'Apex')
