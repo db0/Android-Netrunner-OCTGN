@@ -879,7 +879,8 @@ def remoteAutoscript(card = None, Autoscript = ''):
 def redirect(Autoscript, card, announceText = None, notificationType = 'Quick', X = 0):
    debugNotify(">>> redirect(){}".format(extraASDebug(Autoscript))) #Debug
    if re.search(r':Pass\b', Autoscript): return X # Pass is a simple command of doing nothing ^_^
-   targetC = findTarget(Autoscript)
+   if not re.search(r'(Trace|Psi)',Autoscript): targetC = findTarget(Autoscript) # With a little hack to avoid it searching for targets before a trace or Psi effect is succesfull (e.g. Archangel)
+   else: targetC = []
    debugNotify("card.owner = {}".format(card.owner),2)
    targetPL = ofwhom(Autoscript,card.owner) # So that we know to announce the right person the effect, affects.
    if not announceText: announceText = "{} uses {}'s ability to".format(targetPL,card) 
@@ -1590,17 +1591,22 @@ def TraceX(Autoscript, announceText, card, targetCards = None, notification = No
                   and c.controller.getGlobalVariable('ds') == 'corp' 
                   and c.markers[mdict['Scored']]]
    if len(ImpTracers) and re.search(r'isSubroutine',Autoscript): TraceStrength += len(ImpTracers)   
-   reinforcement = inputTraceValue(card,silent = True)
-   if reinforcement == 'ABORT': return 'ABORT'
-   if reinforcement: reinforceTXT =  "and reinforced by {} (Total: {})".format(uniCredit(reinforcement),TraceStrength + reinforcement)
-   else: reinforceTXT = "(Not reinforced)"
-   setGlobalVariable('CorpTraceValue',str(TraceStrength + reinforcement))
    traceEffects = re.search(r'-traceEffects<(.*?),(.*?)>', Autoscript)
    debugNotify("Checking for Trace Effects", 2) #Debug
    if traceEffects:
       traceEffectTuple = (card._id,traceEffects.group(1),traceEffects.group(2))
       debugNotify("TraceEffectsTuple: {}".format(traceEffectTuple), 2) #Debug
       setGlobalVariable('CurrentTraceEffect',str(traceEffectTuple))
+   if len([c for c in table if c.Name == 'Surveillance Sweep']) and re.search(r'running([A-Za-z&]+)',getGlobalVariable('status')):
+      setGlobalVariable('CorpTraceValue',str(TraceStrength))
+      reinforceTXT = ''
+      remoteCall(fetchRunnerPL(),'inputTraceValue',[getSpecial('Tracing',fetchRunnerPL()),0,0,0,False])
+   else:
+      reinforcement = inputTraceValue(card,silent = True)
+      if reinforcement == 'ABORT': return 'ABORT'
+      if reinforcement: reinforceTXT =  "and reinforced by {} (Total: {})".format(uniCredit(reinforcement),TraceStrength + reinforcement)
+      else: reinforceTXT = "(Not reinforced)"
+      setGlobalVariable('CorpTraceValue',str(TraceStrength + reinforcement))
    if notification == 'Quick': announceString = "{} starts a Trace with a base strength of {} {}".format(announceText, TraceStrength, reinforceTXT)
    else: announceString = "{} start a trace with a base strength of {} {}".format(announceText, TraceStrength, reinforceTXT)
    if notification: notify('--> {}.'.format(announceString))

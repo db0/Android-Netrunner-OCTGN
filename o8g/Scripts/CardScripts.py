@@ -6241,9 +6241,9 @@ Archangel
 -----
 bc0f047c-01b1-427f-a439-d451eda09013
 -----
-
+onAccess:Lose3Credits-isCost-isOptional$$Trace6-isSubroutine-traceEffects<UninstallTarget-DemiAutoTargeted-atProgram_or_Resource_or_Hardware-targetOpponents-choose1>
 +++++
-
+A0B0G0T0:Trace6-isSubroutine-traceEffects<UninstallTarget-DemiAutoTargeted-targetOpponents-choose1,None>
 .....
 News Hound
 -----
@@ -6251,7 +6251,7 @@ bc0f047c-01b1-427f-a439-d451eda09014
 -----
 
 +++++
-
+A0B0G0T0:Trace3-isSubroutine-traceEffects<Gain1Tags-onOpponent,None>||A0B0G0T0:RunEnd
 .....
 Resistor
 -----
@@ -6259,7 +6259,7 @@ bc0f047c-01b1-427f-a439-d451eda09015
 -----
 
 +++++
-
+A0B0G0T0:Trace4-isSubroutine-traceEffects<RunEnd,None>
 .....
 Special Offer
 -----
@@ -6267,7 +6267,7 @@ bc0f047c-01b1-427f-a439-d451eda09016
 -----
 
 +++++
-
+A0B0G0T0:Gain5Credits-isSubroutine$$TrashMyself
 .....
 TL;DR
 -----
@@ -6275,7 +6275,7 @@ bc0f047c-01b1-427f-a439-d451eda09017
 -----
 
 +++++
-
+A0B0G0T0:SimplyAnnounce{duplicate the subs on the next piece of ICE}-isSubroutine
 .....
 Turnpike
 -----
@@ -6283,13 +6283,13 @@ bc0f047c-01b1-427f-a439-d451eda09018
 -----
 
 +++++
-
+A0B0G0T0:Lose1Credits-onOpponent||A0B0G0T0:Trace3-isSubroutine-traceEffects<Gain1Tags-onOpponent,None>
 .....
 24/7 News Cycle
 -----
 bc0f047c-01b1-427f-a439-d451eda09019
 -----
-
+onPlay:ExileTarget-DemiAutoTargeted-atAgenda-targetMine-isCost-choose1$$UseCustomAbility
 +++++
 
 .....
@@ -6297,7 +6297,7 @@ Ad Blitz
 -----
 bc0f047c-01b1-427f-a439-d451eda09020
 -----
-
+onPlay:RequestInt-Msg{How many Advertisements do you want to install and rez?}$$Lose1Credits-perX-isCost$$UseCustomAbility
 +++++
 
 .....
@@ -6305,7 +6305,7 @@ Media Blitz
 -----
 bc0f047c-01b1-427f-a439-d451eda09021
 -----
-
+onPlay:CustomScript
 +++++
 
 .....
@@ -6313,7 +6313,7 @@ The All-Seeing I
 -----
 bc0f047c-01b1-427f-a439-d451eda09022
 -----
-
+onPlay:CustomScript-ifTagged1
 +++++
 
 .....
@@ -6331,7 +6331,7 @@ bc0f047c-01b1-427f-a439-d451eda09024
 -----
 
 +++++
-
+A0B0G0T1:Lose1Tag-onOpponent-isCost$$TrashTarget-DemiAutoTargeted-atProgram
 .....
 Rutherford Grid
 -----
@@ -6345,7 +6345,7 @@ Global Food Initiative
 -----
 bc0f047c-01b1-427f-a439-d451eda09026
 -----
-
+onLiberation:Lose1Agenda Points-onOpponent
 +++++
 
 .....
@@ -6353,7 +6353,7 @@ Launch Campaign
 -----
 bc0f047c-01b1-427f-a439-d451eda09027
 -----
-
+onRez:Put6Credits||atTurnStart:Transfer2Credits-duringMyTurn$$TrashMyself-ifEmpty
 +++++
 
 .....
@@ -6363,7 +6363,7 @@ bc0f047c-01b1-427f-a439-d451eda09028
 -----
 
 +++++
-
+A0B0G0T0:Trace5-traceEffects<Inflict3NetDamage-onOpponent,None>-isSubroutine||A0B0G0T0:Trace4-traceEffects<TrashTarget-DemiAutoTargeted-atProgramt,None>-isSubroutine
 .....
 Apex
 -----

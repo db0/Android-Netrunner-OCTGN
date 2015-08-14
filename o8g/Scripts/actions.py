@@ -652,39 +652,76 @@ def inputTraceValue (card, x=0,y=0, limit = 0, silent = False):
    else: extraText = ''
    if payCost(TraceValue - reduction)  == 'ABORT': return
    #card.markers[mdict['Credits']] = TraceValue
-   if ds == 'corp':
-      if not silent: notify("{} starts a trace with a base strength of 0 reinforced by {}{}.".format(me,TraceValue,extraText))
-      setGlobalVariable('CorpTraceValue',str(TraceValue))
-      OpponentTrace = getSpecial('Tracing',ofwhom('ofOpponent'))
-      OpponentTrace.highlight = EmergencyColor
-      autoscriptOtherPlayers('InitiatedTrace', card)
-   else:
-      if not silent: notify("{} reinforces their {} by {} for a total of {}{}.".format(me,uniLink(),TraceValue, TraceValue + me.counters['Base Link'].value,extraText))
-      CorpTraceValue = num(getGlobalVariable('CorpTraceValue'))
-      currentTraceEffectTuple = eval(getGlobalVariable('CurrentTraceEffect'))
-      debugNotify("currentTraceEffectTuple = {}".format(currentTraceEffectTuple), 2)
-      if CorpTraceValue > TraceValue + me.counters['Base Link'].value:
-         notify("-- {} has been traced".format(identName))
-         playTraceLostSound()
-         autoscriptOtherPlayers('UnavoidedTrace', card)
-         try:
-            if currentTraceEffectTuple[1] != 'None':
-               debugNotify("Found currentTraceEffectTuple")
-               executePostEffects(Card(currentTraceEffectTuple[0]),currentTraceEffectTuple[1], count = CorpTraceValue - TraceValue - me.counters['Base Link'].value) # We sent this function the card which triggered the trace, and the effect which was triggered.
-         except: 
-            debugNotify("currentTraceEffectTuple == None")
-            pass # If it's an exception it means our tuple does not exist, so there's no current trace effects. Manual use of the trace card?
+   if len([c for c in table if c.Name == 'Surveillance Sweep']) and re.search(r'running([A-Za-z&]+)',getGlobalVariable('status')): # We need to swap the order if Surveillance sweep is on the game
+      if ds == 'runner':
+         if not silent: notify("{} reinforces their {} by {} for a total of {}{}.".format(me,uniLink(),TraceValue, TraceValue + me.counters['Base Link'].value,extraText))
+         setGlobalVariable('RunnerTraceValue',str(TraceValue + me.counters['Base Link'].value))
+         OpponentTrace = getSpecial('Tracing',findOpponent())
+         OpponentTrace.highlight = EmergencyColor
+         autoscriptOtherPlayers('InitiatedTrace', card)
       else:
-         notify("-- {} has eluded the trace".format(identName))
-         playTraceAvoidedSound()
-         autoscriptOtherPlayers('EludedTrace', card)
-         try:
-            if currentTraceEffectTuple[2] != 'None':
-               executePostEffects(Card(currentTraceEffectTuple[0]),currentTraceEffectTuple[2]) # We sent this function the card which triggered the trace, and the effect which was triggered.
-         except: pass # If it's an exception it means our tuple does not exist, so there's no current trace effects. Manual use of the trace card?
-      setGlobalVariable('CurrentTraceEffect','None') # Once we're done with the current effects of the trace, we clear the CurrentTraceEffect global variable
-      setGlobalVariable('CorpTraceValue','None') # And the corp's trace value
-      card.highlight = None
+         CorpTraceStrength = num(getGlobalVariable('CorpTraceValue'))
+         RunnerTraceValue = num(getGlobalVariable('RunnerTraceValue'))
+         if not silent: notify("{} reinforces their trace by {} for a total of {}{}.".format(me,TraceValue, TraceValue + CorpTraceStrength,extraText))
+         currentTraceEffectTuple = eval(getGlobalVariable('CurrentTraceEffect'))
+         debugNotify("currentTraceEffectTuple = {}".format(currentTraceEffectTuple), 2)
+         if CorpTraceStrength + TraceValue > RunnerTraceValue:
+            notify("-- {} has been traced".format(fetchRunnerPL()))
+            playTraceLostSound()
+            autoscriptOtherPlayers('UnavoidedTrace', card)
+            try:
+               if currentTraceEffectTuple[1] != 'None':
+                  debugNotify("Found currentTraceEffectTuple")
+                  executePostEffects(Card(currentTraceEffectTuple[0]),currentTraceEffectTuple[1], count = CorpTraceStrength + TraceValue - RunnerTraceValue) # We sent this function the card which triggered the trace, and the effect which was triggered.
+            except: 
+               debugNotify("currentTraceEffectTuple == None")
+               pass # If it's an exception it means our tuple does not exist, so there's no current trace effects. Manual use of the trace card?
+         else:
+            notify("-- {} has eluded the trace".format(identName))
+            playTraceAvoidedSound()
+            autoscriptOtherPlayers('EludedTrace', card)
+            try:
+               if currentTraceEffectTuple[2] != 'None':
+                  executePostEffects(Card(currentTraceEffectTuple[0]),currentTraceEffectTuple[2]) # We sent this function the card which triggered the trace, and the effect which was triggered.
+            except: pass # If it's an exception it means our tuple does not exist, so there's no current trace effects. Manual use of the trace card?
+         setGlobalVariable('CurrentTraceEffect','None') # Once we're done with the current effects of the trace, we clear the CurrentTraceEffect global variable
+         setGlobalVariable('CorpTraceValue','None') # And the corp's trace value
+         setGlobalVariable('RunnerTraceValue','None') # And the runner's trace value
+         card.highlight = None
+   else:
+      if ds == 'corp':
+         if not silent: notify("{} starts a trace with a base strength of 0 reinforced by {}{}.".format(me,TraceValue,extraText))
+         setGlobalVariable('CorpTraceValue',str(TraceValue))
+         OpponentTrace = getSpecial('Tracing',findOpponent())
+         OpponentTrace.highlight = EmergencyColor
+         autoscriptOtherPlayers('InitiatedTrace', card)
+      else:
+         if not silent: notify("{} reinforces their {} by {} for a total of {}{}.".format(me,uniLink(),TraceValue, TraceValue + me.counters['Base Link'].value,extraText))
+         CorpTraceValue = num(getGlobalVariable('CorpTraceValue'))
+         currentTraceEffectTuple = eval(getGlobalVariable('CurrentTraceEffect'))
+         debugNotify("currentTraceEffectTuple = {}".format(currentTraceEffectTuple), 2)
+         if CorpTraceValue > TraceValue + me.counters['Base Link'].value:
+            notify("-- {} has been traced".format(identName))
+            playTraceLostSound()
+            autoscriptOtherPlayers('UnavoidedTrace', card)
+            try:
+               if currentTraceEffectTuple[1] != 'None':
+                  debugNotify("Found currentTraceEffectTuple")
+                  executePostEffects(Card(currentTraceEffectTuple[0]),currentTraceEffectTuple[1], count = CorpTraceValue - TraceValue - me.counters['Base Link'].value) # We sent this function the card which triggered the trace, and the effect which was triggered.
+            except: 
+               debugNotify("currentTraceEffectTuple == None")
+               pass # If it's an exception it means our tuple does not exist, so there's no current trace effects. Manual use of the trace card?
+         else:
+            notify("-- {} has eluded the trace".format(identName))
+            playTraceAvoidedSound()
+            autoscriptOtherPlayers('EludedTrace', card)
+            try:
+               if currentTraceEffectTuple[2] != 'None':
+                  executePostEffects(Card(currentTraceEffectTuple[0]),currentTraceEffectTuple[2]) # We sent this function the card which triggered the trace, and the effect which was triggered.
+            except: pass # If it's an exception it means our tuple does not exist, so there's no current trace effects. Manual use of the trace card?
+         setGlobalVariable('CurrentTraceEffect','None') # Once we're done with the current effects of the trace, we clear the CurrentTraceEffect global variable
+         setGlobalVariable('CorpTraceValue','None') # And the corp's trace value
+         card.highlight = None
    return TraceValue
 
 #def revealTraceValue (card, x=0,y=0): # Obsolete in ANR
@@ -2094,7 +2131,7 @@ def exileCard(card, silent = False):
       if card.markers[mdict['Scored']]:
          if card.Type == 'Agenda': APloss = num(card.Stat)
          else: APloss = card.markers[mdict['Scored']] # If we're trashing a card that's not an agenda but nevertheless counts as one, the amount of scored counters are the AP it provides.
-         me.counters['Agenda Points'].value -= APloss # Trashing Agendas for any reason, now takes they value away as well.
+         if card.highlight != DummyColor: me.counters['Agenda Points'].value -= APloss # Trashing Agendas for any reason, now takes they value away as well.
          notify("--> {} loses {} Agenda Points".format(me, APloss))
       if card.markers[mdict['ScorePenalty']]: # A card with Score Penalty counters was giving us minus agenda points. By exiling it, we recover those points.
          if card.Type == 'Agenda': APgain = num(card.Stat)

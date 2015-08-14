@@ -414,6 +414,25 @@ def UseCustomAbility(Autoscript, announceText, card, targetCards = None, notific
          else:
             changeCardGroup(opCard[1][0],me.piles['R&D/Stack'],True)
             announceString = "{} put {} on the bottom of their shuffled R&D".format(announceText,opCard[1][0].Name)
+   if fetchProperty(card, 'name') == "24/7 News Cycle":
+      scoredAgendas = [c for c in table if c.Type == 'Agenda' and c.markers[mdict['Scored']] and c.controller == me]
+      if not len(scoredAgendas): 
+         whisper("You need a scored agenda to use with {}".format(card))
+         return ''
+      elif len(scoredAgendas) == 1: chosenAgenda = scoredAgendas[0]
+      else: 
+         choice = SingleChoice('Choose one of your agendas with a "when scored" ability to resolve', makeChoiceListfromCardList(scoredAgendas))
+         if choice == None: return ''
+         chosenAgenda = scoredAgendas[choice]
+      executePlayScripts(chosenAgenda,'SCORE')
+      announceString = "{} resolve the ability of {}".format(announceText,chosenAgenda)
+   if fetchProperty(card, 'name') == "Ad Blitz":
+      for iter in range(n): # n should be the number provided by the player
+         if SingleChoice('Install {} advertisement from Archives or HQ? ({}/{})'.format(numOrder(iter),iter+1,n),['Archives','HQ']) == 0:
+            RetrieveX('Retrieve1Card-grabAdvertisement-fromArchives-toTable-rezPay', announceText, card)
+         else: 
+            ModifyStatus('InstallTarget-rezPay', announceText, card,findTarget('DemiAutoTargeted-atAdvertisement-choose1-fromHand'))
+      announceString = "{} install and rez {} advertisements".format(announceText,n)
    return announceString
  
 #------------------------------------------------------------------------------
@@ -1547,6 +1566,20 @@ def CustomScript(card, action = 'PLAY', origin_card = None, original_action = No
       if card.alternate == '': card.switchTo('Flipped')
       else: card.switchTo()
       notify("{} to flip {}".format(actionCost,card))
+   elif fetchProperty(card, 'name') == 'Media Blitz' and action == 'PLAY':
+      scoredAgendas = findTarget('DemiAutoTargeted-atAgenda-targetOpponents-isScored-choose1')
+      if not len(scoredAgendas): 
+         notify(":::ERROR::: The runner needs to have a scored agenda to use with {}".format(card))
+         return 'ABORT'
+      else: chosenAgenda = scoredAgendas[0]
+      dummyCard = table.create(chosenAgenda.model, 0, 00, 1) # This will create a fake card of the agenda we selected
+      dummyCard.highlight = DummyColor
+      dummyCard.markers[mdict['Scored']] += 1
+      hostMe(dummyCard,card)
+      orgAttachments(card)
+      notify("{} selects to copy the text of {}".format(me,chosenAgenda))
+   elif fetchProperty(card, 'name') == 'The All-Seeing I' and action == 'PLAY':
+      remoteCall(fetchRunnerPL(),'AllSeeingI',[card])
    elif action == 'USE': useCard(card)
       
             
@@ -2055,4 +2088,13 @@ def NewsTeam(card):
       TokensX('Put1ScorePenalty-isSilent', '', card)
       notify("{} opts to score News Team for -1 Agenda Point".format(me))
       
+def AllSeeingI(card):
+   if me.counters['Bad Publicity'].value > 0 and confirm("Do you want to remove 1 bad publicity to prevent the All Seeing I?"):
+      me.counters['Bad Publicity'].value -= 1
+      notify("{} chooses to remove 1 bad publicity".format(me))
+   else:
+      for c in table:
+         if c.Type == 'Resource': intTrashCard(c, c.Stat, "free", True)
+      notify("The All Seeing I has trashed all of {}'s resources".format(me))         
+         
          

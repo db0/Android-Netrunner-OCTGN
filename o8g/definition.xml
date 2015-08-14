@@ -3,7 +3,7 @@
       xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
       name="Android-Netrunner" 
       id="0f38e453-26df-4c04-9d67-6d43de939c77" 
-      version="3.21.2.3"
+      version="3.21.2.4"
       octgnVersion="3.1.127.0" 
       markersize="20"
       tags="asymmetric cyberpunk LCG bluff duel"
@@ -137,6 +137,7 @@
      <globalvariable name="SuccessfulRun" value="False" /> 
      <globalvariable name="CurrentTraceEffect" value="None" />
      <globalvariable name="CorpTraceValue" value="None" />
+     <globalvariable name="RunnerTraceValue" value="None" />
      <globalvariable name="Host Cards" value="{}" />
      <globalvariable name="Max Clicks" value="{}" />
      <globalvariable name="League" value="" />

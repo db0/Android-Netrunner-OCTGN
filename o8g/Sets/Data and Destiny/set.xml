@@ -239,7 +239,7 @@
 		<property name="Stat" value="4" />	
 		<property name="Rules" value="If a current is active, News Hound gains &quot;[Subroutine] End the run.&quot; after all its other subroutines.&#xD;&#xA;[Subroutine] Trace3 - If successful, give the Runner 1 tag." />
 		<property name="Flavor" value="&quot;Most reporting these days can be done by AI. We just need the talent for the name recognition.&quot;" />
-		<property name="Instructions" value="" />
+		<property name="Instructions" value="[Subroutine] Trace3 - If successful, give the Runner 1 tag.||[Subroutine] End The Run (Use only if a current is active!)" />
 		<property name="Faction" value="NBN" />
 		<property name="Influence" value="2" />
 		<property name="Side" value="corp" />
@@ -303,7 +303,7 @@
 		<property name="Stat" value="3" />	
 		<property name="Rules" value="When the Runner encounters Turnpike, he or she loses 1[Credits].&#xD;&#xA;[Subroutine] Trace5 - If successful, give the Runner 1 tag." />
 		<property name="Flavor" value="&quot;Stay out of the fast lanes! If speed&apos;s your only concern, you&apos;re already tagged and halfway to fragged.&quot; -g00ru" />
-		<property name="Instructions" value="" />
+		<property name="Instructions" value="Force the Runner to lose 1 Credit||[Subroutine] Trace5 - If successful, give the Runner 1 tag." />
 		<property name="Faction" value="NBN" />
 		<property name="Influence" value="2" />
 		<property name="Side" value="corp" />
@@ -463,7 +463,7 @@
 		<property name="Stat" value="5" />	
 		<property name="Rules" value="[Subroutine] Trace5 - If successful, do 3 net damage.&#xD;&#xA;[Subroutine] Trace4 - If successful, trash 1 program." />
 		<property name="Flavor" value="Bounce rate is a well-understood measure of ice strength. But it is not the only measure." />
-		<property name="Instructions" value="" />
+		<property name="Instructions" value="[Subroutine] Trace5 - If successful, do 3 net damage.||[Subroutine] Trace4 - If successful, trash 1 program." />
 		<property name="Faction" value="Neutral" />
 		<property name="Influence" value="0" />
 		<property name="Side" value="corp" />
