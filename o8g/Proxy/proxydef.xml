@@ -1059,6 +1059,66 @@
             </link>
          </textblocks>
       </template>
+      <template src="Proxy/Events/Event_Neutral.jpg">
+         <matches>
+            <match name="Faction" value="Apex" />
+            <match name="Type" value="Event" />
+         </matches>
+         <textblocks>
+            <link block="event_name" separator=" ">
+               <property name="Name"  />
+            </link>
+            <link block="event_cost" separator=" ">
+               <property name="Cost"  />
+            </link>
+            <link block="event_keywords" separator=" ">
+               <property name="Keywords"  />
+            </link>
+            <link block="event_rules" separator=" ">
+               <property name="Rules"  />
+            </link>
+         </textblocks>
+      </template>
+      <template src="Proxy/Events/Event_Neutral.jpg">
+         <matches>
+            <match name="Faction" value="Adam" />
+            <match name="Type" value="Event" />
+         </matches>
+         <textblocks>
+            <link block="event_name" separator=" ">
+               <property name="Name"  />
+            </link>
+            <link block="event_cost" separator=" ">
+               <property name="Cost"  />
+            </link>
+            <link block="event_keywords" separator=" ">
+               <property name="Keywords"  />
+            </link>
+            <link block="event_rules" separator=" ">
+               <property name="Rules"  />
+            </link>
+         </textblocks>
+      </template>
+      <template src="Proxy/Events/Event_Neutral.jpg">
+         <matches>
+            <match name="Faction" value="Sunny Lebeau" />
+            <match name="Type" value="Event" />
+         </matches>
+         <textblocks>
+            <link block="event_name" separator=" ">
+               <property name="Name"  />
+            </link>
+            <link block="event_cost" separator=" ">
+               <property name="Cost"  />
+            </link>
+            <link block="event_keywords" separator=" ">
+               <property name="Keywords"  />
+            </link>
+            <link block="event_rules" separator=" ">
+               <property name="Rules"  />
+            </link>
+         </textblocks>
+      </template>
    <!-- Resource Templates -->
       <template src="Proxy/Resources/Resource_Criminal.jpg">
          <matches>
@@ -1140,6 +1200,66 @@
             </link>
          </textblocks>
       </template>
+      <template src="Proxy/Resources/Resource_Neutral.jpg">
+         <matches>
+            <match name="Faction" value="Apex" />
+            <match name="Type" value="Resource" />
+         </matches>
+         <textblocks>
+            <link block="resource_name" separator=" ">
+               <property name="Name"  />
+            </link>
+            <link block="resource_cost" separator=" ">
+               <property name="Cost"  />
+            </link>
+            <link block="resource_keywords" separator=" ">
+               <property name="Keywords"  />
+            </link>
+            <link block="resource_rules" separator=" ">
+               <property name="Rules"  />
+            </link>
+         </textblocks>
+      </template>
+      <template src="Proxy/Resources/Resource_Neutral.jpg">
+         <matches>
+            <match name="Faction" value="Adam" />
+            <match name="Type" value="Resource" />
+         </matches>
+         <textblocks>
+            <link block="resource_name" separator=" ">
+               <property name="Name"  />
+            </link>
+            <link block="resource_cost" separator=" ">
+               <property name="Cost"  />
+            </link>
+            <link block="resource_keywords" separator=" ">
+               <property name="Keywords"  />
+            </link>
+            <link block="resource_rules" separator=" ">
+               <property name="Rules"  />
+            </link>
+         </textblocks>
+      </template>
+      <template src="Proxy/Resources/Resource_Neutral.jpg">
+         <matches>
+            <match name="Faction" value="Sunny Lebeau" />
+            <match name="Type" value="Resource" />
+         </matches>
+         <textblocks>
+            <link block="resource_name" separator=" ">
+               <property name="Name"  />
+            </link>
+            <link block="resource_cost" separator=" ">
+               <property name="Cost"  />
+            </link>
+            <link block="resource_keywords" separator=" ">
+               <property name="Keywords"  />
+            </link>
+            <link block="resource_rules" separator=" ">
+               <property name="Rules"  />
+            </link>
+         </textblocks>
+      </template>
    <!-- Hardware Templates -->
       <template src="Proxy/Hardware/Hardware_Anarch.jpg">
          <matches>
@@ -1204,6 +1324,66 @@
       <template src="Proxy/Hardware/Hardware_Neutral.jpg">
          <matches>
             <match name="Faction" value="Neutral" />
+            <match name="Type" value="Hardware" />
+         </matches>
+         <textblocks>
+            <link block="hardware_name" separator=" ">
+               <property name="Name"  />
+            </link>
+            <link block="hardware_cost" separator=" ">
+               <property name="Cost"  />
+            </link>
+            <link block="hardware_keywords" separator=" ">
+               <property name="Keywords"  />
+            </link>
+            <link block="hardware_rules" separator=" ">
+               <property name="Rules"  />
+            </link>
+         </textblocks>
+      </template>
+      <template src="Proxy/Hardware/Hardware_Neutral.jpg">
+         <matches>
+            <match name="Faction" value="Apex" />
+            <match name="Type" value="Hardware" />
+         </matches>
+         <textblocks>
+            <link block="hardware_name" separator=" ">
+               <property name="Name"  />
+            </link>
+            <link block="hardware_cost" separator=" ">
+               <property name="Cost"  />
+            </link>
+            <link block="hardware_keywords" separator=" ">
+               <property name="Keywords"  />
+            </link>
+            <link block="hardware_rules" separator=" ">
+               <property name="Rules"  />
+            </link>
+         </textblocks>
+      </template>
+      <template src="Proxy/Hardware/Hardware_Neutral.jpg">
+         <matches>
+            <match name="Faction" value="Adam" />
+            <match name="Type" value="Hardware" />
+         </matches>
+         <textblocks>
+            <link block="hardware_name" separator=" ">
+               <property name="Name"  />
+            </link>
+            <link block="hardware_cost" separator=" ">
+               <property name="Cost"  />
+            </link>
+            <link block="hardware_keywords" separator=" ">
+               <property name="Keywords"  />
+            </link>
+            <link block="hardware_rules" separator=" ">
+               <property name="Rules"  />
+            </link>
+         </textblocks>
+      </template>
+      <template src="Proxy/Hardware/Hardware_Neutral.jpg">
+         <matches>
+            <match name="Faction" value="Sunny Lebeau" />
             <match name="Type" value="Hardware" />
          </matches>
          <textblocks>
@@ -1326,10 +1506,117 @@
             </link>
          </textblocks>
       </template>
+      <template src="Proxy/Programs/Program_Neutral.jpg">
+         <matches>
+            <match name="Faction" value="Apex" />
+            <match name="Type" value="Program" />
+         </matches>
+         <textblocks>
+            <link block="program_name" separator=" ">
+               <property name="Name"  />
+            </link>
+            <link block="program_cost" separator=" ">
+               <property name="Cost"  />
+            </link>
+            <link block="program_MU" separator=" ">
+               <property name="Requirement"  />
+            </link>
+            <link block="program_keywords" separator=" ">
+               <property name="Keywords"  />
+            </link>
+            <link block="program_rules" separator=" ">
+               <property name="Rules"  />
+            </link>
+            <link block="program_strength" separator=" ">
+               <property name="Stat"  />
+            </link>
+         </textblocks>
+      </template>
+      <template src="Proxy/Programs/Program_Neutral.jpg">
+         <matches>
+            <match name="Faction" value="Adam" />
+            <match name="Type" value="Program" />
+         </matches>
+         <textblocks>
+            <link block="program_name" separator=" ">
+               <property name="Name"  />
+            </link>
+            <link block="program_cost" separator=" ">
+               <property name="Cost"  />
+            </link>
+            <link block="program_MU" separator=" ">
+               <property name="Requirement"  />
+            </link>
+            <link block="program_keywords" separator=" ">
+               <property name="Keywords"  />
+            </link>
+            <link block="program_rules" separator=" ">
+               <property name="Rules"  />
+            </link>
+            <link block="program_strength" separator=" ">
+               <property name="Stat"  />
+            </link>
+         </textblocks>
+      </template>
+      <template src="Proxy/Programs/Program_Neutral.jpg">
+         <matches>
+            <match name="Faction" value="Sunny Lebeau" />
+            <match name="Type" value="Program" />
+         </matches>
+         <textblocks>
+            <link block="program_name" separator=" ">
+               <property name="Name"  />
+            </link>
+            <link block="program_cost" separator=" ">
+               <property name="Cost"  />
+            </link>
+            <link block="program_MU" separator=" ">
+               <property name="Requirement"  />
+            </link>
+            <link block="program_keywords" separator=" ">
+               <property name="Keywords"  />
+            </link>
+            <link block="program_rules" separator=" ">
+               <property name="Rules"  />
+            </link>
+            <link block="program_strength" separator=" ">
+               <property name="Stat"  />
+            </link>
+         </textblocks>
+      </template>
    <!-- Runner Identity Templates -->
       <template src="Proxy/Identities/Identity_Anarch.jpg">
          <matches>
             <match name="Faction" value="Anarch" />
+            <match name="Type" value="Identity" />
+         </matches>
+         <textblocks>
+            <link block="runIdent_name" separator=" ">
+               <property name="Name"  />
+            </link>
+            <link block="runIdent_subtitle" separator=" ">
+               <property name="Subtitle"  />
+            </link>
+            <link block="runIdent_link" separator=" ">
+               <property name="Cost"  />
+            </link>
+            <link block="runIdent_keywords" separator=" ">
+               <property name="Keywords"  />
+            </link>
+            <link block="runIdent_rules" separator=" ">
+               <property name="Rules"  />
+            </link>
+            <link block="runIdent_influence" separator=" ">
+               <property name="Stat"  />
+            </link>
+            <link block="runIdent_deck" separator=" ">
+               <property name="Requirement"  />
+            </link>
+         </textblocks>
+      </template>
+      <template src="Proxy/Identities/Identity_Anarch.jpg">
+         <matches>
+            <match name="Faction" value="Apex" />
             <match name="Type" value="Identity" />
          </matches>
          <textblocks>
@@ -1385,9 +1672,67 @@
             </link>
          </textblocks>
       </template>
+      <template src="Proxy/Identities/Identity_Shaper.jpg">
+         <matches>
+            <match name="Faction" value="Adam" />
+            <match name="Type" value="Identity" />
+         </matches>
+         <textblocks>
+            <link block="runIdent_name" separator=" ">
+               <property name="Name"  />
+            </link>
+            <link block="runIdent_subtitle" separator=" ">
+               <property name="Subtitle"  />
+            </link>
+            <link block="runIdent_link" separator=" ">
+               <property name="Cost"  />
+            </link>
+            <link block="runIdent_keywords" separator=" ">
+               <property name="Keywords"  />
+            </link>
+            <link block="runIdent_rules" separator=" ">
+               <property name="Rules"  />
+            </link>
+            <link block="runIdent_influence" separator=" ">
+               <property name="Stat"  />
+            </link>
+            <link block="runIdent_deck" separator=" ">
+               <property name="Requirement"  />
+            </link>
+         </textblocks>
+      </template>
       <template src="Proxy/Identities/Identity_Criminal.jpg">
          <matches>
             <match name="Faction" value="Criminal" />
+            <match name="Type" value="Identity" />
+         </matches>
+         <textblocks>
+            <link block="runIdent_name" separator=" ">
+               <property name="Name"  />
+            </link>
+            <link block="runIdent_subtitle" separator=" ">
+               <property name="Subtitle"  />
+            </link>
+            <link block="runIdent_link" separator=" ">
+               <property name="Cost"  />
+            </link>
+            <link block="runIdent_keywords" separator=" ">
+               <property name="Keywords"  />
+            </link>
+            <link block="runIdent_rules" separator=" ">
+               <property name="Rules"  />
+            </link>
+            <link block="runIdent_influence" separator=" ">
+               <property name="Stat"  />
+            </link>
+            <link block="runIdent_deck" separator=" ">
+               <property name="Requirement"  />
+            </link>
+         </textblocks>
+      </template>
+      <template src="Proxy/Identities/Identity_Criminal.jpg">
+         <matches>
+            <match name="Faction" value="Sunny Lebeau" />
             <match name="Type" value="Identity" />
          </matches>
          <textblocks>

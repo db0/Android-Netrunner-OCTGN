@@ -1681,7 +1681,7 @@ def ModifyStatus(Autoscript, announceText, card, targetCards = None, notificatio
    if targetCards is None: targetCards = []
    targetCardlist = '' # A text field holding which cards are going to get tokens.
    extraText = ''
-   action = re.search(r'\b(Rez|Derez|Expose|Trash|Uninstall|Possess|Exile|Rework|Install|Score|Rehost|SendToBottom|Reserve)(Target|Host|Multi|Myself)[-to]*([A-Z][A-Za-z&_ ]+)?', Autoscript)
+   action = re.search(r'\b(Rez|Derez|Expose|Trash|Uninstall|Possess|Exile|Rework|Install|Score|Rehost|SendToBottom|Reserve|ApexFlip)(Target|Host|Multi|Myself)[-to]*([A-Z][A-Za-z&_ ]+)?', Autoscript)
    if action.group(2) == 'Myself': 
       del targetCards[:] # Empty the list, just in case.
       targetCards.append(card)
@@ -1748,6 +1748,8 @@ def ModifyStatus(Autoscript, announceText, card, targetCards = None, notificatio
             elif trashResult == 'COUNTERED': extraText = " (Countered!)"
       elif action.group(1) == 'SendToBottom' and movetoBottomOfStack(targetCard, silent = True) != 'ABORT': pass
       elif action.group(1) == 'Exile' and exileCard(targetCard, silent = True) != 'ABORT': pass
+      elif action.group(1) == 'ApexFlip':
+         targetCard.isFaceUp = False
       elif action.group(1) == 'Rework': # Rework puts a card on top of R&D (usually shuffling afterwards)
          changeCardGroup(targetCard,targetCard.owner.piles['R&D/Stack'])
          #targetCard.moveTo(targetCard.controller.piles['R&D/Stack'])
@@ -2243,7 +2245,7 @@ def checkSpecialRestrictions(Autoscript,card):
    if re.search(r'isICE',Autoscript) and card.orientation != Rot90: 
       debugNotify("Rejecting because it isn't an ICE")
       validCard = False # We made a special check for ICE, because some cards must be able target face-down ICE without being able to read its properties.
-   if re.search(r'isRezzed',Autoscript) and not card.isFaceUp: 
+   if re.search(r'isRezzed',Autoscript) and (card.markers[mdict['Scored']] or not card.isFaceUp): # We exclude scored cards as they're not considered rezzed/installed anymore.
       debugNotify("Rejecting because it's not unrezzed")
       validCard = False
    if re.search(r'isUnrezzed',Autoscript) and card.isFaceUp: 

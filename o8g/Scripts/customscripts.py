@@ -433,6 +433,10 @@ def UseCustomAbility(Autoscript, announceText, card, targetCards = None, notific
          else: 
             ModifyStatus('InstallTarget-rezPay', announceText, card,findTarget('DemiAutoTargeted-atAdvertisement-choose1-fromHand'))
       announceString = "{} install and rez {} advertisements".format(announceText,n)
+   if fetchProperty(card, 'name') == "Hunting Grounds":
+      for c in deck.top(3):
+         placeCard(c, action = 'INSTALL', type = 'Apex')
+      announceString = "{} increase their apetite...".format(announceText)
    return announceString
  
 #------------------------------------------------------------------------------
@@ -1572,7 +1576,7 @@ def CustomScript(card, action = 'PLAY', origin_card = None, original_action = No
          notify(":::ERROR::: The runner needs to have a scored agenda to use with {}".format(card))
          return 'ABORT'
       else: chosenAgenda = scoredAgendas[0]
-      dummyCard = table.create(chosenAgenda.model, 0, 00, 1) # This will create a fake card of the agenda we selected
+      dummyCard = table.create(chosenAgenda.model, 0,0,0, 1) # This will create a fake card of the agenda we selected
       dummyCard.highlight = DummyColor
       dummyCard.markers[mdict['Scored']] += 1
       hostMe(dummyCard,card)
@@ -1580,6 +1584,11 @@ def CustomScript(card, action = 'PLAY', origin_card = None, original_action = No
       notify("{} selects to copy the text of {}".format(me,chosenAgenda))
    elif fetchProperty(card, 'name') == 'The All-Seeing I' and action == 'PLAY':
       remoteCall(fetchRunnerPL(),'AllSeeingI',[card])
+   elif fetchProperty(card, 'name') == 'Apex' and action == 'USE':
+      installTarget = findTarget('DemiAutoTargeted-fromHand-choose1')
+      if len(installTarget): 
+         placeCard(installTarget[0], action = 'INSTALL', type = 'Apex')
+         notify("{}'s hunger grows...".format(card))
    elif action == 'USE': useCard(card)
       
             
@@ -2094,7 +2103,7 @@ def AllSeeingI(card):
       notify("{} chooses to remove 1 bad publicity".format(me))
    else:
       for c in table:
-         if c.Type == 'Resource': intTrashCard(c, c.Stat, "free", True)
+         if c.Type == 'Resource' and c.isFaceUp: intTrashCard(c, c.Stat, "free", True)
       notify("The All Seeing I has trashed all of {}'s resources".format(me))         
          
          

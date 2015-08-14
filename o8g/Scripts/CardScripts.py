@@ -6371,13 +6371,13 @@ bc0f047c-01b1-427f-a439-d451eda09029
 -----
 
 +++++
-
+A0B0G0T0:CustomScript
 .....
 Apocalypse
 -----
 bc0f047c-01b1-427f-a439-d451eda09030
 -----
-
+onPlay:TrashMulti-AutoTargeted-atICE_or_Upgrade_or_Asset_or_Agenda-isRezzed$$ApexFlipMulti-AutoTargeted-atProgram_or_Resource_or_Hardware
 +++++
 
 .....
@@ -6385,17 +6385,17 @@ Prey
 -----
 bc0f047c-01b1-427f-a439-d451eda09031
 -----
-
+onPlay:RunGeneric
 +++++
-
+A0B0G0T0:TrashMulti-Targeted-targetMine$$TrashTarget-Targeted-atICE-isRezzed
 .....
 Heartbeat
 -----
 bc0f047c-01b1-427f-a439-d451eda09032
 -----
-
+onDamage:TrashTarget-DemiAutoTargeted-targetMine-isCost$$Put1protectionAllDMG
 +++++
-
+A0B0G0T0:TrashTarget-DemiAutoTargeted-targetMine-isCost$$Put1protectionAllDMG
 .....
 Endless Hunger
 -----
@@ -6403,13 +6403,13 @@ bc0f047c-01b1-427f-a439-d451eda09033
 -----
 
 +++++
-
+A0B0G0T0:TrashTarget-DemiAutoTargeted-targetMine-isCost$$SimplyAnnounce{break one End The Run subroutine}
 .....
 Harbinger
 -----
 bc0f047c-01b1-427f-a439-d451eda09034
 -----
-
+onTrash:ApexFlipMyself-preventTrash-onlyPreventWhileActive
 +++++
 
 .....
@@ -6419,7 +6419,7 @@ bc0f047c-01b1-427f-a439-d451eda09035
 -----
 
 +++++
-
+A0B0G0T0:SimplyAnnounce{prevent one When Encountered ability}-onlyOnce||A0B0G0T1:UseCustomAbility
 .....
 Wasteland
 -----
@@ -6427,7 +6427,7 @@ bc0f047c-01b1-427f-a439-d451eda09036
 -----
 
 +++++
-
+whileInPlay:Gain1Credits-foreachCardTrashed-byMe-onlyOnce
 .....
 Adam
 -----

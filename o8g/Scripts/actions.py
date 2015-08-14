@@ -291,6 +291,13 @@ def intJackin(group = table, x = 0, y = 0, manual = False):
       BL = num(Identity.Cost)
       me.counters['Base Link'].value = BL
       notify("{} is representing the Runner {}. They start with {} {}".format(me,Identity,BL,uniLink()))
+      if card.Name == 'Adam': #Adam needs his directives
+         dir1 = table.create("bc0f047c-01b1-427f-a439-d451eda09041", 0 , 0, True)
+         dir2 = table.create("bc0f047c-01b1-427f-a439-d451eda09043", 0 , 0, True)
+         dir3 = table.create("bc0f047c-01b1-427f-a439-d451eda09044", 0 , 0, True)
+         placeCard(dir1,'INSTALL')
+         placeCard(dir2,'INSTALL')
+         placeCard(dir3,'INSTALL')
    debugNotify("Creating Starting Cards", 3)
    createStartingCards()
    debugNotify("Shuffling Deck", 3)
@@ -2291,6 +2298,9 @@ def intPlay(card, cost = 'not free', scripted = False, preReduction = 0, retainP
    extraText = '' # We set this here, because the if clause that may modify this variable will not be reached in all cases. So we need to set it to null here to avoid a python error later.
    mute()
    chooseSide() # Just in case...
+   if identName == 'Apex' and card.Type == 'Resource' and not re.search(r'Virtual', getKeywords(card)):
+      whisper(":::ERROR::: I do not know how I could consume a {}".format(card))
+      return
    if not scripted: whisper("+++ Processing. Please Hold...")
    storeProperties(card)
    recalcMU()

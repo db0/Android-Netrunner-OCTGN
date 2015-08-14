@@ -538,6 +538,7 @@ def sendToTrash(card, pile = None): # A function which takes care of sending a c
    clearAttachLinks(card)
    if chkModulator(card, 'preventTrash', 'onTrash'): # IF the card has the preventTrash modulator, it's not supposed to be trashed.
       if chkModulator(card, 'ifAccessed', 'onTrash') and ds != 'runner': changeCardGroup(card,pile) # Unless it only has that modulator active during runner access. Then when the corp trashes it, it should trash normally.
+      if chkModulator(card, 'onlyPreventWhileActive', 'onTrash') and card.isFaceUp: changeCardGroup(card,pile) # Unless it only has onlyPreventWhileActive modulator active and the card is not rezzed on the table.
    else: changeCardGroup(card,pile)
    debugNotify("<<< sendToTrash()", 3) #Debug   
    
@@ -633,7 +634,7 @@ def clearCurrents(type = None,card = None):
    debugNotify(">>> clearCurrents(){}".format(extraASDebug())) #Debug
    mute()
    for c in table:
-      if re.search('Current',getKeywords(c)):
+      if re.search('Current',getKeywords(c)) and c.isFaceUp:
          if card and card == c: continue # if a card variable has been passed, it's a newly placed current, which we don't want to trash.
          if not type: 
             intTrashCard(c, c.Stat, "free")
@@ -658,7 +659,7 @@ def calcAgendaStealCost(card):
    for c in table:
       if c.name == 'Utopia Fragment' and c.isFaceUp and card.markers[mdict['Advancement']] and card.markers[mdict['Scored']]: # If there's a scored Utopia Fragment, then stealing costs a bit more.
          extraCreds += 2 * card.markers[mdict['Advancement']]
-      if c.name == 'Predictive Algorithm': # If there's an active predictive Algorithm then stealing costs are raised.
+      if c.name == 'Predictive Algorithm' and c.isFaceUp: # If there's an active predictive Algorithm then stealing costs are raised.
          extraCreds += 2
    return extraCreds
 
@@ -811,7 +812,10 @@ def placeCard(card, action = 'INSTALL', hostCard = None, type = None, retainPos 
             if ds == 'corp': type = 'scoredAgenda'
             else: type = 'liberatedAgenda'
          if action == 'INSTALL' and re.search(r'Console',card.Keywords): type = 'Console'
-      if action == 'INSTALL' and type in CorporationCardTypes and not re.search(r'Public',card.Keywords): CfaceDown = True
+      if action == 'INSTALL' and type == 'Apex': 
+         CfaceDown = True
+         type = ['Hardware','Resource','Program'][rnd(0,2)] # Apex installs its face down cards randomly to avoid giving out info.
+      elif action == 'INSTALL' and type in CorporationCardTypes and not re.search(r'Public',card.Keywords): CfaceDown = True
       else: CfaceDown = False
       debugNotify("Setting installedCount. Type is: {}, CfaceDown: {}".format(type, str(CfaceDown)), 3) #Debug
       if installedCount.get(type,None) == None: installedCount[type] = 0
