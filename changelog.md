@@ -1,6 +1,16 @@
 Changelog - Android:Netrunner LCG OCTGN Game Definition
 ===============================================
 
+### 3.22.0.x
+
+* New game definition for **Old HolyWood**, **Universe of Tomorrow** and **Data and Destiny!**. As always, almost every card scripted!
+
+Given the amount of cards in this set, [please check here](https://docs.google.com/spreadsheets/d/1opShzG9mUKnI_gkVyYAvrMHdG340V1LL6pMMqmriI3k/edit?usp=sharing) for how well each card functions. Cards not listed are fully automated.
+
+Also did an update on how Maximum Hand Size is calcated, and now it works like MU, with it always auto-updating. Please let me know if you notice any bugs.
+
+PS: Lacking templates for the mini factions, so all their cards are proxies as neutrals, except their IDs, which use factions. If you're any good, I'd appreciate getting some templates for those.
+
 ### 3.21.2.x
 
 * Muertos Gang Member won't trigger an uninstall when discarded via Damage
