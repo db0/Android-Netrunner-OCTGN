@@ -5825,7 +5825,7 @@ Trope
 -----
 bc0f047c-01b1-427f-a439-d451eda08081
 -----
-atTurnStart:Put1Power
+atTurnStart:Put1Power-duringMyTurn
 +++++
 A1B0G0T0:TrashMulti-AutoTargeted-atEvent_and_nonCurrent-hasntMarker{Scored}$$Retrieve1Card-fromHeap-toDeck-perMarker{Power}$$ShuffleStack$$ExileMyself
 .....
@@ -6370,8 +6370,8 @@ Apex
 bc0f047c-01b1-427f-a439-d451eda09029
 -----
 
-+++++
 A0B0G0T0:CustomScript
++++++
 .....
 Apocalypse
 -----
