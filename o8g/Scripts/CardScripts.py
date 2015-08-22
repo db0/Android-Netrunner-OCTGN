@@ -6057,7 +6057,7 @@ Team Sponsorship
 -----
 bc0f047c-01b1-427f-a439-d451eda08110
 -----
-whileInPlay:InstallTarget-DemiAutoTargeted-atnonOperation-fromHand-choose1-isOptional-foreachAgendaScored
+whileInPlay:CustomScript-isOptional-foreachAgendaScored
 +++++
 
 .....

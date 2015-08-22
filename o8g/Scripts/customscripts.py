@@ -1597,6 +1597,11 @@ def CustomScript(card, action = 'PLAY', origin_card = None, original_action = No
          me.Credits =+ num(trashC.Cost)
          notify(":> {}'s {} has provided them with {} credits".format(me,card,trashC.Cost))
       else: notify(":> {} tried to get a windfall but found only gas".format(me))
+   elif fetchProperty(card, 'name') == 'Team Sponsorship' and action == 'USE':
+      choice = SingleChoice("You have a Team Sponsorship!\n\nDo you want to install from Archives or HQ",['HQ','Archives'])
+      if choice == None: return 'ABORT'
+      elif choice == 0: ModifyStatus('InstallTarget','Team Sponsortship:',card,findTarget('DemiAutoTargeted-atnonOperation-fromHand-choose1'))
+      else: RetrieveX('Retrieve1Cards-grabnonOperation-fromArchives-toTable', 'Team Sponsortship:', card)
    elif action == 'USE': useCard(card)
       
             
@@ -1656,6 +1661,7 @@ def markerEffects(Time = 'Start'):
             ModifyStatus('TrashMyself', 'London Library:', card)
          if re.search(r'Feelgood',marker[0]) and Time == 'End':
             TokensX('Remove999Feelgood-isSilent', "Dr. Feelgood:", card)
+
 
 def ASVarEffects(Time = 'Start'):
    mute()
