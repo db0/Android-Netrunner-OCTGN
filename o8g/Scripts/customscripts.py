@@ -1594,7 +1594,7 @@ def CustomScript(card, action = 'PLAY', origin_card = None, original_action = No
       trashC = deck.top()
       intTrashCard(trashC, fetchProperty(trashC,'Stat'), "free", silent = True)
       if trashC.Type != 'Event': 
-         me.Credits =+ num(trashC.Cost)
+         me.Credits += num(trashC.Cost)
          notify(":> {}'s {} has provided them with {} credits".format(me,card,trashC.Cost))
       else: notify(":> {} tried to get a windfall but found only gas".format(me))
    elif fetchProperty(card, 'name') == 'Team Sponsorship' and action == 'USE':
