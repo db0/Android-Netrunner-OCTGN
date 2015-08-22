@@ -5841,7 +5841,7 @@ Drug Dealer
 -----
 bc0f047c-01b1-427f-a439-d451eda08083
 -----
-atTurnStart:Lose1Credits-duringMyTurn||atTurnStart:Draw1Cards-duringOpponentTurn
+atTurnStart:Lose1Credits-duringMyTurn||atTurnStart:CustomScript-duringOpponentTurn
 +++++
 
 .....

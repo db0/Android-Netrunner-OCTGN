@@ -1615,6 +1615,8 @@ def CustomScript(card, action = 'PLAY', origin_card = None, original_action = No
       if choice == None: return 'ABORT'
       elif choice == 0: ModifyStatus('InstallTarget','Team Sponsortship:',card,findTarget('DemiAutoTargeted-atnonOperation-fromHand-choose1'))
       else: RetrieveX('Retrieve1Cards-grabnonOperation-fromArchives-toTable', 'Team Sponsortship:', card)
+   elif fetchProperty(card, 'name') == 'Drug Dealer' and action == 'Start': # Have to use a custom script because due to the remote calls, 2/3 of this card will try to draw the same card.
+      remoteCall(fetchRunnerPL(),'DrugDealer',[card]) # So we need to remote script the whole card draw to make sure the runner does the draws serially, after each has finished executing.
    elif action == 'USE': useCard(card)
       
             
@@ -2138,4 +2140,6 @@ def AllSeeingI(card):
          if c.Type == 'Resource' and c.isFaceUp: intTrashCard(c, c.Stat, "free", True)
       notify("The All Seeing I has trashed all of {}'s resources".format(me))         
          
-         
+def DrugDealer(card):
+   drawMany(me.piles['R&D/Stack'], 1, silent = True)
+   notify("--> {} triggers to hook {} up with 1 new card ".format(card,card.owner.name))
