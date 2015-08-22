@@ -3,13 +3,14 @@ Changelog - Android:Netrunner LCG OCTGN Game Definition
 
 ### 3.22.1.x
 
-* Fixed more than 1 Film Critic Not Working
-* Fixed Windfall
+* Fixed more than 1 Film Critic not working
+* Fixed Windfall bugging out
 * Fixed Keegan Lane
-* Fixed Team Sponsorship
-* Fixed Trope
-* Fixed Safety First
+* Fixed Team Sponsorship not seeking in Arc
+* Fixed Trope firing on corp turn
+* Fixed Safety First firing on runner turn
 * Fixed Public Support scoring each turn
+* Fixed successful runs failing when an untriggered checkpoint is on the table
 
 
 
