@@ -2071,12 +2071,15 @@ def chkFilmCritic(card):
       hostCards = eval(getGlobalVariable('Host Cards'))
       openCritic = None
       for c in table:
+         notThisCritic = False # Checks if the current critic has an agenda hosted. If True, we skip this card
          if c.Name == 'Film Critic':
-            openCritic = c
             for attachment in hostCards:
                if hostCards[attachment] == c._id: 
-                  openCritic = None
+                  notThisCritic = True
                   break
+            if not notThisCritic: # If we found a valid critic, we abort
+               openCritic = c
+               break
       if openCritic:
          if confirm("You have accessed {} and you have an available film Critic. Would you like them to host this Agenda".format(card.Name)):
             clearAttachLinks(card)
