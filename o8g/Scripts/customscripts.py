@@ -706,10 +706,10 @@ def CustomScript(card, action = 'PLAY', origin_card = None, original_action = No
          del cardChoices[:]
          del cardTexts[:]
          for c in installableCards:
-            if c.Rules not in cardTexts: # we don't want to provide the player with a the same card as a choice twice.
+            if (c.Rules,c.group) not in cardTexts: # we don't want to provide the player with a the same card as a choice twice.
                debugNotify("Appending card", 4)
                cardChoices.append(c)
-               cardTexts.append(c.Rules)
+               cardTexts.append((c.Rules,c.group))
          choice = SingleChoice("Choose {} card to install in the pet project".format(numOrder(iter)), makeChoiceListfromCardList(cardChoices, includeGroup = True), [], 'Cancel')
          debugNotify("choice = {}".format(choice))
          if choice == None: break
