@@ -349,7 +349,7 @@ def intRun(aCost = 1, Name = 'R&D', silent = False):
    if Name == 'Archives': announceTXT = 'the Archives'
    elif Name == 'Remote': announceTXT = 'a remote server'
    else: announceTXT = Name
-   if not silent: notify ("{} to start a run on {}.".format(ClickCost,announceTXT))
+   if not silent: notify ("{} to start a run on {}. They have {}.".format(ClickCost,announceTXT,uniCredit(me.Credits)))
    #barNotifyAll('#000000',"{} starts a run on {}.".format(fetchRunnerPL(),announceTXT))
    debugNotify("Setting bad publicity", 2)
    if BadPub > 0:

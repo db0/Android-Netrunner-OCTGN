@@ -12,6 +12,7 @@ Changelog - Android:Netrunner LCG OCTGN Game Definition
 * Fixed Public Support scoring each turn
 * Fixed successful runs failing when an untriggered checkpoint is on the table
 * Fixed Off-Campus Apartment (Thanks @jemeador)
+* Dir. Haas. Pet Project will now list cards which are in different piles
 
 
 
