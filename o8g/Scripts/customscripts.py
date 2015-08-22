@@ -1372,25 +1372,38 @@ def CustomScript(card, action = 'PLAY', origin_card = None, original_action = No
             TokensX('Put4Advancement','',card,targetCards)
             notify("{} reveals {} as their Jinteki Biotech department and uses it to advance {} 4 times".format(me,card,targetCards[0]))               
    elif fetchProperty(card, 'name') == "Off-Campus Apartment" and action == 'USE':
-      if useClick() == 'ABORT': return 'ABORT'
       hostCards = eval(getGlobalVariable('Host Cards'))
       handConnections = [c for c in me.hand if c.targetedBy and c.targetedBy == me and re.search(r'Connection', c.Keywords)]
       if len(handConnections):
          connection = handConnections[0] # If they targeted more than one connection for some reason, we only host the first one we see.
+         installedFromGrip = True
       else:
          tableConnections = [c for c in table if c.targetedBy and c.targetedBy == me and re.search(r'Connection', c.Keywords) and not hostCards.get(c._id,None) and c.highlight != RevealedColor and c.highlight != InactiveColor and c.highlight != DummyColor]
          if len(tableConnections):
             connection = tableConnections[0] # If they targeted more than one connection for some reason, we only host the first one we see.
+            installedFromGrip = False
          else:
             connection = None
       if not connection: notify("Please target an unhosted Connection in your Grip or the table before using this action")
       else:
+         payTXT = ''
+         if installedFromGrip:
+            if useClick() == 'ABORT': return 'ABORT'
+            cardCost = num(fetchProperty(connection, 'Cost'))
+            reduction = reduceCost(connection, 'INSTALL', cardCost, dryRun = True)
+            rc = payCost(cardCost - reduction, "not free")
+            if rc == 'ABORT': return 'ABORT' # If the cost couldn't be paid, we don't proceed.
+            reduceCost(connection, 'INSTALL', cardCost) # If the cost could be paid, we finally take the credits out from cost reducing cards.
+            if reduction: reduceTXT = ' (reduced by {})'.format(reduction)
+            else: reduceTXT = ''
+            payTXT = ' paying {}{}'.format(uniCredit(cardCost), reduceTXT)
          hostMe(connection,card)
-         executePlayScripts(connection,'INSTALL')
-         autoscriptOtherPlayers('CardInstall',connection)
+         if installedFromGrip:
+            executePlayScripts(connection,'INSTALL')
+            autoscriptOtherPlayers('CardInstall',connection)
          if not connection.highlight: connection.highlight = NewCardColor
          drawMany(deck, 1,silent = True)
-         notify(":> {} uses {} to host {} and draw 1 card".format(me,card,connection))
+         notify(":> {} uses {} to host {}{}{} and draw 1 card".format(me,card,connection, payTXT))
    elif fetchProperty(card, 'name') == "Turntable" and action == 'USE':
       myAgenda = findTarget('DemiAutoTargeted-atAgenda-targetMine-isScored-isMutedTarget-choose1')
       opAgenda = findTarget('DemiAutoTargeted-atAgenda-targetOpponents-isScored-isMutedTarget-choose1')

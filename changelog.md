@@ -11,6 +11,7 @@ Changelog - Android:Netrunner LCG OCTGN Game Definition
 * Fixed Safety First firing on runner turn
 * Fixed Public Support scoring each turn
 * Fixed successful runs failing when an untriggered checkpoint is on the table
+* Fixed Off-Campus Apartment (Thanks @jemeador)
 
 
 
