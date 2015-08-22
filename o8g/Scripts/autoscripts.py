@@ -1822,6 +1822,7 @@ def ModifyStatus(Autoscript, announceText, card, targetCards = None, notificatio
 def InflictX(Autoscript, announceText, card, targetCards = None, notification = None, n = 0): # Core Command for inflicting Damage to players (even ourselves)
    debugNotify(">>> InflictX(){}".format(extraASDebug(Autoscript))) #Debug
    mute()
+   DMGprevented = 0
    if targetCards is None: targetCards = []
    global failedRequirement
    localDMGwarn = True #A variable to check if we've already warned the player during this damage dealing.
