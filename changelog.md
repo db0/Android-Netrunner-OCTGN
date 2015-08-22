@@ -1,6 +1,18 @@
 Changelog - Android:Netrunner LCG OCTGN Game Definition
 ===============================================
 
+### 3.22.1.x
+
+* Fixed more than 1 Film Critic Not Working
+* Fixed Windfall
+* Fixed Keegan Lane
+* Fixed Team Sponsorship
+* Fixed Trope
+* Fixed Safety First
+* Fixed Public Support scoring each turn
+
+
+
 ### 3.22.0.x
 
 * New game definition for **Old HolyWood**, **Universe of Tomorrow** and **Data and Destiny!**. As always, almost every card scripted!

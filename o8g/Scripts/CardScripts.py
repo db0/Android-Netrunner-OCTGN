@@ -6113,7 +6113,7 @@ Public Support
 -----
 bc0f047c-01b1-427f-a439-d451eda08117
 -----
-onRez:Put3Power||atTurnStart:Remove1Power-duringMyTurn||atTurnStart:Gain1Agenda Points-hasntOrigMarker{Power}-duringMyTurn$$ScoreMyself$$Put1Scored-isSilent
+onRez:Put3Power||atTurnStart:Remove1Power-duringMyTurn||atTurnStart:Gain1Agenda Points-hasntOrigMarker{Power}-ifOrigmarkers{Scored}eq0-duringMyTurn$$ScoreMyself$$Put1Scored-isSilent
 +++++
 
 .....
@@ -6489,7 +6489,7 @@ Safety First
 -----
 bc0f047c-01b1-427f-a439-d451eda09044
 -----
-whileInPlay:Steal2HandSize-forRunner||atTurnEnd:CustomScript-duringOpponentTurn
+whileInPlay:Steal2HandSize-forRunner||atTurnEnd:CustomScript-duringMyTurn
 +++++
 
 .....
