@@ -292,9 +292,9 @@ def intJackin(group = table, x = 0, y = 0, manual = False):
       me.counters['Base Link'].value = BL
       notify("{} is representing the Runner {}. They start with {} {}".format(me,Identity,BL,uniLink()))
       if Identity.Name == 'Adam': #Adam needs his directives
-         dir1 = table.create("bc0f047c-01b1-427f-a439-d451eda09041", 0 , 0, True)
-         dir2 = table.create("bc0f047c-01b1-427f-a439-d451eda09043", 0 , 0, True)
-         dir3 = table.create("bc0f047c-01b1-427f-a439-d451eda09044", 0 , 0, True)
+         dir1 = table.create("bc0f047c-01b1-427f-a439-d451eda09041", 0 , 0, persist = True)
+         dir2 = table.create("bc0f047c-01b1-427f-a439-d451eda09043", 0 , 0, persist = True)
+         dir3 = table.create("bc0f047c-01b1-427f-a439-d451eda09044", 0 , 0, persist = True)
          placeCard(dir1,'INSTALL')
          placeCard(dir2,'INSTALL')
          placeCard(dir3,'INSTALL')

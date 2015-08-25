@@ -1585,11 +1585,12 @@ def CustomScript(card, action = 'PLAY', origin_card = None, original_action = No
       if len(targetCards): 
          count = 0
          del targetCards[5:] # Max 5 cards
+         multiplier = 1
          for c in targetCards:
-            if re.search(r'Directive',getKeywords(c)): count += 2
-            else: count += 1
-         DrawX('Draw{}Cards'.format(count), '', card)
+            if re.search(r'Directive',getKeywords(c)): multiplier = 2
+         DrawX('Draw{}Cards'.format(len(targetCards) * multiplier), '', card)
          notify("{} {} {} to draw {} cards".format(me,uniTrash(),[c.Name for c in targetCards],count))
+         for c in targetCards: intTrashCard(c,c.Stat,'free',silent = True)
    elif fetchProperty(card, 'name') == 'Safety First' and action == 'End':
       if len(me.hand) < currentHandSize(): DrawX('Draw1Cards', '{} uses {}'.format(me,card), card, notification = 'Quick')
    elif fetchProperty(card, 'name') == 'Security Nexus' and action == 'USE':
