@@ -6331,7 +6331,7 @@ bc0f047c-01b1-427f-a439-d451eda09024
 -----
 
 +++++
-A0B0G0T1:Lose1Tag-onOpponent-isCost$$TrashTarget-DemiAutoTargeted-atProgram-choose1
+A0B0G0T1:Lose1Tags-onOpponent-isCost$$TrashTarget-DemiAutoTargeted-atProgram-choose1
 .....
 Rutherford Grid
 -----
