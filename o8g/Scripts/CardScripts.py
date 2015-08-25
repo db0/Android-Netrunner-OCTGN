@@ -6283,7 +6283,7 @@ bc0f047c-01b1-427f-a439-d451eda09018
 -----
 
 +++++
-A0B0G0T0:Lose1Credits-onOpponent||A0B0G0T0:Trace3-isSubroutine-traceEffects<Gain1Tags-onOpponent,None>
+A0B0G0T0:Lose1Credits-onOpponent||A0B0G0T0:Trace5-isSubroutine-traceEffects<Gain1Tags-onOpponent,None>
 .....
 24/7 News Cycle
 -----
