@@ -6241,9 +6241,9 @@ Archangel
 -----
 bc0f047c-01b1-427f-a439-d451eda09013
 -----
-onAccess:Lose3Credits-isCost-isOptional$$Trace6-isSubroutine-traceEffects<UninstallTarget-DemiAutoTargeted-atProgram_or_Resource_or_Hardware-targetOpponents-choose1>
+onAccess:Lose3Credits-isCost-isOptional$$Trace6-isSubroutine-traceEffects<UseCustomAbility,None>
 +++++
-A0B0G0T0:Trace6-isSubroutine-traceEffects<UninstallTarget-DemiAutoTargeted-targetOpponents-choose1,None>
+A0B0G0T0:Trace6-isSubroutine-traceEffects<UseCustomAbility,None>
 .....
 News Hound
 -----

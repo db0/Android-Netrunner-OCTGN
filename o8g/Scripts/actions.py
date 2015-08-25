@@ -2169,7 +2169,8 @@ def uninstall(card, x=0, y=0, destination = 'hand', silent = False):
       if card.isFaceUp and card.highlight != InactiveColor: executePlayScripts(card,'UNINSTALL')
       autoscriptOtherPlayers('CardUninstalled',card)
       clearAttachLinks(card)
-      card.moveTo(group)
+      changeCardGroup(card, group)
+      #card.moveTo(group)
    if not silent: notify("{} uninstalled {}{}.".format(me,card,MUtext))
 
 def useCard(card,x=0,y=0):

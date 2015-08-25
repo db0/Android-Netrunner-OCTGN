@@ -433,6 +433,8 @@ def UseCustomAbility(Autoscript, announceText, card, targetCards = None, notific
          else: 
             ModifyStatus('InstallTarget-rezPay', announceText, card,findTarget('DemiAutoTargeted-atAdvertisement-choose1-fromHand'))
       announceString = "{} install and rez {} advertisements".format(announceText,n)
+   if fetchProperty(card, 'name') == "Archangel":
+      remoteCall(fetchCorpPL(),'Archangel',[card])
    if fetchProperty(card, 'name') == "Hunting Grounds":
       for c in deck.top(3):
          placeCard(c, action = 'INSTALL', type = 'Apex')
@@ -2144,3 +2146,9 @@ def AllSeeingI(card):
 def DrugDealer(card):
    drawMany(me.piles['R&D/Stack'], 1, silent = True)
    notify("--> {} triggers to hook {} up with 1 new card ".format(card,card.owner.name))
+   
+def Archangel(card):
+   mute()
+   targets = findTarget('DemiAutoTargeted-atProgram_or_Resource_or_Hardware-choose1')
+   if len(targets): ModifyStatus('UninstallTarget', '', card, targets)
+   
