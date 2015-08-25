@@ -316,6 +316,7 @@ def checkCardDoubleClicked(card,mouseButton,keysDown): # And event to allow the 
    mute()
    if card.controller != me:
       if card.Name == '15 Minutes': 
+         card.controller.counters['Agenda Points'].value -= 1 
          actionCost = useClick(count = 1)
          if actionCost == 'ABORT': return 'ABORT'  
          changeCardGroup(card,card.owner.piles['R&D/Stack'])

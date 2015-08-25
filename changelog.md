@@ -1,6 +1,12 @@
 Changelog - Android:Netrunner LCG OCTGN Game Definition
 ===============================================
 
+### 3.22.2.x
+
+* Fixed Adam's directives disappearing after trasing
+* Fixed Independent Thinking not trashing cards and giving you 2 cards only for directives.
+* 15 minutes will remove AP from the runner when reshuffled back in R&D
+
 ### 3.22.1.x
 
 * Fixed more than 1 Film Critic not working
