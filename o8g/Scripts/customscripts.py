@@ -1566,7 +1566,7 @@ def CustomScript(card, action = 'PLAY', origin_card = None, original_action = No
          notify(":::ERROR::: The runner needs to have a scored agenda to use with {}".format(card))
          return 'ABORT'
       else: chosenAgenda = scoredAgendas[0]
-      dummyCard = table.create(chosenAgenda.model, 0,0,0, 1) # This will create a fake card of the agenda we selected
+      dummyCard = table.create(chosenAgenda.model, 0,0, persist = True) # This will create a fake card of the agenda we selected
       dummyCard.highlight = DummyColor
       dummyCard.markers[mdict['Scored']] += 1
       hostMe(dummyCard,card)
