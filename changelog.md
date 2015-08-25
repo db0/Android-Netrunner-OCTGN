@@ -7,6 +7,9 @@ Changelog - Android:Netrunner LCG OCTGN Game Definition
 * Fixed Independent Thinking not trashing cards and giving you 2 cards only for directives.
 * 15 minutes will remove AP from the runner when reshuffled back in R&D
 * Fixed Media Blitz
+* Keegan should remove tags now
+* Fixed Archangel 
+* Wasteland should only trigger for runner cards. Unfortunately it cannot trigger for face down events so a manual use has been added as well
 
 ### 3.22.1.x
 

@@ -6425,9 +6425,9 @@ Wasteland
 -----
 bc0f047c-01b1-427f-a439-d451eda09036
 -----
-whileInPlay:Gain1Credits-foreachCardTrashed-byMe-onlyOnce
+whileInPlay:Gain1Credits-foreachCardTrashed-typeProgram_or_Hardware_or_Resource_or_Event-byMe-onlyOnce
 +++++
-
+A0B0G0T0:Gain1Credits-onlyOnce
 .....
 Adam
 -----
