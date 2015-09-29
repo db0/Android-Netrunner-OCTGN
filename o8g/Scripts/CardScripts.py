@@ -6363,7 +6363,7 @@ bc0f047c-01b1-427f-a439-d451eda09028
 -----
 
 +++++
-A0B0G0T0:Trace5-traceEffects<Inflict3NetDamage-onOpponent,None>-isSubroutine||A0B0G0T0:Trace4-traceEffects<TrashTarget-DemiAutoTargeted-atProgramt,None>-isSubroutine
+A0B0G0T0:Trace5-traceEffects<Inflict3NetDamage-onOpponent,None>-isSubroutine||A0B0G0T0:Trace4-traceEffects<TrashTarget-DemiAutoTargeted-atProgram,None>-isSubroutine
 .....
 Apex
 -----
