@@ -6137,7 +6137,7 @@ The Future is Now
 -----
 bc0f047c-01b1-427f-a439-d451eda08120
 -----
-onScore:Retrieve1Cards$$ShuffleR&D
+onScore:Retrieve1Cards-doNotReveal$$ShuffleR&D
 +++++
 
 .....
