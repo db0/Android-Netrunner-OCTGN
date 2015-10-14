@@ -1,6 +1,11 @@
 Changelog - Android:Netrunner LCG OCTGN Game Definition
 ===============================================
 
+### 3.22.3.x
+
+* Always be Running will now remind you to run first click
+* Fixed Archives Interface
+
 ### 3.22.2.x
 
 * Fixed Adam's directives disappearing after trasing
