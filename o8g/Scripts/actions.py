@@ -50,7 +50,7 @@ lastKnownNrClicks = 0 # A Variable keeping track of what the engine thinks our a
 # Clicks indication
 #---------------------------------------------------------------------------
 
-def useClick(group = table, x=0, y=0, count = 1, manual = False):
+def useClick(group = table, x=0, y=0, count = 1, manual = False, type = ''):
    debugNotify(">>> useClick(){}".format(extraASDebug())) #Debug
    global currClicks, lastKnownNrClicks
    mute()
@@ -60,6 +60,12 @@ def useClick(group = table, x=0, y=0, count = 1, manual = False):
       if getGlobalVariable('SuccessfulRun') == 'True': jackOut() # If the runner has done a successful run but forgot to end it, then simply jack them out automatically.
       elif not confirm("You have not yet finished your previous run. Normally you're not allowed to use clicks during runs, are you sure you want to continue?\
                     \n\n(Pressing 'No' will abort this action and you can then Jack-out or finish the run succesfully with [ESC] or [F3] respectively"): return 'ABORT'
+   if ds == 'runner' and not re.search(r'Run',type):
+      for c in table:
+         if c.Name == 'Always Be Running':
+            if c.orientation != Rot90 and c.highlight != InactiveColor  and c.highlight != RevealedColor and not findMarker(c, 'Feelgood'):
+               if not confirm("You have an {} on the table, so you're compelled to run with your first click. Bypass?".format(c.Name)): return 'ABORT'                     
+               else: c.orientation = Rot90
    clicksReduce = findCounterPrevention(me.Clicks, 'Clicks', me)
    if clicksReduce: notify(":::WARNING::: {} had to forfeit their next {} clicks".format(me, clicksReduce))
    me.Clicks -= clicksReduce
@@ -342,9 +348,11 @@ def intRun(aCost = 1, Name = 'R&D', silent = False):
    for c in table:
       if c.name == 'Enhanced Login Protocol' and c.orientation != Rot90 and not silent: # For cards which increase the action cost, we need to check manually before the run. We don't do it when silent since that signifies a scripted run (i.e. card effect)
          aCost += 1
-         c.orientation = Rot90
-   ClickCost = useClick(count = aCost)
+         c.orientation = Rot90         
+   ClickCost = useClick(count = aCost, type = 'Run')
    if ClickCost == 'ABORT': return 'ABORT'
+   for c in table: 
+      if c.name == 'Always Be Running' and c.orientation != Rot90 and not findMarker(c, 'Feelgood'): c.orientation = Rot90 # If the run can go ahead fine, we make sure we disable ABR.
    playRunStartSound()
    if Name == 'Archives': announceTXT = 'the Archives'
    elif Name == 'Remote': announceTXT = 'a remote server'

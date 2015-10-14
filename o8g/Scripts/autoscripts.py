@@ -447,7 +447,7 @@ def useAbility(card, x = 0, y = 0): # The start of autoscript activation.
          # T takes a binary value. A value of 1 means the card needs to be trashed.
          if actionCost: # If there's no match, it means we've already been through the cost part once and now we're going through the '$$' part.
             if actionCost.group(1) != '0': # If we need to use clicks
-               Acost = useClick(count = num(actionCost.group(1)))
+               Acost = useClick(count = num(actionCost.group(1)), type = activeAutoscript)
                if Acost == 'ABORT': return
                else: announceText = Acost
                CardAction = True
