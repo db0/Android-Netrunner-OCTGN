@@ -5091,7 +5091,7 @@ bc0f047c-01b1-427f-a439-d451eda07044
 -----
 
 +++++
-A0B0G0T0:ExileTarget-DemiAutoTargeted-choose1-fromArchives
+A0B0G0T0:ExileTarget-DemiAutoTargeted-choose1-fromArchives-targetOpponents
 .....
 Chop Bot 3000
 -----
