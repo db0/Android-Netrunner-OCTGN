@@ -15,7 +15,7 @@
 		<property name="Stat" value="2" />	
 		<property name="Rules" value="Trash a card from your grip: Break ice subroutine.&#xD;&#xA;Trash a card from your grip: +2 strength." />
 		<property name="Flavor" value="The server was quiet that night. I closed my eyes, the low-hum of the datastream lulling me into a trance. When I opened them, the construct stood before me in the shape of a man, clad in light of many colors. His stature was impressive, and his saccharine voice wormed its way into my very soul." />
-		<property name="Instructions" value="" />
+		<property name="Instructions" value="Trash a card from your grip: Break ice subroutine.||Trash a card from your grip: +2 strength." />
 		<property name="Faction" value="Anarch" />
 		<property name="Influence" value="2" />
 		<property name="Side" value="runner" />
