@@ -269,6 +269,8 @@ def recalcMU(): # Changing how MUs are tracked just for Ekomind...
                   if card.name == 'Ekomind': 
                      baseMU = len(me.hand)
                      #notify("setting MU to {} from {}".format(len(me.hand),card)) #Debug
+                  elif card.name == 'Brain Chip':
+                    baseMU += me.counters['Agenda Points'].value
                else: baseMU = num(setMU.group(1))
    for card in table:
       if card.controller == me and ds == 'runner' and card.highlight != InactiveColor and card.highlight != DummyColor and card.highlight != RevealedColor and card.isFaceUp:
