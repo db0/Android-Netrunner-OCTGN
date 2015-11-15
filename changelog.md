@@ -6,6 +6,13 @@ Changelog - Android:Netrunner LCG OCTGN Game Definition
 * Brain Chip will now give correct MU
 * Cerebral Imaging will now give correct Hand Size
 * Genetics Pavilion will only work while face up
+* Clot shouldn't warn the corp from the peddler
+* Heartbit will now provide its MU
+* Assassin's second traced should work now
+* Charman Hiro not active when scored
+* Corporate Town fixed in multiple ways
+* Film Critic won't activate while in the peddler
+
 
 ### 3.22.3.x
 

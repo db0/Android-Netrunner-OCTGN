@@ -1617,7 +1617,7 @@ def CustomScript(card, action = 'PLAY', origin_card = None, original_action = No
       choice = SingleChoice("You have a Team Sponsorship!\n\nDo you want to install from Archives or HQ",['HQ','Archives'])
       if choice == None: return 'ABORT'
       elif choice == 0: ModifyStatus('InstallTarget','Team Sponsortship:',card,findTarget('DemiAutoTargeted-atnonOperation-fromHand-choose1'))
-      else: RetrieveX('Retrieve1Cards-grabnonOperation-fromArchives-toTable', 'Team Sponsortship:', card)
+      else: RetrieveX('Retrieve1Cards-grabnonOperation-fromArchives-toTable', 'Team Sponsortship:', card, notification = 'Quick')
    elif fetchProperty(card, 'name') == 'Drug Dealer' and action == 'Start': # Have to use a custom script because due to the remote calls, 2/3 of this card will try to draw the same card.
       remoteCall(fetchRunnerPL(),'DrugDealer',[card]) # So we need to remote script the whole card draw to make sure the runner does the draws serially, after each has finished executing.
    elif action == 'USE': useCard(card)
