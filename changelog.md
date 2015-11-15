@@ -12,6 +12,7 @@ Changelog - Android:Netrunner LCG OCTGN Game Definition
 * Charman Hiro not active when scored
 * Corporate Town fixed in multiple ways
 * Film Critic won't activate while in the peddler
+* Independent Thinking will now announce the correct amount of cards drawn.
 
 
 ### 3.22.3.x

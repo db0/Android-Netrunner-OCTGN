@@ -1405,7 +1405,7 @@ def CustomScript(card, action = 'PLAY', origin_card = None, original_action = No
             autoscriptOtherPlayers('CardInstall',connection)
          if not connection.highlight: connection.highlight = NewCardColor
          drawMany(deck, 1,silent = True)
-         notify(":> {} uses {} to host {}{}{} and draw 1 card".format(me,card,connection, payTXT))
+         notify(":> {} uses {} to host {}{} and draw 1 card".format(me,card,connection, payTXT))
    elif fetchProperty(card, 'name') == "Turntable" and action == 'USE':
       myAgenda = findTarget('DemiAutoTargeted-atAgenda-targetMine-isScored-isMutedTarget-choose1')
       opAgenda = findTarget('DemiAutoTargeted-atAgenda-targetOpponents-isScored-isMutedTarget-choose1')
