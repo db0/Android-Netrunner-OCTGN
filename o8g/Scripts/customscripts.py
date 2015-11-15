@@ -1585,13 +1585,12 @@ def CustomScript(card, action = 'PLAY', origin_card = None, original_action = No
    elif fetchProperty(card, 'name') == 'Independent Thinking' and action == 'PLAY':
       targetCards = findTarget('Targeted-atProgram_or_Hardware_or_Resource-targetMine')
       if len(targetCards): 
-         count = 0
          del targetCards[5:] # Max 5 cards
          multiplier = 1
          for c in targetCards:
             if re.search(r'Directive',getKeywords(c)): multiplier = 2
          DrawX('Draw{}Cards'.format(len(targetCards) * multiplier), '', card)
-         notify("{} {} {} to draw {} cards".format(me,uniTrash(),[c.Name for c in targetCards],count))
+         notify("{} {} {} to draw {} cards".format(me,uniTrash(),[c.Name for c in targetCards],len(targetCards) * multiplier))
          for c in targetCards: intTrashCard(c,c.Stat,'free',silent = True)
    elif fetchProperty(card, 'name') == 'Safety First' and action == 'End':
       if len(me.hand) < currentHandSize(): DrawX('Draw1Cards', '{} uses {}'.format(me,card), card, notification = 'Quick')
