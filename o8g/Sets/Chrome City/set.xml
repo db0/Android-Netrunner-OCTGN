@@ -298,7 +298,7 @@
 		<property name="Subtitle" value="" />
 		<property name="Type" value="Asset" />
 		<property name="Keywords" value="" />
-		<property name="Cost" value="0" />
+		<property name="Cost" value="1" />
 		<property name="Requirement" value="" />	
 		<property name="Stat" value="5" />	
 		<property name="Rules" value="As an additional cost to rez Corporate Town, the Corp must forfeit an agenda.&#xD;&#xA;When your turn begins, you may trash 1 resource (cannot be prevented)." />

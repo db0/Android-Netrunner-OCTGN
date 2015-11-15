@@ -5281,7 +5281,7 @@ Genetic Resequencing
 -----
 bc0f047c-01b1-427f-a439-d451eda08013
 -----
-onScore:Put1Agenda-DemiAutoTargeted-atAgenda-isScored-targetMine-choose1
+onScore:Put1Agenda-DemiAutoTargeted-isScored-targetMine-choose1
 +++++
 
 .....
@@ -5649,7 +5649,7 @@ Corporate Town
 -----
 bc0f047c-01b1-427f-a439-d451eda08059
 -----
-onRez:ExileTarget-DemiAutoTargeted-atAgenda-targetMine-isScored-choose1||atTurnStart:TrashTarget-DemiAutoTargeted-atResource-choose1-duringMyTurn-isMutedTarget
+onRez:ExileTarget-DemiAutoTargeted-targetMine-isScored-choose1||atTurnStart:TrashTarget-Targeted-atResource-duringMyTurn-isMutedTarget
 +++++
 
 .....
@@ -5889,7 +5889,7 @@ Enforcer 1.0
 -----
 bc0f047c-01b1-427f-a439-d451eda08089
 -----
-onRez:ExileTarget-DemiAutoTargeted-atAgenda-isScored-choose1
+onRez:ExileTarget-DemiAutoTargeted-isScored-choose1
 +++++
 A0B0G0T0:TrashTarget-DemiAutoTargeted-atProgram-choose1-isSubroutine||A0B0G0T0:Inflict1BrainDamage-onOpponent-isSubroutine||A0B0G0T0:TrashTarget-DemiAutoTargeted-atConsole-choose1-isSubroutine||A0B0G0T0:TrashMulti-AutoTargeted-atResource_and_Virtual-isSubroutine
 .....
