@@ -1322,6 +1322,7 @@ def scrAgenda(card, x = 0, y = 0,silent = False, forced = False):
          else: agendaTxt = 'SCORE'
          extraScoreMSG = '\n'
          for c in table:
+            if not c.isFaceUp or c.highlight == InactiveColor: continue
             if c.Name == 'Clot' and ds == 'corp': extraScoreMSG += '\n:\> Clot detected in play'
             if c.Name == 'Chakana' and ds == 'corp': extraScoreMSG += '\n:\> Chakana detected in play'
          agendaReq = findAgendaRequirement(card)
