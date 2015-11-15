@@ -2090,7 +2090,7 @@ def chkFilmCritic(card):
       openCritic = None
       for c in table:
          notThisCritic = False # Checks if the current critic has an agenda hosted. If True, we skip this card
-         if c.Name == 'Film Critic':
+         if c.Name == 'Film Critic' and c.isFaceUp:
             for attachment in hostCards:
                if hostCards[attachment] == c._id: 
                   notThisCritic = True
