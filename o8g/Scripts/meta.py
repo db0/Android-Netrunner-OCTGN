@@ -308,6 +308,7 @@ def recalcHandSize(): # Changing how MUs are tracked just for Brain Chip...
    for card in table:
       if card.highlight != InactiveColor and card.highlight != DummyColor and card.highlight != RevealedColor and card.isFaceUp:
          if card.Type == 'Agenda' and (card.controller.getGlobalVariable('ds') != 'corp' or not card.markers[mdict['Scored']]): continue # If it's an agenda, it needs to be scored by the corp to be considered active
+         if card.markers[mdict['Scored']] and card.controller.getGlobalVariable('ds') != 'corp': continue # Chairman Hiro shouldn't be active in the runner's score area.
          if findMarker(card, 'Feelgood'): continue
          Autoscripts = CardsAS.get(card.model,'').split('||')
          for autoS in Autoscripts: 
