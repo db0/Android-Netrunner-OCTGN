@@ -13,6 +13,7 @@ Changelog - Android:Netrunner LCG OCTGN Game Definition
 * Corporate Town fixed in multiple ways
 * Film Critic won't activate while in the peddler
 * Independent Thinking will now announce the correct amount of cards drawn.
+* Off Campus Apartment won't give an error instead of announcing its effect.
 
 
 ### 3.22.3.x
