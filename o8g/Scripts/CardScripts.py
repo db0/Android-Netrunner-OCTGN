@@ -6393,7 +6393,7 @@ Heartbeat
 -----
 bc0f047c-01b1-427f-a439-d451eda09032
 -----
-onDamage:TrashTarget-DemiAutoTargeted-targetMine-isCost-choose1$$Put1protectionAllDMG
+whileInPlay:Provide1MU||onDamage:TrashTarget-DemiAutoTargeted-targetMine-isCost-choose1$$Put1protectionAllDMG
 +++++
 A0B0G0T0:TrashTarget-DemiAutoTargeted-targetMine-isCost-choose1$$Put1protectionAllDMG
 .....
