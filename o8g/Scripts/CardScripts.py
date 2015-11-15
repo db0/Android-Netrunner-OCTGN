@@ -5889,7 +5889,7 @@ Enforcer 1.0
 -----
 bc0f047c-01b1-427f-a439-d451eda08089
 -----
-onRez:ExileTarget-DemiAutoTargeted-isScored-choose1
+onRez:ExileTarget-Targeted-isScored
 +++++
 A0B0G0T0:TrashTarget-DemiAutoTargeted-atProgram-choose1-isSubroutine||A0B0G0T0:Inflict1BrainDamage-onOpponent-isSubroutine||A0B0G0T0:TrashTarget-DemiAutoTargeted-atConsole-choose1-isSubroutine||A0B0G0T0:TrashMulti-AutoTargeted-atResource_and_Virtual-isSubroutine
 .....
