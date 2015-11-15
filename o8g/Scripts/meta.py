@@ -834,7 +834,7 @@ def chkDrawPrevention():
    prevention = False
    for card in table:
       if card.Name == 'Lockdown' and card.markers[mdict['Power']]: prevention = True
-      if card.Name == 'Genetics Pavilion' and num(getGlobalVariable('Genetics Pavilion Memory')) >= 2: prevention = True
+      if card.Name == 'Genetics Pavilion' and card.isFaceUp and num(getGlobalVariable('Genetics Pavilion Memory')) >= 2: prevention = True
    return prevention
 #---------------------------------------------------------------------------
 # Card Placement

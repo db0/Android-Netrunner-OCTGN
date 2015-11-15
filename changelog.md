@@ -1,6 +1,12 @@
 Changelog - Android:Netrunner LCG OCTGN Game Definition
 ===============================================
 
+### 3.22.4.x
+
+* Brain Chip will now give correct MU
+* Cerebral Imaging will now give correct Hand Size
+* Genetics Pavilion will only work while face up
+
 ### 3.22.3.x
 
 * Always be Running will now remind you to run first click

@@ -6449,7 +6449,7 @@ Brain Chip
 -----
 bc0f047c-01b1-427f-a439-d451eda09039
 -----
-whileInPlay:ProvideSpecialHandSize-forRunner||whileInPlay:SetTo([0-9]|Special)MU
+whileInPlay:ProvideSpecialHandSize-forRunner||whileInPlay:SetToSpecialMU
 +++++
 
 .....
