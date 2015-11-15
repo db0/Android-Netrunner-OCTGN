@@ -1935,7 +1935,7 @@ Cerebral Imaging: Infinite Frontiers
 -----
 bc0f047c-01b1-427f-a439-d451eda03001
 -----
-whileInPlay:SetToSpecial5HandSize-forRunner
+whileInPlay:SetToSpecialHandSize-forCorp
 +++++
 
 .....
@@ -6449,7 +6449,7 @@ Brain Chip
 -----
 bc0f047c-01b1-427f-a439-d451eda09039
 -----
-whileInPlay:ProvideSpecialHandSize-forRunner
+whileInPlay:ProvideSpecialHandSize-forRunner||whileInPlay:SetTo([0-9]|Special)MU
 +++++
 
 .....
