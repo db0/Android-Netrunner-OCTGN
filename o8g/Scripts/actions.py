@@ -1632,9 +1632,13 @@ def RDaccessX(group = table, x = 0, y = 0,count = None): # A function which look
                extraText = ''
                extraText2 = ''
             action1TXT = 'Pay {}{} to Trash.'.format(num(cStat) - reduction,extraText)
-         options = ["Leave where it is.","Force trash at no cost.\n(Only through card effects)",action1TXT]
+         options = ["Leave where it is.","Force trash at no cost.\n(Only through card effects)",action1TXT].extend(chkRDextraOptions())
       else:
          options = ["Leave where it is.","Force trash at no cost.\n(Only through card effects)"]
+      extraOptions = chkRDextraOptions()
+      existingOptions = len(options)
+      options.extend(extraOptions[0])
+      specialEffectCards = extraOptions[1]
       choice = SingleChoice(title, options, 'button')
       if choice == None: choice = 0
       if choice == 1:
@@ -1642,8 +1646,14 @@ def RDaccessX(group = table, x = 0, y = 0,count = None): # A function which look
          loopChk(RDtop[iter],'Type')
          notify("{} {} {} at no cost".format(me,uniTrash(),RDtop[iter]))
          removedCards += 1
-      elif choice == 2:
-         if cType == 'Agenda':
+      elif choice > 1:
+         if re.search(r'Maya',options[choice]):
+            oncePerTurn(specialEffectCards[choice - existingOptions], act = 'automatic')
+            me.Tags += 1
+            movetoBottomOfStack(RDtop[iter], silent = True)
+            removedCards += 1
+            notify("{} uses {} to send the accessed card to the bottom of the R&D and take a Tag".format(specialEffectCards[choice - existingOptions]))
+         elif cType == 'Agenda':
             if extraCredCost:
                reduceCost(RDtop[iter], 'LIBERATE', extraCredCost)
                rc = payCost(extraCredCost - reduction, "not free")

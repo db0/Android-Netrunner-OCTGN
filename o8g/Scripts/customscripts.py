@@ -439,6 +439,8 @@ def UseCustomAbility(Autoscript, announceText, card, targetCards = None, notific
       for c in deck.top(3):
          placeCard(c, action = 'INSTALL', type = 'Apex')
       announceString = "{} increase their apetite...".format(announceText)
+   if fetchProperty(card, 'name') == "Chatterjee University":  
+      announceString = ModifyStatus('InstallTarget-payCost-reduc{}'.format(card.markers[mdict['Power']]),announceText,card,findTarget('DemiAutoTargeted-atProgram-fromHand-choose1'))
    return announceString
  
 #------------------------------------------------------------------------------

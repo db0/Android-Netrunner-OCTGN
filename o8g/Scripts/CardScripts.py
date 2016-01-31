@@ -6155,7 +6155,7 @@ bc0f047c-01b1-427f-a439-d451eda09002
 -----
 
 +++++
-A0B0G0T0:InstallTarget-DemiAutoTargeted-atCurrent_and_Operation-fromHand-choose1-payCost||A0B0G0T0:Retrieve1Cards-fromArchives-fetchCurrent_and_Operation-toTable-payCost
+A0B0G0T0:InstallTarget-DemiAutoTargeted-atCurrent_and_Operation-fromHand-choose1-payCost||A0B0G0T0:Retrieve1Cards-fromArchives-grabCurrent_and_Operation-toTable-payCost
 .....
 Spark Agency
 -----
@@ -6580,6 +6580,158 @@ bc0f047c-01b1-427f-a439-d451eda09055
 whileInPlay:Put1Credit-foreachCardInstall-typeProgram_or_Hardware
 +++++
 A1B0G0T1:Transfer999Credits
+.....
+Run Amok
+-----
+bc0f047c-01b1-427f-a439-d451eda10001
+-----
+onPlay:RunGeneric
++++++
+A0B0G0T1:TrashTarget-Targeted-atICE
+.....
+Ramujan-reliant 550 BMI
+-----
+bc0f047c-01b1-427f-a439-d451eda10002
+-----
+onDamage:Put1protectionNetBrainDMG-trashCost-excludeDummy-perEveryCard-atRamujan-reliant 550 BMI$$TrashMyself-isSilent
++++++
+A0B0G0T1:CreateDummy-with1protectionNetBrainDMG-perEveryCard-atRamujan-reliant 550 BMI
+.....
+Street Magic
+-----
+bc0f047c-01b1-427f-a439-d451eda10003
+-----
+
++++++
+
+.....
+High-stakes Job
+-----
+bc0f047c-01b1-427f-a439-d451eda10004
+-----
+onPlay:RunGeneric||atSuccessfulRun:Gain12Credits||atJackOut:TrashMyself-isSilent
++++++
+
+.....
+Mongoose
+-----
+bc0f047c-01b1-427f-a439-d451eda10005
+-----
+
++++++
+A0B1G0T0:SimplyAnnounce{break up to 2 sentry subroutines}||A0B2G0T0:Put2PlusOne
+.....
+Jesminder Sareen
+-----
+bc0f047c-01b1-427f-a439-d451eda10006
+-----
+
++++++
+A0B0G0T0:Lose1Tags-onlyOnce
+.....
+Maya
+-----
+bc0f047c-01b1-427f-a439-d451eda10007
+-----
+whileInPlay:Provide2MU
++++++
+
+.....
+Panchatantra
+-----
+bc0f047c-01b1-427f-a439-d451eda10008
+-----
+
++++++
+A0B0G0T2:SimplyAnnounce{Give the encountered ICE a new subtype}
+.....
+Artist Colony
+-----
+bc0f047c-01b1-427f-a439-d451eda10009
+-----
+
++++++
+A0B0G0T0:ExileTarget-Targeted-isScored-isCost$$Retrieve1Cards-grabnonEvent-toTable-payCost
+.....
+Chatterjee University
+-----
+bc0f047c-01b1-427f-a439-d451eda10010
+-----
+
++++++
+A1B0G0T0:Put1Power||A1B0G0T0:UseCustomAbility$$Remove1Power
+.....
+Advanced Concept Hopper
+-----
+bc0f047c-01b1-427f-a439-d451eda10011
+-----
+
++++++
+
+.....
+Vikram 1.0
+-----
+bc0f047c-01b1-427f-a439-d451eda10012
+-----
+
++++++
+
+.....
+Heritage Committee
+-----
+bc0f047c-01b1-427f-a439-d451eda10013
+-----
+
++++++
+
+.....
+Mumbad City Grid
+-----
+bc0f047c-01b1-427f-a439-d451eda10014
+-----
+
++++++
+
+.....
+Kala Ghoda Real TV
+-----
+bc0f047c-01b1-427f-a439-d451eda10015
+-----
+
++++++
+
+.....
+Interrupt 0
+-----
+bc0f047c-01b1-427f-a439-d451eda10016
+-----
+
++++++
+
+.....
+Dedication Ceremony
+-----
+bc0f047c-01b1-427f-a439-d451eda10017
+-----
+
++++++
+
+.....
+Mumba Temple
+-----
+bc0f047c-01b1-427f-a439-d451eda10018
+-----
+
++++++
+
+.....
+Museum of History
+-----
+bc0f047c-01b1-427f-a439-d451eda10019
+-----
+
++++++
+
 .....
 ENDSCRIPTS
 =====

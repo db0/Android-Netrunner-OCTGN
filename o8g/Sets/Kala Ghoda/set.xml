@@ -79,7 +79,7 @@
 		<property name="Stat" value="1" />	
 		<property name="Rules" value="You cannot use Mongoose to break subroutines on more than one ice per run.&#xD;&#xA;1[Credits]: Break up to 2 sentry subroutines.&#xD;&#xA;2[Credits]: +2 strength." />
 		<property name="Flavor" value="" />
-		<property name="Instructions" value="" />
+		<property name="Instructions" value="1[Credits]: Break up to 2 sentry subroutines.||2[Credits]: +2 strength." />
 		<property name="Faction" value="Criminal" />
 		<property name="Influence" value="2" />
 		<property name="Side" value="runner" />
@@ -159,7 +159,7 @@
 		<property name="Stat" value="" />	
 		<property name="Rules" value="[Click]: Place 1 power counter on Chatterjee University.&#xD;&#xA;[Click]: Install a program from your grip, lowering the install cost by 1 for each power counter on Chatterjee University. Remove 1 hosted power counter." />
 		<property name="Flavor" value="" />
-		<property name="Instructions" value="" />
+		<property name="Instructions" value="[Click]: Place 1 power counter on Chatterjee University.||[Click]: Install a program from your grip, lowering the install cost by 1 for each power counter on Chatterjee University. Remove 1 hosted power counter." />
 		<property name="Faction" value="Neutral" />
 		<property name="Influence" value="0" />
 		<property name="Side" value="runner" />

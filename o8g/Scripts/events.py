@@ -85,7 +85,7 @@ def checkDeck(player,groups):
    for card in group:
       #setAwareness(card)
       counts[card.Name] += 1
-      if counts[card.Name] > 3:
+      if counts[card.Name] > checkCardLimits(card.Name):
          notify(":::ERROR::: Only 3 copies of {} allowed.".format(card.Name))
          ok = False
       if card.Type == 'Agenda':
@@ -147,6 +147,11 @@ def checkDeck(player,groups):
       information("We have found illegal cards in your deck. Please load a legal deck!")
    debugNotify("<<< checkDeckNoLimit()") #Debug
    chkSideFlip()
+  
+def checkCardLimits(cardName):
+   if cardName == "Ramujan-reliant 550 BMI": limit = 6
+   else: limit = 3
+   return limit
   
 def chkSideFlip(forced = False):
    mute()

@@ -1,6 +1,15 @@
 Changelog - Android:Netrunner LCG OCTGN Game Definition
 ===============================================
 
+### 3.23.0.x
+
+* New game definition for **Kala Ghoda**. As always, almost every card scripted!
+* ##### Trickier Automations
+  * Run Amok: Target ICE and Double-click Run Amok to trash it.
+  * Street Magic: Manual use
+  * Jesminder Sareen: Manual use
+
+
 ### 3.22.4.x
 
 * Brain Chip will now give correct MU

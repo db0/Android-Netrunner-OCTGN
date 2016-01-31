@@ -1535,11 +1535,11 @@ def CreateDummy(Autoscript, announceText, card, targetCards = None, notification
       storeProperties(dummyCard)
       if re.search(r'onOpponent', Autoscript): passCardControl(dummyCard,findOpponent())
    #confirm("Dummy ID: {}\n\nList Dummy ID: {}".format(dummyCard._id,passedlist[0]._id)) #Debug
+   if action: announceString = TokensX('Put{}'.format(action.group(2)), announceText,dummyCard, n = n) # If we have a -with in our autoscript, this is meant to put some tokens on the dummy card.
+   else: announceString = announceText + 'create a lingering effect for {}'.format(targetPL)
    if not re.search(r'doNotTrash',Autoscript):
       debugNotify("Did not find string 'doNotTrash' in {}. Trashing Card".format(Autoscript))
       sendToTrash(card)
-   if action: announceString = TokensX('Put{}'.format(action.group(2)), announceText,dummyCard, n = n) # If we have a -with in our autoscript, this is meant to put some tokens on the dummy card.
-   else: announceString = announceText + 'create a lingering effect for {}'.format(targetPL)
    debugNotify("<<< CreateDummy()", 3)
    return announceString # Creating a dummy isn't usually announced.
 
@@ -2047,7 +2047,7 @@ def autoscriptCostUndo(card, Autoscript): # Function for undoing the cost of an 
       card.orientation = Rot0
 
 def findTarget(Autoscript, fromHand = False, card = None, dryRun = False): # Function for finding the target of an autoscript
-   debugNotify(">>> findTarget(){}".format(extraASDebug(Autoscript))) #Debug
+   #confirm(">>> findTarget(){}".format(Autoscript)) #Debug
    try:
       if fromHand == True or re.search(r'-fromHand',Autoscript): 
          if re.search(r'-targetOpponents',Autoscript): group = findOpponent().hand
@@ -2464,7 +2464,7 @@ def per(Autoscript, card = None, count = 0, targetCards = None, notification = N
          perReqRegex = re.search(r'\bper(Target|Personal|Every).*?-at(.*)', Autoscript)
          debugNotify("perTargetRegex = {}".format(perTargetRegex.groups()))
          if not perReqRegex: seek = ''
-         else: seek = '-at{}'.format(perReqRegex.group(2))            
+         else: seek = 'at{}'.format(perReqRegex.group(2).replace('-','_'))     
          if perTargetRegex.group(1) == 'Target':
             if re.search('fromHand', Autoscript): 
                targetCards = findTarget('Targeted{}'.format(seek),True)

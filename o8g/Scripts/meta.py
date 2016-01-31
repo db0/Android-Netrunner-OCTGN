@@ -837,6 +837,16 @@ def chkDrawPrevention():
       if card.Name == 'Lockdown' and card.markers[mdict['Power']]: prevention = True
       if card.Name == 'Genetics Pavilion' and card.isFaceUp and num(getGlobalVariable('Genetics Pavilion Memory')) >= 2: prevention = True
    return prevention
+   
+def chkRDextraOptions():
+   extraOptions = []
+   cardObjects = []
+   for c in table:
+      if c.name == "Maya" and oncePerTurn(c, act = 'dryRun') != 'ABORT':
+         extraOptions.append("Add to the bottom of R&D and take 1 tag (Maya)")
+         cardObjects.append(c) # We need to create a list of the respective card objects which trigger each effect as they may need to be modified by their effect.
+         #oncePerTurn(c, act = 'automatic')
+   return (extraOptions,cardObjects)
 #---------------------------------------------------------------------------
 # Card Placement
 #---------------------------------------------------------------------------
