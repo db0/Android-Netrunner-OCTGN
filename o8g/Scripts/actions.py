@@ -2615,7 +2615,7 @@ def draw(group):
       playClickDrawSound()
    changeCardGroup(card,me.hand)      
    dailyList = [card]
-   dailyBusiness = chkDailyBusinessShows() # Due to its automated wording, I have to hardcode this on every card draw.
+   dailyBusiness = chkDailyBusinessShows(group.player) # Due to its automated wording, I have to hardcode this on every card draw.
    if dailyBusiness:
       for c in group.top(dailyBusiness):
          dailyList.append(c)
@@ -2658,7 +2658,8 @@ def drawMany(group, count = None, destination = None, silent = False):
             whisper("You do not have enough cards in your deck to complete this action. Will draw as many as possible")
    if destination == me.hand and group == me.piles['R&D/Stack']: # Due to its automated wording, I have to hardcode this on every card draw.
       dailyList = []
-      dailyBusiness = chkDailyBusinessShows() 
+      dailyBusiness = chkDailyBusinessShows(group.player) 
+      confirm(str(dailyBusiness))
    else: dailyBusiness = 0
    drawn = 0
    for c in group.top(count):
@@ -2685,10 +2686,10 @@ def drawMany(group, count = None, destination = None, silent = False):
    debugNotify("<<< drawMany() with return: {}".format(count), 3)
    return count
 
-def chkDailyBusinessShows():
+def chkDailyBusinessShows(player = me):
    found = 0
    for c in table:
-      if c.name == "Daily Business Show" and c.controller == me and c.orientation == Rot0:
+      if c.name == "Daily Business Show" and c.controller == player and c.orientation == Rot0:
          found += 1
          c.orientation = Rot90
    return found

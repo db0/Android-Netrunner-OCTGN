@@ -71,6 +71,7 @@ def checkDeck(player,groups):
    mute()
    loAP = 0
    loInf = 0
+   MostWanted = 0
    loRunner = False
    agendasCount = 0
    #debugNotify("About to move cards into me.ScriptingPile", 4) #Debug
@@ -85,6 +86,7 @@ def checkDeck(player,groups):
    allianceCounts = storeAlliances()
    for card in group:
       #setAwareness(card)
+      if card.Name in NAPDMW: MostWanted += 1
       counts[card.Name] += 1
       if counts[card.Name] > checkCardLimits(card.Name):
          notify(":::ERROR::: Only 3 copies of {} allowed.".format(card.Name))
@@ -136,8 +138,10 @@ def checkDeck(player,groups):
       if loAP < requiredAP:
          notify(":::ERROR::: {} cards requires {} or {} Agenda Points, found {}.".format(loDeckCount, requiredAP, requiredAP + 1, loAP))
          ok = False
-   if loInf > num(Identity.Stat) and Identity.Faction != 'Neutral':
-      notify(":::ERROR::: Too much rival faction influence in {}'s R&D. {} found with a max of {}".format(me, loInf, num(Identity.Stat)))
+   influenceMax = num(Identity.Stat) - MostWanted
+   if influenceMax < 1: influenceMax = 1
+   if loInf > influenceMax and Identity.Faction != 'Neutral':
+      notify(":::ERROR::: Too much rival faction influence in {}'s R&D. {} found with a max of {}".format(me, loInf, influenceMax))
       ok = False
    deckStats = (loInf,loDeckCount,agendasCount) # The deck stats is a tuple that we stored shared, and stores how much influence is in the player's deck, how many cards it has and how many agendas
    me.setGlobalVariable('Deck Stats',str(deckStats))

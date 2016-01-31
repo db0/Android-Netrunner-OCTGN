@@ -186,3 +186,17 @@ knownLeagues = { # The known leagues. Now the game will confirm this was a leagu
 
 SuperchargedMsg = "{} is Supercharging their systems.\
              \n+=+ Their presence on the grid is enhanced!".format(me)                        
+
+NAPDMW = [ # NAPD Most Wanted List
+            'Cerberus "Lady" H1',
+            'Clone Chip',
+            'Desperado',
+            'Parasite',
+            'Pre-Paid Voice PAD',
+            'Yog.0',
+            'Architect',
+            'AstroScript Pilot Program',
+            'Eli 1.0',
+            'NAPD Contract',
+            'SanSan City Grid'
+         ]
