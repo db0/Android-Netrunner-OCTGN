@@ -82,6 +82,7 @@ def checkDeck(player,groups):
    counts = collections.defaultdict(int)
    CardLimit = {}
    professorsRig = [] # This is used by "The Professor" to avoid counting influence for the first instance of a program.
+   allianceCounts = storeAlliances()
    for card in group:
       #setAwareness(card)
       counts[card.Name] += 1
@@ -107,7 +108,7 @@ def checkDeck(player,groups):
             professorsRig.append(card.model) # First instance of a card is free of influence costs.
          else: 
             debugNotify("adding influence of {}. card type = {}".format(card,card.Type))
-            loInf += calcInfluence(card)
+            loInf += calcInfluence(card,allianceCounts)
       else:
          if card.Type == 'Identity':
             notify(":::ERROR::: Extra Identity Cards found in {}'s {}.".format(me, pileName(group)))
@@ -132,7 +133,7 @@ def checkDeck(player,groups):
    #group.setVisibility('None')
    if ds == 'corp':
       requiredAP = 2 + 2 * int(loDeckCount / 5)
-      if loAP not in (requiredAP, requiredAP + 1):
+      if loAP < requiredAP:
          notify(":::ERROR::: {} cards requires {} or {} Agenda Points, found {}.".format(loDeckCount, requiredAP, requiredAP + 1, loAP))
          ok = False
    if loInf > num(Identity.Stat) and Identity.Faction != 'Neutral':

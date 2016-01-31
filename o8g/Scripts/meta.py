@@ -848,25 +848,27 @@ def chkRDextraOptions():
          #oncePerTurn(c, act = 'automatic')
    return (extraOptions,cardObjects)
    
-def calcInfluence(card):
-   group = me.piles['R&D/Stack']
+def calcInfluence(card, allianceCounts): # Checks if any card's influence is changed due to Alliance mechanics
    if card.Name == "Heritage Committee":
-      JintekiCount = 0
-      for c in group:
-         if c.Faction == "Jinteki" and not re.search(r'Alliance',c.Kewords): JintekiCount += 1
-      if JintekiCount >= 6: influence = 0
+      if allianceCounts['JintekiCount'] >= 6: influence = 0
       else: influence = 2
    elif card.Name == "Mumba Temple":
-      ICEcount = 0
-      for c in group:
-         if c.Type == 'ICE': ICEcount += 1
-      if ICEcount > 15: influence = 2
+      if allianceCounts['ICEcount']  > 15: influence = 2
       else: influence = 0
    elif card.Name == "Museum of History":
-      if len(group) >= 50: influence = 0
+      if len(me.piles['R&D/Stack']) >= 50: influence = 0
       else: influence = 2      
    else: influence = num(card.Influence)
    return influence   
+   
+def storeAlliances(): # Used to precount the influence required for Alliance cards.
+   allianceCounts = {'JintekiCount':0,'ICEcount':0}
+   for c in me.piles['R&D/Stack']:
+      if c.Faction == "Jinteki" and not re.search(r'Alliance',c.Keywords): allianceCounts['JintekiCount'] += 1
+      if c.Type == 'ICE': allianceCounts['ICEcount'] += 1
+   return allianceCounts   
+   
+   
 #---------------------------------------------------------------------------
 # Card Placement
 #---------------------------------------------------------------------------
