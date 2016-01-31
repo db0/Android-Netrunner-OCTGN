@@ -2052,116 +2052,112 @@ def autoscriptCostUndo(card, Autoscript): # Function for undoing the cost of an 
 
 def findTarget(Autoscript, fromHand = False, card = None, dryRun = False): # Function for finding the target of an autoscript
    #confirm(">>> findTarget(){}".format(Autoscript)) #Debug
-   try:
-      if fromHand == True or re.search(r'-fromHand',Autoscript): 
-         if re.search(r'-targetOpponents',Autoscript): group = findOpponent().hand
-         else: group = me.hand
-      elif re.search(r'-fromArchives',Autoscript): 
-         if re.search(r'-targetOpponents',Autoscript): group = findOpponent().piles['Heap/Archives(Face-up)']
-         else: group = me.piles['Heap/Archives(Face-up)']
-      else: group = table
-      foundTargets = []
-      if re.search(r'Targeted', Autoscript):
-         requiredAllegiances = []
-         targetGroups = prepareRestrictions(Autoscript)
-         debugNotify("About to start checking all targeted cards.\n### targetGroups:{}".format(targetGroups), 2) #Debug
-         for targetLookup in group: # Now that we have our list of restrictions, we go through each targeted card on the table to check if it matches.
-            if (targetLookup.targetedBy and targetLookup.targetedBy == me) or (re.search(r'AutoTargeted', Autoscript) and targetLookup.highlight != DummyColor and targetLookup.highlight != RevealedColor and targetLookup.highlight != InactiveColor):
-            # OK the above target check might need some decoding:
-            # Look through all the cards on the group and start checking only IF...
-            # * Card is targeted and targeted by the player OR target search has the -AutoTargeted modulator and it is NOT highlighted as a Dummy, Inactive or Revealed.
-            # * The player who controls this card is supposed to be me or the enemy.
-               debugNotify("Checking {}".format(targetLookup), 2)
-               if not checkSpecialRestrictions(Autoscript,targetLookup): continue
-               if re.search(r'-onHost',Autoscript): 
-                  debugNotify("Looking for Host", 2)
-                  if not card: continue # If this targeting script targets only a host and we have not passed what the attachment is, we cannot find the host, so we abort.
-                  debugNotify("Attachment is: {}".format(card), 2)
-                  hostCards = eval(getGlobalVariable('Host Cards'))
-                  isHost = False
-                  for attachment in hostCards:
-                     if attachment == card._id and hostCards[attachment] == targetLookup._id: 
-                        debugNotify("Host found! {}".format(targetLookup), 2)
-                        isHost = True
-                  if not isHost: continue
-               elif re.search(r'-onAttachment',Autoscript): 
-                  if not card: continue # If this targeting script targets only an attachment and we have not passed what the host is, we cannot find the attachment, so we abort.
-                  hostCards = eval(getGlobalVariable('Host Cards'))
-                  isAttachment = False
-                  for attachment in hostCards:
-                     if hostCards[attachment] == card._id and attachment == targetLookup._id: 
-                        #confirm("Attachment found! {}".format(targetLookup))
-                        isAttachment = True
-                  if not isAttachment: continue
-               if checkCardRestrictions(gatherCardProperties(targetLookup,Autoscript), targetGroups): 
-                  if not targetLookup in foundTargets: 
-                     debugNotify("About to append {}".format(targetLookup), 3) #Debug
-                     foundTargets.append(targetLookup) # I don't know why but the first match is always processed twice by the for loop.
-               else: debugNotify("findTarget() Rejected {}".format(targetLookup), 3)# Debug
-         debugNotify("Finished seeking. foundTargets List = {}".format([T.name for T in foundTargets]), 2)
-         if re.search(r'DemiAutoTargeted', Autoscript):
-            debugNotify("Checking DemiAutoTargeted switches", 2)# Debug
-            targetNRregex = re.search(r'-choose([1-9])',Autoscript)
-            targetedCards = 0
-            foundTargetsTargeted = []
-            debugNotify("About to count targeted cards", 2)# Debug
-            for targetC in foundTargets:
-               if targetC.targetedBy and targetC.targetedBy == me: foundTargetsTargeted.append(targetC)
-            if targetNRregex:
-               debugNotify("!!! targetNRregex exists", 2)# Debug
-               if num(targetNRregex.group(1)) > len(foundTargetsTargeted): pass # Not implemented yet. Once I have choose2 etc I'll work on this
-               else: # If we have the same amount of cards targeted as the amount we need, then we just select the targeted cards
-                  foundTargets = foundTargetsTargeted # This will also work if the player has targeted more cards than they need. The later choice will be simply between those cards.
-            else: # If we do not want to choose, then it's probably a bad script. In any case we make sure that the player has targeted something (as the alternative it giving them a random choice of the valid targets)
-               del foundTargets[:]
-         if len(foundTargets) == 0 and not re.search(r'(?<!Demi)AutoTargeted', Autoscript): 
-            targetsText = ''
-            mergedList = []
-            for posRestrictions in targetGroups: 
-               debugNotify("About to notify on restrictions", 2)# Debug
-               if targetsText == '': targetsText = '\n -- You need: '
-               else: targetsText += ', or '
-               del mergedList[:]
-               mergedList += posRestrictions[0]
-               if len(mergedList) > 0: targetsText += "{} and ".format(mergedList)  
-               del mergedList[:]
-               mergedList += posRestrictions[1]
-               if len(mergedList) > 0: targetsText += "not {}".format(mergedList)
-               if targetsText.endswith(' and '): targetsText = targetsText[:-len(' and ')]
-            debugNotify("About to chkPlayer()", 2)# Debug
-            if not chkPlayer(Autoscript, targetLookup.controller, False, True): 
-               allegiance = re.search(r'by(Opponent|Me)', Autoscript)
-               requiredAllegiances.append(allegiance.group(1))
-            if len(requiredAllegiances) > 0: targetsText += "\n00 Valid Target Allegiance: {}.".format(requiredAllegiances)
-            if re.search(r'isRezzed',Autoscript): targetsText += "\n -- Card Status: Rezzed"
-            if re.search(r'isUnrezzed',Autoscript): targetsText += "\n -- Card Status: Unrezzed"
-            if not re.search(r'isMutedTarget', Autoscript): delayed_whisper(":::ERROR::: You need to target a valid card before using this action{}.".format(targetsText))
-         elif len(foundTargets) >= 1 and re.search(r'-choose',Autoscript):
-            if dryRun: pass # In dry runs we just want to check we have valid targets
-            else:
-               debugNotify("Going for a choice menu", 2)# Debug
-               choiceType = re.search(r'-choose([0-9]+)',Autoscript)
-               targetChoices = makeChoiceListfromCardList(foundTargets)
-               if not card: choiceTitle = "Choose one of the valid targets for this effect"
-               else: choiceTitle = "Choose one of the valid targets for {}".format(fetchProperty(card, 'name'))
-               debugNotify("Checking for SingleChoice", 2)# Debug
-               if choiceType.group(1) == '1':
-                  if len(foundTargets) == 1: choice = 0 # If we only have one valid target, autoselect it.
-                  else: choice = SingleChoice(choiceTitle, targetChoices, type = 'button', default = 0)
-                  if choice == 'ABORT': del foundTargets[:]
-                  else: foundTargets = [foundTargets.pop(choice)] # if we select the target we want, we make our list only hold that target
-         elif re.search(r'-randomTarget',Autoscript): # This modulator randomly selects one card from the valid cards as the single target. Usually paired with AutoTargeted
-            debugNotify("Going for a random choice menu")# Debug
-            rndChoice = rnd(0,len(foundTargets) - 1)
-            foundTargets = [foundTargets[rndChoice]]
-      if debugVerbosity >= 3: # Debug
-         tlist = [] 
-         for foundTarget in foundTargets: tlist.append(foundTarget.name) # Debug
-         notify("<<< findTarget() by returning: {}".format(tlist))
-      return foundTargets
-   except: 
-      notify("!!!ERROR!!! on findTarget()")   
-      return []
+   if fromHand == True or re.search(r'-fromHand',Autoscript): 
+      if re.search(r'-targetOpponents',Autoscript): group = findOpponent().hand
+      else: group = me.hand
+   elif re.search(r'-fromArchives',Autoscript): 
+      if re.search(r'-targetOpponents',Autoscript): group = findOpponent().piles['Heap/Archives(Face-up)']
+      else: group = me.piles['Heap/Archives(Face-up)']
+   else: group = table
+   foundTargets = []
+   if re.search(r'Targeted', Autoscript):
+      requiredAllegiances = []
+      targetGroups = prepareRestrictions(Autoscript)
+      debugNotify("About to start checking all targeted cards.\n### targetGroups:{}".format(targetGroups), 2) #Debug
+      for targetLookup in group: # Now that we have our list of restrictions, we go through each targeted card on the table to check if it matches.
+         if (targetLookup.targetedBy and targetLookup.targetedBy == me) or (re.search(r'AutoTargeted', Autoscript) and targetLookup.highlight != DummyColor and targetLookup.highlight != RevealedColor and targetLookup.highlight != InactiveColor):
+         # OK the above target check might need some decoding:
+         # Look through all the cards on the group and start checking only IF...
+         # * Card is targeted and targeted by the player OR target search has the -AutoTargeted modulator and it is NOT highlighted as a Dummy, Inactive or Revealed.
+         # * The player who controls this card is supposed to be me or the enemy.
+            debugNotify("Checking {}".format(targetLookup), 2)
+            if not checkSpecialRestrictions(Autoscript,targetLookup): continue
+            if re.search(r'-onHost',Autoscript): 
+               debugNotify("Looking for Host", 2)
+               if not card: continue # If this targeting script targets only a host and we have not passed what the attachment is, we cannot find the host, so we abort.
+               debugNotify("Attachment is: {}".format(card), 2)
+               hostCards = eval(getGlobalVariable('Host Cards'))
+               isHost = False
+               for attachment in hostCards:
+                  if attachment == card._id and hostCards[attachment] == targetLookup._id: 
+                     debugNotify("Host found! {}".format(targetLookup), 2)
+                     isHost = True
+               if not isHost: continue
+            elif re.search(r'-onAttachment',Autoscript): 
+               if not card: continue # If this targeting script targets only an attachment and we have not passed what the host is, we cannot find the attachment, so we abort.
+               hostCards = eval(getGlobalVariable('Host Cards'))
+               isAttachment = False
+               for attachment in hostCards:
+                  if hostCards[attachment] == card._id and attachment == targetLookup._id: 
+                     #confirm("Attachment found! {}".format(targetLookup))
+                     isAttachment = True
+               if not isAttachment: continue
+            if checkCardRestrictions(gatherCardProperties(targetLookup,Autoscript), targetGroups): 
+               if not targetLookup in foundTargets: 
+                  debugNotify("About to append {}".format(targetLookup), 3) #Debug
+                  foundTargets.append(targetLookup) # I don't know why but the first match is always processed twice by the for loop.
+            else: debugNotify("findTarget() Rejected {}".format(targetLookup), 3)# Debug
+      debugNotify("Finished seeking. foundTargets List = {}".format([T.name for T in foundTargets]), 2)
+      if re.search(r'DemiAutoTargeted', Autoscript):
+         debugNotify("Checking DemiAutoTargeted switches", 2)# Debug
+         targetNRregex = re.search(r'-choose([1-9])',Autoscript)
+         targetedCards = 0
+         foundTargetsTargeted = []
+         debugNotify("About to count targeted cards", 2)# Debug
+         for targetC in foundTargets:
+            if targetC.targetedBy and targetC.targetedBy == me: foundTargetsTargeted.append(targetC)
+         if targetNRregex:
+            debugNotify("!!! targetNRregex exists", 2)# Debug
+            if num(targetNRregex.group(1)) > len(foundTargetsTargeted): pass # Not implemented yet. Once I have choose2 etc I'll work on this
+            else: # If we have the same amount of cards targeted as the amount we need, then we just select the targeted cards
+               foundTargets = foundTargetsTargeted # This will also work if the player has targeted more cards than they need. The later choice will be simply between those cards.
+         else: # If we do not want to choose, then it's probably a bad script. In any case we make sure that the player has targeted something (as the alternative it giving them a random choice of the valid targets)
+            del foundTargets[:]
+      if len(foundTargets) == 0 and not re.search(r'(?<!Demi)AutoTargeted', Autoscript): 
+         targetsText = ''
+         mergedList = []
+         for posRestrictions in targetGroups: 
+            debugNotify("About to notify on restrictions", 2)# Debug
+            if targetsText == '': targetsText = '\n -- You need: '
+            else: targetsText += ', or '
+            del mergedList[:]
+            mergedList += posRestrictions[0]
+            if len(mergedList) > 0: targetsText += "{} and ".format(mergedList)  
+            del mergedList[:]
+            mergedList += posRestrictions[1]
+            if len(mergedList) > 0: targetsText += "not {}".format(mergedList)
+            if targetsText.endswith(' and '): targetsText = targetsText[:-len(' and ')]
+         debugNotify("About to chkPlayer()", 2)# Debug
+         if not chkPlayer(Autoscript, targetLookup.controller, False, True): 
+            allegiance = re.search(r'by(Opponent|Me)', Autoscript)
+            requiredAllegiances.append(allegiance.group(1))
+         if len(requiredAllegiances) > 0: targetsText += "\n00 Valid Target Allegiance: {}.".format(requiredAllegiances)
+         if re.search(r'isRezzed',Autoscript): targetsText += "\n -- Card Status: Rezzed"
+         if re.search(r'isUnrezzed',Autoscript): targetsText += "\n -- Card Status: Unrezzed"
+         if not re.search(r'isMutedTarget', Autoscript): delayed_whisper(":::ERROR::: You need to target a valid card before using this action{}.".format(targetsText))
+      elif len(foundTargets) >= 1 and re.search(r'-choose',Autoscript):
+         if dryRun: pass # In dry runs we just want to check we have valid targets
+         else:
+            debugNotify("Going for a choice menu", 2)# Debug
+            choiceType = re.search(r'-choose([0-9]+)',Autoscript)
+            targetChoices = makeChoiceListfromCardList(foundTargets)
+            if not card: choiceTitle = "Choose one of the valid targets for this effect"
+            else: choiceTitle = "Choose one of the valid targets for {}".format(fetchProperty(card, 'name'))
+            debugNotify("Checking for SingleChoice", 2)# Debug
+            if choiceType.group(1) == '1':
+               if len(foundTargets) == 1: choice = 0 # If we only have one valid target, autoselect it.
+               else: choice = SingleChoice(choiceTitle, targetChoices, type = 'button', default = 0)
+               if choice == 'ABORT': del foundTargets[:]
+               else: foundTargets = [foundTargets.pop(choice)] # if we select the target we want, we make our list only hold that target
+      elif re.search(r'-randomTarget',Autoscript): # This modulator randomly selects one card from the valid cards as the single target. Usually paired with AutoTargeted
+         debugNotify("Going for a random choice menu")# Debug
+         rndChoice = rnd(0,len(foundTargets) - 1)
+         foundTargets = [foundTargets[rndChoice]]
+   if debugVerbosity >= 3: # Debug
+      tlist = [] 
+      for foundTarget in foundTargets: tlist.append(foundTarget.name) # Debug
+      notify("<<< findTarget() by returning: {}".format(tlist))
+   return foundTargets
    
 def gatherCardProperties(card,Autoscript = ''):
    debugNotify(">>> gatherCardProperties()") #Debug     
@@ -2365,9 +2361,20 @@ def makeChoiceListfromCardList(cardList,includeText = False, includeGroup = Fals
          if includeText: cText = '\n' + fetchProperty(T, 'Rules')
          else: cText = ''
          hostCards = eval(getGlobalVariable('Host Cards'))
-         attachmentsList = [Card(cID).Name for cID in hostCards if hostCards[cID] == T._id]
-         if len(attachmentsList) >= 1: cAttachments = '\nAttachments:' + str(attachmentsList)
-         else: cAttachments = ''
+         if T.controller != me: # We do not want to reveal face-down attachment if we're not the controller of the card
+            attachmentsFUList = [Card(cID).Name for cID in hostCards if hostCards[cID] == T._id and Card(cID).isFaceUp]
+            attachmentsFDList = [Card(cID).Name for cID in hostCards if hostCards[cID] == T._id and not Card(cID).isFaceUp]
+            if len(attachmentsFUList) and len(attachmentsFDList):
+               cAttachments = '\nAttachments: {} plus {} face-down attachments'.format(str(attachmentsFUList),attachmentsFDList)
+            elif len(attachmentsFUList):
+               cAttachments = '\nAttachments: {}'.format(str(attachmentsFUList))
+            elif len(attachmentsFDList):
+               cAttachments = '\nAttachments: {} face-down attachments'.format(len(attachmentsFDList))
+            else: cAttachments = ''
+         else:
+            attachmentsList = [Card(cID).Name for cID in hostCards if hostCards[cID] == T._id]
+            if len(attachmentsList) >= 1: cAttachments = '\nAttachments:' + str(attachmentsList)
+            else: cAttachments = ''
          if includeGroup: cGroup = '\n' + pileName(T.group) # Include group is used to inform the player where the card resides in cases where they're selecting cards from multiple groups.
          else: cGroup = ''
          debugNotify("Finished Adding Stats. Going to choice...", 4)# Debug               

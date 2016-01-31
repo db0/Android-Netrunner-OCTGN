@@ -12,6 +12,9 @@ Changelog - Android:Netrunner LCG OCTGN Game Definition
   * Interrupt 0: Use to track how much you pay per ICE you break, but I can't automate this further. Lose money manually afterwards
   * Dedication Ceremony: Won't prevent you from scoring. Just don't do it.
   * Kala Ghoda Real TV: Will whisper the card to you. DC it to trash it.
+* Archangel will not reveal face-down attachments on Peddler
+* **Added NAPD MW List to influence calculations**
+
 
 
 ### 3.22.4.x

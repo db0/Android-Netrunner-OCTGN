@@ -2659,7 +2659,7 @@ def drawMany(group, count = None, destination = None, silent = False):
    if destination == me.hand and group == me.piles['R&D/Stack']: # Due to its automated wording, I have to hardcode this on every card draw.
       dailyList = []
       dailyBusiness = chkDailyBusinessShows(group.player) 
-      confirm(str(dailyBusiness))
+      #confirm(str(dailyBusiness))
    else: dailyBusiness = 0
    drawn = 0
    for c in group.top(count):
