@@ -1621,17 +1621,8 @@ def CustomScript(card, action = 'PLAY', origin_card = None, original_action = No
       else: RetrieveX('Retrieve1Cards-grabnonOperation-fromArchives-toTable', 'Team Sponsortship:', card, notification = 'Quick')
    elif fetchProperty(card, 'name') == 'Drug Dealer' and action == 'Start': # Have to use a custom script because due to the remote calls, 2/3 of this card will try to draw the same card.
       remoteCall(fetchRunnerPL(),'DrugDealer',[card]) # So we need to remote script the whole card draw to make sure the runner does the draws serially, after each has finished executing.
-   elif fetchProperty(card, 'name') == 'Advanced Concept Hopper' and action == 'Run': 
-      if oncePerTurn(card, act = 'automatic') == 'ABORT': return 'ABORT'
-      choice = SingleChoice("What do you want your {} to give you".format(card.Name), ["Do not use","Draw 1 Card","Gain 1 Credit"])
-      if choice == 1: 
-         DrawX('Draw1Cards', '', card)
-         notify("{} uses {} to draw 1 card".format(me,card))
-      elif choice == 2: 
-         me.Credits += 1
-         notify("{} uses {} to gain {}".format(me,card,uniCredit(1)))
-      else:
-         notify("{} opts not to use their {}".format(me,card))
+   elif fetchProperty(card, 'name') == 'Advanced Concept Hopper' and action == 'Run' and card.controller.getGlobalVariable('ds') == 'corp': 
+      remoteCall(fetchCorpPL(),'ACH',[card])
    elif fetchProperty(card, 'name') == "Kala Ghoda Real TV" and action == 'Start':      
       runnerPl = fetchRunnerPL()
       notify(":::WARN::: {} uses {} to look at the top card of the Runer's Stack.".format(me,card))
@@ -2167,4 +2158,16 @@ def Archangel(card):
    mute()
    targets = findTarget('DemiAutoTargeted-atProgram_or_Resource_or_Hardware-choose1')
    if len(targets): ModifyStatus('UninstallTarget', '', card, targets)
+
+def ACH(card):
+   if oncePerTurn(card, act = 'automatic') == 'ABORT': return 'ABORT'
+   choice = SingleChoice("What do you want your {} to give you".format(card.Name), ["Do not use","Draw 1 Card","Gain 1 Credit"])
+   if choice == 1: 
+      DrawX('Draw1Cards', '', card)
+      notify("{} uses {} to draw 1 card".format(me,card))
+   elif choice == 2: 
+      me.Credits += 1
+      notify("{} uses {} to gain {}".format(me,card,uniCredit(1)))
+   else:
+      notify("{} opts not to use their {}".format(me,card))
    

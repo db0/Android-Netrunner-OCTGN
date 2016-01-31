@@ -1632,7 +1632,7 @@ def RDaccessX(group = table, x = 0, y = 0,count = None): # A function which look
                extraText = ''
                extraText2 = ''
             action1TXT = 'Pay {}{} to Trash.'.format(num(cStat) - reduction,extraText)
-         options = ["Leave where it is.","Force trash at no cost.\n(Only through card effects)",action1TXT].extend(chkRDextraOptions())
+         options = ["Leave where it is.","Force trash at no cost.\n(Only through card effects)",action1TXT]
       else:
          options = ["Leave where it is.","Force trash at no cost.\n(Only through card effects)"]
       extraOptions = chkRDextraOptions()

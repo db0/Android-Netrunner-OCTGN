@@ -149,11 +149,6 @@ def checkDeck(player,groups):
    debugNotify("<<< checkDeckNoLimit()") #Debug
    chkSideFlip()
   
-def checkCardLimits(cardName):
-   if cardName == "Ramujan-reliant 550 BMI": limit = 6
-   else: limit = 3
-   return limit
-  
 def chkSideFlip(forced = False):
    mute()
    debugNotify(">>> chkSideFlip()")

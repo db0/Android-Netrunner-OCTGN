@@ -868,7 +868,11 @@ def storeAlliances(): # Used to precount the influence required for Alliance car
       if c.Type == 'ICE': allianceCounts['ICEcount'] += 1
    return allianceCounts   
    
-   
+def checkCardLimits(cardName):
+   if cardName == "Ramujan-reliant 550 BMI": limit = 6
+   else: limit = 3
+   return limit
+     
 #---------------------------------------------------------------------------
 # Card Placement
 #---------------------------------------------------------------------------
