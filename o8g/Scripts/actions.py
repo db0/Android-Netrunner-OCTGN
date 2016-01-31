@@ -1652,7 +1652,7 @@ def RDaccessX(group = table, x = 0, y = 0,count = None): # A function which look
             me.Tags += 1
             movetoBottomOfStack(RDtop[iter], silent = True)
             removedCards += 1
-            notify("{} uses {} to send the accessed card to the bottom of the R&D and take a Tag".format(specialEffectCards[choice - existingOptions]))
+            notify("{} uses {} to send the accessed card to the bottom of the R&D and take a Tag".format(me,specialEffectCards[choice - existingOptions]))
          elif cType == 'Agenda':
             if extraCredCost:
                reduceCost(RDtop[iter], 'LIBERATE', extraCredCost)

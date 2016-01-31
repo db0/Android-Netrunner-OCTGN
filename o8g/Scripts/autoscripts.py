@@ -652,6 +652,8 @@ def autoscriptOtherPlayers(lookup, origin_card = None, count = 1): # Function th
             #if InflictX(autoS, costText, card, targetCard, notification = 'Automatic', n = count) == 'ABORT': break
          elif regexHooks['DrawX'].search(autoS):
             if DrawX(autoS, costText, card, targetCard, notification = 'Automatic', n = count) == 'ABORT': break
+         elif regexHooks['ShuffleX'].search(autoS):
+            if ShuffleX(autoS, costText, card, targetCard, notification = 'Automatic', n = count) == 'ABORT': break
          elif regexHooks['ModifyStatus'].search(autoS):
             if ModifyStatus(autoS, costText, card, targetCard, notification = 'Automatic', n = count) == 'ABORT': break
          elif regexHooks['SetVarX'].search(autoS):
@@ -797,6 +799,8 @@ def atTimedEffects(Time = 'Start', AlternativeRunResultUsed = False): # Function
                numberTuple = RequestInt(passedScript, announceText, card) # Returns like reshuffleX()
                if numberTuple == 'ABORT': break
                X = numberTuple[1] 
+            elif regexHooks['ShuffleX'].search(passedScript):
+               ShuffleX(passedScript, announceText, card, notification = 'Automatic', n = X)
             elif regexHooks['SimplyAnnounce'].search(passedScript):
                SimplyAnnounce(passedScript, announceText, card, notification = 'Automatic', n = X)
             elif regexHooks['SetVarX'].search(passedScript):

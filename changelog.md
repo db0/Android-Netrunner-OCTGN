@@ -8,6 +8,10 @@ Changelog - Android:Netrunner LCG OCTGN Game Definition
   * Run Amok: Target ICE and Double-click Run Amok to trash it.
   * Street Magic: Manual use
   * Jesminder Sareen: Manual use
+  * Mumbad City Grid: Manual use
+  * Interrupt 0: Use to track how much you pay per ICE you break, but I can't automate this further. Lose money manually afterwards
+  * Dedication Ceremony: Won't prevent you from scoring. Just don't do it.
+  * Kala Ghoda Real TV: Will whisper the card to you. DC it to trash it.
 
 
 ### 3.22.4.x

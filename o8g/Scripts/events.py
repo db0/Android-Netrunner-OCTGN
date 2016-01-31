@@ -107,7 +107,7 @@ def checkDeck(player,groups):
             professorsRig.append(card.model) # First instance of a card is free of influence costs.
          else: 
             debugNotify("adding influence of {}. card type = {}".format(card,card.Type))
-            loInf += num(card.Influence)
+            loInf += calcInfluence(card)
       else:
          if card.Type == 'Identity':
             notify(":::ERROR::: Extra Identity Cards found in {}'s {}.".format(me, pileName(group)))

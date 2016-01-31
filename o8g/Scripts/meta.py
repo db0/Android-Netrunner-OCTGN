@@ -847,6 +847,26 @@ def chkRDextraOptions():
          cardObjects.append(c) # We need to create a list of the respective card objects which trigger each effect as they may need to be modified by their effect.
          #oncePerTurn(c, act = 'automatic')
    return (extraOptions,cardObjects)
+   
+def calcInfluence(card):
+   group = me.piles['R&D/Stack']
+   if card.Name == "Heritage Committee":
+      JintekiCount = 0
+      for c in group:
+         if c.Faction == "Jinteki" and not re.search(r'Alliance',c.Kewords): JintekiCount += 1
+      if JintekiCount >= 6: influence = 0
+      else: influence = 2
+   elif card.Name == "Mumba Temple":
+      ICEcount = 0
+      for c in group:
+         if c.Type == 'ICE': ICEcount += 1
+      if ICEcount > 15: influence = 2
+      else: influence = 0
+   elif card.Name == "Museum of History":
+      if len(group) >= 50: influence = 0
+      else: influence = 2      
+   else: influence = num(card.Influence)
+   return influence   
 #---------------------------------------------------------------------------
 # Card Placement
 #---------------------------------------------------------------------------

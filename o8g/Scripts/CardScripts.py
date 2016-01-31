@@ -6665,7 +6665,7 @@ Advanced Concept Hopper
 -----
 bc0f047c-01b1-427f-a439-d451eda10011
 -----
-
+atRunStart:CustomScript
 +++++
 
 .....
@@ -6675,13 +6675,13 @@ bc0f047c-01b1-427f-a439-d451eda10012
 -----
 
 +++++
-
+A0B0G0T0:SimplyAnnounce{prevent the runner from using any programs for the remainder of this run}-isSubroutine||A0B0G0T0:Trace4-isSubroutine-traceEffects<Inflict1BrainDamage-onOpponent,None>
 .....
 Heritage Committee
 -----
 bc0f047c-01b1-427f-a439-d451eda10013
 -----
-
+onPlay:Draw3Cards$$ReworkTarget-DemiAutoTargeted-choose1-fromHand
 +++++
 
 .....
@@ -6691,29 +6691,29 @@ bc0f047c-01b1-427f-a439-d451eda10014
 -----
 
 +++++
-
+A0B0G0T0:SimplyAnnounce{swap the passed ICE with another piece of ice on this server}
 .....
 Kala Ghoda Real TV
 -----
 bc0f047c-01b1-427f-a439-d451eda10015
 -----
-
+atTurnStart:CustomScript-duringMyTurn
 +++++
-
+A0B0G0T1:Draw1Card-toTrash-ofOpponent
 .....
 Interrupt 0
 -----
 bc0f047c-01b1-427f-a439-d451eda10016
 -----
-
+atJackOut:Remove999Interrupt
 +++++
-
+A0B0G0T0:Put1Interrupt-isSilent$$SimplyAnnounce{force the runner to pay 1 credit as an additional cost each time they use an icebreaker to break at least 1 subroutine}
 .....
 Dedication Ceremony
 -----
 bc0f047c-01b1-427f-a439-d451eda10017
 -----
-
+onPlay:Put3Advancement-DemiAutoTargeted-atICE_or_Asset_or_Upgrade-isRezzed-choose1
 +++++
 
 .....
@@ -6721,7 +6721,7 @@ Mumba Temple
 -----
 bc0f047c-01b1-427f-a439-d451eda10018
 -----
-
+onRez:Put2Credits||atTurnPreStart:Refill2Credits-duringMyTurn||whileRezzed:Reduce#CostRez-affectsAll-forMe
 +++++
 
 .....
@@ -6729,7 +6729,7 @@ Museum of History
 -----
 bc0f047c-01b1-427f-a439-d451eda10019
 -----
-
+atTurnStart:Retrieve1Card-fromArchives-toDeck-doNotReveal-duringMyTurn-isOptional$$ShuffleR&D
 +++++
 
 .....

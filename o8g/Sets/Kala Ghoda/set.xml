@@ -191,7 +191,7 @@
 		<property name="Stat" value="5" />	
 		<property name="Rules" value="The Runner can spend [Click] to break any subroutine on Vikram 1.0.&#xD;&#xA;[Subroutine] The Runner cannot use programs for the remainder of this run.&#xD;&#xA;[Subroutine] Trace4– If successful, do 1 brain damage.&#xD;&#xA;[Subroutine] Trace4– If successful, do 1 brain damage." />
 		<property name="Flavor" value="" />
-		<property name="Instructions" value="" />
+		<property name="Instructions" value="[Subroutine] The Runner cannot use programs for the remainder of this run.||[Subroutine] Trace4 If successful, do 1 brain damage." />
 		<property name="Faction" value="Haas-Bioroid" />
 		<property name="Influence" value="2" />
 		<property name="Side" value="corp" />
