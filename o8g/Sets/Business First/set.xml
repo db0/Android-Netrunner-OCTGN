@@ -1,0 +1,314 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<set xmlns:noNamespaceSchemaLocation="CardSet.xsd" 
+     name="Business First" 
+     id="3ed05c61-2293-4307-b33e-5e5f3aec3a29" 
+     gameId="0f38e453-26df-4c04-9d67-6d43de939c77" 
+     gameVersion="3.0.0.0" 
+     version="3.0.0.0">
+<cards>
+	<card id="bc0f047c-01b1-427f-a439-d451eda10020" name="EMP Device">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Hardware" />
+		<property name="Keywords" value="Bomb" />
+		<property name="Cost" value="1" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="" />	
+		<property name="Rules" value="[Trash]: The Corp cannot rez more than 1 piece of ice for the remainder of this run. Use this ability only during a run." />
+		<property name="Flavor" value="&quot;No! Don’t set that off HERE!&quot;" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Anarch" />
+		<property name="Influence" value="4" />
+		<property name="Side" value="runner" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda10021" name="Diwan">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Program" />
+		<property name="Keywords" value="Virus" />
+		<property name="Cost" value="1" />
+		<property name="Requirement" value="1" />	
+		<property name="Stat" value="-" />	
+		<property name="Rules" value="When Diwan is installed, choose a server. As an additional cost to install a card in or protecting that server, the Corp must pay 1[Credits].&#xD;&#xA;Trash Diwan if the Corp purges virus counters." />
+		<property name="Flavor" value="" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Anarch" />
+		<property name="Influence" value="1" />
+		<property name="Side" value="runner" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda10022" name="CBI Raid">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Event" />
+		<property name="Keywords" value="Run-Sabotage" />
+		<property name="Cost" value="3" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="" />	
+		<property name="Rules" value="Make a run on HQ. If successful, instead of accessing cards, the Corp adds all cards in HQ to the top of R&amp;D in the order of his or her choice.&#xD;&#xA;Designed by 2013 World Champion Jens Erickson" />
+		<property name="Flavor" value="" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Criminal" />
+		<property name="Influence" value="2" />
+		<property name="Side" value="runner" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda10023" name="Tech Trader">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Resource" />
+		<property name="Keywords" value="Connection" />
+		<property name="Cost" value="1" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="" />	
+		<property name="Rules" value="Whenever you use a [Trash] ability, gain 1[Credits]." />
+		<property name="Flavor" value="&quot;Why would you dispose of perfectly good evidence when you can sell it?&quot;" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Criminal" />
+		<property name="Influence" value="1" />
+		<property name="Side" value="runner" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda10024" name="NetChip">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Hardware" />
+		<property name="Keywords" value="Consumer-grade-Chip" />
+		<property name="Cost" value="1" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="" />	
+		<property name="Rules" value="NetChip can host a program with a memory cost less than or equal to the number of copies of NetChip installed. The memory cost of the hosted program does not count against your memory limit.&#xD;&#xA;Limit 6 per deck." />
+		<property name="Flavor" value="" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Shaper" />
+		<property name="Influence" value="2" />
+		<property name="Side" value="runner" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda10025" name="Corporate Scandal">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Event" />
+		<property name="Keywords" value="Current" />
+		<property name="Cost" value="3" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="" />	
+		<property name="Rules" value="This card is not trashed until another current is played or an agenda is scored.&#xD;&#xA;The Corp has 1 additional bad publicity (even if they have 0)." />
+		<property name="Flavor" value="&quot;We may be outraged, but we’re not surprised.&quot; -Sunder" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Neutral" />
+		<property name="Influence" value="1" />
+		<property name="Side" value="runner" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda10026" name="Populist Rally">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Event" />
+		<property name="Keywords" value="" />
+		<property name="Cost" value="2" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="" />	
+		<property name="Rules" value="Play only if you have at least 1 seedy card installed.&#xD;&#xA;The Corp has 1 fewer [Click] to spend on his or her next turn." />
+		<property name="Flavor" value="&quot;The corporations may be stronger than any of us, but they are not stronger than all of us.&quot; -Akshara Sareen " />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Neutral" />
+		<property name="Influence" value="0" />
+		<property name="Side" value="runner" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda10027" name="Advanced Assembly Lines">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Asset" />
+		<property name="Keywords" value="Facility" />
+		<property name="Cost" value="1" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="1" />	
+		<property name="Rules" value="When you rez Advanced Assembly Lines, gain 3[Credits].&#xD;&#xA;[Trash]: Install a non-agenda card from HQ (paying the install cost). You cannot use this ability during a run." />
+		<property name="Flavor" value="" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Haas-Bioroid" />
+		<property name="Influence" value="2" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda10028" name="Lakshmi Smartfabrics">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Asset" />
+		<property name="Keywords" value="" />
+		<property name="Cost" value="1" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="3" />	
+		<property name="Rules" value="Whenever you rez a card, place 1 power counter on Lakshmi Smartfabrics.&#xD;&#xA;X hosted power counters: Reveal an agenda worth X points from HQ. The Runner cannot steal copies of that agenda for the remainder of this turn." />
+		<property name="Flavor" value="" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Haas-Bioroid" />
+		<property name="Influence" value="3" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda10029" name="Product Recall">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Operation" />
+		<property name="Keywords" value="Alliance" />
+		<property name="Cost" value="0" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="" />	
+		<property name="Rules" value="This card costs 0 influence if you have 6 or more non-alliance [haas-bioroid] cards in your deck.&#xD;&#xA;Trash a rezzed asset or upgrade. If you do, gain credits equal to its trash cost." />
+		<property name="Flavor" value="" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Haas-Bioroid" />
+		<property name="Influence" value="2" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda10030" name="Pālanā Foods">
+		<property name="Subtitle" value="Sustainable Growth" />
+		<property name="Type" value="Identity" />
+		<property name="Keywords" value="Division" />
+		<property name="Cost" value="0" />
+		<property name="Requirement" value="45" />	
+		<property name="Stat" value="15" />	
+		<property name="Rules" value="The first time each turn the Runner draws a card, gain 1[Credits]." />
+		<property name="Flavor" value="We Are What We Eat. " />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Jinteki" />
+		<property name="Influence" value="" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda10031" name="Pālanā Agroplex">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Asset" />
+		<property name="Keywords" value="Facility" />
+		<property name="Cost" value="1" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="5" />	
+		<property name="Rules" value="When your turn begins, each player draws 1 card. " />
+		<property name="Flavor" value="Expensive to build but dramatically more efficient than traditional farming, agroplexes are emblems of the inevitable corporatization of the food industry. " />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Jinteki" />
+		<property name="Influence" value="2" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda10032" name="Harvester">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="ICE" />
+		<property name="Keywords" value="Code Gate" />
+		<property name="Cost" value="1" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="3" />	
+		<property name="Rules" value="[Subroutine] The Runner draws 3 cards and then discards down to his or her maximum hand size.&#xD;&#xA;[Subroutine] The Runner draws 3 cards and then discards down to his or her maximum hand size." />
+		<property name="Flavor" value="&quot;We can help others, yet also help ourselves.&quot; -Soraiya Suresh, VP Public Programs" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Jinteki" />
+		<property name="Influence" value="1" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda10033" name="Remote Data Farm">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Agenda" />
+		<property name="Keywords" value="Expansion" />
+		<property name="Cost" value="4" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="2" />	
+		<property name="Rules" value="Your maximum hand size is increased by 2." />
+		<property name="Flavor" value="Data, not food, is one of the biggest exports from the Gujarat district of Mumbad." />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="NBN" />
+		<property name="Influence" value="" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda10034" name="Disposable HQ">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Upgrade" />
+		<property name="Keywords" value="Ambush" />
+		<property name="Cost" value="0" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="5" />	
+		<property name="Rules" value="If Disposable HQ is accessed from R&amp;D, the Runner must reveal it.&#xD;&#xA;When the Runner accesses Disposable HQ, you may add any number of cards from HQ to the bottom of R&amp;D." />
+		<property name="Flavor" value="" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="NBN" />
+		<property name="Influence" value="1" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda10035" name="New Construction">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Agenda" />
+		<property name="Keywords" value="Public" />
+		<property name="Cost" value="4" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="2" />	
+		<property name="Rules" value="Install New Construction faceup.&#xD;&#xA;Whenever you advance New Construction, you may install a card from HQ in a new server (and rez that card ignoring all costs if there are 5 or more advancement tokens on New Construction). " />
+		<property name="Flavor" value="" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="The Weyland Consortium" />
+		<property name="Influence" value="" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda10036" name="Mumbad Construction Co.">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Asset" />
+		<property name="Keywords" value="" />
+		<property name="Cost" value="4" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="3" />	
+		<property name="Rules" value="When your turn begins, place 1 advancement token on Mumbad Construction Co.&#xD;&#xA;2[Credits]: Move 1 advancement token from Mumbad Construction Co. to a faceup card. " />
+		<property name="Flavor" value="" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="The Weyland Consortium" />
+		<property name="Influence" value="3" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda10037" name="Corporate Sales Team">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Agenda" />
+		<property name="Keywords" value="Expansion" />
+		<property name="Cost" value="4" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="2" />	
+		<property name="Rules" value="When you score Corporate Sales Team, place 10[Credits] on it.&#xD;&#xA;When each player&apos;s turn begins, take 1[Credits] from Corporate Sales Team." />
+		<property name="Flavor" value="&quot;You got it. We sell it. They buy it. Everyone wins.&quot;" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Neutral" />
+		<property name="Influence" value="" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda10038" name="PAD Factory">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Asset" />
+		<property name="Keywords" value="Alliance-Facility" />
+		<property name="Cost" value="2" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="3" />	
+		<property name="Rules" value="This card costs 0 influence if you have 3 PAD Campaigns in your deck.&#xD;&#xA;[Click]: Place 1 advancement token on a card. You cannot score that card until your next turn begins." />
+		<property name="Flavor" value="" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Neutral" />
+		<property name="Influence" value="2" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+</cards>
+</set>

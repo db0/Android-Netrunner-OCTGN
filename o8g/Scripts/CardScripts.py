@@ -6733,6 +6733,158 @@ atTurnStart:Retrieve1Card-fromArchives-toDeck-doNotReveal-duringMyTurn-isOptiona
 +++++
 
 .....
+EMP Device
+-----
+bc0f047c-01b1-427f-a439-d451eda10020
+-----
+
++++++
+
+.....
+Diwan
+-----
+bc0f047c-01b1-427f-a439-d451eda10021
+-----
+
++++++
+
+.....
+CBI Raid
+-----
+bc0f047c-01b1-427f-a439-d451eda10022
+-----
+
++++++
+
+.....
+Tech Trader
+-----
+bc0f047c-01b1-427f-a439-d451eda10023
+-----
+
++++++
+
+.....
+NetChip
+-----
+bc0f047c-01b1-427f-a439-d451eda10024
+-----
+
++++++
+
+.....
+Corporate Scandal
+-----
+bc0f047c-01b1-427f-a439-d451eda10025
+-----
+
++++++
+
+.....
+Populist Rally
+-----
+bc0f047c-01b1-427f-a439-d451eda10026
+-----
+
++++++
+
+.....
+Advanced Assembly Lines
+-----
+bc0f047c-01b1-427f-a439-d451eda10027
+-----
+
++++++
+
+.....
+Lakshmi Smartfabrics
+-----
+bc0f047c-01b1-427f-a439-d451eda10028
+-----
+
++++++
+
+.....
+Product Recall
+-----
+bc0f047c-01b1-427f-a439-d451eda10029
+-----
+
++++++
+
+.....
+Palana Foods
+-----
+bc0f047c-01b1-427f-a439-d451eda10030
+-----
+
++++++
+
+.....
+Palana Agroplex
+-----
+bc0f047c-01b1-427f-a439-d451eda10031
+-----
+
++++++
+
+.....
+Harvester
+-----
+bc0f047c-01b1-427f-a439-d451eda10032
+-----
+
++++++
+
+.....
+Remote Data Farm
+-----
+bc0f047c-01b1-427f-a439-d451eda10033
+-----
+
++++++
+
+.....
+Disposable HQ
+-----
+bc0f047c-01b1-427f-a439-d451eda10034
+-----
+
++++++
+
+.....
+New Construction
+-----
+bc0f047c-01b1-427f-a439-d451eda10035
+-----
+
++++++
+
+.....
+Mumbad Construction Co.
+-----
+bc0f047c-01b1-427f-a439-d451eda10036
+-----
+
++++++
+
+.....
+Corporate Sales Team
+-----
+bc0f047c-01b1-427f-a439-d451eda10037
+-----
+
++++++
+
+.....
+PAD Factory
+-----
+bc0f047c-01b1-427f-a439-d451eda10038
+-----
+
++++++
+
+.....
 ENDSCRIPTS
 =====
 '''
