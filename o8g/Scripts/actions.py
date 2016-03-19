@@ -1765,10 +1765,16 @@ def HQaccess(group=table, x=0,y=0, silent = False, directTargets = None):
       return
    else: revealedCards = [c for c in table if c.highlight == RevealedColor]
    if not len(revealedCards):  # If we have revealedCards, we're either continuing from another paused access, or the corp has just finished revealing and passing contol of cards to us
-      if getGlobalVariable('Paused Runner') != 'False':
-         # If the pause variable is still active, it means the last access was paused by there were no other cards to resume, so we just clear the variable.
-         setGlobalVariable('Paused Runner','False')
-         return
+      pauseRecovery = eval(getGlobalVariable('Paused Runner'))
+      #confirm(str(pauseRecovery))
+      if pauseRecovery and pauseRecovery[0] == 'HQ': # If the pause variable is still active, it means the last access was paused by there were no other cards to resume, so we just clear the variable.
+         scrambledRecovery = pauseRecovery[1] # if there was a scrambled access, we reinitiate access based on how many cards remained to be accessed.
+         setGlobalVariable('Paused Runner','False') # We clear the variable. If it's needed again, it'll be reset.
+         if scrambledRecovery:
+            barNotifyAll('#000000',"{} is continuing their HQ Access".format(me))
+            remoteCall(fetchCorpPL(),'prepHQAccess',[me, scrambledRecovery, silent,None])            
+      elif len(fetchCorpPL().ScriptingPile): 
+         for c in fetchCorpPL().ScriptingPile: changeCardGroup(c, fetchCorpPL().hand) # Cards in the scripting pile are previously accessed cards that we return to their hand again.        
       else:
          if not silent and not confirm("You are about to access a random card from the corp's HQ.\
                                       \nPlease make sure your opponent is not manipulating their hand, and does not have a way to cancel this effect before continuing\
@@ -1794,14 +1800,18 @@ def HQaccess(group=table, x=0,y=0, silent = False, directTargets = None):
                if chkTagged(autoS, True) == 'ABORT': continue 
                debugNotify(" accessRegex found!")
                notify("{} has just accessed a {}!".format(me,revealedCard.Name))
-               remoteCall(revealedCard.owner, 'remoteAutoscript', [revealedCard,autoS])
                if re.search(r'-pauseRunner',autoS): 
-                  notify(":::WARNING::: {} has stumbled onto {}. Once the effects of this card are complete, they need to press Ctrl+Q to continue their access from where they left it.".format(me,revealedCard.name))
+                  notify(":::WARNING::: {} has stumbled onto {}. Once the effects of this card are complete, they need to press Ctrl+Q to continue their access from where they left it.".format(me,revealedCard.Name))
                   changeCardGroup(revealedCard, targetPL.hand)
                   #revealedCard.moveTo(targetPL.hand) # We return it to the player's hand because the effect will decide where it goes afterwards
-                  #if not len([c for c in table if c.highlight == RevealedColor]): clearCovers() # If we have no leftover cards to access after a
-                  setGlobalVariable('Paused Runner',str(['HQ']))
+                  if re.search(r'-scrambleCards',autoS): 
+                     setGlobalVariable('Paused Runner',str(['HQ',len([c for c in table if c in revealedCards])]))
+                     for c in revealedCards: # if we're scrambling the HQ access, we're returning all previously revealed but not accessed cards to HQ.
+                        if c.group == table: changeCardGroup(c, targetPL.hand)
+                  else: setGlobalVariable('Paused Runner',str(['HQ',0]))
+                  remoteCall(revealedCard.owner, 'remoteAutoscript', [revealedCard,autoS])
                   return
+               remoteCall(revealedCard.owner, 'remoteAutoscript', [revealedCard,autoS])
          debugNotify("Not a Trap.", 2) #Debug
          if revealedCard.Type == 'ICE':
             cStatTXT = '\nStrength: {}.'.format(revealedCard.Stat)
@@ -1872,10 +1882,11 @@ def HQaccess(group=table, x=0,y=0, silent = False, directTargets = None):
                if rc == "ABORT": revealedCard.moveTo(targetPL.hand) # If the player couldn't pay to trash the card, we leave it where it is.
                sendToTrash(revealedCard)
                notify("{} paid {}{} to {} {}".format(me,uniCredit(num(revealedCard.Stat) - reduction),extraText2,uniTrash(),revealedCard.Name))
-         else: changeCardGroup(revealedCard, targetPL.hand)
+         else: changeCardGroup(revealedCard, targetPL.ScriptingPile) # We move already accessed cards to the scripting pile so that scrambling effects don't mess with them.
          try: del origController[revealedCard._id] # We use a try: just in case...
          except: pass
       for c in revealedCards: c.highlight = None # We make sure no card remains highlighted for some reason.
+      for c in targetPL.ScriptingPile: changeCardGroup(c, targetPL.hand) # Cards in the scripting pile are previously accessed cards that we return to their hand again.
       #passPileControl(targetPL.hand,targetPL)
       setGlobalVariable('Paused Runner','False')
    #clearCovers() # Finally we clear any remaining cover cards.

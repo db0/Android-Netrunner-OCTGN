@@ -435,12 +435,24 @@ def UseCustomAbility(Autoscript, announceText, card, targetCards = None, notific
       announceString = "{} install and rez {} advertisements".format(announceText,n)
    if fetchProperty(card, 'name') == "Archangel":
       remoteCall(fetchCorpPL(),'Archangel',[card])
+      announceString = ''
    if fetchProperty(card, 'name') == "Hunting Grounds":
       for c in deck.top(3):
          placeCard(c, action = 'INSTALL', type = 'Apex')
       announceString = "{} increase their apetite...".format(announceText)
    if fetchProperty(card, 'name') == "Chatterjee University":  
       announceString = ModifyStatus('InstallTarget-payCost-reduc{}'.format(card.markers[mdict['Power']]),announceText,card,findTarget('DemiAutoTargeted-atProgram-fromHand-choose1'))
+   if fetchProperty(card, 'name') == "Disposable HQ":  
+      for iter in range(len(me.hand)):
+         returnCard = askCard([c for c in me.hand],"Choose next card to add to the bottom of your R&D. Close this window to finish")
+         if returnCard:         
+            changeCardGroup(returnCard, me.piles['R&D/Stack'], True)
+            notify("-- {} returned {} card into the bottom of R&D".format(me,numOrder(iter)))
+         else:
+            notify("-- {} has finished resolving their disposable HQ")
+            break
+      if card.group == me.hand: changeCardGroup(card, me.ScriptingPile) # If the disposable HQ is still in our hand, it means it was already accessed in HQ, so we need to put it in the scripting pile to mark it as already accessed
+      announceString = ''
    return announceString
  
 #------------------------------------------------------------------------------
@@ -1627,6 +1639,18 @@ def CustomScript(card, action = 'PLAY', origin_card = None, original_action = No
       runnerPl = fetchRunnerPL()
       notify(":::WARN::: {} uses {} to look at the top card of the Runer's Stack.".format(me,card))
       whisper(":::INFO::: The top card of the corp R&D is {} ({})".format(runnerPl.piles['R&D/Stack'].top().Name,runnerPl.piles['R&D/Stack'].top().Type))
+   elif fetchProperty(card, 'name') == "CBI Raid" and action == 'SuccessfulRun':
+      remoteCall(fetchCorpPL(),'CBIRaid',[card])
+   elif fetchProperty(card, 'name') == 'Lakshmi Smartfabrics' and action == 'USE':
+      count = askInteger("Remove how many power counters?",card.markers[mdict['Power']])
+      if not count: return
+      elif count > card.markers[mdict['Power']]: count = card.markers[mdict['Power']]
+      notify(":::INFO::: {} removed {} power counters from their {} and is choosing an Agenda to protect".format(me,count,card))
+      agenda = askCard([c for c in me.hand if num(c.Stat) == count],"Choose an Agenda worth exactly {} points to reveal".format(count))
+      if not agenda: notify("-- {} decided to abort their use of {}".format(me,card))
+      else:
+         card.markers[mdict['Power']] -= count
+         notify("{} is preventing copies of {} from being stolen for the rest of this turn".format(me,agenda.Name))
    elif action == 'USE': useCard(card)
       
             
@@ -1686,6 +1710,10 @@ def markerEffects(Time = 'Start'):
             ModifyStatus('TrashMyself', 'London Library:', card)
          if re.search(r'Feelgood',marker[0]) and Time == 'End':
             TokensX('Remove999Feelgood-isSilent', "Dr. Feelgood:", card)
+         if re.search(r'Populist Rally',marker[0]) and Time == 'Start' and card.controller == me: 
+            me.Clicks -= 1
+            notify(":> Populist Rally's effect reduces {}'s {} for this turn by 1".format(me,uniClick()))
+            TokensX('Remove1Populist Rally-isSilent', "Populist Rally:", card)
 
 
 def ASVarEffects(Time = 'Start'):
@@ -2171,3 +2199,10 @@ def ACH(card):
    else:
       notify("{} opts not to use their {}".format(me,card))
    
+def CBIRaid(card): 
+   notify("{} is being raided by the CBI...".format(me))
+   for iter in range(len(me.hand)):
+      notify("-- Choosing {} card to place on top of R&D".format(numOrder(iter)))
+      raidedCard = askCard([c for c in me.hand],"Choose next card to place on top of R&D")
+      changeCardGroup(raidedCard,me.piles['R&D/Stack'])
+   notify("The {} is completed".format(card))

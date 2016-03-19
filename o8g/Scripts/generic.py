@@ -836,51 +836,59 @@ def peekCard(card):
 #---------------------------------------------------------------------------   
 
 def prepPatronLists():
-   global supercharged,customized
-   supercharged = patreonsDict['SuperchargedSubs'] + patreonsDict['CustomSubs'] + patreonsDict['CardSubs']
-   customized = patreonsDict['CustomSubs'] + patreonsDict['CardSubs']
-   debugNotify("supercharged = {}".format(supercharged))
+   try: # Fix for missing internet
+      global supercharged,customized
+      supercharged = patreonsDict['SuperchargedSubs'] + patreonsDict['CustomSubs'] + patreonsDict['CardSubs']
+      customized = patreonsDict['CustomSubs'] + patreonsDict['CardSubs']
+      debugNotify("supercharged = {}".format(supercharged))
+   except: pass
    
 def superCharge(card):
-   if me.name.lower() in supercharged: card.switchTo('Supercharged')
-   if me.name.lower() in patreonsDict['CardSubs']: card.switchTo(me.name.lower())
+   try: # Fix for missing internet
+      if me.name.lower() in supercharged: card.switchTo('Supercharged')
+      if me.name.lower() in patreonsDict['CardSubs']: card.switchTo(me.name.lower())
+   except: pass
       
 def announceSupercharge():
    if me.name.lower() in supercharged:
       notify("   \n+=+ {}\n".format(patreonsDict['CustomMsgs'].get(me.name.lower(),SuperchargedMsg))) # We either announce a player's custom message, or the generic supercharged one
       
 def announceSoT():
-   statsTXT = "They have {}, {} cards and {} {} starting this turn.".format(uniCredit(me.Credits),len(me.hand),me.Clicks,uniClick())
-   if ds == "corp": 
-      announceTXT = "The offices of {} ({}) are now open for business.".format(identName,me)
-      if patreonsDict['corpStartMsgs'].get(me.name.lower(),None): customTXT = "\n\n{}\n".format(patreonsDict['corpStartMsgs'][me.name.lower()])
-      else: customTXT = ''
-      #notify("=> The offices of {} ({}) are now open for business.\n They have {} and {} {} for this turn.".format(identName,me,uniCredit(me.Credits),me.Clicks,uniClick()))
-   else:
-      announceTXT = "{} ({}) has woken up.".format(identName,me)
-      if patreonsDict['runnerStartMsgs'].get(me.name.lower(),None): customTXT = "\n\n{}\n".format(patreonsDict['runnerStartMsgs'][me.name.lower()])
-      else: customTXT = ''
-      #notify ("=> {} ({}) has woken up. They have {} and {} {} for this turn.".format(identName,me,uniCredit(me.Credits),me.Clicks,uniClick()))
-   #if ds == 'runner': barNotifyAll('#AA0000',"{} has started their turn".format(me))
-   #else: barNotifyAll('#0000FF',"{} has started their turn".format(me))
-   notify("=> {}{}".format(announceTXT,customTXT)) 
-   notify("=> {}".format(statsTXT))
-   if ds == 'runner' and chkTags(): notify(":::Reminder::: {} is Tagged!".format(identName))
+   try: # Fix for missing internet
+      statsTXT = "They have {}, {} cards and {} {} starting this turn.".format(uniCredit(me.Credits),len(me.hand),me.Clicks,uniClick())
+      if ds == "corp": 
+         announceTXT = "The offices of {} ({}) are now open for business.".format(identName,me)
+         if patreonsDict['corpStartMsgs'].get(me.name.lower(),None): customTXT = "\n\n{}\n".format(patreonsDict['corpStartMsgs'][me.name.lower()])
+         else: customTXT = ''
+         #notify("=> The offices of {} ({}) are now open for business.\n They have {} and {} {} for this turn.".format(identName,me,uniCredit(me.Credits),me.Clicks,uniClick()))
+      else:
+         announceTXT = "{} ({}) has woken up.".format(identName,me)
+         if patreonsDict['runnerStartMsgs'].get(me.name.lower(),None): customTXT = "\n\n{}\n".format(patreonsDict['runnerStartMsgs'][me.name.lower()])
+         else: customTXT = ''
+         #notify ("=> {} ({}) has woken up. They have {} and {} {} for this turn.".format(identName,me,uniCredit(me.Credits),me.Clicks,uniClick()))
+      #if ds == 'runner': barNotifyAll('#AA0000',"{} has started their turn".format(me))
+      #else: barNotifyAll('#0000FF',"{} has started their turn".format(me))
+      notify("=> {}{}".format(announceTXT,customTXT)) 
+      notify("=> {}".format(statsTXT))
+      if ds == 'runner' and chkTags(): notify(":::Reminder::: {} is Tagged!".format(identName))
+   except: pass
 
 def announceEoT():
-   statsTXT = "They end their turn with {}, {} cards in their {}, and {} cards in their {}.".format(uniCredit(me.Credits),len(me.hand),pileName(me.hand),len(me.piles['R&D/Stack']),pileName(me.piles['R&D/Stack']))
-   if ds == "corp": 
-      announceTXT = "{} ({}) has reached CoB.".format(identName, me)
-      if patreonsDict['corpEndMsgs'].get(me.name.lower(),None): customTXT = "\n\n{}\n".format(patreonsDict['corpEndMsgs'][me.name.lower()])
-      else: customTXT = ''
-   else:
-      announceTXT = "{} ({}) has gone to sleep for the day.".format(identName,me)
-      if patreonsDict['runnerEndMsgs'].get(me.name.lower(),None): customTXT = "\n\n{}\n".format(patreonsDict['runnerEndMsgs'][me.name.lower()])
-      else: customTXT = ''
-   #if ds == 'runner': barNotifyAll('#880000',"{} has ended their turn".format(me))
-   #else: barNotifyAll('#0000AA',"{} has ended their turn".format(me))
-   notify("=> {}{}".format(announceTXT,customTXT)) 
-   notify("=> {}".format(statsTXT))
+   try: # Fix for missing internet
+      statsTXT = "They end their turn with {}, {} cards in their {}, and {} cards in their {}.".format(uniCredit(me.Credits),len(me.hand),pileName(me.hand),len(me.piles['R&D/Stack']),pileName(me.piles['R&D/Stack']))
+      if ds == "corp": 
+         announceTXT = "{} ({}) has reached CoB.".format(identName, me)
+         if patreonsDict['corpEndMsgs'].get(me.name.lower(),None): customTXT = "\n\n{}\n".format(patreonsDict['corpEndMsgs'][me.name.lower()])
+         else: customTXT = ''
+      else:
+         announceTXT = "{} ({}) has gone to sleep for the day.".format(identName,me)
+         if patreonsDict['runnerEndMsgs'].get(me.name.lower(),None): customTXT = "\n\n{}\n".format(patreonsDict['runnerEndMsgs'][me.name.lower()])
+         else: customTXT = ''
+      #if ds == 'runner': barNotifyAll('#880000',"{} has ended their turn".format(me))
+      #else: barNotifyAll('#0000AA',"{} has ended their turn".format(me))
+      notify("=> {}{}".format(announceTXT,customTXT)) 
+      notify("=> {}".format(statsTXT))
+   except: pass
 
 #---------------------------------------------------------------------------
 # API Fucking Wrappers
@@ -913,7 +921,10 @@ def changeCardGroup(card, group, sendToBottom = False, index = 0): # A cumulativ
    if group.controller == me and card.controller == me:
       storeProperties(card) # Since we're at it, we might as well store its properties for later
       if sendToBottom: card.moveToBottom(group)
-      else: card.moveTo(group, index) # We move the card into the target pile
+      else: 
+         prevGroup = card.group
+         card.moveTo(group, index) # We move the card into the target pile
+         if prevGroup == me.piles['R&D/Stack'] and group == me.hand: autoscriptOtherPlayers('CardDrawAny',card) # Attempting to catch all card draw effects for Palana Foods
    elif card.controller != me: 
       remoteCall(card.controller,'changeCardGroup',[card, group, sendToBottom])
    else: # We only get here if we control the card but not the group

@@ -6739,21 +6739,21 @@ bc0f047c-01b1-427f-a439-d451eda10020
 -----
 
 +++++
-
+A0B0G0T1:SimplyAnnounce{prevent the corp from rezzing more than 1 ice for the remainder of this run}
 .....
 Diwan
 -----
 bc0f047c-01b1-427f-a439-d451eda10021
 -----
-
+onInstall:Put1Diwan-Targeted-atServer||whileInPlay:TrashMyself-foreachVirusPurged$$Remove999Diwan-AutoTargeted-atServer
 +++++
-
+A0B0G0T0:Lose1Credits-onOpponent
 .....
 CBI Raid
 -----
 bc0f047c-01b1-427f-a439-d451eda10022
 -----
-
+onPlay:RunHQ||atSuccessfulRun:CustomScript-isAlternativeRunResult||atJackOut:TrashMyself-isSilent
 +++++
 
 .....
@@ -6763,21 +6763,21 @@ bc0f047c-01b1-427f-a439-d451eda10023
 -----
 
 +++++
-
+A0B0G0T0:Gain1Credits
 .....
 NetChip
 -----
 bc0f047c-01b1-427f-a439-d451eda10024
 -----
-
+onInstall:Put1NetChip Hosted-isSilent||ConstantAbility:CountsAsDaemon
 +++++
-
+A0B0G0T0:PossessTarget-Targeted-atProgram-targetMine
 .....
 Corporate Scandal
 -----
 bc0f047c-01b1-427f-a439-d451eda10025
 -----
-
+onPlay:Gain1Bad Publicity-onOpponent||onTrash:Lose1Bad Publicity-onOpponent
 +++++
 
 .....
@@ -6785,7 +6785,7 @@ Populist Rally
 -----
 bc0f047c-01b1-427f-a439-d451eda10026
 -----
-
+onPlay:Put1Populist Rally-AutoTargeted-atIdentity-targetOpponents
 +++++
 
 .....
@@ -6793,23 +6793,23 @@ Advanced Assembly Lines
 -----
 bc0f047c-01b1-427f-a439-d451eda10027
 -----
-
+onRez:Gain3Credits
 +++++
-
+A0B0G0T1:InstallTarget-Targeted-atnonAgenda-fromHand
 .....
 Lakshmi Smartfabrics
 -----
 bc0f047c-01b1-427f-a439-d451eda10028
 -----
-
+whileInPlay:Put1Power-foreachCardRezzed-byMe
 +++++
-
+A0B0G0T0:CustomScript
 .....
 Product Recall
 -----
 bc0f047c-01b1-427f-a439-d451eda10029
 -----
-
+onPlay:Gain1Credits-perTargetProperty{Stat}-Targeted-atAsset_or_Upgrade-isRezzed-targetMine$$TrashTarget-Targeted-atAsset_or_Upgrade-isRezzed-targetMine
 +++++
 
 .....
@@ -6817,7 +6817,7 @@ Palana Foods
 -----
 bc0f047c-01b1-427f-a439-d451eda10030
 -----
-
+whileInPlay:Gain1Credits-foreachCardDrawAny-byOpponent-onlyOnce
 +++++
 
 .....
@@ -6825,7 +6825,7 @@ Palana Agroplex
 -----
 bc0f047c-01b1-427f-a439-d451eda10031
 -----
-
+atTurnStart:Draw1Card-duringMyTurn$$Draw1Card-forOpponent
 +++++
 
 .....
@@ -6835,13 +6835,13 @@ bc0f047c-01b1-427f-a439-d451eda10032
 -----
 
 +++++
-
+A0B0G0T0:Draw3Cards-forOpponent-isSubroutine
 .....
 Remote Data Farm
 -----
 bc0f047c-01b1-427f-a439-d451eda10033
 -----
-
+whileInPlay:Provide2HandSize-forCorp
 +++++
 
 .....
@@ -6849,7 +6849,7 @@ Disposable HQ
 -----
 bc0f047c-01b1-427f-a439-d451eda10034
 -----
-
+onAccess:UseCustomAbility-worksInArchives-pauseRunner-scrambleCards
 +++++
 
 .....
@@ -6857,7 +6857,7 @@ New Construction
 -----
 bc0f047c-01b1-427f-a439-d451eda10035
 -----
-
+onAdvance:InstallTarget-DemiAutoTargeted-choose1-fromHand
 +++++
 
 .....
@@ -6865,15 +6865,15 @@ Mumbad Construction Co.
 -----
 bc0f047c-01b1-427f-a439-d451eda10036
 -----
-
+atTurnStart:Put1Advancement-duringMyTurn
 +++++
-
+A0B2G0T0:Remove1Advancement-isCost$$Put1Advancement-Targeted-isRezzed-atICE_or_Asset_or_Upgrade_or_Agenda-targetMine-choose1
 .....
 Corporate Sales Team
 -----
 bc0f047c-01b1-427f-a439-d451eda10037
 -----
-
+onScore:Put10Credits||atTurnStart:Transfer1Credits
 +++++
 
 .....
@@ -6883,7 +6883,7 @@ bc0f047c-01b1-427f-a439-d451eda10038
 -----
 
 +++++
-
+A1B0G0T0:Put1Advancement-Targeted
 .....
 ENDSCRIPTS
 =====

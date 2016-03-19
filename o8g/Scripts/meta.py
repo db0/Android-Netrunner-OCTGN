@@ -730,7 +730,7 @@ def prepHQAccess(runner, count, silent, directTargets = None): # Helper function
          card.moveToTable(playerside * -1 * iter * cwidth(card) - (len(revealedCards) * cwidth(card) / 2), 0 - yaxisMove(card) * -1, False)
          card.highlight = RevealedColor
    else: revealedCards = showatrandom(count = count, targetPL = me, silent = True)
-   if not len(revealedCards): 
+   if not len(revealedCards) and len(me.ScriptingPile) == 0: 
       notify(":::ERROR::: Corp has no cards in HQ")
       return
    for card in revealedCards: passCardControl(card,runner)
@@ -858,6 +858,12 @@ def calcInfluence(card, allianceCounts): # Checks if any card's influence is cha
    elif card.Name == "Museum of History":
       if len(me.piles['R&D/Stack']) >= 50: influence = 0
       else: influence = 2      
+   elif card.Name == "Product Recall":
+      if allianceCounts['HBCount'] >= 6: influence = 0
+      else: influence = 2
+   elif card.Name == "PAD Factory":
+      if allianceCounts['PAD Campaign'] == 3: influence = 0
+      else: influence = 0
    else: influence = num(card.Influence)
    return influence   
    
@@ -865,7 +871,9 @@ def storeAlliances(): # Used to precount the influence required for Alliance car
    allianceCounts = {'JintekiCount':0,'ICEcount':0}
    for c in me.piles['R&D/Stack']:
       if c.Faction == "Jinteki" and not re.search(r'Alliance',c.Keywords): allianceCounts['JintekiCount'] += 1
+      if c.Faction == "Haas-Bioroid" and not re.search(r'Alliance',c.Keywords): allianceCounts['HBCount'] += 1
       if c.Type == 'ICE': allianceCounts['ICEcount'] += 1
+      if c.Name == 'PAD Campaign': allianceCounts['PAD Campaign'] += 1      
    return allianceCounts   
    
 def checkCardLimits(cardName):
@@ -1639,5 +1647,5 @@ def fetchPatrons():
    patreonsString = None
    patreonsString, code = webRead('https://raw.githubusercontent.com/db0/octgn-supercharges/master/dicts.txt',5000)
    #confirm(patreonsString)
-   if not patreonsString: whisper(":::WARNING::: Cannot download patreon list at the moment.")
+   if not patreonsString or patreonsString == 'error': whisper(":::WARNING::: Cannot download patreon list at the moment.")
    else: patreonsDict = eval(patreonsString)

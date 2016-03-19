@@ -1,6 +1,16 @@
 Changelog - Android:Netrunner LCG OCTGN Game Definition
 ===============================================
 
+### 3.24.0.x
+
+* New game definition for **Business First**. As always, almost every card scripted!
+* ##### Trickier Automations
+  * Tech Trader: Manual use
+  * Net Chip: Won't enforce the memory, just don't host more expensive stuff than you should
+  * Corporate Scandal: Won't prevent the corp from going to 0 Bad Publicity, so make sure you increase it to 1 afterwards.
+  * Harvester: won't enforce the discard down to hand size. Do it manually.
+  * New Construction: Rez without cost manually if you have the advancements.
+
 ### 3.23.0.x
 
 * New game definition for **Kala Ghoda**. As always, almost every card scripted!

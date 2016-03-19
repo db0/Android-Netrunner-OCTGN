@@ -302,8 +302,8 @@ def reconnect():
 # An event which takes care to properly reset all the player variables after they reconnect to the game.
    global identName, Identity, lastKnownNrClicks, PriorityInform, ds
    fetchCardScripts(silent = True)
-   fetchPatrons()
-   prepPatronLists()
+   #fetchPatrons()
+   #prepPatronLists()
    for card in me.hand: storeProperties(card)
    for card in table:
       storeProperties(card)
