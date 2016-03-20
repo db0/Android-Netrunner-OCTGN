@@ -11,7 +11,8 @@ Changelog - Android:Netrunner LCG OCTGN Game Definition
   * Harvester: won't enforce the discard down to hand size. Do it manually.
   * New Construction: Rez without cost manually if you have the advancements.
   * Disposable HQ: Should be working, but it might cause issues if encountered in the middle of multi-access in HQ. If the Corp HQ is empty after access, press Ctrl+Q as the runner once and it shOuld recover.
-
+* Switched away from WinForms to built-in OCTGN APIs.
+  
 ### 3.23.0.x
 
 * New game definition for **Kala Ghoda**. As always, almost every card scripted!
