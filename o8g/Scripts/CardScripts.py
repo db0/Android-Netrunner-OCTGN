@@ -6825,7 +6825,7 @@ Palana Agroplex
 -----
 bc0f047c-01b1-427f-a439-d451eda10031
 -----
-atTurnStart:Draw1Card-duringMyTurn$$Draw1Card-forOpponent
+atTurnStart:Draw1Card-duringMyTurn$$Draw1Card-ofOpponent
 +++++
 
 .....
@@ -6835,7 +6835,7 @@ bc0f047c-01b1-427f-a439-d451eda10032
 -----
 
 +++++
-A0B0G0T0:Draw3Cards-forOpponent-isSubroutine
+A0B0G0T0:Draw3Cards-ofOpponent-isSubroutine
 .....
 Remote Data Farm
 -----

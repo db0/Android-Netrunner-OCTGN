@@ -1165,7 +1165,18 @@ def modGroupVisibility(group,setting):
    update()
    debugNotify("<<< modGroupVisibility. {} group.visibility == {}".format(group,group.visibility))
 
-   
+def recoverHQRevealCards(revealedCardsList):
+   for c in revealedCardsList: # if we're scrambling the HQ access, we're returning all previously revealed but not accessed cards to HQ.
+      if c.group == table: 
+         #confirm("returning {} to hand".format(c.Name))
+         c.moveTo(me.hand)
+         changeCardGroup(c, me.hand)
+         
+def revoverScriptedHQ():
+   for c in me.ScriptingPile: 
+      c.moveTo(me.hand)
+      changeCardGroup(c, me.hand) # Cards in the scripting pile are previously accessed cards that we return to their hand again.
+            
 #------------------------------------------------------------------------------
 # Help functions
 #------------------------------------------------------------------------------

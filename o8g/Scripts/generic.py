@@ -286,28 +286,36 @@ class SingleChoiceWindow(Form):
 
 def SingleChoice(title, options, type = 'button', default = 0, cancelButton = True, cancelName = 'Cancel'):
    debugNotify(">>> SingleChoice()".format(title))
-   if Automations['WinForms']:
-      optChunks=[options[x:x+7] for x in xrange(0, len(options), 7)]
-      optCurrent = 0
-      choice = "New"
-      while choice == "New" or choice == "Next Page" or (choice == None and not cancelButton):
-         Application.EnableVisualStyles()
-         form = SingleChoiceWindow(title, optChunks[optCurrent], type, default, pages = len(optChunks), cancelButtonBool = cancelButton, cancelName = cancelName)
-         form.BringToFront()
-         showWinForm(form)
-         choice = form.getIndex()
-         debugNotify("choice is: {}".format(choice), 2)
-         if choice == "Next Page": 
-            debugNotify("Going to next page", 3)
-            optCurrent += 1
-            if optCurrent >= len(optChunks): optCurrent = 0
-         elif choice != None: 
-            choice = num(form.getIndex()) + (optCurrent * 7) # if the choice is not a next page, then we convert it to an integer and give that back, adding 8 per number of page passed
-   else:
-      concatTXT = title + '\n\n'
-      for iter in range(len(options)):
-         concatTXT += '{}:--> {}\n'.format(iter,options[iter])
-      choice = askInteger(concatTXT,0)
+   # if Automations['WinForms']:
+      # optChunks=[options[x:x+7] for x in xrange(0, len(options), 7)]
+      # optCurrent = 0
+      # choice = "New"
+      # while choice == "New" or choice == "Next Page" or (choice == None and not cancelButton):
+         # Application.EnableVisualStyles()
+         # form = SingleChoiceWindow(title, optChunks[optCurrent], type, default, pages = len(optChunks), cancelButtonBool = cancelButton, cancelName = cancelName)
+         # form.BringToFront()
+         # showWinForm(form)
+         # choice = form.getIndex()
+         # debugNotify("choice is: {}".format(choice), 2)
+         # if choice == "Next Page": 
+            # debugNotify("Going to next page", 3)
+            # optCurrent += 1
+            # if optCurrent >= len(optChunks): optCurrent = 0
+         # elif choice != None: 
+            # choice = num(form.getIndex()) + (optCurrent * 7) # if the choice is not a next page, then we convert it to an integer and give that back, adding 8 per number of page passed
+   # else:
+      # concatTXT = title + '\n\n'
+      # for iter in range(len(options)):
+         # concatTXT += '{}:--> {}\n'.format(iter,options[iter])
+      # choice = askInteger(concatTXT,0)
+   choice = "New"
+   if cancelButton: customButtonsList = [cancelName]
+   else: customButtonsList = []
+   while choice == "New" or (choice == None and not cancelButton):
+      choice = askChoice(title, options, customButtons = customButtonsList)
+      debugNotify("choice is: {}".format(choice), 2)
+      if choice > 0: choice -= 1 # Reducing by 1 because askChoice() starts from 1 but my code expects to start from 0
+      elif choice <= 0: choice = None
    debugNotify("<<< SingleChoice() with return {}".format(choice), 3)
    return choice
 
@@ -451,36 +459,48 @@ class MultiChoiceWindow(Form):
 
 def multiChoice(title, options,card): # This displays a choice where the player can select more than one ability to trigger serially one after the other
    debugNotify(">>> multiChoice()".format(title))
-   if Automations['WinForms']: # If the player has not disabled the custom WinForms, we use those
-      optChunks=[options[x:x+7] for x in xrange(0, len(options), 7)]
-      optCurrent = 0
-      choices = "New"
-      currChoices = []
-      while choices == "New" or choices == "Next Page":
-         Application.EnableVisualStyles() # To make the window look like all other windows in the user's system
-         if card.Type == 'ICE': CPType = 'Intrusion Countermeasures Electronics'  # Just some nice fluff
-         elif re.search(r'Icebreaker', card.Keywords): CPType = 'ICEbreaker GUI'
-         elif card.Type == 'Hardware': CPType = 'Dashboard'
-         else: CPType = 'Control Panel'
-         debugNotify("About to open form")
-         form = MultiChoiceWindow(title, optChunks[optCurrent], CPType, pages = len(optChunks), currPage = optCurrent, existingChoices = currChoices) # We create an object called "form" which contains an instance of the MultiChoice windows form.
-         showWinForm(form) # We bring the form to the front to allow the user to make their choices
-         choices = form.getIndex() # Once the form is closed, we check an internal variable within the form object to grab what choices they made
-         if choices == "Next Page": 
-            debugNotify("Going to next page", 3)
-            optCurrent += 1
-            if optCurrent >= len(optChunks): optCurrent = 0
-            currChoices = form.getStoredChoices()
-            debugNotify("currChoices = {}".format(currChoices))            
-   else: # If the user has disabled the windows forms, we use instead the OCTGN built-in askInteger function
-      concatTXT = title + "\n\n(Tip: You can put multiple abilities one after the the other (e.g. '110'). Max 9 at once)\n\n" # We prepare the text of the window with a concat string
-      for iter in range(len(options)): # We populate the concat string with the options
-         concatTXT += '{}:--> {}\n'.format(iter,options[iter])
-      choicesInteger = askInteger(concatTXT,0) # We now ask the user to put in an integer.
-      if not choicesInteger: choices = 'ABORT' # If the user just close the window, abort.
-      else: 
-         choices = list(str(choicesInteger)) # We convert our number into a list of numeric chars
-         for iter in range(len(choices)): choices[iter] = int(choices[iter]) # we convert our list of chars into a list of integers      
+   # if Automations['WinForms']: # If the player has not disabled the custom WinForms, we use those
+      # optChunks=[options[x:x+7] for x in xrange(0, len(options), 7)]
+      # optCurrent = 0
+      # choices = "New"
+      # currChoices = []
+      # while choices == "New" or choices == "Next Page":
+         # Application.EnableVisualStyles() # To make the window look like all other windows in the user's system
+         # if card.Type == 'ICE': CPType = 'Intrusion Countermeasures Electronics'  # Just some nice fluff
+         # elif re.search(r'Icebreaker', card.Keywords): CPType = 'ICEbreaker GUI'
+         # elif card.Type == 'Hardware': CPType = 'Dashboard'
+         # else: CPType = 'Control Panel'
+         # debugNotify("About to open form")
+         # form = MultiChoiceWindow(title, optChunks[optCurrent], CPType, pages = len(optChunks), currPage = optCurrent, existingChoices = currChoices) # We create an object called "form" which contains an instance of the MultiChoice windows form.
+         # showWinForm(form) # We bring the form to the front to allow the user to make their choices
+         # choices = form.getIndex() # Once the form is closed, we check an internal variable within the form object to grab what choices they made
+         # if choices == "Next Page": 
+            # debugNotify("Going to next page", 3)
+            # optCurrent += 1
+            # if optCurrent >= len(optChunks): optCurrent = 0
+            # currChoices = form.getStoredChoices()
+            # debugNotify("currChoices = {}".format(currChoices))            
+   # else: # If the user has disabled the windows forms, we use instead the OCTGN built-in askInteger function
+   choices = []
+   while not len([choice for choice in choices if choice < 0]):         
+      if card.Type == 'ICE': CPType = 'Intrusion Countermeasures Electronics'  # Just some nice fluff
+      elif re.search(r'Icebreaker', card.Keywords): CPType = 'ICEbreaker GUI'
+      elif card.Type == 'Hardware': CPType = 'Dashboard'
+      else: CPType = 'Control Panel'
+      CPType += '\n\n Current Choices: {}'.format(choices)
+      choose = askChoice(CPType, options, customButtons = ['Finish Selection', 'Abort'])
+      #if confirm('infinite loop?'): break
+      choices.append(choose - 1)
+      #confirm(str(choices))
+   if -1 in choices or -3 in choices: choices = []
+      #concatTXT = title + "\n\n(Tip: You can put multiple abilities one after the the other (e.g. '110'). Max 9 at once)\n\n" # We prepare the text of the window with a concat string
+      #for iter in range(len(options)): # We populate the concat string with the options
+      #   concatTXT += '{}:--> {}\n'.format(iter,options[iter])
+      #choicesInteger = askInteger(concatTXT,0) # We now ask the user to put in an integer.
+      #if not choicesInteger: choices = 'ABORT' # If the user just close the window, abort.
+      #else: 
+      #   choices = list(str(choicesInteger)) # We convert our number into a list of numeric chars
+      #   for iter in range(len(choices)): choices[iter] = int(choices[iter]) # we convert our list of chars into a list of integers      
    debugNotify("<<< multiChoice() with list: {}".format(choices), 3)
    return choices # We finally return a list of integers to the previous function. Those will in turn be iterated one-by-one serially.
       
@@ -924,6 +944,7 @@ def changeCardGroup(card, group, sendToBottom = False, index = 0): # A cumulativ
       else: 
          prevGroup = card.group
          card.moveTo(group, index) # We move the card into the target pile
+         #if group == me.ScriptingPile: confirm('bb')
          if prevGroup == me.piles['R&D/Stack'] and group == me.hand: autoscriptOtherPlayers('CardDrawAny',card) # Attempting to catch all card draw effects for Palana Foods
    elif card.controller != me: 
       remoteCall(card.controller,'changeCardGroup',[card, group, sendToBottom])

@@ -10,6 +10,7 @@ Changelog - Android:Netrunner LCG OCTGN Game Definition
   * Corporate Scandal: Won't prevent the corp from going to 0 Bad Publicity, so make sure you increase it to 1 afterwards.
   * Harvester: won't enforce the discard down to hand size. Do it manually.
   * New Construction: Rez without cost manually if you have the advancements.
+  * Disposable HQ: Should be working, but it might cause issues if encountered in the middle of multi-access in HQ. If the Corp HQ is empty after access, press Ctrl+Q as the runner once and it shOuld recover.
 
 ### 3.23.0.x
 

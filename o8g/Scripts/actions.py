@@ -1375,16 +1375,17 @@ def scrTargetAgenda(group = table, x = 0, y = 0):
             return
    notify("You need to target an unscored agenda in order to use this action")
 
-def accessTarget(group = table, x = 0, y = 0, noQuestionsAsked = False):
+def accessTarget(group = table, x = 0, y = 0, noQuestionsAsked = False, directAccess = None):
    debugNotify(">>> accessTarget()") #Debug
    mute()
    global origController
    targetPL = ofwhom('-ofOpponent')
    extraCredCost = 0
-   if getGlobalVariable('SuccessfulRun') != 'True' and not noQuestionsAsked:
+   if getGlobalVariable('SuccessfulRun') != 'True' and not noQuestionsAsked: # noQuestionsAsked just ignored double-checking for mistakes. used only in scripts where I know what I'm doing
       if not re.search(r'running',getGlobalVariable('status')) and not confirm("You're not currently running. Are you sure you're allowed to access this card?"): return
       if runSuccess() == 'DENIED': return # If the player is trying to access, then we assume the run was a success.
-   cardList = [c for c in table
+   if directAccess: cardList = [directAccess]
+   else: cardList = [c for c in table
                if c.targetedBy
                and c.targetedBy == me
                and c.controller == targetPL
@@ -1405,7 +1406,7 @@ def accessTarget(group = table, x = 0, y = 0, noQuestionsAsked = False):
       storeProperties(card)
       Autoscripts = CardsAS.get(card.model,'').split('||')
       for autoS in Autoscripts:
-         if re.search(r'onAccess:',autoS):
+         if re.search(r'onAccess:',autoS) and not directAccess: # directAccess is meant to bypass on-access scripts, as a workaround for cards which pause the run to script, like Disposable HQ
             debugNotify(" accessRegex found!")
             if re.search(r'-ifNotInstalled',autoS): continue # -ifNotInstalled effects don't work with the Access Card shortcut.
             if chkTagged(autoS, True) == 'ABORT': continue 
@@ -1437,7 +1438,7 @@ def accessTarget(group = table, x = 0, y = 0, noQuestionsAsked = False):
                                   \n(Pressing 'No' will send a ping to the corporation player to remind him to take action)\
                                     ".format(att.name)):
                      notify(":::NOTICE::: {} is still waiting for {} to decide whether to use {} or not".format(me,att.owner,att))
-      if card.group != table: whisper(":::Access Aborted::: Card has left the table!")
+      if card.group != table and not directAccess: whisper(":::Access Aborted::: Card has left the table!")
       else:
          #grabCardControl(card) # If the card is still in the table after any trap option resolves...
          if card.Type == 'ICE':
@@ -1805,11 +1806,13 @@ def HQaccess(group=table, x=0,y=0, silent = False, directTargets = None):
                   changeCardGroup(revealedCard, targetPL.hand)
                   #revealedCard.moveTo(targetPL.hand) # We return it to the player's hand because the effect will decide where it goes afterwards
                   if re.search(r'-scrambleCards',autoS): 
-                     setGlobalVariable('Paused Runner',str(['HQ',len([c for c in table if c in revealedCards])]))
-                     for c in revealedCards: # if we're scrambling the HQ access, we're returning all previously revealed but not accessed cards to HQ.
-                        if c.group == table: changeCardGroup(c, targetPL.hand)
+                     confirm('Sorry but I had to put a delay here to prevent OCTGN screwing up. Press any button to continue. If the Corp is missing cards from their hand afterwards, press CTRL+Q once more.')
+                     #confirm(str([c.Name for c in table if c in revealedCards and c != revealedCard]))
+                     setGlobalVariable('Paused Runner',str(['HQ',len([c for c in table if c in revealedCards and c != revealedCard])]))
+                     remoteCall(targetPL, 'recoverHQRevealCards', [revealedCards])
                   else: setGlobalVariable('Paused Runner',str(['HQ',0]))
                   remoteCall(revealedCard.owner, 'remoteAutoscript', [revealedCard,autoS])
+                  #confirm('returning')
                   return
                remoteCall(revealedCard.owner, 'remoteAutoscript', [revealedCard,autoS])
          debugNotify("Not a Trap.", 2) #Debug
@@ -1882,11 +1885,15 @@ def HQaccess(group=table, x=0,y=0, silent = False, directTargets = None):
                if rc == "ABORT": revealedCard.moveTo(targetPL.hand) # If the player couldn't pay to trash the card, we leave it where it is.
                sendToTrash(revealedCard)
                notify("{} paid {}{} to {} {}".format(me,uniCredit(num(revealedCard.Stat) - reduction),extraText2,uniTrash(),revealedCard.Name))
-         else: changeCardGroup(revealedCard, targetPL.ScriptingPile) # We move already accessed cards to the scripting pile so that scrambling effects don't mess with them.
+         else: 
+            changeCardGroup(revealedCard, targetPL.ScriptingPile) # We move already accessed cards to the scripting pile so that scrambling effects don't mess with them.
+            #confirm('gg')
          try: del origController[revealedCard._id] # We use a try: just in case...
          except: pass
       for c in revealedCards: c.highlight = None # We make sure no card remains highlighted for some reason.
-      for c in targetPL.ScriptingPile: changeCardGroup(c, targetPL.hand) # Cards in the scripting pile are previously accessed cards that we return to their hand again.
+      #confirm("targetPL ID = {}, list = {}, me ID = {}".format(targetPL._id, [c.Name for c in targetPL.ScriptingPile],me._id)) # Debug
+      remoteCall(targetPL,'revoverScriptedHQ',[])
+      #for c in targetPL.ScriptingPile: changeCardGroup(c, targetPL.hand) # Cards in the scripting pile are previously accessed cards that we return to their hand again.
       #passPileControl(targetPL.hand,targetPL)
       setGlobalVariable('Paused Runner','False')
    #clearCovers() # Finally we clear any remaining cover cards.

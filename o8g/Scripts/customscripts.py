@@ -443,6 +443,7 @@ def UseCustomAbility(Autoscript, announceText, card, targetCards = None, notific
    if fetchProperty(card, 'name') == "Chatterjee University":  
       announceString = ModifyStatus('InstallTarget-payCost-reduc{}'.format(card.markers[mdict['Power']]),announceText,card,findTarget('DemiAutoTargeted-atProgram-fromHand-choose1'))
    if fetchProperty(card, 'name') == "Disposable HQ":  
+      #confirm('a')
       for iter in range(len(me.hand)):
          returnCard = askCard([c for c in me.hand],"Choose next card to add to the bottom of your R&D. Close this window to finish")
          if returnCard:         
@@ -451,9 +452,12 @@ def UseCustomAbility(Autoscript, announceText, card, targetCards = None, notific
          else:
             notify("-- {} has finished resolving their disposable HQ")
             break
+      remoteCall(fetchRunnerPL(),"accessTarget",[table,0,0,True,card])
+      remoteCall(fetchRunnerPL(),"HQaccess",[table,0,0])
       if card.group == me.hand: changeCardGroup(card, me.ScriptingPile) # If the disposable HQ is still in our hand, it means it was already accessed in HQ, so we need to put it in the scripting pile to mark it as already accessed
       announceString = ''
    return announceString
+ 
  
 #------------------------------------------------------------------------------
 # Custom Scripts. These are card scripts that take over the whole execution. 
@@ -2206,3 +2210,4 @@ def CBIRaid(card):
       raidedCard = askCard([c for c in me.hand],"Choose next card to place on top of R&D")
       changeCardGroup(raidedCard,me.piles['R&D/Stack'])
    notify("The {} is completed".format(card))
+   
