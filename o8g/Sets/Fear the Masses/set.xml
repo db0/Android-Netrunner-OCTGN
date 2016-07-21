@@ -1,0 +1,314 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<set xmlns:noNamespaceSchemaLocation="CardSet.xsd" 
+     name="Fear the Masses" 
+     id="5027896e-b3f2-4f08-b7a6-246192125be2" 
+     gameId="0f38e453-26df-4c04-9d67-6d43de939c77" 
+     gameVersion="3.0.0.0" 
+     version="3.0.0.0">
+<cards>
+	<card id="bc0f047c-01b1-427f-a439-d451eda10096" name="Fear the Masses">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Event" />
+		<property name="Keywords" value="Run-Sabotage" />
+		<property name="Cost" value="1" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="" />	
+		<property name="Rules" value="Make a run on HQ. If successful, instead of accessing cards, force the Corp to trash the top card of R&amp;D. You may reveal X copies of Fear the Masses from your grip to force the Corp to trash X additional cards.&#xA;Limit 6 per deck." />
+		<property name="Flavor" value="" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Anarch" />
+		<property name="Influence" value="2" />
+		<property name="Side" value="runner" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda10097" name="Aghora">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Program" />
+		<property name="Keywords" value="Icebreaker-AI-Deva-Unique" />
+		<property name="Cost" value="5" />
+		<property name="Requirement" value="1" />	
+		<property name="Stat" value="2" />	
+		<property name="Rules" value="1[Credits]: Break ice subroutine on a piece of ice that has a rez cost of 5 or greater.&#xA;1[Credits]: +1 strength.&#xA;2[Credits]: Swap Aghora with a deva program from your grip." />
+		<property name="Flavor" value="The Destroyer." />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Anarch" />
+		<property name="Influence" value="2" />
+		<property name="Side" value="runner" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda10098" name="Bhagat">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Resource" />
+		<property name="Keywords" value="Connection-Unique" />
+		<property name="Cost" value="3" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="" />	
+		<property name="Rules" value="The first time you make a successful run on HQ each turn, force the Corp to trash the top card of R&amp;D." />
+		<property name="Flavor" value="&quot;They don&apos;t want to listen, so we&apos;ll just have to crank up the volume.&quot;" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Anarch" />
+		<property name="Influence" value="4" />
+		<property name="Side" value="runner" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda10099" name="The Black File">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Resource" />
+		<property name="Keywords" value="Virtual-Unique" />
+		<property name="Cost" value="5" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="" />	
+		<property name="Rules" value="The Corp cannot win the game unless the Runner is flatlined.&#xA;When your turn begins, place 1 power counter on The Black File. When there are 3 or more power counters on The Black File, remove it from the game.&#xA;Limit 1 per deck." />
+		<property name="Flavor" value="" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Criminal" />
+		<property name="Influence" value="4" />
+		<property name="Side" value="runner" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda10100" name="The Price of Freedom">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Event" />
+		<property name="Keywords" value="" />
+		<property name="Cost" value="0" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="" />	
+		<property name="Rules" value="As an additional cost to play this event, trash an installed connection.&#xA;The Corp cannot advance cards during his or her next turn. Remove The Price of Freedom from the game instead of trashing it." />
+		<property name="Flavor" value="" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Shaper" />
+		<property name="Influence" value="2" />
+		<property name="Side" value="runner" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda10101" name="Ankusa">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Program" />
+		<property name="Keywords" value="Icebreaker-Fracter" />
+		<property name="Cost" value="6" />
+		<property name="Requirement" value="1" />	
+		<property name="Stat" value="0" />	
+		<property name="Rules" value="If you use Ankusa to break all subroutines on a barrier during a single encounter, add that barrier to HQ.&#xA;2[Credits]: Break barrier subroutine.&#xA;1[Credits]: +1 strength." />
+		<property name="Flavor" value="" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Shaper" />
+		<property name="Influence" value="3" />
+		<property name="Side" value="runner" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda10102" name="Rigged Results">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Event" />
+		<property name="Keywords" value="" />
+		<property name="Cost" value="0" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="" />	
+		<property name="Rules" value="Secretly spend up to 2[Credits]. The Corp guesses how much you spent. Reveal spent credits. If the Corp guessed incorrectly, make a run and choose a piece of ice protecting the attacked server. Bypass that ice when you encounter it." />
+		<property name="Flavor" value="" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Neutral" />
+		<property name="Influence" value="1" />
+		<property name="Side" value="runner" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda10103" name="Magnet">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="ICE" />
+		<property name="Keywords" value="Code Gate" />
+		<property name="Cost" value="3" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="3" />	
+		<property name="Rules" value="When you rez Magnet, host a program on it that is hosted on an installed piece of ice.&#xA;The text box of each program hosted on Magnet is blank.&#xA;[Subroutine] End the run." />
+		<property name="Flavor" value="&quot;When the enemy has mastered the battlefield, change the battlefield.&quot; -The Playbook" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Haas-Bioroid" />
+		<property name="Influence" value="1" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda10104" name="Lateral Growth">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Operation" />
+		<property name="Keywords" value="Transaction" />
+		<property name="Cost" value="2" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="" />	
+		<property name="Rules" value="Gain 4[Credits]. You may install 1 card (paying the install cost)." />
+		<property name="Flavor" value="&quot;Practical effects are expensive, but worth it. I had to smash seventeen stunt bioroids to get this shot.&quot; -Parvati Kapoor, director" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Haas-Bioroid" />
+		<property name="Influence" value="2" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda10105" name="Improved Protein Source">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Agenda" />
+		<property name="Keywords" value="Research" />
+		<property name="Cost" value="4" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="3" />	
+		<property name="Rules" value="When Improved Protein Source is scored or stolen, the Runner gains 4[Credits]." />
+		<property name="Flavor" value="They eat us, we eat them, the cycle goes on and on. -Omar Keung, &quot;the Flashpoint&quot;" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Jinteki" />
+		<property name="Influence" value="" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda10106" name="Voter Intimidation">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Operation" />
+		<property name="Keywords" value="Gray Ops-Psi" />
+		<property name="Cost" value="1" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="" />	
+		<property name="Rules" value="Play only if there is an agenda in the Runner&apos;s score area.&#xA;You and the Runner secretly spend 0[Credits], 1[Credits], or 2[Credits]. Reveal spent credits. If you and the Runner spent a different number of credits, trash 1 resource." />
+		<property name="Flavor" value="" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Jinteki" />
+		<property name="Influence" value="2" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda10107" name="Harishchandra Ent.">
+		<property name="Subtitle" value="Where You&#039;re the Star" />
+		<property name="Type" value="Identity" />
+		<property name="Keywords" value="Division" />
+		<property name="Cost" value="0" />
+		<property name="Requirement" value="45" />	
+		<property name="Stat" value="17" />	
+		<property name="Rules" value="If the Runner is tagged, he or she plays with his or her grip revealed." />
+		<property name="Flavor" value="We Know What You Want." />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="NBN" />
+		<property name="Influence" value="" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda10108" name="Full Immersion RecStudio">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Asset" />
+		<property name="Keywords" value="Facility" />
+		<property name="Cost" value="2" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="3" />	
+		<property name="Rules" value="Full Immersion RecStudio can host up to 2 assets and/or agendas.&#xA;The trash cost of Full Immersion RecStudio is increased by 3 for each card hosted on it." />
+		<property name="Flavor" value="The costumes aren&apos;t strictly necessary, but they improve the performances of the vactors and sensie stars." />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="NBN" />
+		<property name="Influence" value="4" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda10109" name="Ibrahim Salem">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Asset" />
+		<property name="Keywords" value="Alliance-Character-Unique" />
+		<property name="Cost" value="2" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="5" />	
+		<property name="Rules" value="This card costs 0 influence if you have 6 or more non-alliance [nbn] cards in your deck.&#xA;As an additional cost to rez Ibrahim Salem, forfeit an agenda.&#xA;When your turn begins, name a card type. Look at the Runner&apos;s grip and trash 1 card in it of the named type." />
+		<property name="Flavor" value="" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="NBN" />
+		<property name="Influence" value="3" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda10110" name="Navi Mumbai City Grid">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Upgrade" />
+		<property name="Keywords" value="Region" />
+		<property name="Cost" value="2" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="3" />	
+		<property name="Rules" value="During a run on this server, the Runner cannot use paid abilities on non-icebreaker cards.&#xA;Limit 1 region per server." />
+		<property name="Flavor" value="The entertainment capital of Mumbad." />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="NBN" />
+		<property name="Influence" value="2" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda10111" name="Zealous Judge">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Asset" />
+		<property name="Keywords" value="Character" />
+		<property name="Cost" value="2" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="2" />	
+		<property name="Rules" value="Zealous Judge can only be rezzed if the Runner is tagged.&#xA;[Click], 1[Credits]: Give the Runner 1 tag." />
+		<property name="Flavor" value="" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="The Weyland Consortium" />
+		<property name="Influence" value="2" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda10112" name="Election Day">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Operation" />
+		<property name="Keywords" value="" />
+		<property name="Cost" value="0" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="" />	
+		<property name="Rules" value="Trash all cards in HQ (minimum of 1). Draw 5 cards." />
+		<property name="Flavor" value="&quot;A new administration means we have to start greasing the wheels all over again. Let&apos;s get to work.&quot;" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="The Weyland Consortium" />
+		<property name="Influence" value="2" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda10113" name="Subcontract">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Operation" />
+		<property name="Keywords" value="Gray Ops" />
+		<property name="Cost" value="0" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="" />	
+		<property name="Rules" value="Play only if the Runner is tagged.&#xA;Play up to 2 operations from HQ (paying all costs), resolving them one at a time." />
+		<property name="Flavor" value="Judicious use of freelancers can increase efficiency and protect the company from legal repercussions. It&apos;s what they call a &quot;win-win&quot;." />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="The Weyland Consortium" />
+		<property name="Influence" value="3" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda10114" name="Merger">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Agenda" />
+		<property name="Keywords" value="Expansion" />
+		<property name="Cost" value="3" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="2" />	
+		<property name="Rules" value="Merger is worth 1 additional agenda point while in the Runner&apos;s score area." />
+		<property name="Flavor" value="Survival of the fittest&apos; is so outdated; in finance it&apos;s &apos;survival of the fattest.&apos; -Omar Keung, &quot;the Flashpoint&quot;" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Neutral" />
+		<property name="Influence" value="1" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+</cards>
+</set>

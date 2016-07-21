@@ -1,0 +1,314 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<set xmlns:noNamespaceSchemaLocation="CardSet.xsd" 
+     name="Salsette Island" 
+     id="01b214dd-63ca-415f-bd58-0d389feee859" 
+     gameId="0f38e453-26df-4c04-9d67-6d43de939c77" 
+     gameVersion="3.0.0.0" 
+     version="3.0.0.0">
+<cards>
+	<card id="bc0f047c-01b1-427f-a439-d451eda10058" name="Making an Entrance">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Event" />
+		<property name="Keywords" value="Priority" />
+		<property name="Cost" value="0" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="" />	
+		<property name="Rules" value="Play only as your first [Click].&#xA;Look at the top 6 cards of your stack. You may trash any of those cards and arrange the rest in any order." />
+		<property name="Flavor" value="Sometimes in an instant you realize who your friends really are." />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Anarch" />
+		<property name="Influence" value="2" />
+		<property name="Side" value="runner" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda10059" name="Salsette Slums">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Resource" />
+		<property name="Keywords" value="Location-Seedy" />
+		<property name="Cost" value="2" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="" />	
+		<property name="Rules" value="Once per turn, when you pay the trash cost of an accessed card, remove that card from the game instead of trashing it." />
+		<property name="Flavor" value="&quot;Underestimate those people at your own peril.&quot; -Akshara Sareen" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Anarch" />
+		<property name="Influence" value="2" />
+		<property name="Side" value="runner" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda10060" name="Exclusive Party">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Event" />
+		<property name="Keywords" value="" />
+		<property name="Cost" value="0" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="" />	
+		<property name="Rules" value="Draw 1 card. Gain 1[Credits] for each copy of Exclusive Party in your heap.&#xA;Limit 6 per deck." />
+		<property name="Flavor" value="The more parties she attended, the more they trusted her. The more they trusted her, the more entertaining her scams became." />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Criminal" />
+		<property name="Influence" value="1" />
+		<property name="Side" value="runner" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda10061" name="Vamadeva">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Program" />
+		<property name="Keywords" value="Icebreaker-AI-Deva-Unique" />
+		<property name="Cost" value="6" />
+		<property name="Requirement" value="1" />	
+		<property name="Stat" value="2" />	
+		<property name="Rules" value="1[Credits]: Break ice subroutine on a piece of ice with exactly 1 subroutine.&#xA;1[Credits]: +1 strength.&#xA;2[Credits]: Swap Vamadeva with a deva program from your grip." />
+		<property name="Flavor" value="The Preserver." />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Criminal" />
+		<property name="Influence" value="2" />
+		<property name="Side" value="runner" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda10062" name="Brahman">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Program" />
+		<property name="Keywords" value="Icebreaker-AI" />
+		<property name="Cost" value="4" />
+		<property name="Requirement" value="2" />	
+		<property name="Stat" value="3" />	
+		<property name="Rules" value="1[Credits]: Break up to 2 ice subroutines.&#xA;2[Credits]: +1 strength.&#xA;Whenever an encounter with a piece of ice in which you used Brahman to break a subroutine ends, add 1 installed non-virus program to the top of your stack." />
+		<property name="Flavor" value="" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Shaper" />
+		<property name="Influence" value="3" />
+		<property name="Side" value="runner" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda10063" name="Patron">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Resource" />
+		<property name="Keywords" value="Connection" />
+		<property name="Cost" value="3" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="" />	
+		<property name="Rules" value="When your turn begins, you may choose a server.&#xA;The first time you make a successful run on that server this turn, instead of accessing cards, draw 2 cards." />
+		<property name="Flavor" value="" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Shaper" />
+		<property name="Influence" value="3" />
+		<property name="Side" value="runner" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda10064" name="Sports Hopper">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Hardware" />
+		<property name="Keywords" value="Vehicle" />
+		<property name="Cost" value="3" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="" />	
+		<property name="Rules" value=" +1[Link]&#xA;[Trash]: Draw 3 cards." />
+		<property name="Flavor" value="&quot;Check out my new ride.&quot; -2xTiger" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Neutral" />
+		<property name="Influence" value="0" />
+		<property name="Side" value="runner" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda10065" name="Bazaar">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Resource" />
+		<property name="Keywords" value="Location-Ritzy" />
+		<property name="Cost" value="1" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="" />	
+		<property name="Rules" value="Whenever you install a piece of hardware from your grip, you may install another copy of that hardware from your grip (paying all costs)." />
+		<property name="Flavor" value="In these days of digital full-sim browsing and widely available nano-assembly, it takes a special kind of crazy person to go shopping in meatspace. There are millions of them." />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Neutral" />
+		<property name="Influence" value="0" />
+		<property name="Side" value="runner" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda10066" name="Personality Profiles">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Agenda" />
+		<property name="Keywords" value="Security" />
+		<property name="Cost" value="3" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="1" />	
+		<property name="Rules" value="Whenever the Runner searches his or her stack or installs a card from his or her heap, he or she must trash a card from his or her grip at random." />
+		<property name="Flavor" value="" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Haas-Bioroid" />
+		<property name="Influence" value="" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda10067" name="Jeeves Model Bioroids">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Asset" />
+		<property name="Keywords" value="Alliance-Unique" />
+		<property name="Cost" value="2" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="5" />	
+		<property name="Rules" value="This card costs 0 influence if you have 6 or more non-alliance [haas-bioroid] cards in your deck.&#xA;The first time you spend 3[Click] on the same action each turn, gain [Click]." />
+		<property name="Flavor" value="&quot;Very good, sir.&quot;" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Haas-Bioroid" />
+		<property name="Influence" value="3" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda10068" name="Raman Rai">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Asset" />
+		<property name="Keywords" value="Alliance-Unique" />
+		<property name="Cost" value="1" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="3" />	
+		<property name="Rules" value="This card costs 0 influence if you have 6 or more non-alliance [jinteki] cards in your deck.&#xA;Once per turn, you may lose [Click] when you draw a card. If you do, reveal that card and a card in Archives of the same type, then swap those cards." />
+		<property name="Flavor" value="" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Jinteki" />
+		<property name="Influence" value="3" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda10069" name="Upayoga">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="ICE" />
+		<property name="Keywords" value="Code Gate-Psi" />
+		<property name="Cost" value="3" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="4" />	
+		<property name="Rules" value="[Subroutine] You and the Runner secretly spend 0[Credits], 1[Credits], or 2[Credits]. Reveal spent credits. If you and the Runner spent a different number of credits, the Runner loses 2[Credits].&#xA;[Subroutine] Resolve a subroutine on a piece of rezzed psi ice." />
+		<property name="Flavor" value="&quot;Connect two truths. Connect two programs. All is one.&quot;" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Jinteki" />
+		<property name="Influence" value="1" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda10070" name="Aryabhata Tech">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Asset" />
+		<property name="Keywords" value="Ritzy" />
+		<property name="Cost" value="2" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="3" />	
+		<property name="Rules" value="Whenever there is a successful trace, gain 1[Credits] and the Runner loses 1[Credits]." />
+		<property name="Flavor" value="&quot;As the world shrinks, communications becomes the most essential technology.&quot; -Ramesh Gupta, One World Economy" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="NBN" />
+		<property name="Influence" value="2" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda10071" name="Salem&#039;s Hospitality">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Operation" />
+		<property name="Keywords" value="Alliance-Gray Ops" />
+		<property name="Cost" value="2" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="" />	
+		<property name="Rules" value="This card costs 0 influence if you have 6 or more non-alliance [nbn] cards in your deck.&#xA;Name a card. The Runner reveals his or her grip and trashes all copies of the named card from his or her grip." />
+		<property name="Flavor" value="" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="NBN" />
+		<property name="Influence" value="4" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda10072" name="Executive Search Firm">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Asset" />
+		<property name="Keywords" value="Alliance-Ritzy" />
+		<property name="Cost" value="0" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="3" />	
+		<property name="Rules" value="This card costs 0 influence if you have 6 or more non-alliance [weyland-consortium] cards in your deck.&#xA;[Click]: Search R&amp;D for an executive, sysop, or character, reveal it, and add it to HQ. Shuffle R&amp;D." />
+		<property name="Flavor" value="" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="The Weyland Consortium" />
+		<property name="Influence" value="3" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda10073" name="Indian Union Stock Exchange">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Asset" />
+		<property name="Keywords" value="" />
+		<property name="Cost" value="1" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="3" />	
+		<property name="Rules" value="Whenever you rez or play an out-of-faction card (including Indian Union Stock Exchange), gain 1[Credits]." />
+		<property name="Flavor" value="&quot;Wealth wisely invested is wealth earned.&quot; -The New Gospel of Wealth" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="The Weyland Consortium" />
+		<property name="Influence" value="2" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda10074" name="Cobra">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="ICE" />
+		<property name="Keywords" value="Sentry-Destroyer-AP" />
+		<property name="Cost" value="4" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="1" />	
+		<property name="Rules" value="[Subroutine] Trash 1 program.&#xA;[Subroutine] Do 2 net damage." />
+		<property name="Flavor" value="The naja naja is the king of all serpents." />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Neutral" />
+		<property name="Influence" value="0" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda10075" name="Localized Product Line">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Operation" />
+		<property name="Keywords" value="" />
+		<property name="Cost" value="4" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="" />	
+		<property name="Rules" value="Search R&amp;D for any number of copies of a card, reveal them, and add them to HQ. Shuffle R&amp;D." />
+		<property name="Flavor" value="It&apos;s the exact same coffee, but the price sure is different." />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Neutral" />
+		<property name="Influence" value="3" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda10076" name="Mumbad Virtual Tour">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Upgrade" />
+		<property name="Keywords" value="Alliance" />
+		<property name="Cost" value="0" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="5" />	
+		<property name="Rules" value="This card costs 0 influence if you have 7 or more assets in your deck.&#xA;If the Runner accesses Mumbad Virtual Tour while it is installed, he or she must trash it, if able." />
+		<property name="Flavor" value="" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Neutral" />
+		<property name="Influence" value="2" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+</cards>
+</set>

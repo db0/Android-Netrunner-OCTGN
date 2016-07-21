@@ -1,0 +1,330 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<set xmlns:noNamespaceSchemaLocation="CardSet.xsd" 
+     name="23 Seconds" 
+     id="917d4b3f-a584-46f6-ac13-1f2e0c1eb4f5" 
+     gameId="0f38e453-26df-4c04-9d67-6d43de939c77" 
+     gameVersion="3.0.0.0" 
+     version="3.0.0.0">
+<cards>
+	<card id="bc0f047c-01b1-427f-a439-d451eda11001" name="System Outage">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Event" />
+		<property name="Keywords" value="Current" />
+		<property name="Cost" value="1" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="" />	
+		<property name="Rules" value="This card is not trashed until another current is played or an agenda is scored.&#xA;Whenever the Corp draws 1 or more cards, he or she loses 1[Credits] if it is not the first time he or she has drawn cards this turn." />
+		<property name="Flavor" value="" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Anarch" />
+		<property name="Influence" value="2" />
+		<property name="Side" value="runner" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda11002" name="Null">
+		<property name="Subtitle" value="Whistleblower" />
+		<property name="Type" value="Identity" />
+		<property name="Keywords" value="Natural" />
+		<property name="Cost" value="0" />
+		<property name="Requirement" value="45" />	
+		<property name="Stat" value="15" />	
+		<property name="Rules" value="Once per turn, when you encounter a piece of ice, you may trash 1 card from your grip. If you do, that ice has -2 strength for the remainder of this run." />
+		<property name="Flavor" value="" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Anarch" />
+		<property name="Influence" value="" />
+		<property name="Side" value="runner" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda11003" name="GPI Net Tap">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Hardware" />
+		<property name="Keywords" value="" />
+		<property name="Cost" value="3" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="" />	
+		<property name="Rules" value="Whenever you approach a piece of ice, you may expose it. You may then trash GPI Net Tap to jack out." />
+		<property name="Flavor" value="Sometimes the itsy-bitsy data is most important." />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Criminal" />
+		<property name="Influence" value="2" />
+		<property name="Side" value="runner" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda11004" name="Hernando Cortez">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Resource" />
+		<property name="Keywords" value="Connection-Unique" />
+		<property name="Cost" value="2" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="" />	
+		<property name="Rules" value="If the Corp has at least 10[Credits], as an additional cost to rez each piece of ice, the Corp must spend credits equal to the number of subroutines on that ice." />
+		<property name="Flavor" value="&quot;Take it from me, there is a point where you have so much money you stop caring. That&apos;s usually right before it all comes tumbling down.&quot;" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Criminal" />
+		<property name="Influence" value="1" />
+		<property name="Side" value="runner" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda11005" name="Mirror">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Hardware" />
+		<property name="Keywords" value="Console-Unique" />
+		<property name="Cost" value="3" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="" />	
+		<property name="Rules" value="+2[Memory Unit]&#xA;Whenever you make a successful run on R&amp;D, you may replace 1 spent recurring credit.&#xA;Limit 1 console per player." />
+		<property name="Flavor" value="" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Shaper" />
+		<property name="Influence" value="3" />
+		<property name="Side" value="runner" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda11006" name="Dai V">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Program" />
+		<property name="Keywords" value="Icebreaker-AI" />
+		<property name="Cost" value="6" />
+		<property name="Requirement" value="1" />	
+		<property name="Stat" value="1" />	
+		<property name="Rules" value="2[Credits]: Break all subroutines. Use this ability only by spending credits from stealth cards.&#xA;1[Credits]: +1 strength." />
+		<property name="Flavor" value="In running, as in reality, all elements are connected." />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Shaper" />
+		<property name="Influence" value="3" />
+		<property name="Side" value="runner" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda11007" name="Another Day, Another Paycheck">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Event" />
+		<property name="Keywords" value="Current" />
+		<property name="Cost" value="0" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="" />	
+		<property name="Rules" value="This card is not trashed until another current is played or an agenda is scored.&#xA;Whenever you steal an agenda, force the Corp to &quot;Trace0– If unsuccessful, the Runner gains credits equal to the number of agenda points in both players&apos; score areas.&quot;" />
+		<property name="Flavor" value="" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Sunny Lebeau" />
+		<property name="Influence" value="3" />
+		<property name="Side" value="runner" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda11008" name="Deuces Wild">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Event" />
+		<property name="Keywords" value="" />
+		<property name="Cost" value="2" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="" />	
+		<property name="Rules" value="Resolve two of the following in any order:&lt;ul&gt;&lt;li&gt;Gain 3[Credits].&lt;/li&gt;&lt;li&gt;Draw 2 cards.&lt;/li&gt;&lt;li&gt;Remove 1 tag.&lt;/li&gt;&lt;li&gt;Expose 1 piece of ice, then make a run.&lt;/li&gt;&lt;/ul&gt;" />
+		<property name="Flavor" value="&lt;span class=&quot;champion&quot;&gt;Designed by 2014 World Champion Dan D&apos;Argenio&lt;/champion&gt;" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Neutral" />
+		<property name="Influence" value="1" />
+		<property name="Side" value="runner" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda11009" name="Injection Attack">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Event" />
+		<property name="Keywords" value="Run" />
+		<property name="Cost" value="1" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="" />	
+		<property name="Rules" value="Make a run and choose an icebreaker. That icebreaker has +2 strength for the remainder of this run." />
+		<property name="Flavor" value="They call it &quot;running&quot; because jacking in is mentally and physically exhausting." />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Neutral" />
+		<property name="Influence" value="0" />
+		<property name="Side" value="runner" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda11010" name="Fairchild 1.0">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="ICE" />
+		<property name="Keywords" value="Code Gate-Bioroid" />
+		<property name="Cost" value="1" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="2" />	
+		<property name="Rules" value="The Runner can spend [Click] to break any subroutine on Fairchild 1.0.&#xA;[Subroutine]The Runner must pay 1[Credits] or trash 1 of his or her installed cards.&#xA;[Subroutine]The Runner must pay 1[Credits] or trash 1 of his or her installed cards." />
+		<property name="Flavor" value="I foresee the end of all things..." />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Haas-Bioroid" />
+		<property name="Influence" value="1" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda11011" name="Sherlock 2.0">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="ICE" />
+		<property name="Keywords" value="Sentry-Bioroid-Tracer" />
+		<property name="Cost" value="7" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="6" />	
+		<property name="Rules" value="The Runner can spend [Click][Click] to break up to 2 subroutines on Sherlock 2.0.&#xA;[Subroutine]Trace4– If successful, add 1 installed program to the bottom of the Runner&apos;s stack.&#xA;[Subroutine]Trace4– If successful, add 1 installed program to the bottom of the Runner&apos;s stack.&#xA;[Subroutine]Give the Runner 1 tag." />
+		<property name="Flavor" value="" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Haas-Bioroid" />
+		<property name="Influence" value="3" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda11012" name="Hyoubu Research Facility">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Asset" />
+		<property name="Keywords" value="Facility-Unique" />
+		<property name="Cost" value="0" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="4" />	
+		<property name="Rules" value="The first time each turn you reveal secretly spent credits, gain that many credits." />
+		<property name="Flavor" value="&quot;I&apos;m telling you, free up the emergency accounts. Something&apos;s coming; I haven&apos;t seen a reaction like that since the tsunami. My god, the screaming...&quot;" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Jinteki" />
+		<property name="Influence" value="3" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda11013" name="Chrysalis">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="ICE" />
+		<property name="Keywords" value="Sentry-AP" />
+		<property name="Cost" value="3" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="2" />	
+		<property name="Rules" value="If Chrysalis is accessed from R&amp;D, the Runner must reveal it.&#xA;When the Runner accesses Chrysalis, he or she encounters it. Ignore this ability if the Runner accesses Chrysalis from Archives.&#xA;[Subroutine] Do 2 net damage." />
+		<property name="Flavor" value="" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Jinteki" />
+		<property name="Influence" value="2" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda11014" name="Georgia Emelyov">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Upgrade" />
+		<property name="Keywords" value="Sysop-Unique" />
+		<property name="Cost" value="1" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="3" />	
+		<property name="Rules" value="Whenever the Runner makes an unsuccessful run on this server, do 1 net damage.&#xA;2[Credits]: Move Georgia Emelyov to another server." />
+		<property name="Flavor" value="&quot;Your mistake is thinking that it&apos;s just business, when really it&apos;s a war.&quot;" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Jinteki" />
+		<property name="Influence" value="2" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda11015" name="Watchdog">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Asset" />
+		<property name="Keywords" value="" />
+		<property name="Cost" value="0" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="4" />	
+		<property name="Rules" value="The rez cost of the first piece of ice you rez each turn is lowered by 1 for each tag the Runner has." />
+		<property name="Flavor" value="&quot;Person of interest. Noun. Someone who is about to get ****ed by a corp.&quot; - Anarch&apos;s Dictionary, Volume Who&apos;s Counting" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="NBN" />
+		<property name="Influence" value="1" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda11016" name="Hard-Hitting News">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Operation" />
+		<property name="Keywords" value="Terminal" />
+		<property name="Cost" value="3" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="" />	
+		<property name="Rules" value="After you resolve this operation, end your action phase.&#xA;Play only if the Runner made a run during his or her last turn.&#xA;Trace4– If successful, give the Runner 4 tags." />
+		<property name="Flavor" value="" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="NBN" />
+		<property name="Influence" value="2" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda11017" name="NBN">
+		<property name="Subtitle" value="Controlling the Message" />
+		<property name="Type" value="Identity" />
+		<property name="Keywords" value="Megacorp" />
+		<property name="Cost" value="0" />
+		<property name="Requirement" value="45" />	
+		<property name="Stat" value="12" />	
+		<property name="Rules" value="The first time the Runner trashes an installed Corp card each turn, you may trace4– If successful, give the Runner 1 tag (cannot be avoided)." />
+		<property name="Flavor" value="" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="NBN" />
+		<property name="Influence" value="" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda11018" name="Crisis Management">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Agenda" />
+		<property name="Keywords" value="Security" />
+		<property name="Cost" value="3" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="1" />	
+		<property name="Rules" value="If the Runner is tagged, Crisis Management gains &quot;When your turn begins, do 1 meat damage.&quot;" />
+		<property name="Flavor" value="&quot;For the duration of the emergency&quot; is code for &quot;this is the way things are now.&quot;" />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="The Weyland Consortium" />
+		<property name="Influence" value="" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda11019" name="Stock Buy-Back">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Operation" />
+		<property name="Keywords" value="Terminal-Transaction" />
+		<property name="Cost" value="1" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="" />	
+		<property name="Rules" value="After you resolve this operation, end your action phase.&#xA;Gain 3[Credits] for each agenda in the Runner&apos;s score area." />
+		<property name="Flavor" value="A stock dropping sharply is bad for shareholders, but not neccessarily bad for the company." />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="The Weyland Consortium" />
+		<property name="Influence" value="2" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+	<card id="bc0f047c-01b1-427f-a439-d451eda11020" name="Sandburg">
+		<property name="Subtitle" value="" />
+		<property name="Type" value="Asset" />
+		<property name="Keywords" value="Unique" />
+		<property name="Cost" value="0" />
+		<property name="Requirement" value="" />	
+		<property name="Stat" value="4" />	
+		<property name="Rules" value="If you have at least 10[Credits], each piece of ice has +1 strength for every 5[Credits] in your credit pool." />
+		<property name="Flavor" value="Money is power." />
+		<property name="Instructions" value="" />
+		<property name="Faction" value="Neutral" />
+		<property name="Influence" value="0" />
+		<property name="Side" value="corp" />
+		<property name="AutoScript" value="" />
+		<property name="AutoAction" value="" />	
+	</card>
+</cards>
+</set>
