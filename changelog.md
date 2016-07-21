@@ -1,6 +1,15 @@
 Changelog - Android:Netrunner LCG OCTGN Game Definition
 ===============================================
 
+### 3.25.0.x
+
+* Rezzed all card sets until now. No cards are scripted.
+  * Democracy and Dogma
+  * Salsette Island
+  * The Liberated Mind
+  * Fear the Masses
+  * 23 Seconds
+
 ### 3.24.0.x
 
 * New game definition for **Business First**. As always, almost every card scripted!
